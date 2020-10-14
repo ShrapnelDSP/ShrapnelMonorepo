@@ -1,6 +1,9 @@
 #include "driver/i2s.h"
 #include "i2s.h"
 
+#include <stdint.h>
+#include <stdio.h>
+
 #define BITS            (24)
 #define MCK             (384*SAMPLE_RATE)
 
@@ -19,9 +22,14 @@ static void fill_dma_buffer()
     int *samples_data = malloc(buffer_size_bytes);
     size_t i2s_bytes_write = 0;
 
+    printf("Filling DMA buffers\n");
     for(int i = 0; i < buffer_size_bytes/4/2; i++) {
-        samples_data[i*2] = ((int) i<<8);
-        samples_data[i*2 + 1] = ((int) i<<8);
+        int64_t step = ((int64_t)INT32_MAX) - ((int64_t)INT32_MIN)/59;
+        int val = ((i % 60) - 30) * (INT32_MAX/31);
+        samples_data[i*2] = val;//((int) i<<8);
+        samples_data[i*2 + 1] = val;//((int) i<<8);
+
+        if(i < 60) printf("%08Xh\n", samples_data[i*2]);
     }
 
     i2s_set_clk(I2S_NUM, SAMPLE_RATE, BITS, 2);
