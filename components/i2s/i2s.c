@@ -50,50 +50,51 @@ static inline void log_event(i2s_event_t e)
     ESP_LOGI(TAG, "type: %d, size: %d", e.type, e.size);
 }
 
-static inline void process_event(i2s_event_t e)
-{
-    size_t tx_rx_size;
-
-    switch(e.type)
-    {
-        case I2S_EVENT_DMA_ERROR:
-            ESP_LOGE(TAG, "Something went wrong with DMA");
-            break;
-        case I2S_EVENT_TX_DONE:
-            //do nothing
-            break;
-        case I2S_EVENT_RX_DONE:
-            //process the samples and send them to the TX queue
-            i2s_read(I2S_NUM, rx_buf, DMA_BUF_SIZE*4, &tx_rx_size, 0);
-            if(tx_rx_size != DMA_BUF_SIZE*4)
-            {
-                ESP_LOGE(TAG, "Got the wrong number of bytes %d/%d", tx_rx_size, DMA_BUF_SIZE*4);
-            }
-
-            for(int i = 0; i < DMA_BUF_SIZE; i++)
-            {
-                rx_buf[i] /= att;
-            }
-
-            i2s_write(I2S_NUM, rx_buf, DMA_BUF_SIZE*4, &tx_rx_size, 0);
-            if(tx_rx_size != DMA_BUF_SIZE*4)
-            {
-                ESP_LOGE(TAG, "Sent the wrong number of bytes %d/%d", tx_rx_size, DMA_BUF_SIZE*4);
-            }
-            break;
-        default:
-            ESP_LOGE(TAG, "Unhandled type: %d", e.type);
-            break;
-    }
-}
-
-static void i2s_processing_task(void *param)
+static void event_task(void *param)
 {
     i2s_event_t e;
     while(1)
     {
         xQueueReceive(i2s_queue, &e, portMAX_DELAY);
-        process_event(e);
+        switch(e.type)
+        {
+            case I2S_EVENT_DMA_ERROR:
+                ESP_LOGE(TAG, "Something went wrong with DMA");
+                break;
+            case I2S_EVENT_TX_DONE:
+            case I2S_EVENT_RX_DONE:
+                //do nothing
+                break;
+            default:
+                ESP_LOGE(TAG, "Unhandled type: %d", e.type);
+                break;
+        }
+    }
+}
+
+static void i2s_processing_task(void *param)
+{
+    size_t tx_rx_size;
+
+    while(1)
+    {
+        i2s_read(I2S_NUM, rx_buf, DMA_BUF_SIZE*4, &tx_rx_size, 100/portTICK_PERIOD_MS);
+        if(tx_rx_size != DMA_BUF_SIZE*4)
+        {
+            ESP_LOGE(TAG, "Got the wrong number of bytes %d/%d", tx_rx_size, DMA_BUF_SIZE*4);
+        }
+
+        //TODO do processing here
+        for(int i = 0; i < DMA_BUF_SIZE; i++)
+        {
+            rx_buf[i] /= att;
+        }
+
+        i2s_write(I2S_NUM, rx_buf, DMA_BUF_SIZE*4, &tx_rx_size, 100/portTICK_PERIOD_MS);
+        if(tx_rx_size != DMA_BUF_SIZE*4)
+        {
+            ESP_LOGE(TAG, "Sent the wrong number of bytes %d/%d", tx_rx_size, DMA_BUF_SIZE*4);
+        }
     }
 }
 
@@ -218,10 +219,16 @@ esp_err_t i2s_setup(void)
         ESP_LOGE(TAG, "Processing task create failed %d", ret);
     }
 
-    ret = xTaskCreate(i2s_gain_task, "i2s gain", TASK_STACK, NULL, TASK_PRIO, NULL);
+    ret = xTaskCreate(i2s_gain_task, "i2s gain", TASK_STACK, NULL, TASK_PRIO - 1, NULL);
     if(ret != pdPASS)
     {
         ESP_LOGE(TAG, "Gain task create failed %d", ret);
+    }
+
+    ret = xTaskCreate(event_task, "i2s event", TASK_STACK, NULL, TASK_PRIO - 1, NULL);
+    if(ret != pdPASS)
+    {
+        ESP_LOGE(TAG, "Event task create failed %d", ret);
     }
     
     return ESP_OK;
