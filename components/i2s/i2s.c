@@ -43,7 +43,7 @@ static int16_t rx_buf[DMA_BUF_SIZE];
 #error "Unsupported I2S bit width"
 #endif
 
-int att = 0;
+static float gain = 0.f;
 
 static inline void log_event(i2s_event_t e)
 {
@@ -87,7 +87,9 @@ static void i2s_processing_task(void *param)
         //TODO do processing here
         for(int i = 0; i < DMA_BUF_SIZE; i++)
         {
-            rx_buf[i] /= att;
+            float f = rx_buf[i]/(float)INT32_MAX;
+            f *= gain;
+            rx_buf[i] = (int) (f * INT32_MAX);
         }
 
         i2s_write(I2S_NUM, rx_buf, DMA_BUF_SIZE*4, &tx_rx_size, 100/portTICK_PERIOD_MS);
@@ -101,17 +103,20 @@ static void i2s_processing_task(void *param)
 static void i2s_gain_task(void *param)
 {
     bool b = 0;
+    int att;
     while(1)
     {
         if(b)
         {
-            att = 2;
+            att = 0;
         }
         else
         {
-            att = 1;
+            att = 6;
         }
-        ESP_LOGI(TAG, "amplitude divider set to: %d", att);
+        gain = powf(10.f, -att / 20.f);
+        ESP_LOGI(TAG, "attenuation is: %d dB", att);
+        ESP_LOGI(TAG, "gain is: %01.3f", gain);
 
         b = !b;
         vTaskDelay(2000/portTICK_PERIOD_MS);
