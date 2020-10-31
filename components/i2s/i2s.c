@@ -16,11 +16,11 @@
 #define MCK             (384*SAMPLE_RATE)
 
 #define SAMPLE_RATE     (48000)
-#define I2S_NUM         (1)
-#define I2S_BCK_IO      (GPIO_NUM_2)
-#define I2S_WS_IO       (GPIO_NUM_4)
-#define I2S_DO_IO       (GPIO_NUM_5)
-#define I2S_DI_IO       (GPIO_NUM_19)
+#define I2S_NUM         (1)             //PCM3060 pin
+#define I2S_BCK_IO      (GPIO_NUM_2)    //5/10
+#define I2S_WS_IO       (GPIO_NUM_4)    //4/11
+#define I2S_DO_IO       (GPIO_NUM_5)    //12
+#define I2S_DI_IO       (GPIO_NUM_19)   //3
 
 #define DMA_BUF_SIZE    (960)
 #define DMA_BUF_COUNT   (6)
@@ -72,6 +72,11 @@ static void event_task(void *param)
     }
 }
 
+void i2s_set_gain(float g)
+{
+    gain = g;
+}
+
 static void i2s_processing_task(void *param)
 {
     size_t tx_rx_size;
@@ -84,7 +89,6 @@ static void i2s_processing_task(void *param)
             ESP_LOGE(TAG, "Got the wrong number of bytes %d/%d", tx_rx_size, DMA_BUF_SIZE*4);
         }
 
-        //TODO do processing here
         for(int i = 0; i < DMA_BUF_SIZE; i++)
         {
             float f = rx_buf[i]/(float)INT32_MAX;
@@ -97,29 +101,6 @@ static void i2s_processing_task(void *param)
         {
             ESP_LOGE(TAG, "Sent the wrong number of bytes %d/%d", tx_rx_size, DMA_BUF_SIZE*4);
         }
-    }
-}
-
-static void i2s_gain_task(void *param)
-{
-    bool b = 0;
-    int att;
-    while(1)
-    {
-        if(b)
-        {
-            att = 0;
-        }
-        else
-        {
-            att = 6;
-        }
-        gain = powf(10.f, -att / 20.f);
-        ESP_LOGI(TAG, "attenuation is: %d dB", att);
-        ESP_LOGI(TAG, "gain is: %01.3f", gain);
-
-        b = !b;
-        vTaskDelay(2000/portTICK_PERIOD_MS);
     }
 }
 
@@ -222,12 +203,6 @@ esp_err_t i2s_setup(void)
     if(ret != pdPASS)
     {
         ESP_LOGE(TAG, "Processing task create failed %d", ret);
-    }
-
-    ret = xTaskCreate(i2s_gain_task, "i2s gain", TASK_STACK, NULL, TASK_PRIO - 1, NULL);
-    if(ret != pdPASS)
-    {
-        ESP_LOGE(TAG, "Gain task create failed %d", ret);
     }
 
     ret = xTaskCreate(event_task, "i2s event", TASK_STACK, NULL, TASK_PRIO - 1, NULL);
