@@ -1,3 +1,4 @@
-idf_component_register(SRCS "i2s.c"
+idf_component_register(SRCS "i2s.c" "process.c"
                        INCLUDE_DIRS "include"
-                       PRIV_REQUIRES driver)
+                       REQUIRES driver
+                       PRIV_REQUIRES "esp-dsp" "float_convert")

@@ -1,5 +1,7 @@
 #include "driver/i2s.h"
 #include "i2s.h"
+#include "process.h"
+#include "float_convert.h"
 
 #define LOG_LOCAL_LEVEL ESP_LOG_VERBOSE
 #include "esp_log.h"
@@ -43,16 +45,12 @@ static int16_t rx_buf[DMA_BUF_SIZE];
 #error "Unsupported I2S bit width"
 #endif
 
-static float gain = 0.f;
+float gain = 0.f;
+gpio_num_t g_profiling_gpio = -1;
 
 static inline void log_event(i2s_event_t e)
 {
     ESP_LOGI(TAG, "type: %d, size: %d", e.type, e.size);
-}
-
-static inline int32_t float_to_int32(float f)
-{
-    return (int32_t) (f * INT32_MAX);
 }
 
 static void event_task(void *param)
@@ -101,12 +99,7 @@ static void i2s_processing_task(void *param)
         }
 #endif
 
-        for(int i = 0; i < DMA_BUF_SIZE; i++)
-        {
-            float f = rx_buf[i]/(float)INT32_MAX;
-            f *= gain;
-            rx_buf[i] = float_to_int32(f);
-        }
+        process_samples(rx_buf, sizeof(rx_buf) / sizeof(rx_buf[0]));
 
         i2s_write(I2S_NUM, rx_buf, DMA_BUF_SIZE*4, &tx_rx_size, 100/portTICK_PERIOD_MS);
         if(tx_rx_size != DMA_BUF_SIZE*4)
@@ -122,9 +115,32 @@ static void i2s_processing_task(void *param)
  * Master mode, MCK, BCK, FS controlled using the defines above. Clock is
  * output on GPIO0 (CLK_OUT1) to keep UART0 free.
  */
-esp_err_t i2s_setup(void)
+esp_err_t i2s_setup(gpio_num_t profiling_gpio)
 {
     esp_err_t err;
+
+    g_profiling_gpio = profiling_gpio;
+    /* configure the GPIO used for profiling. It will go high when samples are
+     * being processed and return to low once the processing is finished. */
+    gpio_config_t io_conf = {
+        .intr_type = GPIO_INTR_DISABLE,
+        .mode = GPIO_MODE_OUTPUT,
+        .pin_bit_mask = 1ULL << profiling_gpio,
+        .pull_down_en = 0,
+        .pull_up_en = 0,
+    };
+    err = gpio_config(&io_conf);
+    if(err != ESP_OK)
+    {
+        ESP_LOGE(TAG, "gpio_config failed %d, %s", err, esp_err_to_name(err));
+        return err;
+    }
+    err = gpio_set_level(profiling_gpio, 0);
+    if(err != ESP_OK)
+    {
+        ESP_LOGE(TAG, "gpio_set_level failed %d, %s", err, esp_err_to_name(err));
+        return err;
+    }
 
     i2s_config_t i2s_config = {
         .mode = I2S_MODE_MASTER | I2S_MODE_TX | I2S_MODE_RX,

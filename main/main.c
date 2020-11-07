@@ -26,6 +26,8 @@
 #include "esp_http_websocket_server.h"
 #include "pcm3060.h"
 
+#define PROFILING_GPIO GPIO_NUM_23
+
 //this magic is used during the websocket handshake
 const char WEBSOCKET_KEY_MAGIC[] = "258EAFA5-E914-47DA-95CA-C5AB0DC85B11";
 #define STRLEN(a) (sizeof(a)/sizeof(char))
@@ -276,7 +278,7 @@ void app_main(void)
     static httpd_handle_t server = NULL;
 
     i2c_setup();
-    i2s_setup();
+    i2s_setup(PROFILING_GPIO);
 
     vTaskDelay(100 / portTICK_PERIOD_MS);
 
