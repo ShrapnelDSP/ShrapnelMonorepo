@@ -142,6 +142,13 @@ esp_err_t i2s_setup(gpio_num_t profiling_gpio)
         return err;
     }
 
+    err = process_init();
+    if(err != ESP_OK)
+    {
+        ESP_LOGE(TAG, "process_init failed %d, %s", err, esp_err_to_name(err));
+        return err;
+    }
+
     i2s_config_t i2s_config = {
         .mode = I2S_MODE_MASTER | I2S_MODE_TX | I2S_MODE_RX,
         .sample_rate = SAMPLE_RATE,

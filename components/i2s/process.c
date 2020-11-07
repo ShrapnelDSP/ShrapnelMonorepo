@@ -2,6 +2,7 @@
 #include "process.h"
 #include "dsps_biquad.h"
 #include "float_convert.h"
+#include "dsps_fir.h"
 #include "math.h"
 
 #include "driver/gpio.h"
@@ -11,6 +12,10 @@
 extern float gain;
 extern gpio_num_t g_profiling_gpio;
 float fbuf[DMA_BUF_SIZE];
+
+#include "speaker_coeffs.h"
+float fir_delay_line[sizeof(fir_coeff)/sizeof(fir_coeff[0])];
+fir_f32_t fir;
 
 //these approximate the pre EQ from a Boss HM-2 pedal
 static float coeff[3][5] = {
@@ -24,20 +29,24 @@ static float coeff[3][5] = {
 
 static float delay_line[3][2];
 
-float waveshape(float x)
+static float waveshape(float x)
 {
+#if 1
     float y;
-    if (x >= -1 && x < -0.08905) {
-        y = -3.0 / 4.0 *
-            (1 - powf(1 - (fabs(x) - 0.032847), 12) +
-             1.0 / 3.0 * (fabs(x) - 0.032847)) +
-            0.01;
-    } else if (x >= -0.08905 && x < 0.320018) {
-        y = -6.153 * powf(x, 2) + 3.9375 * x;
+    if (x >= -1.f && x < -0.08905f) {
+        y = -3.0f / 4.0f *
+            (1.f - powf(1.f - (fabs(x) - 0.032847f), 12.f) +
+             1.f / 3.f * (fabs(x) - 0.032847f)) +
+            0.01f;
+    } else if (x >= -0.08905f && x < 0.320018f) {
+        y = -6.153f * powf(x, 2.f) + 3.9375f * x;
     } else {
-        y = 0.630035;
+        y = 0.630035f;
     }
     return y;
+#else
+    return tanhf(x);
+#endif
 }
 
 void process_samples(int32_t *buf, size_t buf_len)
@@ -49,12 +58,14 @@ void process_samples(int32_t *buf, size_t buf_len)
     {
         fbuf[i] = buf[i]/(float)INT32_MAX;
         fbuf[i] *= gain;
+        fbuf[i] = waveshape(fbuf[i]);
     }
 
     for(int i = 0; i < 3; i++)
     {
         dsps_biquad_f32_ae32(fbuf, fbuf, buf_len, coeff[i], delay_line[i]);
     }
+    //dsps_fir_f32_ae32(&fir, fbuf, fbuf, buf_len);
 
     for(int i = 0; i < buf_len; i++)
     {
@@ -62,4 +73,10 @@ void process_samples(int32_t *buf, size_t buf_len)
     }
 
     gpio_set_level(g_profiling_gpio, 0);
+}
+
+esp_err_t process_init()
+{
+    return dsps_fir_init_f32(&fir, fir_coeff, fir_delay_line,
+                             sizeof(fir_coeff) / sizeof(fir_coeff[0]));
 }
