@@ -157,7 +157,7 @@ static void httpd_process_ctrl_msg(struct httpd_data *hd)
 /* Manage in-coming connection or data requests */
 static esp_err_t httpd_server(struct httpd_data *hd)
 {
-    static const struct timeval hundred_ms = {.tv_sec = 0, .tv_usec = 100000};
+    static const struct timeval sock_timeout = {.tv_sec = 0, .tv_usec = 10000};
     //this is set when a message is waiting to be sent
     static bool need_to_write = false;
     //pointer to the message to write
@@ -200,7 +200,7 @@ static esp_err_t httpd_server(struct httpd_data *hd)
     tmp_max_fd = maxfd;
     maxfd = MAX(hd->ctrl_fd, tmp_max_fd);
 
-    int active_cnt = select(maxfd + 1, &read_set, &write_set, NULL, &hundred_ms);
+    int active_cnt = select(maxfd + 1, &read_set, &write_set, NULL, &sock_timeout);
     if (active_cnt < 0) {
         ESP_LOGE(TAG, LOG_FMT("error in select (%d)"), errno);
         httpd_sess_delete_invalid(hd);

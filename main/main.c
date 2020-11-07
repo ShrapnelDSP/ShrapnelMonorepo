@@ -241,7 +241,7 @@ void app_main(void)
     server = start_webserver();
 
 
-    ret = xTaskCreate(i2s_gain_task, "i2s gain", 2000, NULL, 5, NULL);
+    ret = xTaskCreate(i2s_gain_task, "i2s gain", 2000, NULL, configMAX_PRIORITIES - 1, NULL);
     if(ret != pdPASS)
     {
         ESP_LOGE(TAG, "Gain task create failed %d", ret);
