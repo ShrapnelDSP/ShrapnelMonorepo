@@ -22,8 +22,8 @@
 #define I2S_DO_IO       (GPIO_NUM_5)    //12
 #define I2S_DI_IO       (GPIO_NUM_19)   //3
 
-#define DMA_BUF_SIZE    (960)
-#define DMA_BUF_COUNT   (6)
+#define DMA_BUF_SIZE    (64)
+#define DMA_BUF_COUNT   (3)
 
 #define TASK_STACK      (3000)
 #define TASK_PRIO       (5)
