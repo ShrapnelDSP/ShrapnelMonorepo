@@ -18,6 +18,7 @@
 #include "esp32/sha.h"
 #include "mbedtls/base64.h"
 #include "protocol_examples_common.h"
+#include "mdns.h"
 
 #include "i2s.h"
 #include "esp_http_websocket_server.h"
@@ -234,6 +235,21 @@ static void i2s_gain_task(void *param)
     }
 }
 
+void start_mdns()
+{
+    esp_err_t err = mdns_init();
+    if (err) {
+        ESP_LOGE(TAG, "MDNS Init failed: %d %s", err, esp_err_to_name(err));
+        return;
+    }
+
+    mdns_hostname_set("guitar-dsp");
+    mdns_instance_name_set("Barabas' Guitar Processor");
+
+    mdns_service_add(NULL, "_http", "_tcp", 80, NULL, 0);
+    mdns_service_instance_name_set("_http", "_tcp", "Barabas' Guitar Processor Web Server");
+}
+
 void app_main(void)
 {
     int ret;
@@ -259,6 +275,9 @@ void app_main(void)
 
     /* Start the server for the first time */
     server = start_webserver();
+
+    /* Start the mdns service */
+    start_mdns();
 
 
     ret = xTaskCreate(i2s_gain_task, "i2s gain", 2000, NULL, configMAX_PRIORITIES - 1, NULL);
