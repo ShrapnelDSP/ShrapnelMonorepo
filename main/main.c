@@ -18,6 +18,7 @@
 #include "esp32/sha.h"
 #include "mbedtls/base64.h"
 #include "protocol_examples_common.h"
+#include "mdns.h"
 
 #include "i2s.h"
 #include "esp_http_websocket_server.h"
@@ -114,10 +115,29 @@ static esp_err_t websocket_get_handler(httpd_req_t *req)
     return ESP_OK;
 }
 
+static esp_err_t ui_get_handler(httpd_req_t *req)
+{
+    extern const unsigned char html_start[] asm("_binary_index_html_start");
+    extern const unsigned char html_end[] asm("_binary_index_html_end");
+    const size_t html_size = (html_end - html_start);
+
+    httpd_resp_send(req, (const char *)html_start, html_size);
+    httpd_resp_send(req, NULL, 0);
+
+    return ESP_OK;
+}
+
 static const httpd_uri_t websocket = {
     .uri       = "/websocket",
     .method    = HTTP_GET,
     .handler   = websocket_get_handler,
+    .user_ctx  = NULL
+};
+
+static const httpd_uri_t ui = {
+    .uri       = "/",
+    .method    = HTTP_GET,
+    .handler   = ui_get_handler,
     .user_ctx  = NULL
 };
 
@@ -146,6 +166,7 @@ static httpd_handle_t start_webserver(void)
         // Set URI handlers
         ESP_LOGI(TAG, "Registering URI handlers");
         httpd_register_uri_handler(server, &websocket);
+        httpd_register_uri_handler(server, &ui);
         return server;
     }
 
@@ -214,6 +235,21 @@ static void i2s_gain_task(void *param)
     }
 }
 
+void start_mdns()
+{
+    esp_err_t err = mdns_init();
+    if (err) {
+        ESP_LOGE(TAG, "MDNS Init failed: %d %s", err, esp_err_to_name(err));
+        return;
+    }
+
+    mdns_hostname_set("guitar-dsp");
+    mdns_instance_name_set("Barabas' Guitar Processor");
+
+    mdns_service_add(NULL, "_http", "_tcp", 80, NULL, 0);
+    mdns_service_instance_name_set("_http", "_tcp", "Barabas' Guitar Processor Web Server");
+}
+
 void app_main(void)
 {
     int ret;
@@ -239,6 +275,9 @@ void app_main(void)
 
     /* Start the server for the first time */
     server = start_webserver();
+
+    /* Start the mdns service */
+    start_mdns();
 
 
     ret = xTaskCreate(i2s_gain_task, "i2s gain", 2000, NULL, configMAX_PRIORITIES - 1, NULL);
