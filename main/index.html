@@ -12,7 +12,7 @@
     <div id="rangeLabel"></div>
 
     <script> 
-        let socket = new WebSocket("ws://192.168.0.22/websocket");
+        let socket = new WebSocket("ws://" + window.location.host + "/websocket");
         let block_slider_change = false;
 
         let slider = document.getElementById("myRange")
