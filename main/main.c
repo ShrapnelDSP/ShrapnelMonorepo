@@ -114,10 +114,29 @@ static esp_err_t websocket_get_handler(httpd_req_t *req)
     return ESP_OK;
 }
 
+static esp_err_t ui_get_handler(httpd_req_t *req)
+{
+    extern const unsigned char html_start[] asm("_binary_index_html_start");
+    extern const unsigned char html_end[] asm("_binary_index_html_end");
+    const size_t html_size = (html_end - html_start);
+
+    httpd_resp_send(req, (const char *)html_start, html_size);
+    httpd_resp_send(req, NULL, 0);
+
+    return ESP_OK;
+}
+
 static const httpd_uri_t websocket = {
     .uri       = "/websocket",
     .method    = HTTP_GET,
     .handler   = websocket_get_handler,
+    .user_ctx  = NULL
+};
+
+static const httpd_uri_t ui = {
+    .uri       = "/",
+    .method    = HTTP_GET,
+    .handler   = ui_get_handler,
     .user_ctx  = NULL
 };
 
@@ -146,6 +165,7 @@ static httpd_handle_t start_webserver(void)
         // Set URI handlers
         ESP_LOGI(TAG, "Registering URI handlers");
         httpd_register_uri_handler(server, &websocket);
+        httpd_register_uri_handler(server, &ui);
         return server;
     }
 
