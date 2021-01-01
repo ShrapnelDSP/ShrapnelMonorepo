@@ -242,6 +242,19 @@ static void i2s_gain_task(void *param)
     }
 }
 
+extern int64_t i2s_last_run_time;
+void i2s_profiling_task(void *param)
+{
+    while(1)
+    {
+        vTaskDelay(1000 / portTICK_PERIOD_MS);
+        //TODO expose the sample rate from the i2s module
+        ESP_LOGI(TAG, "Audio processing took %lld us (%03.1f %%)",
+                 i2s_last_run_time, 
+                 100.f * i2s_last_run_time / (1e6 * DMA_BUF_SIZE / 48e3));
+    }
+}
+
 void start_mdns()
 {
     esp_err_t err = mdns_init();
@@ -313,6 +326,12 @@ void app_main(void)
     if(ret != pdPASS)
     {
         ESP_LOGE(TAG, "Gain task create failed %d", ret);
+    }
+
+    ret = xTaskCreate(i2s_profiling_task, "i2s profiling", 2000, NULL, configMAX_PRIORITIES - 2, NULL);
+    if(ret != pdPASS)
+    {
+        ESP_LOGE(TAG, "Profiling task create failed %d", ret);
     }
 
     ESP_LOGI(TAG, "setup done");

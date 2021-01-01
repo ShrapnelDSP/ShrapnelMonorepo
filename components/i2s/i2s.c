@@ -24,7 +24,6 @@
 #define I2S_DO_IO       (GPIO_NUM_5)    //12
 #define I2S_DI_IO       (GPIO_NUM_19)   //3
 
-#define DMA_BUF_SIZE    (64)
 #define DMA_BUF_COUNT   (3)
 
 #define TASK_STACK      (3000)
@@ -36,10 +35,10 @@ static QueueHandle_t i2s_queue;
 #define TAG "codec_i2s"
 
 #if BITS == 24
-static int32_t rx_buf[DMA_BUF_SIZE];
+static int32_t rx_buf[2*DMA_BUF_SIZE];
 #define SAMPLE_MAX INT32_MAX
 #elif BITS == 16
-static int16_t rx_buf[DMA_BUF_SIZE];
+static int16_t rx_buf[2*DMA_BUF_SIZE];
 #define SAMPLE_MAX INT16_MAX
 #else
 #error "Unsupported I2S bit width"
@@ -80,31 +79,39 @@ void i2s_set_gain(float g)
     gain = g;
 }
 
+#define I2S_DUMMY_INPUT
 static void i2s_processing_task(void *param)
 {
     size_t tx_rx_size;
 
     while(1)
     {
-#if !defined(GENERATE_SINE_WAVE)
-        i2s_read(I2S_NUM, rx_buf, DMA_BUF_SIZE*4, &tx_rx_size, 100/portTICK_PERIOD_MS);
-        if(tx_rx_size != DMA_BUF_SIZE*4)
+#if !defined(GENERATE_SINE_WAVE) && !defined(I2S_DUMMY_INPUT)
+        i2s_read(I2S_NUM, rx_buf, sizeof(rx_buf), &tx_rx_size, 100/portTICK_PERIOD_MS);
+        if(tx_rx_size != sizeof(rx_buf))
         {
-            ESP_LOGE(TAG, "Got the wrong number of bytes %d/%d", tx_rx_size, DMA_BUF_SIZE*4);
+            ESP_LOGE(TAG, "Got the wrong number of bytes %d/%d", tx_rx_size, sizeof(rx_buf));
         }
-#else
-        for(int i = 0; i < DMA_BUF_SIZE; i++)
+#elif defined(GENERATE_SINE_WAVE)
+        int len = sizeof(rx_buf) / sizeof(rx_buf[0]);
+        for(int i = 0; i < len; i++)
         {
-            rx_buf[i] = float_to_int32(sinf(2 * M_PI * i/(float)DMA_BUF_SIZE));
+            rx_buf[i] = float_to_int32(sinf(2 * M_PI * i/(float)len));
+        }
+#elif defined(GENERATE_RAMP)
+        int len = sizeof(rx_buf) / sizeof(rx_buf[0]);
+        for(int i = 0; i < len; i++)
+        {
+            rx_buf[i] = (i - len/2) * (INT32_MAX / (len/2));
         }
 #endif
 
         process_samples(rx_buf, sizeof(rx_buf) / sizeof(rx_buf[0]));
 
-        i2s_write(I2S_NUM, rx_buf, DMA_BUF_SIZE*4, &tx_rx_size, 100/portTICK_PERIOD_MS);
-        if(tx_rx_size != DMA_BUF_SIZE*4)
+        i2s_write(I2S_NUM, rx_buf, sizeof(rx_buf), &tx_rx_size, 100/portTICK_PERIOD_MS);
+        if(tx_rx_size != sizeof(rx_buf))
         {
-            ESP_LOGE(TAG, "Sent the wrong number of bytes %d/%d", tx_rx_size, DMA_BUF_SIZE*4);
+            ESP_LOGE(TAG, "Sent the wrong number of bytes %d/%d", tx_rx_size, sizeof(rx_buf));
         }
     }
 }

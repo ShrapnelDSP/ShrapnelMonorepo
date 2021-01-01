@@ -4,14 +4,20 @@
 #include "float_convert.h"
 #include "dsps_fir.h"
 #include "math.h"
+#include "esp_log.h"
+#define TAG "i2s_process"
 
 #include "driver/gpio.h"
+#include "esp_timer.h"
 
 #include <assert.h>
 
 extern float gain;
 extern gpio_num_t g_profiling_gpio;
 float fbuf[DMA_BUF_SIZE];
+
+/** The time it took to run the processing task in us*/
+int64_t i2s_last_run_time;
 
 #include "speaker_coeffs.h"
 float fir_delay_line[sizeof(fir_coeff)/sizeof(fir_coeff[0])];
@@ -51,6 +57,8 @@ static float waveshape(float x)
 
 void process_samples(int32_t *buf, size_t buf_len)
 {
+    int64_t start_time = esp_timer_get_time();
+
     assert(g_profiling_gpio != -1 && "I2S task has not been initialised");
 
     gpio_set_level(g_profiling_gpio, 1);
@@ -58,13 +66,19 @@ void process_samples(int32_t *buf, size_t buf_len)
     {
         fbuf[i] = buf[i]/(float)INT32_MAX;
         fbuf[i] *= gain;
-        fbuf[i] = waveshape(fbuf[i]);
     }
 
     for(int i = 0; i < 3; i++)
     {
         dsps_biquad_f32_ae32(fbuf, fbuf, buf_len, coeff[i], delay_line[i]);
     }
+
+    for(int i = 0; i < buf_len; i++)
+    {
+        fbuf[i] = waveshape(fbuf[i]);
+    }
+
+    //TODO this crashes for some reason
     //dsps_fir_f32_ae32(&fir, fbuf, fbuf, buf_len);
 
     for(int i = 0; i < buf_len; i++)
@@ -72,11 +86,15 @@ void process_samples(int32_t *buf, size_t buf_len)
         buf[i] = float_to_int32(fbuf[i]);
     }
 
+    i2s_last_run_time = esp_timer_get_time() - start_time;
     gpio_set_level(g_profiling_gpio, 0);
 }
 
 esp_err_t process_init()
 {
+    ESP_LOGI(TAG, "Initialised FIR filter with length %d", 
+                             sizeof(fir_coeff) / sizeof(fir_coeff[0]));
+
     return dsps_fir_init_f32(&fir, fir_coeff, fir_delay_line,
                              sizeof(fir_coeff) / sizeof(fir_coeff[0]));
 }
