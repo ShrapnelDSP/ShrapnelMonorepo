@@ -323,6 +323,15 @@ esp_err_t httpd_sess_process(struct httpd_data *hd, int newfd)
         ESP_LOGD(TAG, "recv_fn returned %d", ret);
         ESP_LOG_BUFFER_HEX_LEVEL(TAG, buf, WEBSOCKET_BUF_SIZE, ESP_LOG_DEBUG);
 
+        if(ret == 0)
+        {
+            ESP_LOGW(TAG, LOG_FMT("Peer shut down connection"));
+            return ESP_FAIL;
+        } else if(ret < 0) {
+            ESP_LOGE(TAG, LOG_FMT("recv_fn error"));
+            return ESP_FAIL;
+        }
+
         httpd_websocket_parse(hd, buf, WEBSOCKET_BUF_SIZE, sd->fd);
     }
     sd->lru_counter = httpd_sess_get_lru_counter();
