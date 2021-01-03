@@ -17,7 +17,6 @@
 #define BITS            (24)
 #define MCK             (384*SAMPLE_RATE)
 
-#define SAMPLE_RATE     (48000)
 #define I2S_NUM         (1)             //PCM3060 pin
 #define I2S_BCK_IO      (GPIO_NUM_2)    //5/10
 #define I2S_WS_IO       (GPIO_NUM_4)    //4/11
@@ -45,6 +44,9 @@ static int16_t rx_buf[2*DMA_BUF_SIZE];
 #endif
 
 float gain = 0.f;
+float bass = 0.f;
+float middle = 0.f;
+float treble = 0.f;
 gpio_num_t g_profiling_gpio = -1;
 
 static inline void log_event(i2s_event_t e)
@@ -74,9 +76,27 @@ static void event_task(void *param)
     }
 }
 
-void i2s_set_gain(float g)
+void i2s_set_gain(float a)
 {
-    gain = g;
+    gain = a;
+}
+
+void i2s_set_bass(float a)
+{
+    bass = a;
+    //updateFmvCoefficients();
+}
+
+void i2s_set_middle(float a)
+{
+    middle = a;
+    //updateFmvCoefficients();
+}
+
+void i2s_set_treble(float a)
+{
+    treble = a;
+    //updateFmvCoefficients();
 }
 
 #define I2S_DUMMY_INPUT
