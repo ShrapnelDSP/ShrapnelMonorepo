@@ -12,6 +12,8 @@
 #include <esp_system.h>
 #include <nvs_flash.h>
 #include <sys/param.h>
+#include <driver/i2c.h>
+#include <driver/gpio.h>
 #include "nvs_flash.h"
 #include "esp_netif.h"
 #include "esp_eth.h"
@@ -250,11 +252,27 @@ void start_mdns()
     mdns_service_instance_name_set("_http", "_tcp", "Barabas' Guitar Processor Web Server");
 }
 
+static void i2c_setup(void)
+{
+    const i2c_config_t config = {
+        .mode = I2C_MODE_MASTER,
+        .sda_io_num = GPIO_NUM_13,
+        .scl_io_num = GPIO_NUM_12,
+        .sda_pullup_en = true,
+        .scl_pullup_en = true,
+        .master.clk_speed = 100 * 1000,
+    };
+
+    ESP_ERROR_CHECK(i2c_param_config(I2C_NUM_0, &config));
+    ESP_ERROR_CHECK(i2c_driver_install(I2C_NUM_0, I2C_MODE_MASTER, 0, 0, 0));
+}
+
 void app_main(void)
 {
     int ret;
     static httpd_handle_t server = NULL;
 
+    i2c_setup();
     i2s_setup();
 
     ESP_ERROR_CHECK(nvs_flash_init());
