@@ -24,6 +24,7 @@
 
 #include "i2s.h"
 #include "esp_http_websocket_server.h"
+#include "pcm3060.h"
 
 //this magic is used during the websocket handshake
 const char WEBSOCKET_KEY_MAGIC[] = "258EAFA5-E914-47DA-95CA-C5AB0DC85B11";
@@ -32,6 +33,8 @@ const char WEBSOCKET_KEY_MAGIC[] = "258EAFA5-E914-47DA-95CA-C5AB0DC85B11";
 #define QUEUE_LEN 10
 QueueHandle_t in_queue;
 QueueHandle_t out_queue;
+
+#define I2C_NUM I2C_NUM_0
 
 static esp_err_t websocket_get_handler(httpd_req_t *req)
 {
@@ -263,8 +266,8 @@ static void i2c_setup(void)
         .master.clk_speed = 100 * 1000,
     };
 
-    ESP_ERROR_CHECK(i2c_param_config(I2C_NUM_0, &config));
-    ESP_ERROR_CHECK(i2c_driver_install(I2C_NUM_0, I2C_MODE_MASTER, 0, 0, 0));
+    ESP_ERROR_CHECK(i2c_param_config(I2C_NUM, &config));
+    ESP_ERROR_CHECK(i2c_driver_install(I2C_NUM, I2C_MODE_MASTER, 0, 0, 0));
 }
 
 void app_main(void)
@@ -274,6 +277,12 @@ void app_main(void)
 
     i2c_setup();
     i2s_setup();
+
+    vTaskDelay(100 / portTICK_PERIOD_MS);
+
+    //dac must be powered up after the i2s clocks have stabilised
+    pcm3060_init(I2C_NUM, 0);
+    ESP_ERROR_CHECK(pcm3060_power_up());
 
     ESP_ERROR_CHECK(nvs_flash_init());
     ESP_ERROR_CHECK(esp_netif_init());
