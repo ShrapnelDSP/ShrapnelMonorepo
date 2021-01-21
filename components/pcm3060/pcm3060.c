@@ -30,7 +30,7 @@ esp_err_t _i2c_write(uint8_t reg_adr, uint8_t data)
 void pcm3060_init(i2c_port_t port, bool adr)
 {
     _port = port;
-    _address = I2C_ADDRESS | adr ? 2 : 0;
+    _address = I2C_ADDRESS | (adr << 1);
 }
 
 esp_err_t pcm3060_power_up(void)
@@ -48,7 +48,7 @@ esp_err_t pcm3060_power_up(void)
         return err;
     }
 
-    err = _i2c_write(0x40, 0xC1);//single ended output, power save release
+    err = _i2c_write(0x40, 0xC0);//differential output, power save release
     return err;
 }
 

@@ -50,6 +50,11 @@ static inline void log_event(i2s_event_t e)
     ESP_LOGI(TAG, "type: %d, size: %d", e.type, e.size);
 }
 
+static inline int32_t float_to_int32(float f)
+{
+    return (int32_t) (f * INT32_MAX);
+}
+
 static void event_task(void *param)
 {
     i2s_event_t e;
@@ -83,17 +88,24 @@ static void i2s_processing_task(void *param)
 
     while(1)
     {
+#if !defined(GENERATE_SINE_WAVE)
         i2s_read(I2S_NUM, rx_buf, DMA_BUF_SIZE*4, &tx_rx_size, 100/portTICK_PERIOD_MS);
         if(tx_rx_size != DMA_BUF_SIZE*4)
         {
             ESP_LOGE(TAG, "Got the wrong number of bytes %d/%d", tx_rx_size, DMA_BUF_SIZE*4);
         }
+#else
+        for(int i = 0; i < DMA_BUF_SIZE; i++)
+        {
+            rx_buf[i] = float_to_int32(sinf(2 * M_PI * i/(float)DMA_BUF_SIZE));
+        }
+#endif
 
         for(int i = 0; i < DMA_BUF_SIZE; i++)
         {
             float f = rx_buf[i]/(float)INT32_MAX;
             f *= gain;
-            rx_buf[i] = (int) (f * INT32_MAX);
+            rx_buf[i] = float_to_int32(f);
         }
 
         i2s_write(I2S_NUM, rx_buf, DMA_BUF_SIZE*4, &tx_rx_size, 100/portTICK_PERIOD_MS);
