@@ -99,14 +99,14 @@ void i2s_set_treble(float a)
     //updateFmvCoefficients();
 }
 
-#define I2S_DUMMY_INPUT
+#define GENERATE_RAMP
 static void i2s_processing_task(void *param)
 {
     size_t tx_rx_size;
 
     while(1)
     {
-#if !defined(GENERATE_SINE_WAVE) && !defined(I2S_DUMMY_INPUT)
+#if !defined(GENERATE_SINE_WAVE) && !defined(GENERATE_RAMP)
         i2s_read(I2S_NUM, rx_buf, sizeof(rx_buf), &tx_rx_size, 100/portTICK_PERIOD_MS);
         if(tx_rx_size != sizeof(rx_buf))
         {
