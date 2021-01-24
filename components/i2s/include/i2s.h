@@ -9,8 +9,5 @@
 
 esp_err_t i2s_setup(gpio_num_t profiling_gpio);
 void i2s_set_gain(float a);
-void i2s_set_bass(float a);
-void i2s_set_middle(float a);
-void i2s_set_treble(float a);
 
 #endif //I2S_H

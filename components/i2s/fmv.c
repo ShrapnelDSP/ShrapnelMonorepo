@@ -18,13 +18,26 @@
 
 #include "fmv.h"
 #include "i2s.h"
+#include "iir.h"
+#include "freertos/FreeRTOS.h"
+#include "freertos/semphr.h"
+#include "dsps_mulc.h"
 
 #define LOG_LOCAL_LEVEL ESP_LOG_DEBUG
 #include "esp_log.h"
 #define TAG "fmv"
 
-void design_fmv(float l, float m, float t, float (*coeffs)[8])
+static float coeffs[8];
+static float delay_line[3];
+/** This mutex is used to ensure that the coefficients of the filter don't
+ * change in the middle of processing */
+static SemaphoreHandle_t mutex;
+
+void fmv_update_params(float l, float m, float t)
 {
+    //temporary buffer used to minimise the time spent with the mutex
+    float tmp_coeffs[8];
+
     //JCM800 values
     float R1 = 220e3;
     float R2 = 1e6;
@@ -59,11 +72,11 @@ void design_fmv(float l, float m, float t, float (*coeffs)[8])
         + m * C3 * R3 + l * (C1 * R2 + C2 * R2);
 
     float a2 = m * (C1 * C3 * R1 * R3 - C2 * C3 * R3 * R4 + C1 * C3 * R3 * R3
-        + C2 * C3 * R3 * R3 ) + l * m * (C1 * C3 * R2 * R3 + C2 * C3 * R2 * R3 )
+            + C2 * C3 * R3 * R3 ) + l * m * (C1 * C3 * R2 * R3 + C2 * C3 * R2 * R3 )
         - m*m * (C1 * C3 * R3 * R3 + C2 * C3 * R3 * R3 ) + l*(C1 * C2 * R2 * R4
-        + C1 * C2 * R1 * R2 + C1 * C3 * R2 * R4 + C2 * C3 * R2 * R4 )
+                + C1 * C2 * R1 * R2 + C1 * C3 * R2 * R4 + C2 * C3 * R2 * R4 )
         + (C1 * C2 * R1 * R4 + C1 * C3 * R1 * R4 + C1 * C2 * R3 * R4
-        + C1 * C2 * R1 * R3 + C1 * C3 * R3 * R4 + C2 * C3 * R3 * R4 );
+                + C1 * C2 * R1 * R3 + C1 * C3 * R3 * R4 + C2 * C3 * R3 * R4 );
 
     float a3 = l*m*(C1 * C2 * C3 * R1 * R2 * R3 + C1 * C2 * C3 * R2 * R3 * R4 )
         - m * m * (C1 * C2 * C3 * R1 * R3 * R3 + C1 * C2 * C3 * R3 * R3 * R4)
@@ -78,18 +91,68 @@ void design_fmv(float l, float m, float t, float (*coeffs)[8])
 
     float A0 = -a0 - a1 * c- a2 * c2 - a3 * c3;
 
-    (*coeffs)[0] = (-b1 * c- b2 * c2 - b3 * c3) / A0;
-    (*coeffs)[1] = (-b1 * c+ b2 * c2 + 3 * b3 * c3) / A0;
-    (*coeffs)[2] = (b1 * c+ b2 * c2 - 3 * b3 * c3) / A0;
-    (*coeffs)[3] = (b1 * c- b2 * c2 + b3 * c3) / A0;
+    tmp_coeffs[0] = (-b1 * c- b2 * c2 - b3 * c3) / A0;
+    tmp_coeffs[1] = (-b1 * c+ b2 * c2 + 3 * b3 * c3) / A0;
+    tmp_coeffs[2] = (b1 * c+ b2 * c2 - 3 * b3 * c3) / A0;
+    tmp_coeffs[3] = (b1 * c- b2 * c2 + b3 * c3) / A0;
 
-    (*coeffs)[4] = 1;
-    (*coeffs)[5] = (-3 * a0 - a1 * c+ a2 * c2 + 3 * a3 * c3) / A0;
-    (*coeffs)[6] = (-3 * a0 + a1 * c+ a2 * c2 - 3 * a3 * c3) / A0;
-    (*coeffs)[7] = (-a0 + a1 * c- a2 * c2 + a3 * c3) / A0;
+    tmp_coeffs[4] = 1;
+    tmp_coeffs[5] = (-3 * a0 - a1 * c+ a2 * c2 + 3 * a3 * c3) / A0;
+    tmp_coeffs[6] = (-3 * a0 + a1 * c+ a2 * c2 - 3 * a3 * c3) / A0;
+    tmp_coeffs[7] = (-a0 + a1 * c- a2 * c2 + a3 * c3) / A0;
+
+    if(xSemaphoreTake(mutex, 100 / portTICK_PERIOD_MS) == pdPASS)
+    {
+        for(int i = 0; i < 8; i++)
+        {
+            coeffs[i] = tmp_coeffs[i];
+        }
+        xSemaphoreGive(mutex);
+    }
+    else
+    {
+        ESP_LOGE(TAG, "Failed to take semaphore, parameter update skipped");
+    }
 
     for(int i = 0; i < 8; i++)
     {
-        ESP_LOGD(TAG, "coeffs[%d] = %f", i, (*coeffs)[i]);
+        ESP_LOGD(TAG, "coeffs[%d] = %f", i, coeffs[i]);
     }
+}
+
+void fmv_process(float *buf, size_t buf_len)
+{
+    if(xSemaphoreTake(mutex, 10 / portTICK_PERIOD_MS) == pdPASS)
+    {
+        iir_process(buf, buf, buf_len, coeffs, delay_line,
+                sizeof(coeffs)/sizeof(coeffs[0]));
+        xSemaphoreGive(mutex);
+    }
+    else
+    {
+        // If we can't perform normal processing, output silence. This makes
+        // the error more noticable. 
+        dsps_mulc_f32_ae32(buf, buf, buf_len, 0.f, 1, 1);
+    }
+}
+
+esp_err_t fmv_init(void)
+{
+    for(int i = 0; i < sizeof(delay_line)/sizeof(delay_line[0]); i++)
+    {
+        delay_line[i] = 0.f;
+    }
+
+    mutex = xSemaphoreCreateMutex();
+
+    if(mutex == NULL)
+    {
+        return ESP_FAIL;
+    }
+
+    xSemaphoreGive(mutex);
+
+    fmv_update_params(0.5, 0.5, 0.5);
+
+    return ESP_OK;
 }

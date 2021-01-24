@@ -38,9 +38,6 @@ static float coeff[3][5] = {
         -1.896438187817481, 0.934800467599452}
 };
 
-static float fmv_coeffs[8];
-static float fmv_delay_line[3];
-
 static float delay_line[3][2];
 
 static float waveshape(float x)
@@ -92,7 +89,7 @@ void process_samples(int32_t *buf, size_t buf_len)
         fbuf[i] = waveshape(fbuf[i]);
     }
 
-    iir_process(fbuf, fbuf, buf_len, fmv_coeffs, fmv_delay_line, 8);
+    fmv_process(fbuf, buf_len);
 
     //TODO this crashes for some reason
     //dsps_fir_f32_ae32(&fir, fbuf, fbuf, buf_len);
@@ -111,16 +108,7 @@ esp_err_t process_init()
     ESP_LOGI(TAG, "Initialised FIR filter with length %d", 
                              sizeof(fir_coeff) / sizeof(fir_coeff[0]));
 
-    i2s_set_bass(0.5);
-    i2s_set_middle(0.5);
-    i2s_set_treble(0.5);
-
-    design_fmv(0.5, 0.5, 0.5, &fmv_coeffs);
-
-    for(int i = 0; i < 8; i++)
-    {
-        ESP_LOGD(TAG, "coeffs[%d] = %f", i, fmv_coeffs[i]);
-    }
+    ESP_ERROR_CHECK(fmv_init());
 
     return dsps_fir_init_f32(&fir, fir_coeff, fir_delay_line,
                              sizeof(fir_coeff) / sizeof(fir_coeff[0]));

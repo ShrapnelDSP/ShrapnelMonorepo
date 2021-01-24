@@ -6,9 +6,16 @@
 #include "audio_param.h"
 #include "esp_log.h"
 #include "i2s.h"
+#include "fmv.h"
 #define TAG "audio_param"
 #include <assert.h>
 #include <math.h>
+
+/* These parameters are all tied to the same processor. All three are required
+ * together for an update, so we need to save the state. */
+static float _bass;
+static float _middle;
+static float _treble;
 
 esp_err_t param_update_parameter(audio_param_t param, float value)
 {
@@ -36,6 +43,18 @@ esp_err_t param_update_parameter(audio_param_t param, float value)
                 i2s_set_gain(gain);
                 break;
             }
+        case PARAM_BASS:
+            _bass = value;
+            fmv_update_params(_bass, _middle, _treble);
+            break;
+        case PARAM_MIDDLE:
+            _middle = value;
+            fmv_update_params(_bass, _middle, _treble);
+            break;
+        case PARAM_TREBLE:
+            _treble = value;
+            fmv_update_params(_bass, _middle, _treble);
+            break;
         default:
             ESP_LOGE(TAG, "Unhandled parameter %d", param);
             break;
