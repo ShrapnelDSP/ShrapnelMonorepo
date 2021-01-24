@@ -94,11 +94,10 @@ void process_samples(int32_t *buf, size_t buf_len)
 
     fmv_process(fbuf, buf_len/2);
 
-    //TODO this crashes for some reason
-    //dsps_fir_f32_ae32(&fir, fbuf, fbuf, buf_len);
+    dsps_fir_f32_ae32(&fir, fbuf, fbuf, buf_len/2);
 
     // output the same thing on both channels
-    for(int i = 0; i < buf_len; i++)
+    for(int i = 1; i < buf_len; i+=2)
     {
         buf[i] = float_to_int32(fbuf[i/2]);
     }
