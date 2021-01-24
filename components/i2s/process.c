@@ -73,30 +73,34 @@ void process_samples(int32_t *buf, size_t buf_len)
     assert(g_profiling_gpio != -1 && "I2S task has not been initialised");
 
     gpio_set_level(g_profiling_gpio, 1);
-    for(int i = 0; i < buf_len; i++)
+    /* Copy samples, skipping every second one. These correspond to the left
+     * channel of the ADC and DAC, which are not used here 
+     * XXX not sure why the right channel is not at index 0 */
+    for(int i = 1; i < buf_len; i+=2)
     {
-        fbuf[i] = buf[i]/(float)INT32_MAX;
-        fbuf[i] *= gain;
+        fbuf[i/2] = buf[i]/(float)INT32_MAX;
+        fbuf[i/2] *= gain;
     }
 
     for(int i = 0; i < 3; i++)
     {
-        dsps_biquad_f32_ae32(fbuf, fbuf, buf_len, coeff[i], delay_line[i]);
+        dsps_biquad_f32_ae32(fbuf, fbuf, buf_len/2, coeff[i], delay_line[i]);
     }
 
-    for(int i = 0; i < buf_len; i++)
+    for(int i = 1; i < buf_len; i+=2)
     {
-        fbuf[i] = waveshape(fbuf[i]);
+        fbuf[i/2] = waveshape(fbuf[i/2]);
     }
 
-    fmv_process(fbuf, buf_len);
+    fmv_process(fbuf, buf_len/2);
 
     //TODO this crashes for some reason
     //dsps_fir_f32_ae32(&fir, fbuf, fbuf, buf_len);
 
+    // output the same thing on both channels
     for(int i = 0; i < buf_len; i++)
     {
-        buf[i] = float_to_int32(fbuf[i]);
+        buf[i] = float_to_int32(fbuf[i/2]);
     }
 
     i2s_last_run_time = esp_timer_get_time() - start_time;
