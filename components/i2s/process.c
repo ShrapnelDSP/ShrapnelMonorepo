@@ -8,6 +8,7 @@
 #include "iir.h"
 #include "fmv.h"
 
+#define LOG_LOCAL_LEVEL ESP_LOG_DEBUG
 #include "esp_log.h"
 #define TAG "i2s_process"
 
@@ -46,7 +47,13 @@ static float waveshape(float x)
 {
 #if 1
     float y;
-    if (x >= -1.f && x < -0.08905f) {
+    if (x < -1.f) {
+        y = -3.0f / 4.0f *
+            (1.f - powf(1.f - (1 - 0.032847f), 12.f) +
+             1.f / 3.f * (1 - 0.032847f)) +
+            0.01f;
+    }
+    else if (x >= -1.f && x < -0.08905f) {
         y = -3.0f / 4.0f *
             (1.f - powf(1.f - (fabs(x) - 0.032847f), 12.f) +
              1.f / 3.f * (fabs(x) - 0.032847f)) +
@@ -109,6 +116,11 @@ esp_err_t process_init()
     i2s_set_treble(0.5);
 
     design_fmv(0.5, 0.5, 0.5, &fmv_coeffs);
+
+    for(int i = 0; i < 8; i++)
+    {
+        ESP_LOGD(TAG, "coeffs[%d] = %f", i, fmv_coeffs[i]);
+    }
 
     return dsps_fir_init_f32(&fir, fir_coeff, fir_delay_line,
                              sizeof(fir_coeff) / sizeof(fir_coeff[0]));

@@ -99,7 +99,7 @@ void i2s_set_treble(float a)
     //updateFmvCoefficients();
 }
 
-#define GENERATE_RAMP
+#define GENERATE_SINE_WAVE
 static void i2s_processing_task(void *param)
 {
     size_t tx_rx_size;

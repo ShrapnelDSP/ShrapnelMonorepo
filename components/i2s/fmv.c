@@ -78,18 +78,18 @@ void design_fmv(float l, float m, float t, float (*coeffs)[8])
 
     float A0 = -a0 - a1 * c- a2 * c2 - a3 * c3;
 
-    *coeffs[0] = (-b1 * c- b2 * c2 - b3 * c3) / A0;
-    *coeffs[1] = (-b1 * c+ b2 * c2 + 3 * b3 * c3) / A0;
-    *coeffs[2] = (b1 * c+ b2 * c2 - 3 * b3 * c3) / A0;
-    *coeffs[3] = (b1 * c- b2 * c2 + b3 * c3) / A0;
+    (*coeffs)[0] = (-b1 * c- b2 * c2 - b3 * c3) / A0;
+    (*coeffs)[1] = (-b1 * c+ b2 * c2 + 3 * b3 * c3) / A0;
+    (*coeffs)[2] = (b1 * c+ b2 * c2 - 3 * b3 * c3) / A0;
+    (*coeffs)[3] = (b1 * c- b2 * c2 + b3 * c3) / A0;
 
-    *coeffs[4] = 1;
-    *coeffs[5] = (-3 * a0 - a1 * c+ a2 * c2 + 3 * a3 * c3) / A0;
-    *coeffs[6] = (-3 * a0 + a1 * c+ a2 * c2 - 3 * a3 * c3) / A0;
-    *coeffs[7] = (-a0 + a1 * c- a2 * c2 + a3 * c3) / A0;
+    (*coeffs)[4] = 1;
+    (*coeffs)[5] = (-3 * a0 - a1 * c+ a2 * c2 + 3 * a3 * c3) / A0;
+    (*coeffs)[6] = (-3 * a0 + a1 * c+ a2 * c2 - 3 * a3 * c3) / A0;
+    (*coeffs)[7] = (-a0 + a1 * c- a2 * c2 + a3 * c3) / A0;
 
     for(int i = 0; i < 8; i++)
     {
-        ESP_LOGD(TAG, "coeffs[%d] = %f", i, *coeffs[i]);
+        ESP_LOGD(TAG, "coeffs[%d] = %f", i, (*coeffs)[i]);
     }
 }
