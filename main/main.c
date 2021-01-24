@@ -25,6 +25,7 @@
 #include "i2s.h"
 #include "esp_http_websocket_server.h"
 #include "pcm3060.h"
+#include "cmd_handling.h"
 
 #define PROFILING_GPIO GPIO_NUM_23
 
@@ -153,18 +154,24 @@ static httpd_handle_t start_webserver(void)
     httpd_handle_t server = NULL;
     httpd_config_t config = HTTPD_DEFAULT_CONFIG();
 
-    in_queue  = xQueueCreate(QUEUE_LEN, sizeof(char*));
     if(in_queue == NULL)
     {
-        ESP_LOGE(TAG, "Failed to create in queue");
-        return NULL;
+        in_queue  = xQueueCreate(QUEUE_LEN, sizeof(char*));
+        if(in_queue == NULL)
+        {
+            ESP_LOGE(TAG, "Failed to create in queue");
+            return NULL;
+        }
     }
 
-    out_queue = xQueueCreate(QUEUE_LEN, sizeof(char*));
     if(out_queue == NULL)
     {
-        ESP_LOGE(TAG, "Failed to create out queue");
-        return NULL;
+        out_queue = xQueueCreate(QUEUE_LEN, sizeof(char*));
+        if(out_queue == NULL)
+        {
+            ESP_LOGE(TAG, "Failed to create out queue");
+            return NULL;
+        }
     }
 
     // Start the httpd server
@@ -205,40 +212,6 @@ static void connect_handler(void* arg, esp_event_base_t event_base,
     if (*server == NULL) {
         ESP_LOGI(TAG, "Starting webserver");
         *server = start_webserver();
-    }
-}
-
-static void i2s_gain_task(void *param)
-{
-    char *s;
-    int gain_db;
-    int ret;
-    float gain;
-    while(1)
-    {
-        ret = xQueueReceive(in_queue, &s, portMAX_DELAY);
-        if(ret == pdTRUE)
-        {
-            ESP_LOGI(TAG, "received websocket message: %s", s);
-
-            gain_db = atoi(s);
-            gain = powf(10.f, gain_db / 20.f);
-            ESP_LOGI(TAG, "gain is: %d dB, %01.3f", gain_db, gain);
-
-            i2s_set_gain(gain);
-
-            //this should be the last step, as s will be deallocated on the
-            //other side of this queue
-            ret = xQueueSend(out_queue, &s, 100/portTICK_PERIOD_MS);
-            if(ret != pdTRUE)
-            {
-                ESP_LOGE(TAG, "Queue failed to send");
-            }
-        }
-        else
-        {
-            ESP_LOGE(TAG, "Queue failed to receive");
-        }
     }
 }
 
@@ -317,16 +290,11 @@ void app_main(void)
 
     /* Start the server for the first time */
     server = start_webserver();
+    /* queue is created in start_webserver */
+    cmd_init(in_queue);
 
     /* Start the mdns service */
     start_mdns();
-
-
-    ret = xTaskCreate(i2s_gain_task, "i2s gain", 2000, NULL, configMAX_PRIORITIES - 1, NULL);
-    if(ret != pdPASS)
-    {
-        ESP_LOGE(TAG, "Gain task create failed %d", ret);
-    }
 
     ret = xTaskCreate(i2s_profiling_task, "i2s profiling", 2000, NULL, configMAX_PRIORITIES - 2, NULL);
     if(ret != pdPASS)
