@@ -78,21 +78,41 @@ esp_err_t filter_init(void)
 {
     esp_err_t err = ESP_OK;
 
-    err = dsps_biquad_gen_hpf_f32(pedal_coeffs_normal, 60, 1.f/sqrtf(2.f));
+    err = dsps_biquad_gen_hpf_f32(pedal_coeffs_normal, 60.f/SAMPLE_RATE, 1.f/sqrtf(2.f));
 
     if(err != ESP_FAIL)
     {
-        err = dsps_biquad_gen_hpf_f32(pedal_coeffs_tight, 700, 1.f/sqrtf(2.f));
+        err = dsps_biquad_gen_hpf_f32(pedal_coeffs_tight, 700.f/SAMPLE_RATE, 1.f/sqrtf(2.f));
     }
 
     if(err != ESP_FAIL)
     {
-        err = dsps_biquad_gen_hpf_f32(amp_coeffs, 600, 1.f/sqrtf(2.f));
+        err = dsps_biquad_gen_hpf_f32(amp_coeffs, 600.f/SAMPLE_RATE, 1.f/sqrtf(2.f));
     }
 
     if(err != ESP_FAIL)
     {
-        err = dsps_biquad_gen_lpf_f32(final_coeffs, 7000, 1.f/sqrtf(2.f));
+        err = dsps_biquad_gen_lpf_f32(final_coeffs, 7000.f/SAMPLE_RATE, 1.f/sqrtf(2.f));
+    }
+
+    for(int i = 0; i < 5; i++)
+    {
+        ESP_LOGI(TAG, "pedal coeffs normal[%d] = %f", i, pedal_coeffs_normal[i]);
+    }
+
+    for(int i = 0; i < 5; i++)
+    {
+        ESP_LOGI(TAG, "pedal coeffs tight[%d] = %f", i, pedal_coeffs_tight[i]);
+    }
+
+    for(int i = 0; i < 5; i++)
+    {
+        ESP_LOGI(TAG, "amp coeffs[%d] = %f", i, amp_coeffs[i]);
+    }
+
+    for(int i = 0; i < 5; i++)
+    {
+        ESP_LOGI(TAG, "final coeffs[%d] = %f", i, final_coeffs[i]);
     }
 
     return err;

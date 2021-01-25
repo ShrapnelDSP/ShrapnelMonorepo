@@ -31,13 +31,14 @@ int64_t i2s_last_run_time;
 float fir_delay_line[sizeof(fir_coeff)/sizeof(fir_coeff[0])];
 fir_f32_t fir;
 
+#define EQ_GAIN (0.5)
 //these approximate the pre EQ from a Boss HM-2 pedal
 static float coeff[3][5] = {
-    { 1.016224171805848, -1.996244766867333, 0.980170456681741, 
+    { 1.016224171805848*EQ_GAIN, -1.996244766867333*EQ_GAIN, 0.980170456681741*EQ_GAIN, 
         -1.996244766867333, 0.996394628487589 },
-    { 1.048098514125369, -1.946884930731663, 0.914902628855116,
+    { 1.048098514125369*EQ_GAIN, -1.946884930731663*EQ_GAIN, 0.914902628855116*EQ_GAIN,
         -1.946884930731663, 0.963001142980485 },
-    { 1.260798129602192, -1.896438187817481, 0.674002337997260,
+    { 1.260798129602192*EQ_GAIN, -1.896438187817481*EQ_GAIN, 0.674002337997260*EQ_GAIN,
         -1.896438187817481, 0.934800467599452}
 };
 
@@ -98,8 +99,7 @@ void process_samples(int32_t *buf, size_t buf_len)
         dsps_biquad_f32_ae32(fbuf, fbuf, buf_len/2, coeff[i], delay_line[i]);
     }
 
-    //this seems broken
-    //filter_amp_input_process(fbuf, buf_len/2);
+    filter_amp_input_process(fbuf, buf_len/2);
 
     dsps_mulc_f32_ae32(fbuf, fbuf, buf_len/2, amp_gain, 1, 1);
 
@@ -109,7 +109,7 @@ void process_samples(int32_t *buf, size_t buf_len)
     }
 
     fmv_process(fbuf, buf_len/2);
-    //filter_final_process(fbuf, buf_len/2);
+    filter_final_process(fbuf, buf_len/2);
 
     /* speaker IR */
     dsps_fir_f32_ae32(&fir, fbuf, fbuf, buf_len/2);
