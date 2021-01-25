@@ -43,7 +43,9 @@ static int16_t rx_buf[2*DMA_BUF_SIZE];
 #error "Unsupported I2S bit width"
 #endif
 
-float gain = 0.f;
+float volume = 0.f;
+float pedal_gain = 0.f;
+float amp_gain = 0.f;
 gpio_num_t g_profiling_gpio = -1;
 
 static inline void log_event(i2s_event_t e)
@@ -73,9 +75,19 @@ static void event_task(void *param)
     }
 }
 
-void i2s_set_gain(float a)
+void i2s_set_volume(float a)
 {
-    gain = a;
+    volume = a;
+}
+
+void i2s_set_pedal_gain(float a)
+{
+    pedal_gain = a;
+}
+
+void i2s_set_amp_gain(float a)
+{
+    amp_gain = a;
 }
 
 #define GENERATE_SINE_WAVE

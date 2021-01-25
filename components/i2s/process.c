@@ -7,6 +7,7 @@
 #include "math.h"
 #include "iir.h"
 #include "fmv.h"
+#include "input_filter.h"
 
 #define LOG_LOCAL_LEVEL ESP_LOG_DEBUG
 #include "esp_log.h"
@@ -17,7 +18,9 @@
 
 #include <assert.h>
 
-extern float gain;
+extern float pedal_gain;
+extern float amp_gain;
+extern float volume;
 extern gpio_num_t g_profiling_gpio;
 float fbuf[DMA_BUF_SIZE];
 
@@ -42,7 +45,7 @@ static float delay_line[3][2];
 
 static float waveshape(float x)
 {
-#if 1
+#if 0
     float y;
     if (x < -1.f) {
         y = -3.0f / 4.0f *
@@ -79,13 +82,26 @@ void process_samples(int32_t *buf, size_t buf_len)
     for(int i = 1; i < buf_len; i+=2)
     {
         fbuf[i/2] = buf[i]/(float)INT32_MAX;
-        fbuf[i/2] *= gain;
+        fbuf[i/2] *= pedal_gain;
     }
 
+    filter_pedal_input_process(fbuf, buf_len/2);
+
+    for(int i = 1; i < buf_len; i+=2)
+    {
+        fbuf[i/2] = waveshape(fbuf[i/2]);
+    }
+
+    /* HM-2 EQ filters */
     for(int i = 0; i < 3; i++)
     {
         dsps_biquad_f32_ae32(fbuf, fbuf, buf_len/2, coeff[i], delay_line[i]);
     }
+
+    //this seems broken
+    //filter_amp_input_process(fbuf, buf_len/2);
+
+    dsps_mulc_f32_ae32(fbuf, fbuf, buf_len/2, amp_gain, 1, 1);
 
     for(int i = 1; i < buf_len; i+=2)
     {
@@ -93,13 +109,20 @@ void process_samples(int32_t *buf, size_t buf_len)
     }
 
     fmv_process(fbuf, buf_len/2);
+    //filter_final_process(fbuf, buf_len/2);
 
+    /* speaker IR */
     dsps_fir_f32_ae32(&fir, fbuf, fbuf, buf_len/2);
 
-    // output the same thing on both channels
+    dsps_mulc_f32_ae32(fbuf, fbuf, buf_len/2, volume, 1, 1);
+
     for(int i = 1; i < buf_len; i+=2)
     {
         buf[i] = float_to_int32(fbuf[i/2]);
+        if(buf[i] == NAN)
+        {
+            ESP_LOGE(TAG, "Not a number");
+        } 
     }
 
     i2s_last_run_time = esp_timer_get_time() - start_time;
@@ -111,6 +134,7 @@ esp_err_t process_init()
     ESP_LOGI(TAG, "Initialised FIR filter with length %d", 
                              sizeof(fir_coeff) / sizeof(fir_coeff[0]));
 
+    ESP_ERROR_CHECK(filter_init());
     ESP_ERROR_CHECK(fmv_init());
 
     return dsps_fir_init_f32(&fir, fir_coeff, fir_delay_line,

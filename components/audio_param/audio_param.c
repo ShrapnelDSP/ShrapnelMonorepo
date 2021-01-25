@@ -6,6 +6,7 @@
 #include "audio_param.h"
 #include "esp_log.h"
 #include "i2s.h"
+#include "input_filter.h"
 #include "fmv.h"
 #define TAG "audio_param"
 #include <assert.h>
@@ -16,6 +17,11 @@
 static float _bass;
 static float _middle;
 static float _treble;
+
+static float decibel_to_ratio(float db)
+{
+    return powf(10.f, db / 20.f);
+}
 
 esp_err_t param_update_parameter(audio_param_t param, float value)
 {
@@ -35,12 +41,32 @@ esp_err_t param_update_parameter(audio_param_t param, float value)
     {
         case PARAM_VOLUME:
             {
-                //gain range is -40 to 0 dB
-                float gain_db = -40 * (1 - value);
-                float gain = powf(10.f, gain_db / 20.f);
+                //volume range is -40 to 0 dB
+                float volume_db = -40 * (1 - value);
+                float volume = decibel_to_ratio(volume_db);
+                ESP_LOGI(TAG, "volume is: %02.1f dB, %01.3f", volume_db, volume);
+
+                i2s_set_volume(volume);
+                break;
+            }
+        case PARAM_HM2_GAIN:
+            {
+                //gain range is -20 to 20 dB
+                float gain_db = -20 + (40 * value);
+                float gain = decibel_to_ratio(gain_db);
                 ESP_LOGI(TAG, "gain is: %02.1f dB, %01.3f", gain_db, gain);
 
-                i2s_set_gain(gain);
+                i2s_set_pedal_gain(gain);
+                break;
+            }
+        case PARAM_AMP_GAIN:
+            {
+                //gain range is 0 to 30 dB
+                float gain_db = 30 * value;
+                float gain = decibel_to_ratio(gain_db);
+                ESP_LOGI(TAG, "gain is: %02.1f dB, %01.3f", gain_db, gain);
+
+                i2s_set_amp_gain(gain);
                 break;
             }
         case PARAM_BASS:
@@ -54,6 +80,9 @@ esp_err_t param_update_parameter(audio_param_t param, float value)
         case PARAM_TREBLE:
             _treble = value;
             fmv_update_params(_bass, _middle, _treble);
+            break;
+        case PARAM_TIGHT:
+            filter_set_tight(value > 0.5);
             break;
         default:
             ESP_LOGE(TAG, "Unhandled parameter %d", param);
