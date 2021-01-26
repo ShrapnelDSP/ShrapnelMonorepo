@@ -51,8 +51,8 @@ esp_err_t param_update_parameter(audio_param_t param, float value)
             }
         case PARAM_HM2_GAIN:
             {
-                //gain range is -20 to 20 dB
-                float gain_db = -20 + (40 * value);
+                //gain range is 20 to 60 dB
+                float gain_db = 20 + (40 * value);
                 float gain = decibel_to_ratio(gain_db);
                 ESP_LOGI(TAG, "gain is: %02.1f dB, %01.3f", gain_db, gain);
 
