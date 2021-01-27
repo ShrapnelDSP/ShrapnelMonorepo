@@ -8,6 +8,7 @@
 #include "iir.h"
 #include "fmv.h"
 #include "input_filter.h"
+#include "audio_events.h"
 
 #define LOG_LOCAL_LEVEL ESP_LOG_DEBUG
 #include "esp_log.h"
@@ -17,6 +18,7 @@
 #include "esp_timer.h"
 
 #include <assert.h>
+#include <stdlib.h>
 
 extern float pedal_gain;
 extern float amp_gain;
@@ -118,11 +120,17 @@ void process_samples(int32_t *buf, size_t buf_len)
 
     for(int i = 1; i < buf_len; i+=2)
     {
-        buf[i] = float_to_int32(fbuf[i/2]);
-        if(buf[i] == NAN)
+        if(fabs(fbuf[i]) > 1.0)
+        {
+            xEventGroupSetBits(g_audio_event_group, AUDIO_EVENT_OUTPUT_CLIPPED);
+        }
+
+        if(fbuf[i] == NAN)
         {
             ESP_LOGE(TAG, "Not a number");
         } 
+
+        buf[i] = float_to_int32(fbuf[i/2]);
     }
 
     i2s_last_run_time = esp_timer_get_time() - start_time;
