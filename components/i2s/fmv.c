@@ -23,7 +23,6 @@
 #include "freertos/semphr.h"
 #include "dsps_mulc.h"
 
-#define LOG_LOCAL_LEVEL ESP_LOG_DEBUG
 #include "esp_log.h"
 #define TAG "fmv"
 

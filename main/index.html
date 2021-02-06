@@ -25,6 +25,10 @@
 
     <script> 
         let socket = new WebSocket("ws://" + window.location.host + "/websocket");
+        socket.onmessage = function(event)
+        {
+            console.log("Websocket message: " + event);
+        }
 
         tight = document.getElementById("tight");
         hmGain = document.getElementById("hmGain");

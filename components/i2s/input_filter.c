@@ -7,7 +7,6 @@
 #include "dsps_biquad_gen.h"
 #include <math.h>
 
-#define LOG_LOCAL_LEVEL ESP_LOG_DEBUG
 #include "esp_log.h"
 #define TAG "fmv"
 

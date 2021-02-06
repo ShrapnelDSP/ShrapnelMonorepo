@@ -186,6 +186,7 @@ static esp_err_t httpd_server(struct httpd_data *hd)
             struct sock_db *sd = httpd_sess_get(hd, fd);
             if(sd->is_websocket) {
                 ESP_LOGD(TAG, "Socket %d added to write set", fd);
+                ESP_LOGD(TAG, "Got string (%s)", s);
                 FD_SET(fd, &write_set);
                 /* this is only cleared when the write set was not empty, so we
                  * should not set it when the set is going to be empty */
@@ -259,13 +260,6 @@ static esp_err_t httpd_server(struct httpd_data *hd)
         }
     }
 
-    /* free the string if it has not been freed, and we don't need it anymore
-     */
-    if(!need_to_write && s)
-    {
-        free(s);
-        s = NULL;
-    }
     return ESP_OK;
 }
 

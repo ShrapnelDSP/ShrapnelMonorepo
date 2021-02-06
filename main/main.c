@@ -26,6 +26,7 @@
 #include "esp_http_websocket_server.h"
 #include "pcm3060.h"
 #include "cmd_handling.h"
+#include "audio_events.h"
 
 #define PROFILING_GPIO GPIO_NUM_23
 
@@ -263,15 +264,6 @@ void app_main(void)
     int ret;
     static httpd_handle_t server = NULL;
 
-    i2c_setup();
-    i2s_setup(PROFILING_GPIO);
-
-    vTaskDelay(100 / portTICK_PERIOD_MS);
-
-    //dac must be powered up after the i2s clocks have stabilised
-    pcm3060_init(I2C_NUM, 0);
-    ESP_ERROR_CHECK(pcm3060_power_up());
-
     ESP_ERROR_CHECK(nvs_flash_init());
     ESP_ERROR_CHECK(esp_netif_init());
     ESP_ERROR_CHECK(esp_event_loop_create_default());
@@ -290,9 +282,20 @@ void app_main(void)
 
     /* Start the server for the first time */
     server = start_webserver();
+
     /* queue is created in start_webserver */
     cmd_init(in_queue);
 
+    ESP_ERROR_CHECK(audio_event_init(out_queue));
+
+    i2c_setup();
+    i2s_setup(PROFILING_GPIO);
+
+    vTaskDelay(100 / portTICK_PERIOD_MS);
+
+    //dac must be powered up after the i2s clocks have stabilised
+    pcm3060_init(I2C_NUM, 0);
+    ESP_ERROR_CHECK(pcm3060_power_up());
     /* Start the mdns service */
     start_mdns();
 

@@ -83,6 +83,8 @@ static esp_err_t httpd_websocket_build(const websocket_frame_data_t *d, char *bu
 
 esp_err_t httpd_websocket_send_string(int fd, char *s)
 {
+    ESP_LOGD(TAG, "Sending string (%s)", s);
+
     char buf[WEBSOCKET_BUFFER_SIZE];
     size_t size;
     ssize_t sock_size;

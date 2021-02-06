@@ -10,7 +10,6 @@
 #include "input_filter.h"
 #include "audio_events.h"
 
-#define LOG_LOCAL_LEVEL ESP_LOG_DEBUG
 #include "esp_log.h"
 #define TAG "i2s_process"
 
@@ -120,7 +119,7 @@ void process_samples(int32_t *buf, size_t buf_len)
 
     for(int i = 1; i < buf_len; i+=2)
     {
-        if(fabs(fbuf[i]) > 1.0)
+        if(fabs(fbuf[i/2]) > 1.0)
         {
             xEventGroupSetBits(g_audio_event_group, AUDIO_EVENT_OUTPUT_CLIPPED);
         }
