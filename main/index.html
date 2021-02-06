@@ -23,11 +23,27 @@
     <label for="volume"> VOLUME </label>
     <input type="range" min="0" max="1" value="0.5" step="0.05" class="slider" id="volume"> <br>
 
+    <div id="clippingIndicator"> <p id="outClip"> Output Clipped </p> </div>
+
     <script> 
         let socket = new WebSocket("ws://" + window.location.host + "/websocket");
         socket.onmessage = function(event)
         {
-            console.log("Websocket message: " + event);
+            console.log("Websocket message: " + event.data);
+
+            if(JSON.parse(event.data).event == "Output Clipped")
+            {
+                document.getElementById("outClip").style.color = "red"
+                // TODO this timer should be restarted when another clipping
+                //      event is recived while the timer is running. Now we get 
+                //      a flashing effect instead of a solid red light for 
+                //      continous clipping
+                setTimeout(function () {document.getElementById("outClip").style.color = "black"}, 1500)
+            }
+            else
+            {
+               console.log("unhandled message")
+            }
         }
 
         tight = document.getElementById("tight");
@@ -58,10 +74,5 @@
         middle.oninput = onsliderinput;
         treble.oninput = onsliderinput;
         volume.oninput = onsliderinput;
-
-        socket.onmessage = function(event) {
-            let message = event.data;
-            console.log("got websocket message: " + message);
-        }
     </script> 
 </body>
