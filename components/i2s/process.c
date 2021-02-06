@@ -4,11 +4,13 @@
 #include "float_convert.h"
 #include "dsps_fir.h"
 #include "dsps_mulc.h"
+#include "dsps_mul.h"
 #include "math.h"
 #include "iir.h"
 #include "fmv.h"
 #include "input_filter.h"
 #include "audio_events.h"
+#include "noise_gate.h"
 
 #include "esp_log.h"
 #define TAG "i2s_process"
@@ -84,9 +86,10 @@ void process_samples(int32_t *buf, size_t buf_len)
     for(int i = 1; i < buf_len; i+=2)
     {
         fbuf[i/2] = buf[i]/(float)INT32_MAX;
-        fbuf[i/2] *= pedal_gain;
     }
 
+    gate_analyse(fbuf);
+    dsps_mulc_f32_ae32(fbuf, fbuf, sizeof(fbuf)/sizeof(fbuf[0]), pedal_gain, 1, 1);
     filter_pedal_input_process(fbuf, buf_len/2);
 
     for(int i = 1; i < buf_len; i+=2)
@@ -110,6 +113,7 @@ void process_samples(int32_t *buf, size_t buf_len)
     }
 
     fmv_process(fbuf, buf_len/2);
+    gate_process(fbuf);
     filter_final_process(fbuf, buf_len/2);
 
     /* speaker IR */
@@ -143,6 +147,8 @@ esp_err_t process_init()
 
     ESP_ERROR_CHECK(filter_init());
     ESP_ERROR_CHECK(fmv_init());
+    ESP_ERROR_CHECK(gate_init(sizeof(fbuf)/sizeof(fbuf[0]), 0.1, 0.005, 10,
+                50, 50, SAMPLE_RATE));
 
     return dsps_fir_init_f32(&fir, fir_coeff, fir_delay_line,
                              sizeof(fir_coeff) / sizeof(fir_coeff[0]));
