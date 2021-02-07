@@ -47,7 +47,7 @@ esp_err_t gate_init(size_t a_buf_size, float a_threshold, float
 
     for(int i = 0; i < 5; i++)
     {
-        ESP_LOGI(TAG, "filter coeffs[%d] = %f", i, coeffs[i]);
+        ESP_LOGI(TAG, "filter coeffs[%d] = %e", i, coeffs[i]);
     }
 
     for(int i = 0; i < 3; i++)
