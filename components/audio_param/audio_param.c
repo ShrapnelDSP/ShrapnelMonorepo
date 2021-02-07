@@ -7,6 +7,7 @@
 #include "esp_log.h"
 #include "i2s.h"
 #include "input_filter.h"
+#include "noise_gate.h"
 #include "fmv.h"
 #define TAG "audio_param"
 #include <assert.h>
@@ -83,6 +84,9 @@ esp_err_t param_update_parameter(audio_param_t param, float value)
             break;
         case PARAM_TIGHT:
             filter_set_tight(value > 0.5);
+            break;
+        case PARAM_GATE_THRESHOLD:
+            gate_set_threshold(value/100);
             break;
         default:
             ESP_LOGE(TAG, "Unhandled parameter %d", param);

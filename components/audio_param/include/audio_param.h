@@ -10,6 +10,7 @@ typedef enum {
     PARAM_MIDDLE,
     PARAM_TREBLE,
     PARAM_VOLUME,
+    PARAM_GATE_THRESHOLD,
     PARAM_MAX,
 } audio_param_t;
 

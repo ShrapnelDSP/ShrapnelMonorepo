@@ -25,6 +25,7 @@ static audio_param_t get_id_for_param(const char *name)
         {"middle", PARAM_MIDDLE},
         {"treble", PARAM_TREBLE},
         {"volume", PARAM_VOLUME},
+        {"gateThreshold", PARAM_GATE_THRESHOLD},
         {NULL, 0},
     };
 

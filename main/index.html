@@ -10,6 +10,8 @@
     <h1>SWEDISH CHAINSAW</h1>
     <label for="tight"> TIGHT </label>
     <input type="checkbox" id="tight"> <br>
+    <label for="gateThreshold"> GATE THRESHOLD </label>
+    <input type="range" min="0" max="1" value="0.5" step="0.05" class="slider" id="gateThreshold"> <br>
     <label for="hmGain"> HM-2 GAIN </label>
     <input type="range" min="0" max="1" value="0.5" step="0.05" class="slider" id="hmGain"> <br>
     <label for="ampGain"> AMP GAIN </label>
@@ -47,6 +49,7 @@
         }
 
         tight = document.getElementById("tight");
+        gateThreshold = document.getElementById("gateThreshold");
         hmGain = document.getElementById("hmGain");
         ampGain = document.getElementById("ampGain");
         bass = document.getElementById("bass");
@@ -74,5 +77,6 @@
         middle.oninput = onsliderinput;
         treble.oninput = onsliderinput;
         volume.oninput = onsliderinput;
+        gateThreshold.oninput = onsliderinput;
     </script> 
 </body>
