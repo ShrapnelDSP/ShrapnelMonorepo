@@ -57,6 +57,9 @@ void i2s_profiling_task(void *param)
 
         if(xSemaphoreTake(profiling_mutex, 100 / portTICK_PERIOD_MS))
         {
+            ESP_LOGI(TAG, " ========= \n");
+
+            int64_t total_time = 0;
             for(int i = 0; i < NUMBER_OF_STAGES; i++)
             {
                 //if the stage has not been assigned, stop printing
@@ -65,12 +68,21 @@ void i2s_profiling_task(void *param)
                     break;
                 }
 
-                int64_t current_stage_time = stage_time[i] - start_time;
+                int64_t current_stage_time = stage_time[i] - ((i == 0) ? start_time : stage_time[i - 1]);
                 ESP_LOGI(TAG, "Stage %d processing took %lld us (%03.1f %%)",
                         i,
                         current_stage_time,
                         time_to_percent(current_stage_time));
+
+                total_time += current_stage_time;
             }
+
+            ESP_LOGI(TAG, "Total processing took %lld us (%03.1f %%)",
+                    total_time,
+                    time_to_percent(total_time));
+
+            ESP_LOGI(TAG, " ========= \n");
+
             xSemaphoreGive(profiling_mutex);
         }
         else
