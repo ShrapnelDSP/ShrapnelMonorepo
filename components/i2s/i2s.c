@@ -106,7 +106,7 @@ static void i2s_processing_task(void *param)
         int len = sizeof(rx_buf) / sizeof(rx_buf[0]);
         for(int i = 0; i < len; i++)
         {
-            rx_buf[i] = float_to_int32(sinf(2 * M_PI * i/(float)len));
+            rx_buf[i] = float_to_int32(sinf(2 * ((float)M_PI) * i/(float)len));
         }
 #elif defined(GENERATE_RAMP)
         int len = sizeof(rx_buf) / sizeof(rx_buf[0]);
