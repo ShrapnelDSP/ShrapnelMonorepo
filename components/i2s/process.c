@@ -147,6 +147,7 @@ void process_samples(int32_t *buf, size_t buf_len)
     }
 
     profiling_mark_stage(14);
+    profiling_stop();
     gpio_set_level(g_profiling_gpio, 0);
 }
 

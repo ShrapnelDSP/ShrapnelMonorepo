@@ -277,13 +277,15 @@ void app_main(void)
     ESP_ERROR_CHECK(audio_event_init(out_queue));
 
     i2c_setup();
+
+    profiling_mutex = xSemaphoreCreateMutex();
     i2s_setup(PROFILING_GPIO);
 
     vTaskDelay(100 / portTICK_PERIOD_MS);
 
     //dac must be powered up after the i2s clocks have stabilised
-    pcm3060_init(I2C_NUM, 0);
-    ESP_ERROR_CHECK(pcm3060_power_up());
+    //pcm3060_init(I2C_NUM, 0);
+    //ESP_ERROR_CHECK(pcm3060_power_up());
     /* Start the mdns service */
     start_mdns();
 

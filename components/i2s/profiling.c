@@ -1,7 +1,8 @@
+#include "profiling.h"
+
 #include "i2s.h"
 #include "esp_timer.h"
 #include "esp_log.h"
-#include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 #include <assert.h>
 
@@ -11,17 +12,35 @@
 
 static int64_t start_time = 0;
 static int64_t stage_time[NUMBER_OF_STAGES] = {};
+SemaphoreHandle_t profiling_mutex;
+static bool got_semaphore = false;
 
 void profiling_start(void)
 {
-    start_time = esp_timer_get_time();
+    if(xSemaphoreTake(profiling_mutex, 0))
+    {
+        got_semaphore = true;
+        start_time = esp_timer_get_time();
+    }
 }
 
 void profiling_mark_stage(unsigned int stage)
 {
     assert(stage < NUMBER_OF_STAGES);
 
-    stage_time[stage] = esp_timer_get_time();
+    if(got_semaphore)
+    {
+        stage_time[stage] = esp_timer_get_time();
+    }
+}
+
+void profiling_stop(void)
+{
+    if(got_semaphore)
+    {
+        xSemaphoreGive(profiling_mutex);
+        got_semaphore = false;
+    }
 }
 
 static float time_to_percent(int64_t time)
@@ -36,19 +55,27 @@ void i2s_profiling_task(void *param)
     {
         vTaskDelay(1000 / portTICK_PERIOD_MS);
 
-        for(int i = 0; i < NUMBER_OF_STAGES; i++)
+        if(xSemaphoreTake(profiling_mutex, 100 / portTICK_PERIOD_MS))
         {
-            //if the stage has not been assigned, stop printing
-            if(stage_time[i] == 0)
+            for(int i = 0; i < NUMBER_OF_STAGES; i++)
             {
-                break;
-            }
+                //if the stage has not been assigned, stop printing
+                if(stage_time[i] == 0)
+                {
+                    break;
+                }
 
-            int64_t current_stage_time = start_time - stage_time[i];
-            ESP_LOGI(TAG, "Stage %d processing took %lld us (%03.1f %%)",
-                     i,
-                     current_stage_time,
-                     time_to_percent(current_stage_time));
+                int64_t current_stage_time = stage_time[i] - start_time;
+                ESP_LOGI(TAG, "Stage %d processing took %lld us (%03.1f %%)",
+                        i,
+                        current_stage_time,
+                        time_to_percent(current_stage_time));
+            }
+            xSemaphoreGive(profiling_mutex);
+        }
+        else
+        {
+            ESP_LOGE(TAG, "%s failed to take semaphore", __FUNCTION__);
         }
     }
 }
