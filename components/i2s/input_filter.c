@@ -96,22 +96,22 @@ esp_err_t filter_init(void)
 
     for(int i = 0; i < 5; i++)
     {
-        ESP_LOGI(TAG, "pedal coeffs normal[%d] = %f", i, pedal_coeffs_normal[i]);
+        ESP_LOGI(TAG, "pedal coeffs normal[%d] = %f", i, (double)pedal_coeffs_normal[i]);
     }
 
     for(int i = 0; i < 5; i++)
     {
-        ESP_LOGI(TAG, "pedal coeffs tight[%d] = %f", i, pedal_coeffs_tight[i]);
+        ESP_LOGI(TAG, "pedal coeffs tight[%d] = %f", i, (double)pedal_coeffs_tight[i]);
     }
 
     for(int i = 0; i < 5; i++)
     {
-        ESP_LOGI(TAG, "amp coeffs[%d] = %f", i, amp_coeffs[i]);
+        ESP_LOGI(TAG, "amp coeffs[%d] = %f", i, (double)amp_coeffs[i]);
     }
 
     for(int i = 0; i < 5; i++)
     {
-        ESP_LOGI(TAG, "final coeffs[%d] = %f", i, final_coeffs[i]);
+        ESP_LOGI(TAG, "final coeffs[%d] = %f", i, (double)final_coeffs[i]);
     }
 
     return err;

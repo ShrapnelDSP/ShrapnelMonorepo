@@ -115,7 +115,7 @@ void fmv_update_params(float l, float m, float t)
 
     for(int i = 0; i < 8; i++)
     {
-        ESP_LOGD(TAG, "coeffs[%d] = %f", i, coeffs[i]);
+        ESP_LOGD(TAG, "coeffs[%d] = %f", i, (double)coeffs[i]);
     }
 }
 

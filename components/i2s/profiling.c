@@ -43,10 +43,10 @@ void profiling_stop(void)
     }
 }
 
-static float time_to_percent(int64_t time)
+static double time_to_percent(int64_t time)
 {
     //TODO expose the sample rate from the i2s module
-    return 100.f * time / (1e6 * DMA_BUF_SIZE / 48e3);
+    return 100 * time / (1e6 * DMA_BUF_SIZE / 48e3);
 }
 
 void i2s_profiling_task(void *param)
