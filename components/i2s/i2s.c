@@ -89,6 +89,7 @@ void i2s_set_amp_gain(float a)
     amp_gain = a;
 }
 
+#define GENERATE_SINE_WAVE
 static void i2s_processing_task(void *param)
 {
     size_t tx_rx_size;

@@ -23,6 +23,7 @@
 #include "mdns.h"
 
 #include "i2s.h"
+#include "profiling.h"
 #include "esp_http_websocket_server.h"
 #include "pcm3060.h"
 #include "cmd_handling.h"
@@ -213,19 +214,6 @@ static void connect_handler(void* arg, esp_event_base_t event_base,
     if (*server == NULL) {
         ESP_LOGI(TAG, "Starting webserver");
         *server = start_webserver();
-    }
-}
-
-extern int64_t i2s_last_run_time;
-void i2s_profiling_task(void *param)
-{
-    while(1)
-    {
-        vTaskDelay(1000 / portTICK_PERIOD_MS);
-        //TODO expose the sample rate from the i2s module
-        ESP_LOGI(TAG, "Audio processing took %lld us (%03.1f %%)",
-                 i2s_last_run_time, 
-                 100.f * i2s_last_run_time / (1e6 * DMA_BUF_SIZE / 48e3));
     }
 }
 

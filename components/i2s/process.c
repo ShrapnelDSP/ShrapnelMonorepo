@@ -11,12 +11,12 @@
 #include "input_filter.h"
 #include "audio_events.h"
 #include "noise_gate.h"
+#include "profiling.h"
 
 #include "esp_log.h"
 #define TAG "i2s_process"
 
 #include "driver/gpio.h"
-#include "esp_timer.h"
 
 #include <assert.h>
 #include <stdlib.h>
@@ -26,9 +26,6 @@ extern float amp_gain;
 extern float volume;
 extern gpio_num_t g_profiling_gpio;
 float fbuf[DMA_BUF_SIZE];
-
-/** The time it took to run the processing task in us*/
-int64_t i2s_last_run_time;
 
 #include "speaker_coeffs.h"
 float fir_delay_line[sizeof(fir_coeff)/sizeof(fir_coeff[0])];
@@ -75,11 +72,10 @@ static float waveshape(float x)
 
 void process_samples(int32_t *buf, size_t buf_len)
 {
-    int64_t start_time = esp_timer_get_time();
-
     assert(g_profiling_gpio != -1 && "I2S task has not been initialised");
 
     gpio_set_level(g_profiling_gpio, 1);
+    profiling_start();
     /* Copy samples, skipping every second one. These correspond to the left
      * channel of the ADC and DAC, which are not used here 
      * XXX not sure why the right channel is not at index 0 */
@@ -87,39 +83,53 @@ void process_samples(int32_t *buf, size_t buf_len)
     {
         fbuf[i/2] = buf[i]/(float)INT32_MAX;
     }
+    profiling_mark_stage(0);
 
     gate_analyse(fbuf);
+    profiling_mark_stage(1);
     dsps_mulc_f32_ae32(fbuf, fbuf, sizeof(fbuf)/sizeof(fbuf[0]), pedal_gain, 1, 1);
+    profiling_mark_stage(2);
     filter_pedal_input_process(fbuf, buf_len/2);
+    profiling_mark_stage(3);
 
     for(int i = 1; i < buf_len; i+=2)
     {
         fbuf[i/2] = waveshape(fbuf[i/2]);
     }
+    profiling_mark_stage(4);
 
     /* HM-2 EQ filters */
     for(int i = 0; i < 3; i++)
     {
         dsps_biquad_f32_ae32(fbuf, fbuf, buf_len/2, coeff[i], delay_line[i]);
     }
+    profiling_mark_stage(5);
 
     filter_amp_input_process(fbuf, buf_len/2);
+    profiling_mark_stage(6);
 
     dsps_mulc_f32_ae32(fbuf, fbuf, buf_len/2, amp_gain, 1, 1);
+    profiling_mark_stage(7);
 
     for(int i = 1; i < buf_len; i+=2)
     {
         fbuf[i/2] = waveshape(fbuf[i/2]);
     }
+    profiling_mark_stage(8);
 
     fmv_process(fbuf, buf_len/2);
+    profiling_mark_stage(9);
     gate_process(fbuf);
+    profiling_mark_stage(10);
     filter_final_process(fbuf, buf_len/2);
+    profiling_mark_stage(11);
 
     /* speaker IR */
     dsps_fir_f32_ae32(&fir, fbuf, fbuf, buf_len/2);
+    profiling_mark_stage(12);
 
     dsps_mulc_f32_ae32(fbuf, fbuf, buf_len/2, volume, 1, 1);
+    profiling_mark_stage(13);
 
     for(int i = 1; i < buf_len; i+=2)
     {
@@ -136,7 +146,7 @@ void process_samples(int32_t *buf, size_t buf_len)
         buf[i] = float_to_int32(fbuf[i/2]);
     }
 
-    i2s_last_run_time = esp_timer_get_time() - start_time;
+    profiling_mark_stage(14);
     gpio_set_level(g_profiling_gpio, 0);
 }
 
