@@ -133,7 +133,7 @@ void process_samples(int32_t *buf, size_t buf_len)
 
     for(int i = 1; i < buf_len; i+=2)
     {
-        if(fabs(fbuf[i/2]) > 1.0)
+        if(fbuf[i/2] > 1.f || fbuf[i/2] < -1.f)
         {
             xEventGroupSetBits(g_audio_event_group, AUDIO_EVENT_OUTPUT_CLIPPED);
         }
