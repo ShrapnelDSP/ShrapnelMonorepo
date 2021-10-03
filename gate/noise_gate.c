@@ -1,9 +1,7 @@
 #include "noise_gate.h"
-#include "dsps_biquad.h"
-#include "dsps_biquad_gen.h"
-#include "dsps_mul.h"
+#include "abstract_dsp.h"
 #include <math.h>
-#include "esp_log.h"
+#include <stdlib.h>
 
 #define TAG "noise_gate"
 
@@ -21,39 +19,33 @@ static int buf_size;
 static float threshold;
 static float hysteresis;
 
-static float coeffs[5];
-static float delay[3];
+static dspal_iir_t envelope_detect_filter;
 
-esp_err_t gate_init(size_t a_buf_size, float a_threshold, float
+int gate_init(size_t a_buf_size, float a_threshold, float
         a_hysteresis, float attack_ms, float release_ms, float hold_ms, float
         samplerate)
 {
-    gain_buffer = malloc(sizeof(float) * a_buf_size);
+    gain_buffer = calloc(a_buf_size, sizeof(*gain_buffer));
     if(gain_buffer == NULL)
     {
-        ESP_LOGE(TAG, "Failed to malloc gain_buffer");
-        return ESP_FAIL;
+        return -1;
     }
 
-    filter_buffer = malloc(sizeof(float) * a_buf_size);
+    filter_buffer = calloc(a_buf_size, sizeof(*filter_buffer));
     if(gain_buffer == NULL)
     {
-        ESP_LOGE(TAG, "Failed to malloc filter_buffer");
-        return ESP_FAIL;
+        return -1;
     }
 
-    //The low pass filter used for envelope detection
-    dsps_biquad_gen_lpf_f32(coeffs, 10.f/samplerate, M_SQRT1_2);
-
-    for(int i = 0; i < 5; i++)
+    envelope_detect_filter = dspal_iir_create(2);
+    if(envelope_detect_filter == NULL)
     {
-        ESP_LOGI(TAG, "filter coeffs[%d] = %e", i, (double)coeffs[i]);
+        return -1;
     }
 
-    for(int i = 0; i < 3; i++)
-    {
-        delay[i] = 0.f;
-    }
+    float coeffs[5];
+    dspal_biquad_design_lowpass(coeffs, 10.f/samplerate, M_SQRT1_2);
+    dspal_iir_set_coeffs(envelope_detect_filter, coeffs, 2);
 
     threshold = a_threshold;
     hysteresis = a_hysteresis;
@@ -65,7 +57,7 @@ esp_err_t gate_init(size_t a_buf_size, float a_threshold, float
 
     state = INIT;
 
-    return ESP_OK;
+    return 0;
 }
 
 void gate_set_threshold(float a_threshold)
@@ -86,7 +78,7 @@ void gate_analyse(const float *buf)
     }
 
     //low pass filter
-    dsps_biquad_f32_ae32(filter_buffer, filter_buffer, buf_size, coeffs, delay);
+    dspal_iir_process(envelope_detect_filter, filter_buffer, filter_buffer, buf_size);
 
     // work out the gain
     for(int i = 0; i < buf_size; i++)
@@ -112,7 +104,7 @@ void gate_analyse(const float *buf)
             case ATTACK:
                 if(filter_buffer[i] > threshold)
                 {
-                    gain = gain + 1.f/attack_samples;;
+                    gain = gain + 1.f/attack_samples;
                     if(gain > 1)
                     {
                         gain = 1;
@@ -160,11 +152,10 @@ void gate_analyse(const float *buf)
                 }
                 break;
             default:
-                ESP_LOGE(TAG, "invalid state %d", state);
                 next_state = INIT;
                 break;
         }
-            
+
         state = next_state;
         gain_buffer[i] = gain;
     }
@@ -172,5 +163,5 @@ void gate_analyse(const float *buf)
 
 void gate_process(float *buf)
 {
-    dsps_mul_f32_ae32(gain_buffer, buf, buf, buf_size, 1, 1, 1);
+    dspal_multiply(gain_buffer, buf, buf, buf_size);
 }

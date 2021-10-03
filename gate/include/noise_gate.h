@@ -1,12 +1,14 @@
 #pragma once
 
-#include "esp_err.h"
+#include "stddef.h"
 
 /** \brief Initialise the gate
  *
  * This must be called before the other functions.
+ *
+ * \return 0 on success
  */
-esp_err_t gate_init(size_t a_buf_size, float a_threshold, float
+int gate_init(size_t a_buf_size, float a_threshold, float
         a_hysteresis, float attack_ms, float release_ms, float hold_ms, float
         samplerate);
 
