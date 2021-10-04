@@ -4,3 +4,6 @@
 [submodule "dsp"]
 	path = dsp
 	url = git@github.com:ShrapnelDSP/AbstractDSP.git
+[submodule "gate"]
+	path = gate
+	url = git@github.com:ShrapnelDSP/NoiseGateComponent.git
