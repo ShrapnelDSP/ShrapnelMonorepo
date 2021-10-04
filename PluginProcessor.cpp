@@ -10,8 +10,41 @@ AudioPluginAudioProcessor::AudioPluginAudioProcessor()
                       #endif
                        .withOutput ("Output", juce::AudioChannelSet::stereo(), true)
                      #endif
-                       )
+                       ),
+       parameters(*this, nullptr, juce::Identifier("parameters"),
+               {
+                    std::make_unique<juce::AudioParameterFloat>("threshold",
+                                                                "Threshold",
+                                                                -80.f,
+                                                                0.f,
+                                                                -60.f),
+                    std::make_unique<juce::AudioParameterFloat>("hysteresis",
+                                                                "Hysteresis",
+                                                                0.f,
+                                                                5.f,
+                                                                0.f),
+                    std::make_unique<juce::AudioParameterFloat>("attack",
+                                                                "Attack",
+                                                                1.f,
+                                                                50.f,
+                                                                10.f),
+                    std::make_unique<juce::AudioParameterFloat>("hold",
+                                                                "Hold",
+                                                                1.f,
+                                                                250.f,
+                                                                50.f),
+                    std::make_unique<juce::AudioParameterFloat>("release",
+                                                                "Release",
+                                                                1.f,
+                                                                250.f,
+                                                                50.f),
+               })
 {
+    thresholdParameter = parameters.getRawParameterValue("threshold");
+    hysteresisParameter = parameters.getRawParameterValue("hysteresis");
+    attackParameter = parameters.getRawParameterValue("attack");
+    holdParameter = parameters.getRawParameterValue("hold");
+    releaseParameter = parameters.getRawParameterValue("release");
 }
 
 AudioPluginAudioProcessor::~AudioPluginAudioProcessor()
@@ -161,23 +194,25 @@ bool AudioPluginAudioProcessor::hasEditor() const
 
 juce::AudioProcessorEditor* AudioPluginAudioProcessor::createEditor()
 {
-    return new AudioPluginAudioProcessorEditor (*this);
+    //return new AudioPluginAudioProcessorEditor (*this);
+    return new juce::GenericAudioProcessorEditor (*this);
 }
 
 //==============================================================================
 void AudioPluginAudioProcessor::getStateInformation (juce::MemoryBlock& destData)
 {
-    // You should use this method to store your parameters in the memory block.
-    // You could do that either as raw data, or use the XML or ValueTree classes
-    // as intermediaries to make it easy to save and load complex data.
-    juce::ignoreUnused (destData);
+    auto state = parameters.copyState();
+    std::unique_ptr<juce::XmlElement> xml (state.createXml());
+    copyXmlToBinary (*xml, destData);
 }
 
 void AudioPluginAudioProcessor::setStateInformation (const void* data, int sizeInBytes)
 {
-    // You should use this method to restore your parameters from this memory block,
-    // whose contents will have been created by the getStateInformation() call.
-    juce::ignoreUnused (data, sizeInBytes);
+    std::unique_ptr<juce::XmlElement> xmlState (getXmlFromBinary (data, sizeInBytes));
+
+    if (xmlState.get() != nullptr)
+        if (xmlState->hasTagName (parameters.state.getType()))
+            parameters.replaceState (juce::ValueTree::fromXml (*xmlState));
 }
 
 //==============================================================================

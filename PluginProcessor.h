@@ -44,5 +44,13 @@ public:
 
 private:
     //==============================================================================
+    juce::AudioProcessorValueTreeState parameters;
+
+    std::atomic<float> *thresholdParameter = nullptr;
+    std::atomic<float> *hysteresisParameter = nullptr;
+    std::atomic<float> *attackParameter = nullptr;
+    std::atomic<float> *holdParameter = nullptr;
+    std::atomic<float> *releaseParameter = nullptr;
+
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AudioPluginAudioProcessor)
 };
