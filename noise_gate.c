@@ -2,86 +2,132 @@
 #include "abstract_dsp.h"
 #include <math.h>
 #include <stdlib.h>
+#include <string.h>
 
 #define TAG "noise_gate"
 
 typedef enum { INIT, CLOSED, ATTACK, OPEN, RELEASE } state_t;
 
 static state_t state;
+
 static float *gain_buffer;
 static float *filter_buffer;
-
-static int attack_samples;
-static int release_samples;
-static int hold_samples;
-static size_t buf_size;
+static size_t buffer_size;
 
 static float threshold;
 static float hysteresis;
 
+static int attack_samples;
+static int hold_samples;
+static int release_samples;
+
 static dspal_iir_t envelope_detect_filter;
 
-int gate_init(size_t a_buf_size, float a_threshold, float
-        a_hysteresis, float attack_ms, float release_ms, float hold_ms, float
-        samplerate)
+int gate_init(void)
 {
-    gain_buffer = calloc(a_buf_size, sizeof(*gain_buffer));
-    if(gain_buffer == NULL)
-    {
-        return -1;
-    }
-
-    filter_buffer = calloc(a_buf_size, sizeof(*filter_buffer));
-    if(gain_buffer == NULL)
-    {
-        return -1;
-    }
-
     envelope_detect_filter = dspal_iir_create(2);
     if(envelope_detect_filter == NULL)
     {
         return -1;
     }
 
-    float coeffs[5];
-    dspal_biquad_design_lowpass(coeffs, 10.f/samplerate, M_SQRT1_2);
-    dspal_iir_set_coeffs(envelope_detect_filter, coeffs, 2);
-
-    threshold = a_threshold;
-    hysteresis = a_hysteresis;
-
-    attack_samples = samplerate * attack_ms / 1000.f;
-    release_samples = samplerate * release_ms / 1000.f;
-    hold_samples = samplerate * hold_ms / 1000.f;
-    buf_size = a_buf_size;
-
-    state = INIT;
-
+    gate_reset();
     return 0;
 }
 
+// TODO a bunch of state is stored as static variables in functions and can't
+// be reset
+void gate_reset(void)
+{
+    state = INIT;
+
+    memset(gain_buffer, 0, sizeof(*gain_buffer)*buffer_size);
+    memset(filter_buffer, 0, sizeof(*filter_buffer)*buffer_size);
+}
+
+/** \brief Set the buffer size in number of samples */
+// TODO what to do when allocation fails?
+void gate_set_buffer_size(size_t a_buffer_size)
+{
+    if(gain_buffer)
+    {
+        free(gain_buffer);
+        gain_buffer = NULL;
+    }
+
+    gain_buffer = calloc(buffer_size, sizeof(*gain_buffer));
+    if(gain_buffer == NULL)
+    {
+        return;
+    }
+
+    if(filter_buffer)
+    {
+        free(filter_buffer);
+        filter_buffer = NULL;
+    }
+
+    filter_buffer = calloc(buffer_size, sizeof(*filter_buffer));
+    if(filter_buffer == NULL)
+    {
+        return;
+    }
+
+    buffer_size = a_buffer_size;
+}
+
+void gate_set_sample_rate(float sample_rate)
+{
+    float coeffs[5];
+    dspal_biquad_design_lowpass(coeffs, 10.f/sample_rate, M_SQRT1_2);
+    dspal_iir_set_coeffs(envelope_detect_filter, coeffs, 2);
+}
+
+// TODO these two need conversion from dB to ratio
 void gate_set_threshold(float a_threshold)
 {
     threshold = a_threshold;
 }
 
-void gate_analyse(const float *buf)
+void gate_set_hysteresis(float a_hysteresis)
+{
+    hysteresis = a_hysteresis;
+}
+
+void gate_set_attack(float a_attack)
+{
+    attack_samples = samplerate * a_attack / 1000.f;
+}
+
+void gate_set_hold(float a_hold)
+{
+    hold_samples = samplerate * a_hold / 1000.f;
+}
+
+void gate_set_release(float a_release)
+{
+    release_samples = samplerate * a_release / 1000.f;
+}
+
+// TODO Make sure that the sample count is not more than the size of the
+// buffers
+void gate_analyse(const float *buf, size_t sample_count)
 {
     static float gain = 0;
     static state_t next_state = INIT;
     static int hold_count = 0;
 
     // rectify the signal
-    for(size_t i = 0; i < buf_size; i++)
+    for(size_t i = 0; i < sample_count; i++)
     {
         filter_buffer[i] = fabsf(buf[i]);
     }
 
     //low pass filter
-    dspal_iir_process(envelope_detect_filter, filter_buffer, filter_buffer, buf_size);
+    dspal_iir_process(envelope_detect_filter, filter_buffer, filter_buffer, sample_count);
 
     // work out the gain
-    for(size_t i = 0; i < buf_size; i++)
+    for(size_t i = 0; i < sample_count; i++)
     {
         switch(state)
         {
@@ -161,7 +207,7 @@ void gate_analyse(const float *buf)
     }
 }
 
-void gate_process(float *buf)
+void gate_process(float *buf, size_t sample_count)
 {
-    dspal_multiply(gain_buffer, buf, buf, buf_size);
+    dspal_multiply(gain_buffer, buf, buf, sample_count);
 }
