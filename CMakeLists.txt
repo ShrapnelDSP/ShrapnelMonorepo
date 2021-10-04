@@ -19,13 +19,14 @@ juce_add_plugin(AudioPluginExample
 
 target_include_directories(AudioPluginExample
     PUBLIC
+        dsp/include
         gate/include)
 
 target_sources(AudioPluginExample
     PRIVATE
         PluginEditor.cpp
         PluginProcessor.cpp
-        gate/abstract_dsp_juce.cpp
+        dsp/abstract_dsp_juce.cpp
         gate/noise_gate.c)
 
 target_compile_definitions(AudioPluginExample
