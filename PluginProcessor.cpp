@@ -1,5 +1,6 @@
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
+#include "noise_gate.h"
 
 //==============================================================================
 AudioPluginAudioProcessor::AudioPluginAudioProcessor()
@@ -45,6 +46,7 @@ AudioPluginAudioProcessor::AudioPluginAudioProcessor()
     attackParameter = parameters.getRawParameterValue("attack");
     holdParameter = parameters.getRawParameterValue("hold");
     releaseParameter = parameters.getRawParameterValue("release");
+
 }
 
 AudioPluginAudioProcessor::~AudioPluginAudioProcessor()
@@ -119,9 +121,8 @@ void AudioPluginAudioProcessor::changeProgramName (int index, const juce::String
 //==============================================================================
 void AudioPluginAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
-    // Use this method as the place to do any pre-playback
-    // initialisation that you need..
-    juce::ignoreUnused (sampleRate, samplesPerBlock);
+    gate_set_buffer_size(samplesPerBlock);
+    gate_set_sample_rate(sampleRate);
 }
 
 void AudioPluginAudioProcessor::releaseResources()
@@ -172,17 +173,24 @@ void AudioPluginAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
     for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
         buffer.clear (i, 0, buffer.getNumSamples());
 
-    // This is the place where you'd normally do the guts of your plugin's
-    // audio processing...
-    // Make sure to reset the state if your inner loop is processing
-    // the samples and the outer loop is handling the channels.
-    // Alternatively, you can process the samples with the channels
-    // interleaved by keeping the same state.
+    gate_set_threshold(*thresholdParameter);
+    get_set_hysteresis(*hysteresisParameter);
+    get_set_attack(*attackParameter);
+    get_set_hold(*holdParameter);
+    get_set_release(*releaseParameter);
+
     for (int channel = 0; channel < totalNumInputChannels; ++channel)
     {
-        auto* channelData = buffer.getWritePointer (channel);
-        juce::ignoreUnused (channelData);
-        // ..do something to the data...
+        if(channel == 0)
+        {
+            auto* channelData = buffer.getWritePointer (channel);
+            gate_analyse(channelData, buffer.getNumSamples());
+            gate_process(channelData, buffer.getNumSamples());
+        }
+        else
+        {
+            buffer.clear (channel, 0, buffer.getNumSamples());
+        }
     }
 }
 
