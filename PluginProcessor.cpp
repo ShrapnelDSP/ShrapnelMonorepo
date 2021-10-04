@@ -1,6 +1,7 @@
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
 #include "noise_gate.h"
+#include "assert.h"
 
 //==============================================================================
 AudioPluginAudioProcessor::AudioPluginAudioProcessor()
@@ -121,7 +122,8 @@ void AudioPluginAudioProcessor::changeProgramName (int index, const juce::String
 //==============================================================================
 void AudioPluginAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
-    gate_set_buffer_size(samplesPerBlock);
+    assert(samplesPerBlock > 0);
+    gate_set_buffer_size((size_t)samplesPerBlock);
     gate_set_sample_rate(sampleRate);
 }
 
@@ -174,18 +176,18 @@ void AudioPluginAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
         buffer.clear (i, 0, buffer.getNumSamples());
 
     gate_set_threshold(*thresholdParameter);
-    get_set_hysteresis(*hysteresisParameter);
-    get_set_attack(*attackParameter);
-    get_set_hold(*holdParameter);
-    get_set_release(*releaseParameter);
+    gate_set_hysteresis(*hysteresisParameter);
+    gate_set_attack(*attackParameter);
+    gate_set_hold(*holdParameter);
+    gate_set_release(*releaseParameter);
 
     for (int channel = 0; channel < totalNumInputChannels; ++channel)
     {
         if(channel == 0)
         {
             auto* channelData = buffer.getWritePointer (channel);
-            gate_analyse(channelData, buffer.getNumSamples());
-            gate_process(channelData, buffer.getNumSamples());
+            gate_analyse(channelData, (size_t)buffer.getNumSamples());
+            gate_process(channelData, (size_t)buffer.getNumSamples());
         }
         else
         {
