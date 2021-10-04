@@ -14,7 +14,7 @@ static float *filter_buffer;
 static int attack_samples;
 static int release_samples;
 static int hold_samples;
-static int buf_size;
+static size_t buf_size;
 
 static float threshold;
 static float hysteresis;
@@ -72,7 +72,7 @@ void gate_analyse(const float *buf)
     static int hold_count = 0;
 
     // rectify the signal
-    for(int i = 0; i < buf_size; i++)
+    for(size_t i = 0; i < buf_size; i++)
     {
         filter_buffer[i] = fabsf(buf[i]);
     }
@@ -81,7 +81,7 @@ void gate_analyse(const float *buf)
     dspal_iir_process(envelope_detect_filter, filter_buffer, filter_buffer, buf_size);
 
     // work out the gain
-    for(int i = 0; i < buf_size; i++)
+    for(size_t i = 0; i < buf_size; i++)
     {
         switch(state)
         {
