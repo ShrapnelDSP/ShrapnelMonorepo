@@ -3,6 +3,7 @@
 #include <math.h>
 #include <stdlib.h>
 #include <string.h>
+#include <assert.h>
 
 #define TAG "noise_gate"
 
@@ -15,7 +16,7 @@ static float *filter_buffer;
 static size_t buffer_size;
 
 static float threshold;
-static float hysteresis;
+static float threshold_low;
 
 static int attack_samples;
 static int hold_samples;
@@ -87,15 +88,19 @@ void gate_set_sample_rate(float a_sample_rate)
     sample_rate = a_sample_rate;
 }
 
-// TODO these two need conversion from dB to ratio
-void gate_set_threshold(float a_threshold)
+static float db_to_ratio(float db)
 {
-    threshold = a_threshold;
+    return powf(10.f, db/20.f);
 }
 
-void gate_set_hysteresis(float a_hysteresis)
+void gate_set_threshold(float a_threshold, float a_hysteresis)
 {
-    hysteresis = a_hysteresis;
+    assert(a_hysteresis <= 0.f);
+
+    threshold = db_to_ratio(a_threshold);
+    threshold_low = threshold * db_to_ratio(-1.f * a_hysteresis);
+
+    assert(threshold_low <= threshold);
 }
 
 void gate_set_attack(float a_attack)
@@ -168,7 +173,7 @@ void gate_analyse(const float *buf, size_t sample_count)
                 }
                 break;
             case OPEN:
-                if(filter_buffer[i] > (threshold - hysteresis))
+                if(filter_buffer[i] > threshold_low)
                 {
                     hold_count = 0;
                     next_state = OPEN;
@@ -187,7 +192,7 @@ void gate_analyse(const float *buf, size_t sample_count)
                 }
                 break;
             case RELEASE:
-                if(filter_buffer[i] > (threshold - hysteresis))
+                if(filter_buffer[i] > threshold_low)
                 {
                     next_state = ATTACK;
                 }

@@ -18,18 +18,12 @@ void gate_set_buffer_size(size_t buffer_size);
 /** \brief Set the sample rate in Hz */
 void gate_set_sample_rate(float a_sample_rate);
 
-/** \brief Set the threshold value in dBFS
+/** \brief Set the threshold and hysteresis value in dBFS
  *
- * When the level is above the threshold, the gate starts opening.
+ * When the level is above the threshold, the gate starts opening. When the
+ * level falls below the threshold minus hysteresis, the gate starts closing.
  */
-void gate_set_threshold(float a_threshold);
-
-/** \brief Set the hysteresis value in dBFS
- *
- * When the level falls below the threshold minus hysteresis, the gate starts
- * closing.
- */
-void gate_set_hysteresis(float a_hysteresis);
+void gate_set_threshold(float a_threshold, float a_hysteresis);
 
 /** \brief Set the attack time in milliseconds
  *
