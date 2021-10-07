@@ -21,6 +21,8 @@ static int attack_samples;
 static int hold_samples;
 static int release_samples;
 
+static float sample_rate;
+
 static dspal_iir_t envelope_detect_filter;
 
 int gate_init(void)
@@ -76,11 +78,13 @@ void gate_set_buffer_size(size_t a_buffer_size)
     buffer_size = a_buffer_size;
 }
 
-void gate_set_sample_rate(float sample_rate)
+void gate_set_sample_rate(float a_sample_rate)
 {
     float coeffs[5];
-    dspal_biquad_design_lowpass(coeffs, 10.f/sample_rate, M_SQRT1_2);
+    dspal_biquad_design_lowpass(coeffs, 10.f/a_sample_rate, M_SQRT1_2);
     dspal_iir_set_coeffs(envelope_detect_filter, coeffs, 2);
+
+    sample_rate = a_sample_rate;
 }
 
 // TODO these two need conversion from dB to ratio
@@ -96,17 +100,17 @@ void gate_set_hysteresis(float a_hysteresis)
 
 void gate_set_attack(float a_attack)
 {
-    attack_samples = samplerate * a_attack / 1000.f;
+    attack_samples = sample_rate * a_attack / 1000.f;
 }
 
 void gate_set_hold(float a_hold)
 {
-    hold_samples = samplerate * a_hold / 1000.f;
+    hold_samples = sample_rate * a_hold / 1000.f;
 }
 
 void gate_set_release(float a_release)
 {
-    release_samples = samplerate * a_release / 1000.f;
+    release_samples = sample_rate * a_release / 1000.f;
 }
 
 // TODO Make sure that the sample count is not more than the size of the

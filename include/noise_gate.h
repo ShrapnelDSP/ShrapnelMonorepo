@@ -2,17 +2,21 @@
 
 #include "stddef.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /** \brief Initialise the effect */
 int gate_init(void);
 
 /** \brief Reset the state */
-void gate_reset(void)
+void gate_reset(void);
 
 /** \brief Set the buffer size in number of samples */
 void gate_set_buffer_size(size_t buffer_size);
 
 /** \brief Set the sample rate in Hz */
-void gate_set_sample_rate(float sample_rate);
+void gate_set_sample_rate(float a_sample_rate);
 
 /** \brief Set the threshold value in dBFS
  *
@@ -27,13 +31,22 @@ void gate_set_threshold(float a_threshold);
  */
 void gate_set_hysteresis(float a_hysteresis);
 
-/** \brief Set the attack time in milliseconds */
+/** \brief Set the attack time in milliseconds
+ *
+ * \note must be called after gate_set_sample_rate
+ */
 void gate_set_attack(float a_attack);
 
-/** \brief Set the hold time in milliseconds */
+/** \brief Set the hold time in milliseconds
+ *
+ * \note must be called after gate_set_sample_rate
+ */
 void gate_set_hold(float a_hold);
 
-/** \brief Set the release time in milliseconds */
+/** \brief Set the release time in milliseconds
+ *
+ * \note must be called after gate_set_sample_rate
+ */
 void gate_set_release(float a_release);
 
 /** \brief Analyse the audio
@@ -51,3 +64,7 @@ void gate_analyse(const float *buf, size_t sample_count);
  * \note Make sure to use the same buffer with this function and gate_analyse.
  */
 void gate_process(float *buf, size_t sample_count);
+
+#ifdef __cplusplus
+}
+#endif
