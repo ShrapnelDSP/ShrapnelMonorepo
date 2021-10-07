@@ -18,7 +18,7 @@ dspal_err_t dspal_biquad_design_lowpass(float *coeffs, float f, float q_factor)
     assert(2 == juce_coeffs->getFilterOrder());
 
     // These coefficients are not expected to be normalised
-    assert(juce_coeffs.coefficients.size == 6);
+    assert(juce_coeffs->coefficients.size() == 6);
     assert(raw_coeffs[3] != 1);
 
     coeffs[0] = raw_coeffs[0]/raw_coeffs[3];
