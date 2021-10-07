@@ -175,8 +175,7 @@ void AudioPluginAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
     for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
         buffer.clear (i, 0, buffer.getNumSamples());
 
-    gate_set_threshold(*thresholdParameter);
-    gate_set_hysteresis(*hysteresisParameter);
+    gate_set_threshold(*thresholdParameter, *hysteresisParameter);
     gate_set_attack(*attackParameter);
     gate_set_hold(*holdParameter);
     gate_set_release(*releaseParameter);
