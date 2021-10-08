@@ -81,7 +81,7 @@ void gate_set_buffer_size(size_t a_buffer_size)
 
 void gate_set_sample_rate(float a_sample_rate)
 {
-    float coeffs[5];
+    float coeffs[5] = { 0 };
     dspal_biquad_design_lowpass(coeffs, 10.f/a_sample_rate, M_SQRT1_2);
     dspal_iir_set_coeffs(envelope_detect_filter, coeffs, 2);
 
