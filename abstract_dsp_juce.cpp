@@ -48,10 +48,19 @@ void dspal_iir_set_coeffs(dspal_iir_t iir, float *coeffs, size_t coeff_size)
 
 void dspal_iir_process(dspal_iir_t iir, const float *in, float *out, size_t buf_size)
 {
-    auto in_block = juce::dsp::AudioBlock<const float>(&in, 1, 0, buf_size);
-    auto out_block = juce::dsp::AudioBlock<float>(&out, 1, 0, buf_size);
-    auto context = juce::dsp::ProcessContextNonReplacing<float> (in_block, out_block);
-    iir->iir->process(context);
+    if(in == out)
+    {
+        auto block = juce::dsp::AudioBlock<float>(&out, 1, 0, buf_size);
+        auto context = juce::dsp::ProcessContextReplacing<float> (block);
+        iir->iir->process(context);
+    }
+    else
+    {
+        auto in_block = juce::dsp::AudioBlock<const float>(&in, 1, 0, buf_size);
+        auto out_block = juce::dsp::AudioBlock<float>(&out, 1, 0, buf_size);
+        auto context = juce::dsp::ProcessContextNonReplacing<float> (in_block, out_block);
+        iir->iir->process(context);
+    }
 }
 
 void dspal_iir_reset(dspal_iir_t iir)
