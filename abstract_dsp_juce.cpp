@@ -17,15 +17,10 @@ dspal_err_t dspal_biquad_design_lowpass(float *coeffs, float f, float q_factor)
 
     assert(2 == juce_coeffs->getFilterOrder());
 
-    // These coefficients are not expected to be normalised
-    assert(juce_coeffs->coefficients.size() == 6);
-    assert(raw_coeffs[3] != 1);
+    // These coefficients are expected to be normalised
+    assert(5 == juce_coeffs->coefficients.size());
 
-    coeffs[0] = raw_coeffs[0]/raw_coeffs[3];
-    coeffs[1] = raw_coeffs[1]/raw_coeffs[3];
-    coeffs[2] = raw_coeffs[2]/raw_coeffs[3];
-    coeffs[3] = raw_coeffs[4]/raw_coeffs[3];
-    coeffs[4] = raw_coeffs[5]/raw_coeffs[3];
+    memcpy(coeffs, raw_coeffs, 5);
 
     return DSPAL_OK;
 }
