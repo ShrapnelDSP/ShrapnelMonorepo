@@ -20,7 +20,7 @@ dspal_err_t dspal_biquad_design_lowpass(float *coeffs, float f, float q_factor)
     // These coefficients are expected to be normalised
     assert(5 == juce_coeffs->coefficients.size());
 
-    memcpy(coeffs, raw_coeffs, 5);
+    memcpy(coeffs, raw_coeffs, 5*sizeof(float));
 
     return DSPAL_OK;
 }
