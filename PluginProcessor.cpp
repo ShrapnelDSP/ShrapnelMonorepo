@@ -48,6 +48,7 @@ AudioPluginAudioProcessor::AudioPluginAudioProcessor()
     holdParameter = parameters.getRawParameterValue("hold");
     releaseParameter = parameters.getRawParameterValue("release");
 
+    assert(0 == gate_init());
 }
 
 AudioPluginAudioProcessor::~AudioPluginAudioProcessor()
