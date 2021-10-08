@@ -58,7 +58,7 @@ void gate_set_buffer_size(size_t a_buffer_size)
         gain_buffer = NULL;
     }
 
-    gain_buffer = calloc(buffer_size, sizeof(*gain_buffer));
+    gain_buffer = calloc(a_buffer_size, sizeof(*gain_buffer));
     if(gain_buffer == NULL)
     {
         return;
@@ -70,7 +70,7 @@ void gate_set_buffer_size(size_t a_buffer_size)
         filter_buffer = NULL;
     }
 
-    filter_buffer = calloc(buffer_size, sizeof(*filter_buffer));
+    filter_buffer = calloc(a_buffer_size, sizeof(*filter_buffer));
     if(filter_buffer == NULL)
     {
         return;
@@ -118,10 +118,10 @@ void gate_set_release(float a_release)
     release_samples = sample_rate * a_release / 1000.f;
 }
 
-// TODO Make sure that the sample count is not more than the size of the
-// buffers
 void gate_analyse(const float *buf, size_t sample_count)
 {
+    assert(sample_count <= buffer_size);
+
     static float gain = 0;
     static state_t next_state = INIT;
     static int hold_count = 0;
