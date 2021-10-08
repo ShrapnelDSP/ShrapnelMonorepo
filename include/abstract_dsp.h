@@ -23,7 +23,7 @@ extern "C" {
 dspal_err_t dspal_biquad_design_lowpass(float *coeffs, float f, float q_factor);
 
 dspal_iir_t dspal_iir_create(size_t order);
-void dspal_iir_set_coeffs(dspal_iir_t iir, float *coeffs, size_t coeff_size);
+void dspal_iir_set_coeffs(dspal_iir_t iir, const float *coeffs, size_t coeff_size);
 void dspal_iir_process(dspal_iir_t iir, const float *in, float *out, size_t buf_size);
 void dspal_iir_reset(dspal_iir_t iir);
 

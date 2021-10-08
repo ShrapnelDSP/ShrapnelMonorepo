@@ -37,9 +37,10 @@ dspal_iir_t dspal_iir_create(size_t order)
     return iir;
 }
 
-void dspal_iir_set_coeffs(dspal_iir_t iir, float *coeffs, size_t coeff_size)
+void dspal_iir_set_coeffs(dspal_iir_t iir, const float *coeffs, size_t coeff_size)
 {
     assert(coeff_size == 2);
+    assert(iir != NULL);
     (void) coeff_size;
 
     iir->iir->coefficients = new juce::dsp::IIR::Coefficients<float>(
