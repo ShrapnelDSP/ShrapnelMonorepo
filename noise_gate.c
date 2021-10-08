@@ -95,7 +95,7 @@ static float db_to_ratio(float db)
 
 void gate_set_threshold(float a_threshold, float a_hysteresis)
 {
-    assert(a_hysteresis <= 0.f);
+    assert(a_hysteresis >= 0.f);
 
     threshold = db_to_ratio(a_threshold);
     threshold_low = threshold * db_to_ratio(-1.f * a_hysteresis);
