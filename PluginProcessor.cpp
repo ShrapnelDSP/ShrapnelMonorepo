@@ -214,7 +214,6 @@ void AudioPluginAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
                  * TODO adjust when frequency changes */
                 noise *= 10;
 
-#if 0
                 delay = MAX_DELAY_MS / 1000 * sampleRate *
                     (0.5f + (*modulationDepthNormalisedParameter * noise));
 
@@ -223,9 +222,6 @@ void AudioPluginAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
                 dspal_delayline_push_sample(delayline, channelData[i]);
                 channelData[i] = channelData[i] +
                     (*mixParameter * dspal_delayline_pop_sample(delayline));
-#else
-                channelData[i] = noise;
-#endif
             }
         }
         else
