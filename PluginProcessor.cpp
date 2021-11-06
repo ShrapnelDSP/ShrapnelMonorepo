@@ -27,10 +27,17 @@ AudioPluginAudioProcessor::AudioPluginAudioProcessor()
                                                          0.f,
                                                          1.f,
                                                          0.5f),
+
+            std::make_unique<juce::AudioParameterFloat> ("mix",
+                                                         "Mix",
+                                                         0.f,
+                                                         1.f,
+                                                         0.5f),
         })
 {
     modulationRateHzParameter = parameters.getRawParameterValue("modulationRateHz");
     modulationDepthNormalisedParameter = parameters.getRawParameterValue("modulationDepth");
+    mixParameter = parameters.getRawParameterValue("mix");
 }
 
 AudioPluginAudioProcessor::~AudioPluginAudioProcessor()
@@ -194,7 +201,8 @@ void AudioPluginAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
                 dspal_delayline_set_delay(delayline, delay);
 
                 dspal_delayline_push_sample(delayline, channelData[i]);
-                channelData[i] = dspal_delayline_pop_sample(delayline);
+                channelData[i] = channelData[i] +
+                    (*mixParameter * dspal_delayline_pop_sample(delayline));
             }
         }
         else

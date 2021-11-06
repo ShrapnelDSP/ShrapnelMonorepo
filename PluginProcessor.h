@@ -48,6 +48,7 @@ private:
 
     std::atomic<float> *modulationRateHzParameter = nullptr;
     std::atomic<float> *modulationDepthNormalisedParameter = nullptr;
+    std::atomic<float> *mixParameter = nullptr;
 
     float sampleRate = 0;
 

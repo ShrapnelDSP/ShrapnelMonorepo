@@ -13,9 +13,9 @@ juce_add_plugin(AudioPluginExample
     EDITOR_WANTS_KEYBOARD_FOCUS FALSE
     COPY_PLUGIN_AFTER_BUILD FALSE
     PLUGIN_MANUFACTURER_CODE BaRa
-    PLUGIN_CODE ShVb
+    PLUGIN_CODE ShCh
     FORMATS VST3 Standalone
-    PRODUCT_NAME "Shrapnel Vibrato")
+    PRODUCT_NAME "Shrapnel Chorus")
 
 target_include_directories(AudioPluginExample
     PUBLIC
