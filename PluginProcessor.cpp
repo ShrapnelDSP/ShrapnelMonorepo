@@ -18,9 +18,9 @@ AudioPluginAudioProcessor::AudioPluginAudioProcessor()
          {
             std::make_unique<juce::AudioParameterFloat> ("modulationRateHz",
                                                          "Rate (Hz)",
-                                                         5.f,
-                                                         15.f,
-                                                         10.f),
+                                                         1.f,
+                                                         10.f,
+                                                         5.5f),
 
             std::make_unique<juce::AudioParameterFloat> ("modulationDepth",
                                                          "Depth",
@@ -188,7 +188,6 @@ void AudioPluginAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
                     phase -= 2 * M_PI;
                 }
 
-#if 0
                 delay = MAX_DELAY_MS / 1000 * sampleRate *
                     (0.5f + (*modulationDepthNormalisedParameter * lfo));
 
@@ -196,9 +195,6 @@ void AudioPluginAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
 
                 dspal_delayline_push_sample(delayline, channelData[i]);
                 channelData[i] = dspal_delayline_pop_sample(delayline);
-#else
-                channelData[i] = lfo;
-#endif
             }
         }
         else
