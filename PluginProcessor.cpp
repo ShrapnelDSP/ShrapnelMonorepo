@@ -18,9 +18,9 @@ AudioPluginAudioProcessor::AudioPluginAudioProcessor()
          {
             std::make_unique<juce::AudioParameterFloat> ("modulationRateHz",
                                                          "Rate (Hz)",
-                                                         1.f,
-                                                         10.f,
-                                                         5.5f),
+                                                         5.f,
+                                                         20.f,
+                                                         12.5f),
 
             std::make_unique<juce::AudioParameterFloat> ("modulationDepth",
                                                          "Depth",
@@ -38,6 +38,8 @@ AudioPluginAudioProcessor::AudioPluginAudioProcessor()
     modulationRateHzParameter = parameters.getRawParameterValue("modulationRateHz");
     modulationDepthNormalisedParameter = parameters.getRawParameterValue("modulationDepth");
     mixParameter = parameters.getRawParameterValue("mix");
+
+    lowpass = dspal_iir_create(2);
 }
 
 AudioPluginAudioProcessor::~AudioPluginAudioProcessor()
@@ -122,6 +124,21 @@ void AudioPluginAudioProcessor::prepareToPlay (double sampleRate, int samplesPer
     dspal_delayline_set_buffer_size(delayline, (size_t)samplesPerBlock);
 
     this->sampleRate = sampleRate;
+
+    // TODO generate the low frequency noise at some low samplerate (~ 100 Hz)
+    // IIR filters will get unstable if the cutoff frequency is very small.
+    //
+    // This can be done by keeping a sample counter, and when the count exceeds
+    // some limit (the ratio of normal rate to low rate), processing a single
+    // sample in the slow rate domain.
+    //
+    // E.G. every 256/512/1024 sample at 48kHz/96kHz/192kHz, process a sample.
+    // This means the slow sample rate is 187.5 Hz.
+    //
+    // dsp::Oversampling can be used to oversample the slow rate to find the
+    // signal value for every high samplerate sample.
+
+    dspal_iir_reset(lowpass);
 }
 
 void AudioPluginAudioProcessor::releaseResources()
@@ -185,24 +202,30 @@ void AudioPluginAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
         float delay = 0;
         if(channel == 0)
         {
+            float coeffs[5] = { 0 };
+            dspal_biquad_design_lowpass(coeffs, *modulationRateHzParameter / sampleRate, M_SQRT1_2);
+            dspal_iir_set_coeffs(lowpass, coeffs, 2);
+
             for(int i = 0; i < buffer.getNumSamples(); i++)
             {
-                float lfo = 0.5 * std::sin(phase);
-                phase += *modulationRateHzParameter / sampleRate * 2 * M_PI;
+                float noise = (random.nextFloat() - 0.5f) * 2;
+                dspal_iir_process(lowpass, &noise, &noise, 1);
+                /* Make up level loss from low pass filter
+                 * TODO adjust when frequency changes */
+                noise *= 10;
 
-                if(phase > 2 * M_PI)
-                {
-                    phase -= 2 * M_PI;
-                }
-
+#if 0
                 delay = MAX_DELAY_MS / 1000 * sampleRate *
-                    (0.5f + (*modulationDepthNormalisedParameter * lfo));
+                    (0.5f + (*modulationDepthNormalisedParameter * noise));
 
                 dspal_delayline_set_delay(delayline, delay);
 
                 dspal_delayline_push_sample(delayline, channelData[i]);
                 channelData[i] = channelData[i] +
                     (*mixParameter * dspal_delayline_pop_sample(delayline));
+#else
+                channelData[i] = noise;
+#endif
             }
         }
         else

@@ -53,8 +53,9 @@ private:
     float sampleRate = 0;
 
     dspal_delayline_t delayline;
+    dspal_iir_t lowpass;
 
-    float phase;
+    juce::Random random;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AudioPluginAudioProcessor)
 };
