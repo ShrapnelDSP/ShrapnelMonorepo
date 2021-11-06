@@ -81,4 +81,37 @@ void dspal_multiply(const float *in1, const float *in2, float *out, size_t buf_s
     }
 }
 
+dspal_delayline_t dspal_delayline_create(size_t max_samples)
+{
+    dspal_delayline_t delayline = new dspal_delayline;
+
+    delayline->delayline.reset(new juce::dsp::DelayLine<float>(max_samples));
+    return delayline;
+}
+
+void dspal_delayline_set_delay(dspal_delayline_t delayline, float delay)
+{
+    delayline->delayline->setDelay(delay);
+}
+
+void dspal_delayline_set_buffer_size(dspal_delayline_t delayline, size_t size)
+{
+    auto spec = juce::dsp::ProcessSpec();
+    spec.sampleRate = 0; /* JUCE ignores this */
+    spec.numChannels = 1;
+    spec.maximumBlockSize = size;
+
+    delayline->delayline->prepare(spec);
+}
+
+void dspal_delayline_push_sample(dspal_delayline_t delayline, float sample)
+{
+    delayline->delayline->pushSample(0, sample);
+}
+
+float dspal_delayline_pop_sample(dspal_delayline_t delayline)
+{
+    return delayline->delayline->popSample(0);
+}
+
 };
