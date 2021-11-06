@@ -7,6 +7,10 @@ struct dspal_iir {
     std::unique_ptr<juce::dsp::IIR::Filter<float>> iir;
 };
 
+struct dspal_delayline {
+    std::unique_ptr<juce::dsp::DelayLine<float>> delayline;
+};
+
 extern "C" {
 
 dspal_err_t dspal_biquad_design_lowpass(float *coeffs, float f, float q_factor)
