@@ -176,25 +176,35 @@ void AudioPluginAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
         auto* channelData = buffer.getWritePointer (channel);
 
         float delay = 0;
-        for(int i = 0; i < buffer.getNumSamples(); i++)
+        if(channel == 0)
         {
-            float lfo = 0.5 * std::sin(phase);
-            phase += *modulationRateHzParameter / sampleRate * 2 * M_PI;
-
-            if(phase > 2 * M_PI)
+            for(int i = 0; i < buffer.getNumSamples(); i++)
             {
-                phase -= 2 * M_PI;
-            }
+                float lfo = 0.5 * std::sin(phase);
+                phase += *modulationRateHzParameter / sampleRate * 2 * M_PI;
 
-            delay = MAX_DELAY_MS / 1000 * sampleRate *
+                if(phase > 2 * M_PI)
+                {
+                    phase -= 2 * M_PI;
+                }
+
+#if 0
+                delay = MAX_DELAY_MS / 1000 * sampleRate *
                     (0.5f + (*modulationDepthNormalisedParameter * lfo));
 
-            dspal_delayline_set_delay(delayline, delay);
+                dspal_delayline_set_delay(delayline, delay);
 
-            dspal_delayline_push_sample(delayline, channelData[i]);
-            channelData[i] = dspal_delayline_pop_sample(delayline);
+                dspal_delayline_push_sample(delayline, channelData[i]);
+                channelData[i] = dspal_delayline_pop_sample(delayline);
+#else
+                channelData[i] = lfo;
+#endif
+            }
         }
-
+        else
+        {
+            buffer.clear (channel, 0, buffer.getNumSamples());
+        }
     }
 }
 
