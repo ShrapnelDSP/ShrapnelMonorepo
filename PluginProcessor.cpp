@@ -1,4 +1,7 @@
 #include "PluginProcessor.h"
+#include "abstract_dsp.h"
+
+#define MAX_DELAY_MS 15
 
 //==============================================================================
 AudioPluginAudioProcessor::AudioPluginAudioProcessor()
@@ -9,8 +12,24 @@ AudioPluginAudioProcessor::AudioPluginAudioProcessor()
                       #endif
                        .withOutput ("Output", juce::AudioChannelSet::stereo(), true)
                      #endif
-                       )
+                       ),
+     parameters(*this, nullptr, juce::Identifier("parameters"),
+         {
+            std::make_unique<juce::AudioParameterFloat> ("modulationRateHz",
+                                                         "Rate (Hz)",
+                                                         5.f,
+                                                         15.f,
+                                                         10.f),
+
+            std::make_unique<juce::AudioParameterFloat> ("modulationDepth",
+                                                         "Depth",
+                                                         0.f,
+                                                         1.f,
+                                                         0.5f),
+        })
 {
+    modulationRateHzParameter = parameters.getRawParameterValue("modulationRateHz");
+    modulationDepthNormalisedParameter = parameters.getRawParameterValue("modulationDepth");
 }
 
 AudioPluginAudioProcessor::~AudioPluginAudioProcessor()
@@ -88,6 +107,8 @@ void AudioPluginAudioProcessor::prepareToPlay (double sampleRate, int samplesPer
     // Use this method as the place to do any pre-playback
     // initialisation that you need..
     juce::ignoreUnused (sampleRate, samplesPerBlock);
+
+    //dspal_delayline_create(sampleRate * MAX_DELAY_MS);
 }
 
 void AudioPluginAudioProcessor::releaseResources()

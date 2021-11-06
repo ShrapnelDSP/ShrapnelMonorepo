@@ -43,6 +43,10 @@ public:
     void setStateInformation (const void* data, int sizeInBytes) override;
 
 private:
-    //==============================================================================
+    juce::AudioProcessorValueTreeState parameters;
+
+    std::atomic<float> *modulationRateHzParameter = nullptr;
+    std::atomic<float> *modulationDepthNormalisedParameter = nullptr;
+
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AudioPluginAudioProcessor)
 };
