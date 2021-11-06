@@ -1,6 +1,7 @@
 #pragma once
 
 #include <juce_audio_processors/juce_audio_processors.h>
+#include "abstract_dsp.h"
 
 //==============================================================================
 class AudioPluginAudioProcessor  : public juce::AudioProcessor
@@ -47,6 +48,12 @@ private:
 
     std::atomic<float> *modulationRateHzParameter = nullptr;
     std::atomic<float> *modulationDepthNormalisedParameter = nullptr;
+
+    float sampleRate = 0;
+
+    dspal_delayline_t delayline;
+
+    float phase;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AudioPluginAudioProcessor)
 };

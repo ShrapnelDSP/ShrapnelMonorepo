@@ -1,7 +1,8 @@
 #include "PluginProcessor.h"
+#include <cmath>
 #include "abstract_dsp.h"
 
-#define MAX_DELAY_MS 15
+#define MAX_DELAY_MS 15.f
 
 //==============================================================================
 AudioPluginAudioProcessor::AudioPluginAudioProcessor()
@@ -108,7 +109,12 @@ void AudioPluginAudioProcessor::prepareToPlay (double sampleRate, int samplesPer
     // initialisation that you need..
     juce::ignoreUnused (sampleRate, samplesPerBlock);
 
-    //dspal_delayline_create(sampleRate * MAX_DELAY_MS);
+    // TODO this leaks the delayline when prepare called multiple times (reaper
+    // calls this a couple times when we start playing)
+    delayline = dspal_delayline_create(sampleRate * MAX_DELAY_MS / 1000);
+    dspal_delayline_set_buffer_size(delayline, (size_t)samplesPerBlock);
+
+    this->sampleRate = sampleRate;
 }
 
 void AudioPluginAudioProcessor::releaseResources()
@@ -168,8 +174,27 @@ void AudioPluginAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
     for (int channel = 0; channel < totalNumInputChannels; ++channel)
     {
         auto* channelData = buffer.getWritePointer (channel);
-        juce::ignoreUnused (channelData);
-        // ..do something to the data...
+
+        float delay = 0;
+        for(int i = 0; i < buffer.getNumSamples(); i++)
+        {
+            float lfo = 0.5 * std::sin(phase);
+            phase += *modulationRateHzParameter / sampleRate * 2 * M_PI;
+
+            if(phase > 2 * M_PI)
+            {
+                phase -= 2 * M_PI;
+            }
+
+            delay = MAX_DELAY_MS / 1000 * sampleRate *
+                    (0.5f + (*modulationDepthNormalisedParameter * lfo));
+
+            dspal_delayline_set_delay(delayline, delay);
+
+            dspal_delayline_push_sample(delayline, channelData[i]);
+            channelData[i] = dspal_delayline_pop_sample(delayline);
+        }
+
     }
 }
 
