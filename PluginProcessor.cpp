@@ -26,25 +26,24 @@ AudioPluginAudioProcessor::AudioPluginAudioProcessor()
             std::make_unique<juce::AudioParameterFloat> ("modulationRateHz",
                                                          "Rate (Hz)",
                                                          0.1f,
-                                                         20.f,
-                                                         12.5f),
+                                                         2.f,
+                                                         0.5f),
 
             std::make_unique<juce::AudioParameterFloat> ("modulationDepth",
                                                          "Depth",
                                                          0.f,
                                                          1.f,
-                                                         0.5f),
+                                                         1.f),
 
             std::make_unique<juce::AudioParameterFloat> ("mix",
                                                          "Mix",
                                                          0.f,
                                                          1.f,
-                                                         0.5f),
+                                                         1.f),
         }),
      control_signal_downsample(1,
                                CONTROL_SIGNAL_DOWNSAMPLE_ORDER,
-                               juce::dsp::Oversampling<float>::filterHalfBandFIREquiripple,
-                               false)
+                               juce::dsp::Oversampling<float>::filterHalfBandFIREquiripple)
 {
     modulationRateHzParameter = parameters.getRawParameterValue("modulationRateHz");
     modulationDepthNormalisedParameter = parameters.getRawParameterValue("modulationDepth");
@@ -245,19 +244,27 @@ void AudioPluginAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
                     noise_samples_left = fast_noise_block.getNumSamples();
                 }
 
-#if 0
-                float delay = MAX_DELAY_MS / 1000 * sampleRate *
-                    (0.5f + (*modulationDepthNormalisedParameter * noise));
+                float current_noise_sample = fast_noise_block.getSample(
+                        0,
+                        (int)fast_noise_block.getNumSamples() -
+                        noise_samples_left);
 
-                dspal_delayline_set_delay(delayline, delay);
+
+#if 1
+                float delay = MAX_DELAY_MS / 1000 * sampleRate *
+                    (0.5f + (*modulationDepthNormalisedParameter * current_noise_sample));
+
+                float clipped_delay = juce::jlimit((float)0, std::floor(sampleRate * MAX_DELAY_MS / 1000), delay);
+
+                dspal_delayline_set_delay(delayline, clipped_delay);
 
                 dspal_delayline_push_sample(delayline, channelData[i]);
                 channelData[i] = channelData[i] +
                     (*mixParameter * dspal_delayline_pop_sample(delayline));
 #else
-                channelData[i] = fast_noise_block.getSample(0, (int)fast_noise_block.getNumSamples() - noise_samples_left);
-                noise_samples_left--;
+                channelData[i] = current_noise_sample;
 #endif
+                noise_samples_left--;
             }
         }
         else
