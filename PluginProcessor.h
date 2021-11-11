@@ -1,6 +1,7 @@
 #pragma once
 
 #include <juce_audio_processors/juce_audio_processors.h>
+#include <juce_dsp/juce_dsp.h>
 #include "abstract_dsp.h"
 
 //==============================================================================
@@ -51,11 +52,14 @@ private:
     std::atomic<float> *mixParameter = nullptr;
 
     float sampleRate = 0;
+    int noise_samples_left = 0;
 
     dspal_delayline_t delayline;
     dspal_iir_t lowpass;
 
     juce::Random random;
+
+    juce::dsp::Oversampling<float> control_signal_downsample;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AudioPluginAudioProcessor)
 };

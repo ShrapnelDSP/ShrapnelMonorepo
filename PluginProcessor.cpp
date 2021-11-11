@@ -1,8 +1,15 @@
 #include "PluginProcessor.h"
 #include <cmath>
+#include <assert.h>
 #include "abstract_dsp.h"
 
 #define MAX_DELAY_MS 15.f
+
+/* The low pass filter on the control signal has very low cut-off frequency. It
+ * needs to be run at a lower samplerate to ensure the filter's stability.
+ */
+#define CONTROL_SIGNAL_DOWNSAMPLE_ORDER (4)
+#define CONTROL_SIGNAL_DOWNSAMPLE_RATIO (1 << CONTROL_SIGNAL_DOWNSAMPLE_ORDER)
 
 //==============================================================================
 AudioPluginAudioProcessor::AudioPluginAudioProcessor()
@@ -18,7 +25,7 @@ AudioPluginAudioProcessor::AudioPluginAudioProcessor()
          {
             std::make_unique<juce::AudioParameterFloat> ("modulationRateHz",
                                                          "Rate (Hz)",
-                                                         5.f,
+                                                         0.1f,
                                                          20.f,
                                                          12.5f),
 
@@ -33,7 +40,11 @@ AudioPluginAudioProcessor::AudioPluginAudioProcessor()
                                                          0.f,
                                                          1.f,
                                                          0.5f),
-        })
+        }),
+     control_signal_downsample(1,
+                               CONTROL_SIGNAL_DOWNSAMPLE_ORDER,
+                               juce::dsp::Oversampling<float>::filterHalfBandFIREquiripple,
+                               false)
 {
     modulationRateHzParameter = parameters.getRawParameterValue("modulationRateHz");
     modulationDepthNormalisedParameter = parameters.getRawParameterValue("modulationDepth");
@@ -114,9 +125,9 @@ void AudioPluginAudioProcessor::changeProgramName (int index, const juce::String
 //==============================================================================
 void AudioPluginAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
+    assert(samplesPerBlock > 0);
     // Use this method as the place to do any pre-playback
     // initialisation that you need..
-    juce::ignoreUnused (sampleRate, samplesPerBlock);
 
     // TODO this leaks the delayline when prepare called multiple times (reaper
     // calls this a couple times when we start playing)
@@ -139,6 +150,10 @@ void AudioPluginAudioProcessor::prepareToPlay (double sampleRate, int samplesPer
     // signal value for every high samplerate sample.
 
     dspal_iir_reset(lowpass);
+
+    control_signal_downsample.initProcessing((size_t)samplesPerBlock);
+    control_signal_downsample.reset();
+    noise_samples_left = 0;
 }
 
 void AudioPluginAudioProcessor::releaseResources()
@@ -199,22 +214,39 @@ void AudioPluginAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
     {
         auto* channelData = buffer.getWritePointer (channel);
 
-        float delay = 0;
         if(channel == 0)
         {
             float coeffs[5] = { 0 };
-            dspal_biquad_design_lowpass(coeffs, *modulationRateHzParameter / sampleRate, M_SQRT1_2);
+            dspal_biquad_design_lowpass(coeffs,
+                                        *modulationRateHzParameter /
+                                        sampleRate *
+                                        CONTROL_SIGNAL_DOWNSAMPLE_RATIO,
+                                        M_SQRT1_2);
+
+            float noise = 0;
+            float *noise_p = &noise;
+            auto slow_noise_block = juce::dsp::AudioBlock<float>(&noise_p, 1, 1);
+            juce::dsp::AudioBlock<float> fast_noise_block;
             dspal_iir_set_coeffs(lowpass, coeffs, 2);
 
             for(int i = 0; i < buffer.getNumSamples(); i++)
             {
-                float noise = (random.nextFloat() - 0.5f) * 2;
-                dspal_iir_process(lowpass, &noise, &noise, 1);
-                /* Make up level loss from low pass filter
-                 * TODO adjust when frequency changes */
-                noise *= 10;
+                if(noise_samples_left == 0)
+                {
+                    noise = (random.nextFloat() - 0.5f) * 2;
 
-                delay = MAX_DELAY_MS / 1000 * sampleRate *
+                    dspal_iir_process(lowpass, &noise, &noise, 1);
+                    /* Make up level loss from low pass filter
+                     * TODO adjust when frequency changes */
+                    noise *= 50;
+
+                    fast_noise_block = control_signal_downsample.processSamplesUp(slow_noise_block);
+                    assert(fast_noise_block.getNumSamples() == CONTROL_SIGNAL_DOWNSAMPLE_RATIO);
+                    noise_samples_left = fast_noise_block.getNumSamples();
+                }
+
+#if 0
+                float delay = MAX_DELAY_MS / 1000 * sampleRate *
                     (0.5f + (*modulationDepthNormalisedParameter * noise));
 
                 dspal_delayline_set_delay(delayline, delay);
@@ -222,6 +254,10 @@ void AudioPluginAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
                 dspal_delayline_push_sample(delayline, channelData[i]);
                 channelData[i] = channelData[i] +
                     (*mixParameter * dspal_delayline_pop_sample(delayline));
+#else
+                channelData[i] = fast_noise_block.getSample(0, (int)fast_noise_block.getNumSamples() - noise_samples_left);
+                noise_samples_left--;
+#endif
             }
         }
         else
