@@ -216,11 +216,10 @@ void AudioPluginAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
         if(channel == 0)
         {
             float coeffs[5] = { 0 };
-            dspal_biquad_design_lowpass(coeffs,
-                                        *modulationRateHzParameter /
-                                        sampleRate *
-                                        CONTROL_SIGNAL_DOWNSAMPLE_RATIO,
-                                        M_SQRT1_2);
+            float normalised_cutoff = *modulationRateHzParameter /
+                                       sampleRate *
+                                       CONTROL_SIGNAL_DOWNSAMPLE_RATIO;
+            dspal_biquad_design_lowpass(coeffs, normalised_cutoff, M_SQRT1_2);
 
             float noise = 0;
             float *noise_p = &noise;
@@ -235,9 +234,9 @@ void AudioPluginAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
                     noise = (random.nextFloat() - 0.5f) * 2;
 
                     dspal_iir_process(lowpass, &noise, &noise, 1);
-                    /* Make up level loss from low pass filter
-                     * TODO adjust when frequency changes */
-                    noise *= 50;
+                    /* Make up level loss from low pass filter */
+                    noise /= normalised_cutoff;
+                    noise *= juce::Decibels::decibelsToGain(-50.f);
 
                     fast_noise_block = control_signal_downsample.processSamplesUp(slow_noise_block);
                     assert(fast_noise_block.getNumSamples() == CONTROL_SIGNAL_DOWNSAMPLE_RATIO);
@@ -248,7 +247,7 @@ void AudioPluginAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
                         0,
                         (int)fast_noise_block.getNumSamples() -
                         noise_samples_left);
-
+                noise_samples_left--;
 
 #if 1
                 float delay = MAX_DELAY_MS / 1000 * sampleRate *
@@ -264,7 +263,6 @@ void AudioPluginAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
 #else
                 channelData[i] = current_noise_sample;
 #endif
-                noise_samples_left--;
             }
         }
         else
