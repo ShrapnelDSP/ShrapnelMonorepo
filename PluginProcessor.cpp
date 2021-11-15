@@ -5,12 +5,6 @@
 
 #define MAX_DELAY_MS 15.f
 
-/* The low pass filter on the control signal has very low cut-off frequency. It
- * needs to be run at a lower samplerate to ensure the filter's stability.
- */
-#define CONTROL_SIGNAL_DOWNSAMPLE_ORDER (4)
-#define CONTROL_SIGNAL_DOWNSAMPLE_RATIO (1 << CONTROL_SIGNAL_DOWNSAMPLE_ORDER)
-
 //==============================================================================
 AudioPluginAudioProcessor::AudioPluginAudioProcessor()
      : AudioProcessor (BusesProperties()
@@ -25,9 +19,9 @@ AudioPluginAudioProcessor::AudioPluginAudioProcessor()
          {
             std::make_unique<juce::AudioParameterFloat> ("modulationRateHz",
                                                          "Rate (Hz)",
-                                                         0.1f,
-                                                         2.f,
-                                                         0.5f),
+                                                         1.f,
+                                                         100.f,
+                                                         30.f),
 
             std::make_unique<juce::AudioParameterFloat> ("modulationDepth",
                                                          "Depth",
@@ -40,16 +34,11 @@ AudioPluginAudioProcessor::AudioPluginAudioProcessor()
                                                          0.f,
                                                          1.f,
                                                          1.f),
-        }),
-     control_signal_downsample(1,
-                               CONTROL_SIGNAL_DOWNSAMPLE_ORDER,
-                               juce::dsp::Oversampling<float>::filterHalfBandFIREquiripple)
+        })
 {
     modulationRateHzParameter = parameters.getRawParameterValue("modulationRateHz");
     modulationDepthNormalisedParameter = parameters.getRawParameterValue("modulationDepth");
     mixParameter = parameters.getRawParameterValue("mix");
-
-    lowpass = dspal_iir_create(2);
 }
 
 AudioPluginAudioProcessor::~AudioPluginAudioProcessor()
@@ -135,24 +124,6 @@ void AudioPluginAudioProcessor::prepareToPlay (double sampleRate, int samplesPer
 
     this->sampleRate = sampleRate;
 
-    // TODO generate the low frequency noise at some low samplerate (~ 100 Hz)
-    // IIR filters will get unstable if the cutoff frequency is very small.
-    //
-    // This can be done by keeping a sample counter, and when the count exceeds
-    // some limit (the ratio of normal rate to low rate), processing a single
-    // sample in the slow rate domain.
-    //
-    // E.G. every 256/512/1024 sample at 48kHz/96kHz/192kHz, process a sample.
-    // This means the slow sample rate is 187.5 Hz.
-    //
-    // dsp::Oversampling can be used to oversample the slow rate to find the
-    // signal value for every high samplerate sample.
-
-    dspal_iir_reset(lowpass);
-
-    control_signal_downsample.initProcessing((size_t)samplesPerBlock);
-    control_signal_downsample.reset();
-    noise_samples_left = 0;
 }
 
 void AudioPluginAudioProcessor::releaseResources()
@@ -185,6 +156,18 @@ bool AudioPluginAudioProcessor::isBusesLayoutSupported (const BusesLayout& layou
   #endif
 }
 
+static float triangle(float phase)
+{
+    if(phase < M_PI)
+    {
+        return 1 - 2 * phase / M_PI;
+    }
+    else
+    {
+        return - 3 + 2 * phase / M_PI;
+    }
+}
+
 void AudioPluginAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
                                               juce::MidiBuffer& midiMessages)
 {
@@ -215,43 +198,19 @@ void AudioPluginAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
 
         if(channel == 0)
         {
-            float coeffs[5] = { 0 };
-            float normalised_cutoff = *modulationRateHzParameter /
-                                       sampleRate *
-                                       CONTROL_SIGNAL_DOWNSAMPLE_RATIO;
-            dspal_biquad_design_lowpass(coeffs, normalised_cutoff, M_SQRT1_2);
-
-            float noise = 0;
-            float *noise_p = &noise;
-            auto slow_noise_block = juce::dsp::AudioBlock<float>(&noise_p, 1, 1);
-            juce::dsp::AudioBlock<float> fast_noise_block;
-            dspal_iir_set_coeffs(lowpass, coeffs, 2);
-
             for(int i = 0; i < buffer.getNumSamples(); i++)
             {
-                if(noise_samples_left == 0)
+                float lfo = triangle(phase);
+                phase += *modulationRateHzParameter / sampleRate * 2 * M_PI;
+
+                if(phase > 2 * M_PI)
                 {
-                    noise = (random.nextFloat() - 0.5f) * 2;
-
-                    dspal_iir_process(lowpass, &noise, &noise, 1);
-                    /* Make up level loss from low pass filter */
-                    noise /= normalised_cutoff;
-                    noise *= juce::Decibels::decibelsToGain(-50.f);
-
-                    fast_noise_block = control_signal_downsample.processSamplesUp(slow_noise_block);
-                    assert(fast_noise_block.getNumSamples() == CONTROL_SIGNAL_DOWNSAMPLE_RATIO);
-                    noise_samples_left = fast_noise_block.getNumSamples();
+                    phase -= 2 * M_PI;
                 }
 
-                float current_noise_sample = fast_noise_block.getSample(
-                        0,
-                        (int)fast_noise_block.getNumSamples() -
-                        noise_samples_left);
-                noise_samples_left--;
-
-#if 1
+#if 0
                 float delay = MAX_DELAY_MS / 1000 * sampleRate *
-                    (0.5f + (*modulationDepthNormalisedParameter * current_noise_sample));
+                    (0.5f + (*modulationDepthNormalisedParameter * lfo));
 
                 float clipped_delay = juce::jlimit((float)0, std::floor(sampleRate * MAX_DELAY_MS / 1000), delay);
 
@@ -261,7 +220,7 @@ void AudioPluginAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
                 channelData[i] = channelData[i] +
                     (*mixParameter * dspal_delayline_pop_sample(delayline));
 #else
-                channelData[i] = current_noise_sample;
+                channelData[i] = lfo;
 #endif
             }
         }
