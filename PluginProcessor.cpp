@@ -19,21 +19,21 @@ AudioPluginAudioProcessor::AudioPluginAudioProcessor()
          {
             std::make_unique<juce::AudioParameterFloat> ("modulationRateHz",
                                                          "Rate (Hz)",
-                                                         1.f,
-                                                         100.f,
-                                                         30.f),
+                                                         0.1f,
+                                                         4.f,
+                                                         0.95f),
 
             std::make_unique<juce::AudioParameterFloat> ("modulationDepth",
                                                          "Depth",
                                                          0.f,
                                                          1.f,
-                                                         1.f),
+                                                         0.3f),
 
             std::make_unique<juce::AudioParameterFloat> ("mix",
                                                          "Mix",
                                                          0.f,
                                                          1.f,
-                                                         1.f),
+                                                         0.8f),
         })
 {
     modulationRateHzParameter = parameters.getRawParameterValue("modulationRateHz");
@@ -200,7 +200,7 @@ void AudioPluginAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
         {
             for(int i = 0; i < buffer.getNumSamples(); i++)
             {
-                float lfo = triangle(phase);
+                float lfo = 0.5 * triangle(phase);
                 phase += *modulationRateHzParameter / sampleRate * 2 * M_PI;
 
                 if(phase > 2 * M_PI)
@@ -208,11 +208,13 @@ void AudioPluginAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
                     phase -= 2 * M_PI;
                 }
 
-#if 0
+#if 1
                 float delay = MAX_DELAY_MS / 1000 * sampleRate *
                     (0.5f + (*modulationDepthNormalisedParameter * lfo));
 
                 float clipped_delay = juce::jlimit((float)0, std::floor(sampleRate * MAX_DELAY_MS / 1000), delay);
+
+                assert(clipped_delay == delay);
 
                 dspal_delayline_set_delay(delayline, clipped_delay);
 
