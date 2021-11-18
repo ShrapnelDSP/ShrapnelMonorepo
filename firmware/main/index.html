@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<meta charset="UTF-8">
+
+<head>
+    <title> Swedish Chainsaw </title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎸</text></svg>">
+</head>
+
+<body>
+    <h1>SWEDISH CHAINSAW</h1>
+    <label for="tight"> TIGHT </label>
+    <input type="checkbox" id="tight"> <br>
+    <label for="gateThreshold"> GATE THRESHOLD </label>
+    <input type="range" min="0" max="1" value="0.5" step="0.05" class="slider" id="gateThreshold"> <br>
+    <label for="hmGain"> HM-2 GAIN </label>
+    <input type="range" min="0" max="1" value="0.5" step="0.05" class="slider" id="hmGain"> <br>
+    <label for="ampGain"> AMP GAIN </label>
+    <input type="range" min="0" max="1" value="0.5" step="0.05" class="slider" id="ampGain"> <br>
+    <label for="bass"> BASS </label>
+    <input type="range" min="0" max="1" value="0.5" step="0.05" class="slider" id="bass"> <br>
+    <label for="middle"> MIDDLE </label>
+    <input type="range" min="0" max="1" value="0.5" step="0.05" class="slider" id="middle"> <br>
+    <label for="treble"> TREBLE </label>
+    <input type="range" min="0" max="1" value="0.5" step="0.05" class="slider" id="treble"> <br>
+    <label for="volume"> VOLUME </label>
+    <input type="range" min="0" max="1" value="0.5" step="0.05" class="slider" id="volume"> <br>
+
+    <div id="clippingIndicator"> <p id="outClip"> Output Clipped </p> </div>
+
+    <script> 
+        let socket = new WebSocket("ws://" + window.location.host + "/websocket");
+        socket.onmessage = function(event)
+        {
+            console.log("Websocket message: " + event.data);
+
+            if(JSON.parse(event.data).event == "Output Clipped")
+            {
+                document.getElementById("outClip").style.color = "red"
+                // TODO this timer should be restarted when another clipping
+                //      event is recived while the timer is running. Now we get 
+                //      a flashing effect instead of a solid red light for 
+                //      continous clipping
+                setTimeout(function () {document.getElementById("outClip").style.color = "black"}, 1500)
+            }
+            else
+            {
+               console.log("unhandled message")
+            }
+        }
+
+        tight = document.getElementById("tight");
+        gateThreshold = document.getElementById("gateThreshold");
+        hmGain = document.getElementById("hmGain");
+        ampGain = document.getElementById("ampGain");
+        bass = document.getElementById("bass");
+        middle = document.getElementById("middle");
+        treble = document.getElementById("treble");
+        volume = document.getElementById("volume");
+
+        onsliderinput = function()
+        {
+            socketData = JSON.stringify({ id: this.id, value:parseFloat(this.value) });
+            console.log(socketData);
+            socket.send(socketData);
+        }
+
+        tight.oninput = function()
+        {
+            socketData = JSON.stringify({ id: this.id, value:this.checked ? 1 : 0});
+            console.log(socketData);
+            socket.send(socketData);
+        }
+
+        hmGain.oninput = onsliderinput;
+        ampGain.oninput = onsliderinput;
+        bass.oninput = onsliderinput;
+        middle.oninput = onsliderinput;
+        treble.oninput = onsliderinput;
+        volume.oninput = onsliderinput;
+        gateThreshold.oninput = onsliderinput;
+    </script> 
+</body>
