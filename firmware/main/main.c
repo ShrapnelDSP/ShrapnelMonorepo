@@ -24,16 +24,12 @@
 
 #include "i2s.h"
 #include "profiling.h"
-#include "esp_http_websocket_server.h"
+#include "esp_http_server.h"
 #include "pcm3060.h"
 #include "cmd_handling.h"
 #include "audio_events.h"
 
 #define PROFILING_GPIO GPIO_NUM_23
-
-//this magic is used during the websocket handshake
-const char WEBSOCKET_KEY_MAGIC[] = "258EAFA5-E914-47DA-95CA-C5AB0DC85B11";
-#define STRLEN(a) (sizeof(a)/sizeof(char))
 
 #define QUEUE_LEN 10
 QueueHandle_t in_queue;
@@ -41,86 +37,31 @@ QueueHandle_t out_queue;
 
 #define I2C_NUM I2C_NUM_0
 
+/* TODO is the web server single threaded? Could there be 2 threads accessing
+ * this at the same time? */
+static uint8_t websocket_payload[1024];
+
 static esp_err_t websocket_get_handler(httpd_req_t *req)
 {
-    const size_t buf_len = 100;
-    size_t len;
-    char   buf[buf_len];
+    httpd_ws_frame_t pkt = { .payload = websocket_payload };
 
-    /* Get header value string length and allocate memory for length + 1,
-     * extra byte for null termination */
-    len = httpd_req_get_hdr_value_len(req, "Host") + 1;
-    if (len > 1) {
-        /* Copy null terminated value string into buffer */
-        if (httpd_req_get_hdr_value_str(req, "Host", buf, buf_len) == ESP_OK) {
-            ESP_LOGI(TAG, "Found header => Host: %s", buf);
-        }
-    }
-
-    len = httpd_req_get_hdr_value_len(req, "Upgrade") + 1;
-    if (len > 1) {
-        if (httpd_req_get_hdr_value_str(req, "Upgrade", buf, buf_len) == ESP_OK) {
-            ESP_LOGI(TAG, "Found header => Upgrade: %s", buf);
-        }
-        else
-        {
-            ESP_LOGE(TAG, "Upgrade header error");
-        }
-    }
-    else
+    esp_err_t rc = httpd_ws_recv_frame(req, &pkt, sizeof(websocket_payload));
+    if(rc != ESP_OK)
     {
-        ESP_LOGE(TAG, "Websocket request contained no Upgrade header");
+        ESP_LOGE(TAG, "websocket parse failed");
+        return rc;
     }
 
-    len = httpd_req_get_hdr_value_len(req, "Connection") + 1;
-    if (len > 1) {
-        if (httpd_req_get_hdr_value_str(req, "Connection", buf, buf_len) == ESP_OK) {
-            ESP_LOGI(TAG, "Found header => Connection: %s", buf);
-        }
-        else
-        {
-            ESP_LOGE(TAG, "Connection header error");
-        }
-    }
-    else
-    {
-        ESP_LOGE(TAG, "Websocket request contained no Connection header");
-    }
+    /* We should never see any of these packets */
+    assert(pkt.type != HTTPD_WS_TYPE_CONTINUE);
+    assert(pkt.type != HTTPD_WS_TYPE_BINARY);
+    assert(pkt.type != HTTPD_WS_TYPE_CLOSE);
+    assert(pkt.type != HTTPD_WS_TYPE_PING);
+    assert(pkt.type != HTTPD_WS_TYPE_PONG);
+    assert(pkt.final);
+    assert(!pkt.fragmented);
 
-    len = httpd_req_get_hdr_value_len(req, "Sec-WebSocket-Key") + 1;
-    if (len > 1) {
-        if (httpd_req_get_hdr_value_str(req, "Sec-WebSocket-Key", buf, buf_len) == ESP_OK) {
-            ESP_LOGI(TAG, "Found header => Sec-WebSocket-Key: %s", buf);
-        }
-        else
-        {
-            ESP_LOGE(TAG, "Sec-WebSocket-Key header error");
-        }
-    }
-    else
-    {
-        ESP_LOGE(TAG, "Websocket request contained no Sec-WebSocket-Key header");
-    }
-
-    //concatenate the magic to the request's key
-    strcat(buf, WEBSOCKET_KEY_MAGIC);
-
-    //calculate the sha1 of this
-    //sha1 is always 20 bytes long
-    unsigned char sha1[20];
-    esp_sha(SHA1, (unsigned char *)buf, strlen(buf), sha1);
-
-    //base64 encode the sha1
-    size_t olen;
-    mbedtls_base64_encode((unsigned char *)buf, buf_len - 1, &olen, sha1, 20);
-    ESP_LOGI(TAG, "Base64 encoded key length: %d", olen);
-
-    /* Response */
-    httpd_resp_set_hdr(req, "Upgrade", "websocket");
-    httpd_resp_set_hdr(req, "Connection", "Upgrade");
-    httpd_resp_set_hdr(req, "Sec-WebSocket-Accept", buf);
-    httpd_resp_set_status(req, "101 Switching Protocols");
-    httpd_resp_send(req, NULL, 0);
+    ESP_LOG_BUFFER_HEXDUMP(TAG, websocket_payload, pkt.len, ESP_LOG_INFO);
 
     return ESP_OK;
 }
@@ -141,7 +82,9 @@ static const httpd_uri_t websocket = {
     .uri       = "/websocket",
     .method    = HTTP_GET,
     .handler   = websocket_get_handler,
-    .user_ctx  = NULL
+    .user_ctx  = NULL,
+    .is_websocket = true,
+    /* TODO what is a subprotocol? */
 };
 
 static const httpd_uri_t ui = {
@@ -156,29 +99,9 @@ static httpd_handle_t start_webserver(void)
     httpd_handle_t server = NULL;
     httpd_config_t config = HTTPD_DEFAULT_CONFIG();
 
-    if(in_queue == NULL)
-    {
-        in_queue  = xQueueCreate(QUEUE_LEN, sizeof(char*));
-        if(in_queue == NULL)
-        {
-            ESP_LOGE(TAG, "Failed to create in queue");
-            return NULL;
-        }
-    }
-
-    if(out_queue == NULL)
-    {
-        out_queue = xQueueCreate(QUEUE_LEN, sizeof(char*));
-        if(out_queue == NULL)
-        {
-            ESP_LOGE(TAG, "Failed to create out queue");
-            return NULL;
-        }
-    }
-
     // Start the httpd server
     ESP_LOGI(TAG, "Starting server on port: '%d'", config.server_port);
-    if (httpd_start(&server, &config, in_queue, out_queue) == ESP_OK) {
+    if (httpd_start(&server, &config) == ESP_OK) {
         // Set URI handlers
         ESP_LOGI(TAG, "Registering URI handlers");
         httpd_register_uri_handler(server, &websocket);
@@ -271,7 +194,12 @@ void app_main(void)
     /* Start the server for the first time */
     server = start_webserver();
 
-    /* queue is created in start_webserver */
+    in_queue  = xQueueCreate(QUEUE_LEN, sizeof(char*));
+    assert(in_queue);
+
+    out_queue = xQueueCreate(QUEUE_LEN, sizeof(char*));
+    assert(out_queue);
+
     cmd_init(in_queue);
 
     ESP_ERROR_CHECK(audio_event_init(out_queue));

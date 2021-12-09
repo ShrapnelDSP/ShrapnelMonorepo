@@ -1,6 +1,6 @@
 #include "audio_events.h"
 #include "esp_log.h"
-#include "esp_http_websocket_server.h"
+#include "esp_http_server.h"
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 #define TAG "audio_events"
