@@ -44,6 +44,7 @@ static uint8_t websocket_payload[1024];
 static esp_err_t websocket_get_handler(httpd_req_t *req)
 {
     httpd_ws_frame_t pkt = { .payload = websocket_payload };
+    memset(websocket_payload, 0, sizeof(websocket_payload));
 
     esp_err_t rc = httpd_ws_recv_frame(req, &pkt, sizeof(websocket_payload));
     if(rc != ESP_OK)
@@ -61,7 +62,19 @@ static esp_err_t websocket_get_handler(httpd_req_t *req)
     assert(pkt.final);
     assert(!pkt.fragmented);
 
-    ESP_LOG_BUFFER_HEXDUMP(TAG, websocket_payload, pkt.len, ESP_LOG_INFO);
+    ESP_LOGI(TAG, "%s len = %zd", __FUNCTION__, pkt.len);
+    ESP_LOG_BUFFER_HEXDUMP(TAG, websocket_payload, sizeof(websocket_payload), ESP_LOG_DEBUG);
+
+    ESP_LOGE(TAG, "%p", websocket_payload);
+    ESP_LOGE(TAG, "%p", &websocket_payload);
+    ESP_LOGE(TAG, "%p", &websocket_payload[0]);
+    rc = xQueueSendToBack(in_queue, websocket_payload, 100 / portTICK_PERIOD_MS);
+    if(rc != pdTRUE)
+    {
+        ESP_LOGE(TAG, "%s failed to send to queue", __FUNCTION__);
+    }
+
+    ESP_LOGI(TAG, "%s stack %d", __FUNCTION__, uxTaskGetStackHighWaterMark(NULL));
 
     return ESP_OK;
 }
@@ -172,7 +185,6 @@ static void i2c_setup(void)
 
 void app_main(void)
 {
-    int ret;
     static httpd_handle_t server = NULL;
 
     ESP_ERROR_CHECK(nvs_flash_init());
@@ -194,7 +206,7 @@ void app_main(void)
     /* Start the server for the first time */
     server = start_webserver();
 
-    in_queue  = xQueueCreate(QUEUE_LEN, sizeof(char*));
+    in_queue  = xQueueCreate(QUEUE_LEN, 1024 * sizeof(char));
     assert(in_queue);
 
     out_queue = xQueueCreate(QUEUE_LEN, sizeof(char*));
