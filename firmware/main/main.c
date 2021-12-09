@@ -283,17 +283,22 @@ void app_main(void)
 
     vTaskDelay(100 / portTICK_PERIOD_MS);
 
+#if 0
     //dac must be powered up after the i2s clocks have stabilised
     pcm3060_init(I2C_NUM, 0);
     ESP_ERROR_CHECK(pcm3060_power_up());
+#endif
+
     /* Start the mdns service */
     start_mdns();
 
+#if 0
     ret = xTaskCreate(i2s_profiling_task, "i2s profiling", 2000, NULL, configMAX_PRIORITIES - 2, NULL);
     if(ret != pdPASS)
     {
         ESP_LOGE(TAG, "Profiling task create failed %d", ret);
     }
+#endif
 
     ESP_LOGI(TAG, "setup done");
 }
