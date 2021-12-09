@@ -209,7 +209,7 @@ void app_main(void)
     in_queue  = xQueueCreate(QUEUE_LEN, 1024 * sizeof(char));
     assert(in_queue);
 
-    out_queue = xQueueCreate(QUEUE_LEN, sizeof(char*));
+    out_queue = xQueueCreate(QUEUE_LEN, 1024 * sizeof(char));
     assert(out_queue);
 
     cmd_init(in_queue);
