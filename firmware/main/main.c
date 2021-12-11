@@ -18,9 +18,6 @@
 #include <driver/gpio.h>
 #include "nvs_flash.h"
 #include "esp_netif.h"
-#include "esp_eth.h"
-#include "esp32/sha.h"
-#include "mbedtls/base64.h"
 #include "protocol_examples_common.h"
 #include "mdns.h"
 
@@ -35,18 +32,14 @@
 
 #define QUEUE_LEN 10
 #define MAX_CLIENTS 3
+#define MAX_WEBSOCKET_PAYLOAD_SIZE 128
 #define ARRAY_LENGTH(a) (sizeof(a)/sizeof(a[0]))
 
-QueueHandle_t in_queue;
-
+static QueueHandle_t in_queue;
 static QueueHandle_t out_queue;
 static httpd_handle_t server = NULL;
 
 #define I2C_NUM I2C_NUM_0
-
-/* TODO is the web server single threaded? Could there be 2 threads accessing
- * this at the same time? */
-static uint8_t websocket_payload[1024];
 
 static void websocket_send(void *arg);
 static esp_err_t websocket_get_handler(httpd_req_t *req);
@@ -63,8 +56,11 @@ static void i2c_setup(void);
 
 static esp_err_t websocket_get_handler(httpd_req_t *req)
 {
-    httpd_ws_frame_t pkt = { .payload = websocket_payload };
-    memset(websocket_payload, 0, sizeof(websocket_payload));
+    uint8_t websocket_payload[MAX_WEBSOCKET_PAYLOAD_SIZE] = { 0 };
+
+    httpd_ws_frame_t pkt = {
+        .payload = websocket_payload,
+    };
 
     if(req->method == HTTP_GET)
     {
@@ -87,13 +83,11 @@ static esp_err_t websocket_get_handler(httpd_req_t *req)
     assert(pkt.type != HTTPD_WS_TYPE_PONG);
     assert(pkt.final);
     assert(!pkt.fragmented);
+    assert(pkt.len <= sizeof(websocket_payload));
 
     ESP_LOGD(TAG, "%s len = %zd", __FUNCTION__, pkt.len);
     ESP_LOG_BUFFER_HEXDUMP(TAG, websocket_payload, sizeof(websocket_payload), ESP_LOG_DEBUG);
 
-    ESP_LOGE(TAG, "%p", websocket_payload);
-    ESP_LOGE(TAG, "%p", &websocket_payload);
-    ESP_LOGE(TAG, "%p", &websocket_payload[0]);
     rc = xQueueSendToBack(in_queue, websocket_payload, 100 / portTICK_PERIOD_MS);
     if(rc != pdTRUE)
     {
@@ -204,7 +198,7 @@ static void websocket_send(void *arg)
 {
     httpd_handle_t server = arg;
 
-    char buffer[1024 + 1] = {0};
+    char buffer[MAX_WEBSOCKET_PAYLOAD_SIZE + 1] = {0};
 
     int rc = xQueueReceive(out_queue, buffer, 0);
     if(!rc)
@@ -215,6 +209,8 @@ static void websocket_send(void *arg)
 
     ESP_LOGD(TAG, "%s len = %zd", __FUNCTION__, strlen(buffer));
     ESP_LOG_BUFFER_HEXDUMP(TAG, buffer, sizeof(buffer), ESP_LOG_DEBUG);
+
+    assert(strlen(buffer) < sizeof(buffer));
 
     httpd_ws_frame_t pkt = {
         .type = HTTPD_WS_TYPE_TEXT,
@@ -301,13 +297,13 @@ void app_main(void)
     /* Start the server for the first time */
     server = start_webserver();
 
-    in_queue  = xQueueCreate(QUEUE_LEN, 1024 * sizeof(char));
+    in_queue  = xQueueCreate(QUEUE_LEN, MAX_WEBSOCKET_PAYLOAD_SIZE);
     assert(in_queue);
 
-    out_queue = xQueueCreate(QUEUE_LEN, 1024 * sizeof(char));
+    out_queue = xQueueCreate(QUEUE_LEN, MAX_WEBSOCKET_PAYLOAD_SIZE);
     assert(out_queue);
 
-    cmd_init(in_queue);
+    cmd_init(in_queue, MAX_WEBSOCKET_PAYLOAD_SIZE);
 
     ESP_ERROR_CHECK(audio_event_init(out_queue));
 
@@ -340,7 +336,7 @@ void app_main(void)
     while(1)
     {
         /* TODO Socket is closed as soon as we send to the websocket */
-        audio_event_send_callback("hello");
+        xEventGroupSetBits(g_audio_event_group, AUDIO_EVENT_OUTPUT_CLIPPED);
         vTaskDelay(10000 / portTICK_PERIOD_MS);
     }
 }

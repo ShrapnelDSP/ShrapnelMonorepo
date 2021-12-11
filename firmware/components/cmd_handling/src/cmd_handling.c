@@ -9,6 +9,7 @@
 #define TAG "cmd_handling"
 
 static QueueHandle_t in_queue;
+static size_t message_size;
 
 static audio_param_t get_id_for_param(const char *name)
 {
@@ -42,7 +43,8 @@ static audio_param_t get_id_for_param(const char *name)
 static void cmd_task(void *param)
 {
     /* plus 1 size here ensures that s is always a NULL terminated string */
-    char s[1024 + 1] = {0};
+    char s[message_size + 1];
+    memset(s, 0, sizeof(s));
     /* TODO should not leave these uninitialised */
     cJSON *json;
 
@@ -104,8 +106,10 @@ done:
     }
 }
 
-void cmd_init(QueueHandle_t q)
+void cmd_init(QueueHandle_t q, size_t a_message_size)
 {
     in_queue = q;
+    message_size = a_message_size;
+
     xTaskCreate(cmd_task, "command task", 4000, NULL, 5, NULL);
 }
