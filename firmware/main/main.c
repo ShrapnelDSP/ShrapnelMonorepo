@@ -68,7 +68,7 @@ static esp_err_t websocket_get_handler(httpd_req_t *req)
 
     if(req->method == HTTP_GET)
     {
-        ESP_LOGE("DEBUG", "before handshake");
+        ESP_LOGE(TAG, "before handshake");
         return ESP_OK;
     }
 
@@ -80,7 +80,6 @@ static esp_err_t websocket_get_handler(httpd_req_t *req)
     }
 
     /* We should never see any of these packets */
-#if 0
     assert(pkt.type != HTTPD_WS_TYPE_CONTINUE);
     assert(pkt.type != HTTPD_WS_TYPE_BINARY);
     assert(pkt.type != HTTPD_WS_TYPE_CLOSE);
@@ -88,7 +87,6 @@ static esp_err_t websocket_get_handler(httpd_req_t *req)
     assert(pkt.type != HTTPD_WS_TYPE_PONG);
     assert(pkt.final);
     assert(!pkt.fragmented);
-#endif
 
     ESP_LOGD(TAG, "%s len = %zd", __FUNCTION__, pkt.len);
     ESP_LOG_BUFFER_HEXDUMP(TAG, websocket_payload, sizeof(websocket_payload), ESP_LOG_DEBUG);
@@ -186,10 +184,9 @@ static void connect_handler(void* arg, esp_event_base_t event_base,
 
 void audio_event_send_callback(const char *message)
 {
-    ESP_LOGE("DEBUG", "%s", message);
     if(errQUEUE_FULL ==
             xQueueSendToBack(out_queue,
-                             &message,
+                             message,
                              100 / portTICK_PERIOD_MS))
     {
         ESP_LOGE(TAG, "Failed to send message to websocket");
@@ -216,16 +213,10 @@ static void websocket_send(void *arg)
         return;
     }
 
-    /* TODO
-     * https://github.com/espressif/esp-idf/issues/5405
-     * says that final must be set, but header says it is ignored when
-     * fragmented is false?
-     *
-     * This is not working either way.
-     */
+    ESP_LOGD(TAG, "%s len = %zd", __FUNCTION__, strlen(buffer));
+    ESP_LOG_BUFFER_HEXDUMP(TAG, buffer, sizeof(buffer), ESP_LOG_DEBUG);
+
     httpd_ws_frame_t pkt = {
-        .fragmented = false,
-        .final = true,
         .type = HTTPD_WS_TYPE_TEXT,
         .payload = (void *)buffer,
         .len = strlen(buffer),
