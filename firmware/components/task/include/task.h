@@ -1,5 +1,9 @@
 #pragma once
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stddef.h>
 
 typedef void (*task_func_t)(void *context);
@@ -11,3 +15,7 @@ typedef struct {
 } task_t;
 
 void task_start(task_t *task, const char *name, size_t stack, int priority);
+
+#ifdef __cplusplus
+}
+#endif

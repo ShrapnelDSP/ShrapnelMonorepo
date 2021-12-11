@@ -1,5 +1,9 @@
 #pragma once
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include "esp_err.h"
 
 typedef enum {
@@ -15,3 +19,7 @@ typedef enum {
 } audio_param_t;
 
 esp_err_t param_update_parameter(audio_param_t param, float value);
+
+#ifdef __cplusplus
+}
+#endif
