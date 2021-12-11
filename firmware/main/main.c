@@ -332,11 +332,4 @@ void app_main(void)
 #endif
 
     ESP_LOGI(TAG, "setup done");
-
-    while(1)
-    {
-        /* TODO Socket is closed as soon as we send to the websocket */
-        xEventGroupSetBits(g_audio_event_group, AUDIO_EVENT_OUTPUT_CLIPPED);
-        vTaskDelay(10000 / portTICK_PERIOD_MS);
-    }
 }
