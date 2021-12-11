@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <math.h>
 
+#define LOG_LOCAL_LEVEL ESP_LOG_DEBUG
 #include "esp_log.h"
 #define TAG "main"
 
@@ -65,6 +66,12 @@ static esp_err_t websocket_get_handler(httpd_req_t *req)
     httpd_ws_frame_t pkt = { .payload = websocket_payload };
     memset(websocket_payload, 0, sizeof(websocket_payload));
 
+    if(req->method == HTTP_GET)
+    {
+        ESP_LOGE("DEBUG", "before handshake");
+        return ESP_OK;
+    }
+
     esp_err_t rc = httpd_ws_recv_frame(req, &pkt, sizeof(websocket_payload));
     if(rc != ESP_OK)
     {
@@ -73,6 +80,7 @@ static esp_err_t websocket_get_handler(httpd_req_t *req)
     }
 
     /* We should never see any of these packets */
+#if 0
     assert(pkt.type != HTTPD_WS_TYPE_CONTINUE);
     assert(pkt.type != HTTPD_WS_TYPE_BINARY);
     assert(pkt.type != HTTPD_WS_TYPE_CLOSE);
@@ -80,8 +88,9 @@ static esp_err_t websocket_get_handler(httpd_req_t *req)
     assert(pkt.type != HTTPD_WS_TYPE_PONG);
     assert(pkt.final);
     assert(!pkt.fragmented);
+#endif
 
-    ESP_LOGI(TAG, "%s len = %zd", __FUNCTION__, pkt.len);
+    ESP_LOGD(TAG, "%s len = %zd", __FUNCTION__, pkt.len);
     ESP_LOG_BUFFER_HEXDUMP(TAG, websocket_payload, sizeof(websocket_payload), ESP_LOG_DEBUG);
 
     ESP_LOGE(TAG, "%p", websocket_payload);
@@ -207,8 +216,16 @@ static void websocket_send(void *arg)
         return;
     }
 
+    /* TODO
+     * https://github.com/espressif/esp-idf/issues/5405
+     * says that final must be set, but header says it is ignored when
+     * fragmented is false?
+     *
+     * This is not working either way.
+     */
     httpd_ws_frame_t pkt = {
         .fragmented = false,
+        .final = true,
         .type = HTTPD_WS_TYPE_TEXT,
         .payload = (void *)buffer,
         .len = strlen(buffer),
@@ -219,11 +236,15 @@ static void websocket_send(void *arg)
 
     httpd_get_client_list((httpd_handle_t) arg, &number_of_clients, client_fds);
 
+    ESP_LOGD(TAG, "n = %zd", number_of_clients);
+
     assert(number_of_clients <= MAX_CLIENTS);
 
     for(int i = 0; i < number_of_clients; i++)
     {
         int fd = client_fds[i];
+
+        ESP_LOGD(TAG, "fd = %d", fd);
 
         if(HTTPD_WS_CLIENT_WEBSOCKET != httpd_ws_get_fd_info(server, fd))
         {
