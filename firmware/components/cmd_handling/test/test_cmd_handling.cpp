@@ -5,34 +5,28 @@
 
 #include "CppUTest/TestHarness.h"
 #include "CppUTest/CommandLineTestRunner.h"
+#include "CppUTestExt/MockSupport.h"
 
-TEST_GROUP(FirstTestGroup)
+TEST_GROUP(cmd_handling)
 {
+    void teardown()
+    {
+        mock().clear();
+    }
 };
 
-IMPORT_TEST_GROUP(FirstTestGroup);
+IMPORT_TEST_GROUP(cmd_handling);
 
-TEST(FirstTestGroup, FirstTest)
+TEST(cmd_handling, QueueFail)
 {
-   FAIL("Fail me!");
-}
+    mock().expectOneCall("xQueueReceive").ignoreOtherParameters().andReturnValue((int)false);
+    mock().expectNoCall("param_update_parameter");
 
-TEST(FirstTestGroup, SecondTest)
-{
-    STRCMP_EQUAL("hello", "world");
-}
-
-TEST(FirstTestGroup, QueueFail)
-{
-    /* TODO set up mock queue to fail
-     * Expect:
-     * - 1 call to queue
-     * - 0 calls to output function
-     */
     cmd_task_work(NULL);
+
+    mock().checkExpectations();
 }
 
-/* Queue returns fail, param_update_parameter is not called */
 /* Queue returns an invalid message, param_update_parameter is not called */
 /* Queue returns a valid message, param_update_parameter is called with correct parameters */
 
