@@ -6,7 +6,7 @@ BaseType_t xQueueReceive( QueueHandle_t xQueue, void * const pvBuffer, TickType_
 {
     return mock().actualCall("xQueueReceive").
             withParameter("xQueue", xQueue).
-            withParameter("pvBuffer", pvBuffer).
+            withOutputParameter("pvBuffer", pvBuffer).
             withParameter("xTicksToWait", xTicksToWait).
             returnIntValue();
 }
