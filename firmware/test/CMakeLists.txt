@@ -13,9 +13,6 @@ pkg_search_module(cpputest REQUIRED IMPORTED_TARGET cpputest)
 # components
 set(TESTING ON)
 
-include_directories(support/freertos/include)
-include_directories(support/log/include)
-
 add_subdirectory(support/log)
 add_subdirectory(support/freertos)
 add_subdirectory(support/esp_common)

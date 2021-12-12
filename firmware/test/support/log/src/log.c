@@ -12,7 +12,10 @@ static void esp_log_writev(esp_log_level_t level,
                    const char *format,
                    va_list args)
 {
-    printf(format, args);
+    (void) level;
+    (void) tag;
+
+    vprintf(format, args);
 }
 
 void esp_log_write(esp_log_level_t level, const char* tag, const char* format, ...)
