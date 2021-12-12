@@ -38,7 +38,7 @@ static audio_param_t get_id_for_param(const char *name)
     }
 
     ESP_LOGE(TAG, "Couldn't find id for parameter (%s)", name);
-    return -1;
+    return PARAM_MAX;
 }
 
 void cmd_task_work(void *context)
@@ -93,7 +93,7 @@ void cmd_task_work(void *context)
             goto done;
         }
 
-        if(parsed_id != -1)
+        if(parsed_id != PARAM_MAX)
         {
             param_update_parameter(parsed_id, parsed_value);
         }
