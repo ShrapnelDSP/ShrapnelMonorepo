@@ -1,17 +1,13 @@
-cmake_minimum_required(VERSION 3.5)
+cmake_minimum_required(VERSION 3.11)
 project (Tutorial
          LANGUAGES C CXX
          )
 include(CTest)
+find_package(PkgConfig REQUIRED)
 
 add_compile_options(-W -Wall -Wextra)
 
-# Check for CppUTest and bail out if they don't have it
-#if(DEFINED ENV{CPPUTEST_HOME})
-#  message("Using CppUTest found in $ENV{CPPUTEST_HOME}")
-#else()
-#  message(FATAL_ERROR "CPPUTEST_HOME is not set; You must tell CMake where to find CppUTest")
-#endif()
+pkg_search_module(cpputest REQUIRED IMPORTED_TARGET cpputest)
 
 # Tells the component cmake files to become test components instead of esp-idf
 # components

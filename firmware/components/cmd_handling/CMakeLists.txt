@@ -20,6 +20,7 @@ else()
     target_link_libraries(cmd_handling_test PRIVATE log)
     target_link_libraries(cmd_handling_test PRIVATE task_mock)
     target_link_libraries(cmd_handling_test PRIVATE audio_param_mock)
+    target_link_libraries(cmd_handling_test PRIVATE PkgConfig::cpputest)
 
     target_link_libraries(cmd_handling_test INTERFACE esp_common)
 
