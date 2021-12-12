@@ -4,7 +4,7 @@
 #include "esp_log.h"
 #include "cJSON.h"
 #include "audio_param.h"
-#include "freertos/queue.h"
+#include "freertos/task.h"
 #include "task.h"
 
 #define TAG "cmd_handling"
