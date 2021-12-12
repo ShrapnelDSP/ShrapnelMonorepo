@@ -19,6 +19,7 @@ include_directories(support/log/include)
 add_subdirectory(support/log)
 add_subdirectory(support/freertos)
 add_subdirectory(support/esp_common)
+add_subdirectory(support/json)
 
 add_subdirectory(../components/cmd_handling cmd_handling)
 add_subdirectory(../components/audio_param audio_param)
