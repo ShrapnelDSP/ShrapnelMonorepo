@@ -1,13 +1,24 @@
-cmake_minimum_required(VERSION 3.6)
+cmake_minimum_required(VERSION 3.14)
 project (Tutorial
          LANGUAGES C CXX
          )
+
+# GoogleTest requires at least C++11
+set(CMAKE_CXX_STANDARD 11)
+
+include(FetchContent)
+FetchContent_Declare(
+  googletest
+  URL https://github.com/google/googletest/archive/97a467571a0f615a4d96e79e4399c43221ca1232.zip
+)
+# For Windows: Prevent overriding the parent project's compiler/linker settings
+set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+FetchContent_MakeAvailable(googletest)
+
+include(GoogleTest)
 include(CTest)
-find_package(PkgConfig REQUIRED)
 
 add_compile_options(-W -Wall -Wextra)
-
-pkg_search_module(cpputest REQUIRED IMPORTED_TARGET cpputest)
 
 # Tells the component cmake files to become test components instead of esp-idf
 # components

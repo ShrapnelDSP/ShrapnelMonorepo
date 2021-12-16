@@ -17,13 +17,14 @@ else()
     target_link_libraries(cmd_handling_test PRIVATE log)
     target_link_libraries(cmd_handling_test PRIVATE task_mock)
 
-    target_link_libraries(cmd_handling_test PRIVATE PkgConfig::cpputest)
+    target_link_libraries(cmd_handling_test PRIVATE gtest_main)
+    gtest_discover_tests(cmd_handling_test)
 
-    set(testcases QueueFail InvalidMessage ValidMessage)
-    foreach(testcase ${testcases})
-        add_test(NAME cmd_handling.${testcase}
-            COMMAND cmd_handling_test -t "cmd_handling.${testcase}")
-        set_property(TEST cmd_handling.${testcase}
-            PROPERTY LABELS cmd_handling)
-    endforeach()
+#   set(testcases QueueFail InvalidMessage ValidMessage)
+#   foreach(testcase ${testcases})
+#       add_test(NAME cmd_handling.${testcase}
+#           COMMAND cmd_handling_test -t "cmd_handling.${testcase}")
+#       set_property(TEST cmd_handling.${testcase}
+#           PROPERTY LABELS cmd_handling)
+#   endforeach()
 endif()
