@@ -1,9 +1,5 @@
 #pragma once
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 #include "esp_err.h"
 
 typedef enum {
@@ -18,8 +14,11 @@ typedef enum {
     PARAM_MAX,
 } audio_param_t;
 
-esp_err_t param_update_parameter(audio_param_t param, float value);
+namespace shrapnel {
 
-#ifdef __cplusplus
-}
-#endif
+class AudioParameters {
+    public:
+        virtual esp_err_t update(audio_param_t param, float value) = 0;
+};
+
+};

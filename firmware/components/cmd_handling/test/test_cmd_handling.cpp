@@ -25,9 +25,14 @@ template <typename T>
 class MockQueue : public shrapnel::Queue<T>
 {
     public:
-    MOCK_METHOD(BaseType_t, receive, (T *out, TickType_t time_to_wait), (override));
+    MOCK_METHOD(BaseType_t, receive, (char *out, TickType_t time_to_wait), (override));
 };
 
+class MockAudioParameters : public shrapnel::AudioParameters
+{
+    public:
+    MOCK_METHOD(esp_err_t, update, (audio_param_t param, float value), (override));
+};
 
 #define MSG_SIZE 128
 
@@ -36,57 +41,57 @@ class CmdHandling : public ::testing::Test
     protected:
     void SetUp() override
     {
-        cmd_init(&queue);
+        cmd_init(&queue, &param);
     }
 
     MockQueue<char [128]> queue;
+    MockAudioParameters param;
 };
 
 TEST_F(CmdHandling, QueueFail)
 {
 
-#if 0
-    mock().expectOneCall("xQueueReceive")
-        .ignoreOtherParameters()
-        .andReturnValue((int)false);
-    mock().expectNoCall("param_update_parameter");
-#endif
     EXPECT_CALL(queue, receive(_, portMAX_DELAY))
         .Times(1)
         .WillRepeatedly(Return(false));
 
+    EXPECT_CALL(param, update).Times(0);
+
     cmd_task_work(NULL);
 }
 
-#if 0
-TEST(cmd_handling, InvalidMessage)
+TEST_F(CmdHandling, InvalidMessage)
 {
-    char output[] = "This is not JSON";
+    char output[128] = "This is not JSON";
 
-    mock().expectOneCall("xQueueReceive")
-        .ignoreOtherParameters()
-        .withOutputParameterReturning("pvBuffer", output, MSG_SIZE)
-        .andReturnValue((int)true);
+    EXPECT_CALL(queue, receive(_, portMAX_DELAY))
+        .Times(1)
+        .WillRepeatedly(
+                testing::DoAll(
+                    testing::SetArrayArgument<0>(std::begin(output), std::end(output)),
+                    Return(true)
+                ));
 
-    mock().expectNoCall("param_update_parameter");
+    EXPECT_CALL(param, update).Times(0);
 
     cmd_task_work(NULL);
 }
 
-TEST(cmd_handling, ValidMessage)
+TEST_F(CmdHandling, ValidMessage)
 {
-    char output[] = "{\"id\": \"tight\", \"value\": 1}";
+    char output[128] = "{\"id\": \"tight\", \"value\": 1}";
 
-    mock().expectOneCall("xQueueReceive")
-        .ignoreOtherParameters()
-        .withOutputParameterReturning("pvBuffer", output, MSG_SIZE)
-        .andReturnValue((int)true);
+    EXPECT_CALL(queue, receive(_, portMAX_DELAY))
+        .Times(1)
+        .WillRepeatedly(
+                testing::DoAll(
+                    testing::SetArrayArgument<0>(std::begin(output), std::end(output)),
+                    Return(true)
+                ));
 
-    mock().expectOneCall("param_update_parameter")
-        .withParameter("param", PARAM_TIGHT)
-        .withParameter("value", 1.0f)
-        .andReturnValue(ESP_OK);
+    EXPECT_CALL(param, update(PARAM_TIGHT, 1.0f))
+        .Times(1)
+        .WillRepeatedly(Return(ESP_OK));
 
     cmd_task_work(NULL);
 }
-#endif

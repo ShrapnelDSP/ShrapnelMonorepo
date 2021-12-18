@@ -12,6 +12,7 @@
 #define TAG "cmd_handling"
 
 static shrapnel::Queue<char[128]> * in_queue;
+static shrapnel::AudioParameters *parameters;
 
 static audio_param_t get_id_for_param(const char *name)
 {
@@ -59,7 +60,7 @@ void cmd_task_work(void *context)
     cJSON *value;
     float parsed_value;
 
-    int ret = in_queue->receive(reinterpret_cast<char (*)[128]>(&s), portMAX_DELAY);
+    int ret = in_queue->receive(s, portMAX_DELAY);
     if(ret == pdTRUE)
     {
 #if !defined(TESTING)
@@ -98,7 +99,7 @@ void cmd_task_work(void *context)
 
         if(parsed_id != PARAM_MAX)
         {
-            param_update_parameter(parsed_id, parsed_value);
+            parameters->update(parsed_id, parsed_value);
         }
 done:
         cJSON_Delete(json);
@@ -109,9 +110,10 @@ done:
     }
 }
 
-void cmd_init(shrapnel::Queue<char[128]> *q)
+void cmd_init(shrapnel::Queue<char[128]> *q, shrapnel::AudioParameters *param)
 {
     in_queue = q;
+    parameters = param;
 
     // TODO how to get the mock in here?
     //      Pass in a task factory that can be mocked?

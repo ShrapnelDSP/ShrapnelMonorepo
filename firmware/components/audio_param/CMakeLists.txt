@@ -3,8 +3,8 @@ if(NOT DEFINED TESTING)
                            INCLUDE_DIRS "include"
                            PRIV_REQUIRES "i2s")
 else()
-    add_library(audio_param_mock mocks/audio_param.cpp)
-    target_include_directories(audio_param_mock PUBLIC include)
+    add_library(audio_param_mock INTERFACE)
+    target_include_directories(audio_param_mock INTERFACE include)
 
-    target_link_libraries(audio_param_mock PUBLIC esp_common)
+    target_link_libraries(audio_param_mock INTERFACE esp_common)
 endif()

@@ -9,7 +9,7 @@ template <typename T>
 class Queue
 {
     public:
-    virtual BaseType_t receive(T *out, TickType_t time_to_wait) = 0;
+    virtual BaseType_t receive(char *out, TickType_t time_to_wait) = 0;
 
     private:
     QueueHandle_t handle;
