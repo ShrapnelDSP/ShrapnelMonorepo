@@ -19,6 +19,7 @@ include(GoogleTest)
 include(CTest)
 
 add_compile_options(-W -Wall -Wextra)
+add_compile_definitions(TESTING)
 
 # Tells the component cmake files to become test components instead of esp-idf
 # components
@@ -32,3 +33,4 @@ add_subdirectory(support/json)
 add_subdirectory(../components/cmd_handling cmd_handling)
 add_subdirectory(../components/audio_param audio_param)
 add_subdirectory(../components/task task)
+add_subdirectory(../components/queue queue)

@@ -1,22 +1,23 @@
 #include "cmd_handling.h"
-#include "esp_err.h"
-#include <string.h>
-#include "esp_log.h"
-#include "cJSON.h"
+
 #include "audio_param.h"
-#include "freertos/task.h"
+#include "cJSON.h"
+#include "esp_err.h"
+#include "esp_log.h"
+#include <memory>
+#include <string.h>
 #include "task.h"
+#include "queue.h"
 
 #define TAG "cmd_handling"
 
-static QueueHandle_t in_queue;
-static size_t message_size;
+static shrapnel::Queue<char[128]> * in_queue;
 
 static audio_param_t get_id_for_param(const char *name)
 {
     typedef struct {
         const char *name;
-        int id;
+        audio_param_t id;
     } item_t;
 
     static const item_t table[] = {
@@ -28,7 +29,7 @@ static audio_param_t get_id_for_param(const char *name)
         {"treble", PARAM_TREBLE},
         {"volume", PARAM_VOLUME},
         {"gateThreshold", PARAM_GATE_THRESHOLD},
-        {NULL, 0},
+        {NULL, PARAM_MAX},
     };
 
     for (const item_t *p = table; p->name != NULL; ++p) {
@@ -46,7 +47,7 @@ void cmd_task_work(void *context)
     (void) context;
 
     /* plus 1 size here ensures that s is always a NULL terminated string */
-    char s[message_size + 1];
+    char s[128 + 1];
     memset(s, 0, sizeof(s));
 
     /* TODO should not leave these uninitialised */
@@ -58,10 +59,12 @@ void cmd_task_work(void *context)
     cJSON *value;
     float parsed_value;
 
-    int ret = xQueueReceive(in_queue, s, portMAX_DELAY);
+    int ret = in_queue->receive(reinterpret_cast<char (*)[128]>(&s), portMAX_DELAY);
     if(ret == pdTRUE)
     {
+#if !defined(TESTING)
         ESP_LOGI(TAG, "%s stack %d", __FUNCTION__, uxTaskGetStackHighWaterMark(NULL));
+#endif
         ESP_LOGI(TAG, "received websocket message: %s", s);
 
         json = cJSON_Parse(s);
@@ -106,14 +109,11 @@ done:
     }
 }
 
-void cmd_init(QueueHandle_t q, size_t a_message_size)
+void cmd_init(shrapnel::Queue<char[128]> *q)
 {
     in_queue = q;
-    message_size = a_message_size;
 
-    static task_t task = {
-        .work = cmd_task_work,
-    };
-
-    task_start(&task, "command task", 4000, 5);
+    // TODO how to get the mock in here?
+    //      Pass in a task factory that can be mocked?
+    // shrapnel::Task<nullptr, cmd_task_work>("command task", 4000, 5, NULL);
 }

@@ -1,21 +1,17 @@
 #pragma once
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-#include <stddef.h>
+namespace shrapnel {
 
 typedef void (*task_func_t)(void *context);
 
-typedef struct {
-    task_func_t init;
-    task_func_t work;
+template<task_func_t init_function, task_func_t work_function>
+class Task//<init_function, work_function>
+{
+    public:
+    Task(const char *name, size_t stack, int priority, void *context);
+
+    private:
     void *context;
-} task_t;
+};
 
-void task_start(task_t *task, const char *name, size_t stack, int priority);
-
-#ifdef __cplusplus
-}
-#endif
+};

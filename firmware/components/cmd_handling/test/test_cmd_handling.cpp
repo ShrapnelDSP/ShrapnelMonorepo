@@ -6,35 +6,59 @@
 //#include "audio_param.h"
 
 #include "gtest/gtest.h"
+#include "gmock/gmock.h"
+#include "cmd_handling.h"
+
+using testing::_;
+using testing::Return;
+
+#include "task.h"
+#include "queue.h"
+
+#if 0
+template<shrapnel::task_func_t init_function, shrapnel::task_func_t work_function>
+class MockTask : public shrapnel::Task<init_function, work_function> {
+};
+#endif
+
+template <typename T>
+class MockQueue : public shrapnel::Queue<T>
+{
+    public:
+    MOCK_METHOD(BaseType_t, receive, (T *out, TickType_t time_to_wait), (override));
+};
+
 
 #define MSG_SIZE 128
 
-#if 0
-TEST_GROUP(cmd_handling)
+class CmdHandling : public ::testing::Test
 {
-    void setup()
+    protected:
+    void SetUp() override
     {
-        cmd_init(0, MSG_SIZE);
+        cmd_init(&queue);
     }
 
-    void teardown()
-    {
-        mock().clear();
-    }
+    MockQueue<char [128]> queue;
 };
 
-TEST(cmd_handling, QueueFail)
+TEST_F(CmdHandling, QueueFail)
 {
+
+#if 0
     mock().expectOneCall("xQueueReceive")
         .ignoreOtherParameters()
         .andReturnValue((int)false);
     mock().expectNoCall("param_update_parameter");
+#endif
+    EXPECT_CALL(queue, receive(_, portMAX_DELAY))
+        .Times(1)
+        .WillRepeatedly(Return(false));
 
     cmd_task_work(NULL);
-
-    mock().checkExpectations();
 }
 
+#if 0
 TEST(cmd_handling, InvalidMessage)
 {
     char output[] = "This is not JSON";
@@ -47,8 +71,6 @@ TEST(cmd_handling, InvalidMessage)
     mock().expectNoCall("param_update_parameter");
 
     cmd_task_work(NULL);
-
-    mock().checkExpectations();
 }
 
 TEST(cmd_handling, ValidMessage)
@@ -66,19 +88,5 @@ TEST(cmd_handling, ValidMessage)
         .andReturnValue(ESP_OK);
 
     cmd_task_work(NULL);
-
-    mock().checkExpectations();
-}
-
-int main(int ac, char** av)
-{
-    return CommandLineTestRunner::RunAllTests(ac, av);
 }
 #endif
-
-TEST(HelloTest, BasicAssertions) {
-  // Expect two strings not to be equal.
-  EXPECT_STRNE("hello", "world");
-  // Expect equality.
-  EXPECT_EQ(7 * 6, 42);
-}

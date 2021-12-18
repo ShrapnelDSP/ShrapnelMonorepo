@@ -1,5 +1,9 @@
 #pragma once
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stdint.h>
 
 typedef enum {
@@ -54,3 +58,7 @@ uint32_t esp_log_timestamp(void);
     } while(0)
 
 void esp_log_write(esp_log_level_t level, const char* tag, const char* format, ...) __attribute__ ((format (printf, 3, 4)));
+
+#ifdef __cplusplus
+}
+#endif

@@ -1,10 +1,10 @@
 if(NOT DEFINED TESTING)
-    idf_component_register(SRCS "src/cmd_handling.c"
+    idf_component_register(SRCS "src/cmd_handling.cpp"
                            INCLUDE_DIRS "include"
                            PRIV_REQUIRES json audio_param task)
 else()
     add_executable(cmd_handling_test
-                   src/cmd_handling.c
+                   src/cmd_handling.cpp
                    test/test_cmd_handling.cpp
                    )
 
@@ -16,15 +16,9 @@ else()
     target_link_libraries(cmd_handling_test PRIVATE freertos)
     target_link_libraries(cmd_handling_test PRIVATE log)
     target_link_libraries(cmd_handling_test PRIVATE task_mock)
+    target_link_libraries(cmd_handling_test PRIVATE queue_mock)
 
     target_link_libraries(cmd_handling_test PRIVATE gtest_main)
+    target_link_libraries(cmd_handling_test PRIVATE gmock)
     gtest_discover_tests(cmd_handling_test)
-
-#   set(testcases QueueFail InvalidMessage ValidMessage)
-#   foreach(testcase ${testcases})
-#       add_test(NAME cmd_handling.${testcase}
-#           COMMAND cmd_handling_test -t "cmd_handling.${testcase}")
-#       set_property(TEST cmd_handling.${testcase}
-#           PROPERTY LABELS cmd_handling)
-#   endforeach()
 endif()

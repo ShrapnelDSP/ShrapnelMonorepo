@@ -1,16 +1,6 @@
 #pragma once
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+#include "queue.h"
 
-#include "freertos/FreeRTOS.h"
-#include "freertos/queue.h"
-#include <stddef.h>
-
-void cmd_init(QueueHandle_t q, size_t a_message_size);
+void cmd_init(shrapnel::Queue<char[128]> *q);
 void cmd_task_work(void *context);
-
-#ifdef __cplusplus
-}
-#endif
