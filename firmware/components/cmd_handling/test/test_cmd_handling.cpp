@@ -1,12 +1,7 @@
-/* cJSON source code is used, it is not mocked
- * esp_log is replaced with a fake that prints to stdout
- */
-//#include "cmd_handling.h"
-
-//#include "audio_param.h"
-
 #include "gtest/gtest.h"
 #include "gmock/gmock.h"
+
+#include "audio_param.h"
 #include "cmd_handling.h"
 
 using testing::_;
@@ -22,9 +17,10 @@ class MockTask : public shrapnel::Task<init_function, work_function> {
 #endif
 
 template <typename T>
-class MockQueue : public shrapnel::Queue<T>
+class MockQueue : public shrapnel::QueueBase<T>
 {
     public:
+    MockQueue(int n) : shrapnel::QueueBase<T>(n) {};
     MOCK_METHOD(BaseType_t, receive, (T *out, TickType_t time_to_wait), (override));
 };
 
@@ -34,11 +30,11 @@ class MockAudioParameters : public shrapnel::AudioParameters
     MOCK_METHOD(esp_err_t, update, (audio_param_t param, float value), (override));
 };
 
-#define MSG_SIZE 128
-
 class CmdHandling : public ::testing::Test
 {
     protected:
+    CmdHandling() : queue(1) {}
+
     void SetUp() override
     {
         cmd_init(&queue, &param);
