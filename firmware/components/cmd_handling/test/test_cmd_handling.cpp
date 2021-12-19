@@ -25,7 +25,7 @@ template <typename T>
 class MockQueue : public shrapnel::Queue<T>
 {
     public:
-    MOCK_METHOD(BaseType_t, receive, (char *out, TickType_t time_to_wait), (override));
+    MOCK_METHOD(BaseType_t, receive, (T *out, TickType_t time_to_wait), (override));
 };
 
 class MockAudioParameters : public shrapnel::AudioParameters
@@ -44,7 +44,7 @@ class CmdHandling : public ::testing::Test
         cmd_init(&queue, &param);
     }
 
-    MockQueue<char [128]> queue;
+    MockQueue<cmd_message_t> queue;
     MockAudioParameters param;
 };
 
@@ -62,13 +62,15 @@ TEST_F(CmdHandling, QueueFail)
 
 TEST_F(CmdHandling, InvalidMessage)
 {
-    char output[128] = "This is not JSON";
+    cmd_message_t output = {
+        {.json = "This is not JSON"},
+    };
 
     EXPECT_CALL(queue, receive(_, portMAX_DELAY))
         .Times(1)
         .WillRepeatedly(
                 testing::DoAll(
-                    testing::SetArrayArgument<0>(std::begin(output), std::end(output)),
+                    testing::SetArgPointee<0>(output),
                     Return(true)
                 ));
 
@@ -79,13 +81,15 @@ TEST_F(CmdHandling, InvalidMessage)
 
 TEST_F(CmdHandling, ValidMessage)
 {
-    char output[128] = "{\"id\": \"tight\", \"value\": 1}";
+    cmd_message_t output = {
+        {.json = "{\"id\": \"tight\", \"value\": 1}"},
+    };
 
     EXPECT_CALL(queue, receive(_, portMAX_DELAY))
         .Times(1)
         .WillRepeatedly(
                 testing::DoAll(
-                    testing::SetArrayArgument<0>(std::begin(output), std::end(output)),
+                    testing::SetArgPointee<0>(output),
                     Return(true)
                 ));
 

@@ -2,6 +2,7 @@
 
 #include "audio_param.h"
 #include "cJSON.h"
+#include <climits>
 #include "esp_err.h"
 #include "esp_log.h"
 #include <memory>
@@ -11,7 +12,7 @@
 
 #define TAG "cmd_handling"
 
-static shrapnel::Queue<char[128]> * in_queue;
+static shrapnel::Queue<cmd_message_t> *in_queue;
 static shrapnel::AudioParameters *parameters;
 
 static audio_param_t get_id_for_param(const char *name)
@@ -47,9 +48,7 @@ void cmd_task_work(void *context)
 {
     (void) context;
 
-    /* plus 1 size here ensures that s is always a NULL terminated string */
-    char s[128 + 1];
-    memset(s, 0, sizeof(s));
+    cmd_message_t msg = {0};
 
     /* TODO should not leave these uninitialised */
     cJSON *json;
@@ -60,18 +59,23 @@ void cmd_task_work(void *context)
     cJSON *value;
     float parsed_value;
 
-    int ret = in_queue->receive(s, portMAX_DELAY);
+    int ret = in_queue->receive(&msg, portMAX_DELAY);
     if(ret == pdTRUE)
     {
 #if !defined(TESTING)
         ESP_LOGI(TAG, "%s stack %d", __FUNCTION__, uxTaskGetStackHighWaterMark(NULL));
 #endif
-        ESP_LOGI(TAG, "received websocket message: %s", s);
+        size_t msg_size = sizeof(msg.json);
+        assert(msg_size <= INT_MAX);
 
-        json = cJSON_Parse(s);
+        ESP_LOGI(TAG, "received websocket message: %.*s",
+                 static_cast<int>(sizeof(msg.json)),
+                 msg.json);
+
+        json = cJSON_ParseWithLength(msg.json, sizeof(msg.json));
         if(json == NULL)
         {
-            ESP_LOGE(TAG, "json parsing failed at: %s", cJSON_GetErrorPtr());
+            ESP_LOGE(TAG, "json parsing failed");
             goto done;
         }
 
@@ -82,7 +86,7 @@ void cmd_task_work(void *context)
         }
         else
         {
-            ESP_LOGE(TAG, "error parsing id from json (%s)", s);
+            ESP_LOGE(TAG, "error parsing id from json");
             goto done;
         }
 
@@ -93,7 +97,7 @@ void cmd_task_work(void *context)
         }
         else
         {
-            ESP_LOGE(TAG, "error parsing value from json (%s)", s);
+            ESP_LOGE(TAG, "error parsing value from json");
             goto done;
         }
 
@@ -110,7 +114,7 @@ done:
     }
 }
 
-void cmd_init(shrapnel::Queue<char[128]> *q, shrapnel::AudioParameters *param)
+void cmd_init(shrapnel::Queue<cmd_message_t> *q, shrapnel::AudioParameters *param)
 {
     in_queue = q;
     parameters = param;
