@@ -1,7 +1,5 @@
 if(NOT DEFINED TESTING)
-    idf_component_register(SRCS "src/queue.cpp"
-                           INCLUDE_DIRS "include"
-                           )
+    idf_component_register(INCLUDE_DIRS include)
 else()
 add_library(queue
     src/queue.cpp
