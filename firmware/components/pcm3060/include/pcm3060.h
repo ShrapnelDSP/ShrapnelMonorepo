@@ -1,5 +1,9 @@
 #pragma once
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <esp_err.h>
 #include <stdbool.h>
 #include <driver/i2c.h>
@@ -12,3 +16,7 @@ esp_err_t pcm3060_power_up(void);
 
 /** \brief perform power down sequence */
 esp_err_t pcm3060_power_down(void);
+
+#ifdef __cplusplus
+}
+#endif

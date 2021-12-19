@@ -16,9 +16,14 @@ typedef enum {
 
 namespace shrapnel {
 
-class AudioParameters {
+class AudioParametersBase {
     public:
         virtual esp_err_t update(audio_param_t param, float value) = 0;
+};
+
+class AudioParameters : public AudioParametersBase {
+    public:
+        esp_err_t update(audio_param_t param, float value) override;
 };
 
 };

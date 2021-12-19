@@ -22,9 +22,10 @@ class MockQueue : public shrapnel::QueueBase<T>
     public:
     MockQueue(int n) : shrapnel::QueueBase<T>(n) {};
     MOCK_METHOD(BaseType_t, receive, (T *out, TickType_t time_to_wait), (override));
+    MOCK_METHOD(BaseType_t, send, (T *out, TickType_t time_to_wait), (override));
 };
 
-class MockAudioParameters : public shrapnel::AudioParameters
+class MockAudioParameters : public shrapnel::AudioParametersBase
 {
     public:
     MOCK_METHOD(esp_err_t, update, (audio_param_t param, float value), (override));

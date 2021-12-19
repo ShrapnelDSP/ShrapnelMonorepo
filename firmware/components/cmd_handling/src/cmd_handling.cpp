@@ -13,7 +13,7 @@
 #define TAG "cmd_handling"
 
 static shrapnel::QueueBase<cmd_message_t> *in_queue;
-static shrapnel::AudioParameters *parameters;
+static shrapnel::AudioParametersBase *parameters;
 
 static audio_param_t get_id_for_param(const char *name)
 {
@@ -114,7 +114,7 @@ done:
     }
 }
 
-void cmd_init(shrapnel::QueueBase<cmd_message_t> *q, shrapnel::AudioParameters *param)
+void cmd_init(shrapnel::QueueBase<cmd_message_t> *q, shrapnel::AudioParametersBase *param)
 {
     in_queue = q;
     parameters = param;

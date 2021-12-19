@@ -9,4 +9,5 @@ idf_component_register( SRCS main.cpp
                             nvs_flash
                             pcm3060
                             protocol_examples_common
+                            queue
                         EMBED_FILES index.html )

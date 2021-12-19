@@ -296,6 +296,8 @@ static void i2c_setup(void)
     ESP_ERROR_CHECK(i2c_driver_install(I2C_NUM, I2C_MODE_MASTER, 0, 0, 0));
 }
 
+extern "C" {
+
 void app_main(void)
 {
     ESP_ERROR_CHECK(nvs_flash_init());
@@ -354,4 +356,6 @@ void app_main(void)
 #endif
 
     ESP_LOGI(TAG, "setup done");
+}
+
 }

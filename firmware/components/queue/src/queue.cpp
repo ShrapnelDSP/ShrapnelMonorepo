@@ -7,7 +7,7 @@
 namespace shrapnel {
 
 template<typename T>
-Queue<T>::Queue(int number_of_elements)
+Queue<T>::Queue(int number_of_elements) : QueueBase<T>(number_of_elements)
 {
     handle = xQueueCreate(number_of_elements, sizeof(T));
     assert(handle);
