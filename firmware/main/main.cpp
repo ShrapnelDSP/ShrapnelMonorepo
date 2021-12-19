@@ -27,6 +27,7 @@
 #include "pcm3060.h"
 #include "cmd_handling.h"
 #include "audio_events.h"
+#include "audio_param.h"
 
 #define PROFILING_GPIO GPIO_NUM_23
 
@@ -35,11 +36,15 @@
 #define MAX_WEBSOCKET_PAYLOAD_SIZE 128
 #define ARRAY_LENGTH(a) (sizeof(a)/sizeof(a[0]))
 
-static QueueHandle_t in_queue;
+static shrapnel::Queue<cmd_message_t> *in_queue;
+static shrapnel::AudioParameters *audio_params;
+
 static QueueHandle_t out_queue;
 static httpd_handle_t server = NULL;
 
 #define I2C_NUM I2C_NUM_0
+
+extern "C" {
 
 static void websocket_send(void *arg);
 static esp_err_t websocket_get_handler(httpd_req_t *req);
@@ -54,12 +59,18 @@ static void websocket_send(void *arg);
 static void start_mdns(void);
 static void i2c_setup(void);
 
+}
+
 static esp_err_t websocket_get_handler(httpd_req_t *req)
 {
-    uint8_t websocket_payload[MAX_WEBSOCKET_PAYLOAD_SIZE] = { 0 };
+    cmd_message_t message = { 0 };
 
     httpd_ws_frame_t pkt = {
-        .payload = websocket_payload,
+        .final = false,
+        .fragmented = false,
+        .type = HTTPD_WS_TYPE_TEXT,
+        .payload = reinterpret_cast<uint8_t*>(message.json),
+        .len = 0,
     };
 
     if(req->method == HTTP_GET)
@@ -68,7 +79,7 @@ static esp_err_t websocket_get_handler(httpd_req_t *req)
         return ESP_OK;
     }
 
-    esp_err_t rc = httpd_ws_recv_frame(req, &pkt, sizeof(websocket_payload));
+    esp_err_t rc = httpd_ws_recv_frame(req, &pkt, sizeof(message.json));
     if(rc != ESP_OK)
     {
         ESP_LOGE(TAG, "websocket parse failed");
@@ -83,12 +94,12 @@ static esp_err_t websocket_get_handler(httpd_req_t *req)
     assert(pkt.type != HTTPD_WS_TYPE_PONG);
     assert(pkt.final);
     assert(!pkt.fragmented);
-    assert(pkt.len <= sizeof(websocket_payload));
+    assert(pkt.len <= sizeof(message.json));
 
     ESP_LOGD(TAG, "%s len = %zd", __FUNCTION__, pkt.len);
-    ESP_LOG_BUFFER_HEXDUMP(TAG, websocket_payload, sizeof(websocket_payload), ESP_LOG_DEBUG);
+    ESP_LOG_BUFFER_HEXDUMP(TAG, message.json, sizeof(message.json), ESP_LOG_DEBUG);
 
-    rc = xQueueSendToBack(in_queue, websocket_payload, 100 / portTICK_PERIOD_MS);
+    rc = in_queue->send(&message, 100 / portTICK_PERIOD_MS);
     if(rc != pdTRUE)
     {
         ESP_LOGE(TAG, "%s failed to send to queue", __FUNCTION__);
@@ -117,14 +128,18 @@ static const httpd_uri_t websocket = {
     .handler   = websocket_get_handler,
     .user_ctx  = NULL,
     .is_websocket = true,
-    /* TODO what is a subprotocol? */
+    .handle_ws_control_frames = false,
+    .supported_subprotocol = NULL,
 };
 
 static const httpd_uri_t ui = {
     .uri       = "/",
     .method    = HTTP_GET,
     .handler   = ui_get_handler,
-    .user_ctx  = NULL
+    .user_ctx  = NULL,
+    .is_websocket = false,
+    .handle_ws_control_frames = false,
+    .supported_subprotocol = NULL,
 };
 
 static httpd_handle_t start_webserver(void)
@@ -213,8 +228,10 @@ static void websocket_send(void *arg)
     assert(strlen(buffer) < sizeof(buffer));
 
     httpd_ws_frame_t pkt = {
+        .final = false,
+        .fragmented = false,
         .type = HTTPD_WS_TYPE_TEXT,
-        .payload = (void *)buffer,
+        .payload = reinterpret_cast<uint8_t *>(buffer),
         .len = strlen(buffer),
     };
 
@@ -269,7 +286,10 @@ static void i2c_setup(void)
         .scl_io_num = GPIO_NUM_12,
         .sda_pullup_en = true,
         .scl_pullup_en = true,
-        .master.clk_speed = 100 * 1000,
+        .master = {
+            .clk_speed = 100 * 1000,
+        },
+        .clk_flags = 0,
     };
 
     ESP_ERROR_CHECK(i2c_param_config(I2C_NUM, &config));
@@ -297,13 +317,15 @@ void app_main(void)
     /* Start the server for the first time */
     server = start_webserver();
 
-    in_queue  = xQueueCreate(QUEUE_LEN, MAX_WEBSOCKET_PAYLOAD_SIZE);
+    in_queue = new shrapnel::Queue<cmd_message_t>(QUEUE_LEN);
     assert(in_queue);
 
     out_queue = xQueueCreate(QUEUE_LEN, MAX_WEBSOCKET_PAYLOAD_SIZE);
     assert(out_queue);
 
-    cmd_init(in_queue, MAX_WEBSOCKET_PAYLOAD_SIZE);
+    audio_params = new shrapnel::AudioParameters();
+
+    cmd_init(in_queue, audio_params);
 
     ESP_ERROR_CHECK(audio_event_init(out_queue));
 

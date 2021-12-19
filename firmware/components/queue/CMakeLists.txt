@@ -1,5 +1,5 @@
 if(NOT DEFINED TESTING)
-    idf_component_register(SRCS "src/queue.c"
+    idf_component_register(SRCS "src/queue.cpp"
                            INCLUDE_DIRS "include"
                            )
 else()

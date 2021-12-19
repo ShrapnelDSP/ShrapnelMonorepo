@@ -1,5 +1,5 @@
 if(NOT DEFINED TESTING)
-    idf_component_register(SRCS "audio_param.c"
+    idf_component_register(SRCS "src/audio_param.cpp"
                            INCLUDE_DIRS "include"
                            PRIV_REQUIRES "i2s")
 else()

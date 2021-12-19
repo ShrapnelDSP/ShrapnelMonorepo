@@ -1,5 +1,5 @@
 if(NOT DEFINED TESTING)
-    idf_component_register(SRCS "src/task.c"
+    idf_component_register(SRCS "src/task.cpp"
                            INCLUDE_DIRS "include"
                            )
 else()

@@ -19,4 +19,10 @@ BaseType_t Queue<T>::receive(T *out, TickType_t time_to_wait)
     return xQueueReceive(handle, out, time_to_wait);
 }
 
+template<typename T>
+BaseType_t Queue<T>::send(T *out, TickType_t time_to_wait)
+{
+    return xQueueSendToBack(handle, out, time_to_wait);
+}
+
 }
