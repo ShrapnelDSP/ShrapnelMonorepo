@@ -118,8 +118,4 @@ void cmd_init(shrapnel::QueueBase<cmd_message_t> *q, shrapnel::AudioParametersBa
 {
     in_queue = q;
     parameters = param;
-
-    // TODO how to get the mock in here?
-    //      Pass in a task factory that can be mocked?
-    // shrapnel::Task<nullptr, cmd_task_work>("command task", 4000, 5, NULL);
 }

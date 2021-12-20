@@ -5,17 +5,34 @@
 
 namespace shrapnel {
 
-typedef void (*task_func_t)(void *context);
-
-template<task_func_t init_function, task_func_t work_function>
-class Task
+class TaskBase
 {
     public:
-    Task(const char *name, size_t stack, int priority);
-    ~Task();
+    TaskBase(const char *name, size_t stack, int priority);
+    ~TaskBase(void);
+
+    protected:
+    /** Called once when the task starts. */
+    virtual void setup(void);
+
+    /** Called continously while the task is running.
+     *
+     * \note The task should block in this function to avoid task starvation. */
+    virtual void loop(void) = 0;
+
+    /** Call this from the derived class' constructor as the last step to start
+     * the task.
+     *
+     * Prevents the task running before the constructor completes.
+     */
+    void start(void);
 
     private:
-    void *context;
+    static void task_thread(void *param);
+
+    const char *name;
+    size_t stack;
+    int priority;
     TaskHandle_t handle;
 };
 

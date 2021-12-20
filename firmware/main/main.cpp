@@ -21,13 +21,13 @@
 #include "protocol_examples_common.h"
 #include "mdns.h"
 
-#include "i2s.h"
-#include "profiling.h"
-#include "esp_http_server.h"
-#include "pcm3060.h"
-#include "cmd_handling.h"
-#include "audio_events.h"
 #include "audio_param.h"
+#include "audio_events.h"
+#include "cmd_handling_task.h"
+#include "esp_http_server.h"
+#include "i2s.h"
+#include "pcm3060.h"
+#include "profiling.h"
 
 #define PROFILING_GPIO GPIO_NUM_23
 
@@ -38,6 +38,7 @@
 
 static shrapnel::Queue<cmd_message_t> *in_queue;
 static shrapnel::AudioParameters *audio_params;
+static shrapnel::CommandHandlingTask *cmd_handling_task;
 
 static QueueHandle_t out_queue;
 static httpd_handle_t server = NULL;
@@ -296,9 +297,7 @@ static void i2c_setup(void)
     ESP_ERROR_CHECK(i2c_driver_install(I2C_NUM, I2C_MODE_MASTER, 0, 0, 0));
 }
 
-extern "C" {
-
-void app_main(void)
+extern "C" void app_main(void)
 {
     ESP_ERROR_CHECK(nvs_flash_init());
     ESP_ERROR_CHECK(esp_netif_init());
@@ -327,7 +326,7 @@ void app_main(void)
 
     audio_params = new shrapnel::AudioParameters();
 
-    cmd_init(in_queue, audio_params);
+    cmd_handling_task = new shrapnel::CommandHandlingTask(5, in_queue, audio_params);
 
     ESP_ERROR_CHECK(audio_event_init(out_queue));
 
@@ -356,6 +355,4 @@ void app_main(void)
 #endif
 
     ESP_LOGI(TAG, "setup done");
-}
-
 }
