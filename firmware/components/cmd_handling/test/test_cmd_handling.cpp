@@ -33,8 +33,6 @@ class CmdHandling : public ::testing::Test
 
     CmdHandling() : queue(1), cmd(&queue, &param) {}
 
-    /* TODO do we need to reset the mocks manually? */
-
     MockQueue<Message> queue;
     MockAudioParameters param;
 
@@ -72,6 +70,25 @@ TEST_F(CmdHandling, InvalidMessage)
     cmd.work();
 }
 
+TEST_F(CmdHandling, UnregisteredMessage)
+{
+    Message output = {
+        {.json = "{\"id\": \"tight\", \"value\": 1}"},
+    };
+
+    EXPECT_CALL(queue, receive(_, portMAX_DELAY))
+        .Times(1)
+        .WillRepeatedly(
+                testing::DoAll(
+                    testing::SetArgPointee<0>(output),
+                    Return(true)
+                ));
+
+    EXPECT_CALL(param, update).Times(0);
+
+    cmd.work();
+}
+
 TEST_F(CmdHandling, ValidMessage)
 {
     Message output = {
@@ -89,6 +106,11 @@ TEST_F(CmdHandling, ValidMessage)
     EXPECT_CALL(param, update(PARAM_TIGHT, 1.0f))
         .Times(1)
         .WillRepeatedly(Return(ESP_OK));
+
+    cmd.register_parameter(
+            { .name = "tight",
+              .id = PARAM_TIGHT,
+            });
 
     cmd.work();
 }

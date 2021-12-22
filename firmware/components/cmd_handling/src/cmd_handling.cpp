@@ -12,15 +12,11 @@
 
 #define TAG "cmd_handling"
 
-static audio_param_t get_id_for_param(const char *name)
-{
-    typedef struct {
-        const char *name;
-        audio_param_t id;
-    } item_t;
+namespace shrapnel {
 
-    /* TODO allow clients to register their parameters at initialisation time
-     */
+audio_param_t CommandHandling::get_id_for_param(const char *name)
+{
+#if 0
     static const item_t table[] = {
         {"tight", PARAM_TIGHT},
         {"hmGain", PARAM_HM2_GAIN},
@@ -32,10 +28,12 @@ static audio_param_t get_id_for_param(const char *name)
         {"gateThreshold", PARAM_GATE_THRESHOLD},
         {NULL, PARAM_MAX},
     };
+#endif
 
-    for (const item_t *p = table; p->name != NULL; ++p) {
-        if (!strcmp(p->name, name)) {
-            return p->id;
+    for(ParamEntry e : param_table)
+    {
+        if (!strcmp(e.name, name)) {
+            return e.id;
         }
     }
 
@@ -43,7 +41,10 @@ static audio_param_t get_id_for_param(const char *name)
     return PARAM_MAX;
 }
 
-namespace shrapnel {
+void CommandHandling::register_parameter(ParamEntry entry)
+{
+    param_table.push_back(entry);
+}
 
 void CommandHandling::work(void)
 {
