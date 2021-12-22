@@ -3,10 +3,23 @@
 #include "queue.h"
 #include "audio_param.h"
 
-typedef struct
-{
-    char json[128];
-} cmd_message_t;
+namespace shrapnel {
 
-void cmd_init(shrapnel::QueueBase<cmd_message_t> *q, shrapnel::AudioParametersBase *param);
-void cmd_task_work(void *context);
+class CommandHandling
+{
+    public:
+    struct Message
+    {
+        char json[128];
+    };
+
+    CommandHandling(QueueBase<Message> *queue, AudioParametersBase *param);
+
+    void work(void);
+
+    private:
+    QueueBase<Message> *queue;
+    AudioParametersBase *param;
+};
+
+}

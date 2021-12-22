@@ -9,11 +9,13 @@ class CommandHandlingTask : public TaskBase
 {
     public:
     CommandHandlingTask(int priority,
-                        QueueBase<cmd_message_t> *q,
+                        QueueBase<CommandHandling::Message> *queue,
                         AudioParametersBase *param);
 
     private:
         void loop(void) override;
+
+        CommandHandling cmd;
 };
 
 }

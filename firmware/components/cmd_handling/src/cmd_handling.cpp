@@ -12,9 +12,6 @@
 
 #define TAG "cmd_handling"
 
-static shrapnel::QueueBase<cmd_message_t> *in_queue;
-static shrapnel::AudioParametersBase *parameters;
-
 static audio_param_t get_id_for_param(const char *name)
 {
     typedef struct {
@@ -22,6 +19,8 @@ static audio_param_t get_id_for_param(const char *name)
         audio_param_t id;
     } item_t;
 
+    /* TODO allow clients to register their parameters at initialisation time
+     */
     static const item_t table[] = {
         {"tight", PARAM_TIGHT},
         {"hmGain", PARAM_HM2_GAIN},
@@ -44,11 +43,11 @@ static audio_param_t get_id_for_param(const char *name)
     return PARAM_MAX;
 }
 
-void cmd_task_work(void *context)
-{
-    (void) context;
+namespace shrapnel {
 
-    cmd_message_t msg = {0};
+void CommandHandling::work(void)
+{
+    Message msg = {0};
 
     /* TODO should not leave these uninitialised */
     cJSON *json;
@@ -59,7 +58,7 @@ void cmd_task_work(void *context)
     cJSON *value;
     float parsed_value;
 
-    int ret = in_queue->receive(&msg, portMAX_DELAY);
+    int ret = queue->receive(&msg, portMAX_DELAY);
     if(ret == pdTRUE)
     {
 #if !defined(TESTING)
@@ -103,7 +102,7 @@ void cmd_task_work(void *context)
 
         if(parsed_id != PARAM_MAX)
         {
-            parameters->update(parsed_id, parsed_value);
+            param->update(parsed_id, parsed_value);
         }
 done:
         cJSON_Delete(json);
@@ -114,8 +113,10 @@ done:
     }
 }
 
-void cmd_init(shrapnel::QueueBase<cmd_message_t> *q, shrapnel::AudioParametersBase *param)
-{
-    in_queue = q;
-    parameters = param;
+CommandHandling::CommandHandling(
+        QueueBase<Message> *queue,
+        AudioParametersBase *param) :
+    queue(queue),
+    param(param) {}
+
 }

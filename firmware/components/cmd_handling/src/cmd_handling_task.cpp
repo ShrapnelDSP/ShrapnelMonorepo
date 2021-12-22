@@ -3,17 +3,17 @@
 namespace shrapnel {
 
 CommandHandlingTask::CommandHandlingTask(int priority,
-        QueueBase<cmd_message_t> *q,
+        QueueBase<CommandHandling::Message> *queue,
         AudioParametersBase *param) :
-    TaskBase("command handling", 4000, priority)
+    TaskBase("command handling", 4000, priority),
+    cmd(queue, param)
 {
-    cmd_init(q, param);
     start();
 }
 
 void CommandHandlingTask::loop(void)
 {
-    cmd_task_work(nullptr);
+    cmd.work();
 }
 
 }

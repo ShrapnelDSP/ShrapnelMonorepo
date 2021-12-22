@@ -10,12 +10,6 @@ using testing::Return;
 #include "task.h"
 #include "queue.h"
 
-#if 0
-template<shrapnel::task_func_t init_function, shrapnel::task_func_t work_function>
-class MockTask : public shrapnel::Task<init_function, work_function> {
-};
-#endif
-
 template <typename T>
 class MockQueue : public shrapnel::QueueBase<T>
 {
@@ -34,15 +28,17 @@ class MockAudioParameters : public shrapnel::AudioParametersBase
 class CmdHandling : public ::testing::Test
 {
     protected:
-    CmdHandling() : queue(1) {}
 
-    void SetUp() override
-    {
-        cmd_init(&queue, &param);
-    }
+    using Message = shrapnel::CommandHandling::Message;
 
-    MockQueue<cmd_message_t> queue;
+    CmdHandling() : queue(1), cmd(&queue, &param) {}
+
+    /* TODO do we need to reset the mocks manually? */
+
+    MockQueue<Message> queue;
     MockAudioParameters param;
+
+    shrapnel::CommandHandling cmd;
 };
 
 TEST_F(CmdHandling, QueueFail)
@@ -54,12 +50,12 @@ TEST_F(CmdHandling, QueueFail)
 
     EXPECT_CALL(param, update).Times(0);
 
-    cmd_task_work(NULL);
+    cmd.work();
 }
 
 TEST_F(CmdHandling, InvalidMessage)
 {
-    cmd_message_t output = {
+    Message output = {
         {.json = "This is not JSON"},
     };
 
@@ -73,12 +69,12 @@ TEST_F(CmdHandling, InvalidMessage)
 
     EXPECT_CALL(param, update).Times(0);
 
-    cmd_task_work(NULL);
+    cmd.work();
 }
 
 TEST_F(CmdHandling, ValidMessage)
 {
-    cmd_message_t output = {
+    Message output = {
         {.json = "{\"id\": \"tight\", \"value\": 1}"},
     };
 
@@ -94,5 +90,5 @@ TEST_F(CmdHandling, ValidMessage)
         .Times(1)
         .WillRepeatedly(Return(ESP_OK));
 
-    cmd_task_work(NULL);
+    cmd.work();
 }
