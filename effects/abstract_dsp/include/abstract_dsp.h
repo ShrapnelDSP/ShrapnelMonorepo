@@ -10,6 +10,7 @@
 #include <stddef.h>
 
 typedef struct dspal_iir *dspal_iir_t;
+typedef struct dspal_delayline *dspal_delayline_t;
 
 typedef enum {
     DSPAL_OK,
@@ -28,6 +29,13 @@ void dspal_iir_process(dspal_iir_t iir, const float *in, float *out, size_t buf_
 void dspal_iir_reset(dspal_iir_t iir);
 
 void dspal_multiply(const float *in1, const float *in2, float *out, size_t buf_size);
+
+dspal_delayline_t dspal_delayline_create(size_t max_samples);
+void dspal_delayline_set_delay(dspal_delayline_t delayline, float delay);
+void dspal_delayline_set_buffer_size(dspal_delayline_t delayline, size_t size);
+void dspal_delayline_push_sample(dspal_delayline_t delayline, float sample);
+float dspal_delayline_pop_sample(dspal_delayline_t delayline);
+
 #ifdef __cplusplus
 }
 #endif
