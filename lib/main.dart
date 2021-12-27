@@ -60,6 +60,8 @@ class _MyHomePageState extends State<MyHomePage> {
   static const double maxAngle = 160;
   static const double sweepAngle = maxAngle - minAngle;
 
+  static const double distanceToAngle = 0.007 * (maxValue - minValue);
+
   @override
   Widget build(BuildContext context) {
 
@@ -93,15 +95,25 @@ class _MyHomePageState extends State<MyHomePage> {
             Text(
               'Value: ${_value.toStringAsFixed(3)}',
             ),
-            Transform.rotate(
-              angle: _angle,
-              child: ClipOval(
-                child: Container(
-                  color: Colors.blue,
-                  child: const Icon(
-                    Icons.arrow_upward,
-                    color: Colors.white,
-                    size: 50,
+            GestureDetector(
+              onVerticalDragUpdate: (DragUpdateDetails details) {
+                double changeInY = details.delta.dy;
+                double changeInValue = distanceToAngle * -changeInY;
+                double newValue = _value + changeInValue;
+                double clippedValue = min(max(newValue, minValue), maxValue);
+
+                _setValue(clippedValue);
+              },
+              child: Transform.rotate(
+                angle: _angle,
+                child: ClipOval(
+                  child: Container(
+                    color: Colors.blue,
+                    child: const Icon(
+                      Icons.arrow_upward,
+                      color: Colors.white,
+                      size: 50,
+                    ),
                   ),
                 ),
               ),
