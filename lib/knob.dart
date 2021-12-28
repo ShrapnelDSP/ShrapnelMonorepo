@@ -5,6 +5,7 @@ class Knob extends StatelessWidget {
   final double value;
   final double min;
   final double max;
+  final double size;
 
   static const double minAngle = -160;
   static const double maxAngle = 160;
@@ -18,6 +19,7 @@ class Knob extends StatelessWidget {
     required this.onChanged,
     this.min = 0,
     this.max = 1,
+    this.size = 50,
   }) : super(key: key);
 
   @override
@@ -41,11 +43,11 @@ class Knob extends StatelessWidget {
           angle: _angle - m.pi/4,
           child: ClipOval(
             child: Container(
-              color: Theme.of(context).colorScheme.surface,
+              color: Theme.of(context).colorScheme.onSurface,
               child: Icon(
                 Icons.arrow_upward,
-                color: Theme.of(context).colorScheme.onSurface,
-                size: 50,
+                color: Theme.of(context).colorScheme.primary,
+                size: size,
               ),
             ),
           ),
