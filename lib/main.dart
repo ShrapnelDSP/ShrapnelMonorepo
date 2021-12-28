@@ -52,24 +52,28 @@ class _MyHomePageState extends State<MyHomePage> {
                 Stompbox(
                   value: [_value],
                   onChanged: List.filled(1, _setValue),
+                  parameterName: ["AAA"],
                   bypass: _bypass,
                   name: "one",
                 ),
                 Stompbox(
                   value: [_value, _value],
                   onChanged: List.filled(2, _setValue),
+                  parameterName: ["AAA", "BBB"],
                   bypass: _bypass,
                   name: "two",
                 ),
                 Stompbox(
                   value: [_value, _value, _value],
                   onChanged: List.filled(3, _setValue),
+                  parameterName: ["AAA", "BBB", "CCC"],
                   bypass: _bypass,
                   name: "three",
                 ),
                 Stompbox(
                   value: [_value, _value, _value, _value],
                   onChanged: List.filled(4, _setValue),
+                  parameterName: ["AAA", "BBB", "CCC", "DDD"],
                   bypass: _bypass,
                   name: "stomp",
                 ),
