@@ -3,12 +3,15 @@ import 'knob.dart';
 
 class Stompbox extends StatefulWidget {
     final List<double> value;
+    final List<ValueChanged<double>> onChanged;
+
     final bool bypass;
     final String name;
 
     const Stompbox({
         Key? key,
         required this.value,
+        required this.onChanged,
         required this.bypass,
         required this.name,
     }) : super(key: key);
@@ -43,7 +46,7 @@ class _StompboxState extends State<Stompbox> {
                 top: 0,
                 child: Knob(
                   value: widget.value[0],
-                  onChanged: (ignored) {/* not interactive */},
+                  onChanged: _full ? widget.onChanged[0] : (ignored) {/* not interactive */},
                   min: 0,
                   max: 10,
                   size: scaleFactor * 25,
@@ -54,7 +57,7 @@ class _StompboxState extends State<Stompbox> {
                 top: 0,
                 child: Knob(
                   value: widget.value[1],
-                  onChanged: (ignored) {/* not interactive */},
+                  onChanged: _full ? widget.onChanged[1] : (ignored) {/* not interactive */},
                   min: 0,
                   max: 10,
                   size: scaleFactor * 25,
@@ -65,7 +68,7 @@ class _StompboxState extends State<Stompbox> {
                 top: scaleFactor * 35,
                 child: Knob(
                   value: widget.value[2],
-                  onChanged: (ignored) {/* not interactive */},
+                  onChanged: _full ? widget.onChanged[2] : (ignored) {/* not interactive */},
                   min: 0,
                   max: 10,
                   size: scaleFactor * 25,
@@ -76,7 +79,7 @@ class _StompboxState extends State<Stompbox> {
                 top: scaleFactor * 35,
                 child: Knob(
                   value: widget.value[3],
-                  onChanged: (ignored) {/* not interactive */},
+                  onChanged: _full ? widget.onChanged[3] : (ignored) {/* not interactive */},
                   min: 0,
                   max: 10,
                   size: scaleFactor * 25,

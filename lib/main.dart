@@ -64,6 +64,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             Stompbox(
               value: [_value, _value, _value, _value],
+              onChanged: List.filled(4, _setValue),
               bypass: _bypass,
               name: "stomp",
             ),
