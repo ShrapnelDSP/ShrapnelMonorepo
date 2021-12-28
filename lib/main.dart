@@ -32,9 +32,10 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   double _value = 0;
+  bool _bypass = false;
 
   void _setValue(double value) => setState(() => _value = value);
-
+  void _toggleBypass(int index) => setState(() => _bypass = !_bypass);
 
   @override
   Widget build(BuildContext context) {
@@ -63,6 +64,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             Stompbox(
               value: [_value, _value, _value, _value],
+              bypass: _bypass,
               name: "stomp",
             ),
           ],

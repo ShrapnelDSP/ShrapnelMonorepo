@@ -3,11 +3,13 @@ import 'knob.dart';
 
 class Stompbox extends StatelessWidget {
     final List<double> value;
+    final bool bypass;
     final String name;
 
     const Stompbox({
         Key? key,
         required this.value,
+        required this.bypass,
         required this.name,
     }) : super(key: key);
 
@@ -68,6 +70,28 @@ class Stompbox extends StatelessWidget {
                   min: 0,
                   max: 10,
                   size: 25,
+                ),
+              ),
+              Positioned(
+                top: 95,
+                child: Container(
+                  width:25,
+                  height:25,
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.background,
+                    shape: BoxShape.circle,
+                  ),
+                ),
+              ),
+              Positioned(
+                top: 98,
+                child: Container(
+                  width:19,
+                  height:19,
+                  decoration: BoxDecoration(
+                    color: bypass ? Theme.of(context).colorScheme.surface : Theme.of(context).colorScheme.primary,
+                    shape: BoxShape.circle,
+                  ),
                 ),
               ),
             ]
