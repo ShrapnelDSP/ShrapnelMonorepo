@@ -26,17 +26,80 @@ class _StompboxState extends State<Stompbox> {
   List<Widget> knobs(double scaleFactor) {
       if(widget.value.length == 1)
       {
-          return [
+          return [ Positioned(
+                top: 0,
+                child: Knob(
+                  value: widget.value[0],
+                  onChanged: _full ? widget.onChanged[0] : (ignored) {/* not interactive */},
+                  min: 0,
+                  max: 10,
+                  size: scaleFactor * 50,
+                ),
+              ),
+
           ];
       }
       else if(widget.value.length == 2)
       {
-          return [
+          return [ Positioned(
+                left: 0,
+                top: 0,
+                child: Knob(
+                  value: widget.value[0],
+                  onChanged: _full ? widget.onChanged[0] : (ignored) {/* not interactive */},
+                  min: 0,
+                  max: 10,
+                  size: scaleFactor * 25,
+                ),
+              ),
+              Positioned(
+                right: 0,
+                top: 0,
+                child: Knob(
+                  value: widget.value[1],
+                  onChanged: _full ? widget.onChanged[1] : (ignored) {/* not interactive */},
+                  min: 0,
+                  max: 10,
+                  size: scaleFactor * 25,
+                ),
+              ),
+
           ];
       }
       else if(widget.value.length == 3)
       {
-          return [
+          return [ Positioned(
+                left: 0,
+                top: 0,
+                child: Knob(
+                  value: widget.value[0],
+                  onChanged: _full ? widget.onChanged[0] : (ignored) {/* not interactive */},
+                  min: 0,
+                  max: 10,
+                  size: scaleFactor * 25,
+                ),
+              ),
+              Positioned(
+                right: 0,
+                top: 0,
+                child: Knob(
+                  value: widget.value[1],
+                  onChanged: _full ? widget.onChanged[1] : (ignored) {/* not interactive */},
+                  min: 0,
+                  max: 10,
+                  size: scaleFactor * 25,
+                ),
+              ),
+              Positioned(
+                top: scaleFactor * 35,
+                child: Knob(
+                  value: widget.value[2],
+                  onChanged: _full ? widget.onChanged[2] : (ignored) {/* not interactive */},
+                  min: 0,
+                  max: 10,
+                  size: scaleFactor * 25,
+                ),
+              ),
           ];
       }
       else if(widget.value.length == 4)

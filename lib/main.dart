@@ -47,26 +47,33 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Slider(
-              value: _value,
-              onChanged: _setValue,
-              min: 0,
-              max: 10,
-            ),
-            Text(
-              'Value: ${_value.toStringAsFixed(3)}',
-            ),
-            Knob(
-              value: _value,
-              onChanged: _setValue,
-              min: 0,
-              max: 10,
-            ),
-            Stompbox(
-              value: [_value, _value, _value, _value],
-              onChanged: List.filled(4, _setValue),
-              bypass: _bypass,
-              name: "stomp",
+            Row(
+              children: <Widget>[
+                Stompbox(
+                  value: [_value],
+                  onChanged: List.filled(1, _setValue),
+                  bypass: _bypass,
+                  name: "one",
+                ),
+                Stompbox(
+                  value: [_value, _value],
+                  onChanged: List.filled(2, _setValue),
+                  bypass: _bypass,
+                  name: "two",
+                ),
+                Stompbox(
+                  value: [_value, _value, _value],
+                  onChanged: List.filled(3, _setValue),
+                  bypass: _bypass,
+                  name: "three",
+                ),
+                Stompbox(
+                  value: [_value, _value, _value, _value],
+                  onChanged: List.filled(4, _setValue),
+                  bypass: _bypass,
+                  name: "stomp",
+                ),
+              ],
             ),
           ],
         ),
