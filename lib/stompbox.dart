@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'knob.dart';
 
-class Stompbox extends StatelessWidget {
+class Stompbox extends StatefulWidget {
     final List<double> value;
     final bool bypass;
     final String name;
@@ -13,70 +13,109 @@ class Stompbox extends StatelessWidget {
         required this.name,
     }) : super(key: key);
 
+    @override
+    _StompboxState createState() => _StompboxState();
+}
+
+class _StompboxState extends State<Stompbox> {
+  bool _full = false;
+
+  List<Widget> knobs(double scaleFactor) {
+      if(widget.value.length == 1)
+      {
+          return [
+          ];
+      }
+      else if(widget.value.length == 2)
+      {
+          return [
+          ];
+      }
+      else if(widget.value.length == 3)
+      {
+          return [
+          ];
+      }
+      else if(widget.value.length == 4)
+      {
+          return [ Positioned(
+                left: 0,
+                top: 0,
+                child: Knob(
+                  value: widget.value[0],
+                  onChanged: (ignored) {/* not interactive */},
+                  min: 0,
+                  max: 10,
+                  size: scaleFactor * 25,
+                ),
+              ),
+              Positioned(
+                right: 0,
+                top: 0,
+                child: Knob(
+                  value: widget.value[1],
+                  onChanged: (ignored) {/* not interactive */},
+                  min: 0,
+                  max: 10,
+                  size: scaleFactor * 25,
+                ),
+              ),
+              Positioned(
+                left: 0,
+                top: scaleFactor * 35,
+                child: Knob(
+                  value: widget.value[2],
+                  onChanged: (ignored) {/* not interactive */},
+                  min: 0,
+                  max: 10,
+                  size: scaleFactor * 25,
+                ),
+              ),
+              Positioned(
+                right: 0,
+                top: scaleFactor * 35,
+                child: Knob(
+                  value: widget.value[3],
+                  onChanged: (ignored) {/* not interactive */},
+                  min: 0,
+                  max: 10,
+                  size: scaleFactor * 25,
+                ),
+              ),
+        ];
+      }
+
+      assert(false, "Number of parameters must be between 1 and 4");
+      return [];
+  }
+
+  void _toggleSize() => setState( () => _full = !_full);
+
   @override
   Widget build(BuildContext context) {
+    double scaleFactor = _full ? 3 : 1;
+
     return SizedBox(
-      width: 100,
-      height: 150,
+      width: scaleFactor * 100,
+      height: scaleFactor * 150,
+      child: GestureDetector(
+      onTap: _toggleSize,
       child: Card(
         child: Container(
-          margin: const EdgeInsets.all(10),
+          margin: EdgeInsets.all(scaleFactor * 10),
           child: Stack(
             alignment: Alignment.center,
             children: <Widget>[
+              ...knobs(scaleFactor),
               Positioned(
-                top: 70,
-                child: Text(name),
+                top: scaleFactor * 70,
+                child: Text(widget.name),
               ),
               Positioned(
-                left: 0,
-                top: 0,
-                child: Knob(
-                  value: value[0],
-                  onChanged: (ignored) {/* not interactive */},
-                  min: 0,
-                  max: 10,
-                  size: 25,
-                ),
-              ),
-              Positioned(
-                right: 0,
-                top: 0,
-                child: Knob(
-                  value: value[1],
-                  onChanged: (ignored) {/* not interactive */},
-                  min: 0,
-                  max: 10,
-                  size: 25,
-                ),
-              ),
-              Positioned(
-                left: 0,
-                top: 35,
-                child: Knob(
-                  value: value[2],
-                  onChanged: (ignored) {/* not interactive */},
-                  min: 0,
-                  max: 10,
-                  size: 25,
-                ),
-              ),
-              Positioned(
-                right: 0,
-                top: 35,
-                child: Knob(
-                  value: value[3],
-                  onChanged: (ignored) {/* not interactive */},
-                  min: 0,
-                  max: 10,
-                  size: 25,
-                ),
-              ),
-              Positioned(
-                top: 95,
+                top: scaleFactor * 95,
                 child: Container(
-                  width:25,
-                  height:25,
+                  width: scaleFactor * 25,
+                  height: scaleFactor * 25,
                   decoration: BoxDecoration(
                     color: Theme.of(context).colorScheme.background,
                     shape: BoxShape.circle,
@@ -84,12 +123,12 @@ class Stompbox extends StatelessWidget {
                 ),
               ),
               Positioned(
-                top: 98,
+                top: scaleFactor * 98,
                 child: Container(
-                  width:19,
-                  height:19,
+                  width: scaleFactor * 19,
+                  height: scaleFactor * 19,
                   decoration: BoxDecoration(
-                    color: bypass ? Theme.of(context).colorScheme.surface : Theme.of(context).colorScheme.primary,
+                    color: widget.bypass ? Theme.of(context).colorScheme.surface : Theme.of(context).colorScheme.primary,
                     shape: BoxShape.circle,
                   ),
                 ),
@@ -97,6 +136,7 @@ class Stompbox extends StatelessWidget {
             ]
           ),
         ),
+      ),
       ),
     );
   }
