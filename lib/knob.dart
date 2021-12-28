@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
-import 'dart:math';
+import 'dart:math' as m;
 
-class Knob extends StatefulWidget {
+class Knob extends StatelessWidget {
   final double value;
   final double min;
   final double max;
+
+  static const double minAngle = -160;
+  static const double maxAngle = 160;
+  static const double sweepAngle = maxAngle - minAngle;
 
   final ValueChanged<double> onChanged;
 
@@ -17,38 +21,32 @@ class Knob extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => KnobState();
-}
-
-class KnobState extends State<Knob> {
-  static const double minAngle = -160;
-  static const double maxAngle = 160;
-  static const double sweepAngle = maxAngle - minAngle;
-
-  @override
   Widget build(BuildContext context) {
-    double distanceToAngle = 0.007 * (widget.max - widget.min);
-    double _normalisedValue = (widget.value - widget.min)/(widget.max - widget.min);
-    double _angle = minAngle + (_normalisedValue*(sweepAngle)) * 2 * pi / 360;
+    double distanceToAngle = 0.007 * (max - min);
+    double _normalisedValue = (value - min)/(max - min);
+    double _angle = minAngle + _normalisedValue * sweepAngle * 2 * m.pi / 360;
 
-    return GestureDetector(
-      onVerticalDragUpdate: (DragUpdateDetails details) {
-        double changeInY = details.delta.dy;
-        double changeInValue = distanceToAngle * -changeInY;
-        double newValue = widget.value + changeInValue;
-        double clippedValue = min(max(newValue, widget.min), widget.max);
+    return Transform.rotate(
+      angle: m.pi/4,
+      child: GestureDetector(
+        onVerticalDragUpdate: (DragUpdateDetails details) {
+          double changeInY = details.delta.dy;
+          double changeInValue = distanceToAngle * -changeInY;
+          double newValue = value + changeInValue;
+          double clippedValue = m.min(m.max(newValue, min), max);
 
-        widget.onChanged(clippedValue);
-      },
-      child: Transform.rotate(
-        angle: _angle,
-        child: ClipOval(
-          child: Container(
-            color: Colors.blue,
-            child: const Icon(
-              Icons.arrow_upward,
-              color: Colors.white,
-              size: 50,
+          onChanged(clippedValue);
+        },
+        child: Transform.rotate(
+          angle: _angle - m.pi/4,
+          child: ClipOval(
+            child: Container(
+              color: Theme.of(context).colorScheme.surface,
+              child: Icon(
+                Icons.arrow_upward,
+                color: Theme.of(context).colorScheme.onSurface,
+                size: 50,
+              ),
             ),
           ),
         ),
