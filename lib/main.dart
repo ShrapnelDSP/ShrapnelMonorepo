@@ -55,6 +55,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   parameterName: ["AAA"],
                   bypass: _bypass,
                   name: "one",
+                  primarySwatch: Colors.green,
                 ),
                 Stompbox(
                   value: [_value, _value],
@@ -62,6 +63,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   parameterName: ["AAA", "BBB"],
                   bypass: _bypass,
                   name: "two",
+                  primarySwatch: Colors.blue,
                 ),
                 Stompbox(
                   value: [_value, _value, _value],
@@ -69,6 +71,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   parameterName: ["AAA", "BBB", "CCC"],
                   bypass: _bypass,
                   name: "three",
+                  primarySwatch: Colors.red,
                 ),
                 Stompbox(
                   value: [_value, _value, _value, _value],
@@ -76,6 +79,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   parameterName: ["AAA", "BBB", "CCC", "DDD"],
                   bypass: _bypass,
                   name: "stomp",
+                  primarySwatch: Colors.yellow,
                 ),
               ],
             ),

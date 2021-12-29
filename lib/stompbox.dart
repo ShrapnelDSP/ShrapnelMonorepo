@@ -9,6 +9,8 @@ class Stompbox extends StatefulWidget {
   final bool bypass;
   final String name;
 
+  final MaterialColor primarySwatch;
+
   const Stompbox({
     Key? key,
     required this.value,
@@ -16,6 +18,7 @@ class Stompbox extends StatefulWidget {
     required this.parameterName,
     required this.bypass,
     required this.name,
+    required this.primarySwatch,
   }) : super(key: key);
 
   @override
@@ -121,45 +124,56 @@ class _StompboxState extends State<Stompbox> {
   Widget build(BuildContext context) {
     double scaleFactor = _full ? 3 : 1;
 
-    return SizedBox(
-      width: scaleFactor * 100,
-      height: scaleFactor * 150,
-      child: GestureDetector(
-        onTap: _toggleSize,
-        child: Card(
-          child: Container(
-            margin: EdgeInsets.all(scaleFactor * 10),
-            child: Stack(alignment: Alignment.center, children: <Widget>[
-              ...knobs(scaleFactor),
-              Positioned(
-                top: scaleFactor * 70,
-                child: Text(widget.name),
-              ),
-              Positioned(
-                top: scaleFactor * 95,
-                child: Container(
-                  width: scaleFactor * 25,
-                  height: scaleFactor * 25,
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.background,
-                    shape: BoxShape.circle,
+    return Theme(
+      data: ThemeData(
+        brightness: Theme.of(context).brightness,
+        primarySwatch: widget.primarySwatch,
+      ),
+      /* Builder required to create new context, which makes
+       * Theme.of return the new theme defined above
+       */
+      child: Builder(
+        builder: (context) => SizedBox(
+          width: scaleFactor * 100,
+          height: scaleFactor * 150,
+          child: GestureDetector(
+            onTap: _toggleSize,
+            child: Card(
+              child: Container(
+                margin: EdgeInsets.all(scaleFactor * 10),
+                child: Stack(alignment: Alignment.center, children: <Widget>[
+                  ...knobs(scaleFactor),
+                  Positioned(
+                    top: scaleFactor * 70,
+                    child: Text(widget.name),
                   ),
-                ),
-              ),
-              Positioned(
-                top: scaleFactor * 98,
-                child: Container(
-                  width: scaleFactor * 19,
-                  height: scaleFactor * 19,
-                  decoration: BoxDecoration(
-                    color: widget.bypass
-                        ? Theme.of(context).colorScheme.surface
-                        : Theme.of(context).colorScheme.primary,
-                    shape: BoxShape.circle,
+                  Positioned(
+                    top: scaleFactor * 95,
+                    child: Container(
+                      width: scaleFactor * 25,
+                      height: scaleFactor * 25,
+                      decoration: BoxDecoration(
+                        color: Theme.of(context).colorScheme.background,
+                        shape: BoxShape.circle,
+                      ),
+                    ),
                   ),
-                ),
+                  Positioned(
+                    top: scaleFactor * 98,
+                    child: Container(
+                      width: scaleFactor * 19,
+                      height: scaleFactor * 19,
+                      decoration: BoxDecoration(
+                        color: widget.bypass
+                            ? Theme.of(context).colorScheme.surface
+                            : Theme.of(context).colorScheme.primary,
+                        shape: BoxShape.circle,
+                      ),
+                    ),
+                  ),
+                ]),
               ),
-            ]),
+            ),
           ),
         ),
       ),
