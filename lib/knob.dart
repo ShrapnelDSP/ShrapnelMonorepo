@@ -25,11 +25,11 @@ class Knob extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     double distanceToAngle = 0.007 * (max - min);
-    double _normalisedValue = (value - min)/(max - min);
+    double _normalisedValue = (value - min) / (max - min);
     double _angle = minAngle + _normalisedValue * sweepAngle * 2 * m.pi / 360;
 
     return Transform.rotate(
-      angle: m.pi/4,
+      angle: m.pi / 4,
       child: GestureDetector(
         onVerticalDragUpdate: (DragUpdateDetails details) {
           double changeInY = details.delta.dy;
@@ -40,7 +40,7 @@ class Knob extends StatelessWidget {
           onChanged(clippedValue);
         },
         child: Transform.rotate(
-          angle: _angle - m.pi/4,
+          angle: _angle - m.pi / 4,
           child: ClipOval(
             child: Container(
               color: Theme.of(context).colorScheme.onSurface,
