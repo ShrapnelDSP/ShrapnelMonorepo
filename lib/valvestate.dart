@@ -14,17 +14,87 @@ class AudioParameterDouble {
 }
 
 class ValvestateParameterGain extends ChangeNotifier {
-    double _gain = 0.5;
+  double _gain = 0.5;
 
-    final String name = "GAIN";
-    final String id = "ampGain";
+  final String name = "GAIN";
+  final String id = "ampGain";
 
-    set gain(double gain) {
-        _gain = gain;
-        notifyListeners();
-    }
+  set gain(double gain) {
+    _gain = gain;
+    notifyListeners();
+  }
 
-    double get gain => _gain;
+  double get gain => _gain;
+}
+
+class ValvestateParameterBass extends ChangeNotifier {
+  double _bass = 0.5;
+
+  final String name = "BASS";
+  final String id = "bass";
+
+  set bass(double bass) {
+    _bass = bass;
+    notifyListeners();
+  }
+
+  double get bass => _bass;
+}
+
+class ValvestateParameterMiddle extends ChangeNotifier {
+  double _middle = 0.5;
+
+  final String name = "MIDDLE";
+  final String id = "middle";
+
+  set middle(double middle) {
+    _middle = middle;
+    notifyListeners();
+  }
+
+  double get middle => _middle;
+}
+
+class ValvestateParameterTreble extends ChangeNotifier {
+  double _treble = 0.5;
+
+  final String name = "TREBLE";
+  final String id = "treble";
+
+  set treble(double treble) {
+    _treble = treble;
+    notifyListeners();
+  }
+
+  double get treble => _treble;
+}
+
+class ValvestateParameterContour extends ChangeNotifier {
+  double _contour = 0.5;
+
+  final String name = "CONTOUR";
+  final String id = "contour";
+
+  set contour(double contour) {
+    _contour = contour;
+    notifyListeners();
+  }
+
+  double get contour => _contour;
+}
+
+class ValvestateParameterVolume extends ChangeNotifier {
+  double _volume = 0.5;
+
+  final String name = "VOLUME";
+  final String id = "volume";
+
+  set volume(double volume) {
+    _volume = volume;
+    notifyListeners();
+  }
+
+  double get volume => _volume;
 }
 
 /* TODO
@@ -33,84 +103,54 @@ class ValvestateParameterGain extends ChangeNotifier {
  *   provided at once?
  * - Use a common base class to indicate that name and id are required?
  */
-class ValvestateModel extends ChangeNotifier {
-  final bass = AudioParameterDouble(
-    name: "BASS",
-    id: "bass",
-  );
-
-  final middle = AudioParameterDouble(
-    name: "MIDDLE",
-    id: "middle",
-  );
-
-  final treble = AudioParameterDouble(
-    name: "TREBLE",
-    id: "treble",
-  );
-
-  final contour = AudioParameterDouble(
-    name: "CONTOUR",
-    id: "contour",
-  );
-
-  final volume = AudioParameterDouble(
-    name: "VOLUME",
-    id: "volume",
-  );
-
-  /*
-  ValvestateModel({
-      return ChangeNotifierProxyProvider<ValvestateParameterGain, ValvestateModel>(
-            create: (_) => MyChangeNotifier(),
-  update: (_, myModel, myNotifier) => myNotifier
-    ..update(myModel),
-  child: ...
-);
-  });
-  */
-}
 
 class Valvestate extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Consumer<ValvestateParameterGain>(
-      builder: (context, model, _) => Amplifier(
+    return Consumer6<
+        ValvestateParameterGain,
+        ValvestateParameterBass,
+        ValvestateParameterMiddle,
+        ValvestateParameterTreble,
+        ValvestateParameterContour,
+        ValvestateParameterVolume>(
+      builder: (context, gain, bass, middle, treble, contour, volume, _) =>
+          Amplifier(
         parameter: [
-          model.gain,
-          model.gain,
-          model.gain,
-          model.gain,
-          model.gain,
-          model.gain,
+          gain.gain,
+          bass.bass,
+          middle.middle,
+          treble.treble,
+          contour.contour,
+          volume.volume,
         ],
         onChanged: [
           (value) {
-            model.gain = value;
+            gain.gain = value;
           },
           (value) {
-            model.gain = value;
+            bass.bass = value;
           },
           (value) {
-            model.gain = value;
+            middle.middle = value;
           },
           (value) {
-            model.gain = value;
+            treble.treble = value;
           },
           (value) {
-            model.gain = value;
+            contour.contour = value;
           },
           (value) {
-            model.gain = value;
+            volume.volume = value;
           },
         ],
         parameterName: [
-          model.name,
-          model.name,
-          model.name,
-          model.name,
-          model.name,
-          model.name,
+          gain.name,
+          bass.name,
+          middle.name,
+          treble.name,
+          contour.name,
+          volume.name,
         ],
         name: "VALVESTATE 8100",
       ),
