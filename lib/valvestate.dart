@@ -76,11 +76,8 @@ class _ValvestateParameterVolume extends AudioParameterDouble
 }
 
 class Valvestate extends StatelessWidget {
-  final StreamChannel channel;
-
   const Valvestate({
     Key? key,
-    required this.channel,
   }) : super(key: key);
 
   @override
@@ -135,12 +132,12 @@ class Valvestate extends StatelessWidget {
             name: "VALVESTATE 8100",
           ),
         ),
-        ParameterUpdater<_ValvestateParameterGain>(channel: channel),
-        ParameterUpdater<_ValvestateParameterBass>(channel: channel),
-        ParameterUpdater<_ValvestateParameterMiddle>(channel: channel),
-        ParameterUpdater<_ValvestateParameterTreble>(channel: channel),
-        ParameterUpdater<_ValvestateParameterContour>(channel: channel),
-        ParameterUpdater<_ValvestateParameterVolume>(channel: channel),
+        const ParameterUpdater<_ValvestateParameterGain, ParameterChannel>(),
+        const ParameterUpdater<_ValvestateParameterBass, ParameterChannel>(),
+        const ParameterUpdater<_ValvestateParameterMiddle, ParameterChannel>(),
+        const ParameterUpdater<_ValvestateParameterTreble, ParameterChannel>(),
+        const ParameterUpdater<_ValvestateParameterContour, ParameterChannel>(),
+        const ParameterUpdater<_ValvestateParameterVolume, ParameterChannel>(),
       ],
     );
   }

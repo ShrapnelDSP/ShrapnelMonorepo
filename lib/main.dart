@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:web_socket_channel/web_socket_channel.dart';
 
 import 'stompbox.dart';
 import 'valvestate.dart';
@@ -38,10 +36,6 @@ class _MyHomePageState extends State<MyHomePage> {
   double _value = 0;
   final bool _bypass = false;
 
-  final _channel = WebSocketChannel.connect(
-    Uri.parse('ws://guitar-dsp.local/websocket'),
-  );
-
   void _setValue(double value) => setState(() => _value = value);
   /*
   void _toggleBypass(int index) => setState(() => _bypass = !_bypass);
@@ -53,74 +47,70 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Stompbox(
-                  value: List.filled(3, _value),
-                  onChanged: List.filled(3, _setValue),
-                  parameterName: const ["DRIVE", "TONE", "LEVEL"],
-                  bypass: _bypass,
-                  name: "Tube Screamer",
-                  primarySwatch: Colors.green,
-                ),
-                Stompbox(
-                  value: List.filled(4, _value),
-                  onChanged: List.filled(4, _setValue),
-                  parameterName: const [
-                    "Threshold",
-                    "Hysteresis",
-                    "Attack",
-                    "Release"
-                  ],
-                  bypass: _bypass,
-                  name: "Noise Gate",
-                  primarySwatch: Colors.red,
-                ),
-                Stompbox(
-                  value: List.filled(4, _value),
-                  onChanged: List.filled(4, _setValue),
-                  parameterName: const ["LEVEL", "LOW", "HIGH", "DISTORTION"],
-                  bypass: _bypass,
-                  name: "Heavy Metal",
-                  primarySwatch: Colors.deepOrange,
-                ),
-              ],
-            ),
-            ValvestateParameterProvider(
-              child: Row(
+      body: ParameterChannelProvider(
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  Valvestate(channel: _channel),
+                  Stompbox(
+                    value: List.filled(3, _value),
+                    onChanged: List.filled(3, _setValue),
+                    parameterName: const ["DRIVE", "TONE", "LEVEL"],
+                    bypass: _bypass,
+                    name: "Tube Screamer",
+                    primarySwatch: Colors.green,
+                  ),
+                  Stompbox(
+                    value: List.filled(4, _value),
+                    onChanged: List.filled(4, _setValue),
+                    parameterName: const [
+                      "Threshold",
+                      "Hysteresis",
+                      "Attack",
+                      "Release"
+                    ],
+                    bypass: _bypass,
+                    name: "Noise Gate",
+                    primarySwatch: Colors.red,
+                  ),
+                  Stompbox(
+                    value: List.filled(4, _value),
+                    onChanged: List.filled(4, _setValue),
+                    parameterName: const ["LEVEL", "LOW", "HIGH", "DISTORTION"],
+                    bypass: _bypass,
+                    name: "Heavy Metal",
+                    primarySwatch: Colors.deepOrange,
+                  ),
                 ],
               ),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Stompbox(
-                  value: [_value, _value, _value],
-                  onChanged: List.filled(3, _setValue),
-                  parameterName: const ["RATE", "DEPTH", "MIX"],
-                  bypass: _bypass,
-                  name: "Chorus",
-                  primarySwatch: Colors.blue,
+              ValvestateParameterProvider(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: const <Widget>[
+                    Valvestate(),
+                  ],
                 ),
-              ],
-            ),
-          ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Stompbox(
+                    value: [_value, _value, _value],
+                    onChanged: List.filled(3, _setValue),
+                    parameterName: const ["RATE", "DEPTH", "MIX"],
+                    bypass: _bypass,
+                    name: "Chorus",
+                    primarySwatch: Colors.blue,
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );
-  }
-
-  @override
-  void dispose() {
-    _channel.sink.close();
-    super.dispose();
   }
 }
