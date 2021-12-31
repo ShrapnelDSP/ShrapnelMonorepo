@@ -75,12 +75,6 @@ class ValvestateParameterVolume extends AudioParameterDouble
   double get volume => value;
 }
 
-/* TODO
- *
- * - How to group together all the parameters so they can be listened and
- *   provided at once?
- */
-
 class Valvestate extends StatelessWidget {
   final StreamChannel channel;
 
@@ -150,4 +144,38 @@ class Valvestate extends StatelessWidget {
       ],
     );
   }
+}
+
+class ValvestateParameterProvider extends StatelessWidget {
+  final Widget child;
+
+  const ValvestateParameterProvider({
+    Key? key,
+    required this.child,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) => MultiProvider(
+        providers: [
+          ChangeNotifierProvider(
+            create: (_) => ValvestateParameterGain(),
+          ),
+          ChangeNotifierProvider(
+            create: (_) => ValvestateParameterBass(),
+          ),
+          ChangeNotifierProvider(
+            create: (_) => ValvestateParameterMiddle(),
+          ),
+          ChangeNotifierProvider(
+            create: (_) => ValvestateParameterTreble(),
+          ),
+          ChangeNotifierProvider(
+            create: (_) => ValvestateParameterContour(),
+          ),
+          ChangeNotifierProvider(
+            create: (_) => ValvestateParameterVolume(),
+          ),
+        ],
+        child: child,
+      );
 }

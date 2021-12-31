@@ -91,27 +91,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
               ],
             ),
-            MultiProvider(
-              providers: [
-                ChangeNotifierProvider(
-                  create: (_) => ValvestateParameterGain(),
-                ),
-                ChangeNotifierProvider(
-                  create: (_) => ValvestateParameterBass(),
-                ),
-                ChangeNotifierProvider(
-                  create: (_) => ValvestateParameterMiddle(),
-                ),
-                ChangeNotifierProvider(
-                  create: (_) => ValvestateParameterTreble(),
-                ),
-                ChangeNotifierProvider(
-                  create: (_) => ValvestateParameterContour(),
-                ),
-                ChangeNotifierProvider(
-                  create: (_) => ValvestateParameterVolume(),
-                ),
-              ],
+            ValvestateParameterProvider(
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
