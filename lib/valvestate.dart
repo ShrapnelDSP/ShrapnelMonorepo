@@ -5,8 +5,8 @@ import 'package:stream_channel/stream_channel.dart';
 import 'amplifier.dart';
 import 'parameter.dart';
 
-class ValvestateParameterGain extends AudioParameterDouble with ChangeNotifier {
-  ValvestateParameterGain() : super(name: "GAIN", id: "ampGain");
+class _ValvestateParameterGain extends AudioParameterDouble with ChangeNotifier {
+  _ValvestateParameterGain() : super(name: "GAIN", id: "ampGain");
 
   set gain(double gain) {
     value = gain;
@@ -16,8 +16,8 @@ class ValvestateParameterGain extends AudioParameterDouble with ChangeNotifier {
   double get gain => value;
 }
 
-class ValvestateParameterBass extends AudioParameterDouble with ChangeNotifier {
-  ValvestateParameterBass() : super(name: "BASS", id: "bass");
+class _ValvestateParameterBass extends AudioParameterDouble with ChangeNotifier {
+  _ValvestateParameterBass() : super(name: "BASS", id: "bass");
 
   set bass(double bass) {
     value = bass;
@@ -27,9 +27,9 @@ class ValvestateParameterBass extends AudioParameterDouble with ChangeNotifier {
   double get bass => value;
 }
 
-class ValvestateParameterMiddle extends AudioParameterDouble
+class _ValvestateParameterMiddle extends AudioParameterDouble
     with ChangeNotifier {
-  ValvestateParameterMiddle() : super(name: "MIDDLE", id: "middle");
+  _ValvestateParameterMiddle() : super(name: "MIDDLE", id: "middle");
 
   set middle(double middle) {
     value = middle;
@@ -39,9 +39,9 @@ class ValvestateParameterMiddle extends AudioParameterDouble
   double get middle => value;
 }
 
-class ValvestateParameterTreble extends AudioParameterDouble
+class _ValvestateParameterTreble extends AudioParameterDouble
     with ChangeNotifier {
-  ValvestateParameterTreble() : super(name: "TREBLE", id: "treble");
+  _ValvestateParameterTreble() : super(name: "TREBLE", id: "treble");
 
   set treble(double treble) {
     value = treble;
@@ -51,9 +51,9 @@ class ValvestateParameterTreble extends AudioParameterDouble
   double get treble => value;
 }
 
-class ValvestateParameterContour extends AudioParameterDouble
+class _ValvestateParameterContour extends AudioParameterDouble
     with ChangeNotifier {
-  ValvestateParameterContour() : super(name: "CONTOUR", id: "contour");
+  _ValvestateParameterContour() : super(name: "CONTOUR", id: "contour");
 
   set contour(double contour) {
     value = contour;
@@ -63,9 +63,9 @@ class ValvestateParameterContour extends AudioParameterDouble
   double get contour => value;
 }
 
-class ValvestateParameterVolume extends AudioParameterDouble
+class _ValvestateParameterVolume extends AudioParameterDouble
     with ChangeNotifier {
-  ValvestateParameterVolume() : super(name: "VOLUME", id: "volume");
+  _ValvestateParameterVolume() : super(name: "VOLUME", id: "volume");
 
   set volume(double volume) {
     value = volume;
@@ -88,12 +88,12 @@ class Valvestate extends StatelessWidget {
     return Row(
       children: [
         Consumer6<
-            ValvestateParameterGain,
-            ValvestateParameterBass,
-            ValvestateParameterMiddle,
-            ValvestateParameterTreble,
-            ValvestateParameterContour,
-            ValvestateParameterVolume>(
+            _ValvestateParameterGain,
+            _ValvestateParameterBass,
+            _ValvestateParameterMiddle,
+            _ValvestateParameterTreble,
+            _ValvestateParameterContour,
+            _ValvestateParameterVolume>(
           builder: (context, gain, bass, middle, treble, contour, volume, _) =>
               Amplifier(
             parameter: [
@@ -135,12 +135,12 @@ class Valvestate extends StatelessWidget {
             name: "VALVESTATE 8100",
           ),
         ),
-        ParameterUpdater<ValvestateParameterGain>(channel: channel),
-        ParameterUpdater<ValvestateParameterBass>(channel: channel),
-        ParameterUpdater<ValvestateParameterMiddle>(channel: channel),
-        ParameterUpdater<ValvestateParameterTreble>(channel: channel),
-        ParameterUpdater<ValvestateParameterContour>(channel: channel),
-        ParameterUpdater<ValvestateParameterVolume>(channel: channel),
+        ParameterUpdater<_ValvestateParameterGain>(channel: channel),
+        ParameterUpdater<_ValvestateParameterBass>(channel: channel),
+        ParameterUpdater<_ValvestateParameterMiddle>(channel: channel),
+        ParameterUpdater<_ValvestateParameterTreble>(channel: channel),
+        ParameterUpdater<_ValvestateParameterContour>(channel: channel),
+        ParameterUpdater<_ValvestateParameterVolume>(channel: channel),
       ],
     );
   }
@@ -158,22 +158,22 @@ class ValvestateParameterProvider extends StatelessWidget {
   Widget build(BuildContext context) => MultiProvider(
         providers: [
           ChangeNotifierProvider(
-            create: (_) => ValvestateParameterGain(),
+            create: (_) => _ValvestateParameterGain(),
           ),
           ChangeNotifierProvider(
-            create: (_) => ValvestateParameterBass(),
+            create: (_) => _ValvestateParameterBass(),
           ),
           ChangeNotifierProvider(
-            create: (_) => ValvestateParameterMiddle(),
+            create: (_) => _ValvestateParameterMiddle(),
           ),
           ChangeNotifierProvider(
-            create: (_) => ValvestateParameterTreble(),
+            create: (_) => _ValvestateParameterTreble(),
           ),
           ChangeNotifierProvider(
-            create: (_) => ValvestateParameterContour(),
+            create: (_) => _ValvestateParameterContour(),
           ),
           ChangeNotifierProvider(
-            create: (_) => ValvestateParameterVolume(),
+            create: (_) => _ValvestateParameterVolume(),
           ),
         ],
         child: child,
