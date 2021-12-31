@@ -4,6 +4,8 @@ import 'package:provider/provider.dart';
 import 'amplifier.dart';
 
 class AudioParameterDouble {
+  double _value = 0.5;
+
   final String name;
   final String id;
 
@@ -11,20 +13,19 @@ class AudioParameterDouble {
     required this.name,
     required this.id,
   });
+
+  String toJson() => '{"id": "$id", "value": ${_value.toStringAsFixed(2)}}';
 }
 
-class ValvestateParameterGain extends ChangeNotifier {
-  double _gain = 0.5;
-
-  final String name = "GAIN";
-  final String id = "ampGain";
+class ValvestateParameterGain extends AudioParameterDouble with ChangeNotifier {
+  ValvestateParameterGain() : super(name: "GAIN", id: "ampGain");
 
   set gain(double gain) {
-    _gain = gain;
+    _value = gain;
     notifyListeners();
   }
 
-  double get gain => _gain;
+  double get gain => _value;
 }
 
 class ValvestateParameterBass extends ChangeNotifier {

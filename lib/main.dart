@@ -117,7 +117,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   Valvestate(),
                   Consumer<ValvestateParameterGain>(
                     builder: (context, gain, _) {
-                      _channel.sink.add(gain.gain.toString());
+                      _channel.sink.add(gain.toJson());
                       return const SizedBox.shrink();
                     },
                   ),
