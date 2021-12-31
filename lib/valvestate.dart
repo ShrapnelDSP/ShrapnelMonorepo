@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:stream_channel/stream_channel.dart';
 
 import 'amplifier.dart';
 import 'parameter.dart';
@@ -15,133 +16,138 @@ class ValvestateParameterGain extends AudioParameterDouble with ChangeNotifier {
   double get gain => value;
 }
 
-class ValvestateParameterBass extends ChangeNotifier {
-  double _bass = 0.5;
-
-  final String name = "BASS";
-  final String id = "bass";
+class ValvestateParameterBass extends AudioParameterDouble with ChangeNotifier {
+  ValvestateParameterBass() : super(name: "BASS", id: "bass");
 
   set bass(double bass) {
-    _bass = bass;
+    value = bass;
     notifyListeners();
   }
 
-  double get bass => _bass;
+  double get bass => value;
 }
 
-class ValvestateParameterMiddle extends ChangeNotifier {
-  double _middle = 0.5;
-
-  final String name = "MIDDLE";
-  final String id = "middle";
+class ValvestateParameterMiddle extends AudioParameterDouble
+    with ChangeNotifier {
+  ValvestateParameterMiddle() : super(name: "MIDDLE", id: "middle");
 
   set middle(double middle) {
-    _middle = middle;
+    value = middle;
     notifyListeners();
   }
 
-  double get middle => _middle;
+  double get middle => value;
 }
 
-class ValvestateParameterTreble extends ChangeNotifier {
-  double _treble = 0.5;
-
-  final String name = "TREBLE";
-  final String id = "treble";
+class ValvestateParameterTreble extends AudioParameterDouble
+    with ChangeNotifier {
+  ValvestateParameterTreble() : super(name: "TREBLE", id: "treble");
 
   set treble(double treble) {
-    _treble = treble;
+    value = treble;
     notifyListeners();
   }
 
-  double get treble => _treble;
+  double get treble => value;
 }
 
-class ValvestateParameterContour extends ChangeNotifier {
-  double _contour = 0.5;
-
-  final String name = "CONTOUR";
-  final String id = "contour";
+class ValvestateParameterContour extends AudioParameterDouble
+    with ChangeNotifier {
+  ValvestateParameterContour() : super(name: "CONTOUR", id: "contour");
 
   set contour(double contour) {
-    _contour = contour;
+    value = contour;
     notifyListeners();
   }
 
-  double get contour => _contour;
+  double get contour => value;
 }
 
-class ValvestateParameterVolume extends ChangeNotifier {
-  double _volume = 0.5;
-
-  final String name = "VOLUME";
-  final String id = "volume";
+class ValvestateParameterVolume extends AudioParameterDouble
+    with ChangeNotifier {
+  ValvestateParameterVolume() : super(name: "VOLUME", id: "volume");
 
   set volume(double volume) {
-    _volume = volume;
+    value = volume;
     notifyListeners();
   }
 
-  double get volume => _volume;
+  double get volume => value;
 }
 
 /* TODO
  *
  * - How to group together all the parameters so they can be listened and
  *   provided at once?
- * - Use a common base class to indicate that name and id are required?
  */
 
 class Valvestate extends StatelessWidget {
+  final StreamChannel channel;
+
+  const Valvestate({
+    Key? key,
+    required this.channel,
+  }) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
-    return Consumer6<
-        ValvestateParameterGain,
-        ValvestateParameterBass,
-        ValvestateParameterMiddle,
-        ValvestateParameterTreble,
-        ValvestateParameterContour,
-        ValvestateParameterVolume>(
-      builder: (context, gain, bass, middle, treble, contour, volume, _) =>
-          Amplifier(
-        parameter: [
-          gain.gain,
-          bass.bass,
-          middle.middle,
-          treble.treble,
-          contour.contour,
-          volume.volume,
-        ],
-        onChanged: [
-          (value) {
-            gain.gain = value;
-          },
-          (value) {
-            bass.bass = value;
-          },
-          (value) {
-            middle.middle = value;
-          },
-          (value) {
-            treble.treble = value;
-          },
-          (value) {
-            contour.contour = value;
-          },
-          (value) {
-            volume.volume = value;
-          },
-        ],
-        parameterName: [
-          gain.name,
-          bass.name,
-          middle.name,
-          treble.name,
-          contour.name,
-          volume.name,
-        ],
-        name: "VALVESTATE 8100",
-      ),
+    return Row(
+      children: [
+        Consumer6<
+            ValvestateParameterGain,
+            ValvestateParameterBass,
+            ValvestateParameterMiddle,
+            ValvestateParameterTreble,
+            ValvestateParameterContour,
+            ValvestateParameterVolume>(
+          builder: (context, gain, bass, middle, treble, contour, volume, _) =>
+              Amplifier(
+            parameter: [
+              gain.gain,
+              bass.bass,
+              middle.middle,
+              treble.treble,
+              contour.contour,
+              volume.volume,
+            ],
+            onChanged: [
+              (value) {
+                gain.gain = value;
+              },
+              (value) {
+                bass.bass = value;
+              },
+              (value) {
+                middle.middle = value;
+              },
+              (value) {
+                treble.treble = value;
+              },
+              (value) {
+                contour.contour = value;
+              },
+              (value) {
+                volume.volume = value;
+              },
+            ],
+            parameterName: [
+              gain.name,
+              bass.name,
+              middle.name,
+              treble.name,
+              contour.name,
+              volume.name,
+            ],
+            name: "VALVESTATE 8100",
+          ),
+        ),
+        ParameterUpdater<ValvestateParameterGain>(channel: channel),
+        ParameterUpdater<ValvestateParameterBass>(channel: channel),
+        ParameterUpdater<ValvestateParameterMiddle>(channel: channel),
+        ParameterUpdater<ValvestateParameterTreble>(channel: channel),
+        ParameterUpdater<ValvestateParameterContour>(channel: channel),
+        ParameterUpdater<ValvestateParameterVolume>(channel: channel),
+      ],
     );
   }
 }

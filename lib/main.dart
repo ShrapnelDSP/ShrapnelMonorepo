@@ -115,8 +115,7 @@ class _MyHomePageState extends State<MyHomePage> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  Valvestate(),
-                  ParameterUpdater<ValvestateParameterGain>(channel: _channel),
+                  Valvestate(channel: _channel),
                 ],
               ),
             ),
