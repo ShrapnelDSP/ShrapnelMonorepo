@@ -32,8 +32,6 @@ class _AmplifierState extends State<Amplifier> {
           onChanged: _full
               ? widget.onChanged[index]
               : (ignored) {/* not interactive */},
-          min: 0,
-          max: 10,
           size: scaleFactor * 25,
         ),
         if (_full) const SizedBox(height: 10),
