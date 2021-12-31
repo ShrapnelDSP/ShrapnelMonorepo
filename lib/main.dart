@@ -4,6 +4,7 @@ import 'package:web_socket_channel/web_socket_channel.dart';
 
 import 'stompbox.dart';
 import 'valvestate.dart';
+import 'parameter.dart';
 
 void main() {
   runApp(const MyApp());
@@ -115,12 +116,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   Valvestate(),
-                  Consumer<ValvestateParameterGain>(
-                    builder: (context, gain, _) {
-                      _channel.sink.add(gain.toJson());
-                      return const SizedBox.shrink();
-                    },
-                  ),
+                  ParameterUpdater<ValvestateParameterGain>(channel: _channel),
                 ],
               ),
             ),
