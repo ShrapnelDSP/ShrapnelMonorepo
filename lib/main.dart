@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
-import 'amplifier.dart';
-import 'knob.dart';
 import 'stompbox.dart';
 import 'valvestate.dart';
 
@@ -37,10 +35,16 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   double _value = 0;
-  bool _bypass = false;
+  final bool _bypass = false;
+
+  final _channel = WebSocketChannel.connect(
+    Uri.parse('ws://guitar-dsp.local/websocket'),
+  );
 
   void _setValue(double value) => setState(() => _value = value);
+  /*
   void _toggleBypass(int index) => setState(() => _bypass = !_bypass);
+  */
 
   @override
   Widget build(BuildContext context) {
@@ -58,7 +62,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 Stompbox(
                   value: List.filled(3, _value),
                   onChanged: List.filled(3, _setValue),
-                  parameterName: ["DRIVE", "TONE", "LEVEL"],
+                  parameterName: const ["DRIVE", "TONE", "LEVEL"],
                   bypass: _bypass,
                   name: "Tube Screamer",
                   primarySwatch: Colors.green,
@@ -66,7 +70,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 Stompbox(
                   value: List.filled(4, _value),
                   onChanged: List.filled(4, _setValue),
-                  parameterName: [
+                  parameterName: const [
                     "Threshold",
                     "Hysteresis",
                     "Attack",
@@ -79,7 +83,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 Stompbox(
                   value: List.filled(4, _value),
                   onChanged: List.filled(4, _setValue),
-                  parameterName: ["LEVEL", "LOW", "HIGH", "DISTORTION"],
+                  parameterName: const ["LEVEL", "LOW", "HIGH", "DISTORTION"],
                   bypass: _bypass,
                   name: "Heavy Metal",
                   primarySwatch: Colors.deepOrange,
@@ -111,6 +115,12 @@ class _MyHomePageState extends State<MyHomePage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   Valvestate(),
+                  Consumer<ValvestateParameterGain>(
+                    builder: (context, gain, _) {
+                      _channel.sink.add(gain.gain.toString());
+                      return const SizedBox.shrink();
+                    },
+                  ),
                 ],
               ),
             ),
@@ -120,16 +130,22 @@ class _MyHomePageState extends State<MyHomePage> {
                 Stompbox(
                   value: [_value, _value, _value],
                   onChanged: List.filled(3, _setValue),
-                  parameterName: ["RATE", "DEPTH", "MIX"],
+                  parameterName: const ["RATE", "DEPTH", "MIX"],
                   bypass: _bypass,
                   name: "Chorus",
                   primarySwatch: Colors.blue,
                 ),
               ],
-            )
+            ),
           ],
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _channel.sink.close();
+    super.dispose();
   }
 }
