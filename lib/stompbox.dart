@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 import 'knob.dart';
 
-class Stompbox extends StatefulWidget {
+class Stompbox extends StatelessWidget {
   final List<double> value;
   final List<ValueChanged<double>> onChanged;
   final List<String> parameterName;
 
   final bool bypass;
   final String name;
+
+  final bool full;
+  final Function() onTap;
 
   final MaterialColor primarySwatch;
 
@@ -18,31 +21,26 @@ class Stompbox extends StatefulWidget {
     required this.parameterName,
     required this.bypass,
     required this.name,
+    required this.full,
+    required this.onTap,
     required this.primarySwatch,
   }) : super(key: key);
-
-  @override
-  _StompboxState createState() => _StompboxState();
-}
-
-class _StompboxState extends State<Stompbox> {
-  bool _full = false;
 
   Widget knobWithLabel(int index, double scaleFactor) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
         Knob(
-          value: widget.value[index],
-          onChanged: _full
-              ? widget.onChanged[index]
+          value: value[index],
+          onChanged: full
+              ? onChanged[index]
               : (ignored) {/* not interactive */},
           size: scaleFactor * 25,
         ),
-        if (_full) const SizedBox(height: 10),
-        if (_full)
+        if (full) const SizedBox(height: 10),
+        if (full)
           Text(
-            widget.parameterName[index],
+            parameterName[index],
             textAlign: TextAlign.center,
           ),
       ],
@@ -50,14 +48,14 @@ class _StompboxState extends State<Stompbox> {
   }
 
   List<Widget> knobs(double scaleFactor) {
-    if (widget.value.length == 1) {
+    if (value.length == 1) {
       return [
         Positioned(
           top: 0,
           child: knobWithLabel(0, scaleFactor),
         ),
       ];
-    } else if (widget.value.length == 2) {
+    } else if (value.length == 2) {
       return [
         Positioned(
           left: 0,
@@ -70,7 +68,7 @@ class _StompboxState extends State<Stompbox> {
           child: knobWithLabel(1, scaleFactor),
         ),
       ];
-    } else if (widget.value.length == 3) {
+    } else if (value.length == 3) {
       return [
         Positioned(
           left: 0,
@@ -87,7 +85,7 @@ class _StompboxState extends State<Stompbox> {
           child: knobWithLabel(2, scaleFactor),
         ),
       ];
-    } else if (widget.value.length == 4) {
+    } else if (value.length == 4) {
       return [
         Positioned(
           left: 0,
@@ -116,16 +114,14 @@ class _StompboxState extends State<Stompbox> {
     return [];
   }
 
-  void _toggleSize() => setState(() => _full = !_full);
-
   @override
   Widget build(BuildContext context) {
-    double scaleFactor = _full ? 3 : 1;
+    double scaleFactor = full ? 3 : 1;
 
     return Theme(
       data: ThemeData(
         brightness: Theme.of(context).brightness,
-        primarySwatch: widget.primarySwatch,
+        primarySwatch: primarySwatch,
       ),
       /* Builder required to create new context, which makes
        * Theme.of return the new theme defined above
@@ -135,7 +131,7 @@ class _StompboxState extends State<Stompbox> {
           width: scaleFactor * 100,
           height: scaleFactor * 150,
           child: GestureDetector(
-            onTap: _toggleSize,
+            onTap: onTap,
             child: Card(
               child: Container(
                 margin: EdgeInsets.all(scaleFactor * 10),
@@ -143,7 +139,7 @@ class _StompboxState extends State<Stompbox> {
                   ...knobs(scaleFactor),
                   Positioned(
                     top: scaleFactor * 70,
-                    child: Text(widget.name),
+                    child: Text(name),
                   ),
                   Positioned(
                     top: scaleFactor * 95,
@@ -162,7 +158,7 @@ class _StompboxState extends State<Stompbox> {
                       width: scaleFactor * 19,
                       height: scaleFactor * 19,
                       decoration: BoxDecoration(
-                        color: widget.bypass
+                        color: bypass
                             ? Theme.of(context).colorScheme.surface
                             : Theme.of(context).colorScheme.primary,
                         shape: BoxShape.circle,

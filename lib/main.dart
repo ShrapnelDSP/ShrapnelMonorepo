@@ -35,11 +35,13 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   double _value = 0;
   final bool _bypass = false;
+  bool _stompboxFull = false;
 
   void _setValue(double value) => setState(() => _value = value);
   /*
   void _toggleBypass(int index) => setState(() => _bypass = !_bypass);
   */
+  void _stompboxTapped() => setState(() =>_stompboxFull = !_stompboxFull);
 
   @override
   Widget build(BuildContext context) {
@@ -61,6 +63,8 @@ class _MyHomePageState extends State<MyHomePage> {
                     parameterName: const ["DRIVE", "TONE", "LEVEL"],
                     bypass: _bypass,
                     name: "Tube Screamer",
+                    onTap: _stompboxTapped,
+                    full: _stompboxFull,
                     primarySwatch: Colors.green,
                   ),
                   Stompbox(
@@ -74,6 +78,8 @@ class _MyHomePageState extends State<MyHomePage> {
                     ],
                     bypass: _bypass,
                     name: "Noise Gate",
+                    onTap: _stompboxTapped,
+                    full: _stompboxFull,
                     primarySwatch: Colors.red,
                   ),
                   Stompbox(
@@ -82,6 +88,8 @@ class _MyHomePageState extends State<MyHomePage> {
                     parameterName: const ["LEVEL", "LOW", "HIGH", "DISTORTION"],
                     bypass: _bypass,
                     name: "Heavy Metal",
+                    onTap: _stompboxTapped,
+                    full: _stompboxFull,
                     primarySwatch: Colors.deepOrange,
                   ),
                 ],
@@ -103,6 +111,8 @@ class _MyHomePageState extends State<MyHomePage> {
                     parameterName: const ["RATE", "DEPTH", "MIX"],
                     bypass: _bypass,
                     name: "Chorus",
+                    onTap: _stompboxTapped,
+                    full: _stompboxFull,
                     primarySwatch: Colors.blue,
                   ),
                 ],
