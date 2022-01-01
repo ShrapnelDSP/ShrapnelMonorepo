@@ -76,8 +76,13 @@ class _ValvestateParameterVolume extends AudioParameterDouble
 }
 
 class Valvestate extends StatelessWidget {
+  final bool full;
+  final void Function() onTap;
+
   const Valvestate({
     Key? key,
+    required this.full,
+    required this.onTap,
   }) : super(key: key);
 
   @override
@@ -130,6 +135,8 @@ class Valvestate extends StatelessWidget {
               volume.name,
             ],
             name: "VALVESTATE 8100",
+            onTap: onTap,
+            full: full,
           ),
         ),
         const ParameterUpdater<_ValvestateParameterGain, ParameterChannel>(),

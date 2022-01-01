@@ -32,9 +32,8 @@ class Stompbox extends StatelessWidget {
       children: <Widget>[
         Knob(
           value: value[index],
-          onChanged: full
-              ? onChanged[index]
-              : (ignored) {/* not interactive */},
+          onChanged:
+              full ? onChanged[index] : (ignored) {/* not interactive */},
           size: scaleFactor * 25,
         ),
         if (full) const SizedBox(height: 10),

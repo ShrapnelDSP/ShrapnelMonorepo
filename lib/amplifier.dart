@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'knob.dart';
 
-class Amplifier extends StatefulWidget {
+class Amplifier extends StatelessWidget {
   final List<double> parameter;
   final List<ValueChanged<double>> onChanged;
   final List<String> parameterName;
+
+  final bool full;
+  final Function() onTap;
 
   final String name;
 
@@ -14,30 +17,24 @@ class Amplifier extends StatefulWidget {
     required this.onChanged,
     required this.parameterName,
     required this.name,
+    required this.onTap,
+    required this.full,
   }) : super(key: key);
-
-  @override
-  _AmplifierState createState() => _AmplifierState();
-}
-
-class _AmplifierState extends State<Amplifier> {
-  bool _full = false;
 
   Widget knobWithLabel(int index, double scaleFactor) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
         Knob(
-          value: widget.parameter[index],
-          onChanged: _full
-              ? widget.onChanged[index]
-              : (ignored) {/* not interactive */},
+          value: parameter[index],
+          onChanged:
+              full ? onChanged[index] : (ignored) {/* not interactive */},
           size: scaleFactor * 25,
         ),
-        if (_full) const SizedBox(height: 10),
-        if (_full)
+        if (full) const SizedBox(height: 10),
+        if (full)
           Text(
-            widget.parameterName[index],
+            parameterName[index],
             textAlign: TextAlign.center,
           ),
       ],
@@ -47,29 +44,29 @@ class _AmplifierState extends State<Amplifier> {
   List<Widget> knobs(double scaleFactor) {
     List<Widget> knobs = [];
 
-    for (var i = 0; i < widget.parameter.length; i++) {
+    for (var i = 0; i < parameter.length; i++) {
       knobs.add(knobWithLabel(i, scaleFactor));
-      if(i < widget.parameter.length - 1) knobs.add(SizedBox(width: scaleFactor * 10));
+      if (i < parameter.length - 1)
+        knobs.add(SizedBox(width: scaleFactor * 10));
     }
 
     return knobs;
   }
 
-  void _toggleSize() => setState(() => _full = !_full);
-
   @override
   Widget build(BuildContext context) {
-    double scaleFactor = _full ? 3 : 1;
+    double scaleFactor = full ? 3 : 1;
 
     return GestureDetector(
-            onTap: _toggleSize,
-            child: Card(
-              child: Container(
-                margin: EdgeInsets.all(scaleFactor * 10),
-                child: Row(
-                  children: knobs(scaleFactor),),
-),
-),
+      onTap: onTap,
+      child: Card(
+        child: Container(
+          margin: EdgeInsets.all(scaleFactor * 10),
+          child: Row(
+            children: knobs(scaleFactor),
+          ),
+        ),
+      ),
     );
   }
 }
