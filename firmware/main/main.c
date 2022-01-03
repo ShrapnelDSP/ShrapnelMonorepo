@@ -309,13 +309,44 @@ void app_main(void)
     profiling_mutex = xSemaphoreCreateMutex();
     i2s_setup(PROFILING_GPIO);
 
+    //dac must be powered up after the i2s clocks have stabilised
     vTaskDelay(100 / portTICK_PERIOD_MS);
 
-#if 0
-    //dac must be powered up after the i2s clocks have stabilised
+#if HARDWARE == HW_PCB_REV1
+    gpio_config_t io_conf = {
+        .intr_type = GPIO_INTR_DISABLE,
+        .mode = GPIO_MODE_OUTPUT,
+        .pin_bit_mask = 1ULL << GPIO_CODEC_NRESET,
+        .pull_down_en = 0,
+        .pull_up_en = 0,
+    };
+
+    esp_err_t rc = gpio_set_level(GPIO_CODEC_NRESET, 0);
+    if(rc != ESP_OK)
+    {
+        ESP_LOGE(TAG, "gpio_set_level failed %d, %s", rc, esp_err_to_name(rc));
+    }
+
+    rc = gpio_config(&io_conf);
+    if(rc != ESP_OK)
+    {
+        ESP_LOGE(TAG, "gpio_config failed %d, %s", rc, esp_err_to_name(rc));
+    }
+
+    vTaskDelay(5 / portTICK_PERIOD_MS);
+
+    rc = gpio_set_level(GPIO_CODEC_NRESET, 1);
+    if(rc != ESP_OK)
+    {
+        ESP_LOGE(TAG, "gpio_set_level failed %d, %s", rc, esp_err_to_name(rc));
+    }
+
+    vTaskDelay(5 / portTICK_PERIOD_MS);
+
+#endif
+
     pcm3060_init(I2C_NUM, 0);
     ESP_ERROR_CHECK(pcm3060_power_up());
-#endif
 
     /* Start the mdns service */
     start_mdns();
