@@ -27,8 +27,7 @@
 #include "pcm3060.h"
 #include "cmd_handling.h"
 #include "audio_events.h"
-
-#define PROFILING_GPIO GPIO_NUM_23
+#include "hardware.h"
 
 #define QUEUE_LEN 10
 #define MAX_CLIENTS 3
@@ -38,8 +37,6 @@
 static QueueHandle_t in_queue;
 static QueueHandle_t out_queue;
 static httpd_handle_t server = NULL;
-
-#define I2C_NUM I2C_NUM_0
 
 static void websocket_send(void *arg);
 static esp_err_t websocket_get_handler(httpd_req_t *req);
@@ -265,8 +262,8 @@ static void i2c_setup(void)
 {
     const i2c_config_t config = {
         .mode = I2C_MODE_MASTER,
-        .sda_io_num = GPIO_NUM_13,
-        .scl_io_num = GPIO_NUM_12,
+        .sda_io_num = GPIO_I2C_SDA,
+        .scl_io_num = GPIO_I2C_SCL,
         .sda_pullup_en = true,
         .scl_pullup_en = true,
         .master.clk_speed = 100 * 1000,
