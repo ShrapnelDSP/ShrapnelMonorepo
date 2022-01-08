@@ -4,9 +4,9 @@ import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
-class AudioParameterDouble {
+class AudioParameterDouble extends ChangeNotifier {
   @protected
-  double value = 0.5;
+  double _value = 0.5;
 
   final String name;
   final String id;
@@ -15,6 +15,13 @@ class AudioParameterDouble {
     required this.name,
     required this.id,
   });
+
+  set value(double value) {
+    _value = value;
+    notifyListeners();
+  }
+
+  double get value => _value;
 
   String toJson() => '{"id": "$id", "value": ${value.toStringAsFixed(2)}}';
 }
