@@ -5,56 +5,56 @@ import 'amplifier.dart';
 import 'parameter.dart';
 
 class _ValvestateParameterGain extends AudioParameterDouble {
-  _ValvestateParameterGain(ParameterChannel backend)
+  _ValvestateParameterGain({required ParameterChannel parameterChannel})
       : super(
           name: "GAIN",
           id: "ampGain",
-          backendChannel: backend,
+          parameterChannel: parameterChannel,
         );
 }
 
 class _ValvestateParameterBass extends AudioParameterDouble {
-  _ValvestateParameterBass(ParameterChannel backend)
+  _ValvestateParameterBass({required ParameterChannel parameterChannel})
       : super(
           name: "BASS",
           id: "bass",
-          backendChannel: backend,
+          parameterChannel: parameterChannel,
         );
 }
 
 class _ValvestateParameterMiddle extends AudioParameterDouble {
-  _ValvestateParameterMiddle(ParameterChannel backend)
+  _ValvestateParameterMiddle({required ParameterChannel parameterChannel})
       : super(
           name: "MIDDLE",
           id: "middle",
-          backendChannel: backend,
+          parameterChannel: parameterChannel,
         );
 }
 
 class _ValvestateParameterTreble extends AudioParameterDouble {
-  _ValvestateParameterTreble(ParameterChannel backend)
+  _ValvestateParameterTreble({required ParameterChannel parameterChannel})
       : super(
           name: "TREBLE",
           id: "treble",
-          backendChannel: backend,
+          parameterChannel: parameterChannel,
         );
 }
 
 class _ValvestateParameterContour extends AudioParameterDouble {
-  _ValvestateParameterContour(ParameterChannel backend)
+  _ValvestateParameterContour({required ParameterChannel parameterChannel})
       : super(
           name: "CONTOUR",
           id: "contour",
-          backendChannel: backend,
+          parameterChannel: parameterChannel,
         );
 }
 
 class _ValvestateParameterVolume extends AudioParameterDouble {
-  _ValvestateParameterVolume(ParameterChannel backend)
+  _ValvestateParameterVolume({required ParameterChannel parameterChannel})
       : super(
           name: "VOLUME",
           id: "volume",
-          backendChannel: backend,
+          parameterChannel: parameterChannel,
         );
 }
 
@@ -124,27 +124,42 @@ class ValvestateParameterProvider extends StatelessWidget {
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) => MultiProvider(
-        providers: [
-          ChangeNotifierProvider(
-            create: (_) => _ValvestateParameterGain(Provider.of<ParameterChannel>(context)),
-          ),
-          ChangeNotifierProvider(
-            create: (_) => _ValvestateParameterBass(Provider.of<ParameterChannel>(context)),
-          ),
-          ChangeNotifierProvider(
-            create: (_) => _ValvestateParameterMiddle(Provider.of<ParameterChannel>(context)),
-          ),
-          ChangeNotifierProvider(
-            create: (_) => _ValvestateParameterTreble(Provider.of<ParameterChannel>(context)),
-          ),
-          ChangeNotifierProvider(
-            create: (_) => _ValvestateParameterContour(Provider.of<ParameterChannel>(context)),
-          ),
-          ChangeNotifierProvider(
-            create: (_) => _ValvestateParameterVolume(Provider.of<ParameterChannel>(context)),
-          ),
-        ],
-        child: child,
-      );
+  Widget build(BuildContext context) =>
+      Consumer<ParameterChannel>(builder: (_, parameterChannel, __) {
+        return MultiProvider(
+          providers: [
+            ChangeNotifierProvider(
+              create: (_) => _ValvestateParameterGain(
+                parameterChannel: parameterChannel,
+              ),
+            ),
+            ChangeNotifierProvider(
+              create: (_) => _ValvestateParameterBass(
+                parameterChannel: parameterChannel,
+              ),
+            ),
+            ChangeNotifierProvider(
+              create: (_) => _ValvestateParameterMiddle(
+                parameterChannel: parameterChannel,
+              ),
+            ),
+            ChangeNotifierProvider(
+              create: (_) => _ValvestateParameterTreble(
+                parameterChannel: parameterChannel,
+              ),
+            ),
+            ChangeNotifierProvider(
+              create: (_) => _ValvestateParameterContour(
+                parameterChannel: parameterChannel,
+              ),
+            ),
+            ChangeNotifierProvider(
+              create: (_) => _ValvestateParameterVolume(
+                parameterChannel: parameterChannel,
+              ),
+            ),
+          ],
+          child: child,
+        );
+      });
 }

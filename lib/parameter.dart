@@ -10,18 +10,18 @@ class AudioParameterDouble extends ChangeNotifier {
 
   final String name;
   final String id;
-  final ParameterChannel backendChannel;
+  final ParameterChannel parameterChannel;
 
   AudioParameterDouble({
     required this.name,
     required this.id,
-    required this.backendChannel
+    required this.parameterChannel
   });
 
   void onUserChanged(double value) {
       /* setting value instead of _value to make sure listeners are notified */
       this.value = value;
-      backendChannel.sink.add(toJson());
+      parameterChannel.sink.add(toJson());
   }
 
   set value(double value) {
