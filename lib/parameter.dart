@@ -10,11 +10,19 @@ class AudioParameterDouble extends ChangeNotifier {
 
   final String name;
   final String id;
+  final ParameterChannel backendChannel;
 
   AudioParameterDouble({
     required this.name,
     required this.id,
+    required this.backendChannel
   });
+
+  void onUserChanged(double value) {
+      /* setting value instead of _value to make sure listeners are notified */
+      this.value = value;
+      backendChannel.sink.add(toJson());
+  }
 
   set value(double value) {
     _value = value;
@@ -24,21 +32,6 @@ class AudioParameterDouble extends ChangeNotifier {
   double get value => _value;
 
   String toJson() => '{"id": "$id", "value": ${value.toStringAsFixed(2)}}';
-}
-
-class ParameterUpdater<P extends AudioParameterDouble,
-    C extends ParameterChannel> extends StatelessWidget {
-  const ParameterUpdater({
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  build(BuildContext context) => Consumer2<P, C>(
-        builder: (context, parameter, channel, _) {
-          channel.sink.add(parameter.toJson());
-          return const SizedBox.shrink();
-        },
-      );
 }
 
 class ParameterChannel extends ChangeNotifier {
