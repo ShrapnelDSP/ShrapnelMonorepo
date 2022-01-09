@@ -7,8 +7,8 @@ import 'parameter.dart';
 class _ValvestateParameterGain extends AudioParameterDouble {
   _ValvestateParameterGain({required ParameterChannel parameterChannel})
       : super(
-          name: "GAIN",
-          id: "ampGain",
+          name: 'GAIN',
+          id: 'ampGain',
           parameterChannel: parameterChannel,
         );
 }
@@ -16,8 +16,8 @@ class _ValvestateParameterGain extends AudioParameterDouble {
 class _ValvestateParameterBass extends AudioParameterDouble {
   _ValvestateParameterBass({required ParameterChannel parameterChannel})
       : super(
-          name: "BASS",
-          id: "bass",
+          name: 'BASS',
+          id: 'bass',
           parameterChannel: parameterChannel,
         );
 }
@@ -25,8 +25,8 @@ class _ValvestateParameterBass extends AudioParameterDouble {
 class _ValvestateParameterMiddle extends AudioParameterDouble {
   _ValvestateParameterMiddle({required ParameterChannel parameterChannel})
       : super(
-          name: "MIDDLE",
-          id: "middle",
+          name: 'MIDDLE',
+          id: 'middle',
           parameterChannel: parameterChannel,
         );
 }
@@ -34,8 +34,8 @@ class _ValvestateParameterMiddle extends AudioParameterDouble {
 class _ValvestateParameterTreble extends AudioParameterDouble {
   _ValvestateParameterTreble({required ParameterChannel parameterChannel})
       : super(
-          name: "TREBLE",
-          id: "treble",
+          name: 'TREBLE',
+          id: 'treble',
           parameterChannel: parameterChannel,
         );
 }
@@ -43,8 +43,8 @@ class _ValvestateParameterTreble extends AudioParameterDouble {
 class _ValvestateParameterContour extends AudioParameterDouble {
   _ValvestateParameterContour({required ParameterChannel parameterChannel})
       : super(
-          name: "CONTOUR",
-          id: "contour",
+          name: 'CONTOUR',
+          id: 'contour',
           parameterChannel: parameterChannel,
         );
 }
@@ -52,21 +52,21 @@ class _ValvestateParameterContour extends AudioParameterDouble {
 class _ValvestateParameterVolume extends AudioParameterDouble {
   _ValvestateParameterVolume({required ParameterChannel parameterChannel})
       : super(
-          name: "VOLUME",
-          id: "volume",
+          name: 'VOLUME',
+          id: 'volume',
           parameterChannel: parameterChannel,
         );
 }
 
 class Valvestate extends StatelessWidget {
-  final bool full;
-  final void Function() onTap;
-
   const Valvestate({
     Key? key,
     required this.full,
     required this.onTap,
   }) : super(key: key);
+
+  final bool full;
+  final void Function() onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -105,7 +105,7 @@ class Valvestate extends StatelessWidget {
               contour.name,
               volume.name,
             ],
-            name: "VALVESTATE 8100",
+            name: 'VALVESTATE 8100',
             onTap: onTap,
             full: full,
           ),
@@ -116,12 +116,12 @@ class Valvestate extends StatelessWidget {
 }
 
 class ValvestateParameterProvider extends StatelessWidget {
-  final Widget child;
-
   const ValvestateParameterProvider({
     Key? key,
     required this.child,
   }) : super(key: key);
+
+  final Widget child;
 
   @override
   Widget build(BuildContext context) =>

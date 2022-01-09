@@ -2,15 +2,6 @@ import 'package:flutter/material.dart';
 import 'knob.dart';
 
 class Amplifier extends StatelessWidget {
-  final List<double> parameter;
-  final List<ValueChanged<double>> onChanged;
-  final List<String> parameterName;
-
-  final bool full;
-  final Function() onTap;
-
-  final String name;
-
   const Amplifier({
     Key? key,
     required this.parameter,
@@ -20,6 +11,15 @@ class Amplifier extends StatelessWidget {
     required this.onTap,
     required this.full,
   }) : super(key: key);
+
+  final List<double> parameter;
+  final List<ValueChanged<double>> onChanged;
+  final List<String> parameterName;
+
+  final bool full;
+  final Function() onTap;
+
+  final String name;
 
   Widget knobWithLabel(int index, double scaleFactor) {
     return Column(
@@ -42,12 +42,13 @@ class Amplifier extends StatelessWidget {
   }
 
   List<Widget> knobs(double scaleFactor) {
-    List<Widget> knobs = [];
+    final knobs = <Widget>[];
 
     for (var i = 0; i < parameter.length; i++) {
       knobs.add(knobWithLabel(i, scaleFactor));
-      if (i < parameter.length - 1)
+      if (i < parameter.length - 1) {
         knobs.add(SizedBox(width: scaleFactor * 10));
+      }
     }
 
     return knobs;
@@ -55,7 +56,7 @@ class Amplifier extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double scaleFactor = full ? 3 : 1;
+    final scaleFactor = full ? 3.0 : 1.0;
 
     return GestureDetector(
       onTap: onTap,

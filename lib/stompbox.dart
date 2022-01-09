@@ -2,18 +2,6 @@ import 'package:flutter/material.dart';
 import 'knob.dart';
 
 class Stompbox extends StatelessWidget {
-  final List<double> value;
-  final List<ValueChanged<double>> onChanged;
-  final List<String> parameterName;
-
-  final bool bypass;
-  final String name;
-
-  final bool full;
-  final Function() onTap;
-
-  final MaterialColor primarySwatch;
-
   const Stompbox({
     Key? key,
     required this.value,
@@ -25,6 +13,18 @@ class Stompbox extends StatelessWidget {
     required this.onTap,
     required this.primarySwatch,
   }) : super(key: key);
+
+  final List<double> value;
+  final List<ValueChanged<double>> onChanged;
+  final List<String> parameterName;
+
+  final bool bypass;
+  final String name;
+
+  final bool full;
+  final Function() onTap;
+
+  final MaterialColor primarySwatch;
 
   Widget knobWithLabel(int index, double scaleFactor) {
     return Column(
@@ -109,13 +109,13 @@ class Stompbox extends StatelessWidget {
       ];
     }
 
-    assert(false, "Number of parameters must be between 1 and 4");
+    assert(false, 'Number of parameters must be between 1 and 4');
     return [];
   }
 
   @override
   Widget build(BuildContext context) {
-    double scaleFactor = full ? 3 : 1;
+    final scaleFactor = full ? 3.0 : 1.0;
 
     return Theme(
       data: ThemeData(

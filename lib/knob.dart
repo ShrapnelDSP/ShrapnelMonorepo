@@ -1,7 +1,17 @@
-import 'package:flutter/material.dart';
 import 'dart:math' as m;
 
+import 'package:flutter/material.dart';
+
 class Knob extends StatelessWidget {
+  const Knob({
+    Key? key,
+    required this.value,
+    required this.onChanged,
+    this.min = 0,
+    this.max = 1,
+    this.size = 50,
+  }) : super(key: key);
+
   final double value;
   final double min;
   final double max;
@@ -13,29 +23,20 @@ class Knob extends StatelessWidget {
 
   final ValueChanged<double> onChanged;
 
-  const Knob({
-    Key? key,
-    required this.value,
-    required this.onChanged,
-    this.min = 0,
-    this.max = 1,
-    this.size = 50,
-  }) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
-    double distanceToAngle = 0.007 * (max - min);
-    double _normalisedValue = (value - min) / (max - min);
-    double _angle = minAngle + _normalisedValue * sweepAngle * 2 * m.pi / 360;
+    final distanceToAngle = 0.007 * (max - min);
+    final _normalisedValue = (value - min) / (max - min);
+    final _angle = minAngle + _normalisedValue * sweepAngle * 2 * m.pi / 360;
 
     return Transform.rotate(
       angle: m.pi / 4,
       child: GestureDetector(
         onVerticalDragUpdate: (DragUpdateDetails details) {
-          double changeInY = details.delta.dy;
-          double changeInValue = distanceToAngle * -changeInY;
-          double newValue = value + changeInValue;
-          double clippedValue = m.min(m.max(newValue, min), max);
+          final changeInY = details.delta.dy;
+          final changeInValue = distanceToAngle * -changeInY;
+          final newValue = value + changeInValue;
+          final double clippedValue = m.min(m.max(newValue, min), max);
 
           onChanged(clippedValue);
         },
