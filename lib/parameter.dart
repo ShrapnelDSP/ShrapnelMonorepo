@@ -35,15 +35,20 @@ class AudioParameterDouble extends ChangeNotifier {
 }
 
 class ParameterChannel extends ChangeNotifier {
+  ParameterChannel() {
+      channel.sink.addStream(sink.stream);
+  }
+
   final channel = WebSocketChannel.connect(
     Uri.parse('ws://guitar-dsp.local/websocket'),
   );
 
-  StreamSink get sink => channel.sink;
+  final sink = StreamController<String>();
 
   @override
   void dispose() {
     channel.sink.close();
+    sink.close();
     super.dispose();
   }
 }
