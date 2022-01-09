@@ -2,15 +2,41 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/widgets.dart';
+import 'package:json_annotation/json_annotation.dart';
 import 'package:logging/logging.dart';
 import 'package:provider/provider.dart';
 import 'package:rxdart/transformers.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
+part 'parameter.g.dart';
+
 final log = Logger('parameter');
 
-class AudioParameterDouble extends ChangeNotifier {
-  AudioParameterDouble({
+
+// TODO do some testing on this, should fail to create when either field is
+// missing, wrong data type etc.
+@JsonSerializable()
+class AudioParameterDouble {
+    AudioParameterDouble({
+        required this.value,
+        required this.id,
+    });
+
+    factory AudioParameterDouble.fromJson(Map<String, dynamic> json) => _$AudioParameterDoubleFromJson(json);
+    Map<String, dynamic> toJson() => _$AudioParameterDoubleToJson(this);
+
+    @JsonKey(name: 'id')
+    final String id;
+
+    @JsonKey(name: 'value')
+    final double value;
+}
+
+// TODO perhaps use composition to put an instance of AudioParameterDouble
+// inside this model. That will allow us to use model.parameter.toJson to
+// convert the parameter the model represents.
+class AudioParameterDoubleModel extends ChangeNotifier {
+  AudioParameterDoubleModel({
     required this.name,
     required this.id,
     required this.parameterService
@@ -60,9 +86,9 @@ class ParameterService extends ChangeNotifier {
 
   final sink = StreamController<String>();
 
-  final _parameters = <AudioParameterDouble>[];
+  final _parameters = <AudioParameterDoubleModel>[];
 
-  void registerParameter(AudioParameterDouble parameter) {
+  void registerParameter(AudioParameterDoubleModel parameter) {
       _parameters.add(parameter);
   }
 
@@ -75,31 +101,20 @@ class ParameterService extends ChangeNotifier {
 
       log.finer(event);
 
-      final dynamic decoded = json.decode(event);
-      final dynamic idToUpdate = decoded['id'];
-      final dynamic value = decoded['value'];
+      final parameterToUpdate = AudioParameterDouble.fromJson(json.decode(event) as Map<String, dynamic>);
 
-      if(idToUpdate is! String)
-      {
-          log.severe('invalid id $idToUpdate');
-          return;
-      }
-
-      if(value is! double)
-      {
-          log.severe('invalid value $idToUpdate');
-          return;
-      }
+      log.finer(parameterToUpdate.id);
+      log.finer(parameterToUpdate.value);
 
       for (final p in _parameters) {
-          if(p.id == idToUpdate)
+          if(p.id == parameterToUpdate.id)
           {
-            p.value = value;
+            p.value = parameterToUpdate.value;
             return;
           }
       }
 
-      log.warning("Couldn't find parameter with id $idToUpdate");
+      log.warning("Couldn't find parameter with id ${parameterToUpdate.id}");
   }
 
   @override
