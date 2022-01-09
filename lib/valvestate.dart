@@ -5,56 +5,56 @@ import 'amplifier.dart';
 import 'parameter.dart';
 
 class _ValvestateParameterGain extends AudioParameterDouble {
-  _ValvestateParameterGain({required ParameterChannel parameterChannel})
+  _ValvestateParameterGain({required ParameterService parameterService})
       : super(
           name: 'GAIN',
           id: 'ampGain',
-          parameterChannel: parameterChannel,
+          parameterService: parameterService,
         );
 }
 
 class _ValvestateParameterBass extends AudioParameterDouble {
-  _ValvestateParameterBass({required ParameterChannel parameterChannel})
+  _ValvestateParameterBass({required ParameterService parameterChannel})
       : super(
           name: 'BASS',
           id: 'bass',
-          parameterChannel: parameterChannel,
+          parameterService: parameterChannel,
         );
 }
 
 class _ValvestateParameterMiddle extends AudioParameterDouble {
-  _ValvestateParameterMiddle({required ParameterChannel parameterChannel})
+  _ValvestateParameterMiddle({required ParameterService parameterChannel})
       : super(
           name: 'MIDDLE',
           id: 'middle',
-          parameterChannel: parameterChannel,
+          parameterService: parameterChannel,
         );
 }
 
 class _ValvestateParameterTreble extends AudioParameterDouble {
-  _ValvestateParameterTreble({required ParameterChannel parameterChannel})
+  _ValvestateParameterTreble({required ParameterService parameterChannel})
       : super(
           name: 'TREBLE',
           id: 'treble',
-          parameterChannel: parameterChannel,
+          parameterService: parameterChannel,
         );
 }
 
 class _ValvestateParameterContour extends AudioParameterDouble {
-  _ValvestateParameterContour({required ParameterChannel parameterChannel})
+  _ValvestateParameterContour({required ParameterService parameterChannel})
       : super(
           name: 'CONTOUR',
           id: 'contour',
-          parameterChannel: parameterChannel,
+          parameterService: parameterChannel,
         );
 }
 
 class _ValvestateParameterVolume extends AudioParameterDouble {
-  _ValvestateParameterVolume({required ParameterChannel parameterChannel})
+  _ValvestateParameterVolume({required ParameterService parameterChannel})
       : super(
           name: 'VOLUME',
           id: 'volume',
-          parameterChannel: parameterChannel,
+          parameterService: parameterChannel,
         );
 }
 
@@ -125,12 +125,12 @@ class ValvestateParameterProvider extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) =>
-      Consumer<ParameterChannel>(builder: (_, parameterChannel, __) {
+      Consumer<ParameterService>(builder: (_, parameterChannel, __) {
         return MultiProvider(
           providers: [
             ChangeNotifierProvider(
               create: (_) => _ValvestateParameterGain(
-                parameterChannel: parameterChannel,
+                parameterService: parameterChannel,
               ),
             ),
             ChangeNotifierProvider(

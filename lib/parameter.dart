@@ -9,7 +9,7 @@ class AudioParameterDouble extends ChangeNotifier {
   AudioParameterDouble({
     required this.name,
     required this.id,
-    required this.parameterChannel
+    required this.parameterService
   });
 
   @protected
@@ -17,12 +17,12 @@ class AudioParameterDouble extends ChangeNotifier {
 
   final String name;
   final String id;
-  final ParameterChannel parameterChannel;
+  final ParameterService parameterService;
 
   void onUserChanged(double value) {
       /* setting value instead of _value to make sure listeners are notified */
       this.value = value;
-      parameterChannel.sink.add(toJson());
+      parameterService.sink.add(toJson());
   }
 
   set value(double value) {
@@ -35,14 +35,16 @@ class AudioParameterDouble extends ChangeNotifier {
   String toJson() => '{"id": "$id", "value": ${value.toStringAsFixed(2)}}';
 }
 
-class ParameterChannel extends ChangeNotifier {
-  ParameterChannel() {
+class ParameterService extends ChangeNotifier {
+  ParameterService() {
     // TODO is this adding noticable latency when adjusting parameters?
     channel.sink.addStream(sink.stream.throttleTime(
       const Duration(milliseconds: 100),
       trailing: true,
       leading: false,
     ));
+
+    channel.stream.listen(print);
   }
 
   final channel = WebSocketChannel.connect(
@@ -69,7 +71,7 @@ class ParameterChannelProvider extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => ChangeNotifierProvider(
-        create: (_) => ParameterChannel(),
+        create: (_) => ParameterService(),
         child: child,
       );
 }
