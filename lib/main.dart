@@ -1,9 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:logging/logging.dart';
 
 import 'parameter.dart';
 import 'pedalboard.dart';
 
 void main() {
+  Logger.root.level = Level.ALL;
+  Logger.root.onRecord.listen((record) {
+    // ignore: avoid_print
+    print('${record.level.name}: ${record.time}: ${record.message}');
+  });
+
   runApp(const MyApp());
 }
 
@@ -33,7 +40,7 @@ class MyHomePage extends StatelessWidget {
       appBar: AppBar(
         title: Text(title),
       ),
-      body: const ParameterChannelProvider(
+      body: const ParameterServiceProvider(
         child: Center(
           child: Pedalboard(),
         ),

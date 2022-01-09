@@ -1,16 +1,23 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:flutter/widgets.dart';
+import 'package:logging/logging.dart';
 import 'package:provider/provider.dart';
 import 'package:rxdart/transformers.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
+
+final log = Logger('parameter');
 
 class AudioParameterDouble extends ChangeNotifier {
   AudioParameterDouble({
     required this.name,
     required this.id,
     required this.parameterService
-  });
+  })
+  {
+      parameterService.registerParameter(this);
+  }
 
   @protected
   double _value = 0.5;
@@ -44,7 +51,7 @@ class ParameterService extends ChangeNotifier {
       leading: false,
     ));
 
-    channel.stream.listen(print);
+    channel.stream.listen(_handleIncomingEvent);
   }
 
   final channel = WebSocketChannel.connect(
@@ -52,6 +59,48 @@ class ParameterService extends ChangeNotifier {
   );
 
   final sink = StreamController<String>();
+
+  final _parameters = <AudioParameterDouble>[];
+
+  void registerParameter(AudioParameterDouble parameter) {
+      _parameters.add(parameter);
+  }
+
+  void _handleIncomingEvent(dynamic event) {
+      if(event is! String)
+      {
+          log.warning('Dropped message with unexpected type ${json.runtimeType}');
+          return;
+      }
+
+      log.finer(event);
+
+      final dynamic decoded = json.decode(event);
+      final dynamic idToUpdate = decoded['id'];
+      final dynamic value = decoded['value'];
+
+      if(idToUpdate is! String)
+      {
+          log.severe('invalid id $idToUpdate');
+          return;
+      }
+
+      if(value is! double)
+      {
+          log.severe('invalid value $idToUpdate');
+          return;
+      }
+
+      for (final p in _parameters) {
+          if(p.id == idToUpdate)
+          {
+            p.value = value;
+            return;
+          }
+      }
+
+      log.warning("Couldn't find parameter with id $idToUpdate");
+  }
 
   @override
   void dispose() {
@@ -61,8 +110,8 @@ class ParameterService extends ChangeNotifier {
   }
 }
 
-class ParameterChannelProvider extends StatelessWidget {
-  const ParameterChannelProvider({
+class ParameterServiceProvider extends StatelessWidget {
+  const ParameterServiceProvider({
     Key? key,
     required this.child,
   }) : super(key: key);

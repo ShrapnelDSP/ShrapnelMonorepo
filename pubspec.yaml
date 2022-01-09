@@ -11,6 +11,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  logging: ^1.0.2
   provider: ^6.0.0
   rxdart: ^0.27.3
   web_socket_channel: ^2.1.0
