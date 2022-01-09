@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
+import 'package:rxdart/transformers.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
 class AudioParameterDouble extends ChangeNotifier {
@@ -36,7 +37,12 @@ class AudioParameterDouble extends ChangeNotifier {
 
 class ParameterChannel extends ChangeNotifier {
   ParameterChannel() {
-      channel.sink.addStream(sink.stream);
+    // TODO is this adding noticable latency when adjusting parameters?
+    channel.sink.addStream(sink.stream.throttleTime(
+      const Duration(milliseconds: 100),
+      trailing: true,
+      leading: false,
+    ));
   }
 
   final channel = WebSocketChannel.connect(
