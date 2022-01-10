@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import 'amplifier.dart';
 import 'parameter.dart';
 
-class _ValvestateParameterGain extends AudioParameterDouble {
+class _ValvestateParameterGain extends AudioParameterDoubleModel {
   _ValvestateParameterGain({required ParameterService parameterService})
       : super(
           name: 'GAIN',
@@ -13,7 +13,7 @@ class _ValvestateParameterGain extends AudioParameterDouble {
         );
 }
 
-class _ValvestateParameterBass extends AudioParameterDouble {
+class _ValvestateParameterBass extends AudioParameterDoubleModel {
   _ValvestateParameterBass({required ParameterService parameterChannel})
       : super(
           name: 'BASS',
@@ -22,7 +22,7 @@ class _ValvestateParameterBass extends AudioParameterDouble {
         );
 }
 
-class _ValvestateParameterMiddle extends AudioParameterDouble {
+class _ValvestateParameterMiddle extends AudioParameterDoubleModel {
   _ValvestateParameterMiddle({required ParameterService parameterChannel})
       : super(
           name: 'MIDDLE',
@@ -31,7 +31,7 @@ class _ValvestateParameterMiddle extends AudioParameterDouble {
         );
 }
 
-class _ValvestateParameterTreble extends AudioParameterDouble {
+class _ValvestateParameterTreble extends AudioParameterDoubleModel {
   _ValvestateParameterTreble({required ParameterService parameterChannel})
       : super(
           name: 'TREBLE',
@@ -40,7 +40,7 @@ class _ValvestateParameterTreble extends AudioParameterDouble {
         );
 }
 
-class _ValvestateParameterContour extends AudioParameterDouble {
+class _ValvestateParameterContour extends AudioParameterDoubleModel {
   _ValvestateParameterContour({required ParameterService parameterChannel})
       : super(
           name: 'CONTOUR',
@@ -49,7 +49,7 @@ class _ValvestateParameterContour extends AudioParameterDouble {
         );
 }
 
-class _ValvestateParameterVolume extends AudioParameterDouble {
+class _ValvestateParameterVolume extends AudioParameterDoubleModel {
   _ValvestateParameterVolume({required ParameterService parameterChannel})
       : super(
           name: 'VOLUME',

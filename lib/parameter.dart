@@ -1,16 +1,42 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:flutter/widgets.dart';
+import 'package:json_annotation/json_annotation.dart';
+import 'package:logging/logging.dart';
 import 'package:provider/provider.dart';
 import 'package:rxdart/transformers.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
-class AudioParameterDouble extends ChangeNotifier {
+part 'parameter.g.dart';
+
+final log = Logger('parameter');
+
+// TODO do some testing on this, should fail to create when either field is
+// missing, wrong data type etc.
+@JsonSerializable()
+class AudioParameterDouble {
   AudioParameterDouble({
+    required this.value,
+    required this.id,
+  });
+
+  factory AudioParameterDouble.fromJson(Map<String, dynamic> json) =>
+      _$AudioParameterDoubleFromJson(json);
+  Map<String, dynamic> toJson() => _$AudioParameterDoubleToJson(this);
+
+  final String id;
+  final double value;
+}
+
+class AudioParameterDoubleModel extends ChangeNotifier {
+  AudioParameterDoubleModel({
     required this.name,
     required this.id,
-    required this.parameterService
-  });
+    required this.parameterService,
+  }) {
+    parameterService.registerParameter(this);
+  }
 
   @protected
   double _value = 0.5;
@@ -20,9 +46,9 @@ class AudioParameterDouble extends ChangeNotifier {
   final ParameterService parameterService;
 
   void onUserChanged(double value) {
-      /* setting value instead of _value to make sure listeners are notified */
-      this.value = value;
-      parameterService.sink.add(toJson());
+    /* setting value instead of _value to make sure listeners are notified */
+    this.value = value;
+    parameterService.sink.add(toJson());
   }
 
   set value(double value) {
@@ -32,7 +58,8 @@ class AudioParameterDouble extends ChangeNotifier {
 
   double get value => _value;
 
-  String toJson() => '{"id": "$id", "value": ${value.toStringAsFixed(2)}}';
+  String toJson() =>
+      json.encode(AudioParameterDouble(value: value, id: id).toJson());
 }
 
 class ParameterService extends ChangeNotifier {
@@ -44,7 +71,7 @@ class ParameterService extends ChangeNotifier {
       leading: false,
     ));
 
-    channel.stream.listen(print);
+    channel.stream.listen(_handleIncomingEvent);
   }
 
   final channel = WebSocketChannel.connect(
@@ -52,6 +79,33 @@ class ParameterService extends ChangeNotifier {
   );
 
   final sink = StreamController<String>();
+
+  final _parameters = <AudioParameterDoubleModel>[];
+
+  void registerParameter(AudioParameterDoubleModel parameter) {
+    _parameters.add(parameter);
+  }
+
+  void _handleIncomingEvent(dynamic event) {
+    if (event is! String) {
+      log.warning('Dropped message with unexpected type ${json.runtimeType}');
+      return;
+    }
+
+    log.finer(event);
+
+    final parameterToUpdate = AudioParameterDouble.fromJson(
+        json.decode(event) as Map<String, dynamic>);
+
+    for (final p in _parameters) {
+      if (p.id == parameterToUpdate.id) {
+        p.value = parameterToUpdate.value;
+        return;
+      }
+    }
+
+    log.warning("Couldn't find parameter with id ${parameterToUpdate.id}");
+  }
 
   @override
   void dispose() {
@@ -61,8 +115,8 @@ class ParameterService extends ChangeNotifier {
   }
 }
 
-class ParameterChannelProvider extends StatelessWidget {
-  const ParameterChannelProvider({
+class ParameterServiceProvider extends StatelessWidget {
+  const ParameterServiceProvider({
     Key? key,
     required this.child,
   }) : super(key: key);
