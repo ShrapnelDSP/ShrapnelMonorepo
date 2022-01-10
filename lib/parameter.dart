@@ -12,37 +12,30 @@ part 'parameter.g.dart';
 
 final log = Logger('parameter');
 
-
 // TODO do some testing on this, should fail to create when either field is
 // missing, wrong data type etc.
 @JsonSerializable()
 class AudioParameterDouble {
-    AudioParameterDouble({
-        required this.value,
-        required this.id,
-    });
+  AudioParameterDouble({
+    required this.value,
+    required this.id,
+  });
 
-    factory AudioParameterDouble.fromJson(Map<String, dynamic> json) => _$AudioParameterDoubleFromJson(json);
-    Map<String, dynamic> toJson() => _$AudioParameterDoubleToJson(this);
+  factory AudioParameterDouble.fromJson(Map<String, dynamic> json) =>
+      _$AudioParameterDoubleFromJson(json);
+  Map<String, dynamic> toJson() => _$AudioParameterDoubleToJson(this);
 
-    @JsonKey(name: 'id')
-    final String id;
-
-    @JsonKey(name: 'value')
-    final double value;
+  final String id;
+  final double value;
 }
 
-// TODO perhaps use composition to put an instance of AudioParameterDouble
-// inside this model. That will allow us to use model.parameter.toJson to
-// convert the parameter the model represents.
 class AudioParameterDoubleModel extends ChangeNotifier {
   AudioParameterDoubleModel({
     required this.name,
     required this.id,
-    required this.parameterService
-  })
-  {
-      parameterService.registerParameter(this);
+    required this.parameterService,
+  }) {
+    parameterService.registerParameter(this);
   }
 
   @protected
@@ -53,9 +46,9 @@ class AudioParameterDoubleModel extends ChangeNotifier {
   final ParameterService parameterService;
 
   void onUserChanged(double value) {
-      /* setting value instead of _value to make sure listeners are notified */
-      this.value = value;
-      parameterService.sink.add(toJson());
+    /* setting value instead of _value to make sure listeners are notified */
+    this.value = value;
+    parameterService.sink.add(toJson());
   }
 
   set value(double value) {
@@ -65,7 +58,8 @@ class AudioParameterDoubleModel extends ChangeNotifier {
 
   double get value => _value;
 
-  String toJson() => '{"id": "$id", "value": ${value.toStringAsFixed(2)}}';
+  String toJson() =>
+      json.encode(AudioParameterDouble(value: value, id: id).toJson());
 }
 
 class ParameterService extends ChangeNotifier {
@@ -89,32 +83,28 @@ class ParameterService extends ChangeNotifier {
   final _parameters = <AudioParameterDoubleModel>[];
 
   void registerParameter(AudioParameterDoubleModel parameter) {
-      _parameters.add(parameter);
+    _parameters.add(parameter);
   }
 
   void _handleIncomingEvent(dynamic event) {
-      if(event is! String)
-      {
-          log.warning('Dropped message with unexpected type ${json.runtimeType}');
-          return;
+    if (event is! String) {
+      log.warning('Dropped message with unexpected type ${json.runtimeType}');
+      return;
+    }
+
+    log.finer(event);
+
+    final parameterToUpdate = AudioParameterDouble.fromJson(
+        json.decode(event) as Map<String, dynamic>);
+
+    for (final p in _parameters) {
+      if (p.id == parameterToUpdate.id) {
+        p.value = parameterToUpdate.value;
+        return;
       }
+    }
 
-      log.finer(event);
-
-      final parameterToUpdate = AudioParameterDouble.fromJson(json.decode(event) as Map<String, dynamic>);
-
-      log.finer(parameterToUpdate.id);
-      log.finer(parameterToUpdate.value);
-
-      for (final p in _parameters) {
-          if(p.id == parameterToUpdate.id)
-          {
-            p.value = parameterToUpdate.value;
-            return;
-          }
-      }
-
-      log.warning("Couldn't find parameter with id ${parameterToUpdate.id}");
+    log.warning("Couldn't find parameter with id ${parameterToUpdate.id}");
   }
 
   @override
