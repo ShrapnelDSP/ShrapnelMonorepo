@@ -7,6 +7,10 @@ struct dspal_iir {
     std::unique_ptr<juce::dsp::IIR::Filter<float>> iir;
 };
 
+struct dspal_delayline {
+    std::unique_ptr<juce::dsp::DelayLine<float>> delayline;
+};
+
 extern "C" {
 
 dspal_err_t dspal_biquad_design_lowpass(float *coeffs, float f, float q_factor)
@@ -75,6 +79,39 @@ void dspal_multiply(const float *in1, const float *in2, float *out, size_t buf_s
     {
         out[i] = in1[i] * in2[i];
     }
+}
+
+dspal_delayline_t dspal_delayline_create(size_t max_samples)
+{
+    dspal_delayline_t delayline = new dspal_delayline;
+
+    delayline->delayline.reset(new juce::dsp::DelayLine<float>(max_samples));
+    return delayline;
+}
+
+void dspal_delayline_set_delay(dspal_delayline_t delayline, float delay)
+{
+    delayline->delayline->setDelay(delay);
+}
+
+void dspal_delayline_set_buffer_size(dspal_delayline_t delayline, size_t size)
+{
+    auto spec = juce::dsp::ProcessSpec();
+    spec.sampleRate = 0; /* JUCE ignores this */
+    spec.numChannels = 1;
+    spec.maximumBlockSize = size;
+
+    delayline->delayline->prepare(spec);
+}
+
+void dspal_delayline_push_sample(dspal_delayline_t delayline, float sample)
+{
+    delayline->delayline->pushSample(0, sample);
+}
+
+float dspal_delayline_pop_sample(dspal_delayline_t delayline)
+{
+    return delayline->delayline->popSample(0);
 }
 
 };
