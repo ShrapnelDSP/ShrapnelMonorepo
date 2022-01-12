@@ -9,6 +9,7 @@
 #define TAG "cmd_handling"
 
 static QueueHandle_t in_queue;
+static size_t message_size;
 
 static audio_param_t get_id_for_param(const char *name)
 {
@@ -41,7 +42,10 @@ static audio_param_t get_id_for_param(const char *name)
 
 static void cmd_task(void *param)
 {
-    char *s;
+    /* plus 1 size here ensures that s is always a NULL terminated string */
+    char s[message_size + 1];
+    memset(s, 0, sizeof(s));
+    /* TODO should not leave these uninitialised */
     cJSON *json;
 
     cJSON *id;
@@ -53,9 +57,10 @@ static void cmd_task(void *param)
 
     while(1)
     {
-        ret = xQueueReceive(in_queue, &s, portMAX_DELAY);
+        ret = xQueueReceive(in_queue, s, portMAX_DELAY);
         if(ret == pdTRUE)
         {
+            ESP_LOGI(TAG, "%s stack %d", __FUNCTION__, uxTaskGetStackHighWaterMark(NULL));
             ESP_LOGI(TAG, "received websocket message: %s", s);
 
             json = cJSON_Parse(s);
@@ -93,7 +98,6 @@ static void cmd_task(void *param)
             }
 done:
             cJSON_Delete(json);
-            free(s);
         }
         else
         {
@@ -102,8 +106,10 @@ done:
     }
 }
 
-void cmd_init(QueueHandle_t q)
+void cmd_init(QueueHandle_t q, size_t a_message_size)
 {
     in_queue = q;
-    xTaskCreate(cmd_task, "command task", 3000, NULL, 5, NULL);
+    message_size = a_message_size;
+
+    xTaskCreate(cmd_task, "command task", 4000, NULL, 5, NULL);
 }

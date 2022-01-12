@@ -1,13 +1,11 @@
 #include "audio_events.h"
 #include "esp_log.h"
-#include "esp_http_websocket_server.h"
+#include "esp_http_server.h"
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 #define TAG "audio_events"
 
 EventGroupHandle_t g_audio_event_group;
-
-static QueueHandle_t out_queue;
 
 static const char *clipping_message = "{\"event\": \"Output Clipped\"}";
 
@@ -19,7 +17,7 @@ static void audio_event_task(void *parameters)
 
     while(1)
     {
-        bits = xEventGroupWaitBits(g_audio_event_group, 0xFF, true, false, portMAX_DELAY);
+        bits = xEventGroupWaitBits(g_audio_event_group, 0xFFFFFF, true, false, portMAX_DELAY);
 
         if(bits & AUDIO_EVENT_OUTPUT_CLIPPED)
         {
@@ -28,11 +26,7 @@ static void audio_event_task(void *parameters)
              * needed */
             if((xTaskGetTickCount() - last_clipping_tick) > CLIPPING_REPEAT_TICK)
             {
-                // send a message to make the web UI show the clipping
-                if(errQUEUE_FULL == xQueueSendToBack(out_queue, &clipping_message, 100 / portTICK_PERIOD_MS))
-                {
-                    ESP_LOGE(TAG, "Failed to send clipping message to websocket");
-                }
+                audio_event_send_callback(clipping_message);
 
                 ESP_LOGI(TAG, "Sent clipping message");
                 last_clipping_tick = xTaskGetTickCount();
@@ -50,8 +44,6 @@ static void audio_event_task(void *parameters)
 
 esp_err_t audio_event_init(QueueHandle_t q)
 {
-    out_queue = q;
-
     g_audio_event_group = xEventGroupCreate();
 
     if(g_audio_event_group == NULL)

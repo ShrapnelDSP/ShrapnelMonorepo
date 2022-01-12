@@ -1,12 +1,14 @@
 #include <stdio.h>
 #include <math.h>
 
+#define LOG_LOCAL_LEVEL ESP_LOG_DEBUG
 #include "esp_log.h"
 #define TAG "main"
 
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 
+#include <assert.h>
 #include <esp_wifi.h>
 #include <esp_event.h>
 #include <esp_system.h>
@@ -16,111 +18,83 @@
 #include <driver/gpio.h>
 #include "nvs_flash.h"
 #include "esp_netif.h"
-#include "esp_eth.h"
-#include "esp32/sha.h"
-#include "mbedtls/base64.h"
 #include "protocol_examples_common.h"
 #include "mdns.h"
 
 #include "i2s.h"
 #include "profiling.h"
-#include "esp_http_websocket_server.h"
+#include "esp_http_server.h"
 #include "pcm3060.h"
 #include "cmd_handling.h"
 #include "audio_events.h"
 
 #define PROFILING_GPIO GPIO_NUM_23
 
-//this magic is used during the websocket handshake
-const char WEBSOCKET_KEY_MAGIC[] = "258EAFA5-E914-47DA-95CA-C5AB0DC85B11";
-#define STRLEN(a) (sizeof(a)/sizeof(char))
-
 #define QUEUE_LEN 10
-QueueHandle_t in_queue;
-QueueHandle_t out_queue;
+#define MAX_CLIENTS 3
+#define MAX_WEBSOCKET_PAYLOAD_SIZE 128
+#define ARRAY_LENGTH(a) (sizeof(a)/sizeof(a[0]))
+
+static QueueHandle_t in_queue;
+static QueueHandle_t out_queue;
+static httpd_handle_t server = NULL;
 
 #define I2C_NUM I2C_NUM_0
 
+static void websocket_send(void *arg);
+static esp_err_t websocket_get_handler(httpd_req_t *req);
+static esp_err_t ui_get_handler(httpd_req_t *req);
+static httpd_handle_t start_webserver(void);
+static void stop_webserver(httpd_handle_t server);
+static void disconnect_handler(void* arg, esp_event_base_t event_base,
+                               int32_t event_id, void* event_data);
+static void connect_handler(void* arg, esp_event_base_t event_base,
+                            int32_t event_id, void* event_data);
+static void websocket_send(void *arg);
+static void start_mdns(void);
+static void i2c_setup(void);
+
 static esp_err_t websocket_get_handler(httpd_req_t *req)
 {
-    const size_t buf_len = 100;
-    size_t len;
-    char   buf[buf_len];
+    uint8_t websocket_payload[MAX_WEBSOCKET_PAYLOAD_SIZE] = { 0 };
 
-    /* Get header value string length and allocate memory for length + 1,
-     * extra byte for null termination */
-    len = httpd_req_get_hdr_value_len(req, "Host") + 1;
-    if (len > 1) {
-        /* Copy null terminated value string into buffer */
-        if (httpd_req_get_hdr_value_str(req, "Host", buf, buf_len) == ESP_OK) {
-            ESP_LOGI(TAG, "Found header => Host: %s", buf);
-        }
-    }
+    httpd_ws_frame_t pkt = {
+        .payload = websocket_payload,
+    };
 
-    len = httpd_req_get_hdr_value_len(req, "Upgrade") + 1;
-    if (len > 1) {
-        if (httpd_req_get_hdr_value_str(req, "Upgrade", buf, buf_len) == ESP_OK) {
-            ESP_LOGI(TAG, "Found header => Upgrade: %s", buf);
-        }
-        else
-        {
-            ESP_LOGE(TAG, "Upgrade header error");
-        }
-    }
-    else
+    if(req->method == HTTP_GET)
     {
-        ESP_LOGE(TAG, "Websocket request contained no Upgrade header");
+        ESP_LOGE(TAG, "before handshake");
+        return ESP_OK;
     }
 
-    len = httpd_req_get_hdr_value_len(req, "Connection") + 1;
-    if (len > 1) {
-        if (httpd_req_get_hdr_value_str(req, "Connection", buf, buf_len) == ESP_OK) {
-            ESP_LOGI(TAG, "Found header => Connection: %s", buf);
-        }
-        else
-        {
-            ESP_LOGE(TAG, "Connection header error");
-        }
-    }
-    else
+    esp_err_t rc = httpd_ws_recv_frame(req, &pkt, sizeof(websocket_payload));
+    if(rc != ESP_OK)
     {
-        ESP_LOGE(TAG, "Websocket request contained no Connection header");
+        ESP_LOGE(TAG, "websocket parse failed");
+        return rc;
     }
 
-    len = httpd_req_get_hdr_value_len(req, "Sec-WebSocket-Key") + 1;
-    if (len > 1) {
-        if (httpd_req_get_hdr_value_str(req, "Sec-WebSocket-Key", buf, buf_len) == ESP_OK) {
-            ESP_LOGI(TAG, "Found header => Sec-WebSocket-Key: %s", buf);
-        }
-        else
-        {
-            ESP_LOGE(TAG, "Sec-WebSocket-Key header error");
-        }
-    }
-    else
+    /* We should never see any of these packets */
+    assert(pkt.type != HTTPD_WS_TYPE_CONTINUE);
+    assert(pkt.type != HTTPD_WS_TYPE_BINARY);
+    assert(pkt.type != HTTPD_WS_TYPE_CLOSE);
+    assert(pkt.type != HTTPD_WS_TYPE_PING);
+    assert(pkt.type != HTTPD_WS_TYPE_PONG);
+    assert(pkt.final);
+    assert(!pkt.fragmented);
+    assert(pkt.len <= sizeof(websocket_payload));
+
+    ESP_LOGD(TAG, "%s len = %zd", __FUNCTION__, pkt.len);
+    ESP_LOG_BUFFER_HEXDUMP(TAG, websocket_payload, sizeof(websocket_payload), ESP_LOG_DEBUG);
+
+    rc = xQueueSendToBack(in_queue, websocket_payload, 100 / portTICK_PERIOD_MS);
+    if(rc != pdTRUE)
     {
-        ESP_LOGE(TAG, "Websocket request contained no Sec-WebSocket-Key header");
+        ESP_LOGE(TAG, "%s failed to send to queue", __FUNCTION__);
     }
 
-    //concatenate the magic to the request's key
-    strcat(buf, WEBSOCKET_KEY_MAGIC);
-
-    //calculate the sha1 of this
-    //sha1 is always 20 bytes long
-    unsigned char sha1[20];
-    esp_sha(SHA1, (unsigned char *)buf, strlen(buf), sha1);
-
-    //base64 encode the sha1
-    size_t olen;
-    mbedtls_base64_encode((unsigned char *)buf, buf_len - 1, &olen, sha1, 20);
-    ESP_LOGI(TAG, "Base64 encoded key length: %d", olen);
-
-    /* Response */
-    httpd_resp_set_hdr(req, "Upgrade", "websocket");
-    httpd_resp_set_hdr(req, "Connection", "Upgrade");
-    httpd_resp_set_hdr(req, "Sec-WebSocket-Accept", buf);
-    httpd_resp_set_status(req, "101 Switching Protocols");
-    httpd_resp_send(req, NULL, 0);
+    ESP_LOGI(TAG, "%s stack %d", __FUNCTION__, uxTaskGetStackHighWaterMark(NULL));
 
     return ESP_OK;
 }
@@ -141,7 +115,9 @@ static const httpd_uri_t websocket = {
     .uri       = "/websocket",
     .method    = HTTP_GET,
     .handler   = websocket_get_handler,
-    .user_ctx  = NULL
+    .user_ctx  = NULL,
+    .is_websocket = true,
+    /* TODO what is a subprotocol? */
 };
 
 static const httpd_uri_t ui = {
@@ -155,30 +131,11 @@ static httpd_handle_t start_webserver(void)
 {
     httpd_handle_t server = NULL;
     httpd_config_t config = HTTPD_DEFAULT_CONFIG();
-
-    if(in_queue == NULL)
-    {
-        in_queue  = xQueueCreate(QUEUE_LEN, sizeof(char*));
-        if(in_queue == NULL)
-        {
-            ESP_LOGE(TAG, "Failed to create in queue");
-            return NULL;
-        }
-    }
-
-    if(out_queue == NULL)
-    {
-        out_queue = xQueueCreate(QUEUE_LEN, sizeof(char*));
-        if(out_queue == NULL)
-        {
-            ESP_LOGE(TAG, "Failed to create out queue");
-            return NULL;
-        }
-    }
+    config.max_open_sockets = MAX_CLIENTS;
 
     // Start the httpd server
     ESP_LOGI(TAG, "Starting server on port: '%d'", config.server_port);
-    if (httpd_start(&server, &config, in_queue, out_queue) == ESP_OK) {
+    if (httpd_start(&server, &config) == ESP_OK) {
         // Set URI handlers
         ESP_LOGI(TAG, "Registering URI handlers");
         httpd_register_uri_handler(server, &websocket);
@@ -192,6 +149,8 @@ static httpd_handle_t start_webserver(void)
 
 static void stop_webserver(httpd_handle_t server)
 {
+    /* TODO need to stop tasks that use the web server first */
+
     // Stop the httpd server
     httpd_stop(server);
 }
@@ -217,7 +176,77 @@ static void connect_handler(void* arg, esp_event_base_t event_base,
     }
 }
 
-void start_mdns()
+void audio_event_send_callback(const char *message)
+{
+    if(errQUEUE_FULL ==
+            xQueueSendToBack(out_queue,
+                             message,
+                             100 / portTICK_PERIOD_MS))
+    {
+        ESP_LOGE(TAG, "Failed to send message to websocket");
+    }
+
+    esp_err_t rc = httpd_queue_work(server, websocket_send, server);
+    if(ESP_OK != rc)
+    {
+        ESP_LOGE(TAG, "failed to queue work for server");
+        xQueueReset(out_queue);
+    }
+}
+
+static void websocket_send(void *arg)
+{
+    httpd_handle_t server = arg;
+
+    char buffer[MAX_WEBSOCKET_PAYLOAD_SIZE + 1] = {0};
+
+    int rc = xQueueReceive(out_queue, buffer, 0);
+    if(!rc)
+    {
+        ESP_LOGE(TAG, "%s failed to receive from queue", __FUNCTION__);
+        return;
+    }
+
+    ESP_LOGD(TAG, "%s len = %zd", __FUNCTION__, strlen(buffer));
+    ESP_LOG_BUFFER_HEXDUMP(TAG, buffer, sizeof(buffer), ESP_LOG_DEBUG);
+
+    assert(strlen(buffer) < sizeof(buffer));
+
+    httpd_ws_frame_t pkt = {
+        .type = HTTPD_WS_TYPE_TEXT,
+        .payload = (void *)buffer,
+        .len = strlen(buffer),
+    };
+
+    int client_fds[MAX_CLIENTS];
+    size_t number_of_clients = ARRAY_LENGTH(client_fds);
+
+    httpd_get_client_list((httpd_handle_t) arg, &number_of_clients, client_fds);
+
+    ESP_LOGD(TAG, "n = %zd", number_of_clients);
+
+    assert(number_of_clients <= MAX_CLIENTS);
+
+    for(int i = 0; i < number_of_clients; i++)
+    {
+        int fd = client_fds[i];
+
+        ESP_LOGD(TAG, "fd = %d", fd);
+
+        if(HTTPD_WS_CLIENT_WEBSOCKET != httpd_ws_get_fd_info(server, fd))
+        {
+            continue;
+        }
+
+        rc = httpd_ws_send_frame_async(server, fd, &pkt);
+        if(ESP_OK != rc)
+        {
+            ESP_LOGE(TAG, "failed to send to fd %d rc %d", fd, rc);
+        }
+    }
+}
+
+static void start_mdns(void)
 {
     esp_err_t err = mdns_init();
     if (err) {
@@ -249,9 +278,6 @@ static void i2c_setup(void)
 
 void app_main(void)
 {
-    int ret;
-    static httpd_handle_t server = NULL;
-
     ESP_ERROR_CHECK(nvs_flash_init());
     ESP_ERROR_CHECK(esp_netif_init());
     ESP_ERROR_CHECK(esp_event_loop_create_default());
@@ -271,8 +297,13 @@ void app_main(void)
     /* Start the server for the first time */
     server = start_webserver();
 
-    /* queue is created in start_webserver */
-    cmd_init(in_queue);
+    in_queue  = xQueueCreate(QUEUE_LEN, MAX_WEBSOCKET_PAYLOAD_SIZE);
+    assert(in_queue);
+
+    out_queue = xQueueCreate(QUEUE_LEN, MAX_WEBSOCKET_PAYLOAD_SIZE);
+    assert(out_queue);
+
+    cmd_init(in_queue, MAX_WEBSOCKET_PAYLOAD_SIZE);
 
     ESP_ERROR_CHECK(audio_event_init(out_queue));
 
@@ -283,17 +314,22 @@ void app_main(void)
 
     vTaskDelay(100 / portTICK_PERIOD_MS);
 
+#if 0
     //dac must be powered up after the i2s clocks have stabilised
     pcm3060_init(I2C_NUM, 0);
     ESP_ERROR_CHECK(pcm3060_power_up());
+#endif
+
     /* Start the mdns service */
     start_mdns();
 
+#if 0
     ret = xTaskCreate(i2s_profiling_task, "i2s profiling", 2000, NULL, configMAX_PRIORITIES - 2, NULL);
     if(ret != pdPASS)
     {
         ESP_LOGE(TAG, "Profiling task create failed %d", ret);
     }
+#endif
 
     ESP_LOGI(TAG, "setup done");
 }
