@@ -36,7 +36,7 @@
 #define MAX_WEBSOCKET_PAYLOAD_SIZE 128
 #define ARRAY_LENGTH(a) (sizeof(a)/sizeof(a[0]))
 
-static shrapnel::Queue<cmd_message_t> *in_queue;
+static shrapnel::Queue<shrapnel::CommandHandling::Message> *in_queue;
 static shrapnel::AudioParameters *audio_params;
 static shrapnel::CommandHandlingTask *cmd_handling_task;
 
@@ -64,7 +64,7 @@ static void i2c_setup(void);
 
 static esp_err_t websocket_get_handler(httpd_req_t *req)
 {
-    cmd_message_t message = { 0 };
+    shrapnel::CommandHandling::Message message = { 0 };
 
     httpd_ws_frame_t pkt = {
         .final = false,
@@ -318,7 +318,7 @@ extern "C" void app_main(void)
     /* Start the server for the first time */
     server = start_webserver();
 
-    in_queue = new shrapnel::Queue<cmd_message_t>(QUEUE_LEN);
+    in_queue = new shrapnel::Queue<shrapnel::CommandHandling::Message>(QUEUE_LEN);
     assert(in_queue);
 
     out_queue = xQueueCreate(QUEUE_LEN, MAX_WEBSOCKET_PAYLOAD_SIZE);
