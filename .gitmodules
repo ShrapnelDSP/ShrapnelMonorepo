@@ -4,6 +4,3 @@
 [submodule "plugins/JUCE"]
 	path = plugins/JUCE
 	url = https://github.com/juce-framework/JUCE.git
-[submodule "firmware/components/etl"]
-	path = firmware/components/etl
-	url = https://github.com/ETLCPP/etl.git
