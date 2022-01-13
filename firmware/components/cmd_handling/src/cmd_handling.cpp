@@ -16,20 +16,6 @@ namespace shrapnel {
 
 audio_param_t CommandHandling::get_id_for_param(const char *name)
 {
-#if 0
-    static const item_t table[] = {
-        {"tight", PARAM_TIGHT},
-        {"hmGain", PARAM_HM2_GAIN},
-        {"ampGain", PARAM_AMP_GAIN},
-        {"bass", PARAM_BASS},
-        {"middle", PARAM_MIDDLE},
-        {"treble", PARAM_TREBLE},
-        {"volume", PARAM_VOLUME},
-        {"gateThreshold", PARAM_GATE_THRESHOLD},
-        {NULL, PARAM_MAX},
-    };
-#endif
-
     for(ParamEntry e : param_table)
     {
         if (!strcmp(e.name, name)) {

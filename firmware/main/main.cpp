@@ -327,6 +327,38 @@ extern "C" void app_main(void)
     audio_params = new shrapnel::AudioParameters();
 
     cmd_handling_task = new shrapnel::CommandHandlingTask(5, in_queue, audio_params);
+    cmd_handling_task->cmd.register_parameter({
+            .name = "tight",
+            .id = PARAM_TIGHT,
+            });
+    cmd_handling_task->cmd.register_parameter({
+            .name = "hmGain",
+            .id = PARAM_HM2_GAIN,
+            });
+    cmd_handling_task->cmd.register_parameter({
+            .name = "ampGain",
+            .id = PARAM_AMP_GAIN,
+            });
+    cmd_handling_task->cmd.register_parameter({
+            .name = "bass",
+            .id = PARAM_BASS,
+            });
+    cmd_handling_task->cmd.register_parameter({
+            .name = "middle",
+            .id = PARAM_MIDDLE,
+            });
+    cmd_handling_task->cmd.register_parameter({
+            .name = "treble",
+            .id = PARAM_TREBLE,
+            });
+    cmd_handling_task->cmd.register_parameter({
+            .name = "volume",
+            .id = PARAM_VOLUME,
+            });
+    cmd_handling_task->cmd.register_parameter({
+            .name = "gateThreshold",
+            .id = PARAM_GATE_THRESHOLD,
+            });
 
     ESP_ERROR_CHECK(audio_event_init(out_queue));
 
