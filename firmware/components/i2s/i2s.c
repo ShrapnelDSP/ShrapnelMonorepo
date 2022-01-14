@@ -171,7 +171,7 @@ esp_err_t i2s_setup(gpio_num_t profiling_gpio)
         .fixed_mclk = MCK,
         .bits_per_sample = BITS,
         .channel_format = I2S_CHANNEL_FMT_RIGHT_LEFT,
-        .communication_format = I2S_COMM_FORMAT_I2S | I2S_COMM_FORMAT_I2S_MSB,
+        .communication_format = I2S_COMM_FORMAT_STAND_I2S,
         .dma_buf_count = DMA_BUF_COUNT,
         .dma_buf_len = DMA_BUF_SIZE,
         .use_apll = true,

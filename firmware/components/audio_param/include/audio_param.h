@@ -14,4 +14,16 @@ typedef enum {
     PARAM_MAX,
 } audio_param_t;
 
-esp_err_t param_update_parameter(audio_param_t param, float value);
+namespace shrapnel {
+
+class AudioParametersBase {
+    public:
+        virtual esp_err_t update(audio_param_t param, float value) = 0;
+};
+
+class AudioParameters : public AudioParametersBase {
+    public:
+        esp_err_t update(audio_param_t param, float value) override;
+};
+
+};

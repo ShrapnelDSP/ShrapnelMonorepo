@@ -1,5 +1,8 @@
-#ifndef I2S_H
-#define I2S_H
+#pragma once
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 #include "esp_err.h"
 #include "driver/gpio.h"
@@ -13,4 +16,6 @@ void i2s_set_volume(float a);
 void i2s_set_pedal_gain(float a);
 void i2s_set_amp_gain(float a);
 
-#endif //I2S_H
+#ifdef __cplusplus
+}
+#endif
