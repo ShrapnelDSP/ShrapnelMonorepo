@@ -1,5 +1,9 @@
 #pragma once
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stddef.h>
 #include "esp_err.h"
 
@@ -16,3 +20,7 @@ void fmv_process(float *buf, size_t buf_len);
  * initialised to 0.5.
  */
 esp_err_t fmv_init(void);
+
+#ifdef __cplusplus
+}
+#endif

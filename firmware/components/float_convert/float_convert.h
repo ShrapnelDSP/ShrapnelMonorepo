@@ -3,7 +3,7 @@
 
 #define INT24_MAX 8388607
 
-static int32_t float_to_int32(float f)
+static inline int32_t float_to_int32(float f)
 {
     f *= INT24_MAX;
     if(f > 0.f) {

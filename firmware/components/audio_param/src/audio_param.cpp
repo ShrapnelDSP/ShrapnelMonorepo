@@ -24,7 +24,9 @@ static float decibel_to_ratio(float db)
     return powf(10.f, db / 20.f);
 }
 
-esp_err_t param_update_parameter(audio_param_t param, float value)
+namespace shrapnel {
+
+esp_err_t AudioParameters::update(audio_param_t param, float value)
 {
     if(value < 0 || value > 1)
     {
@@ -94,4 +96,6 @@ esp_err_t param_update_parameter(audio_param_t param, float value)
     }
 
     return ESP_OK;
+}
+
 }

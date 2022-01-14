@@ -1,5 +1,10 @@
 #pragma once
 
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include "esp_err.h"
 
 /** \brief Initialise the gate
@@ -31,3 +36,7 @@ void gate_analyse(const float *buf);
  * \note Make sure to use the same buffer with this function and gate_analyse.
  */
 void gate_process(float *buf);
+
+#ifdef __cplusplus
+}
+#endif
