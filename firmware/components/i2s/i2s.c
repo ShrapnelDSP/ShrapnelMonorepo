@@ -2,6 +2,7 @@
 #include "i2s.h"
 #include "process.h"
 #include "float_convert.h"
+#include "hardware.h"
 
 #include "esp_log.h"
 
@@ -15,12 +16,6 @@
 
 #define BITS            (24)
 #define MCK             (384*SAMPLE_RATE)
-
-#define I2S_NUM         (1)             //PCM3060 pin
-#define I2S_BCK_IO      (GPIO_NUM_2)    //5/10
-#define I2S_WS_IO       (GPIO_NUM_4)    //4/11
-#define I2S_DO_IO       (GPIO_NUM_5)    //12
-#define I2S_DI_IO       (GPIO_NUM_19)   //3
 
 #define DMA_BUF_COUNT   (3)
 
@@ -171,7 +166,7 @@ esp_err_t i2s_setup(gpio_num_t profiling_gpio)
         .fixed_mclk = MCK,
         .bits_per_sample = BITS,
         .channel_format = I2S_CHANNEL_FMT_RIGHT_LEFT,
-        .communication_format = I2S_COMM_FORMAT_I2S | I2S_COMM_FORMAT_I2S_MSB,
+        .communication_format = I2S_COMM_FORMAT_STAND_I2S,
         .dma_buf_count = DMA_BUF_COUNT,
         .dma_buf_len = DMA_BUF_SIZE,
         .use_apll = true,

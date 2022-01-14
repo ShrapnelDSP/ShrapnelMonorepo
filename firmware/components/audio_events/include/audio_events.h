@@ -1,5 +1,9 @@
 #pragma once
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include "freertos/FreeRTOS.h"
 #include "freertos/event_groups.h"
 
@@ -22,4 +26,8 @@ esp_err_t audio_event_init(void);
  * message is transmitted only to clients where their descriptor is different
  * from \p fd.
  */
- void audio_event_send_callback(const char *message, int fd);
+void audio_event_send_callback(const char *message, int fd);
+
+#ifdef __cplusplus
+}
+#endif
