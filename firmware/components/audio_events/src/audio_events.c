@@ -26,7 +26,7 @@ static void audio_event_task(void *parameters)
              * needed */
             if((xTaskGetTickCount() - last_clipping_tick) > CLIPPING_REPEAT_TICK)
             {
-                audio_event_send_callback(clipping_message);
+                audio_event_send_callback(clipping_message, -1);
 
                 ESP_LOGI(TAG, "Sent clipping message");
                 last_clipping_tick = xTaskGetTickCount();
@@ -42,7 +42,7 @@ static void audio_event_task(void *parameters)
     }
 }
 
-esp_err_t audio_event_init(QueueHandle_t q)
+esp_err_t audio_event_init(void)
 {
     g_audio_event_group = xEventGroupCreate();
 

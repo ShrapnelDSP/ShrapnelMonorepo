@@ -103,6 +103,8 @@ static esp_err_t websocket_get_handler(httpd_req_t *req)
         ESP_LOGE(TAG, "%s failed to send to queue", __FUNCTION__);
     }
 
+    audio_event_send_callback((char *)pkt.payload, httpd_req_to_sockfd(req));
+
     ESP_LOGI(TAG, "%s stack %d", __FUNCTION__, uxTaskGetStackHighWaterMark(NULL));
 
     return ESP_OK;
@@ -189,11 +191,23 @@ static void connect_handler(void* arg, esp_event_base_t event_base,
     }
 }
 
-void audio_event_send_callback(const char *message)
+typedef struct {
+    char message[MAX_WEBSOCKET_PAYLOAD_SIZE];
+    int fd;
+} audio_event_message_t;
+
+void audio_event_send_callback(const char *message, int fd)
 {
+    audio_event_message_t event_message = {
+        .message = {0},
+        .fd = fd,
+    };
+
+    snprintf(event_message.message, sizeof(event_message.message), "%s", message);
+
     if(errQUEUE_FULL ==
             xQueueSendToBack(out_queue,
-                             message,
+                             &event_message,
                              100 / portTICK_PERIOD_MS))
     {
         ESP_LOGE(TAG, "Failed to send message to websocket");
@@ -211,26 +225,28 @@ static void websocket_send(void *arg)
 {
     httpd_handle_t server = arg;
 
-    char buffer[MAX_WEBSOCKET_PAYLOAD_SIZE + 1] = {0};
+    audio_event_message_t event_message;
 
-    int rc = xQueueReceive(out_queue, buffer, 0);
+    int rc = xQueueReceive(out_queue, &event_message, 0);
     if(!rc)
     {
         ESP_LOGE(TAG, "%s failed to receive from queue", __FUNCTION__);
         return;
     }
 
-    ESP_LOGD(TAG, "%s len = %zd", __FUNCTION__, strlen(buffer));
-    ESP_LOG_BUFFER_HEXDUMP(TAG, buffer, sizeof(buffer), ESP_LOG_DEBUG);
+    ESP_LOGD(TAG, "%s source fd = %d", __FUNCTION__, event_message.fd);
 
-    assert(strlen(buffer) < sizeof(buffer));
+    ESP_LOGD(TAG, "%s len = %zd", __FUNCTION__, strlen(event_message.message));
+    ESP_LOG_BUFFER_HEXDUMP(TAG, event_message.message, sizeof(event_message.message), ESP_LOG_DEBUG);
+
+    assert(strlen(event_message.message) < sizeof(event_message.message));
 
     httpd_ws_frame_t pkt = {
         .final = false,
         .fragmented = false,
         .type = HTTPD_WS_TYPE_TEXT,
-        .payload = reinterpret_cast<uint8_t *>(buffer),
-        .len = strlen(buffer),
+        .payload = reinterpret_cast<uint8_t *>(event_message.message),
+        .len = strlen(event_message.message),
     };
 
     int client_fds[MAX_CLIENTS];
@@ -249,6 +265,11 @@ static void websocket_send(void *arg)
         ESP_LOGD(TAG, "fd = %d", fd);
 
         if(HTTPD_WS_CLIENT_WEBSOCKET != httpd_ws_get_fd_info(server, fd))
+        {
+            continue;
+        }
+
+        if(fd == event_message.fd)
         {
             continue;
         }
@@ -318,7 +339,7 @@ extern "C" void app_main(void)
     in_queue = new shrapnel::Queue<shrapnel::CommandHandling::Message>(QUEUE_LEN);
     assert(in_queue);
 
-    out_queue = xQueueCreate(QUEUE_LEN, MAX_WEBSOCKET_PAYLOAD_SIZE);
+    out_queue = xQueueCreate(QUEUE_LEN, sizeof(audio_event_message_t));
     assert(out_queue);
 
     audio_params = new shrapnel::AudioParameters();
@@ -357,7 +378,7 @@ extern "C" void app_main(void)
             .id = PARAM_GATE_THRESHOLD,
             });
 
-    ESP_ERROR_CHECK(audio_event_init(out_queue));
+    ESP_ERROR_CHECK(audio_event_init());
 
     i2c_setup();
 
