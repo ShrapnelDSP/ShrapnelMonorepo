@@ -346,7 +346,11 @@ void app_main(void)
 #endif
 
     pcm3060_init(I2C_NUM, 0);
-    ESP_ERROR_CHECK(pcm3060_power_up());
+    rc = pcm3060_power_up();
+    if(rc != ESP_OK)
+    {
+        ESP_LOGE(TAG, "pcm3060 power up failed");
+    }
 
     /* Start the mdns service */
     start_mdns();
