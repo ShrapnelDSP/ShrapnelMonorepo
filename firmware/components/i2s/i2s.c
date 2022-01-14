@@ -2,6 +2,7 @@
 #include "i2s.h"
 #include "process.h"
 #include "float_convert.h"
+#include "hardware.h"
 
 #include "esp_log.h"
 
@@ -15,12 +16,6 @@
 
 #define BITS            (24)
 #define MCK             (384*SAMPLE_RATE)
-
-#define I2S_NUM         (1)             //PCM3060 pin
-#define I2S_BCK_IO      (GPIO_NUM_2)    //5/10
-#define I2S_WS_IO       (GPIO_NUM_4)    //4/11
-#define I2S_DO_IO       (GPIO_NUM_5)    //12
-#define I2S_DI_IO       (GPIO_NUM_19)   //3
 
 #define DMA_BUF_COUNT   (3)
 

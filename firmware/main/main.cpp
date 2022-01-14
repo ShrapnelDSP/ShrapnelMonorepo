@@ -25,11 +25,10 @@
 #include "audio_events.h"
 #include "cmd_handling_task.h"
 #include "esp_http_server.h"
+#include "hardware.h"
 #include "i2s.h"
 #include "pcm3060.h"
 #include "profiling.h"
-
-#define PROFILING_GPIO GPIO_NUM_23
 
 #define QUEUE_LEN 10
 #define MAX_CLIENTS 3
@@ -42,8 +41,6 @@ static shrapnel::CommandHandlingTask *cmd_handling_task;
 
 static QueueHandle_t out_queue;
 static httpd_handle_t server = NULL;
-
-#define I2C_NUM I2C_NUM_0
 
 extern "C" {
 
@@ -283,8 +280,8 @@ static void i2c_setup(void)
 {
     const i2c_config_t config = {
         .mode = I2C_MODE_MASTER,
-        .sda_io_num = GPIO_NUM_13,
-        .scl_io_num = GPIO_NUM_12,
+        .sda_io_num = GPIO_I2C_SDA,
+        .scl_io_num = GPIO_I2C_SCL,
         .sda_pullup_en = true,
         .scl_pullup_en = true,
         .master = {
@@ -367,13 +364,48 @@ extern "C" void app_main(void)
     profiling_mutex = xSemaphoreCreateMutex();
     i2s_setup(PROFILING_GPIO);
 
+    //dac must be powered up after the i2s clocks have stabilised
     vTaskDelay(100 / portTICK_PERIOD_MS);
 
-#if 0
-    //dac must be powered up after the i2s clocks have stabilised
-    pcm3060_init(I2C_NUM, 0);
-    ESP_ERROR_CHECK(pcm3060_power_up());
+#if HARDWARE == HW_PCB_REV1
+    gpio_config_t io_conf = {
+        .pin_bit_mask = 1ULL << GPIO_CODEC_NRESET,
+        .mode = GPIO_MODE_OUTPUT,
+        .pull_up_en = GPIO_PULLUP_DISABLE,
+        .pull_down_en = GPIO_PULLDOWN_DISABLE,
+        .intr_type = GPIO_INTR_DISABLE,
+    };
+
+    esp_err_t rc = gpio_set_level(GPIO_CODEC_NRESET, 0);
+    if(rc != ESP_OK)
+    {
+        ESP_LOGE(TAG, "gpio_set_level failed %d, %s", rc, esp_err_to_name(rc));
+    }
+
+    rc = gpio_config(&io_conf);
+    if(rc != ESP_OK)
+    {
+        ESP_LOGE(TAG, "gpio_config failed %d, %s", rc, esp_err_to_name(rc));
+    }
+
+    vTaskDelay(5 / portTICK_PERIOD_MS);
+
+    rc = gpio_set_level(GPIO_CODEC_NRESET, 1);
+    if(rc != ESP_OK)
+    {
+        ESP_LOGE(TAG, "gpio_set_level failed %d, %s", rc, esp_err_to_name(rc));
+    }
+
+    vTaskDelay(5 / portTICK_PERIOD_MS);
+
 #endif
+
+    pcm3060_init(I2C_NUM, 0);
+    rc = pcm3060_power_up();
+    if(rc != ESP_OK)
+    {
+        ESP_LOGE(TAG, "pcm3060 power up failed");
+    }
 
     /* Start the mdns service */
     start_mdns();
