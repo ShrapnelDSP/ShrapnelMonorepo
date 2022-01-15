@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 
+import 'chorus.dart';
+import 'heavy_metal.dart';
+import 'noise_gate.dart';
 import 'stompbox.dart';
+import 'tube_screamer.dart';
 import 'valvestate.dart';
 
 class Pedalboard extends StatefulWidget {
@@ -28,40 +32,26 @@ class _PedalboardState extends State<Pedalboard> {
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Stompbox(
-              value: List.filled(3, _value),
-              onChanged: List.filled(3, _setValue),
-              parameterName: const ['DRIVE', 'TONE', 'LEVEL'],
-              bypass: _bypass,
-              name: 'Tube Screamer',
-              onTap: () => _activateGear(GearId.tubeScreamer),
-              full: _activeGear == GearId.tubeScreamer,
-              primarySwatch: Colors.green,
+            TubeScreamerParameterProvider(
+              child: TubeScreamer(
+                onTap: () => _activateGear(GearId.tubeScreamer),
+                bypass: _bypass,
+                full: _activeGear == GearId.tubeScreamer,
+              ),
             ),
-            Stompbox(
-              value: List.filled(4, _value),
-              onChanged: List.filled(4, _setValue),
-              parameterName: const [
-                'Threshold',
-                'Hysteresis',
-                'Attack',
-                'Release'
-              ],
-              bypass: _bypass,
-              name: 'Noise Gate',
-              onTap: () => _activateGear(GearId.noiseGate),
-              full: _activeGear == GearId.noiseGate,
-              primarySwatch: Colors.red,
+            NoiseGateParameterProvider(
+              child: NoiseGate(
+                onTap: () => _activateGear(GearId.noiseGate),
+                bypass: _bypass,
+                full: _activeGear == GearId.noiseGate,
+              ),
             ),
-            Stompbox(
-              value: List.filled(4, _value),
-              onChanged: List.filled(4, _setValue),
-              parameterName: const ['LEVEL', 'LOW', 'HIGH', 'DISTORTION'],
-              bypass: _bypass,
-              name: 'Heavy Metal',
-              onTap: () => _activateGear(GearId.heavyMetal),
-              full: _activeGear == GearId.heavyMetal,
-              primarySwatch: Colors.deepOrange,
+            HeavyMetalParameterProvider(
+              child: HeavyMetal(
+                onTap: () => _activateGear(GearId.heavyMetal),
+                bypass: _bypass,
+                full: _activeGear == GearId.heavyMetal,
+              ),
             ),
           ],
         ),
@@ -79,6 +69,13 @@ class _PedalboardState extends State<Pedalboard> {
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
+            ChorusParameterProvider(
+              child: Chorus(
+                onTap: () => _activateGear(GearId.chorus),
+                bypass: _bypass,
+                full: _activeGear == GearId.chorus,
+              ),
+            ),
             Stompbox(
               value: [_value, _value, _value],
               onChanged: List.filled(3, _setValue),

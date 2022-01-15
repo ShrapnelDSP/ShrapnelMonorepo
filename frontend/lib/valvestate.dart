@@ -14,47 +14,47 @@ class _ValvestateParameterGain extends AudioParameterDoubleModel {
 }
 
 class _ValvestateParameterBass extends AudioParameterDoubleModel {
-  _ValvestateParameterBass({required ParameterService parameterChannel})
+  _ValvestateParameterBass({required ParameterService parameterService})
       : super(
           name: 'BASS',
           id: 'bass',
-          parameterService: parameterChannel,
+          parameterService: parameterService,
         );
 }
 
 class _ValvestateParameterMiddle extends AudioParameterDoubleModel {
-  _ValvestateParameterMiddle({required ParameterService parameterChannel})
+  _ValvestateParameterMiddle({required ParameterService parameterService})
       : super(
           name: 'MIDDLE',
           id: 'middle',
-          parameterService: parameterChannel,
+          parameterService: parameterService,
         );
 }
 
 class _ValvestateParameterTreble extends AudioParameterDoubleModel {
-  _ValvestateParameterTreble({required ParameterService parameterChannel})
+  _ValvestateParameterTreble({required ParameterService parameterService})
       : super(
           name: 'TREBLE',
           id: 'treble',
-          parameterService: parameterChannel,
+          parameterService: parameterService,
         );
 }
 
 class _ValvestateParameterContour extends AudioParameterDoubleModel {
-  _ValvestateParameterContour({required ParameterService parameterChannel})
+  _ValvestateParameterContour({required ParameterService parameterService})
       : super(
           name: 'CONTOUR',
           id: 'contour',
-          parameterService: parameterChannel,
+          parameterService: parameterService,
         );
 }
 
 class _ValvestateParameterVolume extends AudioParameterDoubleModel {
-  _ValvestateParameterVolume({required ParameterService parameterChannel})
+  _ValvestateParameterVolume({required ParameterService parameterService})
       : super(
           name: 'VOLUME',
           id: 'volume',
-          parameterService: parameterChannel,
+          parameterService: parameterService,
         );
 }
 
@@ -125,37 +125,37 @@ class ValvestateParameterProvider extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) =>
-      Consumer<ParameterService>(builder: (_, parameterChannel, __) {
+      Consumer<ParameterService>(builder: (_, parameterService, __) {
         return MultiProvider(
           providers: [
             ChangeNotifierProvider(
               create: (_) => _ValvestateParameterGain(
-                parameterService: parameterChannel,
+                parameterService: parameterService,
               ),
             ),
             ChangeNotifierProvider(
               create: (_) => _ValvestateParameterBass(
-                parameterChannel: parameterChannel,
+                parameterService: parameterService,
               ),
             ),
             ChangeNotifierProvider(
               create: (_) => _ValvestateParameterMiddle(
-                parameterChannel: parameterChannel,
+                parameterService: parameterService,
               ),
             ),
             ChangeNotifierProvider(
               create: (_) => _ValvestateParameterTreble(
-                parameterChannel: parameterChannel,
+                parameterService: parameterService,
               ),
             ),
             ChangeNotifierProvider(
               create: (_) => _ValvestateParameterContour(
-                parameterChannel: parameterChannel,
+                parameterService: parameterService,
               ),
             ),
             ChangeNotifierProvider(
               create: (_) => _ValvestateParameterVolume(
-                parameterChannel: parameterChannel,
+                parameterService: parameterService,
               ),
             ),
           ],
