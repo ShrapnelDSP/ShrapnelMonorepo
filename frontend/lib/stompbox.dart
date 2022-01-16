@@ -10,7 +10,8 @@ class Stompbox extends StatelessWidget {
     required this.bypass,
     required this.name,
     required this.full,
-    required this.onTap,
+    required this.onCardTap,
+    required this.onBypassTap,
     required this.primarySwatch,
   }) : super(key: key);
 
@@ -22,7 +23,8 @@ class Stompbox extends StatelessWidget {
   final String name;
 
   final bool full;
-  final Function() onTap;
+  final Function() onCardTap;
+  final Function() onBypassTap;
 
   final MaterialColor primarySwatch;
 
@@ -32,8 +34,7 @@ class Stompbox extends StatelessWidget {
       children: <Widget>[
         Knob(
           value: value[index],
-          onChanged:
-              full ? onChanged[index] : (ignored) {/* not interactive */},
+          onChanged: full ? onChanged[index] : (_) {/* not interactive */},
           size: scaleFactor * 25,
         ),
         if (full) const SizedBox(height: 10),
@@ -113,6 +114,28 @@ class Stompbox extends StatelessWidget {
     return [];
   }
 
+  Widget bypassButton(BuildContext context, double scaleFactor) {
+    final button = Container(
+      width: scaleFactor * 19,
+      height: scaleFactor * 19,
+      decoration: BoxDecoration(
+        color: bypass
+            ? Theme.of(context).colorScheme.surface
+            : Theme.of(context).colorScheme.primary,
+        shape: BoxShape.circle,
+      ),
+    );
+
+    if (full) {
+      return GestureDetector(
+        onTap: full ? onBypassTap : () {/* not interactive */},
+        child: button,
+      );
+    }
+
+    return button;
+  }
+
   @override
   Widget build(BuildContext context) {
     final scaleFactor = full ? 3.0 : 1.0;
@@ -130,7 +153,7 @@ class Stompbox extends StatelessWidget {
           width: scaleFactor * 100,
           height: scaleFactor * 150,
           child: GestureDetector(
-            onTap: onTap,
+            onTap: onCardTap,
             child: Card(
               child: Container(
                 margin: EdgeInsets.all(scaleFactor * 10),
@@ -153,16 +176,7 @@ class Stompbox extends StatelessWidget {
                   ),
                   Positioned(
                     top: scaleFactor * 98,
-                    child: Container(
-                      width: scaleFactor * 19,
-                      height: scaleFactor * 19,
-                      decoration: BoxDecoration(
-                        color: bypass
-                            ? Theme.of(context).colorScheme.surface
-                            : Theme.of(context).colorScheme.primary,
-                        shape: BoxShape.circle,
-                      ),
-                    ),
+                    child: bypassButton(context, scaleFactor),
                   ),
                 ]),
               ),

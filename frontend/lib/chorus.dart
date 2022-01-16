@@ -4,6 +4,15 @@ import 'package:provider/provider.dart';
 import 'parameter.dart';
 import 'stompbox.dart';
 
+class _ChorusParameterBypass extends AudioParameterDoubleModel {
+  _ChorusParameterBypass({required ParameterService parameterService})
+      : super(
+          name: 'Bypass',
+          id: 'chorusBypass',
+          parameterService: parameterService,
+        );
+}
+
 class _ChorusParameterDepth extends AudioParameterDoubleModel {
   _ChorusParameterDepth({required ParameterService parameterService})
       : super(
@@ -34,22 +43,20 @@ class _ChorusParameterRate extends AudioParameterDoubleModel {
 class Chorus extends StatelessWidget {
   const Chorus({
     Key? key,
-    required this.bypass,
     required this.full,
     required this.onTap,
   }) : super(key: key);
 
   final bool full;
   final void Function() onTap;
-  final bool bypass;
 
   @override
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Consumer3<_ChorusParameterDepth, _ChorusParameterMix,
-            _ChorusParameterRate>(
-          builder: (_, depth, mix, rate, __) => Stompbox(
+        Consumer4<_ChorusParameterBypass, _ChorusParameterDepth,
+            _ChorusParameterMix, _ChorusParameterRate>(
+          builder: (_, bypass, depth, mix, rate, __) => Stompbox(
             value: [
               rate.value,
               depth.value,
@@ -65,10 +72,12 @@ class Chorus extends StatelessWidget {
               depth.name,
               mix.name,
             ],
-            bypass: bypass,
             name: 'Chorus',
-            onTap: onTap,
+            onCardTap: onTap,
             full: full,
+            onBypassTap: () =>
+                bypass.onUserChanged((bypass.value > 0.5) ? 0 : 1),
+            bypass: bypass.value > 0.5,
             primarySwatch: Colors.blue,
           ),
         ),
@@ -90,6 +99,11 @@ class ChorusParameterProvider extends StatelessWidget {
       Consumer<ParameterService>(builder: (_, parameterService, __) {
         return MultiProvider(
           providers: [
+            ChangeNotifierProvider(
+              create: (_) => _ChorusParameterBypass(
+                parameterService: parameterService,
+              ),
+            ),
             ChangeNotifierProvider(
               create: (_) => _ChorusParameterDepth(
                 parameterService: parameterService,

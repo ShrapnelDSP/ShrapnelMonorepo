@@ -4,6 +4,15 @@ import 'package:provider/provider.dart';
 import 'parameter.dart';
 import 'stompbox.dart';
 
+class _HeavyMetalParameterBypass extends AudioParameterDoubleModel {
+  _HeavyMetalParameterBypass({required ParameterService parameterService})
+      : super(
+          name: 'Bypass',
+          id: 'heavyMetalBypass',
+          parameterService: parameterService,
+        );
+}
+
 class _HeavyMetalParameterDistortion extends AudioParameterDoubleModel {
   _HeavyMetalParameterDistortion({required ParameterService parameterService})
       : super(
@@ -43,22 +52,24 @@ class _HeavyMetalParameterLow extends AudioParameterDoubleModel {
 class HeavyMetal extends StatelessWidget {
   const HeavyMetal({
     Key? key,
-    required this.bypass,
     required this.full,
     required this.onTap,
   }) : super(key: key);
 
   final bool full;
   final void Function() onTap;
-  final bool bypass;
 
   @override
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Consumer4<_HeavyMetalParameterDistortion, _HeavyMetalParameterHigh,
-            _HeavyMetalParameterLevel, _HeavyMetalParameterLow>(
-          builder: (_, distortion, high, level, low, __) => Stompbox(
+        Consumer5<
+            _HeavyMetalParameterBypass,
+            _HeavyMetalParameterDistortion,
+            _HeavyMetalParameterHigh,
+            _HeavyMetalParameterLevel,
+            _HeavyMetalParameterLow>(
+          builder: (_, bypass, distortion, high, level, low, __) => Stompbox(
             value: [
               level.value,
               low.value,
@@ -77,10 +88,12 @@ class HeavyMetal extends StatelessWidget {
               high.name,
               distortion.name,
             ],
-            bypass: bypass,
             name: 'Heavy Metal',
-            onTap: onTap,
+            onCardTap: onTap,
             full: full,
+            onBypassTap: () =>
+                bypass.onUserChanged((bypass.value > 0.5) ? 0 : 1),
+            bypass: bypass.value > 0.5,
             primarySwatch: Colors.deepOrange,
           ),
         ),
@@ -102,6 +115,11 @@ class HeavyMetalParameterProvider extends StatelessWidget {
       Consumer<ParameterService>(builder: (_, parameterService, __) {
         return MultiProvider(
           providers: [
+            ChangeNotifierProvider(
+              create: (_) => _HeavyMetalParameterBypass(
+                parameterService: parameterService,
+              ),
+            ),
             ChangeNotifierProvider(
               create: (_) => _HeavyMetalParameterDistortion(
                 parameterService: parameterService,

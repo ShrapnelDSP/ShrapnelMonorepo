@@ -13,6 +13,15 @@ class _NoiseGateParameterAttack extends AudioParameterDoubleModel {
         );
 }
 
+class _NoiseGateParameterBypass extends AudioParameterDoubleModel {
+  _NoiseGateParameterBypass({required ParameterService parameterService})
+      : super(
+          name: 'Bypass',
+          id: 'noiseGateBypass',
+          parameterService: parameterService,
+        );
+}
+
 class _NoiseGateParameterHysteresis extends AudioParameterDoubleModel {
   _NoiseGateParameterHysteresis({required ParameterService parameterService})
       : super(
@@ -43,22 +52,25 @@ class _NoiseGateParameterThreshold extends AudioParameterDoubleModel {
 class NoiseGate extends StatelessWidget {
   const NoiseGate({
     Key? key,
-    required this.bypass,
     required this.full,
     required this.onTap,
   }) : super(key: key);
 
   final bool full;
   final void Function() onTap;
-  final bool bypass;
 
   @override
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Consumer4<_NoiseGateParameterAttack, _NoiseGateParameterHysteresis,
-            _NoiseGateParameterRelease, _NoiseGateParameterThreshold>(
-          builder: (_, attack, hysteresis, release, threshold, __) => Stompbox(
+        Consumer5<
+            _NoiseGateParameterAttack,
+            _NoiseGateParameterBypass,
+            _NoiseGateParameterHysteresis,
+            _NoiseGateParameterRelease,
+            _NoiseGateParameterThreshold>(
+          builder: (_, attack, bypass, hysteresis, release, threshold, __) =>
+              Stompbox(
             value: [
               threshold.value,
               hysteresis.value,
@@ -77,10 +89,12 @@ class NoiseGate extends StatelessWidget {
               attack.name,
               release.name,
             ],
-            bypass: bypass,
             name: 'Noise Gate',
-            onTap: onTap,
+            onCardTap: onTap,
             full: full,
+            onBypassTap: () =>
+                bypass.onUserChanged((bypass.value > 0.5) ? 0 : 1),
+            bypass: bypass.value > 0.5,
             primarySwatch: Colors.red,
           ),
         ),
@@ -104,6 +118,11 @@ class NoiseGateParameterProvider extends StatelessWidget {
           providers: [
             ChangeNotifierProvider(
               create: (_) => _NoiseGateParameterAttack(
+                parameterService: parameterService,
+              ),
+            ),
+            ChangeNotifierProvider(
+              create: (_) => _NoiseGateParameterBypass(
                 parameterService: parameterService,
               ),
             ),

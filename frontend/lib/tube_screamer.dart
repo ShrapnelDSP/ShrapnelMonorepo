@@ -4,6 +4,15 @@ import 'package:provider/provider.dart';
 import 'parameter.dart';
 import 'stompbox.dart';
 
+class _TubeScreamerParameterBypass extends AudioParameterDoubleModel {
+  _TubeScreamerParameterBypass({required ParameterService parameterService})
+      : super(
+          name: 'Bypass',
+          id: 'tubeScreamerBypass',
+          parameterService: parameterService,
+        );
+}
+
 class _TubeScreamerParameterDrive extends AudioParameterDoubleModel {
   _TubeScreamerParameterDrive({required ParameterService parameterService})
       : super(
@@ -34,22 +43,20 @@ class _TubeScreamerParameterTone extends AudioParameterDoubleModel {
 class TubeScreamer extends StatelessWidget {
   const TubeScreamer({
     Key? key,
-    required this.bypass,
     required this.full,
     required this.onTap,
   }) : super(key: key);
 
   final bool full;
   final void Function() onTap;
-  final bool bypass;
 
   @override
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Consumer3<_TubeScreamerParameterDrive, _TubeScreamerParameterLevel,
-            _TubeScreamerParameterTone>(
-          builder: (_, drive, level, tone, __) => Stompbox(
+        Consumer4<_TubeScreamerParameterBypass, _TubeScreamerParameterDrive,
+            _TubeScreamerParameterLevel, _TubeScreamerParameterTone>(
+          builder: (_, bypass, drive, level, tone, __) => Stompbox(
             value: [
               drive.value,
               tone.value,
@@ -65,10 +72,12 @@ class TubeScreamer extends StatelessWidget {
               tone.name,
               level.name,
             ],
-            bypass: bypass,
             name: 'Tube Screamer',
-            onTap: onTap,
+            onCardTap: onTap,
             full: full,
+            onBypassTap: () =>
+                bypass.onUserChanged((bypass.value > 0.5) ? 0 : 1),
+            bypass: bypass.value > 0.5,
             primarySwatch: Colors.green,
           ),
         ),
@@ -90,6 +99,11 @@ class TubeScreamerParameterProvider extends StatelessWidget {
       Consumer<ParameterService>(builder: (_, parameterService, __) {
         return MultiProvider(
           providers: [
+            ChangeNotifierProvider(
+              create: (_) => _TubeScreamerParameterBypass(
+                parameterService: parameterService,
+              ),
+            ),
             ChangeNotifierProvider(
               create: (_) => _TubeScreamerParameterDrive(
                 parameterService: parameterService,
