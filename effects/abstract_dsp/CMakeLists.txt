@@ -11,15 +11,13 @@ add_library(abstract_dsp
 
 target_include_directories(abstract_dsp PUBLIC include)
 
-target_link_libraries(abstract_dsp PRIVATE juce::juce_dsp)
+target_link_libraries(abstract_dsp INTERFACE juce::juce_dsp)
 
-# https://forum.juce.com/t/building-my-vst3-with-linux-and-juce6-couple-of-tiny-things/39014
-# TODO
-# > For SHARED and MODULE libraries the POSITION_INDEPENDENT_CODE
-#   target property is set to ON automatically.
-#
-# Does that mean we building this as a SHARED library?
-set_target_properties(abstract_dsp PROPERTIES
-    POSITION_INDEPENDENT_CODE TRUE)
+target_include_directories(abstract_dsp
+    PRIVATE
+        $<TARGET_PROPERTY:juce::juce_dsp,INTERFACE_INCLUDE_DIRECTORIES>)
 
+target_compile_definitions(abstract_dsp
+    PRIVATE
+        $<TARGET_PROPERTY:juce::juce_dsp,INTERFACE_COMPILE_DEFINITIONS>)
 endif()
