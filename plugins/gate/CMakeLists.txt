@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.15)
 project(AUDIO_PLUGIN_EXAMPLE VERSION 0.0.1)
 
 add_subdirectory(../JUCE JUCE)
+add_subdirectory(../JUCE_static JUCE_static)
 add_subdirectory(../../effects/gate gate)
 add_subdirectory(../../effects/abstract_dsp abstract_dsp)
 
@@ -22,18 +23,7 @@ target_sources(Gate
     PRIVATE
         PluginProcessor.cpp)
 
-target_compile_definitions(Gate
-    PUBLIC
-        JUCE_DISPLAY_SPLASH_SCREEN=0
-        JUCE_WEB_BROWSER=0
-        JUCE_USE_CURL=0
-        JUCE_VST3_CAN_REPLACE_VST2=0)
-
 target_link_libraries(Gate
     PRIVATE
         gate
-        juce::juce_audio_utils
-    PUBLIC
-        juce::juce_recommended_config_flags
-        juce::juce_recommended_lto_flags
-        juce::juce_recommended_warning_flags)
+        juce_modules)

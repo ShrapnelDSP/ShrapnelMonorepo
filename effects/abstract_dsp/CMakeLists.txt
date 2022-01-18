@@ -11,13 +11,6 @@ add_library(abstract_dsp STATIC
 
 target_include_directories(abstract_dsp PUBLIC include)
 
-target_link_libraries(abstract_dsp INTERFACE juce::juce_dsp)
+target_link_libraries(abstract_dsp PRIVATE juce_modules)
 
-target_include_directories(abstract_dsp
-    PRIVATE
-        $<TARGET_PROPERTY:juce::juce_dsp,INTERFACE_INCLUDE_DIRECTORIES>)
-
-target_compile_definitions(abstract_dsp
-    PRIVATE
-        $<TARGET_PROPERTY:juce::juce_dsp,INTERFACE_COMPILE_DEFINITIONS>)
 endif()
