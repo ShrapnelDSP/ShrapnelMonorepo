@@ -3,7 +3,7 @@
 	url = https://github.com/espressif/esp-dsp.git
 [submodule "plugins/JUCE"]
 	path = plugins/JUCE
-	url = https://github.com/juce-framework/JUCE.git
+	url = git@github.com:ShrapnelDSP/JUCE.git
 [submodule "firmware/components/etl/etl"]
 	path = firmware/components/etl/etl
 	url = https://github.com/ETLCPP/etl.git

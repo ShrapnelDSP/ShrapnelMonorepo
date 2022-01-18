@@ -36,7 +36,6 @@ target_compile_definitions(AudioPluginExample
 target_link_libraries(AudioPluginExample
     PRIVATE
         abstract_dsp
-        juce::juce_dsp
         juce::juce_audio_utils
     PUBLIC
         juce::juce_recommended_config_flags

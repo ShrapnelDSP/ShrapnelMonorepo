@@ -6,7 +6,7 @@ idf_component_register(SRCS "abstract_dsp_esp32.c"
 target_compile_options(${COMPONENT_LIB} PRIVATE -Wdouble-promotion)
 else()
 
-add_library(abstract_dsp
+add_library(abstract_dsp STATIC
             abstract_dsp_juce.cpp)
 
 target_include_directories(abstract_dsp PUBLIC include)
