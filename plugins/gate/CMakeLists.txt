@@ -1,12 +1,11 @@
 cmake_minimum_required(VERSION 3.15)
 project(AUDIO_PLUGIN_EXAMPLE VERSION 0.0.1)
-set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 add_subdirectory(../JUCE JUCE)
 add_subdirectory(../../effects/gate gate)
 add_subdirectory(../../effects/abstract_dsp abstract_dsp)
 
-juce_add_plugin(AudioPluginExample
+juce_add_plugin(Gate
     COMPANY_NAME "Barabas Raffai"
     IS_SYNTH FALSE
     NEEDS_MIDI_INPUT FALSE
@@ -19,19 +18,18 @@ juce_add_plugin(AudioPluginExample
     FORMATS VST3 Standalone
     PRODUCT_NAME "Shrapnel Gate")
 
-target_sources(AudioPluginExample
+target_sources(Gate
     PRIVATE
-        PluginEditor.cpp
         PluginProcessor.cpp)
 
-target_compile_definitions(AudioPluginExample
+target_compile_definitions(Gate
     PUBLIC
         JUCE_DISPLAY_SPLASH_SCREEN=0
         JUCE_WEB_BROWSER=0
         JUCE_USE_CURL=0
         JUCE_VST3_CAN_REPLACE_VST2=0)
 
-target_link_libraries(AudioPluginExample
+target_link_libraries(Gate
     PRIVATE
         gate
         juce::juce_audio_utils
