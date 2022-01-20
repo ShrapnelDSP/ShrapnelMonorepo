@@ -1,11 +1,11 @@
 cmake_minimum_required(VERSION 3.15)
 project(AUDIO_PLUGIN_EXAMPLE VERSION 0.0.1)
-set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 add_subdirectory(../JUCE JUCE)
+add_subdirectory(../JUCE_static JUCE_static)
 add_subdirectory(../../effects/abstract_dsp abstract_dsp)
 
-juce_add_plugin(AudioPluginExample
+juce_add_plugin(Chorus
     COMPANY_NAME "Barabas Raffai"
     IS_SYNTH FALSE
     NEEDS_MIDI_INPUT FALSE
@@ -18,26 +18,11 @@ juce_add_plugin(AudioPluginExample
     FORMATS VST3 Standalone
     PRODUCT_NAME "Shrapnel Chorus")
 
-target_include_directories(AudioPluginExample
-    PUBLIC
-        dsp/include)
-
-target_sources(AudioPluginExample
+target_sources(Chorus
     PRIVATE
         PluginProcessor.cpp)
 
-target_compile_definitions(AudioPluginExample
-    PUBLIC
-        JUCE_DISPLAY_SPLASH_SCREEN=0
-        JUCE_WEB_BROWSER=0
-        JUCE_USE_CURL=0
-        JUCE_VST3_CAN_REPLACE_VST2=0)
-
-target_link_libraries(AudioPluginExample
+target_link_libraries(Chorus
     PRIVATE
-        juce::juce_audio_utils
         abstract_dsp
-    PUBLIC
-        juce::juce_recommended_config_flags
-        juce::juce_recommended_lto_flags
-        juce::juce_recommended_warning_flags)
+        juce_modules)

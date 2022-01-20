@@ -1,5 +1,4 @@
 #include "PluginProcessor.h"
-#include "PluginEditor.h"
 #include "noise_gate.h"
 #include "assert.h"
 
@@ -204,7 +203,6 @@ bool AudioPluginAudioProcessor::hasEditor() const
 
 juce::AudioProcessorEditor* AudioPluginAudioProcessor::createEditor()
 {
-    //return new AudioPluginAudioProcessorEditor (*this);
     return new juce::GenericAudioProcessorEditor (*this);
 }
 
