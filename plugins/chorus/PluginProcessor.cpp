@@ -114,22 +114,18 @@ void AudioPluginAudioProcessor::changeProgramName (int index, const juce::String
 void AudioPluginAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
     assert(samplesPerBlock > 0);
-    // Use this method as the place to do any pre-playback
-    // initialisation that you need..
+    assert(nullptr == delayline);
 
-    // TODO this leaks the delayline when prepare called multiple times (reaper
-    // calls this a couple times when we start playing)
     delayline = dspal_delayline_create(sampleRate * MAX_DELAY_MS / 1000);
     dspal_delayline_set_buffer_size(delayline, (size_t)samplesPerBlock);
 
     this->sampleRate = sampleRate;
-
 }
 
 void AudioPluginAudioProcessor::releaseResources()
 {
-    // When playback stops, you can use this as an opportunity to free up any
-    // spare memory, etc.
+    dspal_delayline_destroy(delayline);
+    delayline = nullptr;
 }
 
 bool AudioPluginAudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts) const

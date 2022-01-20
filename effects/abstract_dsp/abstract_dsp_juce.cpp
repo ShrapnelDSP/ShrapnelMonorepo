@@ -89,6 +89,11 @@ dspal_delayline_t dspal_delayline_create(size_t max_samples)
     return delayline;
 }
 
+void dspal_delayline_destroy(dspal_delayline_t delayline)
+{
+    delete delayline;
+}
+
 void dspal_delayline_set_delay(dspal_delayline_t delayline, float delay)
 {
     delayline->delayline->setDelay(delay);
