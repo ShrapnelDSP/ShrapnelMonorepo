@@ -3,7 +3,7 @@
 
 #include "delayline.h"
 
-#define DELAY_LENGTH 100
+#define DELAY_LENGTH 5
 
 class DelayLine : public ::testing::Test
 {
@@ -27,7 +27,7 @@ TEST_F(DelayLine, UnityByDefault)
 
 TEST_F(DelayLine, StateInitialisedToZero)
 {
-    constexpr int delay = 10;
+    constexpr int delay = 2;
 
     static_assert(delay < DELAY_LENGTH);
     static_assert(delay > 0);
@@ -38,5 +38,29 @@ TEST_F(DelayLine, StateInitialisedToZero)
     {
         uut.push_sample(i);
         EXPECT_FLOAT_EQ(0, uut.pop_sample());
+    }
+}
+
+TEST_F(DelayLine, IntegralDelay)
+{
+    constexpr int delay = 2;
+
+    static_assert(delay < DELAY_LENGTH);
+    static_assert(delay > 0);
+
+    uut.set_delay(delay);
+
+    for(int i = 0; i < DELAY_LENGTH; i++)
+    {
+        uut.push_sample(i);
+
+        if(i < delay)
+        {
+            // these are already checked in the test above
+            uut.pop_sample();
+            continue;
+        }
+
+        EXPECT_FLOAT_EQ(i - delay, uut.pop_sample());
     }
 }

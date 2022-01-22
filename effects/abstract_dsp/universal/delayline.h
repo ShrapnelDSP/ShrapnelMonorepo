@@ -15,11 +15,9 @@ class DelayLine {
     void set_delay(float new_delay);
 
     private:
-    size_t length;
     std::vector<float> samples;
 
     size_t writeIndex;
-    size_t readIndex;
 
     float delay;
 };
