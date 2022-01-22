@@ -26,6 +26,3 @@ target_compile_definitions(juce_modules
 target_include_directories(juce_modules
     INTERFACE
         $<TARGET_PROPERTY:juce_modules,INCLUDE_DIRECTORIES>)
-
-# Required when linking VST plugins
-set_property(TARGET juce_modules PROPERTY POSITION_INDEPENDENT_CODE ON)

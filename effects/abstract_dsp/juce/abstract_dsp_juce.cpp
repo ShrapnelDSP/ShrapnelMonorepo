@@ -1,5 +1,6 @@
 #include "abstract_dsp.h"
 #include "juce_dsp/juce_dsp.h"
+#include "delayline.h"
 #include <assert.h>
 #include <memory>
 
@@ -8,7 +9,7 @@ struct dspal_iir {
 };
 
 struct dspal_delayline {
-    std::unique_ptr<juce::dsp::DelayLine<float>> delayline;
+    std::unique_ptr<shrapnel::dsp::DelayLine> delayline;
 };
 
 extern "C" {
@@ -85,33 +86,29 @@ dspal_delayline_t dspal_delayline_create(size_t max_samples)
 {
     dspal_delayline_t delayline = new dspal_delayline;
 
-    delayline->delayline.reset(new juce::dsp::DelayLine<float>(max_samples));
+    delayline->delayline.reset(new shrapnel::dsp::DelayLine(max_samples));
+
     return delayline;
+}
+
+void dspal_delayline_destroy(dspal_delayline_t delayline)
+{
+    delete delayline;
 }
 
 void dspal_delayline_set_delay(dspal_delayline_t delayline, float delay)
 {
-    delayline->delayline->setDelay(delay);
-}
-
-void dspal_delayline_set_buffer_size(dspal_delayline_t delayline, size_t size)
-{
-    auto spec = juce::dsp::ProcessSpec();
-    spec.sampleRate = 0; /* JUCE ignores this */
-    spec.numChannels = 1;
-    spec.maximumBlockSize = size;
-
-    delayline->delayline->prepare(spec);
+    delayline->delayline->set_delay(delay);
 }
 
 void dspal_delayline_push_sample(dspal_delayline_t delayline, float sample)
 {
-    delayline->delayline->pushSample(0, sample);
+    delayline->delayline->push_sample(sample);
 }
 
 float dspal_delayline_pop_sample(dspal_delayline_t delayline)
 {
-    return delayline->delayline->popSample(0);
+    return delayline->delayline->pop_sample();
 }
 
 };
