@@ -10,8 +10,10 @@ DelayLine::DelayLine(size_t max_samples) :
 
 void DelayLine::push_sample(float sample)
 {
-    this->samples[writeIndex] = sample;
+    samples[writeIndex] = sample;
+
     writeIndex++;
+    writeIndex %= samples.size();
 }
 
 float DelayLine::pop_sample(void)
