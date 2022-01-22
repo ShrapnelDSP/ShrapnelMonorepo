@@ -1,9 +1,4 @@
 #include "PluginProcessor.h"
-#include <cmath>
-#include <assert.h>
-#include "abstract_dsp.h"
-
-#define MAX_DELAY_MS 15.f
 
 //==============================================================================
 AudioPluginAudioProcessor::AudioPluginAudioProcessor()
@@ -113,24 +108,12 @@ void AudioPluginAudioProcessor::changeProgramName (int index, const juce::String
 //==============================================================================
 void AudioPluginAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
-    assert(samplesPerBlock > 0);
+    (void) samplesPerBlock;
 
-    if(nullptr != delayline)
-    {
-        dspal_delayline_destroy(delayline);
-        delayline = nullptr;
-    }
-
-    delayline = dspal_delayline_create(sampleRate * MAX_DELAY_MS / 1000);
-
-    this->sampleRate = sampleRate;
+    chorus.set_sample_rate(sampleRate);
 }
 
-void AudioPluginAudioProcessor::releaseResources()
-{
-    dspal_delayline_destroy(delayline);
-    delayline = nullptr;
-}
+void AudioPluginAudioProcessor::releaseResources() {}
 
 bool AudioPluginAudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts) const
 {
@@ -154,18 +137,6 @@ bool AudioPluginAudioProcessor::isBusesLayoutSupported (const BusesLayout& layou
 
     return true;
   #endif
-}
-
-static float triangle(float phase)
-{
-    if(phase < M_PI)
-    {
-        return 1 - 2 * phase / M_PI;
-    }
-    else
-    {
-        return - 3 + 2 * phase / M_PI;
-    }
 }
 
 void AudioPluginAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
@@ -198,33 +169,11 @@ void AudioPluginAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
 
         if(channel == 0)
         {
-            for(int i = 0; i < buffer.getNumSamples(); i++)
-            {
-                float lfo = 0.5 * triangle(phase);
-                phase += *modulationRateHzParameter / sampleRate * 2 * M_PI;
+            chorus.set_modulation_rate_hz(*modulationRateHzParameter);
+            chorus.set_modulation_depth(*modulationDepthNormalisedParameter);
+            chorus.set_modulation_mix(*mixParameter);
 
-                if(phase > 2 * M_PI)
-                {
-                    phase -= 2 * M_PI;
-                }
-
-#if 1
-                float delay = MAX_DELAY_MS / 1000 * sampleRate *
-                    (0.5f + (*modulationDepthNormalisedParameter * lfo));
-
-                float clipped_delay = juce::jlimit((float)0, std::floor(sampleRate * MAX_DELAY_MS / 1000), delay);
-
-                assert(clipped_delay == delay);
-
-                dspal_delayline_set_delay(delayline, clipped_delay);
-
-                dspal_delayline_push_sample(delayline, channelData[i]);
-                channelData[i] = channelData[i] +
-                    (*mixParameter * dspal_delayline_pop_sample(delayline));
-#else
-                channelData[i] = lfo;
-#endif
-            }
+            chorus.process(channelData, buffer.getNumSamples());
         }
         else
         {

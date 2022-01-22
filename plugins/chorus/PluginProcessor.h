@@ -1,7 +1,7 @@
 #pragma once
 
 #include <juce_audio_processors/juce_audio_processors.h>
-#include "abstract_dsp.h"
+#include "chorus.h"
 
 //==============================================================================
 class AudioPluginAudioProcessor  : public juce::AudioProcessor
@@ -50,11 +50,7 @@ private:
     std::atomic<float> *modulationDepthNormalisedParameter = nullptr;
     std::atomic<float> *mixParameter = nullptr;
 
-    float sampleRate = 0;
-
-    dspal_delayline_t delayline = nullptr;
-
-    float phase = 0;
+    shrapnel::effect::Chorus chorus;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AudioPluginAudioProcessor)
 };

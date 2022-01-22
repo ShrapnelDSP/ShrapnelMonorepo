@@ -8,6 +8,7 @@ add_subdirectory(../JUCE JUCE)
 add_subdirectory(../JUCE_static JUCE_static)
 
 add_subdirectory(../../effects/abstract_dsp abstract_dsp)
+add_subdirectory(../../effects/chorus chorus)
 
 juce_add_plugin(Chorus
     COMPANY_NAME "Barabas Raffai"
@@ -28,5 +29,5 @@ target_sources(Chorus
 
 target_link_libraries(Chorus
     PRIVATE
-        abstract_dsp
+        chorus
         juce_modules)
