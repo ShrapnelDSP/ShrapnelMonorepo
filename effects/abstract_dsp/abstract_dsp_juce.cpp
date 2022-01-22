@@ -86,6 +86,14 @@ dspal_delayline_t dspal_delayline_create(size_t max_samples)
     dspal_delayline_t delayline = new dspal_delayline;
 
     delayline->delayline.reset(new juce::dsp::DelayLine<float>(max_samples));
+
+    auto spec = juce::dsp::ProcessSpec();
+    spec.sampleRate = 0; /* JUCE ignores this */
+    spec.numChannels = 1;
+    spec.maximumBlockSize = 0 /* JUCE ignores this */;
+
+    delayline->delayline->prepare(spec);
+
     return delayline;
 }
 
@@ -97,16 +105,6 @@ void dspal_delayline_destroy(dspal_delayline_t delayline)
 void dspal_delayline_set_delay(dspal_delayline_t delayline, float delay)
 {
     delayline->delayline->setDelay(delay);
-}
-
-void dspal_delayline_set_buffer_size(dspal_delayline_t delayline, size_t size)
-{
-    auto spec = juce::dsp::ProcessSpec();
-    spec.sampleRate = 0; /* JUCE ignores this */
-    spec.numChannels = 1;
-    spec.maximumBlockSize = size;
-
-    delayline->delayline->prepare(spec);
 }
 
 void dspal_delayline_push_sample(dspal_delayline_t delayline, float sample)
