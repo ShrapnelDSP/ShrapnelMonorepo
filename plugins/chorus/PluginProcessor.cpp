@@ -114,7 +114,12 @@ void AudioPluginAudioProcessor::changeProgramName (int index, const juce::String
 void AudioPluginAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
     assert(samplesPerBlock > 0);
-    assert(nullptr == delayline);
+
+    if(nullptr != delayline)
+    {
+        dspal_delayline_destroy(delayline);
+        delayline = nullptr;
+    }
 
     delayline = dspal_delayline_create(sampleRate * MAX_DELAY_MS / 1000);
 
