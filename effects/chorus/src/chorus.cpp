@@ -45,7 +45,7 @@ void Chorus::process(float *samples, int sample_count)
 {
     for(int i = 0; i < sample_count; i++)
     {
-        float lfo = 0.5 * ::triangle(phase);
+        float lfo = 0.5 * triangle(phase);
         phase += modulation_rate / sample_rate * 2 * M_PI;
 
         if(phase > 2 * M_PI)

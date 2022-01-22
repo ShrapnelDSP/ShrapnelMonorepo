@@ -14,7 +14,7 @@ class DelayLine : public ::testing::Test
 };
 
 // NOTE: These tests should use less samples than the delay line length to
-// avoid testing the overflow login. Only the later tests should fail if the
+// avoid testing the overflow logic. Only the later tests should fail if the
 // overflow logic is broken.
 TEST_F(DelayLine, UnityByDefault)
 {

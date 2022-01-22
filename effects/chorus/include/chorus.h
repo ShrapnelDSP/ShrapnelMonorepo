@@ -9,7 +9,7 @@ class Chorus {
     public:
     Chorus();
 
-    /** Set the depth of modulation
+    /** Set the rate of modulation
      *
      * This parameter is in units of Hz.
      */
