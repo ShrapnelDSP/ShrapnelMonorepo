@@ -35,7 +35,7 @@ float DelayLine::pop_sample(void)
 
 void DelayLine::set_delay(float new_delay)
 {
-    delay = new_delay;
+    delay = std::max(0.f, new_delay);
 }
 
 }

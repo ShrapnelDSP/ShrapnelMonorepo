@@ -98,3 +98,14 @@ TEST_F(DelayLine, WrapAround)
         EXPECT_FLOAT_EQ(std::max(0.f, i - delay), uut.pop_sample());
     }
 }
+
+TEST_F(DelayLine, NegativeDelayIsClippedToZero)
+{
+    uut.set_delay(-1);
+
+    for(int i = 0; i < DELAY_LENGTH; i++)
+    {
+        uut.push_sample(i);
+        EXPECT_FLOAT_EQ(i, uut.pop_sample());
+    }
+}
