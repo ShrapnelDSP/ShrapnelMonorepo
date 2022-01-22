@@ -1,5 +1,6 @@
 #pragma once
 #include <cstddef>
+#include <vector>
 
 namespace shrapnel {
 namespace dsp {
@@ -11,11 +12,16 @@ class DelayLine {
     void push_sample(float sample);
     float pop_sample(void);
 
-    void set_delay(float sample);
+    void set_delay(float new_delay);
 
     private:
     size_t length;
-    float sample;
+    std::vector<float> samples;
+
+    size_t writeIndex;
+    size_t readIndex;
+
+    float delay;
 };
 
 }
