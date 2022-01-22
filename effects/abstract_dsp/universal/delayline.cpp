@@ -5,7 +5,7 @@ namespace shrapnel {
 namespace dsp {
 
 DelayLine::DelayLine(size_t max_samples) :
-    samples(max_samples),
+    samples(max_samples + 1),
     writeIndex(0) { }
 
 void DelayLine::push_sample(float sample)
@@ -32,10 +32,9 @@ float DelayLine::pop_sample(void)
     return (1 - fractional_delay) * sample + fractional_delay * before_sample;
 }
 
-
 void DelayLine::set_delay(float new_delay)
 {
-    delay = std::max(0.f, new_delay);
+    delay = std::min((float)samples.size() - 1, std::max(0.f, new_delay));
 }
 
 }

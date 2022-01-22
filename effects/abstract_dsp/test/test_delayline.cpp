@@ -109,3 +109,31 @@ TEST_F(DelayLine, NegativeDelayIsClippedToZero)
         EXPECT_FLOAT_EQ(i, uut.pop_sample());
     }
 }
+
+TEST_F(DelayLine, MaxDelay)
+{
+    constexpr float delay = DELAY_LENGTH;
+
+    uut.set_delay(delay);
+
+    for(int i = 0; i < DELAY_LENGTH; i++)
+    {
+        uut.push_sample(i);
+
+        EXPECT_FLOAT_EQ(std::max(0.f, static_cast<float>(i - DELAY_LENGTH)), uut.pop_sample());
+    }
+}
+
+TEST_F(DelayLine, TooGreatDelayIsClippedToMax)
+{
+    constexpr float delay = DELAY_LENGTH + 1;
+
+    uut.set_delay(delay);
+
+    for(int i = 0; i < DELAY_LENGTH; i++)
+    {
+        uut.push_sample(i);
+
+        EXPECT_FLOAT_EQ(std::max(0.f, static_cast<float>(i - DELAY_LENGTH)), uut.pop_sample());
+    }
+}
