@@ -64,3 +64,20 @@ TEST_F(DelayLine, IntegralDelay)
         EXPECT_FLOAT_EQ(i - delay, uut.pop_sample());
     }
 }
+
+TEST_F(DelayLine, FractionalDelay)
+{
+    constexpr float delay = 2.5;
+
+    static_assert(delay < DELAY_LENGTH);
+    static_assert(delay > 0);
+
+    uut.set_delay(delay);
+
+    for(int i = 0; i < DELAY_LENGTH; i++)
+    {
+        uut.push_sample(i);
+
+        EXPECT_FLOAT_EQ(std::max(0.f, i - delay), uut.pop_sample());
+    }
+}
