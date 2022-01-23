@@ -46,5 +46,4 @@ jobs:
       run: cmake --build ${{github.workspace}}/build --config ${{matrix.build_type}}
 
     - name: Test
-      working-directory: ${{github.workspace}}/build
-      run: ctest -C ${{matrix.build_type}}
+      run: ctest -C ${{matrix.build_type}} --test-dir ${{github.workspace}}/build
