@@ -11,10 +11,14 @@ jobs:
     runs-on: ubuntu-latest
     container: barabas5532/shrapnel:1
     steps:
-      # This could be two different steps, but we need to preserve the
-      # environment that is set up by export.sh
-      - name: Setup ESP-IDF and build
-        run: . $IDF_PATH/export.sh && idf.py -C firmware build
+    - uses: actions/checkout@v2
+      with:
+        submodules: recursive
+
+    # This could be two different steps, but we need to preserve the
+    # environment that is set up by export.sh
+    - name: Setup ESP-IDF and build
+      run: . $IDF_PATH/export.sh && idf.py -C firmware build
 
   build-plugins:
     runs-on: ubuntu-latest
