@@ -7,7 +7,8 @@
 extern "C" {
 #endif
 
-SemaphoreHandle_t profiling_mutex;
+extern SemaphoreHandle_t profiling_mutex;
+
 void profiling_start(void);
 void profiling_mark_stage(unsigned int stage);
 void profiling_stop(void);
