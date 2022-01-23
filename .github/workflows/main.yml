@@ -40,6 +40,7 @@ jobs:
         submodules: recursive
 
     - run: pwd
+    - run: ctest --version
 
     - name: Configure CMake
       run: cmake -B build -DCMAKE_BUILD_TYPE=${{matrix.build_type}} test
@@ -48,4 +49,5 @@ jobs:
       run: cmake --build build --config ${{matrix.build_type}}
 
     - name: Test
-      run: ctest -C ${{matrix.build_type}} --test-dir build
+      working-directory: /__w/ShrapnelMonorepo/ShrapnelMonorepo/build
+      run: ctest -C ${{matrix.build_type}}
