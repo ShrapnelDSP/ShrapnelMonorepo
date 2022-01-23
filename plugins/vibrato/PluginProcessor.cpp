@@ -112,7 +112,6 @@ void AudioPluginAudioProcessor::prepareToPlay (double sampleRate, int samplesPer
     // TODO this leaks the delayline when prepare called multiple times (reaper
     // calls this a couple times when we start playing)
     delayline = dspal_delayline_create(sampleRate * MAX_DELAY_MS / 1000);
-    dspal_delayline_set_buffer_size(delayline, (size_t)samplesPerBlock);
 
     this->sampleRate = sampleRate;
 }
