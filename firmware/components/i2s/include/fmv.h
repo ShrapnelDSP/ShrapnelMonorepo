@@ -1,11 +1,11 @@
 #pragma once
 
+#include <stddef.h>
+#include "esp_err.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-#include <stddef.h>
-#include "esp_err.h"
 
 /** Update the parameters of the filter. 
  *
