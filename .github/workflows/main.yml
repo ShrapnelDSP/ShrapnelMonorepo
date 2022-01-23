@@ -5,11 +5,13 @@ on: [push]
 jobs:
   build-firmware:
     runs-on: ubuntu-latest
+    container: barabas5532/shrapnel:1
     steps:
       - run: echo "TODO build firmware"
 
   build-plugins:
     runs-on: ubuntu-latest
+    container: barabas5532/shrapnel:1
     strategy:
       matrix:
         plugin: ["chorus",  "gate", "vibrato"]
@@ -28,6 +30,7 @@ jobs:
 
   ctest:
     runs-on: ubuntu-latest
+    container: barabas5532/shrapnel:1
     strategy:
       matrix:
         build_type: ["Release", "Debug"]
