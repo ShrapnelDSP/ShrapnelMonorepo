@@ -8,10 +8,6 @@ struct dspal_iir {
     std::unique_ptr<juce::dsp::IIR::Filter<float>> iir;
 };
 
-struct dspal_delayline {
-    std::unique_ptr<shrapnel::dsp::DelayLine> delayline;
-};
-
 extern "C" {
 
 dspal_err_t dspal_biquad_design_lowpass(float *coeffs, float f, float q_factor)
@@ -80,35 +76,6 @@ void dspal_multiply(const float *in1, const float *in2, float *out, size_t buf_s
     {
         out[i] = in1[i] * in2[i];
     }
-}
-
-dspal_delayline_t dspal_delayline_create(size_t max_samples)
-{
-    dspal_delayline_t delayline = new dspal_delayline;
-
-    delayline->delayline.reset(new shrapnel::dsp::DelayLine(max_samples));
-
-    return delayline;
-}
-
-void dspal_delayline_destroy(dspal_delayline_t delayline)
-{
-    delete delayline;
-}
-
-void dspal_delayline_set_delay(dspal_delayline_t delayline, float delay)
-{
-    delayline->delayline->set_delay(delay);
-}
-
-void dspal_delayline_push_sample(dspal_delayline_t delayline, float sample)
-{
-    delayline->delayline->push_sample(sample);
-}
-
-float dspal_delayline_pop_sample(dspal_delayline_t delayline)
-{
-    return delayline->delayline->pop_sample();
 }
 
 };

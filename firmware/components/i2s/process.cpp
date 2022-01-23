@@ -12,6 +12,7 @@
 #include "audio_events.h"
 #include "noise_gate.h"
 #include "profiling.h"
+#include "chorus.h"
 
 #include "esp_log.h"
 #define TAG "i2s_process"
@@ -25,11 +26,13 @@ extern float pedal_gain;
 extern float amp_gain;
 extern float volume;
 extern gpio_num_t g_profiling_gpio;
-float fbuf[DMA_BUF_SIZE];
+static float fbuf[DMA_BUF_SIZE];
 
 #include "speaker_coeffs.h"
-float fir_delay_line[sizeof(fir_coeff)/sizeof(fir_coeff[0])];
-fir_f32_t fir;
+static float fir_delay_line[sizeof(fir_coeff)/sizeof(fir_coeff[0])];
+static fir_f32_t fir;
+
+static shrapnel::effect::Chorus *chorus;
 
 #define EQ_GAIN (0.5)
 //these approximate the pre EQ from a Boss HM-2 pedal
@@ -128,6 +131,11 @@ void process_samples(int32_t *buf, size_t buf_len)
     dsps_fir_f32_ae32(&fir, fbuf, fbuf, buf_len/2);
     profiling_mark_stage(12);
 
+    chorus->set_modulation_rate_hz(1.f);
+    chorus->set_modulation_depth(.5f);
+    chorus->set_modulation_mix(.8f);
+    chorus->process(fbuf, buf_len/2);
+
     dsps_mulc_f32_ae32(fbuf, fbuf, buf_len/2, volume, 1, 1);
     profiling_mark_stage(13);
 
@@ -160,6 +168,9 @@ esp_err_t process_init()
     ESP_ERROR_CHECK(fmv_init());
     ESP_ERROR_CHECK(gate_init(sizeof(fbuf)/sizeof(fbuf[0]), 0.1, 0.005, 10,
                 50, 50, SAMPLE_RATE));
+
+    chorus = new shrapnel::effect::Chorus();
+    assert(chorus);
 
     return dsps_fir_init_f32(&fir, fir_coeff, fir_delay_line,
                              sizeof(fir_coeff) / sizeof(fir_coeff[0]));

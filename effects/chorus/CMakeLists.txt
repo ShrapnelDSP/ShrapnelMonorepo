@@ -1,7 +1,7 @@
-if(ESP_SYSTEM)
+if(ESP_PLATFORM)
 idf_component_register(SRCS src/chorus.cpp
                        INCLUDE_DIRS include
-                       PRIV_REQUIRES abstract_dsp)
+                       REQUIRES abstract_dsp)
 
 target_compile_options(${COMPONENT_LIB} PRIVATE -Wdouble-promotion)
 else()
