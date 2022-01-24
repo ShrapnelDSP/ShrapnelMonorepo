@@ -1,11 +1,11 @@
 #pragma once
 
+#include "esp_err.h"
+#include "driver/gpio.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-#include "esp_err.h"
-#include "driver/gpio.h"
 
 #define DMA_BUF_SIZE    (64)
 #define SAMPLE_RATE     (48000)

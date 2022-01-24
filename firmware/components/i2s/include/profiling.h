@@ -1,13 +1,14 @@
 #pragma once
 
+#include "freertos/FreeRTOS.h"
+#include "freertos/semphr.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-#include "freertos/FreeRTOS.h"
-#include "freertos/semphr.h"
+extern SemaphoreHandle_t profiling_mutex;
 
-SemaphoreHandle_t profiling_mutex;
 void profiling_start(void);
 void profiling_mark_stage(unsigned int stage);
 void profiling_stop(void);

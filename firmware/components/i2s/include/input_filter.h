@@ -1,12 +1,12 @@
 #pragma once
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 #include <stddef.h>
 #include <stdbool.h>
 #include "esp_err.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 void filter_set_tight(bool t);
 void filter_pedal_input_process(float *buf, size_t buf_len);

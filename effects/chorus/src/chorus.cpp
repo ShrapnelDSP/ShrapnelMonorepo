@@ -7,13 +7,13 @@ namespace {
 
 float triangle(float phase)
 {
-    if(phase < M_PI)
+    if(phase < (float)M_PI)
     {
-        return 1 - 2 * phase / M_PI;
+        return 1 - 2 * phase / (float)M_PI;
     }
     else
     {
-        return - 3 + 2 * phase / M_PI;
+        return - 3 + 2 * phase / (float)M_PI;
     }
 }
 
@@ -45,12 +45,12 @@ void Chorus::process(float *samples, int sample_count)
 {
     for(int i = 0; i < sample_count; i++)
     {
-        float lfo = 0.5 * triangle(phase);
-        phase += modulation_rate / sample_rate * 2 * M_PI;
+        float lfo = 0.5f * triangle(phase);
+        phase += modulation_rate / sample_rate * 2 * (float)M_PI;
 
-        if(phase > 2 * M_PI)
+        if(phase > 2 * (float)M_PI)
         {
-            phase -= 2 * M_PI;
+            phase -= 2 * (float)M_PI;
         }
 
 #if 1
@@ -77,7 +77,7 @@ void Chorus::set_sample_rate(float rate)
         delayline = nullptr;
     }
 
-    delayline = dspal_delayline_create(sample_rate * MAX_DELAY_MS / 1000);
+    delayline = dspal_delayline_create(rate * MAX_DELAY_MS / 1000);
 
     sample_rate = rate;
 };

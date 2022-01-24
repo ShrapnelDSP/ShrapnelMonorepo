@@ -2,6 +2,7 @@ if(ESP_PLATFORM)
     idf_component_register(SRCS
                            esp32/abstract_dsp_esp32.c
                            universal/delayline.cpp
+                           universal/delayline_c.cpp
                            INCLUDE_DIRS include
                            PRIV_INCLUDE_DIRS universal
                            PRIV_REQUIRES esp-dsp)
@@ -27,7 +28,8 @@ endif()
 
 add_library(abstract_dsp STATIC
             juce/abstract_dsp_juce.cpp
-            universal/delayline.cpp)
+            universal/delayline.cpp
+            universal/delayline_c.cpp)
 
 target_include_directories(abstract_dsp PUBLIC include)
 target_include_directories(abstract_dsp PRIVATE universal)

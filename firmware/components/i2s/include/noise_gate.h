@@ -1,11 +1,10 @@
 #pragma once
 
+#include "esp_err.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-#include "esp_err.h"
 
 /** \brief Initialise the gate
  *
