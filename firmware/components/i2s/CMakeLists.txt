@@ -3,7 +3,6 @@ idf_component_register(SRCS
                        process.cpp
                        fmv.c
                        input_filter.c
-                       noise_gate.c
                        profiling.c
                        INCLUDE_DIRS include
                        REQUIRES driver
@@ -13,6 +12,7 @@ idf_component_register(SRCS
                        iir
                        audio_events
                        hardware
-                       chorus)
+                       chorus
+                       gate)
 
 target_compile_options(${COMPONENT_LIB} PRIVATE -Wdouble-promotion -Werror=double-promotion)

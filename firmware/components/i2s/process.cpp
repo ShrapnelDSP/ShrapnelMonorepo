@@ -88,7 +88,7 @@ void process_samples(int32_t *buf, size_t buf_len)
     }
     profiling_mark_stage(0);
 
-    gate_analyse(fbuf);
+    gate_analyse(fbuf, buf_len/2);
     profiling_mark_stage(1);
     dsps_mulc_f32_ae32(fbuf, fbuf, sizeof(fbuf)/sizeof(fbuf[0]), pedal_gain, 1, 1);
     profiling_mark_stage(2);
@@ -122,7 +122,7 @@ void process_samples(int32_t *buf, size_t buf_len)
 
     fmv_process(fbuf, buf_len/2);
     profiling_mark_stage(9);
-    gate_process(fbuf);
+    gate_process(fbuf, buf_len/2);
     profiling_mark_stage(10);
     filter_final_process(fbuf, buf_len/2);
     profiling_mark_stage(11);
@@ -167,8 +167,13 @@ esp_err_t process_init()
 
     ESP_ERROR_CHECK(filter_init());
     ESP_ERROR_CHECK(fmv_init());
-    ESP_ERROR_CHECK(gate_init(sizeof(fbuf)/sizeof(fbuf[0]), 0.1, 0.005, 10,
-                50, 50, SAMPLE_RATE));
+
+    ESP_ERROR_CHECK(gate_init());
+    gate_set_sample_rate(SAMPLE_RATE);
+    gate_set_threshold(-20, 1);
+    gate_set_attack(10);
+    gate_set_hold(50);
+    gate_set_release(50);
 
     chorus = new shrapnel::effect::Chorus();
     assert(chorus);
