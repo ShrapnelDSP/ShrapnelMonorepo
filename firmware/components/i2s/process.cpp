@@ -128,13 +128,15 @@ void process_samples(int32_t *buf, size_t buf_len)
     profiling_mark_stage(11);
 
     /* speaker IR */
+    /*
     dsps_fir_f32_ae32(&fir, fbuf, fbuf, buf_len/2);
-    profiling_mark_stage(12);
+    */
 
     chorus->set_modulation_rate_hz(1.f);
     chorus->set_modulation_depth(.5f);
     chorus->set_modulation_mix(.8f);
     chorus->process(fbuf, buf_len/2);
+    profiling_mark_stage(12);
 
     dsps_mulc_f32_ae32(fbuf, fbuf, buf_len/2, volume, 1, 1);
     profiling_mark_stage(13);
