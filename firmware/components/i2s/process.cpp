@@ -171,6 +171,7 @@ esp_err_t process_init()
 
     chorus = new shrapnel::effect::Chorus();
     assert(chorus);
+    chorus->set_sample_rate(SAMPLE_RATE);
 
     return dsps_fir_init_f32(&fir, fir_coeff, fir_delay_line,
                              sizeof(fir_coeff) / sizeof(fir_coeff[0]));
