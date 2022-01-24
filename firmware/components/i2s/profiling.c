@@ -8,7 +8,7 @@
 
 #define TAG "profiling"
 
-#define NUMBER_OF_STAGES 15
+#define NUMBER_OF_STAGES 16
 
 static int64_t start_time = 0;
 static int64_t stage_time[NUMBER_OF_STAGES] = {};
@@ -45,8 +45,7 @@ void profiling_stop(void)
 
 static double time_to_percent(int64_t time)
 {
-    //TODO expose the sample rate from the i2s module
-    return 100 * time / (1e6 * DMA_BUF_SIZE / 48e3);
+    return 100 * time / (1e6 * DMA_BUF_SIZE / SAMPLE_RATE);
 }
 
 void i2s_profiling_task(void *param)

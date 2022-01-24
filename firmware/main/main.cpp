@@ -432,7 +432,7 @@ extern "C" void app_main(void)
     start_mdns();
 
 #if 1
-    rc = xTaskCreate(i2s_profiling_task, "i2s profiling", 2000, NULL, configMAX_PRIORITIES - 2, NULL);
+    rc = xTaskCreate(i2s_profiling_task, "i2s profiling", 2000, NULL, tskIDLE_PRIORITY + 2, NULL);
     if(rc != pdPASS)
     {
         ESP_LOGE(TAG, "Profiling task create failed %d", rc);
