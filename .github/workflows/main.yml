@@ -1,0 +1,62 @@
+on: [push]
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  build-firmware:
+    runs-on: ubuntu-latest
+    container: barabas5532/shrapnel:1
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        submodules: recursive
+
+    # This could be two different steps, but we need to preserve the
+    # environment that is set up by export.sh
+    - name: Setup ESP-IDF and build
+      run: . $IDF_PATH/export.sh && idf.py -C firmware build
+
+  build-plugins:
+    runs-on: ubuntu-latest
+    container: barabas5532/shrapnel:1
+    strategy:
+      matrix:
+        plugin: ["chorus",  "gate", "vibrato"]
+        build_type: ["Release", "Debug"]
+
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        submodules: recursive
+
+    - name: Configure CMake
+      run: cmake -B build -DCMAKE_BUILD_TYPE=${{matrix.build_type}} plugins/${{matrix.plugin}}
+
+    - name: Build
+      run: cmake --build build --config ${{matrix.build_type}}
+
+  ctest:
+    runs-on: ubuntu-latest
+    container: barabas5532/shrapnel:1
+    strategy:
+      matrix:
+        build_type: ["Release", "Debug"]
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        submodules: recursive
+
+    - run: pwd
+    - run: ctest --version
+
+    - name: Configure CMake
+      run: cmake -B build -DCMAKE_BUILD_TYPE=${{matrix.build_type}} test
+
+    - name: Build
+      run: cmake --build build --config ${{matrix.build_type}}
+
+    - name: Test
+      working-directory: /__w/ShrapnelMonorepo/ShrapnelMonorepo/build
+      run: ctest -C ${{matrix.build_type}}
