@@ -1,6 +1,9 @@
 cmake_minimum_required(VERSION 3.15)
 project(AUDIO_PLUGIN_EXAMPLE VERSION 0.0.1)
 
+# Required when linking VST plugins
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+
 add_subdirectory(../JUCE JUCE)
 add_subdirectory(../JUCE_static JUCE_static)
 add_subdirectory(../../effects/abstract_dsp abstract_dsp)

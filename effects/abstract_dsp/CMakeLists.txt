@@ -17,7 +17,7 @@ if(DEFINED TESTING)
                    )
 
     target_include_directories(delayline_test PUBLIC universal)
-    target_include_directories(abstract_dsp PRIVATE universal)
+    target_include_directories(delayline_test PRIVATE universal)
 
     target_link_libraries(delayline_test PRIVATE gtest_main)
     target_link_libraries(delayline_test PRIVATE gmock)
