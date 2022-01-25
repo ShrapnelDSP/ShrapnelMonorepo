@@ -174,6 +174,7 @@ esp_err_t process_init()
     gate_set_attack(10);
     gate_set_hold(50);
     gate_set_release(50);
+    gate_set_buffer_size(DMA_BUF_SIZE);
 
     chorus = new shrapnel::effect::Chorus();
     assert(chorus);
