@@ -88,8 +88,12 @@ esp_err_t AudioParameters::update(audio_param_t param, float value)
             filter_set_tight(value > 0.5);
             break;
         case PARAM_GATE_THRESHOLD:
-            gate_set_threshold(value/100);
-            break;
+            {
+                // -80 dB to 0 dB
+                float threshold = -80 + (80 * value);
+                gate_set_threshold(threshold, 1);
+                break;
+            }
         default:
             ESP_LOGE(TAG, "Unhandled parameter %d", param);
             break;
