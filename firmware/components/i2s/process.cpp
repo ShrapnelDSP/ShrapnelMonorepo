@@ -170,7 +170,7 @@ esp_err_t process_init()
 
     ESP_ERROR_CHECK(gate_init());
     gate_set_sample_rate(SAMPLE_RATE);
-    gate_set_threshold(-20, 1);
+    gate_set_threshold(-60, 1);
     gate_set_attack(10);
     gate_set_hold(50);
     gate_set_release(50);
