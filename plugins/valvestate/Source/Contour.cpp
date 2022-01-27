@@ -29,7 +29,7 @@ ContourFilter::ContourFilter()
 
 ContourFilter::~ContourFilter(){}
 
-void ContourFilter::prepare(dsp::ProcessSpec spec)
+void ContourFilter::prepare(juce::dsp::ProcessSpec spec)
 {
     filter.prepare(spec);
     sampleRate = spec.sampleRate;
@@ -115,7 +115,7 @@ void ContourFilter::setParameter(float p)
                                            A4 * A0inv);
 }
 
-void ContourFilter::process(dsp::ProcessContextReplacing<float> context)
+void ContourFilter::process(juce::dsp::ProcessContextReplacing<float> context)
 {
     filter.process(context);
 }

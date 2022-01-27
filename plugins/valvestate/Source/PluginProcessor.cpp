@@ -24,22 +24,22 @@ ValvestateAudioProcessor::ValvestateAudioProcessor() :
      AudioProcessor (BusesProperties()
                      #if ! JucePlugin_IsMidiEffect
                       #if ! JucePlugin_IsSynth
-                       .withInput  ("Input",  AudioChannelSet::stereo(), true)
+                       .withInput  ("Input",  juce::AudioChannelSet::stereo(), true)
                       #endif
-                       .withOutput ("Output", AudioChannelSet::stereo(), true)
+                       .withOutput ("Output", juce::AudioChannelSet::stereo(), true)
                      #endif
                        ),
     logRange(0, 1, 0.0001, 0.3),
     parameters(*this, nullptr, "PARAMETERS",
         {
-        std::make_unique<AudioParameterBool>  ("od", "OD1/OD2", false),
-        std::make_unique<AudioParameterFloat> ("gain", "Gain", logRange, logRange.convertFrom0to1(0.5)),
-        std::make_unique<AudioParameterFloat> ("bass", "Bass", logRange, logRange.convertFrom0to1(0.5)),
-        std::make_unique<AudioParameterFloat> ("middle" , "Middle", 0, 1, 0.5),
-        std::make_unique<AudioParameterFloat> ("treble", "Treble", 0, 1, 0.5),
+        std::make_unique<juce::AudioParameterBool>  ("od", "OD1/OD2", false),
+        std::make_unique<juce::AudioParameterFloat> ("gain", "Gain", logRange, logRange.convertFrom0to1(0.5)),
+        std::make_unique<juce::AudioParameterFloat> ("bass", "Bass", logRange, logRange.convertFrom0to1(0.5)),
+        std::make_unique<juce::AudioParameterFloat> ("middle" , "Middle", 0, 1, 0.5),
+        std::make_unique<juce::AudioParameterFloat> ("treble", "Treble", 0, 1, 0.5),
         //contour gets unstable when set to 0
-        std::make_unique<AudioParameterFloat> ("contour", "Contour", 0.01, 1, 0.5),
-        std::make_unique<AudioParameterFloat> ("volume", "Volume", 20, 50, 35)
+        std::make_unique<juce::AudioParameterFloat> ("contour", "Contour", 0.01, 1, 0.5),
+        std::make_unique<juce::AudioParameterFloat> ("volume", "Volume", 20, 50, 35)
         })
 {
     od = parameters.getRawParameterValue("od");
@@ -56,7 +56,7 @@ ValvestateAudioProcessor::~ValvestateAudioProcessor()
 }
 
 //==============================================================================
-const String ValvestateAudioProcessor::getName() const
+const juce::String ValvestateAudioProcessor::getName() const
 {
     return JucePlugin_Name;
 }
@@ -109,13 +109,13 @@ void ValvestateAudioProcessor::setCurrentProgram (int index)
     (void) index;
 }
 
-const String ValvestateAudioProcessor::getProgramName (int index)
+const juce::String ValvestateAudioProcessor::getProgramName (int index)
 {
     (void) index;
     return {};
 }
 
-void ValvestateAudioProcessor::changeProgramName (int index, const String& newName)
+void ValvestateAudioProcessor::changeProgramName (int index, const juce::String& newName)
 {
     (void) index;
     (void) newName;
@@ -124,7 +124,7 @@ void ValvestateAudioProcessor::changeProgramName (int index, const String& newNa
 //==============================================================================
 void ValvestateAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
-    dsp::ProcessSpec spec;
+    juce::dsp::ProcessSpec spec;
     spec.sampleRate = sampleRate;
     jassert(samplesPerBlock >= 0);
     spec.maximumBlockSize = (juce::uint32)samplesPerBlock;
@@ -154,8 +154,8 @@ bool ValvestateAudioProcessor::isBusesLayoutSupported (const BusesLayout& layout
   #else
     // This is the place where you check if the layout is supported.
     // In this template code we only support mono or stereo.
-    if (layouts.getMainOutputChannelSet() != AudioChannelSet::mono()
-     && layouts.getMainOutputChannelSet() != AudioChannelSet::stereo())
+    if (layouts.getMainOutputChannelSet() != juce::AudioChannelSet::mono()
+     && layouts.getMainOutputChannelSet() != juce::AudioChannelSet::stereo())
         return false;
 
     // This checks if the input layout matches the output layout
@@ -168,16 +168,16 @@ bool ValvestateAudioProcessor::isBusesLayoutSupported (const BusesLayout& layout
   #endif
 }
 
-void ValvestateAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffer& midiMessages)
+void ValvestateAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
 {
     (void) midiMessages;
 
-    ScopedNoDenormals noDenormals;
+    juce::ScopedNoDenormals noDenormals;
 
     float *input_samples = buffer.getWritePointer(0);
 
-    dsp::AudioBlock<float> block(&input_samples, 1, (size_t)buffer.getNumSamples());
-    dsp::ProcessContextReplacing<float> context(block);
+    juce::dsp::AudioBlock<float> block(&input_samples, 1, (size_t)buffer.getNumSamples());
+    juce::dsp::ProcessContextReplacing<float> context(block);
 
     //set parameters
     gaincontrol.setParameters(*gain, *od);
@@ -191,7 +191,7 @@ void ValvestateAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuf
     fmv.process(context);
     contour.process(context);
 
-    block.multiplyBy(Decibels::decibelsToGain((float)*volume));
+    block.multiplyBy(juce::Decibels::decibelsToGain((float)*volume));
 
     // copy processed samples to the right channel
     for(int i = 0; i < buffer.getNumSamples(); i++)
@@ -206,31 +206,31 @@ bool ValvestateAudioProcessor::hasEditor() const
     return true; // (change this to false if you choose to not supply an editor)
 }
 
-AudioProcessorEditor* ValvestateAudioProcessor::createEditor()
+juce::AudioProcessorEditor* ValvestateAudioProcessor::createEditor()
 {
     return new ValvestateAudioProcessorEditor (*this);
 }
 
 //==============================================================================
-void ValvestateAudioProcessor::getStateInformation (MemoryBlock& destData)
+void ValvestateAudioProcessor::getStateInformation (juce::MemoryBlock& destData)
 {
     auto state = parameters.copyState();
-    std::unique_ptr<XmlElement> xml (state.createXml());
+    std::unique_ptr<juce::XmlElement> xml (state.createXml());
     copyXmlToBinary (*xml, destData);
 }
 
 void ValvestateAudioProcessor::setStateInformation (const void* data, int sizeInBytes)
 {
-    std::unique_ptr<XmlElement> xmlState (getXmlFromBinary (data, sizeInBytes));
+    std::unique_ptr<juce::XmlElement> xmlState (getXmlFromBinary (data, sizeInBytes));
 
     if (xmlState.get() != nullptr)
         if (xmlState->hasTagName (parameters.state.getType()))
-            parameters.replaceState (ValueTree::fromXml (*xmlState));
+            parameters.replaceState (juce::ValueTree::fromXml (*xmlState));
 }
 
 //==============================================================================
 // This creates new instances of the plugin..
-AudioProcessor* JUCE_CALLTYPE createPluginFilter()
+juce::AudioProcessor* JUCE_CALLTYPE createPluginFilter()
 {
     return new ValvestateAudioProcessor();
 }

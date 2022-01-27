@@ -29,24 +29,24 @@
  *  IIR filter
  */
 Clipping::Clipping() : oversampling(1, OVERSAMPLING_ORDER,
-        dsp::Oversampling<float>::filterHalfBandFIREquiripple)
+        juce::dsp::Oversampling<float>::filterHalfBandFIREquiripple)
 {
     waveshaper.functionToUse = waveshape;
 }
 
 Clipping::~Clipping() {}
 
-void Clipping::process(dsp::AudioBlock<float> block)
+void Clipping::process(juce::dsp::AudioBlock<float> block)
 {
     auto oversampledBlock = oversampling.processSamplesUp(block);
 
-    dsp::ProcessContextReplacing<float> ctx(oversampledBlock);
+    juce::dsp::ProcessContextReplacing<float> ctx(oversampledBlock);
     waveshaper.process(ctx);
 
     oversampling.processSamplesDown(block);
 }
 
-void Clipping::prepare(dsp::ProcessSpec spec)
+void Clipping::prepare(juce::dsp::ProcessSpec spec)
 {
     oversampling.initProcessing(spec.maximumBlockSize);
 

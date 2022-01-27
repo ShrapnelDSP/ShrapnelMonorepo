@@ -19,14 +19,14 @@
 
 #pragma once
 
-#include "../JuceLibraryCode/JuceHeader.h"
+#include "juce_audio_processors/juce_audio_processors.h"
 #include "InputFilter.h"
 #include "GainControl.h"
 #include "Clipping.h"
 #include "FMV.h"
 #include "Contour.h"
 
-class ValvestateAudioProcessor  : public AudioProcessor
+class ValvestateAudioProcessor  : public juce::AudioProcessor
 {
 public:
     ValvestateAudioProcessor();
@@ -40,12 +40,12 @@ public:
    #endif
 
     using AudioProcessor::processBlock;
-    void processBlock (AudioBuffer<float>&, MidiBuffer&) override;
+    void processBlock (juce::AudioBuffer<float>&, juce::MidiBuffer&) override;
 
-    AudioProcessorEditor* createEditor() override;
+    juce::AudioProcessorEditor* createEditor() override;
     bool hasEditor() const override;
 
-    const String getName() const override;
+    const juce::String getName() const override;
 
     bool acceptsMidi() const override;
     bool producesMidi() const override;
@@ -55,17 +55,17 @@ public:
     int getNumPrograms() override;
     int getCurrentProgram() override;
     void setCurrentProgram (int index) override;
-    const String getProgramName (int index) override;
-    void changeProgramName (int index, const String& newName) override;
+    const juce::String getProgramName (int index) override;
+    void changeProgramName (int index, const juce::String& newName) override;
 
-    void getStateInformation (MemoryBlock& destData) override;
+    void getStateInformation (juce::MemoryBlock& destData) override;
     void setStateInformation (const void* data, int sizeInBytes) override;
 
 private:
-    NormalisableRange<float> logRange;
+    juce::NormalisableRange<float> logRange;
 
 public:
-    AudioProcessorValueTreeState parameters;
+    juce::AudioProcessorValueTreeState parameters;
 
 private:
     std::atomic<float> *od = nullptr;
