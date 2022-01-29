@@ -4,7 +4,7 @@ project (Tutorial
          )
 
 # GoogleTest requires at least C++11
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 17)
 
 include(FetchContent)
 FetchContent_Declare(
@@ -32,7 +32,8 @@ add_subdirectory(support/json)
 
 add_subdirectory(../effects/abstract_dsp/ abstract_dsp)
 add_subdirectory(../firmware/components/audio_param audio_param)
-add_subdirectory(../firmware/components/cmd_handling cmd_handling)
+# TODO reenable after fixing build
+#add_subdirectory(../firmware/components/cmd_handling cmd_handling)
 add_subdirectory(../firmware/components/etl etl)
 add_subdirectory(../firmware/components/queue queue)
 add_subdirectory(../firmware/components/task task)

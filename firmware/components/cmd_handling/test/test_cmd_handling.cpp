@@ -10,6 +10,7 @@ using testing::Return;
 #include "task.h"
 #include "queue.h"
 
+#if 0
 template <typename T>
 class MockQueue : public shrapnel::QueueBase<T>
 {
@@ -114,3 +115,4 @@ TEST_F(CmdHandling, ValidMessage)
 
     cmd.work();
 }
+#endif

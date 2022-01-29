@@ -4,6 +4,8 @@
  * the details of individual parameter updates */
 
 #include "audio_param.h"
+
+#if 0
 #include "esp_log.h"
 #include "i2s.h"
 #include "input_filter.h"
@@ -100,6 +102,51 @@ esp_err_t AudioParameters::update(audio_param_t param, float value)
     }
 
     return ESP_OK;
+}
+
+}
+#endif
+
+namespace shrapnel {
+
+AudioParameterFloat::AudioParameterFloat(
+        std::string name,
+        float minimum,
+        float maximum,
+        float default_value) : value(default_value), name(name)
+{
+    (void) minimum;
+    (void) maximum;
+}
+
+void AudioParameterFloat::update(float value)
+{
+    this->value = value;
+}
+
+std::atomic<float> *AudioParameterFloat::get_raw_parameter(void)
+{
+    return &value;
+}
+
+AudioParameters::AudioParameters(std::unique_ptr<AudioParameterFloat> parameters...)
+{
+    (void) parameters;
+}
+
+int AudioParameters::update(const std::string param, float value)
+{
+    (void) param;
+    (void) value;
+
+    return 0;
+}
+
+std::atomic<float> *AudioParameters::get_raw_parameter(const std::string param)
+{
+    (void) param;
+
+    return nullptr;
 }
 
 }
