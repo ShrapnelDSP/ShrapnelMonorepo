@@ -116,6 +116,16 @@ AudioParameterFloat::AudioParameterFloat(
 
 void AudioParameterFloat::update(float value)
 {
+    if(value > 1)
+    {
+        return;
+    }
+
+    if(value < 0)
+    {
+        return;
+    }
+
     auto range = maximum - minimum;
     this->value = minimum + value * range;
 }

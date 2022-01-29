@@ -54,3 +54,26 @@ TEST_F(AudioParams, UpdateToHalfWithNonTrivialRange)
 
     ASSERT_EQ(0, *uut.get_raw_parameter("non-trivial"));
 }
+
+TEST_F(AudioParams, UpdateTooHighIsNoop)
+{
+    uut.update("test", 1.1);
+
+    ASSERT_EQ(5, *uut.get_raw_parameter("test"));
+}
+
+TEST_F(AudioParams, UpdateTooLowIsNoop)
+{
+    uut.update("test", -0.1);
+
+    ASSERT_EQ(5, *uut.get_raw_parameter("test"));
+}
+
+TEST_F(AudioParams, UpdateLimitEdgeCases)
+{
+    uut.update("test", 0);
+    ASSERT_EQ(0, *uut.get_raw_parameter("test"));
+
+    uut.update("test", 1);
+    ASSERT_EQ(10, *uut.get_raw_parameter("test"));
+}
