@@ -15,12 +15,16 @@ class AudioParams : public ::testing::Test
 
 TEST_F(AudioParams, UpdateReturnsZeroOnSuccess)
 {
-    auto uut = AudioParameters(std::make_unique<shrapnel::AudioParameterFloat> (
-                    "test",
-                    0,
-                    10,
-                    5)
-            );
+    auto uut = AudioParameters();
+    uut.createAndAddParameter("test", 0, 10, 5);
 
     ASSERT_EQ(0, uut.update("test", 0.5));
+}
+
+TEST_F(AudioParams, UpdateReturnsNonZeroOnFailure)
+{
+    auto uut = AudioParameters();
+    uut.createAndAddParameter("test", 0, 10, 5);
+
+    ASSERT_NE(0, uut.update("invalid", 0.5));
 }

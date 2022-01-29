@@ -4,6 +4,7 @@
 #include <atomic>
 #include <string>
 #include <memory>
+#include <vector>
 
 namespace shrapnel {
 
@@ -21,9 +22,10 @@ class AudioParameterFloat {
      */
     std::atomic<float> *get_raw_parameter(void);
 
+    std::string name;
+
     private:
     std::atomic<float> value;
-    std::string name;
 };
 
 class AudioParametersBase {
@@ -39,6 +41,12 @@ class AudioParametersBase {
      */
     virtual int update(const std::string param, float value) = 0;
 
+    virtual int createAndAddParameter(
+        std::string name,
+        float minimum,
+        float maximum,
+        float default_value) = 0;
+
     /** Get denormalised value of parameter
      *
      * \param param Name of the parameter to get
@@ -48,10 +56,17 @@ class AudioParametersBase {
 
 class AudioParameters : public AudioParametersBase {
     public:
-    AudioParameters(std::unique_ptr<AudioParameterFloat> parameters...);
+    AudioParameters();
 
     int update(const std::string param, float value) override;
     std::atomic<float> *get_raw_parameter(const std::string param) override;
+
+    int createAndAddParameter(
+        std::string name,
+        float minimum,
+        float maximum,
+        float default_value) override;
+
 
     private:
     // TODO how big does this need to be?

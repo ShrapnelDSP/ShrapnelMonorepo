@@ -1,8 +1,3 @@
-/* \brief Audio parameter update functions 
- *
- * This file implements a generic audio parameter update function, to abstract
- * the details of individual parameter updates */
-
 #include "audio_param.h"
 
 #if 0
@@ -129,9 +124,20 @@ std::atomic<float> *AudioParameterFloat::get_raw_parameter(void)
     return &value;
 }
 
-AudioParameters::AudioParameters(std::unique_ptr<AudioParameterFloat> parameters...)
+AudioParameters::AudioParameters() {}
+
+int AudioParameters::createAndAddParameter(
+        std::string name,
+        float minimum,
+        float maximum,
+        float default_value)
 {
-    (void) parameters;
+    if(parameters.full())
+    {
+        return -1;
+    }
+
+    parameters[name] = std::make_unique<AudioParameterFloat>(name, minimum, maximum, default_value);
 }
 
 int AudioParameters::update(const std::string param, float value)
@@ -139,7 +145,9 @@ int AudioParameters::update(const std::string param, float value)
     (void) param;
     (void) value;
 
-    return 0;
+    auto element = parameters.find(param);
+
+    return 0;//element == parameters.end();
 }
 
 std::atomic<float> *AudioParameters::get_raw_parameter(const std::string param)
