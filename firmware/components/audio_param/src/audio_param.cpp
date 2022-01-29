@@ -149,6 +149,7 @@ int AudioParameters::createAndAddParameter(
     }
 
     parameters[name] = std::make_unique<AudioParameterFloat>(name, minimum, maximum, default_value);
+    return 0;
 }
 
 int AudioParameters::update(const std::string param, float value)

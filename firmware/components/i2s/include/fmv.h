@@ -19,7 +19,7 @@ void fmv_process(float *buf, size_t buf_len);
 /** Initialise the fmv processor. The bass middle and treble settings are all
  * initialised to 0.5.
  */
-esp_err_t fmv_init(void);
+esp_err_t fmv_init(float a_sample_rate);
 
 #ifdef __cplusplus
 }
