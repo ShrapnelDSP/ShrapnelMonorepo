@@ -108,15 +108,16 @@ AudioParameterFloat::AudioParameterFloat(
         std::string name,
         float minimum,
         float maximum,
-        float default_value) : value(default_value), name(name)
-{
-    (void) minimum;
-    (void) maximum;
-}
+        float default_value) :
+    name(name),
+    value(default_value),
+    minimum(minimum),
+    maximum(maximum) {}
 
 void AudioParameterFloat::update(float value)
 {
-    this->value = value;
+    auto range = maximum - minimum;
+    this->value = minimum + value * range;
 }
 
 std::atomic<float> *AudioParameterFloat::get_raw_parameter(void)
@@ -147,14 +148,26 @@ int AudioParameters::update(const std::string param, float value)
 
     auto element = parameters.find(param);
 
-    return 0;//element == parameters.end();
+    if(element == parameters.end())
+    {
+        return -1;
+    }
+
+    parameters[param]->update(value);
+
+    return 0;
 }
 
 std::atomic<float> *AudioParameters::get_raw_parameter(const std::string param)
 {
-    (void) param;
+    auto element = parameters.find(param);
 
-    return nullptr;
+    if(element == parameters.end())
+    {
+        return nullptr;
+    }
+
+    return parameters[param]->get_raw_parameter();
 }
 
 }

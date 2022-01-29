@@ -26,6 +26,8 @@ class AudioParameterFloat {
 
     private:
     std::atomic<float> value;
+    float minimum;
+    float maximum;
 };
 
 class AudioParametersBase {
