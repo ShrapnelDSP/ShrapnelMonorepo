@@ -14,24 +14,6 @@
 
 namespace shrapnel {
 
-audio_param_t CommandHandling::get_id_for_param(const char *name)
-{
-    for(ParamEntry e : param_table)
-    {
-        if (!strcmp(e.name, name)) {
-            return e.id;
-        }
-    }
-
-    ESP_LOGE(TAG, "Couldn't find id for parameter (%s)", name);
-    return PARAM_MAX;
-}
-
-void CommandHandling::register_parameter(ParamEntry entry)
-{
-    param_table.push_back(entry);
-}
-
 void CommandHandling::work(void)
 {
     Message msg = {0};
@@ -40,10 +22,10 @@ void CommandHandling::work(void)
     cJSON *json;
 
     cJSON *id;
-    audio_param_t parsed_id;
 
     cJSON *value;
     float parsed_value;
+    char *parsed_id;
 
     int ret = queue->receive(&msg, portMAX_DELAY);
     if(ret == pdTRUE)
@@ -68,7 +50,7 @@ void CommandHandling::work(void)
         id = cJSON_GetObjectItemCaseSensitive(json, "id");
         if(cJSON_IsString(id) && (id->valuestring != NULL))
         {
-            parsed_id = get_id_for_param(id->valuestring);
+            parsed_id = id->valuestring;
         }
         else
         {
@@ -87,10 +69,7 @@ void CommandHandling::work(void)
             goto done;
         }
 
-        if(parsed_id != PARAM_MAX)
-        {
-            param->update(parsed_id, parsed_value);
-        }
+        param->update(parsed_id, parsed_value);
 done:
         cJSON_Delete(json);
     }

@@ -32,8 +32,7 @@ add_subdirectory(support/json)
 
 add_subdirectory(../effects/abstract_dsp/ abstract_dsp)
 add_subdirectory(../firmware/components/audio_param audio_param)
-# TODO reenable after fixing build
-#add_subdirectory(../firmware/components/cmd_handling cmd_handling)
+add_subdirectory(../firmware/components/cmd_handling cmd_handling)
 add_subdirectory(../firmware/components/etl etl)
 add_subdirectory(../firmware/components/queue queue)
 add_subdirectory(../firmware/components/task task)
