@@ -17,11 +17,6 @@
  * ShrapnelDSP. If not, see <https://www.gnu.org/licenses/>.
  */
 
-/* \brief Audio parameter update functions 
- *
- * This file implements a generic audio parameter update function, to abstract
- * the details of individual parameter updates */
-
 #include "audio_param.h"
 
 namespace shrapnel {
