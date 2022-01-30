@@ -92,7 +92,7 @@ static void i2s_processing_task(void *param)
     while(1)
     {
 #if !defined(GENERATE_SINE_WAVE) && !defined(GENERATE_RAMP)
-        i2s_read(I2S_NUM, rx_buf, sizeof(rx_buf), &tx_rx_size, 100/portTICK_PERIOD_MS);
+        i2s_read(static_cast<i2s_port_t>(I2S_NUM), rx_buf, sizeof(rx_buf), &tx_rx_size, 100/portTICK_PERIOD_MS);
         if(tx_rx_size != sizeof(rx_buf))
         {
             ESP_LOGE(TAG, "Got the wrong number of bytes %d/%d", tx_rx_size, sizeof(rx_buf));
@@ -113,7 +113,7 @@ static void i2s_processing_task(void *param)
 
         process_samples(rx_buf, sizeof(rx_buf) / sizeof(rx_buf[0]));
 
-        i2s_write(I2S_NUM, rx_buf, sizeof(rx_buf), &tx_rx_size, 100/portTICK_PERIOD_MS);
+        i2s_write(static_cast<i2s_port_t>(I2S_NUM), rx_buf, sizeof(rx_buf), &tx_rx_size, 100/portTICK_PERIOD_MS);
         if(tx_rx_size != sizeof(rx_buf))
         {
             ESP_LOGE(TAG, "Sent the wrong number of bytes %d/%d", tx_rx_size, sizeof(rx_buf));
@@ -185,7 +185,7 @@ esp_err_t i2s_setup(gpio_num_t profiling_gpio, shrapnel::AudioParametersBase *au
     //the driver will allocate the queue for use, it just needs to be non-NULL
     //when we pass it in
     i2s_queue = (QueueHandle_t) 42;
-    err = i2s_driver_install(I2S_NUM, &i2s_config, I2S_QUEUE_SIZE, &i2s_queue);
+    err = i2s_driver_install(static_cast<i2s_port_t>(I2S_NUM), &i2s_config, I2S_QUEUE_SIZE, &i2s_queue);
     if(err != ESP_OK)
     {
         ESP_LOGE(TAG, "i2s_driver_install failed %d, %s", err, esp_err_to_name(err));
@@ -193,7 +193,7 @@ esp_err_t i2s_setup(gpio_num_t profiling_gpio, shrapnel::AudioParametersBase *au
     }
     ESP_LOGD(TAG, "queue address: %p", i2s_queue);
 
-    err = i2s_set_pin(I2S_NUM, &pin_config);
+    err = i2s_set_pin(static_cast<i2s_port_t>(I2S_NUM), &pin_config);
     if(err != ESP_OK)
     {
         ESP_LOGE(TAG, "i2s_set_pin failed %d, %s", err, esp_err_to_name(err));
@@ -206,7 +206,7 @@ esp_err_t i2s_setup(gpio_num_t profiling_gpio, shrapnel::AudioParametersBase *au
      * The RX buffers should be all empty, and the TX buffers should all be
      * full.
      */
-    err = i2s_stop(I2S_NUM);
+    err = i2s_stop(static_cast<i2s_port_t>(I2S_NUM));
     if(err != ESP_OK)
     {
         ESP_LOGE(TAG, "i2s_stop failed %d, %s", err, esp_err_to_name(err));
@@ -214,7 +214,7 @@ esp_err_t i2s_setup(gpio_num_t profiling_gpio, shrapnel::AudioParametersBase *au
     }
     size_t read_count;
     do {
-        err = i2s_read(I2S_NUM, rx_buf, DMA_BUF_SIZE, &read_count, 100);
+        err = i2s_read(static_cast<i2s_port_t>(I2S_NUM), rx_buf, DMA_BUF_SIZE, &read_count, 100);
         if(err != ESP_OK)
         {
             ESP_LOGE(TAG, "i2s_read failed %d, %s", err, esp_err_to_name(err));
@@ -224,14 +224,14 @@ esp_err_t i2s_setup(gpio_num_t profiling_gpio, shrapnel::AudioParametersBase *au
     }
     while(read_count != 0);
 
-    err = i2s_zero_dma_buffer(I2S_NUM);
+    err = i2s_zero_dma_buffer(static_cast<i2s_port_t>(I2S_NUM));
     if(err != ESP_OK)
     {
         ESP_LOGE(TAG, "i2s_zero_dma_buffer failed %d, %s", err, esp_err_to_name(err));
         return err;
     }
 
-    err = i2s_start(I2S_NUM);
+    err = i2s_start(static_cast<i2s_port_t>(I2S_NUM));
     if(err != ESP_OK)
     {
         ESP_LOGE(TAG, "i2s_start failed %d, %s", err, esp_err_to_name(err));
