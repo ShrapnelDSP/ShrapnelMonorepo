@@ -69,9 +69,18 @@ class AudioParameters : public AudioParametersBase {
         float maximum,
         float default_value) override;
 
-
     private:
-    // TODO how big does this need to be?
+    /* TODO how to avoid having to increase size manually when more effects are
+     * added?
+     *
+     * We don't want to use heap allocation when the parameters are registered.
+     * Maybe some constexpr functions could be used to register the parameters?
+     *
+     * ETL provides template dedcution guide and make template for etl::map.
+     * These deduce the size from the initialiser. Passing an already
+     * initialised etl::map using one of these methods to the constructor
+     * should work.
+     */
     etl::map<std::string, std::unique_ptr<AudioParameterFloat>, 10> parameters;
 };
 
