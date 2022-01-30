@@ -2,6 +2,7 @@
 
 #include "driver/gpio.h"
 #include "driver/i2c.h"
+#include "driver/i2s.h"
 
 #define HW_BREADBOARD 0
 #define HW_PCB_REV1 1
@@ -17,7 +18,8 @@
 
 #   define I2C_NUM I2C_NUM_0
 
-#   define I2S_NUM         (1)             //PCM3060 pin
+#   define I2S_NUM         (I2S_NUM_1)
+                                           //PCM3060 pin
 #   define I2S_BCK_IO      (GPIO_NUM_2)    //5/10
 #   define I2S_WS_IO       (GPIO_NUM_4)    //4/11
 #   define I2S_DO_IO       (GPIO_NUM_5)    //12
@@ -32,7 +34,8 @@
 
 #   define I2C_NUM I2C_NUM_0
 
-#   define I2S_NUM         (1)             //PCM3060 pin
+#   define I2S_NUM         (I2S_NUM_1)
+                                           //PCM3060 pin
 #   define I2S_BCK_IO      (GPIO_NUM_18)   //5/10
 #   define I2S_WS_IO       (GPIO_NUM_19)   //4/11
 #   define I2S_DO_IO       (GPIO_NUM_2)    //12
