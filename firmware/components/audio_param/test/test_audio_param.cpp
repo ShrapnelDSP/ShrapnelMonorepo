@@ -12,7 +12,7 @@ class AudioParams : public ::testing::Test
 
     AudioParams()
     {
-        uut.createAndAddParameter("test", 0, 10, 5);
+        uut.create_and_add_parameter("test", 0, 10, 5);
     }
 
     AudioParameters uut;
@@ -49,7 +49,7 @@ TEST_F(AudioParams, UpdateToMaximum)
 
 TEST_F(AudioParams, UpdateToHalfWithNonTrivialRange)
 {
-    uut.createAndAddParameter("non-trivial", -1, 1, -1);
+    uut.create_and_add_parameter("non-trivial", -1, 1, -1);
     uut.update("non-trivial", 0.5);
 
     ASSERT_EQ(0, *uut.get_raw_parameter("non-trivial"));

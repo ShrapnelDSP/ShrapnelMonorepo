@@ -22,10 +22,10 @@ void CommandHandling::work(void)
     cJSON *json;
 
     cJSON *id;
+    char *parsed_id;
 
     cJSON *value;
     float parsed_value;
-    char *parsed_id;
 
     int ret = queue->receive(&msg, portMAX_DELAY);
     if(ret == pdTRUE)

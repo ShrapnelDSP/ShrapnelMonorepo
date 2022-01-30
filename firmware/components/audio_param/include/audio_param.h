@@ -43,7 +43,7 @@ class AudioParametersBase {
      */
     virtual int update(const std::string param, float value) = 0;
 
-    virtual int createAndAddParameter(
+    virtual int create_and_add_parameter(
         std::string name,
         float minimum,
         float maximum,
@@ -63,7 +63,7 @@ class AudioParameters : public AudioParametersBase {
     int update(const std::string param, float value) override;
     std::atomic<float> *get_raw_parameter(const std::string param) override;
 
-    int createAndAddParameter(
+    int create_and_add_parameter(
         std::string name,
         float minimum,
         float maximum,

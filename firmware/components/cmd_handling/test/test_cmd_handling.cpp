@@ -23,7 +23,7 @@ class MockAudioParameters : public shrapnel::AudioParametersBase
 {
     public:
     MOCK_METHOD(int, update, (std::string param, float value), (override));
-    MOCK_METHOD(int, createAndAddParameter, (
+    MOCK_METHOD(int, create_and_add_parameter, (
         std::string name,
         float minimum,
         float maximum,

@@ -35,7 +35,7 @@ std::atomic<float> *AudioParameterFloat::get_raw_parameter(void)
 
 AudioParameters::AudioParameters() {}
 
-int AudioParameters::createAndAddParameter(
+int AudioParameters::create_and_add_parameter(
         std::string name,
         float minimum,
         float maximum,
