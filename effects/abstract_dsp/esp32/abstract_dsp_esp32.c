@@ -19,7 +19,6 @@
 
 #include "abstract_dsp.h"
 
-#include "dsps_biquad.h"
 #include "dsps_biquad_gen.h"
 #include "dsps_mul.h"
 
@@ -41,41 +40,6 @@ dspal_err_t dspal_biquad_design_lowpass(float *coeffs, float f, float q_factor)
     }
 
     return DSPAL_OK;
-}
-
-dspal_iir_t dspal_iir_create(size_t order)
-{
-    // TODO Use existing C implementation when order is grater than 2
-    assert(order == 2 && "Only biquad IIR filters are supported");
-
-    dspal_iir_t iir = calloc(1, sizeof *iir);
-    assert(iir);
-
-    iir->order = order;
-
-    iir->delay = calloc(order + 1, sizeof(*(iir->delay)));
-    assert(iir->delay);
-
-    iir->coeffs = calloc(2 * (order + 1) - 1, sizeof(*(iir->coeffs)));
-    assert(iir->coeffs);
-
-    return iir;
-}
-
-void dspal_iir_set_coeffs(dspal_iir_t iir, const float *coeffs, size_t coeff_order)
-{
-    assert(coeff_order == iir->order);
-    memcpy(iir->coeffs, coeffs, sizeof(*coeffs) * (2 * (coeff_order + 1) - 1));
-}
-
-void dspal_iir_process(dspal_iir_t iir, const float *in, float *out, size_t buf_size)
-{
-    dsps_biquad_f32_ae32(in, out, buf_size, iir->coeffs, iir->delay);
-}
-
-void dspal_iir_reset(dspal_iir_t iir)
-{
-    memset(iir->delay, 0, sizeof(*(iir->delay)) * (iir->order + 1));
 }
 
 void dspal_multiply(const float *in1, const float *in2, float *out, size_t buf_size)

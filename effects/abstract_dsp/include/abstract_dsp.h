@@ -28,8 +28,6 @@
 
 #include <stddef.h>
 
-#include "iir.h"
-
 typedef struct dspal_delayline *dspal_delayline_t;
 
 typedef enum {

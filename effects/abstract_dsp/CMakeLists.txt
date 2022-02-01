@@ -5,7 +5,7 @@ if(ESP_PLATFORM)
                            universal/delayline_c.cpp
                            INCLUDE_DIRS include
                            PRIV_INCLUDE_DIRS universal
-                           PRIV_REQUIRES esp-dsp)
+                           REQUIRES esp-dsp)
 
     target_compile_options(${COMPONENT_LIB} PRIVATE -Wdouble-promotion)
     return()
