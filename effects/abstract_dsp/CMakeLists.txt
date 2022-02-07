@@ -1,9 +1,11 @@
 if(ESP_PLATFORM)
     idf_component_register(SRCS
-                           esp32/abstract_dsp_esp32.c
-                           universal/delayline.cpp
-                           universal/delayline_c.cpp
-                           INCLUDE_DIRS include
+                             esp32/abstract_dsp_esp32.c
+                             universal/delayline.cpp
+                             universal/delayline_c.cpp
+                           INCLUDE_DIRS
+                             include
+                             esp32/include
                            PRIV_INCLUDE_DIRS universal
                            REQUIRES esp-dsp)
 

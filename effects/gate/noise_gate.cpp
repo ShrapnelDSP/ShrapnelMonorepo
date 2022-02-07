@@ -19,7 +19,8 @@
 
 #include "noise_gate.h"
 #include "abstract_dsp.h"
-#include "iir.h"
+#include "iir_esp.h"
+#include <array>
 #include <math.h>
 #include <stdlib.h>
 #include <string.h>
@@ -44,13 +45,13 @@ static int release_samples;
 
 static float sample_rate;
 
-static shrapnel::dsp::IirFilter<5> *envelope_detect_filter;
+static shrapnel::dsp::IirFilterEsp<6> *envelope_detect_filter;
 
 int gate_init(void)
 {
     assert(envelope_detect_filter == NULL && "already initialised");
 
-    envelope_detect_filter = new shrapnel::dsp::IirFilter<5>();
+    envelope_detect_filter = new shrapnel::dsp::IirFilterEsp<6>();
     if(envelope_detect_filter == NULL)
     {
         return -1;
@@ -103,9 +104,9 @@ void gate_set_buffer_size(size_t a_buffer_size)
 
 void gate_set_sample_rate(float a_sample_rate)
 {
-    auto coeffs = std::make_shared<std::array<float, 5>>();
-    dspal_biquad_design_lowpass(coeffs->data(), 10.f/a_sample_rate, M_SQRT1_2);
-    envelope_detect_filter->coefficients = coeffs;
+    std::array<float, 6> coeffs = {0};
+    dspal_biquad_design_lowpass(coeffs.data(), 10.f/a_sample_rate, M_SQRT1_2);
+    envelope_detect_filter->set_coefficients(coeffs);
 
     sample_rate = a_sample_rate;
 }
