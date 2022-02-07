@@ -7,13 +7,10 @@
 namespace shrapnel {
 namespace dsp {
 
-template <size_t coefficient_count>
-class IirFilterEsp final : public IirFilterBase {
-    // TODO Use existing C implementation when order is greater than 2
-    static_assert(coefficient_count == 6, "Only biquads are supported for now");
-
+// TODO Use existing C implementation to create filters with order greater than 2
+class IirFilter final : public IirFilterBase {
     public:
-    IirFilterEsp(void)
+    IirFilter(void)
     {
         coefficients.fill(0);
         reset();
@@ -45,9 +42,9 @@ class IirFilterEsp final : public IirFilterBase {
     }
 
     private:
-    std::array<float, coefficient_count> coefficients;
+    std::array<float, 5> coefficients;
 
-    std::array<float, (coefficient_count - 1) / 2 + 1> delay;
+    std::array<float, (5 - 1) / 2 + 1> delay;
 };
 
 }

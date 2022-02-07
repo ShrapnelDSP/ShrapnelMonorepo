@@ -22,25 +22,12 @@
 #include "dsps_biquad_gen.h"
 #include "dsps_mul.h"
 
-#include "malloc.h"
-#include "string.h"
-#include "assert.h"
-
-struct dspal_iir {
-    float *coeffs;
-    float *delay;
-    size_t order;
-};
-
 dspal_err_t dspal_biquad_design_lowpass(float *coeffs, float f, float q_factor)
 {
     if(ESP_OK != dsps_biquad_gen_lpf_f32(coeffs, f, q_factor))
     {
         return DSPAL_FAIL;
     }
-
-    memmove(&coeffs[4], &coeffs[3], 2*sizeof(float));
-    coeffs[3] = 1.f;
 
     return DSPAL_OK;
 }
