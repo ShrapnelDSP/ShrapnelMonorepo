@@ -34,6 +34,7 @@ add_library(abstract_dsp STATIC
             universal/delayline_c.cpp)
 
 target_include_directories(abstract_dsp PUBLIC include)
+target_include_directories(abstract_dsp PUBLIC juce/include)
 target_include_directories(abstract_dsp PRIVATE universal)
 
-target_link_libraries(abstract_dsp PRIVATE juce_modules)
+target_link_libraries(abstract_dsp PUBLIC juce_modules)
