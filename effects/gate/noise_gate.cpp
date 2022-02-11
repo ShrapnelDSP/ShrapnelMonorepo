@@ -67,8 +67,15 @@ void gate_reset(void)
 {
     state = INIT;
 
-    memset(gain_buffer, 0, sizeof(*gain_buffer)*buffer_size);
-    memset(filter_buffer, 0, sizeof(*filter_buffer)*buffer_size);
+    if(gain_buffer)
+    {
+        memset(gain_buffer, 0, sizeof(*gain_buffer)*buffer_size);
+    }
+
+    if(filter_buffer)
+    {
+        memset(filter_buffer, 0, sizeof(*filter_buffer)*buffer_size);
+    }
 }
 
 /** \brief Set the buffer size in number of samples */
