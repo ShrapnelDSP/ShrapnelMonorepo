@@ -5,8 +5,8 @@ defaults:
     shell: bash
 
 env:
-  CMAKE_C_COMPILER_LAUNCHER: ccache
-  CMAKE_CXX_COMPILER_LAUNCHER: ccache
+  CMAKE_C_COMPILER_LAUNCHER: ccache -M 500M
+  CMAKE_CXX_COMPILER_LAUNCHER: ccache -M 500M
   CCACHE_DIR: /ccache
 
 jobs:
