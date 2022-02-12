@@ -132,7 +132,6 @@ void ValvestateAudioProcessor::prepareToPlay (double sampleRate, int samplesPerB
 
     input.prepare(sampleRate);
     gaincontrol.prepare(sampleRate);
-    clipping.prepare(spec);
     fmv.prepare(spec);
     contour.prepare(spec);
 }
@@ -141,7 +140,6 @@ void ValvestateAudioProcessor::releaseResources()
 {
     input.reset();
     gaincontrol.reset();
-    clipping.reset();
     fmv.reset();
     contour.reset();
 }
@@ -187,7 +185,7 @@ void ValvestateAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, j
     //process data
     input.process(input_samples, (std::size_t)buffer.getNumSamples());
     gaincontrol.process(input_samples, (std::size_t)buffer.getNumSamples());
-    clipping.process(block);
+    clipping.process(input_samples, (std::size_t)buffer.getNumSamples());
     fmv.process(context);
     contour.process(context);
 

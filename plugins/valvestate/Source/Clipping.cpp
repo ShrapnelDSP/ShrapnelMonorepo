@@ -19,41 +19,19 @@
 
 #include "Clipping.h"
 #include "WaveShape.h"
-#define OVERSAMPLING_ORDER 3
 
-/* TODO using IIR filter here causes the audio to mute after some random amount
- * of time, generally a few seconds. Investigate why that's happening.
- *
- *  - Using double processing doesn't help, and it breaks even when all other
- *  processsing is bypassed, so probably not related to numerical stability of
- *  IIR filter
- */
-Clipping::Clipping() : oversampling(1, OVERSAMPLING_ORDER,
-        juce::dsp::Oversampling<float>::filterHalfBandFIREquiripple)
+namespace shrapnel {
+namespace effect {
+namespace valvestate {
+
+void Clipping::process(float *buffer, std::size_t buffer_size)
 {
-    waveshaper.functionToUse = waveshape;
+    for(std::size_t i = 0; i < buffer_size; i++)
+    {
+        buffer[i] = waveshape(buffer[i]);
+    }
 }
 
-Clipping::~Clipping() {}
-
-void Clipping::process(juce::dsp::AudioBlock<float> block)
-{
-    auto oversampledBlock = oversampling.processSamplesUp(block);
-
-    juce::dsp::ProcessContextReplacing<float> ctx(oversampledBlock);
-    waveshaper.process(ctx);
-
-    oversampling.processSamplesDown(block);
 }
-
-void Clipping::prepare(juce::dsp::ProcessSpec spec)
-{
-    oversampling.initProcessing(spec.maximumBlockSize);
-
-    juce::Logger::outputDebugString("Oversampling latency (samples): " + std::to_string(oversampling.getLatencyInSamples()));
 }
-
-void Clipping::reset()
-{
-    oversampling.reset();
 }

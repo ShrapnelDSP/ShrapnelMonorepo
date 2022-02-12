@@ -19,21 +19,18 @@
 
 #pragma once
 
-#include "juce_dsp/juce_dsp.h"
+#include <cstddef>
+
+namespace shrapnel {
+namespace effect {
+namespace valvestate {
 
 class Clipping
 {
     public:
-        Clipping();
-        ~Clipping();
-
-        void process(juce::dsp::AudioBlock<float> block);
-        void prepare(juce::dsp::ProcessSpec spec);
-        void reset();
-
-    private:
-        juce::dsp::WaveShaper<float> waveshaper;
-        juce::dsp::Oversampling<float> oversampling;
-
-        JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(Clipping)
+        void process(float *buffer, std::size_t buffer_size);
 };
+
+}
+}
+}
