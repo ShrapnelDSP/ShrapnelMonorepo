@@ -7,9 +7,6 @@ namespace dsp {
 
 class IirFilterBase {
     public:
-    // TODO can we remove this constructor?
-    IirFilterBase(void) {}
-
     virtual void process(const float *in, float *out, size_t buf_size) = 0;
 
     virtual void reset(void) = 0;
