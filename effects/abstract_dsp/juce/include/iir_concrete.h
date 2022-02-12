@@ -38,15 +38,8 @@ class IirFilter final : public IirFilterBase {
 
     void set_coefficients(std::array<float, 6> new_coefficients) override
     {
-        // This is crashing, maybe try assigning the std::array directly?
-        // JUCE should support this through the = operator of Coefficients
-        filter.coefficients = new juce::dsp::IIR::Coefficients<float>(
-                new_coefficients[0],
-                new_coefficients[1],
-                new_coefficients[2],
-                new_coefficients[3],
-                new_coefficients[4],
-                new_coefficients[5]);
+        filter.coefficients =
+            new juce::dsp::IIR::Coefficients<float>(new_coefficients);
     }
 
     private:
