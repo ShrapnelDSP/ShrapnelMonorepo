@@ -14,6 +14,7 @@ class IirFilterBase {
 
     virtual void set_coefficients(std::array<float, 6> new_coefficients) = 0;
     virtual void set_coefficients(std::array<float, 8> new_coefficients) = 0;
+    virtual void set_coefficients(std::array<float, 10> new_coefficients) = 0;
 };
 
 }

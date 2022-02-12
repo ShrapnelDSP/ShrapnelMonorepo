@@ -124,16 +124,13 @@ void ValvestateAudioProcessor::changeProgramName (int index, const juce::String&
 //==============================================================================
 void ValvestateAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
-    juce::dsp::ProcessSpec spec;
-    spec.sampleRate = sampleRate;
     jassert(samplesPerBlock >= 0);
-    spec.maximumBlockSize = (juce::uint32)samplesPerBlock;
-    spec.numChannels = 1;
+    (void)samplesPerBlock;
 
     input.prepare(sampleRate);
     gaincontrol.prepare(sampleRate);
     fmv.prepare(sampleRate);
-    contour.prepare(spec);
+    contour.prepare(sampleRate);
 }
 
 void ValvestateAudioProcessor::releaseResources()
@@ -187,7 +184,7 @@ void ValvestateAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, j
     gaincontrol.process(input_samples, (std::size_t)buffer.getNumSamples());
     clipping.process(input_samples, (std::size_t)buffer.getNumSamples());
     fmv.process(input_samples, (std::size_t)buffer.getNumSamples());
-    contour.process(context);
+    contour.process(input_samples, (std::size_t)buffer.getNumSamples());
 
     block.multiplyBy(juce::Decibels::decibelsToGain((float)*volume));
 

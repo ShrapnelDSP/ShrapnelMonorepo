@@ -99,7 +99,7 @@ void FMVFilter::set_parameters(float l, float m, float t)
     float  A2 = -3 * a0 + a1 * c+ a2 * c2 - 3 * a3 * c3;
     float  A3 = -a0 + a1 * c- a2 * c2 + a3 * c3;
 
-    filter.set_coefficients({B0, B1, B2, B3, A0, A1, A2, A3});
+    filter.set_coefficients(std::array<float, 8>{B0, B1, B2, B3, A0, A1, A2, A3});
 }
 
 }

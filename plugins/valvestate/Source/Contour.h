@@ -18,7 +18,8 @@
 */
 
 #pragma once
-#include "juce_dsp/juce_dsp.h"
+#include "iir_concrete.h"
+#include <cstddef>
 
 class ContourFilter
 {
@@ -26,17 +27,13 @@ class ContourFilter
     ContourFilter();
     ~ContourFilter();
 
-    void prepare(juce::dsp::ProcessSpec spec);
-    void process(juce::dsp::ProcessContextReplacing<float> context);
-    void reset();
+    void prepare(float samplerate);
+    void process(float *buffer, std::size_t buffer_size);
+    void reset(void);
 
     void setParameter(float p);
 
     private:
-    juce::dsp::IIR::Coefficients<float> design(float p);
-
-    juce::dsp::IIR::Filter<float> filter;
-    float sampleRate;
-
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(ContourFilter)
+    shrapnel::dsp::IirFilter filter;
+    float samplerate;
 };
