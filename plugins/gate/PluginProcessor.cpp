@@ -66,7 +66,9 @@ AudioPluginAudioProcessor::AudioPluginAudioProcessor()
     holdParameter = parameters.getRawParameterValue("hold");
     releaseParameter = parameters.getRawParameterValue("release");
 
-    assert(0 == gate_init());
+    int rc = gate_init();
+    assert(rc == 0);
+    (void)rc;
 }
 
 AudioPluginAudioProcessor::~AudioPluginAudioProcessor()

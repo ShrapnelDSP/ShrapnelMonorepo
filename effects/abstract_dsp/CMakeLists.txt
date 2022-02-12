@@ -1,11 +1,13 @@
 if(ESP_PLATFORM)
     idf_component_register(SRCS
-                           esp32/abstract_dsp_esp32.c
-                           universal/delayline.cpp
-                           universal/delayline_c.cpp
-                           INCLUDE_DIRS include
+                             esp32/abstract_dsp_esp32.c
+                             universal/delayline.cpp
+                             universal/delayline_c.cpp
+                           INCLUDE_DIRS
+                             include
+                             esp32/include
                            PRIV_INCLUDE_DIRS universal
-                           PRIV_REQUIRES esp-dsp)
+                           REQUIRES esp-dsp)
 
     target_compile_options(${COMPONENT_LIB} PRIVATE -Wdouble-promotion)
     return()
@@ -32,6 +34,7 @@ add_library(abstract_dsp STATIC
             universal/delayline_c.cpp)
 
 target_include_directories(abstract_dsp PUBLIC include)
+target_include_directories(abstract_dsp PUBLIC juce/include)
 target_include_directories(abstract_dsp PRIVATE universal)
 
-target_link_libraries(abstract_dsp PRIVATE juce_modules)
+target_link_libraries(abstract_dsp PUBLIC juce_modules)

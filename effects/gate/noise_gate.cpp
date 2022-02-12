@@ -19,6 +19,8 @@
 
 #include "noise_gate.h"
 #include "abstract_dsp.h"
+#include "iir_concrete.h"
+#include <array>
 #include <math.h>
 #include <stdlib.h>
 #include <string.h>
@@ -43,11 +45,13 @@ static int release_samples;
 
 static float sample_rate;
 
-static dspal_iir_t envelope_detect_filter;
+static shrapnel::dsp::IirFilter *envelope_detect_filter;
 
 int gate_init(void)
 {
-    envelope_detect_filter = dspal_iir_create(2);
+    assert(envelope_detect_filter == NULL && "already initialised");
+
+    envelope_detect_filter = new shrapnel::dsp::IirFilter();
     if(envelope_detect_filter == NULL)
     {
         return -1;
@@ -63,8 +67,15 @@ void gate_reset(void)
 {
     state = INIT;
 
-    memset(gain_buffer, 0, sizeof(*gain_buffer)*buffer_size);
-    memset(filter_buffer, 0, sizeof(*filter_buffer)*buffer_size);
+    if(gain_buffer)
+    {
+        memset(gain_buffer, 0, sizeof(*gain_buffer)*buffer_size);
+    }
+
+    if(filter_buffer)
+    {
+        memset(filter_buffer, 0, sizeof(*filter_buffer)*buffer_size);
+    }
 }
 
 /** \brief Set the buffer size in number of samples */
@@ -77,7 +88,7 @@ void gate_set_buffer_size(size_t a_buffer_size)
         gain_buffer = NULL;
     }
 
-    gain_buffer = calloc(a_buffer_size, sizeof(*gain_buffer));
+    gain_buffer = static_cast<float *>(calloc(a_buffer_size, sizeof(*gain_buffer)));
     if(gain_buffer == NULL)
     {
         return;
@@ -89,7 +100,7 @@ void gate_set_buffer_size(size_t a_buffer_size)
         filter_buffer = NULL;
     }
 
-    filter_buffer = calloc(a_buffer_size, sizeof(*filter_buffer));
+    filter_buffer = static_cast<float *>(calloc(a_buffer_size, sizeof(*filter_buffer)));
     if(filter_buffer == NULL)
     {
         return;
@@ -100,9 +111,13 @@ void gate_set_buffer_size(size_t a_buffer_size)
 
 void gate_set_sample_rate(float a_sample_rate)
 {
-    float coeffs[5] = { 0 };
-    dspal_biquad_design_lowpass(coeffs, 10.f/a_sample_rate, M_SQRT1_2);
-    dspal_iir_set_coeffs(envelope_detect_filter, coeffs, 2);
+    std::array<float, 6> coeffs = {0};
+    dspal_biquad_design_lowpass(coeffs.data(), 10.f/a_sample_rate, M_SQRT1_2);
+
+    memmove(&coeffs.data()[4], &coeffs.data()[3], 2*sizeof(*coeffs.data()));
+    coeffs[3] = 1.f;
+
+    envelope_detect_filter->set_coefficients(coeffs);
 
     sample_rate = a_sample_rate;
 }
@@ -152,7 +167,7 @@ void gate_analyse(const float *buf, size_t sample_count)
     }
 
     //low pass filter
-    dspal_iir_process(envelope_detect_filter, filter_buffer, filter_buffer, sample_count);
+    envelope_detect_filter->process(filter_buffer, filter_buffer, sample_count);
 
     // work out the gain
     for(size_t i = 0; i < sample_count; i++)
