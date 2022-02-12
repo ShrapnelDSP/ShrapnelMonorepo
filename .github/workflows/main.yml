@@ -30,7 +30,7 @@ jobs:
       run: . $IDF_PATH/export.sh && idf.py -C firmware build
 
     - name: ccache statistics
-      run: ccache -sv
+      run: ccache -s
 
   build-plugins:
     runs-on: ubuntu-latest
@@ -58,7 +58,7 @@ jobs:
       run: cmake --build build --config ${{matrix.build_type}}
 
     - name: ccache statistics
-      run: ccache -sv
+      run: ccache -s
 
   ctest:
     runs-on: ubuntu-latest
@@ -91,4 +91,4 @@ jobs:
       run: ctest -C ${{matrix.build_type}}
 
     - name: ccache statistics
-      run: ccache -sv
+      run: ccache -s
