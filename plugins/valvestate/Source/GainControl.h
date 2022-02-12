@@ -19,24 +19,31 @@
 
 #pragma once
 
-#include "juce_dsp/juce_dsp.h"
+#include "iir_concrete.h"
+
+namespace shrapnel {
+namespace effect {
+namespace valvestate {
 
 class GainControl
 {
-
     public:
-        GainControl();
-        ~GainControl();
-
+        /**
+         * \param g The value of gain from 0 to 1.
+         * \param channel 0 for OD1, 1 for OD2
+         */
         void setParameters(float g, float channel);
 
-        void prepare(juce::dsp::ProcessSpec spec);
-        void process(juce::dsp::ProcessContextReplacing<float> context);
-        void reset();
+        void prepare(float samplerate);
+        void process(float *buffer, std::size_t buffer_size);
+        void reset(void);
 
     private:
-        float sampleRate;
+        float samplerate;
 
-        juce::dsp::IIR::Filter<float> filter;
-        JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(GainControl)
+        shrapnel::dsp::IirFilter filter;
 };
+
+}
+}
+}
