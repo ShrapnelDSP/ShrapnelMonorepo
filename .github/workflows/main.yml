@@ -49,7 +49,7 @@ jobs:
       uses: actions/cache@v2
       with:
         path: ${{ env.CCACHE_DIR }}
-        key: ccache-${{ github.job }}-${{ matrix.build.plugin }}-${{ matrix.build.build_type }}
+        key: ccache-${{ github.job }}-${{ matrix.plugin }}-${{ matrix.build_type }}
 
     - name: Configure CMake
       run: cmake -B build -DCMAKE_BUILD_TYPE=${{matrix.build_type}} plugins/${{matrix.plugin}}
@@ -75,7 +75,7 @@ jobs:
       uses: actions/cache@v2
       with:
         path: ${{ env.CCACHE_DIR }}
-        key: ccache-${{ github.job }}-${{ matrix.build.build_type }}
+        key: ccache-${{ github.job }}-${{ matrix.build_type }}
 
     - run: pwd
     - run: ctest --version
