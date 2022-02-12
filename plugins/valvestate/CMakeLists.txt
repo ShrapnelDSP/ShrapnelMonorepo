@@ -7,6 +7,8 @@ set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 add_subdirectory(../JUCE JUCE)
 add_subdirectory(../JUCE_static JUCE_static)
 
+add_subdirectory(../../effects/abstract_dsp abstract_dsp)
+
 juce_add_plugin(Valvestate
     COMPANY_NAME "Barabas Raffai"
     IS_SYNTH FALSE
@@ -37,4 +39,5 @@ target_include_directories(Valvestate
 
 target_link_libraries(Valvestate
     PRIVATE
+        abstract_dsp
         juce_modules)

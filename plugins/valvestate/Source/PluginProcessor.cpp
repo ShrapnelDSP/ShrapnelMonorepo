@@ -130,7 +130,7 @@ void ValvestateAudioProcessor::prepareToPlay (double sampleRate, int samplesPerB
     spec.maximumBlockSize = (juce::uint32)samplesPerBlock;
     spec.numChannels = 1;
 
-    input.prepare(spec);
+    input.prepare(sampleRate);
     gaincontrol.prepare(spec);
     clipping.prepare(spec);
     fmv.prepare(spec);
@@ -185,7 +185,7 @@ void ValvestateAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, j
     contour.setParameter(*contourP);
 
     //process data
-    input.process(context);
+    input.process(input_samples, (std::size_t)buffer.getNumSamples());
     gaincontrol.process(context);
     clipping.process(block);
     fmv.process(context);

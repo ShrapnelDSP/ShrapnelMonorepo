@@ -18,34 +18,38 @@
 */
 
 #include "InputFilter.h"
+#include <cmath>
 
-InputFilter::InputFilter(){}
+namespace shrapnel {
+namespace effect {
+namespace valvestate {
 
-InputFilter::~InputFilter(){}
-
-void InputFilter::prepare(juce::dsp::ProcessSpec spec)
+void InputFilter::prepare(float samplerate)
 {
-    float K = 2 * spec.sampleRate;
-    float B0 = 1.10449884469421e-9*std::pow(K, 2) + 0.00246545127613797*K + 0.5;
-    float B1 = 1.0 - 2.20899768938842e-9*std::pow(K, 2);
-    float B2 = 1.10449884469421e-9*std::pow(K, 2) - 0.00246545127613797*K + 0.5;
+    float K = 2 * samplerate;
+    float B0 = 1.10449884469421e-9f*std::pow(K, 2) + 0.00246545127613797f*K + 0.5f;
+    float B1 = 1.0 - 2.20899768938842e-9f*std::pow(K, 2);
+    float B2 = 1.10449884469421e-9f*std::pow(K, 2) - 0.00246545127613797f*K + 0.5f;
 
-    float A0 = 1.10449884469421e-9*std::pow(K, 2) + 0.000115449950739352*K + 0.5;
-    float A1 = 1.0 - 2.20899768938842e-9*std::pow(K, 2);
-    float A2 = 1.10449884469421e-9*std::pow(K, 2) - 0.000115449950739352*K + 0.5;
+    float A0 = 1.10449884469421e-9f*std::pow(K, 2) + 0.000115449950739352f*K + 0.5f;
+    float A1 = 1.0 - 2.20899768938842e-9f*std::pow(K, 2);
+    float A2 = 1.10449884469421e-9f*std::pow(K, 2) - 0.000115449950739352f*K + 0.5f;
 
-    filter.coefficients = 
-        new juce::dsp::IIR::Coefficients<float>(B0, B1, B2, A0, A1, A2);
+    filter.set_coefficients({B0, B1, B2, A0, A1, A2});
 
-    filter.prepare(spec);
+    filter.reset();
 }
 
-void InputFilter::process(juce::dsp::ProcessContextReplacing<float> context)
+void InputFilter::process(float *buffer, std::size_t buffer_size)
 {
-    filter.process(context);
+    filter.process(buffer, buffer, buffer_size);
 }
 
 void InputFilter::reset()
 {
     filter.reset();
+}
+
+}
+}
 }

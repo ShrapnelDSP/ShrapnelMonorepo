@@ -26,6 +26,8 @@
 #include "FMV.h"
 #include "Contour.h"
 
+using namespace shrapnel::effect::valvestate;
+
 class ValvestateAudioProcessor  : public juce::AudioProcessor
 {
 public:

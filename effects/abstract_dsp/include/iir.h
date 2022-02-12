@@ -1,13 +1,14 @@
 #pragma once
 
 #include <array>
+#include <cstddef>
 
 namespace shrapnel {
 namespace dsp {
 
 class IirFilterBase {
     public:
-    virtual void process(const float *in, float *out, size_t buf_size) = 0;
+    virtual void process(const float *in, float *out, std::size_t buf_size) = 0;
 
     virtual void reset(void) = 0;
 

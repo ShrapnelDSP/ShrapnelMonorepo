@@ -19,20 +19,23 @@
 
 #pragma once
 
-#include "juce_dsp/juce_dsp.h"
+#include "iir_concrete.h"
+
+namespace shrapnel {
+namespace effect {
+namespace valvestate {
 
 class InputFilter
 {
     public:
-    InputFilter();
-    ~InputFilter();
-
-    void prepare(juce::dsp::ProcessSpec spec);
-    void process(juce::dsp::ProcessContextReplacing<float> context);
+    void prepare(float samplerate);
+    void process(float *buffer, std::size_t buffer_size);
     void reset();
 
     private:
-    juce::dsp::IIR::Filter<float> filter;
-
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(InputFilter)
+    shrapnel::dsp::IirFilter filter;
 };
+
+}
+}
+}
