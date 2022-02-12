@@ -43,8 +43,7 @@ class IirFilter final : public IirFilterBase {
 
     private:
     std::array<float, 5> coefficients;
-
-    std::array<float, (5 - 1) / 2 + 1> delay;
+    std::array<float, 2> delay;
 };
 
 }
