@@ -53,8 +53,7 @@ void GainControl::set_parameters(float g, float channel)
         A2 = 4.69953e-8f*std::pow(K, 2)*g - 2.35e-5f*K*g - 0.0009999f*K + 0.5f;
     }
 
-    std::array<float, 6> coefficients{B0, B1, B2, A0, A1, A2};
-    filter.set_coefficients(coefficients);
+    filter.set_coefficients(std::array<float, 6>({B0, B1, B2, A0, A1, A2}));
 }
 
 void GainControl::prepare(float a_samplerate)
