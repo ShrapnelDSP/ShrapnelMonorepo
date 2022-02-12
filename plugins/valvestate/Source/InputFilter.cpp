@@ -35,7 +35,8 @@ void InputFilter::prepare(float samplerate)
     float A1 = 1.0 - 2.20899768938842e-9f*std::pow(K, 2);
     float A2 = 1.10449884469421e-9f*std::pow(K, 2) - 0.000115449950739352f*K + 0.5f;
 
-    filter.set_coefficients({B0, B1, B2, A0, A1, A2});
+    std::array<float, 6> coefficients{B0, B1, B2, A0, A1, A2};
+    filter.set_coefficients(coefficients);
 
     filter.reset();
 }

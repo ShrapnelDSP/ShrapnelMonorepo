@@ -23,7 +23,7 @@ namespace shrapnel {
 namespace effect {
 namespace valvestate {
 
-void GainControl::setParameters(float g, float channel)
+void GainControl::set_parameters(float g, float channel)
 {
     float B0, B1, B2, A0, A1, A2;
     float K = 2*samplerate;
@@ -53,7 +53,8 @@ void GainControl::setParameters(float g, float channel)
         A2 = 4.69953e-8f*std::pow(K, 2)*g - 2.35e-5f*K*g - 0.0009999f*K + 0.5f;
     }
 
-    filter.set_coefficients({B0, B1, B2, A0, A1, A2});
+    std::array<float, 6> coefficients{B0, B1, B2, A0, A1, A2};
+    filter.set_coefficients(coefficients);
 }
 
 void GainControl::prepare(float a_samplerate)

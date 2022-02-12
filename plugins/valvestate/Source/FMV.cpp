@@ -19,19 +19,19 @@
 
 #include "FMV.h"
 
-FMVFilter::FMVFilter(){}
+namespace shrapnel {
+namespace effect {
+namespace valvestate {
 
-FMVFilter::~FMVFilter(){}
-
-void FMVFilter::prepare(juce::dsp::ProcessSpec spec)
+void FMVFilter::prepare(float a_samplerate)
 {
-    filter.prepare(spec);
-    sampleRate = spec.sampleRate;
+    filter.reset();
+    samplerate = a_samplerate;
 }
 
-void FMVFilter::process(juce::dsp::ProcessContextReplacing<float> context)
+void FMVFilter::process(float *buffer, std::size_t buffer_size)
 {
-    filter.process(context);
+    filter.process(buffer, buffer, buffer_size);
 }
 
 void FMVFilter::reset()
@@ -39,7 +39,7 @@ void FMVFilter::reset()
     filter.reset();
 }
 
-void FMVFilter::setParameters(float l, float m, float t)
+void FMVFilter::set_parameters(float l, float m, float t)
 {
     const float R1 = 220e3;
     const float R2 = 1e6;
@@ -85,7 +85,7 @@ void FMVFilter::setParameters(float l, float m, float t)
         + l * C1 * C2 * C3 * R1 * R2 * R4 + C1 * C2 * C3 * R1 * R3 * R4;
 
     //bilinear transform
-    float c = 2*sampleRate;
+    float c = 2*samplerate;
     float c2 = c*c;
     float c3 = c*c*c;
 
@@ -99,6 +99,9 @@ void FMVFilter::setParameters(float l, float m, float t)
     float  A2 = -3 * a0 + a1 * c+ a2 * c2 - 3 * a3 * c3;
     float  A3 = -a0 + a1 * c- a2 * c2 + a3 * c3;
 
-    filter.coefficients = 
-            new juce::dsp::IIR::Coefficients<float>(B0, B1, B2, B3, A0, A1, A2, A3);
+    filter.set_coefficients({B0, B1, B2, B3, A0, A1, A2, A3});
+}
+
+}
+}
 }

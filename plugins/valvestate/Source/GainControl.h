@@ -32,7 +32,7 @@ class GainControl
          * \param g The value of gain from 0 to 1.
          * \param channel 0 for OD1, 1 for OD2
          */
-        void setParameters(float g, float channel);
+        void set_parameters(float g, float channel);
 
         void prepare(float samplerate);
         void process(float *buffer, std::size_t buffer_size);

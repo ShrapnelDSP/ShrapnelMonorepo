@@ -42,6 +42,12 @@ class IirFilter final : public IirFilterBase {
             new juce::dsp::IIR::Coefficients<float>(new_coefficients);
     }
 
+    void set_coefficients(std::array<float, 8> new_coefficients) override
+    {
+        filter.coefficients =
+            new juce::dsp::IIR::Coefficients<float>(new_coefficients);
+    }
+
     private:
     juce::dsp::IIR::Filter<float> filter;
 };
