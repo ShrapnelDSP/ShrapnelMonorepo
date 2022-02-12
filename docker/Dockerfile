@@ -49,4 +49,6 @@ RUN git clone --shallow-submodules --recurse-submodules --depth 1 \
 
 RUN $IDF_PATH/install.sh esp32
 
+COPY ccache.conf /ccache/ccache.conf
+
 ENTRYPOINT ["/bin/bash"]
