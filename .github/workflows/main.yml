@@ -24,13 +24,16 @@ jobs:
         path: ${{ env.CCACHE_DIR }}
         key: ccache-${{ github.job }}
 
+    - name: ccache reset statistics
+      run: ccache --zero-stats
+
     # This could be two different steps, but we need to preserve the
     # environment that is set up by export.sh
     - name: Setup ESP-IDF and build
       run: . $IDF_PATH/export.sh && idf.py -C firmware build
 
     - name: ccache statistics
-      run: ccache -s
+      run: ccache --show-stats
 
   build-plugins:
     runs-on: ubuntu-latest
@@ -51,6 +54,9 @@ jobs:
         path: ${{ env.CCACHE_DIR }}
         key: ccache-${{ github.job }}-${{ matrix.plugin }}-${{ matrix.build_type }}
 
+    - name: ccache reset statistics
+      run: ccache --zero-stats
+
     - name: Configure CMake
       run: cmake -B build -DCMAKE_BUILD_TYPE=${{matrix.build_type}} plugins/${{matrix.plugin}}
 
@@ -58,7 +64,7 @@ jobs:
       run: cmake --build build --config ${{matrix.build_type}}
 
     - name: ccache statistics
-      run: ccache -s
+      run: ccache --show-stats
 
   ctest:
     runs-on: ubuntu-latest
@@ -77,6 +83,9 @@ jobs:
         path: ${{ env.CCACHE_DIR }}
         key: ccache-${{ github.job }}-${{ matrix.build_type }}
 
+    - name: ccache reset statistics
+      run: ccache --zero-stats
+
     - run: pwd
     - run: ctest --version
 
@@ -91,4 +100,4 @@ jobs:
       run: ctest -C ${{matrix.build_type}}
 
     - name: ccache statistics
-      run: ccache -s
+      run: ccache --show-stats
