@@ -4,6 +4,11 @@ defaults:
   run:
     shell: bash
 
+env:
+  CMAKE_C_COMPILER_LAUNCHER: ccache
+  CMAKE_CXX_COMPILER_LAUNCHER: ccache
+  CCACHE_DIR: /ccache
+
 jobs:
   build-firmware:
     runs-on: ubuntu-latest
@@ -13,10 +18,19 @@ jobs:
       with:
         submodules: recursive
 
+    - name: ccache
+      uses: actions/cache@v2
+      with:
+        path: ${{ env.CCACHE_DIR }}
+        key: ccache-${{ github.job }}
+
     # This could be two different steps, but we need to preserve the
     # environment that is set up by export.sh
     - name: Setup ESP-IDF and build
       run: . $IDF_PATH/export.sh && idf.py -C firmware build
+
+    - name: ccache statistics
+      run: ccache -sv
 
   build-plugins:
     runs-on: ubuntu-latest
@@ -31,11 +45,20 @@ jobs:
       with:
         submodules: recursive
 
+    - name: ccache
+      uses: actions/cache@v2
+      with:
+        path: ${{ env.CCACHE_DIR }}
+        key: ccache-${{ github.job }}-${{ matrix.build.plugin }}-${{ matrix.build.build_type }}
+
     - name: Configure CMake
       run: cmake -B build -DCMAKE_BUILD_TYPE=${{matrix.build_type}} plugins/${{matrix.plugin}}
 
     - name: Build
       run: cmake --build build --config ${{matrix.build_type}}
+
+    - name: ccache statistics
+      run: ccache -sv
 
   ctest:
     runs-on: ubuntu-latest
@@ -47,6 +70,12 @@ jobs:
     - uses: actions/checkout@v2
       with:
         submodules: recursive
+
+    - name: ccache
+      uses: actions/cache@v2
+      with:
+        path: ${{ env.CCACHE_DIR }}
+        key: ccache-${{ github.job }}-${{ matrix.build.build_type }}
 
     - run: pwd
     - run: ctest --version
@@ -60,3 +89,6 @@ jobs:
     - name: Test
       working-directory: /__w/ShrapnelMonorepo/ShrapnelMonorepo/build
       run: ctest -C ${{matrix.build_type}}
+
+    - name: ccache statistics
+      run: ccache -sv
