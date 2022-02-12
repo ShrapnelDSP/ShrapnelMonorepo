@@ -1,4 +1,23 @@
 /*
+ * Copyright 2022 Barabas Raffai
+ *
+ * This file is part of ShrapnelDSP.
+ *
+ * ShrapnelDSP is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option)
+ * any later version.
+ *
+ * ShrapnelDSP is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+ * more details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * ShrapnelDSP. If not, see <https://www.gnu.org/licenses/>.
+ */
+
+/*
  *  This file is part of Swedish Chainsaw.
  *  Copyright (C) 2019  Barabas Raffai
  *
@@ -17,7 +36,6 @@
  */
 
 #include "fmv.h"
-#include "i2s.h"
 #include "iir.h"
 #include "freertos/FreeRTOS.h"
 #include "freertos/semphr.h"
@@ -31,6 +49,7 @@ static float delay_line[3];
 /** This mutex is used to ensure that the coefficients of the filter don't
  * change in the middle of processing */
 static SemaphoreHandle_t mutex;
+static float sample_rate;
 
 void fmv_update_params(float l, float m, float t)
 {
@@ -47,7 +66,7 @@ void fmv_update_params(float l, float m, float t)
     float C2 = 22e-9;
     float C3 = 22e-9;
 
-    float Fs = SAMPLE_RATE;
+    float Fs = sample_rate;
 
     float b1 = t * C1 * R1 + m * C3 * R3 + l * (C1 * R2 + C2 * R2) + 
         (C1 * R3 + C2 * R3);
@@ -135,7 +154,7 @@ void fmv_process(float *buf, size_t buf_len)
     }
 }
 
-esp_err_t fmv_init(void)
+esp_err_t fmv_init(float a_sample_rate)
 {
     for(int i = 0; i < sizeof(delay_line)/sizeof(delay_line[0]); i++)
     {
@@ -151,6 +170,7 @@ esp_err_t fmv_init(void)
 
     xSemaphoreGive(mutex);
 
+    sample_rate = a_sample_rate;
     fmv_update_params(0.5, 0.5, 0.5);
 
     return ESP_OK;

@@ -1,3 +1,22 @@
+/*
+ * Copyright 2022 Barabas Raffai
+ *
+ * This file is part of ShrapnelDSP.
+ *
+ * ShrapnelDSP is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option)
+ * any later version.
+ *
+ * ShrapnelDSP is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+ * more details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * ShrapnelDSP. If not, see <https://www.gnu.org/licenses/>.
+ */
+
 #include "cmd_handling.h"
 
 #include "audio_param.h"
@@ -14,24 +33,6 @@
 
 namespace shrapnel {
 
-audio_param_t CommandHandling::get_id_for_param(const char *name)
-{
-    for(ParamEntry e : param_table)
-    {
-        if (!strcmp(e.name, name)) {
-            return e.id;
-        }
-    }
-
-    ESP_LOGE(TAG, "Couldn't find id for parameter (%s)", name);
-    return PARAM_MAX;
-}
-
-void CommandHandling::register_parameter(ParamEntry entry)
-{
-    param_table.push_back(entry);
-}
-
 void CommandHandling::work(void)
 {
     Message msg = {0};
@@ -40,7 +41,7 @@ void CommandHandling::work(void)
     cJSON *json;
 
     cJSON *id;
-    audio_param_t parsed_id;
+    char *parsed_id;
 
     cJSON *value;
     float parsed_value;
@@ -68,7 +69,7 @@ void CommandHandling::work(void)
         id = cJSON_GetObjectItemCaseSensitive(json, "id");
         if(cJSON_IsString(id) && (id->valuestring != NULL))
         {
-            parsed_id = get_id_for_param(id->valuestring);
+            parsed_id = id->valuestring;
         }
         else
         {
@@ -87,10 +88,7 @@ void CommandHandling::work(void)
             goto done;
         }
 
-        if(parsed_id != PARAM_MAX)
-        {
-            param->update(parsed_id, parsed_value);
-        }
+        param->update(parsed_id, parsed_value);
 done:
         cJSON_Delete(json);
     }

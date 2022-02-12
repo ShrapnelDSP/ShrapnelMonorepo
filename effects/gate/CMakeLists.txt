@@ -1,16 +1,16 @@
 if(ESP_PLATFORM)
-idf_component_register(SRCS noise_gate.c
+idf_component_register(SRCS noise_gate.cpp
                        INCLUDE_DIRS include
-                       PRIV_REQUIRES abstract_dsp)
+                       REQUIRES abstract_dsp)
 
 target_compile_options(${COMPONENT_LIB} PRIVATE -Wdouble-promotion)
 else()
 
 add_library(gate STATIC
-            noise_gate.c)
+            noise_gate.cpp)
 
 target_include_directories(gate PUBLIC include)
 
-target_link_libraries(gate PRIVATE abstract_dsp)
+target_link_libraries(gate PUBLIC abstract_dsp)
 
 endif()

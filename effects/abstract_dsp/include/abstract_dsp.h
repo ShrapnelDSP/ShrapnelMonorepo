@@ -1,3 +1,22 @@
+/*
+ * Copyright 2022 Barabas Raffai
+ *
+ * This file is part of ShrapnelDSP.
+ *
+ * ShrapnelDSP is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option)
+ * any later version.
+ *
+ * ShrapnelDSP is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+ * more details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * ShrapnelDSP. If not, see <https://www.gnu.org/licenses/>.
+ */
+
 /** \file
  *
  * Abstraction layer for DSP functionality. This enables the use of use of
@@ -9,7 +28,6 @@
 
 #include <stddef.h>
 
-typedef struct dspal_iir *dspal_iir_t;
 typedef struct dspal_delayline *dspal_delayline_t;
 
 typedef enum {
@@ -22,11 +40,6 @@ extern "C" {
 #endif
 
 dspal_err_t dspal_biquad_design_lowpass(float *coeffs, float f, float q_factor);
-
-dspal_iir_t dspal_iir_create(size_t order);
-void dspal_iir_set_coeffs(dspal_iir_t iir, const float *coeffs, size_t coeff_size);
-void dspal_iir_process(dspal_iir_t iir, const float *in, float *out, size_t buf_size);
-void dspal_iir_reset(dspal_iir_t iir);
 
 void dspal_multiply(const float *in1, const float *in2, float *out, size_t buf_size);
 

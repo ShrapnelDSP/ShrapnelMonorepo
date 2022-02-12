@@ -1,3 +1,22 @@
+/*
+ * Copyright 2022 Barabas Raffai
+ *
+ * This file is part of ShrapnelDSP.
+ *
+ * ShrapnelDSP is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option)
+ * any later version.
+ *
+ * ShrapnelDSP is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+ * more details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * ShrapnelDSP. If not, see <https://www.gnu.org/licenses/>.
+ */
+
 #include <stdio.h>
 #include <math.h>
 
@@ -343,47 +362,23 @@ extern "C" void app_main(void)
     assert(out_queue);
 
     audio_params = new shrapnel::AudioParameters();
+    audio_params->create_and_add_parameter("tight", 0, 1, 0);
+    audio_params->create_and_add_parameter("hmGain", 20, 60, 40);
+    audio_params->create_and_add_parameter("ampGain", 0, 30, 15);
+    audio_params->create_and_add_parameter("bass", 0, 1, 0.5);
+    audio_params->create_and_add_parameter("middle", 0, 1, 0.5);
+    audio_params->create_and_add_parameter("treble", 0, 1, 0.5);
+    audio_params->create_and_add_parameter("volume", -40, 0, -20);
+    audio_params->create_and_add_parameter("gateThreshold", -80, 0, -40);
 
     cmd_handling_task = new shrapnel::CommandHandlingTask(5, in_queue, audio_params);
-    cmd_handling_task->cmd.register_parameter({
-            .name = "tight",
-            .id = PARAM_TIGHT,
-            });
-    cmd_handling_task->cmd.register_parameter({
-            .name = "hmGain",
-            .id = PARAM_HM2_GAIN,
-            });
-    cmd_handling_task->cmd.register_parameter({
-            .name = "ampGain",
-            .id = PARAM_AMP_GAIN,
-            });
-    cmd_handling_task->cmd.register_parameter({
-            .name = "bass",
-            .id = PARAM_BASS,
-            });
-    cmd_handling_task->cmd.register_parameter({
-            .name = "middle",
-            .id = PARAM_MIDDLE,
-            });
-    cmd_handling_task->cmd.register_parameter({
-            .name = "treble",
-            .id = PARAM_TREBLE,
-            });
-    cmd_handling_task->cmd.register_parameter({
-            .name = "volume",
-            .id = PARAM_VOLUME,
-            });
-    cmd_handling_task->cmd.register_parameter({
-            .name = "gateThreshold",
-            .id = PARAM_GATE_THRESHOLD,
-            });
 
     ESP_ERROR_CHECK(audio_event_init());
 
     i2c_setup();
 
     profiling_mutex = xSemaphoreCreateMutex();
-    i2s_setup(PROFILING_GPIO);
+    i2s_setup(PROFILING_GPIO, audio_params);
 
     //dac must be powered up after the i2s clocks have stabilised
     vTaskDelay(100 / portTICK_PERIOD_MS);

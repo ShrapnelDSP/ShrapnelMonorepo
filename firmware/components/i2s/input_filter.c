@@ -1,5 +1,23 @@
+/*
+ * Copyright 2022 Barabas Raffai
+ *
+ * This file is part of ShrapnelDSP.
+ *
+ * ShrapnelDSP is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option)
+ * any later version.
+ *
+ * ShrapnelDSP is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+ * more details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * ShrapnelDSP. If not, see <https://www.gnu.org/licenses/>.
+ */
+
 #include "input_filter.h"
-#include "i2s.h"
 #include "freertos/FreeRTOS.h"
 #include "freertos/semphr.h"
 #include "dsps_mulc.h"
@@ -73,25 +91,25 @@ void filter_final_process(float *buf, size_t buf_len)
  *
  * \todo pedal and amp filter should be 1st order, but only 2nd order design
  * functions are provided */
-esp_err_t filter_init(void)
+esp_err_t filter_init(float sample_rate)
 {
     esp_err_t err = ESP_OK;
 
-    err = dsps_biquad_gen_hpf_f32(pedal_coeffs_normal, 60.f/SAMPLE_RATE, 1.f/sqrtf(2.f));
+    err = dsps_biquad_gen_hpf_f32(pedal_coeffs_normal, 60.f/sample_rate, 1.f/sqrtf(2.f));
 
     if(err != ESP_FAIL)
     {
-        err = dsps_biquad_gen_hpf_f32(pedal_coeffs_tight, 700.f/SAMPLE_RATE, 1.f/sqrtf(2.f));
+        err = dsps_biquad_gen_hpf_f32(pedal_coeffs_tight, 700.f/sample_rate, 1.f/sqrtf(2.f));
     }
 
     if(err != ESP_FAIL)
     {
-        err = dsps_biquad_gen_hpf_f32(amp_coeffs, 600.f/SAMPLE_RATE, 1.f/sqrtf(2.f));
+        err = dsps_biquad_gen_hpf_f32(amp_coeffs, 600.f/sample_rate, 1.f/sqrtf(2.f));
     }
 
     if(err != ESP_FAIL)
     {
-        err = dsps_biquad_gen_lpf_f32(final_coeffs, 7000.f/SAMPLE_RATE, 1.f/sqrtf(2.f));
+        err = dsps_biquad_gen_lpf_f32(final_coeffs, 7000.f/sample_rate, 1.f/sqrtf(2.f));
     }
 
     for(int i = 0; i < 5; i++)

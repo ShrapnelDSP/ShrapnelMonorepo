@@ -1,9 +1,9 @@
 idf_component_register(SRCS
-                       i2s.c
+                       i2s.cpp
                        process.cpp
                        fmv.c
                        input_filter.c
-                       profiling.c
+                       profiling.cpp
                        INCLUDE_DIRS include
                        REQUIRES driver
                        PRIV_REQUIRES
@@ -11,6 +11,7 @@ idf_component_register(SRCS
                        float_convert
                        iir
                        audio_events
+                       audio_param
                        hardware
                        chorus
                        gate)

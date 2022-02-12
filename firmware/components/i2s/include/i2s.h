@@ -1,7 +1,28 @@
+/*
+ * Copyright 2022 Barabas Raffai
+ *
+ * This file is part of ShrapnelDSP.
+ *
+ * ShrapnelDSP is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option)
+ * any later version.
+ *
+ * ShrapnelDSP is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+ * more details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * ShrapnelDSP. If not, see <https://www.gnu.org/licenses/>.
+ */
+
 #pragma once
 
 #include "esp_err.h"
 #include "driver/gpio.h"
+#include "driver/gpio.h"
+#include "audio_param.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -10,11 +31,7 @@ extern "C" {
 #define DMA_BUF_SIZE    (64)
 #define SAMPLE_RATE     (48000)
 
-esp_err_t i2s_setup(gpio_num_t profiling_gpio);
-
-void i2s_set_volume(float a);
-void i2s_set_pedal_gain(float a);
-void i2s_set_amp_gain(float a);
+esp_err_t i2s_setup(gpio_num_t profiling_gpio, shrapnel::AudioParametersBase *audio_params);
 
 #ifdef __cplusplus
 }

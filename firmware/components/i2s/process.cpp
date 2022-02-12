@@ -1,3 +1,22 @@
+/*
+ * Copyright 2022 Barabas Raffai
+ *
+ * This file is part of ShrapnelDSP.
+ *
+ * ShrapnelDSP is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option)
+ * any later version.
+ *
+ * ShrapnelDSP is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+ * more details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * ShrapnelDSP. If not, see <https://www.gnu.org/licenses/>.
+ */
+
 #include "i2s.h"
 #include "process.h"
 #include "dsps_biquad.h"
@@ -21,10 +40,22 @@
 
 #include <assert.h>
 #include <stdlib.h>
+#include <atomic>
 
-extern float pedal_gain;
-extern float amp_gain;
-extern float volume;
+namespace {
+
+std::atomic<float> *tight;
+std::atomic<float> *pedal_gain;
+std::atomic<float> *amp_gain;
+std::atomic<float> *bass;
+std::atomic<float> *middle;
+std::atomic<float> *treble;
+std::atomic<float> *volume;
+std::atomic<float> *gate_threshold;
+
+}
+
+
 extern gpio_num_t g_profiling_gpio;
 static float fbuf[DMA_BUF_SIZE];
 
@@ -73,6 +104,11 @@ static float waveshape(float x)
 #endif
 }
 
+static float decibel_to_ratio(float db)
+{
+    return powf(10.f, db / 20.f);
+}
+
 void process_samples(int32_t *buf, size_t buf_len)
 {
     assert(g_profiling_gpio != -1 && "I2S task has not been initialised");
@@ -86,11 +122,16 @@ void process_samples(int32_t *buf, size_t buf_len)
     {
         fbuf[i/2] = buf[i]/(float)INT32_MAX;
     }
+
+    fmv_update_params(*bass, *middle, *treble);
+    filter_set_tight(*tight > 0.5f);
+    gate_set_threshold(*gate_threshold, 1);
+
     profiling_mark_stage(0);
 
     gate_analyse(fbuf, buf_len/2);
     profiling_mark_stage(1);
-    dsps_mulc_f32_ae32(fbuf, fbuf, sizeof(fbuf)/sizeof(fbuf[0]), pedal_gain, 1, 1);
+    dsps_mulc_f32_ae32(fbuf, fbuf, sizeof(fbuf)/sizeof(fbuf[0]), decibel_to_ratio(*pedal_gain), 1, 1);
     profiling_mark_stage(2);
     filter_pedal_input_process(fbuf, buf_len/2);
     profiling_mark_stage(3);
@@ -111,7 +152,7 @@ void process_samples(int32_t *buf, size_t buf_len)
     filter_amp_input_process(fbuf, buf_len/2);
     profiling_mark_stage(6);
 
-    dsps_mulc_f32_ae32(fbuf, fbuf, buf_len/2, amp_gain, 1, 1);
+    dsps_mulc_f32_ae32(fbuf, fbuf, buf_len/2, decibel_to_ratio(*amp_gain), 1, 1);
     profiling_mark_stage(7);
 
     for(int i = 1; i < buf_len; i+=2)
@@ -137,7 +178,7 @@ void process_samples(int32_t *buf, size_t buf_len)
     chorus->process(fbuf, buf_len/2);
     profiling_mark_stage(13);
 
-    dsps_mulc_f32_ae32(fbuf, fbuf, buf_len/2, volume, 1, 1);
+    dsps_mulc_f32_ae32(fbuf, fbuf, buf_len/2, decibel_to_ratio(*volume), 1, 1);
     profiling_mark_stage(14);
 
     for(int i = 1; i < buf_len; i+=2)
@@ -160,13 +201,13 @@ void process_samples(int32_t *buf, size_t buf_len)
     gpio_set_level(g_profiling_gpio, 0);
 }
 
-esp_err_t process_init()
+esp_err_t process_init(shrapnel::AudioParametersBase *audio_params)
 {
     ESP_LOGI(TAG, "Initialised FIR filter with length %d", 
                              sizeof(fir_coeff) / sizeof(fir_coeff[0]));
 
-    ESP_ERROR_CHECK(filter_init());
-    ESP_ERROR_CHECK(fmv_init());
+    ESP_ERROR_CHECK(filter_init(SAMPLE_RATE));
+    ESP_ERROR_CHECK(fmv_init(SAMPLE_RATE));
 
     ESP_ERROR_CHECK(gate_init());
     gate_set_sample_rate(SAMPLE_RATE);
@@ -179,6 +220,23 @@ esp_err_t process_init()
     chorus = new shrapnel::effect::Chorus();
     assert(chorus);
     chorus->set_sample_rate(SAMPLE_RATE);
+
+    tight = audio_params->get_raw_parameter("tight");
+    assert(tight);
+    pedal_gain = audio_params->get_raw_parameter("hmGain");
+    assert(pedal_gain);
+    amp_gain = audio_params->get_raw_parameter("ampGain");
+    assert(amp_gain);
+    bass = audio_params->get_raw_parameter("bass");
+    assert(bass);
+    middle = audio_params->get_raw_parameter("middle");
+    assert(middle);
+    treble = audio_params->get_raw_parameter("treble");
+    assert(treble);
+    volume = audio_params->get_raw_parameter("volume");
+    assert(volume);
+    gate_threshold = audio_params->get_raw_parameter("gateThreshold");
+    assert(gate_threshold);
 
     return dsps_fir_init_f32(&fir, fir_coeff, fir_delay_line,
                              sizeof(fir_coeff) / sizeof(fir_coeff[0]));
