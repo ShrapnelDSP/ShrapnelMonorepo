@@ -131,10 +131,11 @@ void process_samples(int32_t *buf, size_t buf_len)
             xEventGroupSetBits(g_audio_event_group, AUDIO_EVENT_OUTPUT_CLIPPED);
         }
 
-        if(fbuf[i] == NAN)
+        if(fbuf[i] != fbuf[i])
         {
             ESP_LOGE(TAG, "Not a number");
-        } 
+            assert(0);
+        }
 
         buf[i] = float_to_int32(fbuf[i/2]);
     }
