@@ -17,7 +17,7 @@
     with Valvestate Sim.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#include "WaveShape.h"
+#include "wave_shape.h"
 #include <math.h>
 
 static const float shape[100] = {

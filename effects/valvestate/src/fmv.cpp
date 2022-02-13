@@ -17,7 +17,7 @@
     with Valvestate Sim.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#include "FMV.h"
+#include "fmv.h"
 
 namespace shrapnel {
 namespace effect {

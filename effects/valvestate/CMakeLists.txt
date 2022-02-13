@@ -1,5 +1,11 @@
 if(ESP_PLATFORM)
 idf_component_register(SRCS src/valvestate.cpp
+                            src/clipping.cpp
+                            src/contour.cpp
+                            src/fmv.cpp
+                            src/gain_control.cpp
+                            src/input_filter.cpp
+                            src/wave_shape.cpp
                        INCLUDE_DIRS include
                        REQUIRES abstract_dsp)
 
@@ -8,12 +14,12 @@ else()
 
 add_library(valvestate STATIC
             src/valvestate.cpp
-            src/Clipping.cpp
-            src/Contour.cpp
-            src/FMV.cpp
-            src/GainControl.cpp
-            src/InputFilter.cpp
-            src/WaveShape.cpp)
+            src/clipping.cpp
+            src/contour.cpp
+            src/fmv.cpp
+            src/gain_control.cpp
+            src/input_filter.cpp
+            src/wave_shape.cpp)
 
 target_include_directories(valvestate PUBLIC include)
 

@@ -17,8 +17,8 @@
     with Valvestate Sim.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#include "Clipping.h"
-#include "WaveShape.h"
+#include "clipping.h"
+#include "wave_shape.h"
 
 namespace shrapnel {
 namespace effect {

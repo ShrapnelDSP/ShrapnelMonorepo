@@ -1,11 +1,11 @@
 #pragma once
 
 #include <cstddef>
-#include "InputFilter.h"
-#include "GainControl.h"
-#include "Clipping.h"
-#include "FMV.h"
-#include "Contour.h"
+#include "input_filter.h"
+#include "gain_control.h"
+#include "clipping.h"
+#include "fmv.h"
+#include "contour.h"
 
 namespace shrapnel {
 namespace effect {

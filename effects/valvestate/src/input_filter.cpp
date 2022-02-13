@@ -17,7 +17,7 @@
     with Valvestate Sim.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#include "InputFilter.h"
+#include "input_filter.h"
 #include <cmath>
 
 namespace shrapnel {

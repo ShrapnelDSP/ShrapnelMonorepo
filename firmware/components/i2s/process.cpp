@@ -29,6 +29,7 @@
 #include "noise_gate.h"
 #include "profiling.h"
 #include "chorus.h"
+#include "valvestate.h"
 
 #include "esp_log.h"
 #define TAG "i2s_process"
@@ -51,6 +52,9 @@ std::atomic<float> *volume;
 
 std::atomic<float> *gate_threshold;
 
+shrapnel::effect::valvestate::Valvestate *valvestate;
+shrapnel::effect::Chorus *chorus;
+
 }
 
 extern gpio_num_t g_profiling_gpio;
@@ -59,8 +63,6 @@ static float fbuf[DMA_BUF_SIZE];
 #include "speaker_coeffs.h"
 static float fir_delay_line[sizeof(fir_coeff)/sizeof(fir_coeff[0])];
 static fir_f32_t fir;
-
-static shrapnel::effect::Chorus *chorus;
 
 static float decibel_to_ratio(float db)
 {
@@ -97,6 +99,11 @@ void process_samples(int32_t *buf, size_t buf_len)
     profiling_mark_stage(6);
 
     profiling_mark_stage(7);
+    valvestate->set_gain(*amp_gain, *amp_channel);
+    valvestate->set_fmv(*bass, *middle, *treble);
+    valvestate->set_contour(*contour);
+    valvestate->set_volume(decibel_to_ratio(*volume));
+    valvestate->process(fbuf, buf_len/2);
 
     profiling_mark_stage(8);
 
@@ -153,6 +160,10 @@ esp_err_t process_init(shrapnel::AudioParametersBase *audio_params)
     chorus = new shrapnel::effect::Chorus();
     assert(chorus);
     chorus->set_sample_rate(SAMPLE_RATE);
+
+    valvestate = new shrapnel::effect::valvestate::Valvestate();
+    assert(valvestate);
+    valvestate->prepare(SAMPLE_RATE);
 
     amp_gain = audio_params->get_raw_parameter("ampGain");
     assert(amp_gain);

@@ -17,7 +17,8 @@
     with Valvestate Sim.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#include "GainControl.h"
+#include "gain_control.h"
+#include <cmath>
 
 namespace shrapnel {
 namespace effect {
@@ -28,7 +29,7 @@ void GainControl::set_parameters(float g, float channel)
     float B0, B1, B2, A0, A1, A2;
     float K = 2*samplerate;
 
-    if (channel < 0.5)
+    if (channel < 0.5f)
     {
         //OD1
         B0 = 0.00916582638188652f*K*g;

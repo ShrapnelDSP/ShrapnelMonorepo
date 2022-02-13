@@ -17,7 +17,7 @@
     with Valvestate Sim.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#include "Contour.h"
+#include "contour.h"
 #include <cmath>
 
 ContourFilter::ContourFilter()
@@ -98,7 +98,7 @@ void ContourFilter::set_parameter(float p)
         1.22402003248511e-7f*std::pow(K, 2) + 0.000583333333333333f*K*p +
         0.00052012272153041f*K - 0.166666666666667f;
 
-    jassert (A0 != 0);
+    assert (A0 != 0);
 
     filter.set_coefficients(std::array<float, 10>{B0, B1, B2, B3, B4, A0, A1, A2, A3, A4});
 }
