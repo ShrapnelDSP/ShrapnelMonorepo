@@ -369,7 +369,7 @@ extern "C" void app_main(void)
     audio_params->create_and_add_parameter("treble", 0, 1, 0.5);
     //contour gets unstable when set to 0
     audio_params->create_and_add_parameter("contour", 0.01, 1, 0.5);
-    audio_params->create_and_add_parameter("volume", 20, 50, 35);
+    audio_params->create_and_add_parameter("volume", -30, 0, -15);
 
     audio_params->create_and_add_parameter("gateThreshold", -80, 0, -40);
 
