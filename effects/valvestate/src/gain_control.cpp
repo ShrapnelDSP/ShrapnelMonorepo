@@ -36,10 +36,10 @@ void GainControl::set_parameters(float g, float channel)
         B1 = 0;
         B2 = -0.00916582638188652f*K*g;
 
-        A0 = 4.30793839948666e-8f*std::pow(K, 2)*g + 2.35e-5f*K*g +
+        A0 = 4.30793839948666e-8f*std::pow(K, 2.f)*g + 2.35e-5f*K*g +
             0.000916582638188652f*K + 0.5f;
-        A1 = -8.61587679897332e-8f*std::pow(K, 2)*g + 1.0f;
-        A2 = 4.30793839948666e-8f*std::pow(K, 2)*g - 2.35e-5f*K*g -
+        A1 = -8.61587679897332e-8f*std::pow(K, 2.f)*g + 1.0f;
+        A2 = 4.30793839948666e-8f*std::pow(K, 2.f)*g - 2.35e-5f*K*g -
             0.000916582638188652f*K + 0.5f;
     }
     else
@@ -49,9 +49,9 @@ void GainControl::set_parameters(float g, float channel)
         B1 = 0;
         B2 = -0.11f*K*g;
 
-        A0 = 4.69953e-8f*std::pow(K, 2)*g + 2.35e-5f*K*g + 0.0009999f*K + 0.5f;
-        A1 = -9.39906e-8f*std::pow(K, 2)*g + 1.0f;
-        A2 = 4.69953e-8f*std::pow(K, 2)*g - 2.35e-5f*K*g - 0.0009999f*K + 0.5f;
+        A0 = 4.69953e-8f*std::pow(K, 2.f)*g + 2.35e-5f*K*g + 0.0009999f*K + 0.5f;
+        A1 = -9.39906e-8f*std::pow(K, 2.f)*g + 1.0f;
+        A2 = 4.69953e-8f*std::pow(K, 2.f)*g - 2.35e-5f*K*g - 0.0009999f*K + 0.5f;
     }
 
     filter.set_coefficients(std::array<float, 6>({B0, B1, B2, A0, A1, A2}));
