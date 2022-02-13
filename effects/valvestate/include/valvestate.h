@@ -14,6 +14,8 @@ namespace valvestate {
 class Valvestate
 {
     public:
+    Valvestate();
+
     void set_gain(float gain, float channel);
 
     void set_fmv(float bass, float middle, float treble);
@@ -33,6 +35,7 @@ class Valvestate
     Clipping clipping;
     FMVFilter fmv;
     ContourFilter contour;
+    float volume;
 };
 
 }

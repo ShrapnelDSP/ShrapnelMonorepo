@@ -165,19 +165,14 @@ void ValvestateAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, j
 
     float *input_samples = buffer.getWritePointer(0);
 
-    juce::dsp::AudioBlock<float> block(&input_samples, 1, (size_t)buffer.getNumSamples());
-    juce::dsp::ProcessContextReplacing<float> context(block);
-
     //set parameters
     valvestate.set_gain(*gain, *od);
     valvestate.set_fmv(*bass, *middle, *treble);
     valvestate.set_contour(*contourP);
+    valvestate.set_volume(juce::Decibels::decibelsToGain((float)*volume));
 
     //process data
     valvestate.process(input_samples, (std::size_t)buffer.getNumSamples());
-
-    // TODO this should be using abstract DSP and moved to valvestate effect's process function
-    block.multiplyBy(juce::Decibels::decibelsToGain((float)*volume));
 
     // copy processed samples to the right channel
     for(int i = 0; i < buffer.getNumSamples(); i++)
