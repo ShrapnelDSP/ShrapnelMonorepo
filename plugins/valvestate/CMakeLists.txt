@@ -8,6 +8,7 @@ add_subdirectory(../JUCE JUCE)
 add_subdirectory(../JUCE_static JUCE_static)
 
 add_subdirectory(../../effects/abstract_dsp abstract_dsp)
+add_subdirectory(../../effects/valvestate valvestate)
 
 juce_add_plugin(Valvestate
     COMPANY_NAME "Barabas Raffai"
@@ -24,14 +25,8 @@ juce_add_plugin(Valvestate
 
 target_sources(Valvestate
     PRIVATE
-        Source/Clipping.cpp
-        Source/Contour.cpp
-        Source/FMV.cpp
-        Source/GainControl.cpp
-        Source/InputFilter.cpp
-        Source/PluginEditor.cpp
-        Source/PluginProcessor.cpp
-        Source/WaveShape.cpp)
+        src/PluginEditor.cpp
+        src/PluginProcessor.cpp)
 
 target_include_directories(Valvestate
     PRIVATE
@@ -39,5 +34,5 @@ target_include_directories(Valvestate
 
 target_link_libraries(Valvestate
     PRIVATE
-        abstract_dsp
+        valvestate
         juce_modules)

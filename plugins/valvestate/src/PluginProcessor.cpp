@@ -127,18 +127,12 @@ void ValvestateAudioProcessor::prepareToPlay (double sampleRate, int samplesPerB
     jassert(samplesPerBlock >= 0);
     (void)samplesPerBlock;
 
-    input.prepare(sampleRate);
-    gaincontrol.prepare(sampleRate);
-    fmv.prepare(sampleRate);
-    contour.prepare(sampleRate);
+    valvestate.prepare(sampleRate);
 }
 
 void ValvestateAudioProcessor::releaseResources()
 {
-    input.reset();
-    gaincontrol.reset();
-    fmv.reset();
-    contour.reset();
+    valvestate.reset();
 }
 
 bool ValvestateAudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts) const
@@ -175,17 +169,14 @@ void ValvestateAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, j
     juce::dsp::ProcessContextReplacing<float> context(block);
 
     //set parameters
-    gaincontrol.set_parameters(*gain, *od);
-    fmv.set_parameters(*bass, *middle, *treble);
-    contour.setParameter(*contourP);
+    valvestate.set_gain(*gain, *od);
+    valvestate.set_fmv(*bass, *middle, *treble);
+    valvestate.set_contour(*contourP);
 
     //process data
-    input.process(input_samples, (std::size_t)buffer.getNumSamples());
-    gaincontrol.process(input_samples, (std::size_t)buffer.getNumSamples());
-    clipping.process(input_samples, (std::size_t)buffer.getNumSamples());
-    fmv.process(input_samples, (std::size_t)buffer.getNumSamples());
-    contour.process(input_samples, (std::size_t)buffer.getNumSamples());
+    valvestate.process(input_samples, (std::size_t)buffer.getNumSamples());
 
+    // TODO this should be using abstract DSP and moved to valvestate effect's process function
     block.multiplyBy(juce::Decibels::decibelsToGain((float)*volume));
 
     // copy processed samples to the right channel

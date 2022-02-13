@@ -20,13 +20,7 @@
 #pragma once
 
 #include "juce_audio_processors/juce_audio_processors.h"
-#include "InputFilter.h"
-#include "GainControl.h"
-#include "Clipping.h"
-#include "FMV.h"
-#include "Contour.h"
-
-using namespace shrapnel::effect::valvestate;
+#include "valvestate.h"
 
 class ValvestateAudioProcessor  : public juce::AudioProcessor
 {
@@ -78,11 +72,7 @@ private:
     std::atomic<float> *contourP = nullptr;
     std::atomic<float> *volume = nullptr;
 
-    InputFilter input;
-    GainControl gaincontrol;
-    Clipping clipping;
-    FMVFilter fmv;
-    ContourFilter contour;
+    shrapnel::effect::valvestate::Valvestate valvestate;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ValvestateAudioProcessor)
 };

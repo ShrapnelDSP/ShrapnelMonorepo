@@ -24,7 +24,7 @@ ContourFilter::ContourFilter()
 {
     //we must set the filter order before the first prepare call, so that
     //the correct amount of memory gets allocated
-    setParameter(0.5);
+    set_parameter(0.5);
 }
 
 ContourFilter::~ContourFilter(){}
@@ -35,7 +35,7 @@ void ContourFilter::prepare(float a_samplerate)
     samplerate = a_samplerate;
 }
 
-void ContourFilter::setParameter(float p)
+void ContourFilter::set_parameter(float p)
 {
     float K = 2*samplerate;
 

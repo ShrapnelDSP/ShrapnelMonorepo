@@ -31,7 +31,7 @@ class ContourFilter
     void process(float *buffer, std::size_t buffer_size);
     void reset(void);
 
-    void setParameter(float p);
+    void set_parameter(float p);
 
     private:
     shrapnel::dsp::IirFilter filter;
