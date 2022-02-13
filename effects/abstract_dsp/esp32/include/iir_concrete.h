@@ -83,35 +83,16 @@ class IirFilter final : public IirFilterBase {
     void set_coefficients(std::array<float, 8> new_coefficients) override
     {
         order = 3;
-
-        size_t out_index = 0;
-        for(int i = 0; i < 8; i++)
+        for(int i = 0; i < new_coefficients.size(); i++)
         {
-            if(i == 3)
-            {
-                continue;
-            }
-
-            coefficients[out_index] = new_coefficients[i] / new_coefficients[3];
-            out_index++;
+            coefficients[i] = new_coefficients[i];
         }
     }
 
     void set_coefficients(std::array<float, 10> new_coefficients) override
     {
         order = 4;
-
-        size_t out_index = 0;
-        for(int i = 0; i < 8; i++)
-        {
-            if(i == 3)
-            {
-                continue;
-            }
-
-            coefficients[out_index] = new_coefficients[i] / new_coefficients[3];
-            out_index++;
-        }
+        coefficients = new_coefficients;
     }
 
     private:
