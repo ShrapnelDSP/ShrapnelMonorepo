@@ -46,11 +46,15 @@ namespace {
 
 std::atomic<float> *tight;
 std::atomic<float> *pedal_gain;
+
 std::atomic<float> *amp_gain;
+std::atomic<float> *amp_channel;
 std::atomic<float> *bass;
 std::atomic<float> *middle;
 std::atomic<float> *treble;
+std::atomic<float> *contour;
 std::atomic<float> *volume;
+
 std::atomic<float> *gate_threshold;
 
 }
@@ -225,16 +229,22 @@ esp_err_t process_init(shrapnel::AudioParametersBase *audio_params)
     assert(tight);
     pedal_gain = audio_params->get_raw_parameter("hmGain");
     assert(pedal_gain);
+
     amp_gain = audio_params->get_raw_parameter("ampGain");
     assert(amp_gain);
+    amp_channel = audio_params->get_raw_parameter("ampChannel");
+    assert(amp_channel);
     bass = audio_params->get_raw_parameter("bass");
     assert(bass);
     middle = audio_params->get_raw_parameter("middle");
     assert(middle);
     treble = audio_params->get_raw_parameter("treble");
     assert(treble);
+    contour = audio_params->get_raw_parameter("contour");
+    assert(contour);
     volume = audio_params->get_raw_parameter("volume");
     assert(volume);
+
     gate_threshold = audio_params->get_raw_parameter("gateThreshold");
     assert(gate_threshold);
 

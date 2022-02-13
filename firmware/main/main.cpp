@@ -364,11 +364,15 @@ extern "C" void app_main(void)
     audio_params = new shrapnel::AudioParameters();
     audio_params->create_and_add_parameter("tight", 0, 1, 0);
     audio_params->create_and_add_parameter("hmGain", 20, 60, 40);
+
     audio_params->create_and_add_parameter("ampGain", 0, 30, 15);
+    audio_params->create_and_add_parameter("ampChannel", 0, 1, 0);
     audio_params->create_and_add_parameter("bass", 0, 1, 0.5);
     audio_params->create_and_add_parameter("middle", 0, 1, 0.5);
     audio_params->create_and_add_parameter("treble", 0, 1, 0.5);
+    audio_params->create_and_add_parameter("contour", 0, 1, 0.5);
     audio_params->create_and_add_parameter("volume", -40, 0, -20);
+
     audio_params->create_and_add_parameter("gateThreshold", -80, 0, -40);
 
     cmd_handling_task = new shrapnel::CommandHandlingTask(5, in_queue, audio_params);
