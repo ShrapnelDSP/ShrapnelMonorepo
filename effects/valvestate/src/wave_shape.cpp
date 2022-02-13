@@ -66,7 +66,7 @@ float waveshape(float input)
 
         //linear interpolation
         //find ratio of x
-        float ratio = (index-floor(index)) / (ceil(index)-floor(index));
+        float ratio = index-floor(index);
 
         //y = c + mx
         output = shape[(int)floor(index)] +
