@@ -23,6 +23,15 @@ import 'package:provider/provider.dart';
 import 'amplifier.dart';
 import 'parameter.dart';
 
+class _ValvestateParameterChannel extends AudioParameterDoubleModel {
+  _ValvestateParameterChannel({required ParameterService parameterService})
+      : super(
+          name: 'OD1/OD2',
+          id: 'ampChannel',
+          parameterService: parameterService,
+        );
+}
+
 class _ValvestateParameterGain extends AudioParameterDoubleModel {
   _ValvestateParameterGain({required ParameterService parameterService})
       : super(
@@ -91,16 +100,19 @@ class Valvestate extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Consumer6<
-            _ValvestateParameterGain,
-            _ValvestateParameterBass,
-            _ValvestateParameterMiddle,
-            _ValvestateParameterTreble,
-            _ValvestateParameterContour,
-            _ValvestateParameterVolume>(
-          builder: (context, gain, bass, middle, treble, contour, volume, _) =>
-              Amplifier(
+        Builder(
+          builder: (context) {
+              final channel = Provider.of<_ValvestateParameterChannel>(context);
+              final gain = Provider.of<_ValvestateParameterGain>(context);
+              final bass = Provider.of<_ValvestateParameterBass>(context);
+              final middle = Provider.of<_ValvestateParameterMiddle>(context);
+              final treble = Provider.of<_ValvestateParameterTreble>(context);
+              final contour = Provider.of<_ValvestateParameterContour>(context);
+              final volume = Provider.of<_ValvestateParameterVolume>(context);
+
+            return Amplifier(
             parameter: [
+              channel.value,
               gain.value,
               bass.value,
               middle.value,
@@ -109,6 +121,7 @@ class Valvestate extends StatelessWidget {
               volume.value,
             ],
             onChanged: [
+              channel.onUserChanged,
               gain.onUserChanged,
               bass.onUserChanged,
               middle.onUserChanged,
@@ -117,6 +130,7 @@ class Valvestate extends StatelessWidget {
               volume.onUserChanged,
             ],
             parameterName: [
+              channel.name,
               gain.name,
               bass.name,
               middle.name,
@@ -127,7 +141,8 @@ class Valvestate extends StatelessWidget {
             name: 'VALVESTATE 8100',
             onTap: onTap,
             full: full,
-          ),
+          );
+          },
         ),
       ],
     );
@@ -147,6 +162,11 @@ class ValvestateParameterProvider extends StatelessWidget {
       Consumer<ParameterService>(builder: (_, parameterService, __) {
         return MultiProvider(
           providers: [
+            ChangeNotifierProvider(
+              create: (_) => _ValvestateParameterChannel(
+                parameterService: parameterService,
+              ),
+            ),
             ChangeNotifierProvider(
               create: (_) => _ValvestateParameterGain(
                 parameterService: parameterService,
