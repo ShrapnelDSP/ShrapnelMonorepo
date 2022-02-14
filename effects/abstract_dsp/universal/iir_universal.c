@@ -17,7 +17,7 @@
  * ShrapnelDSP. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include "iir.h"
+#include "iir_universal.h"
 
 void iir_process(const float *input, float *output, int len, float *coeffs, float *w, int coeffs_len)
 {

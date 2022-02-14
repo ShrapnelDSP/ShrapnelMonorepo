@@ -25,6 +25,18 @@ if(DEFINED TESTING)
     target_link_libraries(delayline_test PRIVATE gtest_main)
     target_link_libraries(delayline_test PRIVATE gmock)
     gtest_discover_tests(delayline_test)
+
+    add_executable(iir_test
+                   universal/iir_universal.c
+                   test/test_iir.cpp
+                   )
+
+    target_include_directories(iir_test PUBLIC include)
+
+    target_link_libraries(iir_test PRIVATE gtest_main)
+    target_link_libraries(iir_test PRIVATE gmock)
+    gtest_discover_tests(iir_test)
+
     return()
 endif()
 
