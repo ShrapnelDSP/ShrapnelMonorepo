@@ -3,6 +3,7 @@ if(ESP_PLATFORM)
                              esp32/abstract_dsp_esp32.c
                              universal/delayline.cpp
                              universal/delayline_c.cpp
+                             universal/iir_universal.c
                            INCLUDE_DIRS
                              include
                              esp32/include
@@ -25,6 +26,18 @@ if(DEFINED TESTING)
     target_link_libraries(delayline_test PRIVATE gtest_main)
     target_link_libraries(delayline_test PRIVATE gmock)
     gtest_discover_tests(delayline_test)
+
+    add_executable(iir_test
+                   universal/iir_universal.c
+                   test/test_iir.cpp
+                   )
+
+    target_include_directories(iir_test PUBLIC include)
+
+    target_link_libraries(iir_test PRIVATE gtest_main)
+    target_link_libraries(iir_test PRIVATE gmock)
+    gtest_discover_tests(iir_test)
+
     return()
 endif()
 

@@ -17,16 +17,16 @@
  * ShrapnelDSP. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#define UNITY_INCLUDE_FLOAT
-#include "unity.h"
-#include "iir.h"
+#include "gtest/gtest.h"
+#include "gmock/gmock.h"
+#include "iir_universal.h"
 
 #define ARRAY_SIZE(a) (sizeof(a)/sizeof(a[0]))
 
-void setUp (void) {}
-void tearDown (void) {}
+using ::testing::Pointwise;
+using ::testing::FloatNear;
 
-void test_unity_filter_response(void)
+TEST(iir, unity_filter_response)
 {
     /* create a coefficient array that corresponds to an FIR filter with an
      * impulse response of [ 1, 0, 0 ...] */
@@ -40,10 +40,10 @@ void test_unity_filter_response(void)
     float output[ARRAY_SIZE(impulse)] = {0};
     float w[ARRAY_SIZE(impulse)] = {0};
     iir_process(impulse, output, ARRAY_SIZE(impulse), coeff, w, ARRAY_SIZE(coeff));
-    TEST_ASSERT_EQUAL_FLOAT_ARRAY(impulse, output, ARRAY_SIZE(impulse));
+    EXPECT_THAT(output, Pointwise(FloatNear(1e-6f), impulse));
 }
 
-void test_delay_filter_response(void)
+TEST(iir, delay_filter_response)
 {
     /* create a coefficient array that corresponds to an FIR filter with an
      * impulse response of [ 0, 1, 0, 0 ...] */
@@ -58,10 +58,10 @@ void test_delay_filter_response(void)
     float output[ARRAY_SIZE(impulse)] = {0};
     float w[ARRAY_SIZE(impulse)] = {0};
     iir_process(impulse, output, ARRAY_SIZE(impulse), coeff, w, ARRAY_SIZE(coeff));
-    TEST_ASSERT_EQUAL_FLOAT_ARRAY(expected, output, ARRAY_SIZE(impulse));
+    EXPECT_THAT(output, Pointwise(FloatNear(1e-6f), expected));
 }
 
-void test_div_by_two_unity_filter_response(void)
+TEST(iir, div_by_two_unity_filter_response)
 {
     /* create a coefficient array that corresponds to an FIR filter with an
      * impulse response of [ 1/2, 0, 0, 0 ...] */
@@ -76,10 +76,10 @@ void test_div_by_two_unity_filter_response(void)
     float output[ARRAY_SIZE(impulse)] = {0};
     float w[ARRAY_SIZE(impulse)] = {0};
     iir_process(impulse, output, ARRAY_SIZE(impulse), coeff, w, ARRAY_SIZE(coeff));
-    TEST_ASSERT_EQUAL_FLOAT_ARRAY(expected, output, ARRAY_SIZE(impulse));
+    EXPECT_THAT(output, Pointwise(FloatNear(1e-6f), expected));
 }
 
-void test_convolution_filter_response(void)
+TEST(iir, convolution_filter_response)
 {
     /* create a coefficient array that corresponds to an FIR filter with an
      * impulse response of [ 1, 1, 0, 0 ...] */
@@ -94,10 +94,10 @@ void test_convolution_filter_response(void)
     float output[ARRAY_SIZE(input)] = {0};
     float w[ARRAY_SIZE(input)] = {0};
     iir_process(input, output, ARRAY_SIZE(input), coeff, w, ARRAY_SIZE(coeff));
-    TEST_ASSERT_EQUAL_FLOAT_ARRAY(expected, output, ARRAY_SIZE(input));
+    EXPECT_THAT(output, Pointwise(FloatNear(1e-6f), expected));
 }
 
-void test_third_order_impulse(void)
+TEST(iir, third_order_impulse)
 {
     /* This filter and expected impulse response can be created using the
      * following python script 
@@ -122,10 +122,10 @@ void test_third_order_impulse(void)
     float output[ARRAY_SIZE(input)] = {0};
     float w[ARRAY_SIZE(coeff)/2] = {0};
     iir_process(input, output, ARRAY_SIZE(input), coeff, w, ARRAY_SIZE(coeff));
-    TEST_ASSERT_EQUAL_FLOAT_ARRAY(expected, output, ARRAY_SIZE(input));
+    EXPECT_THAT(output, Pointwise(FloatNear(1e-6f), expected));
 }
 
-void test_third_order_response(void)
+TEST(iir, third_order_response)
 {
     /* Created similar to above, but with a different input signal */
     float coeff[] = {0.03168934384971104, 0.09506803154913313,
@@ -142,18 +142,5 @@ void test_third_order_response(void)
     float output[ARRAY_SIZE(input)] = {0};
     float w[ARRAY_SIZE(coeff)/2] = {0};
     iir_process(input, output, ARRAY_SIZE(input), coeff, w, ARRAY_SIZE(coeff));
-    TEST_ASSERT_EQUAL_FLOAT_ARRAY(expected, output, ARRAY_SIZE(input));
-}
-
-
-int main(void)
-{
-    UNITY_BEGIN();
-    RUN_TEST(test_unity_filter_response);
-    RUN_TEST(test_delay_filter_response);
-    RUN_TEST(test_div_by_two_unity_filter_response);
-    RUN_TEST(test_convolution_filter_response);
-    RUN_TEST(test_third_order_impulse);
-    RUN_TEST(test_third_order_response);
-    return UNITY_END();
+    EXPECT_THAT(output, Pointwise(FloatNear(1e-6f), expected));
 }
