@@ -102,46 +102,46 @@ class Valvestate extends StatelessWidget {
       children: [
         Builder(
           builder: (context) {
-              final channel = Provider.of<_ValvestateParameterChannel>(context);
-              final gain = Provider.of<_ValvestateParameterGain>(context);
-              final bass = Provider.of<_ValvestateParameterBass>(context);
-              final middle = Provider.of<_ValvestateParameterMiddle>(context);
-              final treble = Provider.of<_ValvestateParameterTreble>(context);
-              final contour = Provider.of<_ValvestateParameterContour>(context);
-              final volume = Provider.of<_ValvestateParameterVolume>(context);
+            final channel = Provider.of<_ValvestateParameterChannel>(context);
+            final gain = Provider.of<_ValvestateParameterGain>(context);
+            final bass = Provider.of<_ValvestateParameterBass>(context);
+            final middle = Provider.of<_ValvestateParameterMiddle>(context);
+            final treble = Provider.of<_ValvestateParameterTreble>(context);
+            final contour = Provider.of<_ValvestateParameterContour>(context);
+            final volume = Provider.of<_ValvestateParameterVolume>(context);
 
             return Amplifier(
-            parameter: [
-              channel.value,
-              gain.value,
-              bass.value,
-              middle.value,
-              treble.value,
-              contour.value,
-              volume.value,
-            ],
-            onChanged: [
-              channel.onUserChanged,
-              gain.onUserChanged,
-              bass.onUserChanged,
-              middle.onUserChanged,
-              treble.onUserChanged,
-              contour.onUserChanged,
-              volume.onUserChanged,
-            ],
-            parameterName: [
-              channel.name,
-              gain.name,
-              bass.name,
-              middle.name,
-              treble.name,
-              contour.name,
-              volume.name,
-            ],
-            name: 'VALVESTATE 8100',
-            onTap: onTap,
-            full: full,
-          );
+              parameter: [
+                channel.value,
+                gain.value,
+                bass.value,
+                middle.value,
+                treble.value,
+                contour.value,
+                volume.value,
+              ],
+              onChanged: [
+                channel.onUserChanged,
+                gain.onUserChanged,
+                bass.onUserChanged,
+                middle.onUserChanged,
+                treble.onUserChanged,
+                contour.onUserChanged,
+                volume.onUserChanged,
+              ],
+              parameterName: [
+                channel.name,
+                gain.name,
+                bass.name,
+                middle.name,
+                treble.name,
+                contour.name,
+                volume.name,
+              ],
+              name: 'VALVESTATE 8100',
+              onTap: onTap,
+              full: full,
+            );
           },
         ),
       ],
