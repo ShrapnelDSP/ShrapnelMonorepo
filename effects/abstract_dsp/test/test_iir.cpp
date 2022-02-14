@@ -23,7 +23,8 @@
 
 #define ARRAY_SIZE(a) (sizeof(a)/sizeof(a[0]))
 
-using ::testing::ElementsAreArray;
+using ::testing::Pointwise;
+using ::testing::FloatNear;
 
 TEST(iir, unity_filter_response)
 {
@@ -39,7 +40,7 @@ TEST(iir, unity_filter_response)
     float output[ARRAY_SIZE(impulse)] = {0};
     float w[ARRAY_SIZE(impulse)] = {0};
     iir_process(impulse, output, ARRAY_SIZE(impulse), coeff, w, ARRAY_SIZE(coeff));
-    ASSERT_THAT(output, ElementsAreArray(impulse, ARRAY_SIZE(impulse)));
+    EXPECT_THAT(output, Pointwise(FloatNear(1e-6f), impulse));
 }
 
 TEST(iir, delay_filter_response)
@@ -57,7 +58,7 @@ TEST(iir, delay_filter_response)
     float output[ARRAY_SIZE(impulse)] = {0};
     float w[ARRAY_SIZE(impulse)] = {0};
     iir_process(impulse, output, ARRAY_SIZE(impulse), coeff, w, ARRAY_SIZE(coeff));
-    ASSERT_THAT(output, ElementsAreArray(expected, ARRAY_SIZE(expected)));
+    EXPECT_THAT(output, Pointwise(FloatNear(1e-6f), expected));
 }
 
 TEST(iir, div_by_two_unity_filter_response)
@@ -75,7 +76,7 @@ TEST(iir, div_by_two_unity_filter_response)
     float output[ARRAY_SIZE(impulse)] = {0};
     float w[ARRAY_SIZE(impulse)] = {0};
     iir_process(impulse, output, ARRAY_SIZE(impulse), coeff, w, ARRAY_SIZE(coeff));
-    ASSERT_THAT(output, ElementsAreArray(expected, ARRAY_SIZE(expected)));
+    EXPECT_THAT(output, Pointwise(FloatNear(1e-6f), expected));
 }
 
 TEST(iir, convolution_filter_response)
@@ -93,7 +94,7 @@ TEST(iir, convolution_filter_response)
     float output[ARRAY_SIZE(input)] = {0};
     float w[ARRAY_SIZE(input)] = {0};
     iir_process(input, output, ARRAY_SIZE(input), coeff, w, ARRAY_SIZE(coeff));
-    ASSERT_THAT(output, ElementsAreArray(expected, ARRAY_SIZE(expected)));
+    EXPECT_THAT(output, Pointwise(FloatNear(1e-6f), expected));
 }
 
 TEST(iir, third_order_impulse)
@@ -121,7 +122,7 @@ TEST(iir, third_order_impulse)
     float output[ARRAY_SIZE(input)] = {0};
     float w[ARRAY_SIZE(coeff)/2] = {0};
     iir_process(input, output, ARRAY_SIZE(input), coeff, w, ARRAY_SIZE(coeff));
-    EXPECT_THAT(output, ElementsAreArray(expected, ARRAY_SIZE(expected)));
+    EXPECT_THAT(output, Pointwise(FloatNear(1e-6f), expected));
 }
 
 TEST(iir, third_order_response)
@@ -141,5 +142,5 @@ TEST(iir, third_order_response)
     float output[ARRAY_SIZE(input)] = {0};
     float w[ARRAY_SIZE(coeff)/2] = {0};
     iir_process(input, output, ARRAY_SIZE(input), coeff, w, ARRAY_SIZE(coeff));
-    EXPECT_THAT(output, ElementsAreArray(expected, ARRAY_SIZE(expected)));
+    EXPECT_THAT(output, Pointwise(FloatNear(1e-6f), expected));
 }
