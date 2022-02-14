@@ -48,29 +48,26 @@ const int shape_size = sizeof(shape)/sizeof(shape[0]);
 float waveshape(float input)
 {
     float output;
+
+    //calculate which sample of shape the input sample corresponds to
+    //the first sample is -1, last is 1
+    float index = (input + 1.0f) / 2.0f * (shape_size - 1);
+
     //if input is out of range, hard clip
-    //TODO: maybe it's better if we follow the gradient at the end of the shape
-    if(input <= -1)
+    if(index <= 0)
     {
         output = shape[0];
     }
-    else if(input >= 1)
+    else if((int)index + 1 > (int)(shape_size - 1))
     {
-       output = shape[shape_size - 1];
+        output = shape[shape_size - 1];
     }
     else
     {
-        //calculate which sample of shape the input sample corresponds to
-        //the first sample is -1, last is 1
-        float index = (input + 1.0f)/2.0f * (shape_size-1);
-
-        //linear interpolation
-        //find ratio of x
-        float ratio = index-floor(index);
-
-        //y = c + mx
-        output = shape[(int)floor(index)] +
-            ratio*(shape[(int)ceil(index)]-shape[(int)floor(index)]);
+        // linear interpolation between two nearest elements in shape.
+        // conversion to int rounds down
+        float ratio = index - ((int)index);
+        output = shape[(int)index] + ratio*(shape[((int)index) + 1] - shape[(int)index]);
     }
 
     return (output - shape[shape_size/2])/300.0f;
