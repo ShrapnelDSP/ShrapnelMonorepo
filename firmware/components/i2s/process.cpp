@@ -51,6 +51,11 @@ std::atomic<float> *contour;
 std::atomic<float> *volume;
 
 std::atomic<float> *gate_threshold;
+std::atomic<float> *gate_hysteresis;
+std::atomic<float> *gate_attack;
+std::atomic<float> *gate_hold;
+std::atomic<float> *gate_release;
+std::atomic<float> *gate_bypass;
 
 shrapnel::effect::valvestate::Valvestate *valvestate;
 shrapnel::effect::Chorus *chorus;
@@ -83,7 +88,10 @@ void process_samples(int32_t *buf, size_t buf_len)
         fbuf[i/2] = buf[i]/(float)INT32_MAX;
     }
 
-    gate_set_threshold(*gate_threshold, 1);
+    gate_set_threshold(*gate_threshold, *gate_hysteresis);
+    gate_set_attack(*gate_attack);
+    gate_set_hold(*gate_hold);
+    gate_set_release(*gate_release);
 
     profiling_mark_stage(0);
 
@@ -108,7 +116,12 @@ void process_samples(int32_t *buf, size_t buf_len)
     profiling_mark_stage(8);
 
     profiling_mark_stage(9);
-    gate_process(fbuf, buf_len/2);
+
+    if(*gate_bypass < 0.5f)
+    {
+        gate_process(fbuf, buf_len/2);
+    }
+
     profiling_mark_stage(10);
     profiling_mark_stage(11);
 
@@ -181,8 +194,18 @@ esp_err_t process_init(shrapnel::AudioParametersBase *audio_params)
     volume = audio_params->get_raw_parameter("volume");
     assert(volume);
 
-    gate_threshold = audio_params->get_raw_parameter("gateThreshold");
+    gate_threshold = audio_params->get_raw_parameter("noiseGateThreshold");
     assert(gate_threshold);
+    gate_hysteresis = audio_params->get_raw_parameter("noiseGateHysteresis");
+    assert(gate_hysteresis);
+    gate_attack = audio_params->get_raw_parameter("noiseGateAttack");
+    assert(gate_attack);
+    gate_hold = audio_params->get_raw_parameter("noiseGateHold");
+    assert(gate_hold);
+    gate_release = audio_params->get_raw_parameter("noiseGateRelease");
+    assert(gate_release);
+    gate_bypass = audio_params->get_raw_parameter("noiseGateBypass");
+    assert(gate_bypass);
 
     return dsps_fir_init_f32(&fir, fir_coeff, fir_delay_line,
                              sizeof(fir_coeff) / sizeof(fir_coeff[0]));

@@ -100,7 +100,7 @@ class AudioParameters : public AudioParametersBase {
      * initialised etl::map using one of these methods to the constructor
      * should work.
      */
-    etl::map<std::string, std::unique_ptr<AudioParameterFloat>, 10> parameters;
+    etl::map<std::string, std::unique_ptr<AudioParameterFloat>, 100> parameters;
 };
 
 };
