@@ -379,6 +379,11 @@ extern "C" void app_main(void)
     audio_params->create_and_add_parameter("noiseGateRelease", 1, 250, 50);
     audio_params->create_and_add_parameter("noiseGateBypass", 0, 1, 0);
 
+    audio_params->create_and_add_parameter("chorusRate", 0.1, 4, 0.95);
+    audio_params->create_and_add_parameter("chorusDepth", 0, 1, 0.3);
+    audio_params->create_and_add_parameter("chorusMix", 0, 1, 0.8);
+    audio_params->create_and_add_parameter("chorusBypass", 0, 1, 0);
+
     cmd_handling_task = new shrapnel::CommandHandlingTask(5, in_queue, audio_params);
 
     ESP_ERROR_CHECK(audio_event_init());

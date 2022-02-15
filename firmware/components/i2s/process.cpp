@@ -57,6 +57,11 @@ std::atomic<float> *gate_hold;
 std::atomic<float> *gate_release;
 std::atomic<float> *gate_bypass;
 
+std::atomic<float> *chorus_rate;
+std::atomic<float> *chorus_depth;
+std::atomic<float> *chorus_mix;
+std::atomic<float> *chorus_bypass;
+
 shrapnel::effect::valvestate::Valvestate *valvestate;
 shrapnel::effect::Chorus *chorus;
 
@@ -129,11 +134,16 @@ void process_samples(int32_t *buf, size_t buf_len)
     dsps_fir_f32_ae32(&fir, fbuf, fbuf, buf_len/2);
     profiling_mark_stage(12);
 
-    chorus->set_modulation_rate_hz(1.f);
-    chorus->set_modulation_depth(.5f);
-    chorus->set_modulation_mix(.8f);
-    chorus->process(fbuf, buf_len/2);
+    chorus->set_modulation_rate_hz(*chorus_rate);
+    chorus->set_modulation_depth(*chorus_depth);
+    chorus->set_modulation_mix(*chorus_mix);
+
     profiling_mark_stage(13);
+
+    if(*chorus_bypass < 0.5f)
+    {
+        chorus->process(fbuf, buf_len/2);
+    }
 
     profiling_mark_stage(14);
 
@@ -206,6 +216,15 @@ esp_err_t process_init(shrapnel::AudioParametersBase *audio_params)
     assert(gate_release);
     gate_bypass = audio_params->get_raw_parameter("noiseGateBypass");
     assert(gate_bypass);
+
+    chorus_rate = audio_params->get_raw_parameter("chorusRate");
+    assert(chorus_rate);
+    chorus_depth = audio_params->get_raw_parameter("chorusDepth");
+    assert(chorus_depth);
+    chorus_mix = audio_params->get_raw_parameter("chorusMix");
+    assert(chorus_mix);
+    chorus_bypass = audio_params->get_raw_parameter("chorusBypass");
+    assert(chorus_bypass);
 
     return dsps_fir_init_f32(&fir, fir_coeff, fir_delay_line,
                              sizeof(fir_coeff) / sizeof(fir_coeff[0]));
