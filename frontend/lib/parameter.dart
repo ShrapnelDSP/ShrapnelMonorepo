@@ -46,6 +46,10 @@ class AudioParameterDouble {
 
   final String id;
   final double value;
+
+  // TODO Could we use object oriented design to ensure all message classes
+  // have this field defined?
+  final String messageType = 'updateParameter';
 }
 
 class AudioParameterDoubleModel extends ChangeNotifier {
@@ -77,8 +81,11 @@ class AudioParameterDoubleModel extends ChangeNotifier {
 
   double get value => _value;
 
-  String toJson() =>
-      json.encode(AudioParameterDouble(value: value, id: id).toJson());
+  String toJson() {
+    final message = AudioParameterDouble(value: value, id: id).toJson();
+    message['messageType'] = 'parameterUpdate';
+    return json.encode(message);
+  }
 }
 
 class ParameterService extends ChangeNotifier {
@@ -91,6 +98,14 @@ class ParameterService extends ChangeNotifier {
     ));
 
     channel.stream.listen(_handleIncomingEvent);
+
+    _requestParameterInitialisation();
+  }
+
+  void _requestParameterInitialisation() {
+      final message = <String, dynamic>{};
+      message['messageType'] = 'initialiseParameters';
+      sink.add(json.encode(message));
   }
 
   final channel = WebSocketChannel.connect(

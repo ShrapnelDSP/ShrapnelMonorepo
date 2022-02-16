@@ -22,6 +22,7 @@
 #include "queue.h"
 #include "audio_param.h"
 #include "etl/list.h"
+#include "cJSON.h"
 
 namespace shrapnel {
 
@@ -44,6 +45,8 @@ class CommandHandling
     void work(void);
 
     private:
+    void parameter_update(cJSON *json);
+    void initialise_parameters(cJSON *json);
 
     QueueBase<Message> *queue;
     AudioParametersBase *param;
