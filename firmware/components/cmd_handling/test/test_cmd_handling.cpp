@@ -98,7 +98,7 @@ TEST_F(CmdHandling, InvalidMessage)
 TEST_F(CmdHandling, ValidMessage)
 {
     Message output = {
-        {.json = "{\"id\": \"tight\", \"value\": 1}"},
+        {.json = "{\"id\": \"tight\", \"value\": 1, \"messageType\": \"parameterUpdate\"}"},
     };
 
     EXPECT_CALL(queue, receive(_, portMAX_DELAY))
