@@ -20,7 +20,7 @@
 #include <stdio.h>
 #include <math.h>
 
-#define LOG_LOCAL_LEVEL ESP_LOG_DEBUG
+//#define LOG_LOCAL_LEVEL ESP_LOG_DEBUG
 #include "esp_log.h"
 #define TAG "main"
 
@@ -362,6 +362,7 @@ extern "C" void app_main(void)
     assert(out_queue);
 
     audio_params = new shrapnel::AudioParameters();
+
     audio_params->create_and_add_parameter("ampGain", 0, 1, 0.5);
     audio_params->create_and_add_parameter("ampChannel", 0, 1, 0);
     audio_params->create_and_add_parameter("bass", 0, 1, 0.5);
@@ -371,7 +372,17 @@ extern "C" void app_main(void)
     audio_params->create_and_add_parameter("contour", 0.01, 1, 0.5);
     audio_params->create_and_add_parameter("volume", -30, 0, -15);
 
-    audio_params->create_and_add_parameter("gateThreshold", -80, 0, -40);
+    audio_params->create_and_add_parameter("noiseGateThreshold", -80, 0, -60);
+    audio_params->create_and_add_parameter("noiseGateHysteresis", 0, 5, 0);
+    audio_params->create_and_add_parameter("noiseGateAttack", 1, 50, 10);
+    audio_params->create_and_add_parameter("noiseGateHold", 1, 250, 50);
+    audio_params->create_and_add_parameter("noiseGateRelease", 1, 250, 50);
+    audio_params->create_and_add_parameter("noiseGateBypass", 0, 1, 0);
+
+    audio_params->create_and_add_parameter("chorusRate", 0.1, 4, 0.95);
+    audio_params->create_and_add_parameter("chorusDepth", 0, 1, 0.3);
+    audio_params->create_and_add_parameter("chorusMix", 0, 1, 0.8);
+    audio_params->create_and_add_parameter("chorusBypass", 0, 1, 0);
 
     cmd_handling_task = new shrapnel::CommandHandlingTask(5, in_queue, audio_params);
 

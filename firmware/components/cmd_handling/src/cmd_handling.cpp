@@ -49,6 +49,7 @@ void CommandHandling::work(void)
     int ret = queue->receive(&msg, portMAX_DELAY);
     if(ret == pdTRUE)
     {
+        int rc;
 #if !defined(TESTING)
         ESP_LOGI(TAG, "%s stack %d", __FUNCTION__, uxTaskGetStackHighWaterMark(NULL));
 #endif
@@ -88,7 +89,11 @@ void CommandHandling::work(void)
             goto done;
         }
 
-        param->update(parsed_id, parsed_value);
+        rc = param->update(parsed_id, parsed_value);
+        if(rc != 0)
+        {
+            ESP_LOGE(TAG, "Failed to update parameter (%s) with value %f", parsed_id, parsed_value);
+        }
 done:
         cJSON_Delete(json);
     }
