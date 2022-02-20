@@ -26,6 +26,7 @@
 
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
+#include "freertos/semphr.h"
 
 #include <assert.h>
 #include <esp_wifi.h>
@@ -59,6 +60,16 @@ static shrapnel::AudioParameters *audio_params;
 static shrapnel::CommandHandlingTask *cmd_handling_task;
 
 static QueueHandle_t out_queue;
+
+/*
+ * TODO espressif's http server drops some calls to the work function when
+ * there are many calls queued at once. Waiting for the previous execution to
+ * finish seems to help, but is probably not a real solution. There will be
+ * some internal functions writing to the control socket which could still
+ * reproduce the bug.
+ */
+static SemaphoreHandle_t work_semaphore;
+
 static httpd_handle_t server = NULL;
 
 extern "C" {
@@ -233,9 +244,15 @@ void audio_event_send_callback(const char *message, int fd)
                              100 / portTICK_PERIOD_MS))
     {
         ESP_LOGE(TAG, "Failed to send message to websocket");
+        return;
     }
 
-    //vTaskDelay(100 / portTICK_PERIOD_MS);
+    if(!xSemaphoreTake(work_semaphore, 1000 / portTICK_PERIOD_MS))
+    {
+        ESP_LOGE(TAG, "work semaphore timed out");
+        return;
+    }
+
     esp_err_t rc = httpd_queue_work(server, websocket_send, server);
     if(ESP_OK != rc)
     {
@@ -305,6 +322,8 @@ static void websocket_send(void *arg)
             ESP_LOGE(TAG, "failed to send to fd %d rc %d", fd, rc);
         }
     }
+
+    xSemaphoreGive(work_semaphore);
 }
 
 static void start_mdns(void)
@@ -346,20 +365,9 @@ extern "C" void app_main(void)
     ESP_ERROR_CHECK(esp_netif_init());
     ESP_ERROR_CHECK(esp_event_loop_create_default());
 
-    /* This helper function configures Wi-Fi or Ethernet, as selected in menuconfig.
-     * Read "Establishing Wi-Fi or Ethernet Connection" section in
-     * examples/protocols/README.md for more information about this function.
-     */
-    ESP_ERROR_CHECK(example_connect());
-
-    /* Register event handlers to stop the server when Wi-Fi or Ethernet is disconnected,
-     * and re-start it upon connection.
-     */
-    ESP_ERROR_CHECK(esp_event_handler_register(IP_EVENT, IP_EVENT_STA_GOT_IP, &connect_handler, &server));
-    ESP_ERROR_CHECK(esp_event_handler_register(WIFI_EVENT, WIFI_EVENT_STA_DISCONNECTED, &disconnect_handler, &server));
-
-    /* Start the server for the first time */
-    server = start_webserver();
+    work_semaphore = xSemaphoreCreateBinary();
+    assert(work_semaphore);
+    xSemaphoreGive(work_semaphore);
 
     in_queue = new shrapnel::Queue<shrapnel::CommandHandling::Message>(QUEUE_LEN);
     assert(in_queue);
@@ -452,6 +460,18 @@ extern "C" void app_main(void)
         ESP_LOGE(TAG, "Profiling task create failed %d", rc);
     }
 #endif
+
+    /* Register event handlers to stop the server when Wi-Fi or Ethernet is disconnected,
+     * and re-start it upon connection.
+     */
+    ESP_ERROR_CHECK(esp_event_handler_register(IP_EVENT, IP_EVENT_STA_GOT_IP, &connect_handler, &server));
+    ESP_ERROR_CHECK(esp_event_handler_register(WIFI_EVENT, WIFI_EVENT_STA_DISCONNECTED, &disconnect_handler, &server));
+
+    /* This helper function configures Wi-Fi or Ethernet, as selected in menuconfig.
+     * Read "Establishing Wi-Fi or Ethernet Connection" section in
+     * examples/protocols/README.md for more information about this function.
+     */
+    ESP_ERROR_CHECK(example_connect());
 
     ESP_LOGI(TAG, "setup done");
 }
