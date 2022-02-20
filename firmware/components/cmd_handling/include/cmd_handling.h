@@ -32,6 +32,7 @@ class CommandHandling
     struct Message
     {
         char json[128];
+        int fd;
     };
 
     /** \brief
@@ -45,11 +46,14 @@ class CommandHandling
     void work(void);
 
     private:
-    void parameter_update(cJSON *json);
-    void initialise_parameters(cJSON *json);
+    void parameter_update(void);
+    void initialise_parameters(void);
 
     QueueBase<Message> *queue;
     AudioParametersBase *param;
+
+    cJSON *json;
+    Message message;
 };
 
 }

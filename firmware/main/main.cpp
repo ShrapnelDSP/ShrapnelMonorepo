@@ -80,7 +80,7 @@ static void i2c_setup(void);
 
 static esp_err_t websocket_get_handler(httpd_req_t *req)
 {
-    shrapnel::CommandHandling::Message message = { 0 };
+    shrapnel::CommandHandling::Message message{};
 
     httpd_ws_frame_t pkt = {
         .final = false,
@@ -116,13 +116,13 @@ static esp_err_t websocket_get_handler(httpd_req_t *req)
     ESP_LOGD(TAG, "%s len = %zd", __FUNCTION__, pkt.len);
     ESP_LOG_BUFFER_HEXDUMP(TAG, message.json, sizeof(message.json), ESP_LOG_DEBUG);
 
+    message.fd = httpd_req_to_sockfd(req);
+
     rc = in_queue->send(&message, 100 / portTICK_PERIOD_MS);
     if(rc != pdTRUE)
     {
         ESP_LOGE(TAG, "%s failed to send to queue", __FUNCTION__);
     }
-
-    audio_event_send_callback((char *)pkt.payload, httpd_req_to_sockfd(req));
 
     ESP_LOGI(TAG, "%s stack %d", __FUNCTION__, uxTaskGetStackHighWaterMark(NULL));
 
@@ -223,6 +223,8 @@ void audio_event_send_callback(const char *message, int fd)
     };
 
     snprintf(event_message.message, sizeof(event_message.message), "%s", message);
+
+    ESP_LOGD(TAG, "%s %s", __FUNCTION__, event_message.message);
 
     if(errQUEUE_FULL ==
             xQueueSendToBack(out_queue,

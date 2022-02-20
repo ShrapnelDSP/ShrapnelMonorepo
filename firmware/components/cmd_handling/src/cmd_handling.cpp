@@ -19,6 +19,7 @@
 
 #include "cmd_handling.h"
 
+#include "audio_events.h"
 #include "audio_param.h"
 #include "cJSON.h"
 #include <climits>
@@ -35,15 +36,11 @@ namespace shrapnel {
 
 void CommandHandling::work(void)
 {
-    Message msg = {0};
-
     /* TODO should not leave these uninitialised */
-    cJSON *json;
-
     char *message_type;
     cJSON *type;
 
-    int ret = queue->receive(&msg, portMAX_DELAY);
+    int ret = queue->receive(&message, portMAX_DELAY);
     if(ret != pdTRUE)
     {
         ESP_LOGE(TAG, "Queue failed to receive");
@@ -53,14 +50,15 @@ void CommandHandling::work(void)
 #if !defined(TESTING)
     ESP_LOGI(TAG, "%s stack %d", __FUNCTION__, uxTaskGetStackHighWaterMark(NULL));
 #endif
-    size_t msg_size = sizeof(msg.json);
-    assert(msg_size <= INT_MAX);
+    size_t message_size = sizeof(message.json);
+    assert(message_size <= INT_MAX);
+    (void)message_size;
 
     ESP_LOGI(TAG, "received websocket message: %.*s",
-             static_cast<int>(sizeof(msg.json)),
-             msg.json);
+             static_cast<int>(sizeof(message.json)),
+             message.json);
 
-    json = cJSON_ParseWithLength(msg.json, sizeof(msg.json));
+    json = cJSON_ParseWithLength(message.json, sizeof(message.json));
     if(json == NULL)
     {
         ESP_LOGE(TAG, "json parsing failed");
@@ -80,11 +78,11 @@ void CommandHandling::work(void)
 
     if(0 == strcmp(message_type, "initialiseParameters"))
     {
-        initialise_parameters(json);
+        initialise_parameters();
     }
     else if(0 == strcmp(message_type, "parameterUpdate"))
     {
-        parameter_update(json);
+        parameter_update();
     }
     else
     {
@@ -95,7 +93,7 @@ done:
     cJSON_Delete(json);
 }
 
-void CommandHandling::parameter_update(cJSON *json)
+void CommandHandling::parameter_update(void)
 {
     assert(json);
 
@@ -128,9 +126,11 @@ void CommandHandling::parameter_update(cJSON *json)
     {
         ESP_LOGE(TAG, "Failed to update parameter (%s) with value %f", parsed_id, parsed_value);
     }
+
+    audio_event_send_callback(message.json, message.fd);
 }
 
-void CommandHandling::initialise_parameters(cJSON *json)
+void CommandHandling::initialise_parameters(void)
 {
     assert(json);
 
@@ -142,6 +142,8 @@ CommandHandling::CommandHandling(
         QueueBase<Message> *queue,
         AudioParametersBase *param) :
     queue(queue),
-    param(param) {}
+    param(param),
+    json(nullptr),
+    message({}) {}
 
 }
