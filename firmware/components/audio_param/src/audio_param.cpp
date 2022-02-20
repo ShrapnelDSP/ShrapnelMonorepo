@@ -99,4 +99,14 @@ std::atomic<float> *AudioParameters::get_raw_parameter(const std::string param)
     return parameters[param]->get_raw_parameter();
 }
 
+AudioParameters::MapType::iterator AudioParameters::begin()
+{
+    return parameters.begin();
+}
+
+AudioParameters::MapType::iterator AudioParameters::end()
+{
+    return parameters.end();
+}
+
 }

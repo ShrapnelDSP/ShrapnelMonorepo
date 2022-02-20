@@ -49,7 +49,7 @@
 #include "pcm3060.h"
 #include "profiling.h"
 
-#define QUEUE_LEN 10
+#define QUEUE_LEN 20
 #define MAX_CLIENTS 3
 #define MAX_WEBSOCKET_PAYLOAD_SIZE 128
 #define ARRAY_LENGTH(a) (sizeof(a)/sizeof(a[0]))
@@ -114,7 +114,7 @@ static esp_err_t websocket_get_handler(httpd_req_t *req)
     assert(pkt.len <= sizeof(message.json));
 
     ESP_LOGD(TAG, "%s len = %zd", __FUNCTION__, pkt.len);
-    ESP_LOG_BUFFER_HEXDUMP(TAG, message.json, sizeof(message.json), ESP_LOG_DEBUG);
+    ESP_LOG_BUFFER_HEXDUMP(TAG, message.json, sizeof(message.json), ESP_LOG_VERBOSE);
 
     message.fd = httpd_req_to_sockfd(req);
 
@@ -225,6 +225,7 @@ void audio_event_send_callback(const char *message, int fd)
     snprintf(event_message.message, sizeof(event_message.message), "%s", message);
 
     ESP_LOGD(TAG, "%s %s", __FUNCTION__, event_message.message);
+    ESP_LOGD(TAG, "%s %s", __FUNCTION__, pcTaskGetTaskName(NULL));
 
     if(errQUEUE_FULL ==
             xQueueSendToBack(out_queue,
@@ -234,6 +235,7 @@ void audio_event_send_callback(const char *message, int fd)
         ESP_LOGE(TAG, "Failed to send message to websocket");
     }
 
+    //vTaskDelay(100 / portTICK_PERIOD_MS);
     esp_err_t rc = httpd_queue_work(server, websocket_send, server);
     if(ESP_OK != rc)
     {
@@ -255,10 +257,12 @@ static void websocket_send(void *arg)
         return;
     }
 
+    ESP_LOGD(TAG, "%s %d messages waiting", __FUNCTION__, uxQueueMessagesWaiting(out_queue));
+
     ESP_LOGD(TAG, "%s source fd = %d", __FUNCTION__, event_message.fd);
 
     ESP_LOGD(TAG, "%s len = %zd", __FUNCTION__, strlen(event_message.message));
-    ESP_LOG_BUFFER_HEXDUMP(TAG, event_message.message, sizeof(event_message.message), ESP_LOG_DEBUG);
+    ESP_LOG_BUFFER_HEXDUMP(TAG, event_message.message, sizeof(event_message.message), ESP_LOG_VERBOSE);
 
     assert(strlen(event_message.message) < sizeof(event_message.message));
 

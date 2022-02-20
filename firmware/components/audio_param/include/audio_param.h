@@ -76,19 +76,6 @@ class AudioParametersBase {
 };
 
 class AudioParameters : public AudioParametersBase {
-    public:
-    AudioParameters();
-
-    int update(const std::string param, float value) override;
-    std::atomic<float> *get_raw_parameter(const std::string param) override;
-
-    int create_and_add_parameter(
-        std::string name,
-        float minimum,
-        float maximum,
-        float default_value) override;
-
-    private:
     /* TODO how to avoid having to increase size manually when more effects are
      * added?
      *
@@ -100,7 +87,25 @@ class AudioParameters : public AudioParametersBase {
      * initialised etl::map using one of these methods to the constructor
      * should work.
      */
-    etl::map<std::string, std::unique_ptr<AudioParameterFloat>, 100> parameters;
+    public:
+    using MapType = etl::map<std::string, std::unique_ptr<AudioParameterFloat>, 100>;
+
+    AudioParameters();
+
+    int update(const std::string param, float value) override;
+    std::atomic<float> *get_raw_parameter(const std::string param) override;
+
+    int create_and_add_parameter(
+        std::string name,
+        float minimum,
+        float maximum,
+        float default_value) override;
+
+    MapType::iterator begin();
+    MapType::iterator end();
+
+    private:
+    MapType parameters;
 };
 
 };

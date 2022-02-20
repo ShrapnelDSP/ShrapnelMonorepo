@@ -29,7 +29,7 @@ class CommandHandlingTask : public TaskBase
     public:
     CommandHandlingTask(int priority,
                         QueueBase<CommandHandling::Message> *queue,
-                        AudioParametersBase *param);
+                        AudioParameters *param);
 
     CommandHandling cmd;
     private:

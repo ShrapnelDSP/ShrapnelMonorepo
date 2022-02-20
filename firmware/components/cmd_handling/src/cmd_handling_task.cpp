@@ -23,7 +23,7 @@ namespace shrapnel {
 
 CommandHandlingTask::CommandHandlingTask(int priority,
         QueueBase<CommandHandling::Message> *queue,
-        AudioParametersBase *param) :
+        AudioParameters *param) :
     TaskBase("command handling", 4000, priority),
     cmd(queue, param)
 {

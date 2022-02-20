@@ -29,6 +29,7 @@
 #include <string.h>
 #include "task.h"
 #include "queue.h"
+#include <iterator>
 
 #define TAG "cmd_handling"
 
@@ -134,13 +135,25 @@ void CommandHandling::initialise_parameters(void)
 {
     assert(json);
 
-    // TODO implement function that notifies all parameters
-    ESP_LOGW(TAG, "%s not implemented", __FUNCTION__);
+    Message output;
+
+    for(auto &p : *param)
+    {
+        std::atomic<float> *tmp = p.second->get_raw_parameter();
+        float tmp_f = *tmp;
+
+        snprintf(output.json, sizeof(output.json),
+                 "{\"id\": \"%s\", \"value\":%g}",
+                 p.first.c_str(),
+                 tmp_f);
+
+        audio_event_send_callback(output.json, -1);
+    }
 }
 
 CommandHandling::CommandHandling(
         QueueBase<Message> *queue,
-        AudioParametersBase *param) :
+        AudioParameters *param) :
     queue(queue),
     param(param),
     json(nullptr),
