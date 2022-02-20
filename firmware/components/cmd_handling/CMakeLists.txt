@@ -12,6 +12,7 @@ else()
 
     target_include_directories(cmd_handling_test PRIVATE include)
 
+    target_link_libraries(cmd_handling_test PRIVATE audio_events_mock)
     target_link_libraries(cmd_handling_test PRIVATE audio_param_mock)
     target_link_libraries(cmd_handling_test PRIVATE esp_common)
     target_link_libraries(cmd_handling_test PRIVATE etl)

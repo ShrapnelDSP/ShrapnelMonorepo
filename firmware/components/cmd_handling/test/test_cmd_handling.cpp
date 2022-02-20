@@ -23,6 +23,11 @@
 #include "audio_param.h"
 #include "cmd_handling.h"
 
+#include "audio_events.h"
+
+/* TODO create a C++ interface for mocking. We can use a shrapnel::QueueBase */
+void audio_event_send_callback(const char *message, int fd) {};
+
 using testing::_;
 using testing::Return;
 
@@ -80,6 +85,7 @@ TEST_F(CmdHandling, InvalidMessage)
 {
     Message output = {
         {.json = "This is not JSON"},
+        {}
     };
 
     EXPECT_CALL(queue, receive(_, portMAX_DELAY))
@@ -99,6 +105,7 @@ TEST_F(CmdHandling, ValidMessage)
 {
     Message output = {
         {.json = "{\"id\": \"tight\", \"value\": 1, \"messageType\": \"parameterUpdate\"}"},
+        {}
     };
 
     EXPECT_CALL(queue, receive(_, portMAX_DELAY))

@@ -21,6 +21,7 @@
 
 #include "freertos/FreeRTOS.h"
 #include "freertos/event_groups.h"
+#include "esp_err.h"
 
 #ifdef __cplusplus
 extern "C" {
