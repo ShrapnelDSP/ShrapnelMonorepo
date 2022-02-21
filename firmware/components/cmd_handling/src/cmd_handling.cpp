@@ -137,14 +137,13 @@ void CommandHandling::initialise_parameters(void)
 
     Message output;
 
-    for(auto &p : *param)
+    for(const auto& [key, value] : *param)
     {
-        std::atomic<float> *tmp = p.second->get_raw_parameter();
-        float tmp_f = *tmp;
+        float tmp_f = *value->get_raw_parameter();
 
         snprintf(output.json, sizeof(output.json),
                  "{\"id\": \"%s\", \"value\":%g}",
-                 p.first.c_str(),
+                 key.c_str(),
                  tmp_f);
 
         audio_event_send_callback(output.json, -1);

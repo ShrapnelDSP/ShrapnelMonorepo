@@ -96,3 +96,29 @@ TEST_F(AudioParams, UpdateLimitEdgeCases)
     uut.update("test", 1);
     ASSERT_EQ(10, *uut.get_raw_parameter("test"));
 }
+
+TEST_F(AudioParams, Iterate)
+{
+    uut.create_and_add_parameter("test1", 0, 10, 1);
+    uut.create_and_add_parameter("test2", 0, 10, 2);
+
+    std::map<std::string, float> expected{
+       {"test", 5}, // defined in test fixture
+       {"test1", 1},
+       {"test2", 2},
+    };
+
+    std::map<std::string, float> actual{};
+
+    for(const auto& [key, value] : uut)
+    {
+        actual[key] = *value->get_raw_parameter();
+    }
+
+    EXPECT_EQ(expected.size(), actual.size());
+
+    for(const auto& [key, value] : expected)
+    {
+        EXPECT_EQ(value, actual[key]);
+    }
+}
