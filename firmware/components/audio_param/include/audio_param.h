@@ -50,7 +50,20 @@ class AudioParameterFloat {
 };
 
 class AudioParametersBase {
+    /* TODO how to avoid having to increase size manually when more effects are
+     * added?
+     *
+     * We don't want to use heap allocation when the parameters are registered.
+     * Maybe some constexpr functions could be used to register the parameters?
+     *
+     * ETL provides template dedcution guide and make template for etl::map.
+     * These deduce the size from the initialiser. Passing an already
+     * initialised etl::map using one of these methods to the constructor
+     * should work.
+     */
     public:
+    using MapType = etl::map<std::string, std::unique_ptr<AudioParameterFloat>, 100>;
+
     AudioParametersBase() {};
 
     /** Update a parameter
@@ -61,6 +74,9 @@ class AudioParametersBase {
      * \return 0 on success
      */
     virtual int update(const std::string param, float value) = 0;
+
+    virtual MapType::iterator begin() = 0;
+    virtual MapType::iterator end() = 0;
 
     virtual int create_and_add_parameter(
         std::string name,
@@ -76,20 +92,7 @@ class AudioParametersBase {
 };
 
 class AudioParameters : public AudioParametersBase {
-    /* TODO how to avoid having to increase size manually when more effects are
-     * added?
-     *
-     * We don't want to use heap allocation when the parameters are registered.
-     * Maybe some constexpr functions could be used to register the parameters?
-     *
-     * ETL provides template dedcution guide and make template for etl::map.
-     * These deduce the size from the initialiser. Passing an already
-     * initialised etl::map using one of these methods to the constructor
-     * should work.
-     */
     public:
-    using MapType = etl::map<std::string, std::unique_ptr<AudioParameterFloat>, 100>;
-
     AudioParameters();
 
     int update(const std::string param, float value) override;
@@ -101,8 +104,8 @@ class AudioParameters : public AudioParametersBase {
         float maximum,
         float default_value) override;
 
-    MapType::iterator begin();
-    MapType::iterator end();
+    MapType::iterator begin() override;
+    MapType::iterator end() override;
 
     private:
     MapType parameters;

@@ -41,7 +41,7 @@ class CommandHandling
      * \param[in] param Data received through \ref queue are
      * translated to binary and sent to this object.
      */
-    CommandHandling(QueueBase<Message> *queue, AudioParameters *param);
+    CommandHandling(QueueBase<Message> *queue, AudioParametersBase *param);
 
     void work(void);
 
@@ -50,7 +50,7 @@ class CommandHandling
     void initialise_parameters(void);
 
     QueueBase<Message> *queue;
-    AudioParameters *param;
+    AudioParametersBase *param;
 
     cJSON *json;
     Message message;

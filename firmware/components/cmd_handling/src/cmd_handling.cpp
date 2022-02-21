@@ -153,7 +153,7 @@ void CommandHandling::initialise_parameters(void)
 
 CommandHandling::CommandHandling(
         QueueBase<Message> *queue,
-        AudioParameters *param) :
+        AudioParametersBase *param) :
     queue(queue),
     param(param),
     json(nullptr),

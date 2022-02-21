@@ -34,6 +34,11 @@ using testing::Return;
 #include "task.h"
 #include "queue.h"
 
+std::atomic<float> *shrapnel::AudioParameterFloat::get_raw_parameter(void)
+{
+    return nullptr;
+}
+
 template <typename T>
 class MockQueue : public shrapnel::QueueBase<T>
 {
@@ -53,6 +58,8 @@ class MockAudioParameters : public shrapnel::AudioParametersBase
         float maximum,
         float default_value), (override));
     MOCK_METHOD(std::atomic<float> *, get_raw_parameter, (const std::string param), (override));
+    MOCK_METHOD(MapType::iterator, begin, (), (override));
+    MOCK_METHOD(MapType::iterator, end, (), (override));
 };
 
 class CmdHandling : public ::testing::Test
