@@ -127,7 +127,7 @@ static void i2s_processing_task(void *param)
  * Master mode, MCK, BCK, FS controlled using the defines above. Clock is
  * output on GPIO0 (CLK_OUT1) to keep UART0 free.
  */
-esp_err_t i2s_setup(gpio_num_t profiling_gpio, shrapnel::AudioParametersBase *audio_param)
+esp_err_t i2s_setup(gpio_num_t profiling_gpio, shrapnel::AudioParameters *audio_param)
 {
     esp_err_t err;
 

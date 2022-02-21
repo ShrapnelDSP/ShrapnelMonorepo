@@ -22,7 +22,6 @@
 
 #define LOG_LOCAL_LEVEL ESP_LOG_DEBUG
 #include "esp_log.h"
-#define TAG "main"
 
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
@@ -50,14 +49,17 @@
 #include "pcm3060.h"
 #include "profiling.h"
 
+#define TAG "main"
 #define QUEUE_LEN 20
 #define MAX_CLIENTS 3
 #define MAX_WEBSOCKET_PAYLOAD_SIZE 128
 #define ARRAY_LENGTH(a) (sizeof(a)/sizeof(a[0]))
 
-static shrapnel::Queue<shrapnel::CommandHandling::Message> *in_queue;
+// TODO use namespace shrapnel to make some of these declarations shorter
+
+static shrapnel::Queue<shrapnel::CommandHandling<shrapnel::AudioParameters>::Message> *in_queue;
 static shrapnel::AudioParameters *audio_params;
-static shrapnel::CommandHandlingTask *cmd_handling_task;
+static shrapnel::CommandHandlingTask<shrapnel::AudioParameters> *cmd_handling_task;
 
 static QueueHandle_t out_queue;
 
@@ -91,7 +93,7 @@ static void i2c_setup(void);
 
 static esp_err_t websocket_get_handler(httpd_req_t *req)
 {
-    shrapnel::CommandHandling::Message message{};
+    shrapnel::CommandHandling<shrapnel::AudioParameters>::Message message{};
 
     httpd_ws_frame_t pkt = {
         .final = false,
@@ -369,7 +371,7 @@ extern "C" void app_main(void)
     assert(work_semaphore);
     xSemaphoreGive(work_semaphore);
 
-    in_queue = new shrapnel::Queue<shrapnel::CommandHandling::Message>(QUEUE_LEN);
+    in_queue = new shrapnel::Queue<shrapnel::CommandHandling<shrapnel::AudioParameters>::Message>(QUEUE_LEN);
     assert(in_queue);
 
     out_queue = xQueueCreate(QUEUE_LEN, sizeof(audio_event_message_t));
@@ -398,7 +400,7 @@ extern "C" void app_main(void)
     audio_params->create_and_add_parameter("chorusMix", 0, 1, 0.8);
     audio_params->create_and_add_parameter("chorusBypass", 0, 1, 0);
 
-    cmd_handling_task = new shrapnel::CommandHandlingTask(5, in_queue, audio_params);
+    cmd_handling_task = new shrapnel::CommandHandlingTask<shrapnel::AudioParameters>(5, in_queue, audio_params);
 
     ESP_ERROR_CHECK(audio_event_init());
 

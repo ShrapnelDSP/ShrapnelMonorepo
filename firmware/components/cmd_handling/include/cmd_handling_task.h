@@ -24,16 +24,26 @@
 
 namespace shrapnel {
 
+template<typename AudioParametersT>
 class CommandHandlingTask : public TaskBase
 {
     public:
     CommandHandlingTask(int priority,
-                        QueueBase<CommandHandling::Message> *queue,
-                        AudioParametersBase *param);
+                        QueueBase<typename CommandHandling<AudioParametersT>::Message> *queue,
+                        AudioParametersT *param) :
+        TaskBase("command handling", 4000, priority),
+        cmd(queue, param)
+    {
+        start();
+    }
 
-    CommandHandling cmd;
+    CommandHandling<AudioParametersT> cmd;
+
     private:
-        void loop(void) override;
+    void loop(void) override
+    {
+        cmd.work();
+    }
 };
 
 }

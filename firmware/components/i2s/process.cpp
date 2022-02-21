@@ -168,7 +168,7 @@ void process_samples(int32_t *buf, size_t buf_len)
     gpio_set_level(g_profiling_gpio, 0);
 }
 
-esp_err_t process_init(shrapnel::AudioParametersBase *audio_params)
+esp_err_t process_init(shrapnel::AudioParameters *audio_params)
 {
     ESP_LOGI(TAG, "Initialised FIR filter with length %d", 
                              sizeof(fir_coeff) / sizeof(fir_coeff[0]));

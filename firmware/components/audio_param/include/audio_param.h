@@ -49,7 +49,7 @@ class AudioParameterFloat {
     float maximum;
 };
 
-class AudioParametersBase {
+class AudioParameters final {
     /* TODO how to avoid having to increase size manually when more effects are
      * added?
      *
@@ -64,7 +64,7 @@ class AudioParametersBase {
     public:
     using MapType = etl::map<std::string, std::unique_ptr<AudioParameterFloat>, 100>;
 
-    AudioParametersBase() {};
+    AudioParameters();
 
     /** Update a parameter
      *
@@ -73,39 +73,22 @@ class AudioParametersBase {
      *
      * \return 0 on success
      */
-    virtual int update(const std::string param, float value) = 0;
-
-    virtual MapType::iterator begin() = 0;
-    virtual MapType::iterator end() = 0;
-
-    virtual int create_and_add_parameter(
-        std::string name,
-        float minimum,
-        float maximum,
-        float default_value) = 0;
+    int update(const std::string param, float value);
 
     /** Get denormalised value of parameter
      *
      * \param param Name of the parameter to get
      */
-    virtual std::atomic<float> *get_raw_parameter(const std::string param) = 0;
-};
-
-class AudioParameters : public AudioParametersBase {
-    public:
-    AudioParameters();
-
-    int update(const std::string param, float value) override;
-    std::atomic<float> *get_raw_parameter(const std::string param) override;
+    std::atomic<float> *get_raw_parameter(const std::string param);
 
     int create_and_add_parameter(
         std::string name,
         float minimum,
         float maximum,
-        float default_value) override;
+        float default_value);
 
-    MapType::iterator begin() override;
-    MapType::iterator end() override;
+    MapType::iterator begin();
+    MapType::iterator end();
 
     private:
     MapType parameters;
