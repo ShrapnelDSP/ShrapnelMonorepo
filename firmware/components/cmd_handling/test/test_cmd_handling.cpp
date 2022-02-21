@@ -26,7 +26,11 @@
 #include "audio_events.h"
 
 /* TODO create a C++ interface for mocking. We can use a shrapnel::QueueBase */
-void audio_event_send_callback(const char *message, int fd) {};
+void audio_event_send_callback(const char *message, int fd)
+{
+    (void)message;
+    (void)fd;
+};
 
 using testing::_;
 using testing::Return;
@@ -48,32 +52,40 @@ class MockQueue : public shrapnel::QueueBase<T>
     MOCK_METHOD(BaseType_t, send, (T *out, TickType_t time_to_wait), (override));
 };
 
-class MockAudioParameters : public shrapnel::AudioParametersBase
+class MockAudioParameters
 {
     public:
-    MOCK_METHOD(int, update, (std::string param, float value), (override));
+    using MapType = std::map<std::string, std::unique_ptr<shrapnel::AudioParameterFloat>>;
+
+    MOCK_METHOD(int, update, (std::string param, float value), ());
     MOCK_METHOD(int, create_and_add_parameter, (
         std::string name,
         float minimum,
         float maximum,
-        float default_value), (override));
-    MOCK_METHOD(std::atomic<float> *, get_raw_parameter, (const std::string param), (override));
-    MOCK_METHOD(MapType::iterator, begin, (), (override));
-    MOCK_METHOD(MapType::iterator, end, (), (override));
+        float default_value), ());
+    MOCK_METHOD(std::atomic<float> *, get_raw_parameter, (const std::string param), ());
+    /* TODO How de we use an actual iterator here?
+     *
+     *      Can we just not use MOCK_METHOD and implement some code to wrap
+     *      begin and end on a member MapType just like the actual
+     *      implementation?
+     */
+    MOCK_METHOD(MapType::iterator, begin, (), ());
+    MOCK_METHOD(MapType::iterator, end, (), ());
 };
 
 class CmdHandling : public ::testing::Test
 {
     protected:
 
-    using Message = shrapnel::CommandHandling::Message;
+    using Message = shrapnel::CommandHandling<MockAudioParameters>::Message;
 
     CmdHandling() : queue(1), cmd(&queue, &param) {}
 
     MockQueue<Message> queue;
     MockAudioParameters param;
 
-    shrapnel::CommandHandling cmd;
+    shrapnel::CommandHandling<MockAudioParameters> cmd;
 };
 
 TEST_F(CmdHandling, QueueFail)
