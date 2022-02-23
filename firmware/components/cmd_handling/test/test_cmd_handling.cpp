@@ -46,10 +46,12 @@ class MockQueue : public shrapnel::QueueBase<T>
     MOCK_METHOD(BaseType_t, send, (T *out, TickType_t time_to_wait), (override));
 };
 
+class MockAudioParameterFloat;
+
 class MockAudioParameters
 {
     public:
-    using MapType = std::map<std::string, std::unique_ptr<shrapnel::AudioParameterFloat>>;
+    using MapType = std::map<std::string, std::unique_ptr<MockAudioParameterFloat>>;
 
     MOCK_METHOD(int, update, (std::string param, float value), ());
     MOCK_METHOD(int, create_and_add_parameter, (
@@ -58,20 +60,35 @@ class MockAudioParameters
         float maximum,
         float default_value), ());
     MOCK_METHOD(std::atomic<float> *, get_raw_parameter, (const std::string param), ());
-    /* TODO How de we use an actual iterator here?
-     *
-     *      Can we just not use MOCK_METHOD and implement some code to wrap
-     *      begin and end on a member MapType just like the actual
-     *      implementation?
-     */
-    MOCK_METHOD(MapType::iterator, begin, (), ());
-    MOCK_METHOD(MapType::iterator, end, (), ());
+
+    MapType::iterator begin() { return parameters.begin(); };
+    MapType::iterator end() { return parameters.end(); };
+
+    MapType parameters;
 };
 
 class MockEventSend : public shrapnel::EventSendBase
 {
     public:
     MOCK_METHOD(void, send, (char *json, int fd), (override));
+};
+
+class MockAudioParameterFloat
+{
+    public:
+    MockAudioParameterFloat(std::string name, float default_value) :
+        value(default_value)
+    {
+        (void)name;
+    }
+
+    float *get_raw_parameter(void)
+    {
+        return &value;
+    }
+
+    private:
+    float value;
 };
 
 class CmdHandling : public ::testing::Test
@@ -141,6 +158,32 @@ TEST_F(CmdHandling, ValidMessage)
         .WillRepeatedly(Return(0));
 
     EXPECT_CALL(event, send(StrEq(output.json), 42)).Times(1);
+
+    cmd.work();
+}
+
+TEST_F(CmdHandling, InitialiseParameters)
+{
+    Message output = {
+        {.json = "{\"messageType\": \"initialiseParameters\"}"},
+        {}
+    };
+
+    EXPECT_CALL(queue, receive(_, portMAX_DELAY))
+        .Times(1)
+        .WillRepeatedly(
+                testing::DoAll(
+                    testing::SetArgPointee<0>(output),
+                    Return(true)
+                ));
+
+    param.parameters["test0"] = std::make_unique<MockAudioParameterFloat>("test", 0);
+    param.parameters["test1"] = std::make_unique<MockAudioParameterFloat>("test", 1);
+
+    const char *message = "{\"id\":\"test0\",\"value\":0}";
+    EXPECT_CALL(event, send(StrEq(message), -1)).Times(1);
+    message = "{\"id\":\"test1\",\"value\":1}";
+    EXPECT_CALL(event, send(StrEq(message), -1)).Times(1);
 
     cmd.work();
 }

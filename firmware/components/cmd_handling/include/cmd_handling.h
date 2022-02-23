@@ -172,7 +172,7 @@ done:
             float tmp_f = *value->get_raw_parameter();
 
             snprintf(output.json, sizeof(output.json),
-                    "{\"id\": \"%s\", \"value\":%g}",
+                    "{\"id\":\"%s\",\"value\":%g}",
                     key.c_str(),
                     tmp_f);
 
@@ -189,7 +189,7 @@ done:
 };
 
 // TODO is there a cleaner solution for this? TAG should be private, but since
-// this is a class template, the implement must be in here
+// this is a class template, the implementation must be in here
 #undef TAG
 
 }
