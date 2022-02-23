@@ -103,7 +103,6 @@ class CmdHandling : public ::testing::Test
 
 TEST_F(CmdHandling, QueueFail)
 {
-
     EXPECT_CALL(queue, receive(_, portMAX_DELAY))
         .Times(1)
         .WillRepeatedly(Return(false));
@@ -115,8 +114,8 @@ TEST_F(CmdHandling, QueueFail)
 
 TEST_F(CmdHandling, InvalidMessage)
 {
-    Message output = {
-        {.json = "This is not JSON"},
+    Message output{
+        "This is not JSON",
         0
     };
 
@@ -135,8 +134,8 @@ TEST_F(CmdHandling, InvalidMessage)
 
 TEST_F(CmdHandling, ValidMessage)
 {
-    Message output = {
-        {.json = "{\"id\": \"tight\", \"value\": 1, \"messageType\": \"parameterUpdate\"}"},
+    Message output{
+        "{\"id\": \"tight\", \"value\": 1, \"messageType\": \"parameterUpdate\"}",
         42
     };
 
@@ -159,8 +158,8 @@ TEST_F(CmdHandling, ValidMessage)
 
 TEST_F(CmdHandling, InitialiseParameters)
 {
-    Message output = {
-        {.json = "{\"messageType\": \"initialiseParameters\"}"},
+    Message output{
+        "{\"messageType\": \"initialiseParameters\"}",
         0
     };
 
