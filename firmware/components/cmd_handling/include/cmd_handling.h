@@ -22,9 +22,9 @@
 #include "queue.h"
 #include "audio_param.h"
 #include "etl/list.h"
+#include "event_send.h"
 #include "cJSON.h"
 #include "esp_log.h"
-#include "audio_events.h"
 #include <climits>
 #include "esp_err.h"
 #include <memory>
@@ -39,7 +39,7 @@
 namespace shrapnel {
 
 template<typename AudioParametersT>
-class CommandHandling
+class CommandHandling final
 {
     public:
     struct Message
@@ -54,9 +54,13 @@ class CommandHandling
      * \param[in] param Data received through \ref queue are
      * translated to binary and sent to this object.
      */
-    CommandHandling(QueueBase<Message> *queue, AudioParametersT *param) :
+    CommandHandling(
+            QueueBase<Message> *queue,
+            AudioParametersT *param,
+            EventSendBase &event) :
         queue(queue),
         param(param),
+        event(event),
         json(nullptr),
         message({}) {}
 
@@ -154,7 +158,7 @@ done:
             ESP_LOGE(TAG, "Failed to update parameter (%s) with value %f", parsed_id, parsed_value);
         }
 
-        audio_event_send_callback(message.json, message.fd);
+        event.send(message.json, message.fd);
     }
 
     void initialise_parameters(void)
@@ -172,12 +176,13 @@ done:
                     key.c_str(),
                     tmp_f);
 
-            audio_event_send_callback(output.json, -1);
+            event.send(output.json, -1);
         }
     }
 
     QueueBase<Message> *queue;
     AudioParametersT *param;
+    EventSendBase &event;
 
     cJSON *json;
     Message message;

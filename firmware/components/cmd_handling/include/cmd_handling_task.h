@@ -30,9 +30,10 @@ class CommandHandlingTask : public TaskBase
     public:
     CommandHandlingTask(int priority,
                         QueueBase<typename CommandHandling<AudioParametersT>::Message> *queue,
-                        AudioParametersT *param) :
+                        AudioParametersT *param,
+                        EventSendBase &event) :
         TaskBase("command handling", 4000, priority),
-        cmd(queue, param)
+        cmd(queue, param, event)
     {
         start();
     }

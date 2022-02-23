@@ -60,6 +60,7 @@
 static shrapnel::Queue<shrapnel::CommandHandling<shrapnel::AudioParameters>::Message> *in_queue;
 static shrapnel::AudioParameters *audio_params;
 static shrapnel::CommandHandlingTask<shrapnel::AudioParameters> *cmd_handling_task;
+static shrapnel::EventSend event_send{};
 
 static QueueHandle_t out_queue;
 
@@ -400,7 +401,7 @@ extern "C" void app_main(void)
     audio_params->create_and_add_parameter("chorusMix", 0, 1, 0.8);
     audio_params->create_and_add_parameter("chorusBypass", 0, 1, 0);
 
-    cmd_handling_task = new shrapnel::CommandHandlingTask<shrapnel::AudioParameters>(5, in_queue, audio_params);
+    cmd_handling_task = new shrapnel::CommandHandlingTask<shrapnel::AudioParameters>(5, in_queue, audio_params, event_send);
 
     ESP_ERROR_CHECK(audio_event_init());
 
