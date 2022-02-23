@@ -55,12 +55,12 @@
 #define MAX_WEBSOCKET_PAYLOAD_SIZE 128
 #define ARRAY_LENGTH(a) (sizeof(a)/sizeof(a[0]))
 
-// TODO use namespace shrapnel to make some of these declarations shorter
+namespace shrapnel {
 
-static shrapnel::Queue<shrapnel::CommandHandling<shrapnel::AudioParameters>::Message> *in_queue;
-static shrapnel::AudioParameters *audio_params;
-static shrapnel::CommandHandlingTask<shrapnel::AudioParameters> *cmd_handling_task;
-static shrapnel::EventSend event_send{};
+static Queue<CommandHandling<AudioParameters>::Message> *in_queue;
+static AudioParameters *audio_params;
+static CommandHandlingTask<AudioParameters> *cmd_handling_task;
+static EventSend event_send{};
 
 static QueueHandle_t out_queue;
 
@@ -94,7 +94,7 @@ static void i2c_setup(void);
 
 static esp_err_t websocket_get_handler(httpd_req_t *req)
 {
-    shrapnel::CommandHandling<shrapnel::AudioParameters>::Message message{};
+    CommandHandling<AudioParameters>::Message message{};
 
     httpd_ws_frame_t pkt = {
         .final = false,
@@ -229,41 +229,6 @@ typedef struct {
     int fd;
 } audio_event_message_t;
 
-void audio_event_send_callback(const char *message, int fd)
-{
-    audio_event_message_t event_message = {
-        .message = {0},
-        .fd = fd,
-    };
-
-    snprintf(event_message.message, sizeof(event_message.message), "%s", message);
-
-    ESP_LOGD(TAG, "%s %s", __FUNCTION__, event_message.message);
-    ESP_LOGD(TAG, "%s %s", __FUNCTION__, pcTaskGetTaskName(NULL));
-
-    if(errQUEUE_FULL ==
-            xQueueSendToBack(out_queue,
-                             &event_message,
-                             100 / portTICK_PERIOD_MS))
-    {
-        ESP_LOGE(TAG, "Failed to send message to websocket");
-        return;
-    }
-
-    if(!xSemaphoreTake(work_semaphore, 1000 / portTICK_PERIOD_MS))
-    {
-        ESP_LOGE(TAG, "work semaphore timed out");
-        return;
-    }
-
-    esp_err_t rc = httpd_queue_work(server, websocket_send, server);
-    if(ESP_OK != rc)
-    {
-        ESP_LOGE(TAG, "failed to queue work for server");
-        xQueueReset(out_queue);
-    }
-}
-
 static void websocket_send(void *arg)
 {
     httpd_handle_t server = arg;
@@ -372,13 +337,13 @@ extern "C" void app_main(void)
     assert(work_semaphore);
     xSemaphoreGive(work_semaphore);
 
-    in_queue = new shrapnel::Queue<shrapnel::CommandHandling<shrapnel::AudioParameters>::Message>(QUEUE_LEN);
+    in_queue = new Queue<CommandHandling<AudioParameters>::Message>(QUEUE_LEN);
     assert(in_queue);
 
     out_queue = xQueueCreate(QUEUE_LEN, sizeof(audio_event_message_t));
     assert(out_queue);
 
-    audio_params = new shrapnel::AudioParameters();
+    audio_params = new AudioParameters();
 
     audio_params->create_and_add_parameter("ampGain", 0, 1, 0.5);
     audio_params->create_and_add_parameter("ampChannel", 0, 1, 0);
@@ -401,7 +366,11 @@ extern "C" void app_main(void)
     audio_params->create_and_add_parameter("chorusMix", 0, 1, 0.8);
     audio_params->create_and_add_parameter("chorusBypass", 0, 1, 0);
 
-    cmd_handling_task = new shrapnel::CommandHandlingTask<shrapnel::AudioParameters>(5, in_queue, audio_params, event_send);
+    cmd_handling_task = new CommandHandlingTask<AudioParameters>(
+            5,
+            in_queue,
+            audio_params,
+            event_send);
 
     ESP_ERROR_CHECK(audio_event_init());
 
@@ -477,4 +446,44 @@ extern "C" void app_main(void)
     ESP_ERROR_CHECK(example_connect());
 
     ESP_LOGI(TAG, "setup done");
+}
+
+}
+
+extern "C" void audio_event_send_callback(const char *message, int fd)
+{
+    shrapnel::audio_event_message_t event_message = {
+        .message = {0},
+        .fd = fd,
+    };
+
+    snprintf(event_message.message, sizeof(event_message.message), "%s", message);
+
+    ESP_LOGD(TAG, "%s %s", __FUNCTION__, event_message.message);
+    ESP_LOGD(TAG, "%s %s", __FUNCTION__, pcTaskGetTaskName(NULL));
+
+    if(errQUEUE_FULL ==
+            xQueueSendToBack(shrapnel::out_queue,
+                             &event_message,
+                             100 / portTICK_PERIOD_MS))
+    {
+        ESP_LOGE(TAG, "Failed to send message to websocket");
+        return;
+    }
+
+    if(!xSemaphoreTake(shrapnel::work_semaphore, 1000 / portTICK_PERIOD_MS))
+    {
+        ESP_LOGE(TAG, "work semaphore timed out");
+        return;
+    }
+
+    esp_err_t rc = httpd_queue_work(
+            shrapnel::server,
+            shrapnel::websocket_send,
+            shrapnel::server);
+    if(ESP_OK != rc)
+    {
+        ESP_LOGE(TAG, "failed to queue work for server");
+        xQueueReset(shrapnel::out_queue);
+    }
 }
