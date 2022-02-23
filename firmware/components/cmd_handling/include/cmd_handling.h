@@ -169,7 +169,7 @@ done:
 
         for(const auto& [key, value] : *param)
         {
-            float tmp_f = *value->get_raw_parameter();
+            float tmp_f = value->get();
 
             snprintf(output.json, sizeof(output.json),
                     "{\"id\":\"%s\",\"value\":%g}",

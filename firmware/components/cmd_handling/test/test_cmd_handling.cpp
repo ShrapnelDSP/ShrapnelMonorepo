@@ -77,6 +77,8 @@ class MockAudioParameterFloat
         (void)name;
     }
 
+    MOCK_METHOD(float, get, (), ());
+
     float *get_raw_parameter(void)
     {
         return &value;
@@ -171,8 +173,12 @@ TEST_F(CmdHandling, InitialiseParameters)
                     Return(true)
                 ));
 
-    param.parameters["test0"] = std::make_unique<MockAudioParameterFloat>("test", 0);
-    param.parameters["test1"] = std::make_unique<MockAudioParameterFloat>("test", 1);
+    auto parameter0 = std::make_unique<MockAudioParameterFloat>("test", 0);
+    EXPECT_CALL(*parameter0.get(), get()).WillRepeatedly(Return(0));
+    auto parameter1 = std::make_unique<MockAudioParameterFloat>("test", 0);
+    EXPECT_CALL(*parameter1.get(), get()).WillRepeatedly(Return(1));
+    param.parameters["test0"] = std::move(parameter0);
+    param.parameters["test1"] = std::move(parameter1);
 
     const char *message = "{\"id\":\"test0\",\"value\":0}";
     EXPECT_CALL(event, send(StrEq(message), -1)).Times(1);

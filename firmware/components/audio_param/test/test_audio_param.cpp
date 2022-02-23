@@ -122,3 +122,8 @@ TEST_F(AudioParams, Iterate)
         EXPECT_EQ(value, actual[key]);
     }
 }
+
+TEST_F(AudioParams, GetNormalised)
+{
+    EXPECT_EQ(0.5, uut.get("test"));
+}

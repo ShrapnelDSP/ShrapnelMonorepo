@@ -37,6 +37,9 @@ class AudioParameterFloat {
      */
     void update(float value);
 
+    /** Get the normalised value of a parameter */
+    float get(void);
+
     /** Get denormalised value of parameter
      */
     std::atomic<float> *get_raw_parameter(void);
@@ -74,6 +77,9 @@ class AudioParameters final {
      * \return 0 on success
      */
     int update(const std::string param, float value);
+
+    /** Get the normalised value of a parameter */
+    float get(const std::string &param);
 
     /** Get denormalised value of parameter
      *
