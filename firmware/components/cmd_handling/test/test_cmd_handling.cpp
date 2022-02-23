@@ -32,11 +32,6 @@ using testing::StrEq;
 #include "task.h"
 #include "queue.h"
 
-std::atomic<float> *shrapnel::AudioParameterFloat::get_raw_parameter(void)
-{
-    return nullptr;
-}
-
 template <typename T>
 class MockQueue : public shrapnel::QueueBase<T>
 {
@@ -122,7 +117,7 @@ TEST_F(CmdHandling, InvalidMessage)
 {
     Message output = {
         {.json = "This is not JSON"},
-        {}
+        0
     };
 
     EXPECT_CALL(queue, receive(_, portMAX_DELAY))
@@ -142,7 +137,7 @@ TEST_F(CmdHandling, ValidMessage)
 {
     Message output = {
         {.json = "{\"id\": \"tight\", \"value\": 1, \"messageType\": \"parameterUpdate\"}"},
-        {42}
+        42
     };
 
     EXPECT_CALL(queue, receive(_, portMAX_DELAY))
@@ -166,7 +161,7 @@ TEST_F(CmdHandling, InitialiseParameters)
 {
     Message output = {
         {.json = "{\"messageType\": \"initialiseParameters\"}"},
-        {}
+        0
     };
 
     EXPECT_CALL(queue, receive(_, portMAX_DELAY))
