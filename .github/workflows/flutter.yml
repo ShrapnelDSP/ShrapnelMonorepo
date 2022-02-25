@@ -43,24 +43,9 @@ jobs:
         flutter-version: ${{ env.FLUTTER_VERSION }}
         channel: ${{ env.FLUTTER_CHANNEL }}
 
+    - working-directory: frontend
+      run: flutter pub get
+
     - name: Format
       working-directory: frontend
       run: flutter format -o none --set-exit-if-changed lib
-
-  flutter-test:
-    needs: flutter-analyze
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v2
-      with:
-        submodules: recursive
-
-    - name: Install flutter
-      uses: subosito/flutter-action@v2
-      with:
-        flutter-version: ${{ env.FLUTTER_VERSION }}
-        channel: ${{ env.FLUTTER_CHANNEL }}
-
-    - name: Format
-      working-directory: frontend
-      run: echo "TODO"

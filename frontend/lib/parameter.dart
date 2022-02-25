@@ -99,9 +99,9 @@ class ParameterService extends ChangeNotifier {
   }
 
   void _requestParameterInitialisation() {
-      final message = <String, dynamic>{};
-      message['messageType'] = 'initialiseParameters';
-      sink.add(json.encode(message));
+    final message = <String, dynamic>{};
+    message['messageType'] = 'initialiseParameters';
+    sink.add(json.encode(message));
   }
 
   final channel = WebSocketChannel.connect(
