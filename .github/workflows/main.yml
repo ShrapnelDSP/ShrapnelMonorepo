@@ -119,6 +119,12 @@ jobs:
     - name: Debug print lcov
       run: cat lcov.info
 
+    - name: Hack
+      run: sed s#/__w/ShrapnelMonorepo/ShrapnelMonorepo#\.\.# -i lcov.info
+
+    - name: Debug print lcov after hack
+      run: cat lcov.info
+
     - name: Coveralls
       if: matrix.build_type == 'Debug'
       uses: coverallsapp/github-action@master
