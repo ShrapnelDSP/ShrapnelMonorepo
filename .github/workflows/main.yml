@@ -117,12 +117,15 @@ jobs:
         -o lcov.info
 
     - name: Debug print lcov
+      if: matrix.build_type == 'Debug'
       run: cat lcov.info
 
     - name: Hack
+      if: matrix.build_type == 'Debug'
       run: sed s#/__w/ShrapnelMonorepo/ShrapnelMonorepo#\.\.# -i lcov.info
 
     - name: Debug print lcov after hack
+      if: matrix.build_type == 'Debug'
       run: cat lcov.info
 
     - name: Coveralls
