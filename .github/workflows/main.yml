@@ -5,6 +5,7 @@ defaults:
     shell: bash
 
 env:
+  NODE_COVERALLS_DEBUG: 1
   CMAKE_C_COMPILER_LAUNCHER: ccache
   CMAKE_CXX_COMPILER_LAUNCHER: ccache
   CCACHE_DIR: /ccache
