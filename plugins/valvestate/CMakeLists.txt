@@ -4,7 +4,7 @@ project(Valvestate VERSION 0.0.1)
 # Required when linking VST plugins
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
-add_subdirectory(../JUCE JUCE)
+add_subdirectory(../../thirdparty/JUCE JUCE)
 add_subdirectory(../JUCE_static JUCE_static)
 
 add_subdirectory(../../effects/abstract_dsp abstract_dsp)

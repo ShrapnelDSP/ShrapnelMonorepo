@@ -1,9 +1,9 @@
 [submodule "firmware/components/esp-dsp"]
-	path = firmware/components/esp-dsp
+	path = thirdparty/esp-idf-components/esp-dsp
 	url = https://github.com/espressif/esp-dsp.git
 [submodule "plugins/JUCE"]
-	path = plugins/JUCE
+	path = thirdparty/JUCE
 	url = https://github.com/juce-framework/JUCE.git
 [submodule "firmware/components/etl/etl"]
-	path = firmware/components/etl/etl
+	path = thirdparty/esp-idf-components/etl/etl
 	url = https://github.com/ETLCPP/etl.git

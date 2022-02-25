@@ -6,8 +6,8 @@ ENV IDF_TOOLS_PATH=/opt/esp-idf-tools
 
 # Install the depenencies from Linux Dependencies.md in the juce repo, and for
 # ESP-IDF
-RUN apt update
-RUN apt install -y \
+RUN apt-get update
+RUN apt-get install -y \
     libasound2-dev \
     libjack-jackd2-dev \
     libcurl4-openssl-dev \
@@ -37,10 +37,11 @@ RUN apt install -y \
     libffi-dev \
     libssl-dev \
     dfu-util \
-    libusb-1.0-0
+    libusb-1.0-0 \
+    lcov
 
 RUN rm -rf /var/lib/apt/lists/* && \
-    apt clean
+    apt-get clean
 
 RUN git clone --shallow-submodules --recurse-submodules --depth 1 \
     --branch v4.3.2 \
