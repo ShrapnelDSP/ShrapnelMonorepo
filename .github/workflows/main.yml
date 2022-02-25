@@ -112,7 +112,6 @@ jobs:
         --exclude '/usr/*'
         --exclude '*/thirdparty/*'
         --exclude '*/test/*'
-        --rc lcov_branch_coverage=1
         -o lcov.info
 
     - name: Coveralls
