@@ -69,3 +69,9 @@ jobs:
 
     - name: Test
       run: flutter test
+
+    - name: Coveralls
+      if: matrix.build_type == 'Debug'
+      uses: coverallsapp/github-action@master
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
