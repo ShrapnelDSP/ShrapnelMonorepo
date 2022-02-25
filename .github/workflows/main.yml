@@ -106,7 +106,12 @@ jobs:
 
     - name: Coverage
       if: matrix.build_type == 'Debug'
-      run: lcov --capture --directory build -o lcov.info
+      run: >
+        lcov --capture --directory build
+        --exclude '*google*'
+        --exclude '/usr/*'
+        --exclude '*thirdparty*'
+        -o lcov.info
 
     - name: Coveralls
       if: matrix.build_type == 'Debug'
