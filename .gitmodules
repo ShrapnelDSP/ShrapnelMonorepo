@@ -5,5 +5,5 @@
 	path = thirdparty/JUCE
 	url = https://github.com/juce-framework/JUCE.git
 [submodule "firmware/components/etl/etl"]
-	path = thirdparty/esp-idf-components/etl/esp-idf-components/etl
+	path = thirdparty/esp-idf-components/etl/etl
 	url = https://github.com/ETLCPP/etl.git
