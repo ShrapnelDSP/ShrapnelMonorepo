@@ -120,8 +120,9 @@ jobs:
       if: matrix.build_type == 'Debug'
       uses: coverallsapp/github-action@master
       with:
-        github-token: ${{ secrets.GITHUB_TOKEN }}
         path-to-lcov: lcov.info
+        base-path: test
+        github-token: ${{ secrets.GITHUB_TOKEN }}
         parallel: true
 
   flutter-analyze:
