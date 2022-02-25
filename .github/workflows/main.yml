@@ -8,6 +8,8 @@ env:
   CMAKE_C_COMPILER_LAUNCHER: ccache
   CMAKE_CXX_COMPILER_LAUNCHER: ccache
   CCACHE_DIR: /ccache
+  FLUTTER_VERSION: '2.10.1'
+  FLUTTER_CHANNEL: 'stable'
 
 jobs:
   build-firmware:
@@ -120,3 +122,94 @@ jobs:
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
         path-to-lcov: lcov.info
+        parallel: true
+
+  flutter-analyze:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory:
+          frontend
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        submodules: recursive
+
+    - name: Install flutter
+      uses: subosito/flutter-action@v2
+      with:
+        flutter-version: ${{ env.FLUTTER_VERSION }}
+        channel: ${{ env.FLUTTER_CHANNEL }}
+
+    - run: flutter pub get
+
+    - name: Generate code
+      run: flutter pub run build_runner build
+
+    - name: Analyze
+      run: flutter analyze
+
+  flutter-format:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory:
+          frontend
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        submodules: recursive
+
+    - name: Install flutter
+      uses: subosito/flutter-action@v2
+      with:
+        flutter-version: ${{ env.FLUTTER_VERSION }}
+        channel: ${{ env.FLUTTER_CHANNEL }}
+
+    - run: flutter pub get
+
+    - name: Format
+      run: flutter format -o none --set-exit-if-changed lib test
+
+  flutter-test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory:
+          frontend
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        submodules: recursive
+
+    - name: Install flutter
+      uses: subosito/flutter-action@v2
+      with:
+        flutter-version: ${{ env.FLUTTER_VERSION }}
+        channel: ${{ env.FLUTTER_CHANNEL }}
+
+    - run: flutter pub get
+
+    - name: Generate code
+      run: flutter pub run build_runner build
+
+    - name: Test
+      run: flutter test --coverage
+
+    - name: Coveralls
+      uses: coverallsapp/github-action@master
+      with:
+        path-to-lcov: frontend/coverage/lcov.info
+        base-path: frontend
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        parallel: true
+
+  coveralls-finish:
+    needs: [flutter-test, ctest]
+    runs-on: ubuntu-latest
+    steps:
+    - name: Coveralls
+      uses: coverallsapp/github-action@master
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        parallel-finished: true
