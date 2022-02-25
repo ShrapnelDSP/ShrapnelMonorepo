@@ -116,6 +116,9 @@ jobs:
         --exclude '*/test/*'
         -o lcov.info
 
+    - name: Debug print lcov
+      run: cat lcov.info
+
     - name: Coveralls
       if: matrix.build_type == 'Debug'
       uses: coverallsapp/github-action@master
