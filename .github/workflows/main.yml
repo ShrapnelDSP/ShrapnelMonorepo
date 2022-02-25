@@ -110,7 +110,9 @@ jobs:
         lcov --capture --directory build
         --exclude '*google*'
         --exclude '/usr/*'
-        --exclude '*thirdparty*'
+        --exclude '*/thirdparty/*'
+        --exclude '*/test/*'
+        --rc lcov_branch_coverage=1
         -o lcov.info
 
     - name: Coveralls
