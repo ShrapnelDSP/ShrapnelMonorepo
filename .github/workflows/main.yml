@@ -105,11 +105,11 @@ jobs:
       run: ccache --show-stats
 
     - name: Coverage
-      if: build_type == 'Debug'
+      if: matrix.build_type == 'Debug'
       run: lcov --capture --directory build -o lcov.info
 
     - name: Coveralls
-      if: build_type == 'Debug'
+      if: matrix.build_type == 'Debug'
       uses: coverallsapp/github-action@v1
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
