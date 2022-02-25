@@ -20,12 +20,12 @@
 #include <stdio.h>
 #include <math.h>
 
-//#define LOG_LOCAL_LEVEL ESP_LOG_DEBUG
+#define LOG_LOCAL_LEVEL ESP_LOG_DEBUG
 #include "esp_log.h"
-#define TAG "main"
 
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
+#include "freertos/semphr.h"
 
 #include <assert.h>
 #include <esp_wifi.h>
@@ -49,16 +49,30 @@
 #include "pcm3060.h"
 #include "profiling.h"
 
-#define QUEUE_LEN 10
+#define TAG "main"
+#define QUEUE_LEN 20
 #define MAX_CLIENTS 3
 #define MAX_WEBSOCKET_PAYLOAD_SIZE 128
 #define ARRAY_LENGTH(a) (sizeof(a)/sizeof(a[0]))
 
-static shrapnel::Queue<shrapnel::CommandHandling::Message> *in_queue;
-static shrapnel::AudioParameters *audio_params;
-static shrapnel::CommandHandlingTask *cmd_handling_task;
+namespace shrapnel {
+
+static Queue<CommandHandling<AudioParameters>::Message> *in_queue;
+static AudioParameters *audio_params;
+static CommandHandlingTask<AudioParameters> *cmd_handling_task;
+static EventSend event_send{};
 
 static QueueHandle_t out_queue;
+
+/*
+ * TODO espressif's http server drops some calls to the work function when
+ * there are many calls queued at once. Waiting for the previous execution to
+ * finish seems to help, but is probably not a real solution. There will be
+ * some internal functions writing to the control socket which could still
+ * reproduce the bug.
+ */
+static SemaphoreHandle_t work_semaphore;
+
 static httpd_handle_t server = NULL;
 
 extern "C" {
@@ -80,7 +94,7 @@ static void i2c_setup(void);
 
 static esp_err_t websocket_get_handler(httpd_req_t *req)
 {
-    shrapnel::CommandHandling::Message message = { 0 };
+    CommandHandling<AudioParameters>::Message message{};
 
     httpd_ws_frame_t pkt = {
         .final = false,
@@ -114,15 +128,15 @@ static esp_err_t websocket_get_handler(httpd_req_t *req)
     assert(pkt.len <= sizeof(message.json));
 
     ESP_LOGD(TAG, "%s len = %zd", __FUNCTION__, pkt.len);
-    ESP_LOG_BUFFER_HEXDUMP(TAG, message.json, sizeof(message.json), ESP_LOG_DEBUG);
+    ESP_LOG_BUFFER_HEXDUMP(TAG, message.json, sizeof(message.json), ESP_LOG_VERBOSE);
+
+    message.fd = httpd_req_to_sockfd(req);
 
     rc = in_queue->send(&message, 100 / portTICK_PERIOD_MS);
     if(rc != pdTRUE)
     {
         ESP_LOGE(TAG, "%s failed to send to queue", __FUNCTION__);
     }
-
-    audio_event_send_callback((char *)pkt.payload, httpd_req_to_sockfd(req));
 
     ESP_LOGI(TAG, "%s stack %d", __FUNCTION__, uxTaskGetStackHighWaterMark(NULL));
 
@@ -215,31 +229,6 @@ typedef struct {
     int fd;
 } audio_event_message_t;
 
-void audio_event_send_callback(const char *message, int fd)
-{
-    audio_event_message_t event_message = {
-        .message = {0},
-        .fd = fd,
-    };
-
-    snprintf(event_message.message, sizeof(event_message.message), "%s", message);
-
-    if(errQUEUE_FULL ==
-            xQueueSendToBack(out_queue,
-                             &event_message,
-                             100 / portTICK_PERIOD_MS))
-    {
-        ESP_LOGE(TAG, "Failed to send message to websocket");
-    }
-
-    esp_err_t rc = httpd_queue_work(server, websocket_send, server);
-    if(ESP_OK != rc)
-    {
-        ESP_LOGE(TAG, "failed to queue work for server");
-        xQueueReset(out_queue);
-    }
-}
-
 static void websocket_send(void *arg)
 {
     httpd_handle_t server = arg;
@@ -253,10 +242,12 @@ static void websocket_send(void *arg)
         return;
     }
 
+    ESP_LOGD(TAG, "%s %d messages waiting", __FUNCTION__, uxQueueMessagesWaiting(out_queue));
+
     ESP_LOGD(TAG, "%s source fd = %d", __FUNCTION__, event_message.fd);
 
     ESP_LOGD(TAG, "%s len = %zd", __FUNCTION__, strlen(event_message.message));
-    ESP_LOG_BUFFER_HEXDUMP(TAG, event_message.message, sizeof(event_message.message), ESP_LOG_DEBUG);
+    ESP_LOG_BUFFER_HEXDUMP(TAG, event_message.message, sizeof(event_message.message), ESP_LOG_VERBOSE);
 
     assert(strlen(event_message.message) < sizeof(event_message.message));
 
@@ -299,6 +290,8 @@ static void websocket_send(void *arg)
             ESP_LOGE(TAG, "failed to send to fd %d rc %d", fd, rc);
         }
     }
+
+    xSemaphoreGive(work_semaphore);
 }
 
 static void start_mdns(void)
@@ -340,28 +333,17 @@ extern "C" void app_main(void)
     ESP_ERROR_CHECK(esp_netif_init());
     ESP_ERROR_CHECK(esp_event_loop_create_default());
 
-    /* This helper function configures Wi-Fi or Ethernet, as selected in menuconfig.
-     * Read "Establishing Wi-Fi or Ethernet Connection" section in
-     * examples/protocols/README.md for more information about this function.
-     */
-    ESP_ERROR_CHECK(example_connect());
+    work_semaphore = xSemaphoreCreateBinary();
+    assert(work_semaphore);
+    xSemaphoreGive(work_semaphore);
 
-    /* Register event handlers to stop the server when Wi-Fi or Ethernet is disconnected,
-     * and re-start it upon connection.
-     */
-    ESP_ERROR_CHECK(esp_event_handler_register(IP_EVENT, IP_EVENT_STA_GOT_IP, &connect_handler, &server));
-    ESP_ERROR_CHECK(esp_event_handler_register(WIFI_EVENT, WIFI_EVENT_STA_DISCONNECTED, &disconnect_handler, &server));
-
-    /* Start the server for the first time */
-    server = start_webserver();
-
-    in_queue = new shrapnel::Queue<shrapnel::CommandHandling::Message>(QUEUE_LEN);
+    in_queue = new Queue<CommandHandling<AudioParameters>::Message>(QUEUE_LEN);
     assert(in_queue);
 
     out_queue = xQueueCreate(QUEUE_LEN, sizeof(audio_event_message_t));
     assert(out_queue);
 
-    audio_params = new shrapnel::AudioParameters();
+    audio_params = new AudioParameters();
 
     audio_params->create_and_add_parameter("ampGain", 0, 1, 0.5);
     audio_params->create_and_add_parameter("ampChannel", 0, 1, 0);
@@ -384,7 +366,11 @@ extern "C" void app_main(void)
     audio_params->create_and_add_parameter("chorusMix", 0, 1, 0.8);
     audio_params->create_and_add_parameter("chorusBypass", 0, 1, 0);
 
-    cmd_handling_task = new shrapnel::CommandHandlingTask(5, in_queue, audio_params);
+    cmd_handling_task = new CommandHandlingTask<AudioParameters>(
+            5,
+            in_queue,
+            audio_params,
+            event_send);
 
     ESP_ERROR_CHECK(audio_event_init());
 
@@ -447,5 +433,57 @@ extern "C" void app_main(void)
     }
 #endif
 
+    /* Register event handlers to stop the server when Wi-Fi or Ethernet is disconnected,
+     * and re-start it upon connection.
+     */
+    ESP_ERROR_CHECK(esp_event_handler_register(IP_EVENT, IP_EVENT_STA_GOT_IP, &connect_handler, &server));
+    ESP_ERROR_CHECK(esp_event_handler_register(WIFI_EVENT, WIFI_EVENT_STA_DISCONNECTED, &disconnect_handler, &server));
+
+    /* This helper function configures Wi-Fi or Ethernet, as selected in menuconfig.
+     * Read "Establishing Wi-Fi or Ethernet Connection" section in
+     * examples/protocols/README.md for more information about this function.
+     */
+    ESP_ERROR_CHECK(example_connect());
+
     ESP_LOGI(TAG, "setup done");
+}
+
+}
+
+extern "C" void audio_event_send_callback(const char *message, int fd)
+{
+    shrapnel::audio_event_message_t event_message = {
+        .message = {0},
+        .fd = fd,
+    };
+
+    snprintf(event_message.message, sizeof(event_message.message), "%s", message);
+
+    ESP_LOGD(TAG, "%s %s", __FUNCTION__, event_message.message);
+    ESP_LOGD(TAG, "%s %s", __FUNCTION__, pcTaskGetTaskName(NULL));
+
+    if(errQUEUE_FULL ==
+            xQueueSendToBack(shrapnel::out_queue,
+                             &event_message,
+                             100 / portTICK_PERIOD_MS))
+    {
+        ESP_LOGE(TAG, "Failed to send message to websocket");
+        return;
+    }
+
+    if(!xSemaphoreTake(shrapnel::work_semaphore, 1000 / portTICK_PERIOD_MS))
+    {
+        ESP_LOGE(TAG, "work semaphore timed out");
+        return;
+    }
+
+    esp_err_t rc = httpd_queue_work(
+            shrapnel::server,
+            shrapnel::websocket_send,
+            shrapnel::server);
+    if(ESP_OK != rc)
+    {
+        ESP_LOGE(TAG, "failed to queue work for server");
+        xQueueReset(shrapnel::out_queue);
+    }
 }

@@ -37,6 +37,9 @@ class AudioParameterFloat {
      */
     void update(float value);
 
+    /** Get the normalised value of a parameter */
+    float get(void);
+
     /** Get denormalised value of parameter
      */
     std::atomic<float> *get_raw_parameter(void);
@@ -49,46 +52,7 @@ class AudioParameterFloat {
     float maximum;
 };
 
-class AudioParametersBase {
-    public:
-    AudioParametersBase() {};
-
-    /** Update a parameter
-     *
-     * \param param Name of the parameter to update
-     * \param value New normalised value of the parameter
-     *
-     * \return 0 on success
-     */
-    virtual int update(const std::string param, float value) = 0;
-
-    virtual int create_and_add_parameter(
-        std::string name,
-        float minimum,
-        float maximum,
-        float default_value) = 0;
-
-    /** Get denormalised value of parameter
-     *
-     * \param param Name of the parameter to get
-     */
-    virtual std::atomic<float> *get_raw_parameter(const std::string param) = 0;
-};
-
-class AudioParameters : public AudioParametersBase {
-    public:
-    AudioParameters();
-
-    int update(const std::string param, float value) override;
-    std::atomic<float> *get_raw_parameter(const std::string param) override;
-
-    int create_and_add_parameter(
-        std::string name,
-        float minimum,
-        float maximum,
-        float default_value) override;
-
-    private:
+class AudioParameters final {
     /* TODO how to avoid having to increase size manually when more effects are
      * added?
      *
@@ -100,7 +64,40 @@ class AudioParameters : public AudioParametersBase {
      * initialised etl::map using one of these methods to the constructor
      * should work.
      */
-    etl::map<std::string, std::unique_ptr<AudioParameterFloat>, 100> parameters;
+    public:
+    using MapType = etl::map<std::string, std::unique_ptr<AudioParameterFloat>, 100>;
+
+    AudioParameters();
+
+    /** Update a parameter
+     *
+     * \param param Name of the parameter to update
+     * \param value New normalised value of the parameter
+     *
+     * \return 0 on success
+     */
+    int update(const std::string param, float value);
+
+    /** Get the normalised value of a parameter */
+    float get(const std::string &param);
+
+    /** Get denormalised value of parameter
+     *
+     * \param param Name of the parameter to get
+     */
+    std::atomic<float> *get_raw_parameter(const std::string param);
+
+    int create_and_add_parameter(
+        std::string name,
+        float minimum,
+        float maximum,
+        float default_value);
+
+    MapType::iterator begin();
+    MapType::iterator end();
+
+    private:
+    MapType parameters;
 };
 
 };

@@ -31,6 +31,7 @@ add_subdirectory(support/esp_common)
 add_subdirectory(support/json)
 
 add_subdirectory(../effects/abstract_dsp/ abstract_dsp)
+add_subdirectory(../firmware/components/audio_events audio_events)
 add_subdirectory(../firmware/components/audio_param audio_param)
 add_subdirectory(../firmware/components/cmd_handling cmd_handling)
 add_subdirectory(../thirdparty/esp-idf-components/etl etl)

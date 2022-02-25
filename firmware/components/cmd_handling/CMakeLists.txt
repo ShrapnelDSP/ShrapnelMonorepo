@@ -2,8 +2,8 @@ if(NOT DEFINED TESTING)
     idf_component_register(SRCS src/cmd_handling.cpp
                                 src/cmd_handling_task.cpp
                            INCLUDE_DIRS include
-                           REQUIRES audio_param queue task etl
-                           PRIV_REQUIRES json)
+                           REQUIRES audio_param queue task etl json
+                           PRIV_REQUIRES audio_events)
 else()
     add_executable(cmd_handling_test
                    src/cmd_handling.cpp
@@ -12,6 +12,7 @@ else()
 
     target_include_directories(cmd_handling_test PRIVATE include)
 
+    target_link_libraries(cmd_handling_test PRIVATE audio_events_mock)
     target_link_libraries(cmd_handling_test PRIVATE audio_param_mock)
     target_link_libraries(cmd_handling_test PRIVATE esp_common)
     target_link_libraries(cmd_handling_test PRIVATE etl)

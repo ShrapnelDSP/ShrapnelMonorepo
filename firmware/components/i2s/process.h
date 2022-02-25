@@ -29,7 +29,7 @@ extern "C" {
 #endif
 
 void process_samples(int32_t *buf, size_t buf_len);
-esp_err_t process_init(shrapnel::AudioParametersBase *audio_params);
+esp_err_t process_init(shrapnel::AudioParameters *audio_params);
 
 #ifdef __cplusplus
 }

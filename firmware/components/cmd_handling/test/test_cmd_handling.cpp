@@ -23,8 +23,11 @@
 #include "audio_param.h"
 #include "cmd_handling.h"
 
+#include "audio_events.h"
+
 using testing::_;
 using testing::Return;
+using testing::StrEq;
 
 #include "task.h"
 #include "queue.h"
@@ -38,35 +41,70 @@ class MockQueue : public shrapnel::QueueBase<T>
     MOCK_METHOD(BaseType_t, send, (T *out, TickType_t time_to_wait), (override));
 };
 
-class MockAudioParameters : public shrapnel::AudioParametersBase
+class MockAudioParameterFloat;
+
+class MockAudioParameters
 {
     public:
-    MOCK_METHOD(int, update, (std::string param, float value), (override));
+    using MapType = std::map<std::string, std::unique_ptr<MockAudioParameterFloat>>;
+
+    MOCK_METHOD(int, update, (std::string param, float value), ());
     MOCK_METHOD(int, create_and_add_parameter, (
         std::string name,
         float minimum,
         float maximum,
-        float default_value), (override));
-    MOCK_METHOD(std::atomic<float> *, get_raw_parameter, (const std::string param), (override));
+        float default_value), ());
+    MOCK_METHOD(std::atomic<float> *, get_raw_parameter, (const std::string param), ());
+
+    MapType::iterator begin() { return parameters.begin(); };
+    MapType::iterator end() { return parameters.end(); };
+
+    MapType parameters;
+};
+
+class MockEventSend : public shrapnel::EventSendBase
+{
+    public:
+    MOCK_METHOD(void, send, (char *json, int fd), (override));
+};
+
+class MockAudioParameterFloat
+{
+    public:
+    MockAudioParameterFloat(std::string name, float default_value) :
+        value(default_value)
+    {
+        (void)name;
+    }
+
+    MOCK_METHOD(float, get, (), ());
+
+    float *get_raw_parameter(void)
+    {
+        return &value;
+    }
+
+    private:
+    float value;
 };
 
 class CmdHandling : public ::testing::Test
 {
     protected:
 
-    using Message = shrapnel::CommandHandling::Message;
+    using Message = shrapnel::CommandHandling<MockAudioParameters>::Message;
 
-    CmdHandling() : queue(1), cmd(&queue, &param) {}
+    CmdHandling() : queue(1), cmd(&queue, &param, event) {}
 
     MockQueue<Message> queue;
     MockAudioParameters param;
+    MockEventSend event;
 
-    shrapnel::CommandHandling cmd;
+    shrapnel::CommandHandling<MockAudioParameters> cmd;
 };
 
 TEST_F(CmdHandling, QueueFail)
 {
-
     EXPECT_CALL(queue, receive(_, portMAX_DELAY))
         .Times(1)
         .WillRepeatedly(Return(false));
@@ -78,8 +116,9 @@ TEST_F(CmdHandling, QueueFail)
 
 TEST_F(CmdHandling, InvalidMessage)
 {
-    Message output = {
-        {.json = "This is not JSON"},
+    Message output{
+        "This is not JSON",
+        0
     };
 
     EXPECT_CALL(queue, receive(_, portMAX_DELAY))
@@ -97,8 +136,9 @@ TEST_F(CmdHandling, InvalidMessage)
 
 TEST_F(CmdHandling, ValidMessage)
 {
-    Message output = {
-        {.json = "{\"id\": \"tight\", \"value\": 1}"},
+    Message output{
+        "{\"id\": \"tight\", \"value\": 1, \"messageType\": \"parameterUpdate\"}",
+        42
     };
 
     EXPECT_CALL(queue, receive(_, portMAX_DELAY))
@@ -112,6 +152,38 @@ TEST_F(CmdHandling, ValidMessage)
     EXPECT_CALL(param, update("tight", 1.0f))
         .Times(1)
         .WillRepeatedly(Return(0));
+
+    EXPECT_CALL(event, send(StrEq(output.json), 42)).Times(1);
+
+    cmd.work();
+}
+
+TEST_F(CmdHandling, InitialiseParameters)
+{
+    Message output{
+        "{\"messageType\": \"initialiseParameters\"}",
+        0
+    };
+
+    EXPECT_CALL(queue, receive(_, portMAX_DELAY))
+        .Times(1)
+        .WillRepeatedly(
+                testing::DoAll(
+                    testing::SetArgPointee<0>(output),
+                    Return(true)
+                ));
+
+    auto parameter0 = std::make_unique<MockAudioParameterFloat>("test", 0);
+    EXPECT_CALL(*parameter0.get(), get()).WillRepeatedly(Return(0));
+    auto parameter1 = std::make_unique<MockAudioParameterFloat>("test", 0);
+    EXPECT_CALL(*parameter1.get(), get()).WillRepeatedly(Return(1));
+    param.parameters["test0"] = std::move(parameter0);
+    param.parameters["test1"] = std::move(parameter1);
+
+    const char *message = "{\"id\":\"test0\",\"value\":0}";
+    EXPECT_CALL(event, send(StrEq(message), -1)).Times(1);
+    message = "{\"id\":\"test1\",\"value\":1}";
+    EXPECT_CALL(event, send(StrEq(message), -1)).Times(1);
 
     cmd.work();
 }
