@@ -228,7 +228,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Debug print
-      - run: echo ${{needs.flutter-test.outputs.tmp}} ${{needs.ctest.outputs.tmp}}
+      run: echo ${{needs.flutter-test.outputs.tmp}} ${{needs.ctest.outputs.tmp}}
 
     - name: Coveralls
       uses: coverallsapp/github-action@master
