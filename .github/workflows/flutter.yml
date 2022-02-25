@@ -18,6 +18,9 @@ jobs:
         flutter-version: ${{ env.FLUTTER_VERSION }}
         channel: ${{ env.FLUTTER_CHANNEL }}
 
+    - working-directory: frontend
+      run: flutter pub get
+
     - name: Generate code
       working-directory: frontend
       run: flutter pub run build_runner build
