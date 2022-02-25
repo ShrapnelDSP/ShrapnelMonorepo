@@ -25,6 +25,7 @@ jobs:
   flutter-format:
     runs-on: ubuntu-latest
     needs: flutter-analyze
+    steps:
     - uses: actions/checkout@v2
       with:
         submodules: recursive
@@ -41,6 +42,7 @@ jobs:
 
   flutter-test:
     needs: flutter-analyze
+    steps:
     - uses: actions/checkout@v2
       with:
         submodules: recursive
