@@ -5,13 +5,13 @@ env:
   FLUTTER_CHANNEL: 'stable'
 
 defaults:
-  runs-on: ubuntu-latest
   run:
     working-directory:
       frontend
 
 jobs:
   flutter-analyze:
+    runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
       with:
@@ -32,6 +32,7 @@ jobs:
       run: flutter analyze
 
   flutter-format:
+    runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
       with:
@@ -49,6 +50,7 @@ jobs:
       run: flutter format -o none --set-exit-if-changed lib
 
   flutter-test:
+    runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
       with:
