@@ -46,10 +46,6 @@ class AudioParameterDouble {
 
   final String id;
   final double value;
-
-  // TODO Could we use object oriented design to ensure all message classes
-  // have this field defined?
-  final String messageType = 'updateParameter';
 }
 
 class AudioParameterDoubleModel extends ChangeNotifier {
