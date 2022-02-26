@@ -5,7 +5,7 @@ defaults:
     shell: bash
 
 env:
-  NODE_COVERALLS_DEBUG: 1
+  NODE_COVERALLS_DEBUG: 1 # verbose logging for coveralls steps
   CMAKE_C_COMPILER_LAUNCHER: ccache
   CMAKE_CXX_COMPILER_LAUNCHER: ccache
   CCACHE_DIR: /ccache
@@ -124,7 +124,7 @@ jobs:
       run: cat lcov.info
 
     - name: Hack
-      if: matrix.build_type == 'Debug'
+      if: false #matrix.build_type == 'Debug'
       run: sed s#/__w/ShrapnelMonorepo/ShrapnelMonorepo#\.\.# -i lcov.info
 
     - name: Debug print lcov after hack
