@@ -19,6 +19,7 @@
 
 #include "contour.h"
 #include <cmath>
+#include <cassert>
 
 ContourFilter::ContourFilter()
 {
