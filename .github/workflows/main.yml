@@ -137,7 +137,7 @@ jobs:
       uses: coverallsapp/github-action@master
       with:
         path-to-lcov: lcov.info
-        base-path: test
+          #base-path: test
         github-token: ${{ secrets.GITHUB_TOKEN }}
         parallel: true
         flag-name: "ctest"
