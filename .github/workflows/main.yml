@@ -118,7 +118,7 @@ jobs:
         -o lcov.info
 
     - name: Debug print lcov
-      if: env.NODE_COVERALLS_DEBUG
+      if: env.NODE_COVERALLS_DEBUG != 0
       run: cat lcov.info
 
     - name: Coveralls
