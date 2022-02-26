@@ -45,7 +45,7 @@ jobs:
     container: barabas5532/shrapnel:3
     strategy:
       matrix:
-        plugin: ["chorus",  "gate", "vibrato"]
+        plugin: ["chorus",  "gate", "vibrato", "valvestate"]
         build_type: ["Release", "Debug"]
 
     steps:
