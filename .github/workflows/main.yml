@@ -152,6 +152,16 @@ jobs:
       with:
         flutter-version: ${{ env.FLUTTER_VERSION }}
         channel: ${{ env.FLUTTER_CHANNEL }}
+        cache: true
+        cache-key: ${{ github.job }}
+
+    - name: Flutter pub cache
+      uses: actions/cache@v2
+      with:
+        path: ${{ env.PUB_CACHE }}
+        key: flutter-pub-${{ github.job }}-${{ hashFiles('**/pubspec.lock') }}
+        restore-keys: |
+          flutter-pub-${{ github.job }}-
 
     - run: flutter pub get
 
@@ -177,6 +187,16 @@ jobs:
       with:
         flutter-version: ${{ env.FLUTTER_VERSION }}
         channel: ${{ env.FLUTTER_CHANNEL }}
+        cache: true
+        cache-key: ${{ github.job }}
+
+    - name: Flutter pub cache
+      uses: actions/cache@v2
+      with:
+        path: ${{ env.PUB_CACHE }}
+        key: flutter-pub-${{ github.job }}-${{ hashFiles('**/pubspec.lock') }}
+        restore-keys: |
+          flutter-pub-${{ github.job }}-
 
     - run: flutter pub get
 
@@ -199,6 +219,16 @@ jobs:
       with:
         flutter-version: ${{ env.FLUTTER_VERSION }}
         channel: ${{ env.FLUTTER_CHANNEL }}
+        cache: true
+        cache-key: ${{ github.job }}
+
+    - name: Flutter pub cache
+      uses: actions/cache@v2
+      with:
+        path: ${{ env.PUB_CACHE }}
+        key: flutter-pub-${{ github.job }}-${{ hashFiles('**/pubspec.lock') }}
+        restore-keys: |
+          flutter-pub-${{ github.job }}-
 
     - run: flutter pub get
 
