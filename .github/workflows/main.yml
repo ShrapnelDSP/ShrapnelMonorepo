@@ -156,7 +156,7 @@ jobs:
         cache-key: ${{ github.job }}
 
     - run: |
-      echo ${{ env.PUB_CACHE }} $PUB_CACHE
+      echo $PUB_CACHE
       ls -R $PUB_CACHE
       echo ~/.pub-cache
       ls -R ~/.pub-cache
@@ -164,7 +164,7 @@ jobs:
     - run: flutter pub get
 
     - run: |
-      echo ${{ env.PUB_CACHE }} $PUB_CACHE
+      echo $PUB_CACHE
       ls -R $PUB_CACHE
       echo ~/.pub-cache
       ls -R ~/.pub-cache
