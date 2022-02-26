@@ -179,6 +179,7 @@ jobs:
 
   flutter-test:
     runs-on: ubuntu-latest
+    container: barabas5532/shrapnel:3
     defaults:
       run:
         working-directory:
