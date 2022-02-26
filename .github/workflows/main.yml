@@ -179,7 +179,6 @@ jobs:
 
   flutter-test:
     runs-on: ubuntu-latest
-    container: barabas5532/shrapnel:3
     defaults:
       run:
         working-directory:
@@ -205,9 +204,9 @@ jobs:
 
     - name: Coverage clean-up
       run: >
-        lcov --remove coverage/lcov.info
-        '*.g.dart'
-        -o coverage/lcov.info
+        flutter pub run
+        remove_from_coverage --remove="\.g\.dart$"
+        --file=coverage/lcov.info
 
     - name: Coveralls
       uses: coverallsapp/github-action@master
