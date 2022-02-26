@@ -155,9 +155,19 @@ jobs:
         cache: true
         cache-key: ${{ github.job }}
 
-    - run: echo ${{ env.PUB_CACHE }} $PUB_CACHE
+    - run: |
+      echo ${{ env.PUB_CACHE }} $PUB_CACHE
+      ls -R $PUB_CACHE
+      echo ~/.pub-cache
+      ls -R ~/.pub-cache
 
     - run: flutter pub get
+
+    - run: |
+      echo ${{ env.PUB_CACHE }} $PUB_CACHE
+      ls -R $PUB_CACHE
+      echo ~/.pub-cache
+      ls -R ~/.pub-cache
 
     - name: Generate code
       run: flutter pub run build_runner build
