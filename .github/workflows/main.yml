@@ -25,7 +25,10 @@ jobs:
       uses: actions/cache@v2
       with:
         path: ${{ env.CCACHE_DIR }}
-        key: ccache-${{ github.job }}
+        key: ccache-${{ github.job }}-${{ github.ref_name }}-${{ github.sha }}
+        restore-keys: |
+          ccache-${{ github.job }}-${{ github.ref_name }}
+          ccache-${{ github.job }}
 
     - name: ccache reset statistics
       run: ccache --zero-stats
@@ -55,7 +58,10 @@ jobs:
       uses: actions/cache@v2
       with:
         path: ${{ env.CCACHE_DIR }}
-        key: ccache-${{ github.job }}-${{ matrix.plugin }}-${{ matrix.build_type }}
+        key: ccache-${{ github.job }}-${{ matrix.plugin }}-${{ matrix.build_type }}-${{ github.ref_name }}-${{ github.sha }}
+        restore-keys: |
+          ccache-${{ github.job }}-${{ matrix.plugin }}-${{ matrix.build_type }}-${{ github.ref_name }}
+          ccache-${{ github.job }}-${{ matrix.plugin }}-${{ matrix.build_type }}
 
     - name: ccache reset statistics
       run: ccache --zero-stats
@@ -84,7 +90,10 @@ jobs:
       uses: actions/cache@v2
       with:
         path: ${{ env.CCACHE_DIR }}
-        key: ccache-${{ github.job }}-${{ matrix.build_type }}
+        key: ccache-${{ github.job }}-${{ matrix.build_type }}-${{ github.ref_name }}-${{ github.sha }}
+        restore-keys: |
+          ccache-${{ github.job }}-${{ matrix.build_type }}-${{ github.ref_name }}
+          ccache-${{ github.job }}-${{ matrix.build_type }}
 
     - name: ccache reset statistics
       run: ccache --zero-stats
