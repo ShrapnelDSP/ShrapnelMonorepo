@@ -202,6 +202,12 @@ jobs:
     - name: Test
       run: flutter test --coverage
 
+    - name: Coverage clean-up
+      run: >
+        lcov --remove coverage/lcov.info
+        '*.g.dart'
+        -o coverage/lcov.info
+
     - name: Coveralls
       uses: coverallsapp/github-action@master
       with:
