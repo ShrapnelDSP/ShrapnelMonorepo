@@ -155,17 +155,15 @@ jobs:
         cache: true
         cache-key: ${{ github.job }}
 
-    - run: echo $PUB_CACHE || true
-    - run: ls -R $PUB_CACHE || true
-    - run: echo ~/.pub-cache || true
-    - run: ls -R ~/.pub-cache || true
+    - name: Flutter pub cache
+      uses: actions/cache@v2
+      with:
+        path: ${{ env.PUB_CACHE }}
+        key: flutter-pub-${{ github.job }}-${{ hashFiles('**/pubspec.lock') }}
+        restore-keys: |
+          flutter-pub-${{ github.job }}-
 
     - run: flutter pub get
-
-    - run: echo $PUB_CACHE || true
-    - run: ls -R $PUB_CACHE || true
-    - run: echo ~/.pub-cache || true
-    - run: ls -R ~/.pub-cache || true
 
     - name: Generate code
       run: flutter pub run build_runner build
@@ -192,6 +190,14 @@ jobs:
         cache: true
         cache-key: ${{ github.job }}
 
+    - name: Flutter pub cache
+      uses: actions/cache@v2
+      with:
+        path: ${{ env.PUB_CACHE }}
+        key: flutter-pub-${{ github.job }}-${{ hashFiles('**/pubspec.lock') }}
+        restore-keys: |
+          flutter-pub-${{ github.job }}-
+
     - run: flutter pub get
 
     - name: Format
@@ -215,6 +221,14 @@ jobs:
         channel: ${{ env.FLUTTER_CHANNEL }}
         cache: true
         cache-key: ${{ github.job }}
+
+    - name: Flutter pub cache
+      uses: actions/cache@v2
+      with:
+        path: ${{ env.PUB_CACHE }}
+        key: flutter-pub-${{ github.job }}-${{ hashFiles('**/pubspec.lock') }}
+        restore-keys: |
+          flutter-pub-${{ github.job }}-
 
     - run: flutter pub get
 
