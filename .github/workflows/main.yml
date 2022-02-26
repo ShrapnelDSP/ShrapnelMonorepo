@@ -27,7 +27,7 @@ jobs:
         path: ${{ env.CCACHE_DIR }}
         key: ccache-${{ github.job }}-${{ github.sha }}
         restore-keys: |
-          ccache-${{ github.job }}
+          ccache-${{ github.job }}-
 
     - name: ccache reset statistics
       run: ccache --zero-stats
@@ -59,7 +59,7 @@ jobs:
         path: ${{ env.CCACHE_DIR }}
         key: ccache-${{ github.job }}-${{ matrix.plugin }}-${{ matrix.build_type }}-${{ github.sha }}
         restore-keys: |
-          ccache-${{ github.job }}-${{ matrix.plugin }}-${{ matrix.build_type }}
+          ccache-${{ github.job }}-${{ matrix.plugin }}-${{ matrix.build_type }}-
 
     - name: ccache reset statistics
       run: ccache --zero-stats
@@ -90,7 +90,7 @@ jobs:
         path: ${{ env.CCACHE_DIR }}
         key: ccache-${{ github.job }}-${{ matrix.build_type }}-${{ github.sha }}
         restore-keys: |
-          ccache-${{ github.job }}-${{ matrix.build_type }}
+          ccache-${{ github.job }}-${{ matrix.build_type }}-
 
     - name: ccache reset statistics
       run: ccache --zero-stats
