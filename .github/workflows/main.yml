@@ -5,7 +5,7 @@ defaults:
     shell: bash
 
 env:
-  NODE_COVERALLS_DEBUG: 1 # verbose logging for coveralls steps
+  NODE_COVERALLS_DEBUG: 0 # verbose logging for coveralls steps
   CMAKE_C_COMPILER_LAUNCHER: ccache
   CMAKE_CXX_COMPILER_LAUNCHER: ccache
   CCACHE_DIR: /ccache
@@ -72,8 +72,6 @@ jobs:
   ctest:
     runs-on: ubuntu-latest
     container: barabas5532/shrapnel:3
-    outputs:
-      tmp: ${{ steps.coveralls.outputs.coveralls-api-result }}
     strategy:
       matrix:
         build_type: ["Release", "Debug"]
@@ -120,24 +118,14 @@ jobs:
         -o lcov.info
 
     - name: Debug print lcov
-      if: matrix.build_type == 'Debug'
-      run: cat lcov.info
-
-    - name: Hack
-      if: false #matrix.build_type == 'Debug'
-      run: sed s#/__w/ShrapnelMonorepo/ShrapnelMonorepo#\.\.# -i lcov.info
-
-    - name: Debug print lcov after hack
-      if: matrix.build_type == 'Debug'
+      if: env.NODE_COVERALLS_DEBUG
       run: cat lcov.info
 
     - name: Coveralls
-      id: coveralls
       if: matrix.build_type == 'Debug'
       uses: coverallsapp/github-action@master
       with:
         path-to-lcov: lcov.info
-          #base-path: test
         github-token: ${{ secrets.GITHUB_TOKEN }}
         parallel: true
         flag-name: "ctest"
@@ -195,8 +183,6 @@ jobs:
       run:
         working-directory:
           frontend
-    outputs:
-      tmp: ${{ steps.coveralls.outputs.coveralls-api-result }}
     steps:
     - uses: actions/checkout@v2
       with:
@@ -217,7 +203,6 @@ jobs:
       run: flutter test --coverage
 
     - name: Coveralls
-      id: coveralls
       uses: coverallsapp/github-action@master
       with:
         path-to-lcov: frontend/coverage/lcov.info
@@ -230,9 +215,6 @@ jobs:
     needs: [flutter-test, ctest]
     runs-on: ubuntu-latest
     steps:
-    - name: Debug print
-      run: echo ${{needs.flutter-test.outputs.tmp}} ${{needs.ctest.outputs.tmp}}
-
     - name: Coveralls
       uses: coverallsapp/github-action@master
       with:
