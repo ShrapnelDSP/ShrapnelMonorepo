@@ -152,6 +152,10 @@ jobs:
       with:
         flutter-version: ${{ env.FLUTTER_VERSION }}
         channel: ${{ env.FLUTTER_CHANNEL }}
+        cache: true
+        cache-key: ${{ github.job }}
+
+    - run: echo ${{ env.PUB_CACHE }} $PUB_CACHE
 
     - run: flutter pub get
 
@@ -177,6 +181,8 @@ jobs:
       with:
         flutter-version: ${{ env.FLUTTER_VERSION }}
         channel: ${{ env.FLUTTER_CHANNEL }}
+        cache: true
+        cache-key: ${{ github.job }}
 
     - run: flutter pub get
 
@@ -199,6 +205,8 @@ jobs:
       with:
         flutter-version: ${{ env.FLUTTER_VERSION }}
         channel: ${{ env.FLUTTER_CHANNEL }}
+        cache: true
+        cache-key: ${{ github.job }}
 
     - run: flutter pub get
 
