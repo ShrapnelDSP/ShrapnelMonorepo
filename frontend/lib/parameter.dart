@@ -88,20 +88,20 @@ class AudioParameterDoubleModel extends ChangeNotifier {
 class ParameterService extends ChangeNotifier {
   ParameterService({required this.websocket}) {
     // TODO is this adding noticable latency when adjusting parameters?
-    sink.stream.throttleTime(
-      const Duration(milliseconds: 100),
-      trailing: true,
-      leading: false,
-    ).listen(websocket.sendMessage);
+    sink.stream
+        .throttleTime(
+          const Duration(milliseconds: 100),
+          trailing: true,
+          leading: false,
+        )
+        .listen(websocket.sendMessage);
 
     websocket.onData = _handleIncomingEvent;
 
-    if(websocket.isAlive)
-    {
-        _requestParameterInitialisation();
+    if (websocket.isAlive) {
+      _requestParameterInitialisation();
     }
     websocket.onConnect = _requestParameterInitialisation;
-
   }
 
   void _requestParameterInitialisation() {
@@ -158,7 +158,8 @@ class ParameterServiceProvider extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => ChangeNotifierProvider(
-        create: (_) => ParameterService(websocket: context.read<RobustWebsocket>()),
+        create: (_) =>
+            ParameterService(websocket: context.read<RobustWebsocket>()),
         child: child,
       );
 }

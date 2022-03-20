@@ -49,9 +49,8 @@ class RobustWebsocket extends ChangeNotifier {
         final nonce = <int>[];
         final rand = Random();
 
-        for (var i = 0; i < 16; i++)
-        {
-            nonce.add(rand.nextInt(255));
+        for (var i = 0; i < 16; i++) {
+          nonce.add(rand.nextInt(255));
         }
 
         request.headers
