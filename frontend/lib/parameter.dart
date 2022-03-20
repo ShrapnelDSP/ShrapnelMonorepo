@@ -96,8 +96,12 @@ class ParameterService extends ChangeNotifier {
 
     websocket.onData = _handleIncomingEvent;
 
-    // TODO this is getting sent before the connection is created
-    _requestParameterInitialisation();
+    if(websocket.isAlive)
+    {
+        _requestParameterInitialisation();
+    }
+    websocket.onConnect = _requestParameterInitialisation;
+
   }
 
   void _requestParameterInitialisation() {

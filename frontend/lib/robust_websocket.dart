@@ -28,6 +28,7 @@ class RobustWebsocket extends ChangeNotifier {
   Uri uri;
   bool isAlive = false;
   void Function(dynamic)? onData;
+  void Function()? onConnect;
 
   WebSocket? _ws;
 
@@ -82,6 +83,8 @@ class RobustWebsocket extends ChangeNotifier {
     }, onDone: _reconnect);
 
     _ws!.pingInterval = const Duration(seconds: 1);
+
+    onConnect?.call();
   }
 
   void sendMessage(String s) {
