@@ -24,6 +24,7 @@ import 'package:provider/provider.dart';
 import 'parameter.dart';
 import 'pedalboard.dart';
 import 'robust_websocket.dart';
+import 'websocket_status.dart';
 
 void main() {
   Logger.root.level = Level.ALL;
@@ -54,6 +55,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.orange,
       ),
       home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      debugShowCheckedModeBanner: false,
     );
   }
 }
@@ -67,6 +69,10 @@ class MyHomePage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(title),
+        actions: [
+          const WebSocketStatus(size: kToolbarHeight - 20),
+          Container(width: 10),
+        ],
       ),
       body: const ParameterServiceProvider(
         child: Center(
