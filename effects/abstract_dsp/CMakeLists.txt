@@ -38,6 +38,19 @@ if(DEFINED TESTING)
     target_link_libraries(iir_test PRIVATE gmock)
     gtest_discover_tests(iir_test)
 
+    add_executable(conv_test
+                   universal/fast_convolution.cpp
+                   test/test_conv.cpp
+                   )
+
+    target_include_directories(conv_test PUBLIC include)
+
+    target_link_libraries(conv_test PUBLIC esp_dsp)
+
+    target_link_libraries(conv_test PRIVATE gtest_main)
+    target_link_libraries(conv_test PRIVATE gmock)
+    gtest_discover_tests(conv_test)
+
     return()
 endif()
 
