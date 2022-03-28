@@ -12,7 +12,7 @@ class FastConvolution final {
     public:
     FastConvolution()
     {
-        ESP_ERROR_CHECK(dsps_fft2r_init_fc32(table.data(), table.size()));
+        ESP_ERROR_CHECK(dsps_fft2r_init_fc32(NULL, CONFIG_DSP_MAX_FFT_SIZE));
     }
 
     /**
@@ -29,11 +29,46 @@ class FastConvolution final {
         // define using a global table pointer, how are we using that? What's
         // the point of the table passed to the init function?
 
-#if 0
+        int i = 0;
+        printf("\nstart\n");
+        for(const auto &a: a)
+        {
+            printf("a %d %f\n", i, a);
+            i++;
+        }
+
         // transform a
         auto a_complex = real_to_complex(a);
-        ESP_ERROR_CHECK(dsps_fft2r_fc32(a_complex.data(), N, table.data()));
 
+        i = 0;
+        printf("\ncomplex\n");
+        for(const auto &a: a_complex)
+        {
+            printf("a %d %f\n", i, a);
+            i++;
+        }
+
+        ESP_ERROR_CHECK(dsps_fft2r_fc32(a_complex.data(), N));
+
+        i = 0;
+        printf("\ntransformed\n");
+        for(const auto &a: a_complex)
+        {
+            printf("a %d %f\n", i, a);
+            i++;
+        }
+
+        dsps_bit_rev_fc32(a_complex.data(), N);
+
+        i = 0;
+        printf("\nreversed\n");
+        for(const auto &a: a_complex)
+        {
+            printf("a %d %f\n", i, a);
+            i++;
+        }
+
+#if 0
         // transform b
         auto b_complex = real_to_complex(b);
         ESP_ERROR_CHECK(dsps_fft2r_fc32(b_complex.data(), N, table.data()));
@@ -50,11 +85,9 @@ class FastConvolution final {
     }
 
     private:
-    std::array<float, N> table;
-
     std::array<float, 2*N> real_to_complex(const std::array<float, N> &real)
     {
-        std::array<float, 2*N> _complex;
+        std::array<float, 2*N> _complex{};
 
         for(int i = 0; i < N; i++)
         {

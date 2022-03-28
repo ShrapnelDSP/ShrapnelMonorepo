@@ -23,6 +23,18 @@
 #include <complex>
 #include "fast_convolution.h"
 
+
+void _esp_error_check_failed(esp_err_t rc, const char *file, int line, const char *function, const char *expression)
+{
+    printf("ESP_ERROR_CHECK failed: esp_err_t 0x%x", rc);
+#ifdef CONFIG_ESP_ERR_TO_NAME_LOOKUP
+    printf(" (%s)", esp_err_to_name(rc));
+#endif //CONFIG_ESP_ERR_TO_NAME_LOOKUP
+    printf(" at %p\n", __builtin_return_address(0));
+    printf("file: \"%s\" line %d\nfunc: %s\nexpression: %s\n", file, line, function, expression);
+    abort();
+}
+
 class FastConvolution : public ::testing::Test {};
 
 TEST_F(FastConvolution, ComplexMultiply)
@@ -75,22 +87,6 @@ TEST_F(FastConvolution, ComplexMultiply)
         }
     }
 
-#if 0
-    std::cout << "in_a_flat:";
-    for(auto &a : in_a_flat)
-    {
-        std::cout << " " << a;
-    }
-    std::cout << std::endl;
-
-    std::cout << "in_b_flat:";
-    for(auto &b : in_b_flat)
-    {
-        std::cout << " " << b;
-    }
-    std::cout << std::endl;
-#endif
-
     std::array<float, 16> out_uut;
 
     shrapnel::dsp::FastConvolution<8>::complex_multiply(
@@ -105,6 +101,27 @@ TEST_F(FastConvolution, ComplexMultiply)
         EXPECT_FLOAT_EQ(ref.imag(), out_uut[i*2 + 1]) <<
             "i: " << i << " in_a: " << in_a[i] << " in_b: " << in_b[i];
     }
+}
+
+TEST_F(FastConvolution, PlayGround)
+{
+    size_t a_length = 16;
+    std::array<float, 32> input_a{};
+    input_a[0] = 4;
+    input_a[1] = 4;
+
+    size_t b_length = 4;
+    std::array<float, 32> input_b{};
+    input_b[0] = 1;
+    input_b[1] = 2;
+    input_b[2] = 3;
+    input_b[3] = 4;
+
+    std::array<float, 32> out{};
+
+    shrapnel::dsp::FastConvolution<32> conv;
+
+    conv.process(input_a, input_b, out);
 }
 
 #if 0
