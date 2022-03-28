@@ -40,19 +40,52 @@ class FastConvolution final {
         ESP_ERROR_CHECK(dsps_fft2r_fc32(reinterpret_cast<float *>(b_complex.data()), N));
         dsps_bit_rev_fc32(reinterpret_cast<float *>(b_complex.data()), N);
 
-#if 0
         // multiply A * B
         std::array<std::complex<float>, N> multiplied;
         complex_multiply(a_complex, b_complex, multiplied);
 
+        std::array<std::complex<float>, N> test{};
+        for(auto &t : test)
+        {
+            t = 1;
+        }
+        multiplied = test;
+
+        int i = 0;
+        printf("\nmultiplied\n");
+        for(const auto &n: multiplied)
+        {
+            printf("n %d %f %f\n", i, n.real(), n.imag());
+            i++;
+        }
+
         // transform result
-        ESP_ERROR_CHECK(dsps_fft2r_fc32(multiplied.data(), N, table.data()));
+        ESP_ERROR_CHECK(dsps_fft2r_fc32(reinterpret_cast<float *>(multiplied.data()), N));
+        dsps_bit_rev_fc32(reinterpret_cast<float *>(multiplied.data()), N);
+
+        i = 0;
+        printf("\ntransformed\n");
+        for(const auto &n: multiplied)
+        {
+            printf("n %d %f %f\n", i, n.real(), n.imag());
+            i++;
+        }
 
         complex_to_real(multiplied, out);
-#endif
+        dsps_mulc_f32(out.data(), out.data(), N, scale, 1, 1);
+
+        i = 0;
+        printf("\nscaled\n");
+        for(const auto &n: out)
+        {
+            printf("n %d %f\n", i, n);
+            i++;
+        }
     }
 
     private:
+    float scale = 1.f/N;
+
     std::array<std::complex<float>, N> real_to_complex(const std::array<float, N> &real)
     {
         std::array<std::complex<float>, N> _complex{};
@@ -71,18 +104,13 @@ class FastConvolution final {
     {
         for(int i = 0; i < N; i++)
         {
-            real[i] = _complex[i];
+            real[i] = _complex[i].real();
         }
     }
 
     public:
     // TODO is const reference faster? This signature causes a copy of a and b
     // when the function is called.
-    //
-    // TODO std::complex should work here. It has reimplement cast that
-    // allows casting array<complex<float>, N>.data() pointers to look like
-    // a flat buffer with the real and imaginary parts interleaved, same as
-    // the format used by ESP FFT
     static void complex_multiply(
             std::array<std::complex<float>, N> a,
             std::array<std::complex<float>, N> b,
