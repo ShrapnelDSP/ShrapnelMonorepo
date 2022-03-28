@@ -30,52 +30,19 @@ class FastConvolution final {
         // define using a global table pointer, how are we using that? What's
         // the point of the table passed to the init function?
 
-        int i = 0;
-        printf("\nstart\n");
-        for(const auto &a: a)
-        {
-            printf("a %d %f\n", i, a);
-            i++;
-        }
-
         // transform a
         auto a_complex = real_to_complex(a);
-
-        i = 0;
-        printf("\ncomplex\n");
-        for(const auto &a: a_complex)
-        {
-            printf("a %d %f %f\n", i, a.real(), a.imag());
-            i++;
-        }
-
         ESP_ERROR_CHECK(dsps_fft2r_fc32(reinterpret_cast<float *>(a_complex.data()), N));
-
-        i = 0;
-        printf("\ntransformed\n");
-        for(const auto &a: a_complex)
-        {
-            printf("a %d %f %f\n", i, a.real(), a.imag());
-            i++;
-        }
-
         dsps_bit_rev_fc32(reinterpret_cast<float *>(a_complex.data()), N);
 
-        i = 0;
-        printf("\nreversed\n");
-        for(const auto &a: a_complex)
-        {
-            printf("a %d %f %f\n", i, a.real(), a.imag());
-            i++;
-        }
-
-#if 0
         // transform b
         auto b_complex = real_to_complex(b);
-        ESP_ERROR_CHECK(dsps_fft2r_fc32(b_complex.data(), N, table.data()));
+        ESP_ERROR_CHECK(dsps_fft2r_fc32(reinterpret_cast<float *>(b_complex.data()), N));
+        dsps_bit_rev_fc32(reinterpret_cast<float *>(b_complex.data()), N);
 
+#if 0
         // multiply A * B
-        std::array<float, 2*N> multiplied;
+        std::array<std::complex<float>, N> multiplied;
         complex_multiply(a_complex, b_complex, multiplied);
 
         // transform result
@@ -104,7 +71,7 @@ class FastConvolution final {
     {
         for(int i = 0; i < N; i++)
         {
-            real[i] = _complex[2*i];
+            real[i] = _complex[i];
         }
     }
 
@@ -117,9 +84,9 @@ class FastConvolution final {
     // a flat buffer with the real and imaginary parts interleaved, same as
     // the format used by ESP FFT
     static void complex_multiply(
-            std::array<float, 2*N> a,
-            std::array<float, 2*N> b,
-            std::array<float, 2*N> &out)
+            std::array<std::complex<float>, N> a,
+            std::array<std::complex<float>, N> b,
+            std::array<std::complex<float>, N> &out)
     {
         // We want to compute (r_a + im_a j) * (r_b + im_b j)
         // This can be rewritten as follows:
@@ -134,18 +101,22 @@ class FastConvolution final {
         // TODO we multiply then add here, could we use the MADD.S instruction
         // to speed it up?
 
+        auto a_ptr = reinterpret_cast<float*>(a.data());
+        auto b_ptr = reinterpret_cast<float*>(b.data());
+        auto out_ptr = reinterpret_cast<float*>(out.data());
         // part 1
-        dsps_mul_f32(a.data(), b.data(), out.data(), N, 2, 2, 2);
-        dsps_mul_f32(a.data(), b.data() + 1, out.data() + 1, N, 2, 2, 2);
+        dsps_mul_f32(a_ptr, b_ptr, out_ptr, N, 2, 2, 2);
+        dsps_mul_f32(a_ptr, b_ptr + 1, out_ptr + 1, N, 2, 2, 2);
 
         // part 2
-        std::array<float, 2*N> out2;
-        dsps_mul_f32(a.data() + 1, b.data() + 1, out2.data(), N, 2, 2, 2);
-        dsps_mul_f32(a.data() + 1, b.data(), out2.data() + 1, N, 2, 2, 2);
+        std::array<std::complex<float>, N> out2;
+        auto out2_ptr = reinterpret_cast<float*>(out2.data());
+        dsps_mul_f32(a_ptr + 1, b_ptr + 1, out2_ptr, N, 2, 2, 2);
+        dsps_mul_f32(a_ptr + 1, b_ptr, out2_ptr + 1, N, 2, 2, 2);
         // TODO maybe faster if we use bit operations to inverse the sign bit?
-        dsps_mulc_f32(out2.data(), out2.data(), N, -1, 2, 2);
+        dsps_mulc_f32(out2_ptr, out2_ptr, N, -1, 2, 2);
 
-        dsps_add_f32(out.data(), out2.data(), out.data(), out.size(), 1, 1, 1);
+        dsps_add_f32(out_ptr, out2_ptr, out_ptr, 2*out.size(), 1, 1, 1);
     }
 };
 

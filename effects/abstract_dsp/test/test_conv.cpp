@@ -61,44 +61,17 @@ TEST_F(FastConvolution, ComplexMultiply)
          1.f + 1if,
     };
 
-    std::array<float, 16> in_a_flat;
-    for(int i = 0; i < 16; i++)
-    {
-        if(!(i % 2))
-        {
-            in_a_flat[i] = in_a[i/2].real();
-        }
-        else
-        {
-            in_a_flat[i] = in_a[i/2].imag();
-        }
-    }
+    std::array<std::complex<float>, 8> out_uut;
 
-    std::array<float, 16> in_b_flat;
-    for(int i = 0; i < 16; i++)
-    {
-        if(!(i % 2))
-        {
-            in_b_flat[i] = in_b[i/2].real();
-        }
-        else
-        {
-            in_b_flat[i] = in_b[i/2].imag();
-        }
-    }
-
-    std::array<float, 16> out_uut;
-
-    shrapnel::dsp::FastConvolution<8>::complex_multiply(
-            in_a_flat, in_b_flat, out_uut);
+    shrapnel::dsp::FastConvolution<8>::complex_multiply(in_a, in_b, out_uut);
 
     for(int i = 0; i < 8; i++)
     {
         auto ref = in_a[i] * in_b[i];
 
-        EXPECT_FLOAT_EQ(ref.real(), out_uut[i*2]) <<
+        EXPECT_FLOAT_EQ(ref.real(), out_uut[i].real()) <<
             "i: " << i << " in_a: " << in_a[i] << " in_b: " << in_b[i];
-        EXPECT_FLOAT_EQ(ref.imag(), out_uut[i*2 + 1]) <<
+        EXPECT_FLOAT_EQ(ref.imag(), out_uut[i].imag()) <<
             "i: " << i << " in_a: " << in_a[i] << " in_b: " << in_b[i];
     }
 }
