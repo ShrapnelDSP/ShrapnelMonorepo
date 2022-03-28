@@ -44,47 +44,23 @@ class FastConvolution final {
         std::array<std::complex<float>, N> multiplied;
         complex_multiply(a_complex, b_complex, multiplied);
 
-        std::array<std::complex<float>, N> test{};
-        for(auto &t : test)
-        {
-            t = 1;
-        }
-        multiplied = test;
-
-        int i = 0;
-        printf("\nmultiplied\n");
-        for(const auto &n: multiplied)
-        {
-            printf("n %d %f %f\n", i, n.real(), n.imag());
-            i++;
-        }
-
         // transform result
-        ESP_ERROR_CHECK(dsps_fft2r_fc32(reinterpret_cast<float *>(multiplied.data()), N));
-        dsps_bit_rev_fc32(reinterpret_cast<float *>(multiplied.data()), N);
-
-        i = 0;
-        printf("\ntransformed\n");
-        for(const auto &n: multiplied)
-        {
-            printf("n %d %f %f\n", i, n.real(), n.imag());
-            i++;
-        }
+        // Inverse transform achieved by complex conjugating the input and
+        // output of the forward transform. There is no inverse transform
+        // provided by esp-dsp.
+        auto multiplied_ptr = reinterpret_cast<float *>(multiplied.data());
+        dsps_mulc_f32(multiplied_ptr + 1, multiplied_ptr + 1, N, -1, 2, 2);
+        ESP_ERROR_CHECK(dsps_fft2r_fc32(multiplied_ptr, N));
+        dsps_bit_rev_fc32(multiplied_ptr, N);
+        dsps_mulc_f32(multiplied_ptr + 1, multiplied_ptr + 1, N, -1, 2, 2);
 
         complex_to_real(multiplied, out);
-        dsps_mulc_f32(out.data(), out.data(), N, scale, 1, 1);
 
-        i = 0;
-        printf("\nscaled\n");
-        for(const auto &n: out)
-        {
-            printf("n %d %f\n", i, n);
-            i++;
-        }
+        dsps_mulc_f32(out.data(), out.data(), N, scale_factor, 1, 1);
     }
 
     private:
-    float scale = 1.f/N;
+    float scale_factor = 1.f/N;
 
     std::array<std::complex<float>, N> real_to_complex(const std::array<float, N> &real)
     {
