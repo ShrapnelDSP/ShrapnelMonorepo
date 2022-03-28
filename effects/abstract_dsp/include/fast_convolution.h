@@ -1,5 +1,6 @@
 #pragma once
 
+#include <complex>
 #include <cstddef>
 #include <array>
 #include "esp_dsp.h"
@@ -44,27 +45,27 @@ class FastConvolution final {
         printf("\ncomplex\n");
         for(const auto &a: a_complex)
         {
-            printf("a %d %f\n", i, a);
+            printf("a %d %f %f\n", i, a.real(), a.imag());
             i++;
         }
 
-        ESP_ERROR_CHECK(dsps_fft2r_fc32(a_complex.data(), N));
+        ESP_ERROR_CHECK(dsps_fft2r_fc32(reinterpret_cast<float *>(a_complex.data()), N));
 
         i = 0;
         printf("\ntransformed\n");
         for(const auto &a: a_complex)
         {
-            printf("a %d %f\n", i, a);
+            printf("a %d %f %f\n", i, a.real(), a.imag());
             i++;
         }
 
-        dsps_bit_rev_fc32(a_complex.data(), N);
+        dsps_bit_rev_fc32(reinterpret_cast<float *>(a_complex.data()), N);
 
         i = 0;
         printf("\nreversed\n");
         for(const auto &a: a_complex)
         {
-            printf("a %d %f\n", i, a);
+            printf("a %d %f %f\n", i, a.real(), a.imag());
             i++;
         }
 
@@ -85,20 +86,20 @@ class FastConvolution final {
     }
 
     private:
-    std::array<float, 2*N> real_to_complex(const std::array<float, N> &real)
+    std::array<std::complex<float>, N> real_to_complex(const std::array<float, N> &real)
     {
-        std::array<float, 2*N> _complex{};
+        std::array<std::complex<float>, N> _complex{};
 
         for(int i = 0; i < N; i++)
         {
-            _complex[2*i] = real[i];
+            _complex[i] = real[i];
         }
 
         return _complex;
     }
 
     void complex_to_real(
-            const std::array<float, 2*N> &_complex,
+            const std::array<std::complex<float>, N> &_complex,
             std::array<float, N> &real)
     {
         for(int i = 0; i < N; i++)
