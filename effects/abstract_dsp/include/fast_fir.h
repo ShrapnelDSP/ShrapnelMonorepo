@@ -31,7 +31,7 @@ class FastFir final {
      * \param coefficients A buffer containing the filter coefficients
      */
     FastFir(const std::array<float, K> &coefficients, Convolution &convolution) :
-        coefficients{}, convolution{convolution}
+        signal{}, coefficients{}, convolution{convolution}
     {
         std::copy(coefficients.cbegin(), coefficients.cend(), this->coefficients.begin());
     }
@@ -42,6 +42,9 @@ class FastFir final {
      */
     void process(float *buffer)
     {
+        std::copy(signal.begin() + N, signal.end(), signal.begin());
+        std::copy(buffer, buffer + N, signal.end() - N);
+
         std::array<float, M> out;
         convolution.process(coefficients, signal, out);
     }
