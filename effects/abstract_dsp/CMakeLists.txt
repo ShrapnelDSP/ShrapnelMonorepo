@@ -3,6 +3,7 @@ if(ESP_PLATFORM)
                              esp32/abstract_dsp_esp32.c
                              universal/delayline.cpp
                              universal/delayline_c.cpp
+                             universal/fast_fir.cpp
                              universal/iir_universal.c
                            INCLUDE_DIRS
                              include
@@ -50,6 +51,17 @@ if(DEFINED TESTING)
     target_link_libraries(conv_test PRIVATE gtest_main)
     target_link_libraries(conv_test PRIVATE gmock)
     gtest_discover_tests(conv_test)
+
+    add_executable(fast_fir_test
+                   universal/fast_fir.cpp
+                   test/test_fast_fir.cpp
+                   )
+
+    target_include_directories(fast_fir_test PUBLIC include)
+
+    target_link_libraries(fast_fir_test PRIVATE gtest_main)
+    target_link_libraries(fast_fir_test PRIVATE gmock)
+    gtest_discover_tests(fast_fir_test)
 
     return()
 endif()

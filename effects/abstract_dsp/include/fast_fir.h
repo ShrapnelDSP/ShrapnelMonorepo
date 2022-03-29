@@ -5,28 +5,64 @@
 
 #pragma once
 
-#include <stddef.h>
+#include <algorithm>
+#include <array>
+#include <cstddef>
 
-/** Initialise the filter
- *
- * \param[in] coefficients A buffer containing the filter coefficients
- * \param     coefficients_length The number of coefficients
- * \param[in] buffer A buffer used internally
- * \param     buffer_length The number of samples in \p buffer
- * \param     block_length The number of samples in input blocks
- */
-void dspal_fast_fir_init(float *coefficients, size_t coefficients_length,
-                         float *buffer, size_t buffer_length,
-                         size_t block_length);
+namespace shrapnel {
+namespace dsp {
 
-/** Filter samples
- *
- * \param[in,out] buffer Samples to process
+/**
+ * \tparam N The number of samples in each buffer passed to \ref process()
+ * \tparam M The number of samples used for convolution
+ * \tparam K The number of samples used for coefficients
+ * \tparam Convolution The circular convolution processor to use
  */
-void dspal_fast_fir_process(float *buffer);
+template<size_t N, size_t M, size_t K, typename Convolution>
+class FastFir final {
+    // TODO add static asserts for the following:
+    // buffer size is power of two
+    // convolution size is power of two
+    // Coefficients size is not more than convolutions size / 2
 
-/** Reset the state of the filter
- *
- * \note Does not reset coefficients
- */
-void dspal_fast_fir_reset(void);
+    public:
+    /** Initialise the filter
+     *
+     * \param coefficients A buffer containing the filter coefficients
+     */
+    FastFir(const std::array<float, K> &coefficients, Convolution &convolution) :
+        coefficients{}, convolution{convolution}
+    {
+        std::copy(coefficients.cbegin(), coefficients.cend(), this->coefficients.begin());
+    }
+
+    /** Filter samples
+     *
+     * \param[in,out] buffer Samples to process. Must be \p N samples long.
+     */
+    void process(float *buffer)
+    {
+        std::array<float, M> out;
+        convolution.process(coefficients, signal, out);
+    }
+
+    /** Reset the state of the filter
+     *
+     * \note Does not reset coefficients
+     */
+    void reset(void);
+
+    private:
+    // TODO this is not perfect, the convolution could become invalid at any
+    // time.  We can't use std::unique_ptr, since the tests need access to
+    // convolution to set up expectations.
+    //
+    // Can we set up all expectations before we even the convolution to this
+    // class? In that case unique_ptr is fine.
+    Convolution &convolution;
+    std::array<float, M> coefficients;
+    std::array<float, M> signal;
+};
+
+}
+}
