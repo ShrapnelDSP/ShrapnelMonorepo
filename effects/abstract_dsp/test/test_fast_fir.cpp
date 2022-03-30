@@ -117,6 +117,9 @@ TEST_F(FastFir, SignalIsBufferedCorrectly)
 
     // TODO this must be called first, right now the order of calls does not
     //      matter at all
+    //
+    //      Use InSequence with the same sequence for all calls, then the calls
+    //      must appear in the order they are defined
     EXPECT_CALL(convolution, process(_,
                 ElementsAre(
                     0.f,
@@ -132,4 +135,29 @@ TEST_F(FastFir, SignalIsBufferedCorrectly)
     {
         uut.process(in.data());
     }
+}
+
+TEST_F(FastFir, OutputIsCopiedCorrectly)
+{
+    MockFastConvolution<8> convolution;
+    std::array coefficients{
+            1.f,
+            2.f,
+            3.f,
+            4.f,
+    };
+
+    shrapnel::dsp::FastFir<2, 8, 4, MockFastConvolution<8>> uut(
+            coefficients,
+            convolution);
+
+    std::array<float, 2> signal{};
+
+    EXPECT_CALL(convolution, process(_, _, _))
+        .WillOnce(::testing::SetArgReferee<2>(
+                    std::array {8.f, 7.f, 6.f, 5.f, 4.f, 3.f, 2.f, 1.f}
+                    ));
+
+    uut.process(signal.data());
+    EXPECT_THAT(signal, ElementsAre(2.f, 1.f));
 }

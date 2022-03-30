@@ -47,6 +47,8 @@ class FastFir final {
 
         std::array<float, M> out;
         convolution.process(coefficients, signal, out);
+
+        std::copy(out.end() - N, out.end(), buffer);
     }
 
     /** Reset the state of the filter
