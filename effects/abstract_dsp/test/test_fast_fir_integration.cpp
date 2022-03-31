@@ -43,13 +43,13 @@ TEST_F(FastFirIntegration, ImpulseZeroDelayIsIdentity)
 {
     std::array<float, 4> input{
         1,
+        2,
+        3,
+        4,
     };
 
     std::array<float, 4> coefficients{
         1,
-        2,
-        3,
-        4,
     };
 
     shrapnel::dsp::FastConvolution<8> convolution;
@@ -65,25 +65,26 @@ TEST_F(FastFirIntegration, ImpulseZeroDelayIsIdentity)
                 ));
 }
 
-TEST_F(FastFirIntegration, DISABLED_ImpulseNonZeroDelay)
+TEST_F(FastFirIntegration, ImpulseNonZeroDelay)
 {
-    std::array<float, 4> input_a{};
-    std::array<float, 4> input_b{};
+    std::array<float, 4> input{
+        1,
+        2,
+        3,
+        4,
+    };
 
-    input_b[1] = 1;
+    std::array<float, 4> coefficients{
+        0,
+        1,
+    };
 
-    input_a[0] = 1;
-    input_a[1] = 2;
-    input_a[2] = 3;
-    input_a[3] = 4;
+    shrapnel::dsp::FastConvolution<8> convolution;
+    shrapnel::dsp::FastFir<4, 8, 4, shrapnel::dsp::FastConvolution<8>> uut(coefficients, convolution);
 
-    std::array<float, 4> out{};
+    uut.process(input.data());
 
-    shrapnel::dsp::FastConvolution<4> uut;
-
-    uut.process(input_a, input_b, out);
-
-    EXPECT_THAT(out, ElementsAre(
+    EXPECT_THAT(input, ElementsAre(
                 FloatEq(0),
                 FloatEq(1),
                 FloatEq(2),
@@ -91,55 +92,59 @@ TEST_F(FastFirIntegration, DISABLED_ImpulseNonZeroDelay)
                 ));
 }
 
-TEST_F(FastFirIntegration, DISABLED_IsCommutative)
+TEST_F(FastFirIntegration, IsCommutative)
 {
-    std::array<float, 4> input_a{};
-    std::array<float, 4> input_b{};
+    std::array<float, 4> input_a{
+        1,
+        2,
+        3,
+        4,
+    };
 
-    input_a[0] = 1;
-    input_a[1] = 2;
-    input_a[2] = 3;
-    input_a[3] = 4;
+    std::array<float, 4> input_b{
+        5,
+        6,
+        7,
+        8,
+    };
 
-    input_b[0] = 5;
-    input_b[1] = 6;
-    input_b[2] = 7;
-    input_b[3] = 8;
 
-    std::array<float, 4> out_a{};
-    std::array<float, 4> out_b{};
+    shrapnel::dsp::FastConvolution<8> convolution_a;
+    shrapnel::dsp::FastFir<4, 8, 4, shrapnel::dsp::FastConvolution<8>> uut_a(input_a, convolution_a);
 
-    shrapnel::dsp::FastConvolution<4> uut;
+    shrapnel::dsp::FastConvolution<8> convolution_b;
+    shrapnel::dsp::FastFir<4, 8, 4, shrapnel::dsp::FastConvolution<8>> uut_b(input_b, convolution_b);
 
-    uut.process(input_a, input_b, out_a);
-    uut.process(input_b, input_a, out_b);
+    uut_a.process(input_b.data());
+    uut_b.process(input_a.data());
 
     for(int i = 0; i < 4; i++)
     {
-        EXPECT_FLOAT_EQ(out_a[i], out_b[i]);
+        EXPECT_FLOAT_EQ(input_a[i], input_b[i]);
     }
 }
 
-TEST_F(FastFirIntegration, DISABLED_IsLinear)
+TEST_F(FastFirIntegration, IsLinear)
 {
-    std::array<float, 4> input_a{};
-    std::array<float, 4> input_b{};
+    std::array<float, 4> input{
+        1,
+        2,
+        3,
+        4,
+    };
 
-    input_b[0] = 1;
-    input_b[1] = 1;
 
-    input_a[0] = 1;
-    input_a[1] = 2;
-    input_a[2] = 3;
-    input_a[3] = 4;
+    std::array<float, 4> coefficients{
+        1,
+        1,
+    };
 
-    std::array<float, 4> out{};
+    shrapnel::dsp::FastConvolution<8> convolution;
+    shrapnel::dsp::FastFir<4, 8, 4, shrapnel::dsp::FastConvolution<8>> uut(coefficients, convolution);
 
-    shrapnel::dsp::FastConvolution<4> uut;
+    uut.process(input.data());
 
-    uut.process(input_a, input_b, out);
-
-    EXPECT_THAT(out, ElementsAre(
+    EXPECT_THAT(input, ElementsAre(
                 FloatEq(1 + 0),
                 FloatEq(2 + 1),
                 FloatEq(3 + 2),
