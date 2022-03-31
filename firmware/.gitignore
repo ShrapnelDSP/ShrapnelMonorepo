@@ -1,7 +1,6 @@
 build/
 sdkconfig
 sdkconfig.old
-docs
 
 # YouCompleteMe stuff
 .clangd
