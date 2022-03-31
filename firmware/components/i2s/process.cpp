@@ -71,7 +71,7 @@ extern gpio_num_t g_profiling_gpio;
 static float fbuf[DMA_BUF_SIZE];
 
 #include "speaker_coeffs.h"
-static float fir_delay_line[sizeof(fir_coeff)/sizeof(fir_coeff[0])];
+static float fir_delay_line[fir_coeff.size()];
 static fir_f32_t fir;
 
 static float decibel_to_ratio(float db)
@@ -170,9 +170,6 @@ void process_samples(int32_t *buf, size_t buf_len)
 
 esp_err_t process_init(shrapnel::AudioParameters *audio_params)
 {
-    ESP_LOGI(TAG, "Initialised FIR filter with length %d", 
-                             sizeof(fir_coeff) / sizeof(fir_coeff[0]));
-
     ESP_ERROR_CHECK(gate_init());
     gate_set_sample_rate(SAMPLE_RATE);
     gate_set_threshold(-60, 1);
@@ -226,7 +223,8 @@ esp_err_t process_init(shrapnel::AudioParameters *audio_params)
     chorus_bypass = audio_params->get_raw_parameter("chorusBypass");
     assert(chorus_bypass);
 
-    return dsps_fir_init_f32(&fir, fir_coeff, fir_delay_line,
-                             sizeof(fir_coeff) / sizeof(fir_coeff[0]));
+    ESP_LOGI(TAG, "Initialised FIR filter with length %d", fir_coeff.size());
+
+    return dsps_fir_init_f32(&fir, fir_coeff.data(), fir_delay_line, fir_coeff.size());
 
 }
