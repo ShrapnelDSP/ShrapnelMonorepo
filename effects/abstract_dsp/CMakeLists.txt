@@ -63,6 +63,20 @@ if(DEFINED TESTING)
     target_link_libraries(fast_fir_test PRIVATE gmock)
     gtest_discover_tests(fast_fir_test)
 
+    add_executable(fast_fir_integration_test
+                   universal/fast_fir.cpp
+                   universal/fast_convolution.cpp
+                   test/test_fast_fir_integration.cpp
+                   )
+
+    target_include_directories(fast_fir_integration_test PUBLIC include)
+
+    target_link_libraries(fast_fir_integration_test PUBLIC esp_dsp)
+
+    target_link_libraries(fast_fir_integration_test PRIVATE gtest_main)
+    target_link_libraries(fast_fir_integration_test PRIVATE gmock)
+    gtest_discover_tests(fast_fir_integration_test)
+
     return()
 endif()
 
