@@ -13,7 +13,7 @@ class FastConvolution final {
     public:
     FastConvolution()
     {
-        ESP_ERROR_CHECK(dsps_fft2r_init_fc32(NULL, CONFIG_DSP_MAX_FFT_SIZE));
+        ESP_ERROR_CHECK(dsps_fft4r_init_fc32(NULL, CONFIG_DSP_MAX_FFT_SIZE));
     }
 
     /**
@@ -32,13 +32,13 @@ class FastConvolution final {
 
         // transform a
         auto a_complex = real_to_complex(a);
-        ESP_ERROR_CHECK(dsps_fft2r_fc32(reinterpret_cast<float *>(a_complex.data()), N));
-        dsps_bit_rev_fc32(reinterpret_cast<float *>(a_complex.data()), N);
+        ESP_ERROR_CHECK(dsps_fft4r_fc32(reinterpret_cast<float *>(a_complex.data()), N));
+        dsps_bit_rev4r_fc32(reinterpret_cast<float *>(a_complex.data()), N);
 
         // transform b
         auto b_complex = real_to_complex(b);
-        ESP_ERROR_CHECK(dsps_fft2r_fc32(reinterpret_cast<float *>(b_complex.data()), N));
-        dsps_bit_rev_fc32(reinterpret_cast<float *>(b_complex.data()), N);
+        ESP_ERROR_CHECK(dsps_fft4r_fc32(reinterpret_cast<float *>(b_complex.data()), N));
+        dsps_bit_rev4r_fc32(reinterpret_cast<float *>(b_complex.data()), N);
 
         // multiply A * B
         std::array<std::complex<float>, N> multiplied;
@@ -50,8 +50,8 @@ class FastConvolution final {
         // provided by esp-dsp.
         auto multiplied_ptr = reinterpret_cast<float *>(multiplied.data());
         dsps_mulc_f32(multiplied_ptr + 1, multiplied_ptr + 1, N, -1, 2, 2);
-        ESP_ERROR_CHECK(dsps_fft2r_fc32(multiplied_ptr, N));
-        dsps_bit_rev_fc32(multiplied_ptr, N);
+        ESP_ERROR_CHECK(dsps_fft4r_fc32(multiplied_ptr, N));
+        dsps_bit_rev4r_fc32(multiplied_ptr, N);
         dsps_mulc_f32(multiplied_ptr + 1, multiplied_ptr + 1, N, -1, 2, 2);
 
         complex_to_real(multiplied, out);

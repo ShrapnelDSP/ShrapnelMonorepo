@@ -36,6 +36,7 @@ void _esp_error_check_failed(esp_err_t rc, const char *file, int line, const cha
 
 using ::testing::ElementsAre;
 using ::testing::FloatEq;
+using ::testing::FloatNear;
 
 class FastFirIntegration : public ::testing::Test {};
 
@@ -52,8 +53,8 @@ TEST_F(FastFirIntegration, ImpulseZeroDelayIsIdentity)
         1,
     };
 
-    shrapnel::dsp::FastConvolution<8> convolution;
-    shrapnel::dsp::FastFir<4, 8, 4, shrapnel::dsp::FastConvolution<8>> uut(coefficients, convolution);
+    shrapnel::dsp::FastConvolution<16> convolution;
+    shrapnel::dsp::FastFir<4, 16, 4, shrapnel::dsp::FastConvolution<16>> uut(coefficients, convolution);
 
     uut.process(input.data());
 
@@ -79,13 +80,13 @@ TEST_F(FastFirIntegration, ImpulseNonZeroDelay)
         1,
     };
 
-    shrapnel::dsp::FastConvolution<8> convolution;
-    shrapnel::dsp::FastFir<4, 8, 4, shrapnel::dsp::FastConvolution<8>> uut(coefficients, convolution);
+    shrapnel::dsp::FastConvolution<16> convolution;
+    shrapnel::dsp::FastFir<4, 16, 4, shrapnel::dsp::FastConvolution<16>> uut(coefficients, convolution);
 
     uut.process(input.data());
 
     EXPECT_THAT(input, ElementsAre(
-                FloatEq(0),
+                FloatNear(0, 1e-6),
                 FloatEq(1),
                 FloatEq(2),
                 FloatEq(3)
@@ -109,11 +110,11 @@ TEST_F(FastFirIntegration, IsCommutative)
     };
 
 
-    shrapnel::dsp::FastConvolution<8> convolution_a;
-    shrapnel::dsp::FastFir<4, 8, 4, shrapnel::dsp::FastConvolution<8>> uut_a(input_a, convolution_a);
+    shrapnel::dsp::FastConvolution<16> convolution_a;
+    shrapnel::dsp::FastFir<4, 16, 4, shrapnel::dsp::FastConvolution<16>> uut_a(input_a, convolution_a);
 
-    shrapnel::dsp::FastConvolution<8> convolution_b;
-    shrapnel::dsp::FastFir<4, 8, 4, shrapnel::dsp::FastConvolution<8>> uut_b(input_b, convolution_b);
+    shrapnel::dsp::FastConvolution<16> convolution_b;
+    shrapnel::dsp::FastFir<4, 16, 4, shrapnel::dsp::FastConvolution<16>> uut_b(input_b, convolution_b);
 
     uut_a.process(input_b.data());
     uut_b.process(input_a.data());
@@ -139,8 +140,8 @@ TEST_F(FastFirIntegration, IsLinear)
         1,
     };
 
-    shrapnel::dsp::FastConvolution<8> convolution;
-    shrapnel::dsp::FastFir<4, 8, 4, shrapnel::dsp::FastConvolution<8>> uut(coefficients, convolution);
+    shrapnel::dsp::FastConvolution<16> convolution;
+    shrapnel::dsp::FastFir<4, 16, 4, shrapnel::dsp::FastConvolution<16>> uut(coefficients, convolution);
 
     uut.process(input.data());
 
