@@ -26,11 +26,9 @@ class FastConvolution final {
             const std::array<float, N> &b,
             std::array<float, N> &out)
     {
-        // TODO check the esp-dsp example to see how it's done. They have a
-        // define using a global table pointer, how are we using that? What's
-        // the point of the table passed to the init function?
-
         // transform a
+        // TODO FFT on the first input should be done only once, maybe in the
+        // constructor. This input changes rarely for speaker simulation.
         auto a_complex = real_to_complex(a);
         ESP_ERROR_CHECK(dsps_fft4r_fc32(reinterpret_cast<float *>(a_complex.data()), N));
         dsps_bit_rev4r_fc32(reinterpret_cast<float *>(a_complex.data()), N);
@@ -46,13 +44,15 @@ class FastConvolution final {
 
         // transform result
         // Inverse transform achieved by complex conjugating the input and
-        // output of the forward transform. There is no inverse transform
-        // provided by esp-dsp.
+        // output of the forward transform. The imaginary part of the output is
+        // not used, so we don't actually calculate the complex conjugate on
+        // it.
+        //
+        // There is no inverse transform provided by esp-dsp.
         auto multiplied_ptr = reinterpret_cast<float *>(multiplied.data());
         dsps_mulc_f32(multiplied_ptr + 1, multiplied_ptr + 1, N, -1, 2, 2);
         ESP_ERROR_CHECK(dsps_fft4r_fc32(multiplied_ptr, N));
         dsps_bit_rev4r_fc32(multiplied_ptr, N);
-        dsps_mulc_f32(multiplied_ptr + 1, multiplied_ptr + 1, N, -1, 2, 2);
 
         complex_to_real(multiplied, out);
 
@@ -88,8 +88,8 @@ class FastConvolution final {
     // TODO is const reference faster? This signature causes a copy of a and b
     // when the function is called.
     static void complex_multiply(
-            std::array<std::complex<float>, N> a,
-            std::array<std::complex<float>, N> b,
+            const std::array<std::complex<float>, N> &a,
+            const std::array<std::complex<float>, N> &b,
             std::array<std::complex<float>, N> &out)
     {
         // We want to compute (r_a + im_a j) * (r_b + im_b j)
@@ -105,8 +105,8 @@ class FastConvolution final {
         // TODO we multiply then add here, could we use the MADD.S instruction
         // to speed it up?
 
-        auto a_ptr = reinterpret_cast<float*>(a.data());
-        auto b_ptr = reinterpret_cast<float*>(b.data());
+        auto a_ptr = reinterpret_cast<const float*>(a.data());
+        auto b_ptr = reinterpret_cast<const float*>(b.data());
         auto out_ptr = reinterpret_cast<float*>(out.data());
         // part 1
         dsps_mul_f32(a_ptr, b_ptr, out_ptr, N, 2, 2, 2);

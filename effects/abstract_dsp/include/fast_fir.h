@@ -58,6 +58,9 @@ class FastFir final {
     void reset(void);
 
     private:
+    std::array<float, M> signal;
+    std::array<float, M> coefficients;
+
     // TODO this is not perfect, the convolution could become invalid at any
     // time.  We can't use std::unique_ptr, since the tests need access to
     // convolution to set up expectations.
@@ -65,8 +68,6 @@ class FastFir final {
     // Can we set up all expectations before we even the convolution to this
     // class? In that case unique_ptr is fine.
     Convolution &convolution;
-    std::array<float, M> coefficients;
-    std::array<float, M> signal;
 };
 
 }

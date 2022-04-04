@@ -38,7 +38,7 @@
 
 #define DMA_BUF_COUNT   (3)
 
-#define TASK_STACK      (3000)
+#define TASK_STACK      (63000)
 #define TASK_PRIO       (5)
 
 #define I2S_QUEUE_SIZE (4*DMA_BUF_COUNT)

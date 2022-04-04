@@ -20,7 +20,6 @@
 #include "i2s.h"
 #include "process.h"
 #include "float_convert.h"
-#include "dsps_fir.h"
 #include "dsps_mulc.h"
 #include "dsps_mul.h"
 #include "math.h"
@@ -30,6 +29,8 @@
 #include "profiling.h"
 #include "chorus.h"
 #include "valvestate.h"
+#include "fast_convolution.h"
+#include "fast_fir.h"
 
 #include "esp_log.h"
 #define TAG "i2s_process"
@@ -65,14 +66,19 @@ std::atomic<float> *chorus_bypass;
 shrapnel::effect::valvestate::Valvestate *valvestate;
 shrapnel::effect::Chorus *chorus;
 
+shrapnel::dsp::FastConvolution<256> *speaker_convolution;
+shrapnel::dsp::FastFir<
+    DMA_BUF_SIZE/2,
+    256,
+    128,
+    shrapnel::dsp::FastConvolution<256>> *speaker;
+
 }
 
 extern gpio_num_t g_profiling_gpio;
 static float fbuf[DMA_BUF_SIZE];
 
 #include "speaker_coeffs.h"
-static float fir_delay_line[fir_coeff.size()];
-static fir_f32_t fir;
 
 static float decibel_to_ratio(float db)
 {
@@ -131,7 +137,7 @@ void process_samples(int32_t *buf, size_t buf_len)
     profiling_mark_stage(11);
 
     /* speaker IR */
-    dsps_fir_f32_ae32(&fir, fbuf, fbuf, buf_len/2);
+    speaker->process(fbuf);
     profiling_mark_stage(12);
 
     chorus->set_modulation_rate_hz(*chorus_rate);
@@ -225,6 +231,15 @@ esp_err_t process_init(shrapnel::AudioParameters *audio_params)
 
     ESP_LOGI(TAG, "Initialised FIR filter with length %d", fir_coeff.size());
 
-    return dsps_fir_init_f32(&fir, fir_coeff.data(), fir_delay_line, fir_coeff.size());
+    speaker_convolution = new shrapnel::dsp::FastConvolution<256>();
+    assert(speaker_convolution);
 
+    speaker = new shrapnel::dsp::FastFir<
+        DMA_BUF_SIZE/2,
+        256,
+        128,
+        shrapnel::dsp::FastConvolution<256>>(fir_coeff, *speaker_convolution);
+    assert(speaker);
+
+    return ESP_OK;
 }

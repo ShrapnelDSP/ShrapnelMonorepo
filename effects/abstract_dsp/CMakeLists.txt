@@ -3,6 +3,7 @@ if(ESP_PLATFORM)
                              esp32/abstract_dsp_esp32.c
                              universal/delayline.cpp
                              universal/delayline_c.cpp
+                             universal/fast_convolution.cpp
                              universal/fast_fir.cpp
                              universal/iir_universal.c
                            INCLUDE_DIRS
