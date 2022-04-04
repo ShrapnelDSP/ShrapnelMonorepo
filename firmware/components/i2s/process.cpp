@@ -107,50 +107,36 @@ void process_samples(int32_t *buf, size_t buf_len)
 
     gate_analyse(fbuf, buf_len/2);
     profiling_mark_stage(1);
-    profiling_mark_stage(2);
-    profiling_mark_stage(3);
 
-    profiling_mark_stage(4);
-
-    profiling_mark_stage(5);
-
-    profiling_mark_stage(6);
-
-    profiling_mark_stage(7);
     valvestate->set_gain(*amp_gain, *amp_channel);
     valvestate->set_fmv(*bass, *middle, *treble);
     valvestate->set_contour(*contour);
     valvestate->set_volume(decibel_to_ratio(*volume));
+    profiling_mark_stage(2);
+
     valvestate->process(fbuf, buf_len/2);
-
-    profiling_mark_stage(8);
-
-    profiling_mark_stage(9);
+    profiling_mark_stage(3);
 
     if(*gate_bypass < 0.5f)
     {
         gate_process(fbuf, buf_len/2);
     }
-
-    profiling_mark_stage(10);
-    profiling_mark_stage(11);
+    profiling_mark_stage(4);
 
     /* speaker IR */
     speaker->process(fbuf);
-    profiling_mark_stage(12);
+    profiling_mark_stage(17);
 
     chorus->set_modulation_rate_hz(*chorus_rate);
     chorus->set_modulation_depth(*chorus_depth);
     chorus->set_modulation_mix(*chorus_mix);
-
-    profiling_mark_stage(13);
+    profiling_mark_stage(18);
 
     if(*chorus_bypass < 0.5f)
     {
         chorus->process(fbuf, buf_len/2);
     }
-
-    profiling_mark_stage(14);
+    profiling_mark_stage(19);
 
     for(int i = 1; i < buf_len; i+=2)
     {
@@ -167,8 +153,8 @@ void process_samples(int32_t *buf, size_t buf_len)
 
         buf[i] = float_to_int32(fbuf[i/2]);
     }
+    profiling_mark_stage(20);
 
-    profiling_mark_stage(15);
     profiling_stop();
     gpio_set_level(g_profiling_gpio, 0);
 }

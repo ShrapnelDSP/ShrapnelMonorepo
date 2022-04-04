@@ -6,6 +6,8 @@
 #include <algorithm>
 #include "esp_dsp.h"
 
+void profiling_mark_stage(unsigned int);
+
 namespace shrapnel {
 namespace dsp {
 
@@ -35,12 +37,16 @@ class FastConvolution final {
     {
         // transform b
         auto b_complex = real_to_complex(b);
+        profiling_mark_stage(7);
         ESP_ERROR_CHECK(dsps_fft4r_fc32(reinterpret_cast<float *>(b_complex.data()), N));
+        profiling_mark_stage(8);
         dsps_bit_rev4r_fc32(reinterpret_cast<float *>(b_complex.data()), N);
+        profiling_mark_stage(9);
 
         // multiply A * B
         std::array<std::complex<float>, N> multiplied;
         complex_multiply(a_complex, b_complex, multiplied);
+        profiling_mark_stage(10);
 
         // transform result
         // Inverse transform achieved by complex conjugating the input and
@@ -51,12 +57,17 @@ class FastConvolution final {
         // There is no inverse transform provided by esp-dsp.
         auto multiplied_ptr = reinterpret_cast<float *>(multiplied.data());
         dsps_mulc_f32(multiplied_ptr + 1, multiplied_ptr + 1, N, -1, 2, 2);
+        profiling_mark_stage(11);
         ESP_ERROR_CHECK(dsps_fft4r_fc32(multiplied_ptr, N));
+        profiling_mark_stage(12);
         dsps_bit_rev4r_fc32(multiplied_ptr, N);
+        profiling_mark_stage(13);
 
         complex_to_real(multiplied, out);
+        profiling_mark_stage(14);
 
         dsps_mulc_f32(out.data(), out.data(), N, scale_factor, 1, 1);
+        profiling_mark_stage(15);
     }
 
     private:

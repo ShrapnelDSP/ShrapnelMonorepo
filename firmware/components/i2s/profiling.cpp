@@ -27,7 +27,7 @@
 
 #define TAG "profiling"
 
-#define NUMBER_OF_STAGES 16
+#define NUMBER_OF_STAGES 25
 
 static int64_t start_time = 0;
 static int64_t stage_time[NUMBER_OF_STAGES] = {};
@@ -87,7 +87,7 @@ void i2s_profiling_task(void *param)
                 }
 
                 int64_t current_stage_time = stage_time[i] - ((i == 0) ? start_time : stage_time[i - 1]);
-                ESP_LOGI(TAG, "Stage %d processing took %lld us (%03.1f %%)",
+                ESP_LOGI(TAG, "Stage %3d processing took %4lld us (%03.1f %%)",
                         i,
                         current_stage_time,
                         time_to_percent(current_stage_time));
@@ -95,7 +95,7 @@ void i2s_profiling_task(void *param)
                 total_time += current_stage_time;
             }
 
-            ESP_LOGI(TAG, "Total processing took %lld us (%03.1f %%)",
+            ESP_LOGI(TAG, "Total processing took     %4lld us (%03.1f %%)",
                     total_time,
                     time_to_percent(total_time));
 

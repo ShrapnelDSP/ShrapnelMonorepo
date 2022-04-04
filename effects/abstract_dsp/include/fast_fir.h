@@ -9,6 +9,8 @@
 #include <array>
 #include <cstddef>
 
+void profiling_mark_stage(unsigned int stage);
+
 namespace shrapnel {
 namespace dsp {
 
@@ -38,10 +40,13 @@ class FastFir final {
     void process(float *buffer)
     {
         std::copy(signal.begin() + N, signal.end(), signal.begin());
+        profiling_mark_stage(5);
         std::copy(buffer, buffer + N, signal.end() - N);
+        profiling_mark_stage(6);
 
         std::array<float, M> out;
         convolution.process(signal, out);
+        profiling_mark_stage(16);
 
         std::copy(out.end() - N, out.end(), buffer);
     }
