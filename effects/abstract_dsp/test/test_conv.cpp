@@ -66,7 +66,7 @@ TEST_F(FastConvolution, ComplexMultiply)
 
     std::array<std::complex<float>, 8> out_uut;
 
-    shrapnel::dsp::FastConvolution<8>::complex_multiply(in_a, in_b, out_uut);
+    shrapnel::dsp::FastConvolution<8, 8>::complex_multiply(in_a, in_b, out_uut);
 
     for(int i = 0; i < 8; i++)
     {
@@ -93,9 +93,9 @@ TEST_F(FastConvolution, ImpulseZeroDelayIsIdentity)
 
     std::array<float, 4> out{};
 
-    shrapnel::dsp::FastConvolution<4> uut;
+    shrapnel::dsp::FastConvolution<4, 4> uut(input_a);
 
-    uut.process(input_a, input_b, out);
+    uut.process(input_b, out);
 
     EXPECT_THAT(out, ElementsAre(
                 FloatEq(1),
@@ -119,9 +119,9 @@ TEST_F(FastConvolution, ImpulseNonZeroDelay)
 
     std::array<float, 4> out{};
 
-    shrapnel::dsp::FastConvolution<4> uut;
+    shrapnel::dsp::FastConvolution<4, 4> uut(input_a);
 
-    uut.process(input_a, input_b, out);
+    uut.process(input_b, out);
 
     EXPECT_THAT(out, ElementsAre(
                 FloatEq(4),
@@ -149,10 +149,11 @@ TEST_F(FastConvolution, IsCommutative)
     std::array<float, 4> out_a{};
     std::array<float, 4> out_b{};
 
-    shrapnel::dsp::FastConvolution<4> uut;
+    shrapnel::dsp::FastConvolution<4, 4> uut_a(input_a);
+    shrapnel::dsp::FastConvolution<4, 4> uut_b(input_b);
 
-    uut.process(input_a, input_b, out_a);
-    uut.process(input_b, input_a, out_b);
+    uut_a.process(input_b, out_a);
+    uut_b.process(input_a, out_b);
 
     for(int i = 0; i < 4; i++)
     {
@@ -175,9 +176,9 @@ TEST_F(FastConvolution, IsLinear)
 
     std::array<float, 4> out{};
 
-    shrapnel::dsp::FastConvolution<4> uut;
+    shrapnel::dsp::FastConvolution<4, 4> uut(input_a);
 
-    uut.process(input_a, input_b, out);
+    uut.process(input_b, out);
 
     EXPECT_THAT(out, ElementsAre(
                 FloatEq(1 + 4),
@@ -186,57 +187,3 @@ TEST_F(FastConvolution, IsLinear)
                 FloatEq(4 + 3)
                 ));
 }
-
-#if 0
-TEST_F(FastConvolution, Functionality)
-{
-    size_t a_length = 64;
-    std::array<float, 128> input_a;
-
-    size_t b_length = 8;
-    std::array<float, 128> input_b;
-
-    std::array<float, a_length + b_length - 1> output_ref;
-    std::array<float, 128> output_fast;
-
-    FastConvolution<max_N> conv;
-
-    for (size_t la = 1; la < lenA; la++) {
-        for (size_t lb = 1; lb < lenB; lb++) {
-            for (int i = 0 ; i < lenA ; i++) {
-                input_a[i] = (float)rand() / INT32_MAX;
-            }
-            for (int i = 0 ; i < lenB ; i++) {
-                input_b[i] = (float)rand() / INT32_MAX;
-            }
-            for (int i = 0 ; i < (lenA + lenB  - 1 + 2); i++) {
-                output_ref[i] = -1;
-                output_fwd[i] = -1;
-                output_back[i] = -1;
-            }
-            dsps_conv_f32(input_a.data(), la,
-                          input_b.data(), lb, &output_ref[1]);
-            dsps_conv_f32_ansi(inputA, la, inputB, lb, &output_fwd[1]);
-            dsps_conv_f32_ansi(inputB, lb, inputA, la, &output_back[1]);
-            float max_eps = 0.000001;
-
-            for (size_t i = 0; i < (la + lb + 1); i++)
-            {
-                if ((fabs(output_ref[i] - output_fwd[i]) > max_eps) ||
-                    (fabs(output_ref[i] - output_back[i]) > max_eps) ||
-                    (fabs(output_back[i] - output_fwd[i]) > max_eps))
-                {
-                    ESP_LOGE(TAG, "la=%i, lb=%i, i=%i, "
-                                  "ref=%2.3f, fwd=%2.3f, back=%2.3f",
-                                  la, lb, i,
-                                  output_ref[i], output_fwd[i], output_back[i]);
-                }
-
-                TEST_ASSERT_EQUAL(output_ref[i], output_fwd[i]);
-                TEST_ASSERT_EQUAL(output_ref[i], output_back[i]);
-                TEST_ASSERT_EQUAL(output_back[i], output_fwd[i]);
-            }
-        }
-    }
-}
-#endif

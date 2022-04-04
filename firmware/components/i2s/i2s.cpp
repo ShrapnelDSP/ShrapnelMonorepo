@@ -252,7 +252,7 @@ esp_err_t i2s_setup(gpio_num_t profiling_gpio, shrapnel::AudioParameters *audio_
         ESP_LOGE(TAG, "Processing task create failed %d", ret);
     }
 
-    ret = xTaskCreate(event_task, "i2s event", TASK_STACK, NULL, TASK_PRIO - 1, NULL);
+    ret = xTaskCreate(event_task, "i2s event", 3000, NULL, TASK_PRIO - 1, NULL);
     if(ret != pdPASS)
     {
         ESP_LOGE(TAG, "Event task create failed %d", ret);

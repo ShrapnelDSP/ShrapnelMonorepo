@@ -49,12 +49,12 @@ TEST_F(FastFirIntegration, ImpulseZeroDelayIsIdentity)
         4,
     };
 
-    std::array<float, 4> coefficients{
+    std::array<float, 1> coefficients{
         1,
     };
 
-    shrapnel::dsp::FastConvolution<16> convolution;
-    shrapnel::dsp::FastFir<4, 16, 4, shrapnel::dsp::FastConvolution<16>> uut(coefficients, convolution);
+    shrapnel::dsp::FastConvolution<16, 1> convolution(coefficients);
+    shrapnel::dsp::FastFir<4, 16, shrapnel::dsp::FastConvolution<16, 1>> uut(convolution);
 
     uut.process(input.data());
 
@@ -75,13 +75,13 @@ TEST_F(FastFirIntegration, ImpulseNonZeroDelay)
         4,
     };
 
-    std::array<float, 4> coefficients{
+    std::array<float, 2> coefficients{
         0,
         1,
     };
 
-    shrapnel::dsp::FastConvolution<16> convolution;
-    shrapnel::dsp::FastFir<4, 16, 4, shrapnel::dsp::FastConvolution<16>> uut(coefficients, convolution);
+    shrapnel::dsp::FastConvolution<16, 2> convolution(coefficients);
+    shrapnel::dsp::FastFir<4, 16, shrapnel::dsp::FastConvolution<16, 2>> uut(convolution);
 
     uut.process(input.data());
 
@@ -110,11 +110,11 @@ TEST_F(FastFirIntegration, IsCommutative)
     };
 
 
-    shrapnel::dsp::FastConvolution<16> convolution_a;
-    shrapnel::dsp::FastFir<4, 16, 4, shrapnel::dsp::FastConvolution<16>> uut_a(input_a, convolution_a);
+    shrapnel::dsp::FastConvolution<16, 4> convolution_a(input_a);
+    shrapnel::dsp::FastFir<4, 16, shrapnel::dsp::FastConvolution<16, 4>> uut_a(convolution_a);
 
-    shrapnel::dsp::FastConvolution<16> convolution_b;
-    shrapnel::dsp::FastFir<4, 16, 4, shrapnel::dsp::FastConvolution<16>> uut_b(input_b, convolution_b);
+    shrapnel::dsp::FastConvolution<16, 4> convolution_b(input_b);
+    shrapnel::dsp::FastFir<4, 16, shrapnel::dsp::FastConvolution<16, 4>> uut_b(convolution_b);
 
     uut_a.process(input_b.data());
     uut_b.process(input_a.data());
@@ -135,13 +135,13 @@ TEST_F(FastFirIntegration, IsLinear)
     };
 
 
-    std::array<float, 4> coefficients{
+    std::array<float, 2> coefficients{
         1,
         1,
     };
 
-    shrapnel::dsp::FastConvolution<16> convolution;
-    shrapnel::dsp::FastFir<4, 16, 4, shrapnel::dsp::FastConvolution<16>> uut(coefficients, convolution);
+    shrapnel::dsp::FastConvolution<16, 2> convolution(coefficients);
+    shrapnel::dsp::FastFir<4, 16, shrapnel::dsp::FastConvolution<16, 2>> uut(convolution);
 
     uut.process(input.data());
 

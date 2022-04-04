@@ -15,10 +15,9 @@ namespace dsp {
 /**
  * \tparam N The number of samples in each buffer passed to \ref process()
  * \tparam M The number of samples used for convolution
- * \tparam K The number of samples used for coefficients
  * \tparam Convolution The circular convolution processor to use
  */
-template<size_t N, size_t M, size_t K, typename Convolution>
+template<size_t N, size_t M, typename Convolution>
 class FastFir final {
     // TODO add static asserts for the following:
     // buffer size is power of two
@@ -30,11 +29,7 @@ class FastFir final {
      *
      * \param coefficients A buffer containing the filter coefficients
      */
-    FastFir(const std::array<float, K> &coefficients, Convolution &convolution) :
-        signal{}, coefficients{}, convolution{convolution}
-    {
-        std::copy(coefficients.cbegin(), coefficients.cend(), this->coefficients.begin());
-    }
+    FastFir(Convolution &convolution) : signal{}, convolution{convolution} {}
 
     /** Filter samples
      *
@@ -46,7 +41,7 @@ class FastFir final {
         std::copy(buffer, buffer + N, signal.end() - N);
 
         std::array<float, M> out;
-        convolution.process(coefficients, signal, out);
+        convolution.process(signal, out);
 
         std::copy(out.end() - N, out.end(), buffer);
     }
@@ -59,7 +54,6 @@ class FastFir final {
 
     private:
     std::array<float, M> signal;
-    std::array<float, M> coefficients;
 
     // TODO this is not perfect, the convolution could become invalid at any
     // time.  We can't use std::unique_ptr, since the tests need access to

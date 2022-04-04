@@ -3,17 +3,25 @@
 #include <complex>
 #include <cstddef>
 #include <array>
+#include <algorithm>
 #include "esp_dsp.h"
 
 namespace shrapnel {
 namespace dsp {
 
-template<std::size_t N>
+template<std::size_t N, std::size_t K>
 class FastConvolution final {
     public:
-    FastConvolution()
+    FastConvolution(const std::array<float, K> &a)
     {
         ESP_ERROR_CHECK(dsps_fft4r_init_fc32(NULL, CONFIG_DSP_MAX_FFT_SIZE));
+
+        // transform a
+        std::array<float, N> a_copy{};
+        std::copy(a.cbegin(), a.cend(), a_copy.begin());
+        a_complex = real_to_complex(a_copy);
+        ESP_ERROR_CHECK(dsps_fft4r_fc32(reinterpret_cast<float *>(a_complex.data()), N));
+        dsps_bit_rev4r_fc32(reinterpret_cast<float *>(a_complex.data()), N);
     }
 
     /**
@@ -22,17 +30,9 @@ class FastConvolution final {
      * \f$ out = a \circledast b \f$
      */
     void process(
-            const std::array<float, N> &a,
             const std::array<float, N> &b,
             std::array<float, N> &out)
     {
-        // transform a
-        // TODO FFT on the first input should be done only once, maybe in the
-        // constructor. This input changes rarely for speaker simulation.
-        auto a_complex = real_to_complex(a);
-        ESP_ERROR_CHECK(dsps_fft4r_fc32(reinterpret_cast<float *>(a_complex.data()), N));
-        dsps_bit_rev4r_fc32(reinterpret_cast<float *>(a_complex.data()), N);
-
         // transform b
         auto b_complex = real_to_complex(b);
         ESP_ERROR_CHECK(dsps_fft4r_fc32(reinterpret_cast<float *>(b_complex.data()), N));
@@ -61,6 +61,7 @@ class FastConvolution final {
 
     private:
     float scale_factor = 1.f/N;
+    std::array<std::complex<float>, N> a_complex;
 
     std::array<std::complex<float>, N> real_to_complex(const std::array<float, N> &real)
     {
