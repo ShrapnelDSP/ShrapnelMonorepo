@@ -66,11 +66,11 @@ std::atomic<float> *chorus_bypass;
 shrapnel::effect::valvestate::Valvestate *valvestate;
 shrapnel::effect::Chorus *chorus;
 
-shrapnel::dsp::FastConvolution<256, 128> *speaker_convolution;
+shrapnel::dsp::FastConvolution<1024, 512> *speaker_convolution;
 shrapnel::dsp::FastFir<
     DMA_BUF_SIZE/2,
-    256,
-    shrapnel::dsp::FastConvolution<256, 128>> *speaker;
+    1024,
+    shrapnel::dsp::FastConvolution<1024, 512>> *speaker;
 
 }
 
@@ -216,13 +216,13 @@ esp_err_t process_init(shrapnel::AudioParameters *audio_params)
 
     ESP_LOGI(TAG, "Initialised FIR filter with length %d", fir_coeff.size());
 
-    speaker_convolution = new shrapnel::dsp::FastConvolution<256, 128>(fir_coeff);
+    speaker_convolution = new shrapnel::dsp::FastConvolution<1024, 512>(fir_coeff);
     assert(speaker_convolution);
 
     speaker = new shrapnel::dsp::FastFir<
         DMA_BUF_SIZE/2,
-        256,
-        shrapnel::dsp::FastConvolution<256, 128>>(*speaker_convolution);
+        1024,
+        shrapnel::dsp::FastConvolution<1024, 512>>(*speaker_convolution);
     assert(speaker);
 
     return ESP_OK;

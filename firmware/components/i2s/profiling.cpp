@@ -41,12 +41,6 @@ void profiling_start(void)
     {
         got_semaphore = true;
         start_cycles = cpu_hal_get_cycle_count();
-
-        if(cpu_freq_mhz == 0)
-        {
-            cpu_freq_mhz = ets_get_cpu_frequency();
-            ESP_LOGI(TAG, "%d", cpu_freq_mhz);
-        }
     }
 }
 
@@ -87,6 +81,9 @@ static int64_t cycles_to_us(int64_t cycles)
 
 void i2s_profiling_task(void *param)
 {
+    cpu_freq_mhz = ets_get_cpu_frequency();
+    ESP_LOGI(TAG, "%d", cpu_freq_mhz);
+
     while(1)
     {
         vTaskDelay(1000 / portTICK_PERIOD_MS);
