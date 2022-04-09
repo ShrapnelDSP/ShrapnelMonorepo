@@ -425,7 +425,7 @@ extern "C" void app_main(void)
     /* Start the mdns service */
     start_mdns();
 
-#if 0
+#if 1
     rc = xTaskCreate(i2s_profiling_task, "i2s profiling", 2000, NULL, tskIDLE_PRIORITY + 2, NULL);
     if(rc != pdPASS)
     {
@@ -446,6 +446,7 @@ extern "C" void app_main(void)
     ESP_ERROR_CHECK(example_connect());
 
     ESP_LOGI(TAG, "setup done");
+    ESP_LOGI(TAG, "stack: %d", uxTaskGetStackHighWaterMark(NULL));
 }
 
 }

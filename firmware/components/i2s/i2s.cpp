@@ -246,7 +246,8 @@ esp_err_t i2s_setup(gpio_num_t profiling_gpio, shrapnel::AudioParameters *audio_
     WRITE_PERI_REG(PIN_CTRL, READ_PERI_REG(PIN_CTRL) | 0x0000000F);
 #endif
 
-    int ret = xTaskCreate(i2s_processing_task, "i2s proc", TASK_STACK, NULL, TASK_PRIO, NULL);
+    // This task must be pinned as CPU cycle count is used for profiling
+    int ret = xTaskCreatePinnedToCore(i2s_processing_task, "i2s proc", TASK_STACK, NULL, TASK_PRIO, NULL, 1);
     if(ret != pdPASS)
     {
         ESP_LOGE(TAG, "Processing task create failed %d", ret);
