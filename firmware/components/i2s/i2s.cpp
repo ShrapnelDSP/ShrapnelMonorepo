@@ -38,8 +38,13 @@
 
 #define DMA_BUF_COUNT   (3)
 
-#define TASK_STACK      (43000)
-#define TASK_PRIO       (5)
+#define TASK_STACK      (31000)
+
+/* Guarantee no preemption by esp-idf tasks.
+ *
+ * https://docs.espressif.com/projects/esp-idf/en/latest/esp32/api-guides/performance/speed.html#choosing-application-task-priorities
+ */
+#define TASK_PRIO       (19)
 
 #define I2S_QUEUE_SIZE (4*DMA_BUF_COUNT)
 static QueueHandle_t i2s_queue;

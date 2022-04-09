@@ -37,6 +37,7 @@
 #include <driver/gpio.h>
 #include "nvs_flash.h"
 #include "esp_netif.h"
+#include "esp_debug_helpers.h"
 #include "protocol_examples_common.h"
 #include "mdns.h"
 
@@ -327,8 +328,17 @@ static void i2c_setup(void)
     ESP_ERROR_CHECK(i2c_driver_install(I2C_NUM, I2C_MODE_MASTER, 0, 0, 0));
 }
 
+static void failed_alloc_callback(size_t size, uint32_t caps, const char *function_name)
+{
+    ESP_LOGE(TAG, "allocation failed. size=%zu caps=%08xh, function=%s", size, caps, function_name);
+    heap_caps_print_heap_info(caps);
+    abort();
+}
+
 extern "C" void app_main(void)
 {
+    ESP_ERROR_CHECK(heap_caps_register_failed_alloc_callback(failed_alloc_callback));
+
     ESP_ERROR_CHECK(nvs_flash_init());
     ESP_ERROR_CHECK(esp_netif_init());
     ESP_ERROR_CHECK(esp_event_loop_create_default());
@@ -443,7 +453,7 @@ extern "C" void app_main(void)
      * Read "Establishing Wi-Fi or Ethernet Connection" section in
      * examples/protocols/README.md for more information about this function.
      */
-    //ESP_ERROR_CHECK(example_connect());
+    ESP_ERROR_CHECK(example_connect());
 
     ESP_LOGI(TAG, "setup done");
     ESP_LOGI(TAG, "stack: %d", uxTaskGetStackHighWaterMark(NULL));

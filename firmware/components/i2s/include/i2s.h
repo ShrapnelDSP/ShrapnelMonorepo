@@ -28,7 +28,7 @@
 extern "C" {
 #endif
 
-#define DMA_BUF_SIZE    (512*2)
+#define DMA_BUF_SIZE    (512)
 #define SAMPLE_RATE     (48000)
 
 esp_err_t i2s_setup(gpio_num_t profiling_gpio, shrapnel::AudioParameters *audio_params);

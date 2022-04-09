@@ -68,7 +68,7 @@ shrapnel::effect::Chorus *chorus;
 
 shrapnel::dsp::FastConvolution<1024, 512> *speaker_convolution;
 shrapnel::dsp::FastFir<
-    DMA_BUF_SIZE/2,
+    DMA_BUF_SIZE,
     1024,
     shrapnel::dsp::FastConvolution<1024, 512>> *speaker;
 
@@ -145,9 +145,9 @@ void process_samples(int32_t *buf, size_t buf_len)
             xEventGroupSetBits(g_audio_event_group, AUDIO_EVENT_OUTPUT_CLIPPED);
         }
 
-        if(fbuf[i] != fbuf[i])
+        if(fbuf[i/2] != fbuf[i/2])
         {
-            ESP_LOGE(TAG, "Not a number");
+            ESP_LOGE(TAG, "Not a number at index %d", i);
             assert(0);
         }
 
@@ -157,6 +157,8 @@ void process_samples(int32_t *buf, size_t buf_len)
 
     profiling_stop();
     gpio_set_level(g_profiling_gpio, 0);
+
+    ESP_LOGD(TAG, "stack: %d", uxTaskGetStackHighWaterMark(NULL));
 }
 
 esp_err_t process_init(shrapnel::AudioParameters *audio_params)
@@ -220,7 +222,7 @@ esp_err_t process_init(shrapnel::AudioParameters *audio_params)
     assert(speaker_convolution);
 
     speaker = new shrapnel::dsp::FastFir<
-        DMA_BUF_SIZE/2,
+        DMA_BUF_SIZE,
         1024,
         shrapnel::dsp::FastConvolution<1024, 512>>(*speaker_convolution);
     assert(speaker);
