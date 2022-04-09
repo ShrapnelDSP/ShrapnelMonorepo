@@ -44,11 +44,13 @@ RUN rm -rf /var/lib/apt/lists/* && \
     apt-get clean
 
 RUN git clone --shallow-submodules --recurse-submodules --depth 1 \
-    --branch v4.3.2 \
+    --branch v4.4 \
     https://github.com/espressif/esp-idf.git \
     $IDF_PATH
 
 RUN $IDF_PATH/install.sh esp32
+
+RUN rm -rf $IDF_TOOLS_PATH/dist
 
 COPY ccache.conf /ccache/ccache.conf
 
