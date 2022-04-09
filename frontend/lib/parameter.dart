@@ -25,7 +25,8 @@ import 'package:json_annotation/json_annotation.dart';
 import 'package:logging/logging.dart';
 import 'package:provider/provider.dart';
 import 'package:rxdart/transformers.dart';
-import 'package:web_socket_channel/web_socket_channel.dart';
+
+import 'robust_websocket.dart';
 
 part 'parameter.g.dart';
 
@@ -85,17 +86,22 @@ class AudioParameterDoubleModel extends ChangeNotifier {
 }
 
 class ParameterService extends ChangeNotifier {
-  ParameterService() {
+  ParameterService({required this.websocket}) {
     // TODO is this adding noticable latency when adjusting parameters?
-    channel.sink.addStream(sink.stream.throttleTime(
-      const Duration(milliseconds: 100),
-      trailing: true,
-      leading: false,
-    ));
+    sink.stream
+        .throttleTime(
+          const Duration(milliseconds: 100),
+          trailing: true,
+          leading: false,
+        )
+        .listen(websocket.sendMessage);
 
-    channel.stream.listen(_handleIncomingEvent);
+    websocket.onData = _handleIncomingEvent;
 
-    _requestParameterInitialisation();
+    if (websocket.isAlive) {
+      _requestParameterInitialisation();
+    }
+    websocket.onConnect = _requestParameterInitialisation;
   }
 
   void _requestParameterInitialisation() {
@@ -104,13 +110,11 @@ class ParameterService extends ChangeNotifier {
     sink.add(json.encode(message));
   }
 
-  final channel = WebSocketChannel.connect(
-    Uri.parse('ws://guitar-dsp.local/websocket'),
-  );
-
   final sink = StreamController<String>();
 
   final _parameters = <AudioParameterDoubleModel>[];
+
+  final RobustWebsocket websocket;
 
   void registerParameter(AudioParameterDoubleModel parameter) {
     _parameters.add(parameter);
@@ -139,7 +143,6 @@ class ParameterService extends ChangeNotifier {
 
   @override
   void dispose() {
-    channel.sink.close();
     sink.close();
     super.dispose();
   }
@@ -155,7 +158,8 @@ class ParameterServiceProvider extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => ChangeNotifierProvider(
-        create: (_) => ParameterService(),
+        create: (_) =>
+            ParameterService(websocket: context.read<RobustWebsocket>()),
         child: child,
       );
 }

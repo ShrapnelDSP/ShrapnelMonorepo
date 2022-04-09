@@ -19,9 +19,12 @@
 
 import 'package:flutter/material.dart';
 import 'package:logging/logging.dart';
+import 'package:provider/provider.dart';
 
 import 'parameter.dart';
 import 'pedalboard.dart';
+import 'robust_websocket.dart';
+import 'websocket_status.dart';
 
 void main() {
   Logger.root.level = Level.ALL;
@@ -30,7 +33,14 @@ void main() {
     print('${record.level.name}: ${record.time}: ${record.message}');
   });
 
-  runApp(const MyApp());
+  runApp(MultiProvider(
+    providers: [
+      ChangeNotifierProvider(
+          create: (_) => RobustWebsocket(
+              uri: Uri.parse('http://guitar-dsp.local/websocket'))),
+    ],
+    child: const MyApp(),
+  ));
 }
 
 class MyApp extends StatelessWidget {
@@ -45,6 +55,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.orange,
       ),
       home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      debugShowCheckedModeBanner: false,
     );
   }
 }
@@ -58,6 +69,10 @@ class MyHomePage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(title),
+        actions: [
+          const WebSocketStatus(size: kToolbarHeight - 20),
+          Container(width: 10),
+        ],
       ),
       body: const ParameterServiceProvider(
         child: Center(
