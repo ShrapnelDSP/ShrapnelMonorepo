@@ -3,6 +3,8 @@
 
 #include "fast_fir.h"
 
+void profiling_mark_stage(unsigned int stage) {(void)stage;};
+
 using ::testing::ElementsAre;
 using ::testing::FloatEq;
 using ::testing::_;
