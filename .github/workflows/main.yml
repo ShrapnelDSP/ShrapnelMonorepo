@@ -15,7 +15,7 @@ env:
 jobs:
   build-firmware:
     runs-on: ubuntu-latest
-    container: barabas5532/shrapnel:3
+    container: barabas5532/shrapnel:4
     steps:
     - uses: actions/checkout@v2
       with:
@@ -42,7 +42,7 @@ jobs:
 
   build-plugins:
     runs-on: ubuntu-latest
-    container: barabas5532/shrapnel:3
+    container: barabas5532/shrapnel:4
     strategy:
       matrix:
         plugin: ["chorus",  "gate", "vibrato", "valvestate"]
@@ -75,7 +75,7 @@ jobs:
 
   ctest:
     runs-on: ubuntu-latest
-    container: barabas5532/shrapnel:3
+    container: barabas5532/shrapnel:4
     strategy:
       matrix:
         build_type: ["Release", "Debug"]
