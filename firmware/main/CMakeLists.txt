@@ -11,4 +11,6 @@ idf_component_register( SRCS main.cpp
                             pcm3060
                             protocol_examples_common
                             queue
-                        EMBED_FILES index.html )
+                        EMBED_FILES index.html
+                        LDFRAGMENTS esp-dsp.lf
+                        )
