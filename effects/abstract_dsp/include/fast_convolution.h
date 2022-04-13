@@ -97,8 +97,6 @@ class FastConvolution final {
     }
 
     public:
-    // TODO is const reference faster? This signature causes a copy of a and b
-    // when the function is called.
     static void complex_multiply(
             const std::array<std::complex<float>, N> &a,
             const std::array<std::complex<float>, N> &b,
