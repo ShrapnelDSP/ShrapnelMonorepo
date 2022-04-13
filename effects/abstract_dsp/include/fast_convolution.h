@@ -127,7 +127,6 @@ class FastConvolution final {
         auto out2_ptr = reinterpret_cast<float*>(out2.data());
         dsps_mul_f32(a_ptr + 1, b_ptr + 1, out2_ptr, N, 2, 2, 2);
         dsps_mul_f32(a_ptr + 1, b_ptr, out2_ptr + 1, N, 2, 2, 2);
-        // TODO maybe faster if we use bit operations to inverse the sign bit?
         dsps_mulc_f32(out2_ptr, out2_ptr, N, -1, 2, 2);
 
         dsps_add_f32(out_ptr, out2_ptr, out_ptr, 2*out.size(), 1, 1, 1);
