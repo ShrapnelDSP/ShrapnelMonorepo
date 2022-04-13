@@ -40,18 +40,18 @@ if(DEFINED TESTING)
     target_link_libraries(iir_test PRIVATE gmock)
     gtest_discover_tests(iir_test)
 
-    add_executable(conv_test
+    add_executable(fast_convolution_test
                    universal/fast_convolution.cpp
-                   test/test_conv.cpp
+                   test/test_fast_convolution.cpp
                    )
 
-    target_include_directories(conv_test PUBLIC include)
+    target_include_directories(fast_convolution_test PUBLIC include)
 
-    target_link_libraries(conv_test PUBLIC esp_dsp)
+    target_link_libraries(fast_convolution_test PUBLIC esp_dsp)
 
-    target_link_libraries(conv_test PRIVATE gtest_main)
-    target_link_libraries(conv_test PRIVATE gmock)
-    gtest_discover_tests(conv_test)
+    target_link_libraries(fast_convolution_test PRIVATE gtest_main)
+    target_link_libraries(fast_convolution_test PRIVATE gmock)
+    gtest_discover_tests(fast_convolution_test)
 
     add_executable(fast_fir_test
                    universal/fast_fir.cpp
