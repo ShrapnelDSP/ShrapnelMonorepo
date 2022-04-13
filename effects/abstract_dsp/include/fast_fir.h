@@ -8,6 +8,7 @@
 #include <algorithm>
 #include <array>
 #include <cstddef>
+#include <memory>
 
 void profiling_mark_stage(unsigned int stage);
 
@@ -31,7 +32,7 @@ class FastFir final {
      *
      * \param coefficients A buffer containing the filter coefficients
      */
-    FastFir(Convolution &convolution) : signal{}, convolution{convolution} {}
+    FastFir(std::unique_ptr<Convolution> convolution) : signal{}, convolution{std::move(convolution)} {}
 
     /** Filter samples
      *
@@ -45,7 +46,7 @@ class FastFir final {
         profiling_mark_stage(6);
 
         std::array<float, M> out;
-        convolution.process(signal, out);
+        convolution->process(signal, out);
         profiling_mark_stage(16);
 
         std::copy(out.end() - N, out.end(), buffer);
@@ -59,14 +60,7 @@ class FastFir final {
 
     private:
     std::array<float, M> signal;
-
-    // TODO this is not perfect, the convolution could become invalid at any
-    // time.  We can't use std::unique_ptr, since the tests need access to
-    // convolution to set up expectations.
-    //
-    // Can we set up all expectations before we even the convolution to this
-    // class? In that case unique_ptr is fine.
-    Convolution &convolution;
+    std::unique_ptr<Convolution> convolution;
 };
 
 }
