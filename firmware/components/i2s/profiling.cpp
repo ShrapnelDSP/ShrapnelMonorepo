@@ -102,7 +102,7 @@ void i2s_profiling_task(void *param)
                 }
 
                 int64_t current_stage_cycles = stage_cycles[i] - ((i == 0) ? start_cycles : stage_cycles[i - 1]);
-                ESP_LOGI(TAG, "Stage %3d processing took %6lld cycles %4lld us (%03.1f %%)",
+                ESP_LOGI(TAG, "Stage %3d processing took %7lld cycles %4lld us (%03.1f %%)",
                         i,
                         current_stage_cycles,
                         cycles_to_us(current_stage_cycles),
@@ -111,7 +111,7 @@ void i2s_profiling_task(void *param)
                 total_cycles += current_stage_cycles;
             }
 
-            ESP_LOGI(TAG, "Total processing took     %6lld cycles %4lld us (%03.1f %%)",
+            ESP_LOGI(TAG, "Total processing took     %7lld cycles %4lld us (%03.1f %%)",
                     total_cycles,
                     cycles_to_us(total_cycles),
                     cycles_to_percent(total_cycles));
