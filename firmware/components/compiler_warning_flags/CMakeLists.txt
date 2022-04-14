@@ -1,12 +1,16 @@
 # Based on JUCE's recommended warning flags
-# https://github.com/juce-framework/JUCE/blob/6.1.6/extras/Build/CMake/JUCEHelperTargets.cmake
 
+if(NOT DEFINED TESTING)
+idf_component_register()
+else()
 add_library(compiler_warning_flags INTERFACE)
+set(COMPONENT_LIB compiler_warning_flags)
+endif()
 
 if((CMAKE_CXX_COMPILER_ID STREQUAL "MSVC") OR (CMAKE_CXX_COMPILER_FRONTEND_VARIANT STREQUAL "MSVC"))
-    target_compile_options(compiler_warning_flags INTERFACE "/W4")
+    target_compile_options(${COMPONENT_LIB} INTERFACE "/W4")
 elseif((CMAKE_CXX_COMPILER_ID STREQUAL "Clang") OR (CMAKE_CXX_COMPILER_ID STREQUAL "AppleClang"))
-    target_compile_options(compiler_warning_flags INTERFACE
+    target_compile_options(${COMPONENT_LIB} INTERFACE
         -Wall -Wshadow-all -Wshorten-64-to-32 -Wstrict-aliasing
         -Wuninitialized -Wunused-parameter -Wconversion -Wsign-compare
         -Wint-conversion -Wconditional-uninitialized -Wconstant-conversion
@@ -19,7 +23,7 @@ elseif((CMAKE_CXX_COMPILER_ID STREQUAL "Clang") OR (CMAKE_CXX_COMPILER_ID STREQU
             -Woverloaded-virtual -Wreorder
             -Winconsistent-missing-destructor-override>)
 elseif(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-    target_compile_options(compiler_warning_flags INTERFACE
+    target_compile_options(${COMPONENT_LIB} INTERFACE
         -Wall -Wextra -Wpedantic -Wstrict-aliasing -Wuninitialized
         -Wunused-parameter -Wsign-compare -Wsign-conversion -Wunreachable-code
         -Wcast-align -Wno-implicit-fallthrough -Wno-maybe-uninitialized
