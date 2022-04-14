@@ -70,7 +70,7 @@ TEST_F(FastConvolution, ComplexMultiply)
 
     shrapnel::dsp::FastConvolution<8, 8>::complex_multiply(in_a, in_b, out_uut);
 
-    for(int i = 0; i < 8; i++)
+    for(std::size_t i = 0; i < 8; i++)
     {
         auto ref = in_a[i] * in_b[i];
 
@@ -157,7 +157,7 @@ TEST_F(FastConvolution, IsCommutative)
     uut_a.process(input_b, out_a);
     uut_b.process(input_a, out_b);
 
-    for(int i = 0; i < 4; i++)
+    for(std::size_t i = 0; i < 4; i++)
     {
         EXPECT_FLOAT_EQ(out_a[i], out_b[i]);
     }

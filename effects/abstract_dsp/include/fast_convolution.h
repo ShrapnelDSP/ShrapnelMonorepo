@@ -78,7 +78,7 @@ class FastConvolution final {
     {
         std::array<std::complex<float>, N> _complex{};
 
-        for(int i = 0; i < N; i++)
+        for(std::size_t i = 0; i < N; i++)
         {
             _complex[i] = real[i];
         }
@@ -90,7 +90,7 @@ class FastConvolution final {
             const std::array<std::complex<float>, N> &_complex,
             std::array<float, N> &real)
     {
-        for(int i = 0; i < N; i++)
+        for(std::size_t i = 0; i < N; i++)
         {
             real[i] = _complex[i].real();
         }

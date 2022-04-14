@@ -19,6 +19,8 @@ else()
     target_link_libraries(audio_param_test PRIVATE etl)
     target_link_libraries(audio_param_test PRIVATE gtest_main)
     target_link_libraries(audio_param_test PRIVATE gmock)
+    # TODO fix warnings
+    #target_link_libraries(audio_param_test PRIVATE compiler_warning_flags)
     gtest_discover_tests(audio_param_test)
 
 endif()

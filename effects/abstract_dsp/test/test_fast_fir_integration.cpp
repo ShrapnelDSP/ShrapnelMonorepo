@@ -121,7 +121,7 @@ TEST_F(FastFirIntegration, IsCommutative)
     uut_a.process(input_b.data());
     uut_b.process(input_a.data());
 
-    for(int i = 0; i < 4; i++)
+    for(std::size_t i = 0; i < 4; i++)
     {
         EXPECT_FLOAT_EQ(input_a[i], input_b[i]);
     }

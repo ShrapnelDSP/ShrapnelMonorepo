@@ -27,6 +27,7 @@ if(DEFINED TESTING)
 
     target_link_libraries(delayline_test PRIVATE gtest_main)
     target_link_libraries(delayline_test PRIVATE gmock)
+    target_link_libraries(delayline_test PRIVATE compiler_warning_flags)
     gtest_discover_tests(delayline_test)
 
     add_executable(iir_test
@@ -38,6 +39,7 @@ if(DEFINED TESTING)
 
     target_link_libraries(iir_test PRIVATE gtest_main)
     target_link_libraries(iir_test PRIVATE gmock)
+    target_link_libraries(iir_test PRIVATE compiler_warning_flags)
     gtest_discover_tests(iir_test)
 
     add_executable(fast_convolution_test
@@ -51,6 +53,7 @@ if(DEFINED TESTING)
 
     target_link_libraries(fast_convolution_test PRIVATE gtest_main)
     target_link_libraries(fast_convolution_test PRIVATE gmock)
+    target_link_libraries(fast_convolution_test PRIVATE compiler_warning_flags)
     gtest_discover_tests(fast_convolution_test)
 
     add_executable(fast_fir_test
@@ -62,6 +65,7 @@ if(DEFINED TESTING)
 
     target_link_libraries(fast_fir_test PRIVATE gtest_main)
     target_link_libraries(fast_fir_test PRIVATE gmock)
+    target_link_libraries(fast_fir_test PRIVATE compiler_warning_flags)
     gtest_discover_tests(fast_fir_test)
 
     add_executable(fast_fir_integration_test
@@ -76,6 +80,7 @@ if(DEFINED TESTING)
 
     target_link_libraries(fast_fir_integration_test PRIVATE gtest_main)
     target_link_libraries(fast_fir_integration_test PRIVATE gmock)
+    target_link_libraries(fast_fir_integration_test PRIVATE compiler_warning_flags)
     gtest_discover_tests(fast_fir_integration_test)
 
     return()

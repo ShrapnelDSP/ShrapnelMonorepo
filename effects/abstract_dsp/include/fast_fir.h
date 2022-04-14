@@ -32,7 +32,7 @@ class FastFir final {
      *
      * \param coefficients A buffer containing the filter coefficients
      */
-    FastFir(std::unique_ptr<Convolution> convolution) : signal{}, convolution{std::move(convolution)} {}
+    FastFir(std::unique_ptr<Convolution> a_convolution) : signal{}, convolution{std::move(a_convolution)} {}
 
     /** Filter samples
      *

@@ -18,11 +18,6 @@ FetchContent_MakeAvailable(googletest)
 include(GoogleTest)
 include(CTest)
 
-# TODO this should be added only for our code, it is making library code fail
-# to build, so disabled for now. JUCE does this by providing a target that can
-# be linked which provides these flags. Then any code that wants to use the
-# flags can link that target.
-#add_compile_options(-W -Wall -Wextra)
 add_compile_definitions(TESTING)
 
 # Tells the component cmake files to become test components instead of esp-idf
@@ -42,4 +37,5 @@ add_subdirectory(../firmware/components/cmd_handling cmd_handling)
 add_subdirectory(../thirdparty/esp-idf-components/etl etl)
 add_subdirectory(../firmware/components/queue queue)
 add_subdirectory(../firmware/components/task task)
+add_subdirectory(../firmware/components/compiler_warning_flags compiler_warning_flags)
 add_subdirectory(../thirdparty/esp-idf-components/esp-dsp esp_dsp)
