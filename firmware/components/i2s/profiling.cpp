@@ -82,7 +82,7 @@ static int64_t cycles_to_us(int64_t cycles)
 void i2s_profiling_task(void *param)
 {
     cpu_freq_mhz = ets_get_cpu_frequency();
-    ESP_LOGI(TAG, "%d", cpu_freq_mhz);
+    ESP_LOGI(TAG, "CPU frequency: %d MHz", cpu_freq_mhz);
 
     while(1)
     {
