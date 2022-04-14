@@ -32,27 +32,29 @@ TEST_F(FastFir, SignalIsBufferedCorrectly)
         std::array {90.f, 100.f},
     };
 
-    EXPECT_CALL(*convolution, process(
-                ElementsAre(
-                    30.f,
-                    40.f,
-                    50.f,
-                    60.f,
-                    70.f,
-                    80.f,
-                    90.f,
-                    100.f), _)).Times(1);
+    ::testing::InSequence seq;
 
     EXPECT_CALL(*convolution, process(
                 ElementsAre(
+                    0.f,
+                    0.f,
+                    0.f,
+                    0.f,
+                    0.f,
+                    0.f,
+                    10.f,
+                    20.f), _)).Times(1);
+
+    EXPECT_CALL(*convolution, process(
+                ElementsAre(
+                    0.f,
+                    0.f,
+                    0.f,
+                    0.f,
                     10.f,
                     20.f,
                     30.f,
-                    40.f,
-                    50.f,
-                    60.f,
-                    70.f,
-                    80.f), _)).Times(1);
+                    40.f), _)).Times(1);
 
     EXPECT_CALL(*convolution, process(
                 ElementsAre(
@@ -67,30 +69,25 @@ TEST_F(FastFir, SignalIsBufferedCorrectly)
 
     EXPECT_CALL(*convolution, process(
                 ElementsAre(
-                    0.f,
-                    0.f,
-                    0.f,
-                    0.f,
                     10.f,
                     20.f,
                     30.f,
-                    40.f), _)).Times(1);
+                    40.f,
+                    50.f,
+                    60.f,
+                    70.f,
+                    80.f), _)).Times(1);
 
-    // TODO this must be called first, right now the order of calls does not
-    //      matter at all
-    //
-    //      Use InSequence with the same sequence for all calls, then the calls
-    //      must appear in the order they are defined
     EXPECT_CALL(*convolution, process(
                 ElementsAre(
-                    0.f,
-                    0.f,
-                    0.f,
-                    0.f,
-                    0.f,
-                    0.f,
-                    10.f,
-                    20.f), _)).Times(1);
+                    30.f,
+                    40.f,
+                    50.f,
+                    60.f,
+                    70.f,
+                    80.f,
+                    90.f,
+                    100.f), _)).Times(1);
 
     shrapnel::dsp::FastFir<2, 8, MockFastConvolution<8>> uut(std::move(convolution));
 
