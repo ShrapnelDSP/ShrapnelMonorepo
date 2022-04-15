@@ -18,7 +18,6 @@ FetchContent_MakeAvailable(googletest)
 include(GoogleTest)
 include(CTest)
 
-add_compile_options(-W -Wall -Wextra)
 add_compile_definitions(TESTING)
 
 # Tells the component cmake files to become test components instead of esp-idf
@@ -28,6 +27,7 @@ set(TESTING ON)
 add_subdirectory(support/log)
 add_subdirectory(support/freertos)
 add_subdirectory(support/esp_common)
+add_subdirectory(support/esp_hw_support)
 add_subdirectory(support/json)
 
 add_subdirectory(../effects/abstract_dsp/ abstract_dsp)
@@ -37,3 +37,5 @@ add_subdirectory(../firmware/components/cmd_handling cmd_handling)
 add_subdirectory(../thirdparty/esp-idf-components/etl etl)
 add_subdirectory(../firmware/components/queue queue)
 add_subdirectory(../firmware/components/task task)
+add_subdirectory(../firmware/components/compiler_warning_flags compiler_warning_flags)
+add_subdirectory(../thirdparty/esp-idf-components/esp-dsp esp_dsp)

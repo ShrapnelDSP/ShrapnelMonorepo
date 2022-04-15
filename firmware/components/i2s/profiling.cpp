@@ -20,26 +20,27 @@
 #include "profiling.h"
 
 #include "i2s.h"
-#include "esp_timer.h"
 #include "esp_log.h"
+#include "hal/cpu_hal.h"
 #include "freertos/task.h"
 #include <assert.h>
 
 #define TAG "profiling"
 
-#define NUMBER_OF_STAGES 16
+#define NUMBER_OF_STAGES 25
 
-static int64_t start_time = 0;
-static int64_t stage_time[NUMBER_OF_STAGES] = {};
+static uint32_t start_cycles = 0;
+static uint32_t stage_cycles[NUMBER_OF_STAGES] = {};
 SemaphoreHandle_t profiling_mutex;
 static bool got_semaphore = false;
+static int cpu_freq_mhz;
 
 void profiling_start(void)
 {
     if(xSemaphoreTake(profiling_mutex, 0))
     {
         got_semaphore = true;
-        start_time = esp_timer_get_time();
+        start_cycles = cpu_hal_get_cycle_count();
     }
 }
 
@@ -49,7 +50,7 @@ void profiling_mark_stage(unsigned int stage)
 
     if(got_semaphore)
     {
-        stage_time[stage] = esp_timer_get_time();
+        stage_cycles[stage] = cpu_hal_get_cycle_count();
     }
 }
 
@@ -62,13 +63,27 @@ void profiling_stop(void)
     }
 }
 
-static double time_to_percent(int64_t time)
+static double cycles_to_percent(int64_t cycles)
 {
-    return 100 * time / (1e6 * DMA_BUF_SIZE / SAMPLE_RATE);
+    float cycles_per_second = cpu_freq_mhz * 1e6f;
+
+    float ratio = cycles /
+        ((float)DMA_BUF_SIZE / SAMPLE_RATE) /
+        (cycles_per_second);
+
+    return (double)(100 * ratio);
+}
+
+static int64_t cycles_to_us(int64_t cycles)
+{
+    return cycles / cpu_freq_mhz;
 }
 
 void i2s_profiling_task(void *param)
 {
+    cpu_freq_mhz = ets_get_cpu_frequency();
+    ESP_LOGI(TAG, "CPU frequency: %d MHz", cpu_freq_mhz);
+
     while(1)
     {
         vTaskDelay(1000 / portTICK_PERIOD_MS);
@@ -77,27 +92,29 @@ void i2s_profiling_task(void *param)
         {
             ESP_LOGI(TAG, " ========= \n");
 
-            int64_t total_time = 0;
+            int64_t total_cycles = 0;
             for(int i = 0; i < NUMBER_OF_STAGES; i++)
             {
                 //if the stage has not been assigned, stop printing
-                if(stage_time[i] == 0)
+                if(stage_cycles[i] == 0)
                 {
                     break;
                 }
 
-                int64_t current_stage_time = stage_time[i] - ((i == 0) ? start_time : stage_time[i - 1]);
-                ESP_LOGI(TAG, "Stage %d processing took %lld us (%03.1f %%)",
+                int64_t current_stage_cycles = stage_cycles[i] - ((i == 0) ? start_cycles : stage_cycles[i - 1]);
+                ESP_LOGI(TAG, "Stage %3d processing took %7lld cycles %4lld us (%03.1f %%)",
                         i,
-                        current_stage_time,
-                        time_to_percent(current_stage_time));
+                        current_stage_cycles,
+                        cycles_to_us(current_stage_cycles),
+                        cycles_to_percent(current_stage_cycles));
 
-                total_time += current_stage_time;
+                total_cycles += current_stage_cycles;
             }
 
-            ESP_LOGI(TAG, "Total processing took %lld us (%03.1f %%)",
-                    total_time,
-                    time_to_percent(total_time));
+            ESP_LOGI(TAG, "Total processing took     %7lld cycles %4lld us (%03.1f %%)",
+                    total_cycles,
+                    cycles_to_us(total_cycles),
+                    cycles_to_percent(total_cycles));
 
             ESP_LOGI(TAG, " ========= \n");
 

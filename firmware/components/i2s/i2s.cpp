@@ -38,8 +38,13 @@
 
 #define DMA_BUF_COUNT   (3)
 
-#define TASK_STACK      (3000)
-#define TASK_PRIO       (5)
+#define TASK_STACK      (31000)
+
+/* Guarantee no preemption by esp-idf tasks.
+ *
+ * https://docs.espressif.com/projects/esp-idf/en/latest/esp32/api-guides/performance/speed.html#choosing-application-task-priorities
+ */
+#define TASK_PRIO       (19)
 
 #define I2S_QUEUE_SIZE (4*DMA_BUF_COUNT)
 static QueueHandle_t i2s_queue;
@@ -246,13 +251,14 @@ esp_err_t i2s_setup(gpio_num_t profiling_gpio, shrapnel::AudioParameters *audio_
     WRITE_PERI_REG(PIN_CTRL, READ_PERI_REG(PIN_CTRL) | 0x0000000F);
 #endif
 
-    int ret = xTaskCreate(i2s_processing_task, "i2s proc", TASK_STACK, NULL, TASK_PRIO, NULL);
+    // This task must be pinned as CPU cycle count is used for profiling
+    int ret = xTaskCreatePinnedToCore(i2s_processing_task, "i2s proc", TASK_STACK, NULL, TASK_PRIO, NULL, 1);
     if(ret != pdPASS)
     {
         ESP_LOGE(TAG, "Processing task create failed %d", ret);
     }
 
-    ret = xTaskCreate(event_task, "i2s event", TASK_STACK, NULL, TASK_PRIO - 1, NULL);
+    ret = xTaskCreate(event_task, "i2s event", 3000, NULL, TASK_PRIO - 1, NULL);
     if(ret != pdPASS)
     {
         ESP_LOGE(TAG, "Event task create failed %d", ret);

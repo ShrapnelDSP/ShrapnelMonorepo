@@ -20,7 +20,6 @@
 #include "i2s.h"
 #include "process.h"
 #include "float_convert.h"
-#include "dsps_fir.h"
 #include "dsps_mulc.h"
 #include "dsps_mul.h"
 #include "math.h"
@@ -30,6 +29,8 @@
 #include "profiling.h"
 #include "chorus.h"
 #include "valvestate.h"
+#include "fast_convolution.h"
+#include "fast_fir.h"
 
 #include "esp_log.h"
 #define TAG "i2s_process"
@@ -65,14 +66,17 @@ std::atomic<float> *chorus_bypass;
 shrapnel::effect::valvestate::Valvestate *valvestate;
 shrapnel::effect::Chorus *chorus;
 
+shrapnel::dsp::FastFir<
+    DMA_BUF_SIZE,
+    1024,
+    shrapnel::dsp::FastConvolution<1024, 512>> *speaker;
+
 }
 
 extern gpio_num_t g_profiling_gpio;
 static float fbuf[DMA_BUF_SIZE];
 
 #include "speaker_coeffs.h"
-static float fir_delay_line[sizeof(fir_coeff)/sizeof(fir_coeff[0])];
-static fir_f32_t fir;
 
 static float decibel_to_ratio(float db)
 {
@@ -102,50 +106,36 @@ void process_samples(int32_t *buf, size_t buf_len)
 
     gate_analyse(fbuf, buf_len/2);
     profiling_mark_stage(1);
-    profiling_mark_stage(2);
-    profiling_mark_stage(3);
 
-    profiling_mark_stage(4);
-
-    profiling_mark_stage(5);
-
-    profiling_mark_stage(6);
-
-    profiling_mark_stage(7);
     valvestate->set_gain(*amp_gain, *amp_channel);
     valvestate->set_fmv(*bass, *middle, *treble);
     valvestate->set_contour(*contour);
     valvestate->set_volume(decibel_to_ratio(*volume));
+    profiling_mark_stage(2);
+
     valvestate->process(fbuf, buf_len/2);
-
-    profiling_mark_stage(8);
-
-    profiling_mark_stage(9);
+    profiling_mark_stage(3);
 
     if(*gate_bypass < 0.5f)
     {
         gate_process(fbuf, buf_len/2);
     }
-
-    profiling_mark_stage(10);
-    profiling_mark_stage(11);
+    profiling_mark_stage(4);
 
     /* speaker IR */
-    dsps_fir_f32_ae32(&fir, fbuf, fbuf, buf_len/2);
-    profiling_mark_stage(12);
+    speaker->process(fbuf);
+    profiling_mark_stage(17);
 
     chorus->set_modulation_rate_hz(*chorus_rate);
     chorus->set_modulation_depth(*chorus_depth);
     chorus->set_modulation_mix(*chorus_mix);
-
-    profiling_mark_stage(13);
+    profiling_mark_stage(18);
 
     if(*chorus_bypass < 0.5f)
     {
         chorus->process(fbuf, buf_len/2);
     }
-
-    profiling_mark_stage(14);
+    profiling_mark_stage(19);
 
     for(int i = 1; i < buf_len; i+=2)
     {
@@ -154,25 +144,24 @@ void process_samples(int32_t *buf, size_t buf_len)
             xEventGroupSetBits(g_audio_event_group, AUDIO_EVENT_OUTPUT_CLIPPED);
         }
 
-        if(fbuf[i] != fbuf[i])
+        if(fbuf[i/2] != fbuf[i/2])
         {
-            ESP_LOGE(TAG, "Not a number");
+            ESP_LOGE(TAG, "Not a number at index %d", i);
             assert(0);
         }
 
         buf[i] = float_to_int32(fbuf[i/2]);
     }
+    profiling_mark_stage(20);
 
-    profiling_mark_stage(15);
     profiling_stop();
     gpio_set_level(g_profiling_gpio, 0);
+
+    ESP_LOGD(TAG, "stack: %d", uxTaskGetStackHighWaterMark(NULL));
 }
 
 esp_err_t process_init(shrapnel::AudioParameters *audio_params)
 {
-    ESP_LOGI(TAG, "Initialised FIR filter with length %d", 
-                             sizeof(fir_coeff) / sizeof(fir_coeff[0]));
-
     ESP_ERROR_CHECK(gate_init());
     gate_set_sample_rate(SAMPLE_RATE);
     gate_set_threshold(-60, 1);
@@ -226,7 +215,16 @@ esp_err_t process_init(shrapnel::AudioParameters *audio_params)
     chorus_bypass = audio_params->get_raw_parameter("chorusBypass");
     assert(chorus_bypass);
 
-    return dsps_fir_init_f32(&fir, fir_coeff, fir_delay_line,
-                             sizeof(fir_coeff) / sizeof(fir_coeff[0]));
+    ESP_LOGI(TAG, "Initialised FIR filter with length %d", fir_coeff.size());
 
+    auto speaker_convolution = std::make_unique<shrapnel::dsp::FastConvolution<1024, 512>>(fir_coeff);
+    assert(speaker_convolution.get());
+
+    speaker = new shrapnel::dsp::FastFir<
+        DMA_BUF_SIZE,
+        1024,
+        shrapnel::dsp::FastConvolution<1024, 512>>(std::move(speaker_convolution));
+    assert(speaker);
+
+    return ESP_OK;
 }

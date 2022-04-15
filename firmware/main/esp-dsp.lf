@@ -1,0 +1,30 @@
+[mapping:esp_dsp]
+archive: libesp-dsp.a
+entries:
+    * (noflash)
+
+[mapping:dsp]
+archive: libabstract_dsp.a
+entries:
+    * (noflash)
+
+[mapping:chorus]
+archive: libchorus.a
+entries:
+    * (noflash)
+
+[mapping:valvestate]
+archive: libvalvestate.a
+entries:
+    * (noflash)
+
+[mapping:gate]
+archive: libgate.a
+entries:
+    * (noflash)
+
+[mapping:i2s]
+archive: libi2s.a
+entries:
+    * (noflash)
+
