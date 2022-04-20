@@ -97,3 +97,4 @@ target_include_directories(abstract_dsp PUBLIC juce/include)
 target_include_directories(abstract_dsp PRIVATE universal)
 
 target_link_libraries(abstract_dsp PUBLIC juce_modules)
+target_link_libraries(abstract_dsp PRIVATE compiler_warning_flags)
