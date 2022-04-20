@@ -13,5 +13,6 @@ add_library(gate STATIC
 target_include_directories(gate PUBLIC include)
 
 target_link_libraries(gate PUBLIC abstract_dsp)
+target_link_libraries(gate PRIVATE compiler_warning_flags)
 
 endif()

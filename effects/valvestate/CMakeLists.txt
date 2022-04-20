@@ -25,5 +25,6 @@ add_library(valvestate STATIC
 target_include_directories(valvestate PUBLIC include)
 
 target_link_libraries(valvestate PUBLIC abstract_dsp)
+target_link_libraries(valvestate PRIVATE compiler_warning_flags)
 
 endif()

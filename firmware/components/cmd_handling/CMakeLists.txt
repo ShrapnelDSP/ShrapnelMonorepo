@@ -24,7 +24,6 @@ else()
 
     target_link_libraries(cmd_handling_test PRIVATE gtest_main)
     target_link_libraries(cmd_handling_test PRIVATE gmock)
-    # TODO fix warnings
-    #target_link_libraries(cmd_handling_test PRIVATE compiler_warning_flags)
+    target_link_libraries(cmd_handling_test PRIVATE compiler_warning_flags)
     gtest_discover_tests(cmd_handling_test)
 endif()
