@@ -10,7 +10,8 @@ if(ESP_PLATFORM)
                              include
                              esp32/include
                            PRIV_INCLUDE_DIRS universal
-                           REQUIRES esp-dsp)
+                           REQUIRES esp-dsp
+                           PRIV_REQUIRES compiler_warning_flags)
 
     target_compile_options(${COMPONENT_LIB} PRIVATE -Wdouble-promotion)
     return()

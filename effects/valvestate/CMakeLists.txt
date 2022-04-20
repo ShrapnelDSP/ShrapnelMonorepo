@@ -7,7 +7,8 @@ idf_component_register(SRCS src/valvestate.cpp
                             src/input_filter.cpp
                             src/wave_shape.cpp
                        INCLUDE_DIRS include
-                       REQUIRES abstract_dsp)
+                       REQUIRES abstract_dsp
+                       PRIV_REQUIRES compiler_warning_flags)
 
 target_compile_options(${COMPONENT_LIB} PRIVATE -Wdouble-promotion)
 else()

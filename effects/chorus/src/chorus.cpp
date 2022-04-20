@@ -99,7 +99,7 @@ void Chorus::set_sample_rate(float rate)
     delayline = dspal_delayline_create(rate * MAX_DELAY_MS / 1000);
 
     sample_rate = rate;
-};
+}
 
 }
 }

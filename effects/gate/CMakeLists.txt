@@ -1,7 +1,8 @@
 if(ESP_PLATFORM)
 idf_component_register(SRCS noise_gate.cpp
                        INCLUDE_DIRS include
-                       REQUIRES abstract_dsp)
+                       REQUIRES abstract_dsp
+                       PRIV_REQUIRES compiler_warning_flags)
 
 target_compile_options(${COMPONENT_LIB} PRIVATE -Wdouble-promotion)
 else()
