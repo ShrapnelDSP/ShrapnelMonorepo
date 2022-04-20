@@ -60,9 +60,9 @@ void Chorus::set_modulation_mix(float mix)
     modulation_mix = mix;
 }
 
-void Chorus::process(float *samples, int sample_count)
+void Chorus::process(float *samples, std::size_t sample_count)
 {
-    for(int i = 0; i < sample_count; i++)
+    for(std::size_t i = 0; i < sample_count; i++)
     {
         float lfo = 0.5f * triangle(phase);
         phase += modulation_rate / sample_rate * 2 * (float)M_PI;

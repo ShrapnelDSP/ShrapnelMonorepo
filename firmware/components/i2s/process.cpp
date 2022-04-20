@@ -92,7 +92,7 @@ void process_samples(int32_t *buf, size_t buf_len)
     /* Copy samples, skipping every second one. These correspond to the left
      * channel of the ADC and DAC, which are not used here 
      * XXX not sure why the right channel is not at index 0 */
-    for(int i = 1; i < buf_len; i+=2)
+    for(size_t i = 1; i < buf_len; i+=2)
     {
         fbuf[i/2] = buf[i]/(float)INT32_MAX;
     }
@@ -137,7 +137,7 @@ void process_samples(int32_t *buf, size_t buf_len)
     }
     profiling_mark_stage(19);
 
-    for(int i = 1; i < buf_len; i+=2)
+    for(size_t i = 1; i < buf_len; i+=2)
     {
         if(fbuf[i/2] > 1.f || fbuf[i/2] < -1.f)
         {

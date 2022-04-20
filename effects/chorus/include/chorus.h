@@ -20,6 +20,7 @@
 #pragma once
 
 #include "abstract_dsp.h"
+#include "cstddef"
 
 namespace shrapnel {
 namespace effect {
@@ -48,7 +49,7 @@ class Chorus {
      */
     void set_modulation_mix(float depth);
 
-    void process(float *samples, int sample_count);
+    void process(float *samples, std::size_t sample_count);
 
     private:
     float modulation_rate = 0;

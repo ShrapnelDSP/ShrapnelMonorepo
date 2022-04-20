@@ -33,7 +33,7 @@ static uint32_t start_cycles = 0;
 static uint32_t stage_cycles[NUMBER_OF_STAGES] = {};
 SemaphoreHandle_t profiling_mutex;
 static bool got_semaphore = false;
-static int cpu_freq_mhz;
+static uint32_t cpu_freq_mhz;
 
 void profiling_start(void)
 {
@@ -81,6 +81,8 @@ static int64_t cycles_to_us(int64_t cycles)
 
 void i2s_profiling_task(void *param)
 {
+    (void) param;
+
     cpu_freq_mhz = ets_get_cpu_frequency();
     ESP_LOGI(TAG, "CPU frequency: %d MHz", cpu_freq_mhz);
 

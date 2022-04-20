@@ -67,6 +67,8 @@ static inline void log_event(i2s_event_t e)
 
 static void event_task(void *param)
 {
+    (void) param;
+
     i2s_event_t e;
     while(1)
     {
@@ -80,6 +82,9 @@ static void event_task(void *param)
             case I2S_EVENT_RX_DONE:
                 //do nothing
                 break;
+            case I2S_EVENT_TX_Q_OVF:
+            case I2S_EVENT_RX_Q_OVF:
+            case I2S_EVENT_MAX:
             default:
                 ESP_LOGE(TAG, "Unhandled type: %d", e.type);
                 break;
@@ -89,6 +94,8 @@ static void event_task(void *param)
 
 static void i2s_processing_task(void *param)
 {
+    (void) param;
+
     size_t tx_rx_size;
 
     while(1)
@@ -137,12 +144,10 @@ esp_err_t i2s_setup(gpio_num_t profiling_gpio, shrapnel::AudioParameters *audio_
     /* configure the GPIO used for profiling. It will go high when samples are
      * being processed and return to low once the processing is finished. */
     gpio_config_t io_conf = {
-        .pin_bit_mask = 1ULL << profiling_gpio,
-        .mode = GPIO_MODE_OUTPUT,
-        .pull_up_en = GPIO_PULLUP_DISABLE,
-        .pull_down_en = GPIO_PULLDOWN_DISABLE,
-        .intr_type = GPIO_INTR_DISABLE,
+        1ULL << profiling_gpio, GPIO_MODE_OUTPUT, GPIO_PULLUP_DISABLE,
+        GPIO_PULLDOWN_DISABLE, GPIO_INTR_DISABLE,
     };
+
     err = gpio_config(&io_conf);
     if(err != ESP_OK)
     {
@@ -164,27 +169,27 @@ esp_err_t i2s_setup(gpio_num_t profiling_gpio, shrapnel::AudioParameters *audio_
     }
 
     i2s_config_t i2s_config = {
-        .mode = static_cast<i2s_mode_t>(I2S_MODE_MASTER | I2S_MODE_TX | I2S_MODE_RX),
-        .sample_rate = SAMPLE_RATE,
-        .bits_per_sample = I2S_BITS_PER_SAMPLE_24BIT,
-        .channel_format = I2S_CHANNEL_FMT_RIGHT_LEFT,
-        .communication_format = I2S_COMM_FORMAT_STAND_I2S,
-        .intr_alloc_flags = ESP_INTR_FLAG_LEVEL1,
-        .dma_buf_count = DMA_BUF_COUNT,
-        .dma_buf_len = DMA_BUF_SIZE,
-        .use_apll = true,
-        .tx_desc_auto_clear = true, //this will clear the tx buffer when we overrun
-        .fixed_mclk = 0,
-        .mclk_multiple = I2S_MCLK_MULTIPLE_384,
-        .bits_per_chan = I2S_BITS_PER_CHAN_DEFAULT,
+        static_cast<i2s_mode_t>(I2S_MODE_MASTER | I2S_MODE_TX | I2S_MODE_RX),
+        SAMPLE_RATE,
+        I2S_BITS_PER_SAMPLE_24BIT,
+        I2S_CHANNEL_FMT_RIGHT_LEFT,
+        I2S_COMM_FORMAT_STAND_I2S,
+        ESP_INTR_FLAG_LEVEL1,
+        DMA_BUF_COUNT,
+        DMA_BUF_SIZE,
+        true,
+        true, //this will clear the tx buffer when we overrun
+        0,
+        I2S_MCLK_MULTIPLE_384,
+        I2S_BITS_PER_CHAN_DEFAULT,
     };
 
     i2s_pin_config_t pin_config = {
-        .mck_io_num = I2S_MCK_IO,
-        .bck_io_num = I2S_BCK_IO,
-        .ws_io_num = I2S_WS_IO,
-        .data_out_num = I2S_DO_IO,
-        .data_in_num = I2S_DI_IO
+        I2S_MCK_IO,
+        I2S_BCK_IO,
+        I2S_WS_IO,
+        I2S_DO_IO,
+        I2S_DI_IO
     };
 
     //the driver will allocate the queue for use, it just needs to be non-NULL
@@ -196,7 +201,7 @@ esp_err_t i2s_setup(gpio_num_t profiling_gpio, shrapnel::AudioParameters *audio_
         ESP_LOGE(TAG, "i2s_driver_install failed %d, %s", err, esp_err_to_name(err));
         return err;
     }
-    ESP_LOGD(TAG, "queue address: %p", i2s_queue);
+    ESP_LOGD(TAG, "queue address: %p", (void*)i2s_queue);
 
     err = i2s_set_pin(static_cast<i2s_port_t>(I2S_NUM), &pin_config);
     if(err != ESP_OK)
