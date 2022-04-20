@@ -3,7 +3,7 @@ if(NOT DEFINED TESTING)
                                 src/cmd_handling_task.cpp
                            INCLUDE_DIRS include
                            REQUIRES audio_param queue task etl json
-                           PRIV_REQUIRES audio_events)
+                           PRIV_REQUIRES audio_events compiler_warning_flags)
 else()
     add_executable(cmd_handling_test
                    src/cmd_handling.cpp
