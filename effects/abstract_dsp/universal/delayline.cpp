@@ -25,7 +25,8 @@ namespace dsp {
 
 DelayLine::DelayLine(size_t max_samples) :
     samples(max_samples + 1),
-    writeIndex(0) { }
+    writeIndex(0),
+    delay{} { }
 
 void DelayLine::push_sample(float sample)
 {
