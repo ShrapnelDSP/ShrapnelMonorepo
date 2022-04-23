@@ -95,9 +95,6 @@ jobs:
     - name: ccache reset statistics
       run: ccache --zero-stats
 
-    - run: pwd
-    - run: ctest --version
-
     - name: Configure CMake
       env:
         CXXFLAGS: "-fprofile-arcs -ftest-coverage"
@@ -135,6 +132,43 @@ jobs:
         github-token: ${{ secrets.GITHUB_TOKEN }}
         parallel: true
         flag-name: "ctest"
+
+  ctest-sanitize:
+    runs-on: ubuntu-latest
+    container: barabas5532/shrapnel:4
+    strategy:
+      matrix:
+        build_type: ["Release", "Debug"]
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        submodules: recursive
+
+    - name: ccache
+      uses: actions/cache@v2
+      with:
+        path: ${{ env.CCACHE_DIR }}
+        key: ccache-${{ github.job }}-${{ matrix.build_type }}-${{ github.sha }}
+        restore-keys: |
+          ccache-${{ github.job }}-${{ matrix.build_type }}-
+
+    - name: ccache reset statistics
+      run: ccache --zero-stats
+
+    - name: Configure CMake
+      env:
+        CXXFLAGS: "-fsanitize=address,undefined -fno-sanitize-recover=all"
+      run: cmake -B build -DCMAKE_BUILD_TYPE=${{matrix.build_type}} test
+
+    - name: Build
+      run: cmake --build build --config ${{matrix.build_type}}
+
+    - name: Test
+      working-directory: /__w/ShrapnelMonorepo/ShrapnelMonorepo/build
+      run: ctest -C ${{matrix.build_type}}
+
+    - name: ccache statistics
+      run: ccache --show-stats
 
   flutter-analyze:
     runs-on: ubuntu-latest
