@@ -44,7 +44,7 @@ RUN rm -rf /var/lib/apt/lists/* && \
     apt-get clean
 
 RUN git clone --shallow-submodules --recurse-submodules --depth 1 \
-    --branch v4.4-shrapneldsp \
+    --branch v4.4-shrapnel1 \
     https://github.com/shrapneldsp/esp-idf.git \
     $IDF_PATH
 
