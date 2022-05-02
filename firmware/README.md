@@ -1,11 +1,13 @@
-ESP-IDF template app
+SharpnelDSP Firmware
 ====================
 
-This is a template application to be used with [Espressif IoT Development Framework](https://github.com/espressif/esp-idf).
+Build instructions
+---
 
-Please check [ESP-IDF docs](https://docs.espressif.com/projects/esp-idf/en/latest/get-started/index.html) for getting started instructions.
+To build this firmware, use ESP-IDF v4.4, with the patch from this project's
+[fork](https://github.com/ShrapnelDSP/esp-idf/commit/3df8e0cf7b5c1ee193f8444501ed8827134eacde).
 
-*Code in this repository is in the Public Domain (or CC0 licensed, at your option.)
-Unless required by applicable law or agreed to in writing, this
-software is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
-CONDITIONS OF ANY KIND, either express or implied.*
+This patch prevents warnings from headers included from other components,
+and allows the project to use more warnings than the default in ESP-IDF. It is
+also possible to build the project using unpatched ESP-IDF v4.4. In this case,
+many false positive compiler warnings will appear.
