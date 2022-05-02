@@ -1,12 +1,10 @@
-# The following lines of boilerplate have to be in your project's
-# CMakeLists in this exact order for cmake to work correctly
-cmake_minimum_required(VERSION 3.5)
+cmake_minimum_required(VERSION 3.13)
 
 set(CMAKE_CXX_STANDARD 17)
 
-# (Not part of the boilerplate)
-# This example uses an extra component for common functions such as Wi-Fi and Ethernet connection.
+# Use the example Wi-Fi configuration tools
 set(EXTRA_COMPONENT_DIRS $ENV{IDF_PATH}/examples/common_components/protocol_examples_common)
+
 list(APPEND EXTRA_COMPONENT_DIRS ../effects)
 list(APPEND EXTRA_COMPONENT_DIRS ../thirdparty/esp-idf-components)
 
