@@ -74,7 +74,7 @@ static QueueHandle_t out_queue;
  */
 static SemaphoreHandle_t work_semaphore;
 
-static httpd_handle_t server = NULL;
+static httpd_handle_t _server = nullptr;
 
 extern "C" {
 
@@ -87,7 +87,6 @@ static void disconnect_handler(void* arg, esp_event_base_t event_base,
                                int32_t event_id, void* event_data);
 static void connect_handler(void* arg, esp_event_base_t event_base,
                             int32_t event_id, void* event_data);
-static void websocket_send(void *arg);
 static void start_mdns(void);
 static void i2c_setup(void);
 
@@ -148,10 +147,10 @@ static esp_err_t ui_get_handler(httpd_req_t *req)
 {
     extern const unsigned char html_start[] asm("_binary_index_html_start");
     extern const unsigned char html_end[] asm("_binary_index_html_end");
-    const size_t html_size = (html_end - html_start);
+    const int html_size = (html_end - html_start);
 
     httpd_resp_send(req, (const char *)html_start, html_size);
-    httpd_resp_send(req, NULL, 0);
+    httpd_resp_send(req, nullptr, 0);
 
     return ESP_OK;
 }
@@ -160,20 +159,20 @@ static const httpd_uri_t websocket = {
     .uri       = "/websocket",
     .method    = HTTP_GET,
     .handler   = websocket_get_handler,
-    .user_ctx  = NULL,
+    .user_ctx  = nullptr,
     .is_websocket = true,
     .handle_ws_control_frames = false,
-    .supported_subprotocol = NULL,
+    .supported_subprotocol = nullptr,
 };
 
 static const httpd_uri_t ui = {
     .uri       = "/",
     .method    = HTTP_GET,
     .handler   = ui_get_handler,
-    .user_ctx  = NULL,
+    .user_ctx  = nullptr,
     .is_websocket = false,
     .handle_ws_control_frames = false,
-    .supported_subprotocol = NULL,
+    .supported_subprotocol = nullptr,
 };
 
 static httpd_handle_t start_webserver(void)
@@ -207,19 +206,27 @@ static void stop_webserver(httpd_handle_t server)
 static void disconnect_handler(void* arg, esp_event_base_t event_base, 
                                int32_t event_id, void* event_data)
 {
+    (void)event_base;
+    (void)event_id;
+    (void)event_data;
+
     httpd_handle_t* server = (httpd_handle_t*) arg;
     if (*server) {
         ESP_LOGI(TAG, "Stopping webserver");
         stop_webserver(*server);
-        *server = NULL;
+        *server = nullptr;
     }
 }
 
 static void connect_handler(void* arg, esp_event_base_t event_base, 
                             int32_t event_id, void* event_data)
 {
+    (void)event_base;
+    (void)event_id;
+    (void)event_data;
+
     httpd_handle_t* server = (httpd_handle_t*) arg;
-    if (*server == NULL) {
+    if (*server == nullptr) {
         ESP_LOGI(TAG, "Starting webserver");
         *server = start_webserver();
     }
@@ -269,7 +276,7 @@ static void websocket_send(void *arg)
 
     assert(number_of_clients <= MAX_CLIENTS);
 
-    for(int i = 0; i < number_of_clients; i++)
+    for(size_t i = 0; i < number_of_clients; i++)
     {
         int fd = client_fds[i];
 
@@ -446,8 +453,8 @@ extern "C" void app_main(void)
     /* Register event handlers to stop the server when Wi-Fi or Ethernet is disconnected,
      * and re-start it upon connection.
      */
-    ESP_ERROR_CHECK(esp_event_handler_register(IP_EVENT, IP_EVENT_STA_GOT_IP, &connect_handler, &server));
-    ESP_ERROR_CHECK(esp_event_handler_register(WIFI_EVENT, WIFI_EVENT_STA_DISCONNECTED, &disconnect_handler, &server));
+    ESP_ERROR_CHECK(esp_event_handler_register(IP_EVENT, IP_EVENT_STA_GOT_IP, &connect_handler, &_server));
+    ESP_ERROR_CHECK(esp_event_handler_register(WIFI_EVENT, WIFI_EVENT_STA_DISCONNECTED, &disconnect_handler, &_server));
 
     /* This helper function configures Wi-Fi or Ethernet, as selected in menuconfig.
      * Read "Establishing Wi-Fi or Ethernet Connection" section in
@@ -489,9 +496,9 @@ extern "C" void audio_event_send_callback(const char *message, int fd)
     }
 
     esp_err_t rc = httpd_queue_work(
-            shrapnel::server,
+            shrapnel::_server,
             shrapnel::websocket_send,
-            shrapnel::server);
+            shrapnel::_server);
     if(ESP_OK != rc)
     {
         ESP_LOGE(TAG, "failed to queue work for server");
