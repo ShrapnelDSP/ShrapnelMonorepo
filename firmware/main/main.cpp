@@ -49,6 +49,7 @@
 #include "i2s.h"
 #include "pcm3060.h"
 #include "profiling.h"
+#include "wifi_provisioning.h"
 
 #define TAG "main"
 #define QUEUE_LEN 20
@@ -439,10 +440,7 @@ extern "C" void app_main(void)
         ESP_LOGE(TAG, "pcm3060 power up failed");
     }
 
-    /* Start the mdns service */
-    start_mdns();
-
-#if 1
+#if 0
     rc = xTaskCreate(i2s_profiling_task, "i2s profiling", 2000, NULL, tskIDLE_PRIORITY + 2, NULL);
     if(rc != pdPASS)
     {
@@ -450,17 +448,32 @@ extern "C" void app_main(void)
     }
 #endif
 
+    esp_netif_create_default_wifi_sta();
+    esp_netif_create_default_wifi_ap();
+    wifi_init_config_t cfg = WIFI_INIT_CONFIG_DEFAULT();
+    ESP_ERROR_CHECK(esp_wifi_init(&cfg));
+
+    {
+        wifi_provisioning::WiFiProvisioning wifi_provisioning{};
+
+        if(!wifi_provisioning.is_provisioned())
+        {
+             wifi_provisioning.wait_for_provisioning();
+        }
+    }
+
+    /* Start the mdns service */
+    start_mdns();
+
+    /* Start Wi-Fi station */
+    ESP_ERROR_CHECK(esp_wifi_set_mode(WIFI_MODE_STA));
+    ESP_ERROR_CHECK(esp_wifi_start());
+
     /* Register event handlers to stop the server when Wi-Fi or Ethernet is disconnected,
      * and re-start it upon connection.
      */
     ESP_ERROR_CHECK(esp_event_handler_register(IP_EVENT, IP_EVENT_STA_GOT_IP, &connect_handler, &_server));
     ESP_ERROR_CHECK(esp_event_handler_register(WIFI_EVENT, WIFI_EVENT_STA_DISCONNECTED, &disconnect_handler, &_server));
-
-    /* This helper function configures Wi-Fi or Ethernet, as selected in menuconfig.
-     * Read "Establishing Wi-Fi or Ethernet Connection" section in
-     * examples/protocols/README.md for more information about this function.
-     */
-    ESP_ERROR_CHECK(example_connect());
 
     ESP_LOGI(TAG, "setup done");
     ESP_LOGI(TAG, "stack: %d", uxTaskGetStackHighWaterMark(NULL));
