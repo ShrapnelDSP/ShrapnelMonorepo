@@ -35,7 +35,7 @@ void _esp_error_check_failed(esp_err_t rc, const char *file, int line, const cha
     abort();
 }
 
-void profiling_mark_stage(unsigned int stage) {(void)stage;};
+void profiling_mark_stage(unsigned int stage) {(void)stage;}
 
 using ::testing::ElementsAre;
 using ::testing::FloatEq;
