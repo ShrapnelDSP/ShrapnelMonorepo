@@ -27,7 +27,7 @@ namespace shrapnel {
 class TaskBase
 {
     public:
-    TaskBase(const char *name, size_t stack, int priority);
+    TaskBase(const char *name, size_t stack, unsigned int priority);
     ~TaskBase(void);
 
     protected:
@@ -51,8 +51,8 @@ class TaskBase
 
     const char *name;
     size_t stack;
-    int priority;
+    unsigned int priority;
     TaskHandle_t handle;
 };
 
-};
+}

@@ -100,4 +100,4 @@ class AudioParameters final {
     MapType parameters;
 };
 
-};
+}

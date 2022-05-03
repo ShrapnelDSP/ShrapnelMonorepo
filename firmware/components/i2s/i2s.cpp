@@ -33,9 +33,6 @@
 #include "freertos/queue.h"
 #include "freertos/task.h"
 
-#define BITS            (I2S_BITS_PER_SAMPLE_24BIT)
-#define MCK             (384*SAMPLE_RATE)
-
 #define DMA_BUF_COUNT   (3)
 
 #define TASK_STACK      (31000)
@@ -51,15 +48,7 @@ static QueueHandle_t i2s_queue;
 
 #define TAG "codec_i2s"
 
-#if BITS == I2S_BITS_PER_SAMPLE_24BIT
 static int32_t rx_buf[2*DMA_BUF_SIZE];
-#define SAMPLE_MAX INT32_MAX
-#elif BITS == I2S_BITS_PER_SAMPLE_16BIT
-static int16_t rx_buf[2*DMA_BUF_SIZE];
-#define SAMPLE_MAX INT16_MAX
-#else
-#error "Unsupported I2S bit width"
-#endif
 
 gpio_num_t g_profiling_gpio = static_cast<gpio_num_t>(-1);
 
@@ -70,6 +59,8 @@ static inline void log_event(i2s_event_t e)
 
 static void event_task(void *param)
 {
+    (void) param;
+
     i2s_event_t e;
     while(1)
     {
@@ -83,6 +74,9 @@ static void event_task(void *param)
             case I2S_EVENT_RX_DONE:
                 //do nothing
                 break;
+            case I2S_EVENT_TX_Q_OVF:
+            case I2S_EVENT_RX_Q_OVF:
+            case I2S_EVENT_MAX:
             default:
                 ESP_LOGE(TAG, "Unhandled type: %d", e.type);
                 break;
@@ -92,6 +86,8 @@ static void event_task(void *param)
 
 static void i2s_processing_task(void *param)
 {
+    (void) param;
+
     size_t tx_rx_size;
 
     while(1)
@@ -146,6 +142,7 @@ esp_err_t i2s_setup(gpio_num_t profiling_gpio, shrapnel::AudioParameters *audio_
         .pull_down_en = GPIO_PULLDOWN_DISABLE,
         .intr_type = GPIO_INTR_DISABLE,
     };
+
     err = gpio_config(&io_conf);
     if(err != ESP_OK)
     {
@@ -169,7 +166,7 @@ esp_err_t i2s_setup(gpio_num_t profiling_gpio, shrapnel::AudioParameters *audio_
     i2s_config_t i2s_config = {
         .mode = static_cast<i2s_mode_t>(I2S_MODE_MASTER | I2S_MODE_TX | I2S_MODE_RX),
         .sample_rate = SAMPLE_RATE,
-        .bits_per_sample = BITS,
+        .bits_per_sample = I2S_BITS_PER_SAMPLE_24BIT,
         .channel_format = I2S_CHANNEL_FMT_RIGHT_LEFT,
         .communication_format = I2S_COMM_FORMAT_STAND_I2S,
         .intr_alloc_flags = ESP_INTR_FLAG_LEVEL1,
@@ -177,10 +174,13 @@ esp_err_t i2s_setup(gpio_num_t profiling_gpio, shrapnel::AudioParameters *audio_
         .dma_buf_len = DMA_BUF_SIZE,
         .use_apll = true,
         .tx_desc_auto_clear = true, //this will clear the tx buffer when we overrun
-        .fixed_mclk = MCK,
+        .fixed_mclk = 0, // Use mclk_multiple
+        .mclk_multiple = I2S_MCLK_MULTIPLE_384,
+        .bits_per_chan = I2S_BITS_PER_CHAN_DEFAULT,
     };
 
     i2s_pin_config_t pin_config = {
+        .mck_io_num = I2S_MCK_IO,
         .bck_io_num = I2S_BCK_IO,
         .ws_io_num = I2S_WS_IO,
         .data_out_num = I2S_DO_IO,
@@ -196,7 +196,7 @@ esp_err_t i2s_setup(gpio_num_t profiling_gpio, shrapnel::AudioParameters *audio_
         ESP_LOGE(TAG, "i2s_driver_install failed %d, %s", err, esp_err_to_name(err));
         return err;
     }
-    ESP_LOGD(TAG, "queue address: %p", i2s_queue);
+    ESP_LOGD(TAG, "queue address: %p", (void*)i2s_queue);
 
     err = i2s_set_pin(static_cast<i2s_port_t>(I2S_NUM), &pin_config);
     if(err != ESP_OK)
@@ -242,14 +242,6 @@ esp_err_t i2s_setup(gpio_num_t profiling_gpio, shrapnel::AudioParameters *audio_
         ESP_LOGE(TAG, "i2s_start failed %d, %s", err, esp_err_to_name(err));
         return err;
     }
-
-    /* Route the I2S master clock to CLK_OUT1/GPIO0 */
-    PIN_FUNC_SELECT(PERIPHS_IO_MUX_GPIO0_U, FUNC_GPIO0_CLK_OUT1);
-#if I2S_NUM == 0
-    WRITE_PERI_REG(PIN_CTRL, READ_PERI_REG(PIN_CTRL) & 0xFFFFFFF0);
-#else
-    WRITE_PERI_REG(PIN_CTRL, READ_PERI_REG(PIN_CTRL) | 0x0000000F);
-#endif
 
     // This task must be pinned as CPU cycle count is used for profiling
     int ret = xTaskCreatePinnedToCore(i2s_processing_task, "i2s proc", TASK_STACK, NULL, TASK_PRIO, NULL, 1);

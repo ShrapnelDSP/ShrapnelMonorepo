@@ -10,7 +10,8 @@ if(ESP_PLATFORM)
                              include
                              esp32/include
                            PRIV_INCLUDE_DIRS universal
-                           REQUIRES esp-dsp)
+                           REQUIRES esp-dsp
+                           PRIV_REQUIRES compiler_warning_flags)
 
     target_compile_options(${COMPONENT_LIB} PRIVATE -Wdouble-promotion)
     return()
@@ -96,3 +97,4 @@ target_include_directories(abstract_dsp PUBLIC juce/include)
 target_include_directories(abstract_dsp PRIVATE universal)
 
 target_link_libraries(abstract_dsp PUBLIC juce_modules)
+target_link_libraries(abstract_dsp PRIVATE compiler_warning_flags)

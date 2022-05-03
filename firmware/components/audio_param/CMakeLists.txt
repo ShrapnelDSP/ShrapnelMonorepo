@@ -1,7 +1,7 @@
 if(NOT DEFINED TESTING)
     idf_component_register(SRCS "src/audio_param.cpp"
                            INCLUDE_DIRS "include"
-                           PRIV_REQUIRES i2s gate
+                           PRIV_REQUIRES i2s gate compiler_warning_flags
                            REQUIRES etl)
 else()
     add_library(audio_param_mock INTERFACE)
@@ -19,8 +19,7 @@ else()
     target_link_libraries(audio_param_test PRIVATE etl)
     target_link_libraries(audio_param_test PRIVATE gtest_main)
     target_link_libraries(audio_param_test PRIVATE gmock)
-    # TODO fix warnings
-    #target_link_libraries(audio_param_test PRIVATE compiler_warning_flags)
+    target_link_libraries(audio_param_test PRIVATE compiler_warning_flags)
     gtest_discover_tests(audio_param_test)
 
 endif()

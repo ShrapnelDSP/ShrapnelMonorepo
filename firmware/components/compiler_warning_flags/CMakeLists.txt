@@ -1,6 +1,6 @@
 # Based on JUCE's recommended warning flags
 
-if(NOT DEFINED TESTING)
+if(ESP_PLATFORM)
 idf_component_register()
 else()
 add_library(compiler_warning_flags INTERFACE)

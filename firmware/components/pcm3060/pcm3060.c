@@ -25,7 +25,7 @@
 #define TAG "pcm3060"
 #define I2C_ADDRESS 0x8C
 
-static uint8_t _address = -1;
+static uint8_t _address;
 static i2c_port_t _port = -1;
 
 static bool _initialised(void)

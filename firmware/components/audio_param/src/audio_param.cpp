@@ -22,29 +22,29 @@
 namespace shrapnel {
 
 AudioParameterFloat::AudioParameterFloat(
-        std::string name,
-        float minimum,
-        float maximum,
+        std::string a_name,
+        float a_minimum,
+        float a_maximum,
         float default_value) :
-    name(name),
+    name(a_name),
     value(default_value),
-    minimum(minimum),
-    maximum(maximum) {}
+    minimum(a_minimum),
+    maximum(a_maximum) {}
 
-void AudioParameterFloat::update(float value)
+void AudioParameterFloat::update(float a_value)
 {
-    if(value > 1)
+    if(a_value > 1)
     {
         return;
     }
 
-    if(value < 0)
+    if(a_value < 0)
     {
         return;
     }
 
     auto range = maximum - minimum;
-    this->value = minimum + value * range;
+    value = minimum + a_value * range;
 }
 
 float AudioParameterFloat::get(void)

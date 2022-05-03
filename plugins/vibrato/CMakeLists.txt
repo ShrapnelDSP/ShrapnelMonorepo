@@ -8,6 +8,8 @@ add_subdirectory(../../thirdparty/JUCE JUCE)
 add_subdirectory(../JUCE_static JUCE_static)
 add_subdirectory(../../effects/abstract_dsp abstract_dsp)
 
+add_subdirectory(../../firmware/components/compiler_warning_flags compiler_warning_flags)
+
 juce_add_plugin(Vibrato
     COMPANY_NAME "Barabas Raffai"
     IS_SYNTH FALSE

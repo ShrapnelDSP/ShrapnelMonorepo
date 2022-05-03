@@ -34,5 +34,5 @@ dspal_err_t dspal_biquad_design_lowpass(float *coeffs, float f, float q_factor)
 
 void dspal_multiply(const float *in1, const float *in2, float *out, size_t buf_size)
 {
-    dsps_mul_f32_ae32(in1, in2, out, buf_size, 1, 1, 1);
+    dsps_mul_f32_ae32(in1, in2, out, (int)buf_size, 1, 1, 1);
 }

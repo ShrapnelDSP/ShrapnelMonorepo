@@ -1,5 +1,6 @@
 if(NOT DEFINED TESTING)
-    idf_component_register(INCLUDE_DIRS include)
+    idf_component_register(INCLUDE_DIRS include
+                           PRIV_REQUIRES compiler_warning_flags)
 else()
 # TODO define the mock class here
 #      It will be the same for all tests, so no point duplicating it

@@ -28,11 +28,11 @@ template<typename AudioParametersT>
 class CommandHandlingTask : public TaskBase
 {
     public:
-    CommandHandlingTask(int priority,
+    CommandHandlingTask(int a_priority,
                         QueueBase<typename CommandHandling<AudioParametersT>::Message> *queue,
                         AudioParametersT *param,
                         EventSendBase &event) :
-        TaskBase("command handling", 4000, priority),
+        TaskBase("command handling", 4000, a_priority),
         cmd(queue, param, event)
     {
         start();

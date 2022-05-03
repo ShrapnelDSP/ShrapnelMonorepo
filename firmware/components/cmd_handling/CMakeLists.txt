@@ -3,7 +3,7 @@ if(NOT DEFINED TESTING)
                                 src/cmd_handling_task.cpp
                            INCLUDE_DIRS include
                            REQUIRES audio_param queue task etl json
-                           PRIV_REQUIRES audio_events)
+                           PRIV_REQUIRES audio_events compiler_warning_flags)
 else()
     add_executable(cmd_handling_test
                    src/cmd_handling.cpp
@@ -24,7 +24,6 @@ else()
 
     target_link_libraries(cmd_handling_test PRIVATE gtest_main)
     target_link_libraries(cmd_handling_test PRIVATE gmock)
-    # TODO fix warnings
-    #target_link_libraries(cmd_handling_test PRIVATE compiler_warning_flags)
+    target_link_libraries(cmd_handling_test PRIVATE compiler_warning_flags)
     gtest_discover_tests(cmd_handling_test)
 endif()

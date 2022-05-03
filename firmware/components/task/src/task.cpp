@@ -25,10 +25,10 @@
 
 namespace shrapnel {
 
-TaskBase::TaskBase(const char *name, size_t stack, int priority) :
-    name(name),
-    stack(stack),
-    priority(priority) {}
+TaskBase::TaskBase(const char *a_name, size_t a_stack, unsigned int a_priority) :
+    name(a_name),
+    stack(a_stack),
+    priority(a_priority) {}
 
 void TaskBase::task_thread(void *param)
 {

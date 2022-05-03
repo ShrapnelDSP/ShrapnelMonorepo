@@ -55,12 +55,12 @@ class CommandHandling final
      * translated to binary and sent to this object.
      */
     CommandHandling(
-            QueueBase<Message> *queue,
-            AudioParametersT *param,
-            EventSendBase &event) :
-        queue(queue),
-        param(param),
-        event(event),
+            QueueBase<Message> *a_queue,
+            AudioParametersT *a_param,
+            EventSendBase &a_event) :
+        queue(a_queue),
+        param(a_param),
+        event(a_event),
         json(nullptr),
         message({}) {}
 

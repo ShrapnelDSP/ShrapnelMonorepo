@@ -29,14 +29,16 @@ EventGroupHandle_t g_audio_event_group;
 static const char *clipping_message = "{\"event\": \"Output Clipped\"}";
 
 #define CLIPPING_REPEAT_TICK (1000/portTICK_PERIOD_MS)
+
 static void audio_event_task(void *parameters)
 {
-    int bits;
+    (void) parameters;
+
     TickType_t last_clipping_tick = 0;
 
     while(1)
     {
-        bits = xEventGroupWaitBits(g_audio_event_group, 0xFFFFFF, true, false, portMAX_DELAY);
+        EventBits_t bits = xEventGroupWaitBits(g_audio_event_group, 0xFFFFFF, true, false, portMAX_DELAY);
 
         if(bits & AUDIO_EVENT_OUTPUT_CLIPPED)
         {
@@ -51,7 +53,7 @@ static void audio_event_task(void *parameters)
                 last_clipping_tick = xTaskGetTickCount();
             }
             //clear the bit we just checked
-            bits &= (~AUDIO_EVENT_OUTPUT_CLIPPED);
+            bits &= (~(EventBits_t)AUDIO_EVENT_OUTPUT_CLIPPED);
         }
 
         if(bits)

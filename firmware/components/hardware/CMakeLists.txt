@@ -1,2 +1,3 @@
 idf_component_register(INCLUDE_DIRS "include"
-                       REQUIRES driver)
+                       REQUIRES driver
+                       PRIV_REQUIRES compiler_warning_flags)
