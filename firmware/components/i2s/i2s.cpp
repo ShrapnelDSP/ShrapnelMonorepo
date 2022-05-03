@@ -48,15 +48,7 @@ static QueueHandle_t i2s_queue;
 
 #define TAG "codec_i2s"
 
-#if BITS == I2S_BITS_PER_SAMPLE_24BIT
 static int32_t rx_buf[2*DMA_BUF_SIZE];
-#define SAMPLE_MAX INT32_MAX
-#elif BITS == I2S_BITS_PER_SAMPLE_16BIT
-static int16_t rx_buf[2*DMA_BUF_SIZE];
-#define SAMPLE_MAX INT16_MAX
-#else
-#error "Unsupported I2S bit width"
-#endif
 
 gpio_num_t g_profiling_gpio = static_cast<gpio_num_t>(-1);
 
@@ -144,8 +136,11 @@ esp_err_t i2s_setup(gpio_num_t profiling_gpio, shrapnel::AudioParameters *audio_
     /* configure the GPIO used for profiling. It will go high when samples are
      * being processed and return to low once the processing is finished. */
     gpio_config_t io_conf = {
-        1ULL << profiling_gpio, GPIO_MODE_OUTPUT, GPIO_PULLUP_DISABLE,
-        GPIO_PULLDOWN_DISABLE, GPIO_INTR_DISABLE,
+        .pin_bit_mask = 1ULL << profiling_gpio,
+        .mode = GPIO_MODE_OUTPUT,
+        .pull_up_en = GPIO_PULLUP_DISABLE,
+        .pull_down_en = GPIO_PULLDOWN_DISABLE,
+        .intr_type = GPIO_INTR_DISABLE,
     };
 
     err = gpio_config(&io_conf);
@@ -169,27 +164,27 @@ esp_err_t i2s_setup(gpio_num_t profiling_gpio, shrapnel::AudioParameters *audio_
     }
 
     i2s_config_t i2s_config = {
-        static_cast<i2s_mode_t>(I2S_MODE_MASTER | I2S_MODE_TX | I2S_MODE_RX),
-        SAMPLE_RATE,
-        I2S_BITS_PER_SAMPLE_24BIT,
-        I2S_CHANNEL_FMT_RIGHT_LEFT,
-        I2S_COMM_FORMAT_STAND_I2S,
-        ESP_INTR_FLAG_LEVEL1,
-        DMA_BUF_COUNT,
-        DMA_BUF_SIZE,
-        true,
-        true, //this will clear the tx buffer when we overrun
-        0,
-        I2S_MCLK_MULTIPLE_384,
-        I2S_BITS_PER_CHAN_DEFAULT,
+        .mode = static_cast<i2s_mode_t>(I2S_MODE_MASTER | I2S_MODE_TX | I2S_MODE_RX),
+        .sample_rate = SAMPLE_RATE,
+        .bits_per_sample = I2S_BITS_PER_SAMPLE_24BIT,
+        .channel_format = I2S_CHANNEL_FMT_RIGHT_LEFT,
+        .communication_format = I2S_COMM_FORMAT_STAND_I2S,
+        .intr_alloc_flags = ESP_INTR_FLAG_LEVEL1,
+        .dma_buf_count = DMA_BUF_COUNT,
+        .dma_buf_len = DMA_BUF_SIZE,
+        .use_apll = true,
+        .tx_desc_auto_clear = true, //this will clear the tx buffer when we overrun
+        .fixed_mclk = 0, // Use mclk_multiple
+        .mclk_multiple = I2S_MCLK_MULTIPLE_384,
+        .bits_per_chan = I2S_BITS_PER_CHAN_DEFAULT,
     };
 
     i2s_pin_config_t pin_config = {
-        I2S_MCK_IO,
-        I2S_BCK_IO,
-        I2S_WS_IO,
-        I2S_DO_IO,
-        I2S_DI_IO
+        .mck_io_num = I2S_MCK_IO,
+        .bck_io_num = I2S_BCK_IO,
+        .ws_io_num = I2S_WS_IO,
+        .data_out_num = I2S_DO_IO,
+        .data_in_num = I2S_DI_IO
     };
 
     //the driver will allocate the queue for use, it just needs to be non-NULL
