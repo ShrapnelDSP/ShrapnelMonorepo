@@ -37,6 +37,7 @@
 #   define I2C_NUM I2C_NUM_0
 
 #   define I2S_NUM         (1)             //PCM3060 pin
+/* The only other option conflicts with the UART0 used for debugging */
 #   define I2S_MCK_IO      (GPIO_NUM_0)    //6/9
 #   define I2S_BCK_IO      (GPIO_NUM_2)    //5/10
 #   define I2S_WS_IO       (GPIO_NUM_4)    //4/11
@@ -53,6 +54,7 @@
 #   define I2C_NUM I2C_NUM_0
 
 #   define I2S_NUM         (1)             //PCM3060 pin
+/* The only other option conflicts with the UART0 used for debugging */
 #   define I2S_MCK_IO      (GPIO_NUM_0)    //6
 #   define I2S_BCK_IO      (GPIO_NUM_18)   //5
 #   define I2S_WS_IO       (GPIO_NUM_19)   //4
