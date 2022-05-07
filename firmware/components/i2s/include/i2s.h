@@ -31,6 +31,13 @@ extern "C" {
 #define DMA_BUF_SIZE    (512)
 #define SAMPLE_RATE     (48000)
 
+/**
+ *
+ * \param profiling_gpio This pin will go high when samples are
+ *                       being processed and return to low once the processing
+ *                       is finished.
+ *
+ */
 esp_err_t i2s_setup(gpio_num_t profiling_gpio, shrapnel::AudioParameters *audio_params);
 
 #ifdef __cplusplus
