@@ -87,8 +87,53 @@ static void event_task(void *param)
 static void i2s_processing_task(void *param)
 {
     (void) param;
+    auto audio_param = reinterpret_cast<shrapnel::AudioParameters *>(param);
 
     size_t tx_rx_size;
+
+    esp_err_t err = process_init(audio_param);
+    if(err != ESP_OK)
+    {
+        ESP_LOGE(TAG, "process_init failed %d, %s", err, esp_err_to_name(err));
+        return;
+    }
+
+    /* Get the DMA buffers into their initial states
+     *
+     * The RX buffers should be all empty, and the TX buffers should all be
+     * full.
+     */
+    err = i2s_stop(static_cast<i2s_port_t>(I2S_NUM));
+    if(err != ESP_OK)
+    {
+        ESP_LOGE(TAG, "i2s_stop failed %d, %s", err, esp_err_to_name(err));
+        return;
+    }
+    size_t read_count;
+    do {
+        err = i2s_read(static_cast<i2s_port_t>(I2S_NUM), rx_buf, DMA_BUF_SIZE, &read_count, 100);
+        if(err != ESP_OK)
+        {
+            ESP_LOGE(TAG, "i2s_read failed %d, %s", err, esp_err_to_name(err));
+            return;
+        }
+        ESP_LOGI(TAG, "discarded %d samples from RX buffer", read_count);
+    }
+    while(read_count != 0);
+
+    err = i2s_zero_dma_buffer(static_cast<i2s_port_t>(I2S_NUM));
+    if(err != ESP_OK)
+    {
+        ESP_LOGE(TAG, "i2s_zero_dma_buffer failed %d, %s", err, esp_err_to_name(err));
+        return;
+    }
+
+    err = i2s_start(static_cast<i2s_port_t>(I2S_NUM));
+    if(err != ESP_OK)
+    {
+        ESP_LOGE(TAG, "i2s_start failed %d, %s", err, esp_err_to_name(err));
+        return;
+    }
 
     while(1)
     {
@@ -156,13 +201,6 @@ esp_err_t i2s_setup(gpio_num_t profiling_gpio, shrapnel::AudioParameters *audio_
         return err;
     }
 
-    err = process_init(audio_param);
-    if(err != ESP_OK)
-    {
-        ESP_LOGE(TAG, "process_init failed %d, %s", err, esp_err_to_name(err));
-        return err;
-    }
-
     i2s_config_t i2s_config = {
         .mode = static_cast<i2s_mode_t>(I2S_MODE_MASTER | I2S_MODE_TX | I2S_MODE_RX),
         .sample_rate = SAMPLE_RATE,
@@ -205,46 +243,8 @@ esp_err_t i2s_setup(gpio_num_t profiling_gpio, shrapnel::AudioParameters *audio_
         return err;
     }
 
-
-    /* Get the DMA buffers into their initial states
-     *
-     * The RX buffers should be all empty, and the TX buffers should all be
-     * full.
-     */
-    err = i2s_stop(static_cast<i2s_port_t>(I2S_NUM));
-    if(err != ESP_OK)
-    {
-        ESP_LOGE(TAG, "i2s_stop failed %d, %s", err, esp_err_to_name(err));
-        return err;
-    }
-    size_t read_count;
-    do {
-        err = i2s_read(static_cast<i2s_port_t>(I2S_NUM), rx_buf, DMA_BUF_SIZE, &read_count, 100);
-        if(err != ESP_OK)
-        {
-            ESP_LOGE(TAG, "i2s_read failed %d, %s", err, esp_err_to_name(err));
-            return err;
-        }
-        ESP_LOGI(TAG, "discarded %d samples from RX buffer", read_count);
-    }
-    while(read_count != 0);
-
-    err = i2s_zero_dma_buffer(static_cast<i2s_port_t>(I2S_NUM));
-    if(err != ESP_OK)
-    {
-        ESP_LOGE(TAG, "i2s_zero_dma_buffer failed %d, %s", err, esp_err_to_name(err));
-        return err;
-    }
-
-    err = i2s_start(static_cast<i2s_port_t>(I2S_NUM));
-    if(err != ESP_OK)
-    {
-        ESP_LOGE(TAG, "i2s_start failed %d, %s", err, esp_err_to_name(err));
-        return err;
-    }
-
     // This task must be pinned as CPU cycle count is used for profiling
-    int ret = xTaskCreatePinnedToCore(i2s_processing_task, "i2s proc", TASK_STACK, NULL, TASK_PRIO, NULL, 1);
+    int ret = xTaskCreatePinnedToCore(i2s_processing_task, "i2s proc", TASK_STACK, audio_param, TASK_PRIO, NULL, 1);
     if(ret != pdPASS)
     {
         ESP_LOGE(TAG, "Processing task create failed %d", ret);
