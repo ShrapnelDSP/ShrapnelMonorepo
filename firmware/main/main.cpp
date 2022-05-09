@@ -312,11 +312,27 @@ static void start_mdns(void)
         return;
     }
 
-    mdns_hostname_set("guitar-dsp");
-    mdns_instance_name_set("Barabas' Guitar Processor");
+    err = mdns_hostname_set("guitar-dsp");
+    if(err) {
+        ESP_LOGE(TAG, "MDNS failed to set host name %d %s", err, esp_err_to_name(err));
+        return;
+    }
+    err = mdns_instance_name_set("Barabas' Guitar Processor");
+    if(err) {
+        ESP_LOGE(TAG, "MDNS failed to set instance name %d %s", err, esp_err_to_name(err));
+        return;
+    }
 
-    mdns_service_add(NULL, "_http", "_tcp", 80, NULL, 0);
-    mdns_service_instance_name_set("_http", "_tcp", "Barabas' Guitar Processor Web Server");
+    err = mdns_service_add(NULL, "_http", "_tcp", 80, NULL, 0);
+    if(err) {
+        ESP_LOGE(TAG, "MDNS failed to add service %d %s", err, esp_err_to_name(err));
+        return;
+    }
+    err = mdns_service_instance_name_set("_http", "_tcp", "Barabas' Guitar Processor Web Server");
+    if(err) {
+        ESP_LOGE(TAG, "MDNS failed to set service name %d %s", err, esp_err_to_name(err));
+        return;
+    }
 }
 
 static void i2c_setup(void)
@@ -452,6 +468,12 @@ extern "C" void app_main(void)
     }
 #endif
 
+    /* Register event handlers to stop the server when Wi-Fi or Ethernet is disconnected,
+     * and re-start it upon connection.
+     */
+    ESP_ERROR_CHECK(esp_event_handler_register(IP_EVENT, IP_EVENT_STA_GOT_IP, &connect_handler, &_server));
+    ESP_ERROR_CHECK(esp_event_handler_register(WIFI_EVENT, WIFI_EVENT_STA_DISCONNECTED, &disconnect_handler, &_server));
+
     esp_netif_create_default_wifi_sta();
     esp_netif_create_default_wifi_ap();
     wifi_init_config_t cfg = WIFI_INIT_CONFIG_DEFAULT();
@@ -469,12 +491,6 @@ extern "C" void app_main(void)
     /* Start Wi-Fi station */
     ESP_ERROR_CHECK(esp_wifi_set_mode(WIFI_MODE_STA));
     ESP_ERROR_CHECK(esp_wifi_start());
-
-    /* Register event handlers to stop the server when Wi-Fi or Ethernet is disconnected,
-     * and re-start it upon connection.
-     */
-    ESP_ERROR_CHECK(esp_event_handler_register(IP_EVENT, IP_EVENT_STA_GOT_IP, &connect_handler, &_server));
-    ESP_ERROR_CHECK(esp_event_handler_register(WIFI_EVENT, WIFI_EVENT_STA_DISCONNECTED, &disconnect_handler, &_server));
 
     ESP_LOGI(TAG, "setup done");
     ESP_LOGI(TAG, "stack: %d", uxTaskGetStackHighWaterMark(NULL));
