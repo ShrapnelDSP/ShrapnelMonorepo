@@ -180,6 +180,7 @@ static httpd_handle_t start_webserver(void)
 {
     httpd_handle_t server = NULL;
     httpd_config_t config = HTTPD_DEFAULT_CONFIG();
+    config.server_port = 8080;
     config.max_open_sockets = MAX_CLIENTS;
 
     // Start the httpd server
@@ -475,6 +476,9 @@ extern "C" void app_main(void)
     wifi_init_config_t cfg = WIFI_INIT_CONFIG_DEFAULT();
     ESP_ERROR_CHECK(esp_wifi_init(&cfg));
 
+    /* Start the mdns service */
+    start_mdns();
+
     {
         wifi_provisioning::WiFiProvisioning wifi_provisioning{};
 
@@ -483,9 +487,6 @@ extern "C" void app_main(void)
              wifi_provisioning.wait_for_provisioning();
         }
     }
-
-    /* Start the mdns service */
-    start_mdns();
 
     /* Start Wi-Fi station */
     ESP_ERROR_CHECK(esp_wifi_set_mode(WIFI_MODE_STA));
