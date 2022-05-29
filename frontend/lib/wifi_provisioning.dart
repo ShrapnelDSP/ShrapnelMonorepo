@@ -17,7 +17,10 @@
  * ShrapnelDSP. If not, see <https://www.gnu.org/licenses/>.
  */
 
+import 'dart:async';
 import 'package:esp_softap_provisioning/esp_softap_provisioning.dart';
+// ignore: implementation_imports
+import 'package:esp_softap_provisioning/src/connection_models.dart';
 import 'package:flutter/material.dart';
 import 'package:logging/logging.dart';
 import 'package:provider/provider.dart';
@@ -31,9 +34,156 @@ class _Strings {
       'Connection failed. Please ensure you are connected to the ShrapnelDSP '
       'access point and try again.';
   static const sessionFailureButtonText = 'Try again';
+  static const wifiPasswordSubmitButtonText = 'Join';
 }
 
 final log = Logger('robust_websocket');
+
+class _WifiPasswordDialog extends StatefulWidget {
+  @override
+  State<_WifiPasswordDialog> createState() => _WifiPasswordDialogState();
+}
+
+class _WifiPasswordDialogState extends State<_WifiPasswordDialog> {
+  late TextEditingController _controller;
+
+  bool _isObscure = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  void submitWifiPassword(BuildContext context) {
+    final provisioning =
+        Provider.of<WifiProvisioningProvider>(context, listen: false);
+    provisioning.join(_controller.value.text);
+    Navigator.pop(context);
+  }
+
+  @override
+  Widget build(BuildContext context) => Consumer<WifiProvisioningProvider>(
+        builder: (context, provisioning, _) {
+          final screenWidth = MediaQuery.of(context).size.width;
+          const dialogWidth = 300;
+          var insets = (screenWidth - dialogWidth) / 2;
+          if (insets < 8) {
+            insets = 8;
+          }
+
+          return Dialog(
+            insetPadding: EdgeInsets.symmetric(horizontal: insets),
+            child: Padding(
+              padding: const EdgeInsets.all(8),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    provisioning
+                            .accessPoints![provisioning.selectedAccessPoint!]
+                        ['ssid'] as String,
+                    style: Theme.of(context).textTheme.titleLarge,
+                  ),
+                  Container(height: 16),
+                  TextField(
+                    controller: _controller,
+                    onSubmitted: (_) => submitWifiPassword(context),
+                    obscureText: _isObscure,
+                    decoration: InputDecoration(
+                      border: const OutlineInputBorder(),
+                      labelText: 'Password',
+                      suffixIcon: IconButton(
+                        icon: Icon(_isObscure
+                            ? Icons.visibility
+                            : Icons.visibility_off),
+                        onPressed: () {
+                          setState(() {
+                            _isObscure = !_isObscure;
+                          });
+                        },
+                      ),
+                    ),
+                  ),
+                  Container(height: 8),
+                  MaterialButton(
+                    onPressed: () {
+                      submitWifiPassword(context);
+                    },
+                    child: const Text(_Strings.wifiPasswordSubmitButtonText),
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
+      );
+}
+
+class _WifiScanningScreen extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() => _WifiScanningScreenState();
+}
+
+class _WifiScanningScreenState extends State<_WifiScanningScreen> {
+  @override
+  Widget build(BuildContext context) {
+    final provisioning = Provider.of<WifiProvisioningProvider>(context);
+
+    final accessPointCount = provisioning.accessPoints?.length ?? 0;
+
+    Widget child;
+
+    if (accessPointCount == 0) {
+      child = const Text('Scanning...');
+    } else {
+      child = ListView.builder(
+        itemCount: accessPointCount,
+        itemBuilder: (context, index) => Card(
+          child: ListTile(
+            title: Text('${provisioning.accessPoints![index]['ssid']}'),
+            subtitle:
+                Text('BSSID: ${provisioning.accessPoints![index]['bssid']}\n'
+                    'Security: ${provisioning.accessPoints![index]['auth']}'),
+            // TODO there are supposed to be wifi_2_bar and wifi_1_bar icons
+            //      too, but these are missing from the Icons class for some
+            //      reason
+            trailing: Icon(
+                provisioning.accessPoints![index]['rssi'] as int > -65
+                    ? Icons.wifi
+                    : Icons.signal_wifi_0_bar),
+            onTap: () {
+              // TODO Pass the selected SSID to a dialog
+              //      Dialog asks for password and starts the provisioning
+              //      process
+              //      Once submitted, we show a provisioning screen, then the
+              //      provisioning result once awailable
+
+              provisioning.selectedAccessPoint = index;
+              showDialog<void>(
+                  context: context,
+                  builder: (context) =>
+                      ChangeNotifierProvider<WifiProvisioningProvider>.value(
+                        value: provisioning,
+                        child: _WifiPasswordDialog(),
+                      ));
+            },
+          ),
+        ),
+      );
+    }
+
+    return Center(
+      child: child,
+    );
+  }
+}
 
 class WifiProvisioningScreen extends StatelessWidget {
   WifiProvisioningScreen({Key? key}) : super(key: key);
@@ -45,7 +195,8 @@ class WifiProvisioningScreen extends StatelessWidget {
       children: [
         Container(
           margin: const EdgeInsets.all(10),
-          child: const Text(_Strings.initialMessage),
+          child:
+              const Text(_Strings.initialMessage, textAlign: TextAlign.center),
         ),
         ElevatedButton(
           onPressed: onReadyPressed,
@@ -78,7 +229,8 @@ class WifiProvisioningScreen extends StatelessWidget {
       children: [
         Container(
           margin: const EdgeInsets.all(10),
-          child: const Text(_Strings.sessionFailureMesssage),
+          child: const Text(_Strings.sessionFailureMesssage,
+              textAlign: TextAlign.center),
         ),
         ElevatedButton(
           onPressed: onReadyPressed,
@@ -86,24 +238,6 @@ class WifiProvisioningScreen extends StatelessWidget {
         ),
       ],
     ));
-  }
-
-  Widget buildWifiScanning(
-      BuildContext context, WifiProvisioningProvider provisioning) {
-    final accessPointCount = provisioning.accessPoints?.length ?? 0;
-
-    return Column(children: [
-      if (accessPointCount == 0) const Text('Scanning...'),
-      if (accessPointCount != 0)
-        Expanded(
-          child: ListView.builder(
-            shrinkWrap: true,
-            itemCount: accessPointCount,
-            itemBuilder: (context, index) =>
-                Text('${provisioning.accessPoints?[index]['ssid']}'),
-          ),
-        ),
-    ]);
   }
 
   @override
@@ -121,7 +255,7 @@ class WifiProvisioningScreen extends StatelessWidget {
           child = buildSessionFailure(context, provisioning.start);
           break;
         case WifiProvisioningState.scanning:
-          child = buildWifiScanning(context, provisioning);
+          child = _WifiScanningScreen();
           break;
         default:
           child = Text(provisioning.state.toString());
@@ -142,6 +276,8 @@ class WifiProvisioningScreen extends StatelessWidget {
 enum WifiProvisioningState {
   initial,
   connecting,
+  // TODO This is used for all failures during the process, rename it and
+  //      update strings to match
   sessionFailure,
   scanning,
   testing,
@@ -175,6 +311,17 @@ class WifiProvisioningProvider extends ChangeNotifier {
   WifiProvisioningState get _state => _statePrivate;
   WifiProvisioningState get state => _state;
 
+  ConnectionStatus? _statusPrivate;
+  set _status(ConnectionStatus? newStatus) {
+    _statusPrivate = newStatus;
+    notifyListeners();
+  }
+
+  ConnectionStatus? get _status => _statusPrivate;
+  ConnectionStatus? get status => _status;
+
+  int? selectedAccessPoint;
+
   /// Connect to device and start provisioning process
   Future<void> start() async {
     log.info('started');
@@ -191,20 +338,115 @@ class WifiProvisioningProvider extends ChangeNotifier {
     }
 
     log.info('scanning');
-    if (isConnected) {
-      _state = WifiProvisioningState.scanning;
-      final accessPoints = await provisioning.startScanWiFi();
-      if (_state != WifiProvisioningState.scanning) {
-        log.info('scanning cancelled');
-        return;
-      }
-      _accessPoints = accessPoints;
-    } else {
+    if (!isConnected) {
+      log.severe('establish session failed');
+      _state = WifiProvisioningState.sessionFailure;
+      return;
+    }
+
+    _state = WifiProvisioningState.scanning;
+    final accessPoints = await provisioning.startScanWiFi();
+
+    if (_state != WifiProvisioningState.scanning) {
+      log.info('scanning cancelled');
+      return;
+    }
+
+    if (accessPoints == null) {
+      log.severe('scanning failed');
+      _state = WifiProvisioningState.sessionFailure;
+      return;
+    }
+
+    _accessPoints = accessPoints;
+  }
+
+  // TODO cancel if reset is called
+  Future<void> join(String passphrase) async {
+    if (state != WifiProvisioningState.scanning) {
+      throw StateError('join called in unexpected state ${_state.toString()}');
+    }
+
+    if (selectedAccessPoint == null) {
+      throw StateError('join called when selectedAccessPoint is null');
+    }
+
+    if (selectedAccessPoint! < 0 ||
+        selectedAccessPoint! > accessPoints!.length) {
+      throw StateError(
+          'join called when selectedAccessPoint has invalid value $selectedAccessPoint');
+    }
+
+    final ssid = accessPoints![selectedAccessPoint!]['ssid'] as String;
+
+    _state = WifiProvisioningState.testing;
+    log.info('send wifi');
+    var success =
+        await provisioning.sendWifiConfig(ssid: ssid, password: passphrase);
+    if (!success) {
+      log.severe('send wifi config failed');
+      _state = WifiProvisioningState.sessionFailure;
+      return;
+    }
+
+    log.info('apply wifi');
+    success = await provisioning.applyWifiConfig();
+    if (!success) {
+      log.severe('apply wifi config failed');
       _state = WifiProvisioningState.sessionFailure;
     }
+
+    _status = await _pollWifiStatusWithTimeout(const Duration(seconds: 10));
+    if (!_isSuccessStatus(_status)) {
+      log.severe('could not connect to provisioned access point '
+          '${_status?.state.toString()} '
+          '${_status?.failedReason?.toString()}');
+      _state = WifiProvisioningState.failure;
+      return;
+    }
+
+    _state = WifiProvisioningState.success;
+    return;
+  }
+
+  Future<ConnectionStatus?> _pollWifiStatusWithTimeout(Duration timeout) async {
+    var keepGoing = true;
+    final timer = Timer(timeout, () {
+      keepGoing = false;
+    });
+    ConnectionStatus? status;
+
+    while (keepGoing) {
+      status = await provisioning.getStatus();
+
+      if (_isTerminalStatus(status)) {
+        timer.cancel();
+        return status;
+      }
+      await Future<void>.delayed(const Duration(seconds: 1));
+    }
+
+    return status;
+  }
+
+  bool _isTerminalStatus(ConnectionStatus? status) {
+    return status == null ||
+        status.state == WifiConnectionState.Connected ||
+        status.state == WifiConnectionState.Disconnected ||
+        status.state == WifiConnectionState.ConnectionFailed;
+  }
+
+  bool _isSuccessStatus(ConnectionStatus? status) {
+    if (status == null) {
+      return false;
+    }
+
+    return status.state == WifiConnectionState.Connected;
   }
 
   void reset() {
+    _accessPoints = null;
+    selectedAccessPoint = null;
     _state = WifiProvisioningState.initial;
   }
 }
