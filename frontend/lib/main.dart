@@ -17,23 +17,39 @@
  * ShrapnelDSP. If not, see <https://www.gnu.org/licenses/>.
  */
 
+import 'package:esp_softap_provisioning/esp_softap_provisioning.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:logging/logging.dart';
 import 'package:provider/provider.dart';
 
 import 'fake_provisioning.dart';
-//import 'package:esp_softap_provisioning/esp_softap_provisioning.dart';
 import 'parameter.dart';
 import 'pedalboard.dart';
 import 'robust_websocket.dart';
 import 'websocket_status.dart';
 import 'wifi_provisioning.dart';
 
+final log = Logger('main');
+
+String formatDateTime(DateTime t) {
+  final builder = StringBuffer()
+    ..write(t.hour.toString().padLeft(2, '0'))
+    ..write(':')
+    ..write(t.minute.toString().padLeft(2, '0'))
+    ..write(':')
+    ..write(t.second.toString().padLeft(2, '0'))
+    ..write('.')
+    ..write(t.millisecond.toString().padLeft(3, '0'));
+
+  return builder.toString();
+}
+
 void main() {
   Logger.root.level = Level.ALL;
   Logger.root.onRecord.listen((record) {
-    debugPrint('${record.level.name}: ${record.time}: ${record.message}');
+    debugPrint(
+        '${record.level.name.padLeft("WARNING".length)} ${formatDateTime(record.time)} ${record.loggerName}: ${record.message}');
   });
 
   GoogleFonts.config.allowRuntimeFetching = false;
@@ -45,24 +61,19 @@ void main() {
               uri: Uri.parse('http://guitar-dsp.local:8080/websocket'))),
       ChangeNotifierProvider(
           create: (_) => WifiProvisioningProvider(
-                  /*
-                provisioning: Provisioning(
-                // TODO The security state must be reset when we close the
-                // provisioning page. This is a long lived session with a
-                // unique set of credentials for each session. How does the
-                // server actually keep track of this? Is there a persistent
-                // socket open during provisioning? I don't think so, we are
-                // just making one-off HTTP requests to the various
-                // provisioning endpoints.
-
-                // The transport persists the connection, we need to destruct
-                // the provisioning object when the provisioning is restarted.
-
-                  security: Security1(pop: 'abcd1234'),
-                  transport: TransportHTTP('guitar-dsp.local'),
-                ),
-                */
-                provisioning: FakeProvisioning(),
+                provisioningFactory: () {
+                  log.info('Creating provisioning connection');
+                  // ignore: literal_only_boolean_expressions, dead_code
+                  if (false) {
+                    return FakeProvisioning();
+                    // ignore: dead_code
+                  } else {
+                    return Provisioning(
+                      security: Security1(pop: 'abcd1234'),
+                      transport: TransportHTTP('guitar-dsp.local'),
+                    );
+                  }
+                },
               )),
     ],
     child: const MyApp(),

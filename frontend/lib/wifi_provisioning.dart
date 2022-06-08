@@ -32,7 +32,7 @@ class _Strings {
   static const connectingMessage = 'Connecting...';
   static const sessionFailureMesssage =
       'Connection failed. Please ensure you are connected to the ShrapnelDSP '
-      'access point and try again.';
+      'access point.';
   static const sessionFailureButtonText = 'Try again';
   static const wifiPasswordSubmitButtonText = 'Join';
 }
@@ -144,6 +144,7 @@ class _WifiScanningScreenState extends State<_WifiScanningScreen> {
       child = const Text('Scanning...');
     } else {
       child = ListView.builder(
+        padding: const EdgeInsets.all(8),
         itemCount: accessPointCount,
         itemBuilder: (context, index) {
           final ssid = provisioning.accessPoints![index]['ssid'] as String;
@@ -151,45 +152,46 @@ class _WifiScanningScreenState extends State<_WifiScanningScreen> {
           final bssidFormatted = <String>[];
 
           for (final byte in bssid) {
-              bssidFormatted.add(byte.toRadixString(16).padLeft(2, '0').toUpperCase());
+            bssidFormatted
+                .add(byte.toRadixString(16).padLeft(2, '0').toUpperCase());
           }
 
           final bssidString = bssidFormatted.join(':');
 
           return Card(
-          child: ListTile(
-            title: Text(ssid),
-            subtitle:
-                Text('BSSID: $bssidString\n'
-                    'Security: ${provisioning.accessPoints![index]['auth']}'),
-            // TODO there are supposed to be wifi_2_bar and wifi_1_bar icons
-            //      too, but these are missing from the Icons class for some
-            //      reason
-            trailing: Tooltip(
-              message:
-                  'RSSI: ${provisioning.accessPoints![index]['rssi'] as int}',
-              child: Icon(provisioning.accessPoints![index]['rssi'] as int > -65
-                  ? Icons.wifi
-                  : Icons.signal_wifi_0_bar),
-            ),
-            onTap: () {
-              // TODO Pass the selected SSID to a dialog
-              //      Dialog asks for password and starts the provisioning
-              //      process
-              //      Once submitted, we show a provisioning screen, then the
-              //      provisioning result once awailable
+            child: ListTile(
+              title: Text(ssid),
+              subtitle: Text('BSSID: $bssidString\n'
+                  'Security: ${provisioning.accessPoints![index]['auth']}'),
+              // TODO there are supposed to be wifi_2_bar and wifi_1_bar icons
+              //      too, but these are missing from the Icons class for some
+              //      reason
+              trailing: Tooltip(
+                message:
+                    'RSSI: ${provisioning.accessPoints![index]['rssi'] as int}',
+                child: Icon(
+                    provisioning.accessPoints![index]['rssi'] as int > -65
+                        ? Icons.wifi
+                        : Icons.signal_wifi_0_bar),
+              ),
+              onTap: () {
+                // TODO Pass the selected SSID to a dialog
+                //      Dialog asks for password and starts the provisioning
+                //      process
+                //      Once submitted, we show a provisioning screen, then the
+                //      provisioning result once awailable
 
-              provisioning.selectedAccessPoint = index;
-              showDialog<void>(
-                  context: context,
-                  builder: (context) =>
-                      ChangeNotifierProvider<WifiProvisioningProvider>.value(
-                        value: provisioning,
-                        child: _WifiPasswordDialog(),
-                      ));
-            },
-          ),
-        );
+                provisioning.selectedAccessPoint = index;
+                showDialog<void>(
+                    context: context,
+                    builder: (context) =>
+                        ChangeNotifierProvider<WifiProvisioningProvider>.value(
+                          value: provisioning,
+                          child: _WifiPasswordDialog(),
+                        ));
+              },
+            ),
+          );
         },
       );
     }
@@ -301,9 +303,12 @@ enum WifiProvisioningState {
 }
 
 class WifiProvisioningProvider extends ChangeNotifier {
-  WifiProvisioningProvider({required this.provisioning});
+  WifiProvisioningProvider({required this.provisioningFactory});
 
-  ProvisioningBase provisioning;
+  /// Will be called to construct an instance of [ProvisioningBase]
+  ProvisioningBase Function() provisioningFactory;
+
+  ProvisioningBase? provisioning;
 
   var _statePrivate = WifiProvisioningState.initial;
 
@@ -345,8 +350,10 @@ class WifiProvisioningProvider extends ChangeNotifier {
       throw StateError('start called in unexpected state ${_state.toString()}');
     }
 
+    provisioning = provisioningFactory();
+
     _state = WifiProvisioningState.connecting;
-    final isConnected = await provisioning.establishSession();
+    final isConnected = await provisioning!.establishSession();
     if (_state != WifiProvisioningState.connecting) {
       log.info('establishSession cancelled');
       return;
@@ -361,7 +368,7 @@ class WifiProvisioningProvider extends ChangeNotifier {
 
     _state = WifiProvisioningState.scanning;
     // TODO need to remove duplicate SSID here
-    final accessPoints = await provisioning.startScanWiFi();
+    final accessPoints = await provisioning!.startScanWiFi();
 
     if (_state != WifiProvisioningState.scanning) {
       log.info('scanning cancelled');
@@ -398,7 +405,7 @@ class WifiProvisioningProvider extends ChangeNotifier {
     _state = WifiProvisioningState.testing;
     log.info('send wifi');
     var success =
-        await provisioning.sendWifiConfig(ssid: ssid, password: passphrase);
+        await provisioning!.sendWifiConfig(ssid: ssid, password: passphrase);
     if (!success) {
       log.severe('send wifi config failed');
       _state = WifiProvisioningState.sessionFailure;
@@ -406,7 +413,7 @@ class WifiProvisioningProvider extends ChangeNotifier {
     }
 
     log.info('apply wifi');
-    success = await provisioning.applyWifiConfig();
+    success = await provisioning!.applyWifiConfig();
     if (!success) {
       log.severe('apply wifi config failed');
       _state = WifiProvisioningState.sessionFailure;
@@ -433,7 +440,7 @@ class WifiProvisioningProvider extends ChangeNotifier {
     ConnectionStatus? status;
 
     while (keepGoing) {
-      status = await provisioning.getStatus();
+      status = await provisioning!.getStatus();
 
       if (_isTerminalStatus(status)) {
         timer.cancel();
@@ -463,6 +470,7 @@ class WifiProvisioningProvider extends ChangeNotifier {
   void reset() {
     _accessPoints = null;
     selectedAccessPoint = null;
+    provisioning = null;
     _state = WifiProvisioningState.initial;
   }
 }
