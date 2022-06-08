@@ -27,7 +27,7 @@ import 'package:provider/provider.dart';
 
 class _Strings {
   static const initialMessage =
-      'Please connect to the ShrapnelDSP WiFi access point (PROV_XXX).';
+      'Please connect to the ShrapnelDSP WiFi access point (shrapnel_XXXXXX).';
   static const initialButtonText = 'Ready';
   static const connectingMessage = 'Connecting...';
   static const sessionFailureMesssage =
@@ -145,19 +145,33 @@ class _WifiScanningScreenState extends State<_WifiScanningScreen> {
     } else {
       child = ListView.builder(
         itemCount: accessPointCount,
-        itemBuilder: (context, index) => Card(
+        itemBuilder: (context, index) {
+          final ssid = provisioning.accessPoints![index]['ssid'] as String;
+          final bssid = provisioning.accessPoints![index]['bssid'] as List<int>;
+          final bssidFormatted = <String>[];
+
+          for (final byte in bssid) {
+              bssidFormatted.add(byte.toRadixString(16).padLeft(2, '0').toUpperCase());
+          }
+
+          final bssidString = bssidFormatted.join(':');
+
+          return Card(
           child: ListTile(
-            title: Text('${provisioning.accessPoints![index]['ssid']}'),
+            title: Text(ssid),
             subtitle:
-                Text('BSSID: ${provisioning.accessPoints![index]['bssid']}\n'
+                Text('BSSID: $bssidString\n'
                     'Security: ${provisioning.accessPoints![index]['auth']}'),
             // TODO there are supposed to be wifi_2_bar and wifi_1_bar icons
             //      too, but these are missing from the Icons class for some
             //      reason
-            trailing: Icon(
-                provisioning.accessPoints![index]['rssi'] as int > -65
-                    ? Icons.wifi
-                    : Icons.signal_wifi_0_bar),
+            trailing: Tooltip(
+              message:
+                  'RSSI: ${provisioning.accessPoints![index]['rssi'] as int}',
+              child: Icon(provisioning.accessPoints![index]['rssi'] as int > -65
+                  ? Icons.wifi
+                  : Icons.signal_wifi_0_bar),
+            ),
             onTap: () {
               // TODO Pass the selected SSID to a dialog
               //      Dialog asks for password and starts the provisioning
@@ -175,7 +189,8 @@ class _WifiScanningScreenState extends State<_WifiScanningScreen> {
                       ));
             },
           ),
-        ),
+        );
+        },
       );
     }
 
@@ -345,6 +360,7 @@ class WifiProvisioningProvider extends ChangeNotifier {
     }
 
     _state = WifiProvisioningState.scanning;
+    // TODO need to remove duplicate SSID here
     final accessPoints = await provisioning.startScanWiFi();
 
     if (_state != WifiProvisioningState.scanning) {
