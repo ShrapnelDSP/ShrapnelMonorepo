@@ -45,21 +45,19 @@ class FakeProvisioning extends ProvisioningBase {
         'channel': id,
         'rssi': -60 - 5 * id,
         'bssid': _createFakeMac(id),
+        // TODO This is not a realistic value for the auth field. What are the
+        //      actual possible values?
         'auth': 'wpa',
       };
 
-  String _createFakeMac(int id) {
+  List<int> _createFakeMac(int id) {
     final rand = Random(id);
-    final mac = StringBuffer();
+    final mac = <int>[];
 
     for (var i = 0; i < 6; i++) {
-      final byte = rand.nextInt(256);
-      mac.write(byte.toRadixString(16).padLeft(2, '0'));
-      if (i < 5) {
-        mac.write(':');
-      }
+      mac.add(rand.nextInt(256));
     }
 
-    return mac.toString();
+    return mac;
   }
 }

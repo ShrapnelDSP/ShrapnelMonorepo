@@ -23,6 +23,7 @@ import 'package:logging/logging.dart';
 import 'package:provider/provider.dart';
 
 import 'fake_provisioning.dart';
+//import 'package:esp_softap_provisioning/esp_softap_provisioning.dart';
 import 'parameter.dart';
 import 'pedalboard.dart';
 import 'robust_websocket.dart';
@@ -42,7 +43,27 @@ void main() {
       ChangeNotifierProvider(
           create: (_) => RobustWebsocket(
               uri: Uri.parse('http://guitar-dsp.local:8080/websocket'))),
-      ChangeNotifierProvider(create: (_) => WifiProvisioningProvider(provisioning: FakeProvisioning())),
+      ChangeNotifierProvider(
+          create: (_) => WifiProvisioningProvider(
+                  /*
+                provisioning: Provisioning(
+                // TODO The security state must be reset when we close the
+                // provisioning page. This is a long lived session with a
+                // unique set of credentials for each session. How does the
+                // server actually keep track of this? Is there a persistent
+                // socket open during provisioning? I don't think so, we are
+                // just making one-off HTTP requests to the various
+                // provisioning endpoints.
+
+                // The transport persists the connection, we need to destruct
+                // the provisioning object when the provisioning is restarted.
+
+                  security: Security1(pop: 'abcd1234'),
+                  transport: TransportHTTP('guitar-dsp.local'),
+                ),
+                */
+                provisioning: FakeProvisioning(),
+              )),
     ],
     child: const MyApp(),
   ));
