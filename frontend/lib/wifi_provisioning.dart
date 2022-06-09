@@ -33,7 +33,16 @@ class _Strings {
   static const sessionFailureMesssage =
       'Connection failed. Please ensure you are connected to the ShrapnelDSP '
       'access point.';
-  static const sessionFailureButtonText = 'Try again';
+  static const retryButtonText = 'Try again';
+  static const failureMessage = 'The ShrapnelDSP device failed to connect to '
+      'your WiFi access point.';
+  // TODO how to add the SSID to this message?
+  // https://stackoverflow.com/questions/52278035/flutter-internationalization-dynamic-strings
+  // https://github.com/dart-lang/sdk/issues/1694
+  static const failureReasonMessage = {
+    WifiConnectFailedReason.AuthError: 'The password provided was incorrect.',
+    WifiConnectFailedReason.NetworkNotFound: 'The network was not found.',
+  };
   static const wifiPasswordSubmitButtonText = 'Join';
 }
 
@@ -175,12 +184,6 @@ class _WifiScanningScreenState extends State<_WifiScanningScreen> {
                         : Icons.signal_wifi_0_bar),
               ),
               onTap: () {
-                // TODO Pass the selected SSID to a dialog
-                //      Dialog asks for password and starts the provisioning
-                //      process
-                //      Once submitted, we show a provisioning screen, then the
-                //      provisioning result once awailable
-
                 provisioning.selectedAccessPoint = index;
                 showDialog<void>(
                     context: context,
@@ -205,7 +208,10 @@ class _WifiScanningScreenState extends State<_WifiScanningScreen> {
 class WifiProvisioningScreen extends StatelessWidget {
   WifiProvisioningScreen({Key? key}) : super(key: key);
 
-  Widget buildInitial(BuildContext context, void Function() onReadyPressed) {
+  Widget buildInitial(BuildContext context) {
+    final provisioning =
+        Provider.of<WifiProvisioningProvider>(context, listen: false);
+
     return Center(
         child: Column(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -216,7 +222,7 @@ class WifiProvisioningScreen extends StatelessWidget {
               const Text(_Strings.initialMessage, textAlign: TextAlign.center),
         ),
         ElevatedButton(
-          onPressed: onReadyPressed,
+          onPressed: provisioning.start,
           child: const Text(_Strings.initialButtonText),
         ),
       ],
@@ -236,10 +242,10 @@ class WifiProvisioningScreen extends StatelessWidget {
     ));
   }
 
-  Widget buildSessionFailure(
-    BuildContext context,
-    void Function() onReadyPressed,
-  ) {
+  Widget buildSessionFailure(BuildContext context) {
+    final provisioning =
+        Provider.of<WifiProvisioningProvider>(context, listen: false);
+
     return Center(
         child: Column(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -250,8 +256,29 @@ class WifiProvisioningScreen extends StatelessWidget {
               textAlign: TextAlign.center),
         ),
         ElevatedButton(
-          onPressed: onReadyPressed,
-          child: const Text(_Strings.sessionFailureButtonText),
+          onPressed: provisioning.start,
+          child: const Text(_Strings.retryButtonText),
+        ),
+      ],
+    ));
+  }
+
+  Widget buildFailure(BuildContext context) {
+    final provisioning = Provider.of<WifiProvisioningProvider>(context);
+
+    return Center(
+        child: Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Container(
+          margin: const EdgeInsets.all(10),
+          child: Text(
+              '${_Strings.failureMessage} ${_Strings.failureReasonMessage[provisioning.status!.failedReason]}',
+              textAlign: TextAlign.center),
+        ),
+        ElevatedButton(
+          onPressed: provisioning.start,
+          child: const Text(_Strings.retryButtonText),
         ),
       ],
     ));
@@ -263,16 +290,19 @@ class WifiProvisioningScreen extends StatelessWidget {
       Widget child;
       switch (provisioning.state) {
         case WifiProvisioningState.initial:
-          child = buildInitial(context, provisioning.start);
+          child = buildInitial(context);
           break;
         case WifiProvisioningState.connecting:
           child = buildConnecting(context);
           break;
         case WifiProvisioningState.sessionFailure:
-          child = buildSessionFailure(context, provisioning.start);
+          child = buildSessionFailure(context);
           break;
         case WifiProvisioningState.scanning:
           child = _WifiScanningScreen();
+          break;
+        case WifiProvisioningState.failure:
+          child = buildFailure(context);
           break;
         default:
           child = Text(provisioning.state.toString());
@@ -346,9 +376,12 @@ class WifiProvisioningProvider extends ChangeNotifier {
   Future<void> start() async {
     log.info('started');
     if (state != WifiProvisioningState.initial &&
-        state != WifiProvisioningState.sessionFailure) {
+        state != WifiProvisioningState.sessionFailure &&
+        state != WifiProvisioningState.failure) {
       throw StateError('start called in unexpected state ${_state.toString()}');
     }
+
+    reset();
 
     provisioning = provisioningFactory();
 
@@ -471,6 +504,7 @@ class WifiProvisioningProvider extends ChangeNotifier {
     _accessPoints = null;
     selectedAccessPoint = null;
     provisioning = null;
+    _status = null;
     _state = WifiProvisioningState.initial;
   }
 }
