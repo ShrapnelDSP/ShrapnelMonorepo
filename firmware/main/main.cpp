@@ -483,10 +483,6 @@ extern "C" void app_main(void)
     /* Start the mdns service */
     start_mdns();
 
-    /* TODO need to reset the provisioning state machine if the provided
-     *      credentials did not work. Right now it just keeps trying to connect
-     *      and says logs say that the device must be factory reset.
-     */
     {
         wifi_provisioning::WiFiProvisioning wifi_provisioning{};
 

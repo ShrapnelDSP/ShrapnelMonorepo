@@ -6,6 +6,7 @@
 #include <freertos/FreeRTOS.h>
 #include <freertos/task.h>
 #include <freertos/event_groups.h>
+#include <queue.h>
 
 #include <esp_log.h>
 #include <esp_wifi.h>
@@ -21,13 +22,25 @@ namespace wifi_provisioning {
 class WiFiProvisioning final {
 private:
 
+    enum event_type_t {
+        EVENT_PROVISIONING_SUCCESSFUL,
+        EVENT_PROVISIONING_FAILED,
+    };
+
+    struct Event {
+        event_type_t type;
+    };
+
     static constexpr char TAG[5] = "wifi";
 
-/* Event handler for catching system events */
+    Queue<Event> queue;
+
 static void event_handler(void* arg, esp_event_base_t event_base,
                           int32_t event_id, void* event_data)
 {
-    (void)arg;
+    assert(arg != nullptr);
+
+    auto queue = static_cast<Queue<Event> *>(arg);
 
     if (event_base == WIFI_PROV_EVENT) {
         switch (event_id) {
@@ -44,15 +57,29 @@ static void event_handler(void* arg, esp_event_base_t event_base,
             }
             case WIFI_PROV_CRED_FAIL: {
                 wifi_prov_sta_fail_reason_t *reason = (wifi_prov_sta_fail_reason_t *)event_data;
-                ESP_LOGE(TAG, "Provisioning failed!\n\tReason : %s"
-                         "\n\tPlease reset to factory and retry provisioning",
+                ESP_LOGE(TAG, "Provisioning failed!\n\tReason : %s",
                          (*reason == WIFI_PROV_STA_AUTH_ERROR) ?
                          "Wi-Fi station authentication failed" : "Wi-Fi access-point not found");
+
+                Event event{.type = EVENT_PROVISIONING_FAILED};
+                int rc = queue->send(&event, 100 / portTICK_PERIOD_MS);
+                if(rc != true)
+                {
+                    ESP_LOGE(TAG, "failed to send to queue");
+                }
                 break;
             }
-            case WIFI_PROV_CRED_SUCCESS:
+            case WIFI_PROV_CRED_SUCCESS: {
                 ESP_LOGI(TAG, "Provisioning successful");
+
+                Event event{.type = EVENT_PROVISIONING_SUCCESSFUL};
+                int rc = queue->send(&event, 100 / portTICK_PERIOD_MS);
+                if(rc != true)
+                {
+                    ESP_LOGE(TAG, "failed to send to queue");
+                }
                 break;
+            }
             case WIFI_PROV_END:
                 ESP_LOGI(TAG, "Provisioning end");
                 break;
@@ -71,8 +98,7 @@ static void event_handler(void* arg, esp_event_base_t event_base,
         ip_event_got_ip_t* event = (ip_event_got_ip_t*) event_data;
         ESP_LOGI(TAG, "Connected with IP Address:" IPSTR, IP2STR(&event->ip_info.ip));
     } else if (event_base == WIFI_EVENT && event_id == WIFI_EVENT_STA_DISCONNECTED) {
-        ESP_LOGI(TAG, "Disconnected. Connecting to the AP again...");
-        esp_wifi_connect();
+        ESP_LOGI(TAG, "Disconnected");
     }
 }
 
@@ -86,11 +112,11 @@ static void get_device_service_name(char *service_name, size_t max)
 }
 
 public:
-WiFiProvisioning(void)
+WiFiProvisioning(void) : queue(1)
 {
-    ESP_ERROR_CHECK(esp_event_handler_register(WIFI_PROV_EVENT, ESP_EVENT_ANY_ID, &event_handler, NULL));
-    ESP_ERROR_CHECK(esp_event_handler_register(WIFI_EVENT, ESP_EVENT_ANY_ID, &event_handler, NULL));
-    ESP_ERROR_CHECK(esp_event_handler_register(IP_EVENT, IP_EVENT_STA_GOT_IP, &event_handler, NULL));
+    ESP_ERROR_CHECK(esp_event_handler_register(WIFI_PROV_EVENT, ESP_EVENT_ANY_ID, &event_handler, &queue));
+    ESP_ERROR_CHECK(esp_event_handler_register(WIFI_EVENT, ESP_EVENT_ANY_ID, &event_handler, &queue));
+    ESP_ERROR_CHECK(esp_event_handler_register(IP_EVENT, IP_EVENT_STA_GOT_IP, &event_handler, &queue));
 
     wifi_prov_mgr_config_t config = {
         .scheme = wifi_prov_scheme_softap,
@@ -107,7 +133,7 @@ static bool is_provisioned(void)
     return provisioned;
 }
 
-static void wait_for_provisioning(void)
+static void start(void)
 {
     ESP_LOGI(TAG, "Starting provisioning");
 
@@ -119,8 +145,33 @@ static void wait_for_provisioning(void)
     const char *service_key = NULL;
 
     ESP_ERROR_CHECK(wifi_prov_mgr_start_provisioning(security, pop, service_name, service_key));
+}
 
-    wifi_prov_mgr_wait();
+void wait_for_provisioning(void)
+{
+    start();
+
+    while(1)
+    {
+        Event event;
+        int rc = queue.receive(&event, portMAX_DELAY);
+        assert(rc == true);
+
+        if(event.type == EVENT_PROVISIONING_SUCCESSFUL)
+        {
+            break;
+        }
+        else if(event.type == EVENT_PROVISIONING_FAILED)
+        {
+            wifi_prov_mgr_stop_provisioning();
+            wifi_prov_mgr_wait();
+            start();
+        }
+        else
+        {
+            ESP_LOGE(TAG, "unhandled event %d", event.type);
+        }
+    }
 
     ESP_LOGI(TAG, "Provisioning finished");
 }
