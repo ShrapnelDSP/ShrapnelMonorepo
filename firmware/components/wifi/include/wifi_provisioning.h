@@ -60,6 +60,8 @@ static void event_handler(void* arg, esp_event_base_t event_base,
                 break;
         }
     } else if (event_base == WIFI_EVENT && event_id == WIFI_EVENT_STA_START) {
+        // TODO this is causing an error when not provisioned. Is it doing
+        // anything productive?
         int rc = esp_wifi_connect();
         if(rc != ESP_OK)
         {
@@ -81,33 +83,6 @@ static void get_device_service_name(char *service_name, size_t max)
     esp_wifi_get_mac(WIFI_IF_STA, eth_mac);
     snprintf(service_name, max, "%s%02X%02X%02X",
              ssid_prefix, eth_mac[3], eth_mac[4], eth_mac[5]);
-}
-
-// TODO this is not needed, but I think it's used by the provisioning flutter
-// example app, so let's leave it in for now
-//
-/* Handler for the optional provisioning endpoint registered by the application.
- * The data format can be chosen by applications. Here, we are using plain ascii text.
- * Applications can choose to use other formats like protobuf, JSON, XML, etc.
- */
-static esp_err_t custom_prov_data_handler(uint32_t session_id, const uint8_t *inbuf, ssize_t inlen,
-                                          uint8_t **outbuf, ssize_t *outlen, void *priv_data)
-{
-    (void)session_id;
-    (void)priv_data;
-
-    if (inbuf) {
-        ESP_LOGI(TAG, "Received data: %.*s", inlen, (char *)inbuf);
-    }
-    char response[] = "SUCCESS";
-    *outbuf = (uint8_t *)strdup(response);
-    if (*outbuf == NULL) {
-        ESP_LOGE(TAG, "System out of memory");
-        return ESP_ERR_NO_MEM;
-    }
-    *outlen = (ssize_t)strlen(response) + 1; /* +1 for NULL terminating byte */
-
-    return ESP_OK;
 }
 
 public:
@@ -143,11 +118,7 @@ static void wait_for_provisioning(void)
     const char *pop = "abcd1234";
     const char *service_key = NULL;
 
-    wifi_prov_mgr_endpoint_create("custom-data");
-
     ESP_ERROR_CHECK(wifi_prov_mgr_start_provisioning(security, pop, service_name, service_key));
-
-    wifi_prov_mgr_endpoint_register("custom-data", custom_prov_data_handler, NULL);
 
     wifi_prov_mgr_wait();
 
