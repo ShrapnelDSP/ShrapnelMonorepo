@@ -30,6 +30,7 @@ class _Strings {
       'Please connect to the ShrapnelDSP WiFi access point (shrapnel_XXXXXX).';
   static const initialButtonText = 'Ready';
   static const connectingMessage = 'Connecting...';
+  static const testingMessage = 'Testing...';
   static const sessionFailureMesssage =
       'Connection failed. Please ensure you are connected to the ShrapnelDSP '
       'access point.';
@@ -46,7 +47,7 @@ class _Strings {
   static const wifiPasswordSubmitButtonText = 'Join';
 }
 
-final log = Logger('robust_websocket');
+final log = Logger('wifi_provisioning');
 
 class _WifiPasswordDialog extends StatefulWidget {
   @override
@@ -242,6 +243,19 @@ class WifiProvisioningScreen extends StatelessWidget {
     ));
   }
 
+  Widget buildTesting(BuildContext context) {
+    return Center(
+        child: Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Container(
+          margin: const EdgeInsets.all(10),
+          child: const Text(_Strings.testingMessage),
+        ),
+      ],
+    ));
+  }
+
   Widget buildSessionFailure(BuildContext context) {
     final provisioning =
         Provider.of<WifiProvisioningProvider>(context, listen: false);
@@ -273,7 +287,9 @@ class WifiProvisioningScreen extends StatelessWidget {
         Container(
           margin: const EdgeInsets.all(10),
           child: Text(
-              '${_Strings.failureMessage} ${_Strings.failureReasonMessage[provisioning.status!.failedReason]}',
+              provisioning.status?.failedReason == null
+                  ? _Strings.failureMessage
+                  : '${_Strings.failureMessage} ${_Strings.failureReasonMessage[provisioning.status!.failedReason]!}',
               textAlign: TextAlign.center),
         ),
         ElevatedButton(
@@ -300,6 +316,9 @@ class WifiProvisioningScreen extends StatelessWidget {
           break;
         case WifiProvisioningState.scanning:
           child = _WifiScanningScreen();
+          break;
+        case WifiProvisioningState.testing:
+          child = buildTesting(context);
           break;
         case WifiProvisioningState.failure:
           child = buildFailure(context);
@@ -450,10 +469,11 @@ class WifiProvisioningProvider extends ChangeNotifier {
     if (!success) {
       log.severe('apply wifi config failed');
       _state = WifiProvisioningState.sessionFailure;
+      return;
     }
 
     _status = await _pollWifiStatusWithTimeout(const Duration(seconds: 10));
-    if (!_isSuccessStatus(_status)) {
+    if (!_status.isSuccess()) {
       log.severe('could not connect to provisioned access point '
           '${_status?.state.toString()} '
           '${_status?.failedReason?.toString()}');
@@ -468,6 +488,7 @@ class WifiProvisioningProvider extends ChangeNotifier {
   Future<ConnectionStatus?> _pollWifiStatusWithTimeout(Duration timeout) async {
     var keepGoing = true;
     final timer = Timer(timeout, () {
+      log.warning('Connection to provisioned access point timed out');
       keepGoing = false;
     });
     ConnectionStatus? status;
@@ -475,7 +496,7 @@ class WifiProvisioningProvider extends ChangeNotifier {
     while (keepGoing) {
       status = await provisioning!.getStatus();
 
-      if (_isTerminalStatus(status)) {
+      if (status.isTerminal()) {
         timer.cancel();
         return status;
       }
@@ -485,26 +506,33 @@ class WifiProvisioningProvider extends ChangeNotifier {
     return status;
   }
 
-  bool _isTerminalStatus(ConnectionStatus? status) {
-    return status == null ||
-        status.state == WifiConnectionState.Connected ||
-        status.state == WifiConnectionState.Disconnected ||
-        status.state == WifiConnectionState.ConnectionFailed;
-  }
-
-  bool _isSuccessStatus(ConnectionStatus? status) {
-    if (status == null) {
-      return false;
-    }
-
-    return status.state == WifiConnectionState.Connected;
-  }
-
   void reset() {
     _accessPoints = null;
     selectedAccessPoint = null;
     provisioning = null;
     _status = null;
     _state = WifiProvisioningState.initial;
+  }
+}
+
+extension ShrapnelAdditions on ConnectionStatus? {
+  bool isTerminal() {
+    if (this == null) {
+      return true;
+    }
+
+    final state = this!.state;
+
+    return state == WifiConnectionState.Connected ||
+        state == WifiConnectionState.Disconnected ||
+        state == WifiConnectionState.ConnectionFailed;
+  }
+
+  bool isSuccess() {
+    if (this == null) {
+      return false;
+    }
+
+    return this!.state == WifiConnectionState.Connected;
   }
 }
