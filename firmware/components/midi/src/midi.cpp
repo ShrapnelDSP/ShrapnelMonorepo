@@ -23,8 +23,7 @@
 namespace shrapnel {
 namespace midi {
 
-Decoder::Decoder(std::function<void(Message)> on_message_decoded) : state{IDLE} {
-    // TODO implement callback storing
+Decoder::Decoder(std::function<void(Message)> _on_message_decoded) : on_message_decoded{_on_message_decoded}, state{IDLE}  {
     (void)on_message_decoded;};
 
 void Decoder::decode(uint8_t byte)
@@ -46,6 +45,7 @@ void Decoder::decode(uint8_t byte)
 Decoder::State Decoder::decode_idle(uint8_t byte)
 {
     // TODO implement
+    on_message_decoded({});
     (void) byte;
     return IDLE;
 }

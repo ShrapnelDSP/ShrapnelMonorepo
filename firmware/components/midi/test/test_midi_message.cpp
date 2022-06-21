@@ -26,31 +26,46 @@ using testing::_;
 
 using namespace shrapnel::midi;
 
-class MidiDecoder : public ::testing::Test
+class MidiMessage : public ::testing::Test
 {
     protected:
 
-    MidiDecoder() : sut(receiver.AsStdFunction()) {}
-
-    testing::MockFunction<void(shrapnel::midi::Message)> receiver;
-    Decoder sut;
+    MidiMessage() {}
 };
 
-TEST_F(MidiDecoder, NoteOn)
+TEST_F(MidiMessage, Equality)
 {
-    Message expected{.type{CHANNEL_VOICE},
-        .u{.voice{.u{.note_on{.note{0}, .velocity{0}}}}}};
-
-    EXPECT_CALL(receiver, Call(expected))
-        .Times(1);
-
-    std::vector<uint8_t> bytes {
-        0x90,
-        0x00,
-        0x01,
+    Message message{
+        .type{CHANNEL_VOICE},
+        .u{
+            .voice{
+                .type = NOTE_ON,
+                .u{
+                    .note_on{
+                        .note{0},
+                        .velocity{0}}
+                }
+            }
+        }
     };
 
-    for (auto byte : bytes){
-        sut.decode(byte);
-    }
+    Message copy = message;
+
+    ASSERT_TRUE(message == message);
+    ASSERT_TRUE(message == copy);
+
+    copy.type = CHANNEL_MODE;
+    ASSERT_FALSE(message == copy);
+
+    copy = message;
+    copy.u.voice.type = NOTE_OFF;
+    ASSERT_FALSE(message == copy);
+
+    copy = message;
+    copy.u.voice.u.note_on.note = 1;
+    ASSERT_FALSE(message == copy);
+
+    copy = message;
+    copy.u.voice.u.note_on.velocity = 1;
+    ASSERT_FALSE(message == copy);
 }
