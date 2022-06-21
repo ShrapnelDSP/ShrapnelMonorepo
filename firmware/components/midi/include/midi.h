@@ -20,6 +20,7 @@
 #include <assert.h>
 #include <cstdint>
 #include <functional>
+#include <ostream>
 #include <unordered_map>
 
 namespace shrapnel {
@@ -80,7 +81,23 @@ struct Message {
                 return false;
             };
 
-        } voice;
+            friend std::ostream & operator<<(std::ostream &out, Voice const &voice) {
+                out << "voice type " << voice.type;
+
+                switch(voice.type)
+                {
+                    case NOTE_ON:
+                        return out << " note " << voice.u.note_on.note << " velocity " << voice.u.note_on.velocity;
+                        break;
+                    default:
+                        assert(false);
+                        break;
+                }
+
+                return out;
+            }
+
+            } voice;
     } u;
 
     bool operator==(const Message &other) const {
@@ -100,6 +117,22 @@ struct Message {
         }
 
         return false;
+    };
+
+    friend std::ostream & operator<<(std::ostream &out, Message const &message) {
+        out << "midi message type " << message.type << " ";
+
+        switch(message.type)
+        {
+        case CHANNEL_VOICE:
+            out << message.u.voice;
+            break;
+        default:
+            assert(false);
+            break;
+        }
+
+        return out;
     };
 };
 
@@ -128,11 +161,17 @@ class Decoder {
 
     enum State {
         IDLE,
+        GOT_MESSAGE,
     };
 
     State state;
 
     State decode_idle(uint8_t byte);
+    State decode_message(uint8_t byte);
+
+    uint8_t current_message;
+    int data_count;
+    std::array<uint8_t, 2> received_data;
 
     constexpr static const char *TAG = "midi";
 };
