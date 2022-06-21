@@ -38,8 +38,20 @@ class MidiDecoder : public ::testing::Test
 
 TEST_F(MidiDecoder, NoteOn)
 {
-    Message expected{.type{CHANNEL_VOICE},
-        .u{.voice{.u{.note_on{.note{0}, .velocity{0}}}}}};
+    Message expected{
+        .type{CHANNEL_VOICE},
+        .u{
+            .voice{
+                .type = NOTE_ON,
+                .u{
+                    .note_on{
+                        .note{0},
+                        .velocity{0}
+                    }
+                }
+            }
+        }
+    };
 
     EXPECT_CALL(receiver, Call(expected))
         .Times(1);
