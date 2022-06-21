@@ -17,6 +17,7 @@
  * ShrapnelDSP. If not, see <https://www.gnu.org/licenses/>.
  */
 
+#include <assert.h>
 #include <cstdint>
 #include <functional>
 #include <unordered_map>
@@ -48,25 +49,68 @@ struct Message {
         struct Voice {
             ChannelVoiceMessageType type;
             union ChannelVoiceData {
-                struct {
+                struct NoteOn {
                     uint8_t note;
                     uint8_t velocity;
+                    auto operator<=>(const NoteOn &other) const = default;
                 } note_on;
-                struct {
+                struct NoteOff {
                     uint8_t note;
                     uint8_t velocity;
+                    auto operator<=>(const NoteOff &other) const = default;
                 } note_off;
+            } u;
+
+            bool operator==(const Voice &other) const {
+                if(type != other.type)
+                {
+                    return false;
+                }
+
+                switch(type)
+                {
+                    case NOTE_ON:
+                        return u.note_on == other.u.note_on;
+                        break;
+                    default:
+                        assert(false);
+                        break;
+                }
+
+                return false;
             };
+
         } voice;
+    } u;
+
+    bool operator==(const Message &other) const {
+        if(type != other.type)
+        {
+            return false;
+        }
+
+        switch(type)
+        {
+            case CHANNEL_VOICE:
+                return u.voice == other.u.voice;
+                break;
+            default:
+                assert(false);
+                break;
+        }
+
+        return false;
     };
 };
 
 class Decoder {
     public:
+    using Callback = std::function<void(Message)>;
+
     /**
      * \param on_message_decoded Called when a message has been decoded
      */
-    Decoder(std::function<void(Message)> on_message_decoded);
+    Decoder(Callback on_message_decoded);
 
     /** Decode bytes received by UART
      *
@@ -75,6 +119,9 @@ class Decoder {
     void decode(uint8_t byte);
 
     private:
+
+    Callback on_message_decoded;
+
     static inline bool is_status_byte(uint8_t byte) {
         return byte & (1 << 7);
     };
@@ -88,7 +135,6 @@ class Decoder {
     State decode_idle(uint8_t byte);
 
     constexpr static const char *TAG = "midi";
-
 };
 
 /** Implements persistent configuration for MIDI functionality

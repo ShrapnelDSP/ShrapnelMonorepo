@@ -6,6 +6,7 @@ else()
     add_executable(midi_test
                    src/midi.cpp
                    test/test_midi_decoder.cpp
+                   test/test_midi_message.cpp
                    )
 
     target_include_directories(midi_test PRIVATE include)
