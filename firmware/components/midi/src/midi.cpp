@@ -67,18 +67,11 @@ Decoder::State Decoder::decode_message(uint8_t byte)
         if(data_count == 2)
         {
             on_message_decoded({
-                .type{CHANNEL_VOICE},
-                .u{
-                    .voice{
-                        .type = NOTE_ON,
-                        .u{
-                            .note_on{
-                                .note{received_data[0]},
-                                .velocity{received_data[1]}
-                            }
-                        }
-                    }
-                }
+                .type{NOTE_ON},
+                .note_on{
+                    .note{received_data[0]},
+                    .velocity{received_data[1]}
+                },
             });
             current_message = 0;
             data_count = 0;

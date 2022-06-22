@@ -26,7 +26,7 @@
 namespace shrapnel {
 namespace midi {
 
-enum MessageType {
+enum MessageGroupType {
     CHANNEL_VOICE,
     CHANNEL_MODE,
     SYSTEM_COMMON,
@@ -34,7 +34,7 @@ enum MessageType {
     SYSTEM_EXCLUSIVE,
 };
 
-enum ChannelVoiceMessageType {
+enum MessageType {
     NOTE_OFF = 0x80,
     NOTE_ON = 0x90,
     POLY_KEY_PRESSURE = 0xA0,
@@ -44,96 +44,36 @@ enum ChannelVoiceMessageType {
     PITCH_BEND = 0xE0,
 };
 
+struct NoteOnOff {
+    uint8_t note;
+    uint8_t velocity;
+};
+
 struct Message {
     MessageType type;
-    union Data {
-        struct Voice {
-            ChannelVoiceMessageType type;
-            union ChannelVoiceData {
-                struct NoteOn {
-                    uint8_t note;
-                    uint8_t velocity;
-                    auto operator<=>(const NoteOn &other) const = default;
-                } note_on;
-                struct NoteOff {
-                    uint8_t note;
-                    uint8_t velocity;
-                    auto operator<=>(const NoteOff &other) const = default;
-                } note_off;
-            } u;
-
-            bool operator==(const Voice &other) const {
-                if(type != other.type)
-                {
-                    return false;
-                }
-
-                switch(type)
-                {
-                    case NOTE_ON:
-                        return u.note_on == other.u.note_on;
-                        break;
-                    default:
-                        assert(false);
-                        break;
-                }
-
-                return false;
-            };
-
-            friend std::ostream & operator<<(std::ostream &out, Voice const &voice) {
-                out << "voice type " << voice.type;
-
-                switch(voice.type)
-                {
-                    case NOTE_ON:
-                        return out << " note " << voice.u.note_on.note << " velocity " << voice.u.note_on.velocity;
-                        break;
-                    default:
-                        assert(false);
-                        break;
-                }
-
-                return out;
-            }
-
-            } voice;
-    } u;
-
-    bool operator==(const Message &other) const {
-        if(type != other.type)
-        {
-            return false;
-        }
-
-        switch(type)
-        {
-            case CHANNEL_VOICE:
-                return u.voice == other.u.voice;
-                break;
-            default:
-                assert(false);
-                break;
-        }
-
-        return false;
+    union {
+        NoteOnOff note_on;
+        NoteOnOff note_off;
     };
 
-    friend std::ostream & operator<<(std::ostream &out, Message const &message) {
-        out << "midi message type " << message.type << " ";
-
+    friend std::ostream& operator<<(std::ostream&  out, const Message& message) {
+        out << '{';
         switch(message.type)
         {
-        case CHANNEL_VOICE:
-            out << message.u.voice;
+        case NOTE_ON:
+            out << "note on " << +message.note_on.note << ' ' << +message.note_on.velocity;
+            break;
+        case NOTE_OFF:
+            out << "note off " << +message.note_on.note << ' ' << +message.note_on.velocity;
             break;
         default:
-            assert(false);
+            out << +message.type;
             break;
         }
 
+        out << '}';
         return out;
-    };
+    }
 };
 
 class Decoder {
