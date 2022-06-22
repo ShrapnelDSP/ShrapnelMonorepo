@@ -23,8 +23,23 @@
 #include "midi.h"
 
 using testing::_;
+using testing::AllOf;
+using testing::Field;
+using testing::ExplainMatchResult;
+using testing::Not;
 
 using namespace shrapnel::midi;
+
+MATCHER_P(MessageMatches, other, "")
+{
+    return ExplainMatchResult(
+            AllOf(Field("type", &Message::type, other.type),
+                  Field("note on", &Message::note_on, Field("note", &NoteOnOff::note, other.note_on.note)),
+                  Field("note on", &Message::note_on, Field("velocity", &NoteOnOff::velocity, other.note_on.velocity))),
+                  arg, result_listener);
+
+}
+
 
 class MidiMessage : public ::testing::Test
 {
@@ -36,36 +51,26 @@ class MidiMessage : public ::testing::Test
 TEST_F(MidiMessage, Equality)
 {
     Message message{
-        .type{CHANNEL_VOICE},
-        .u{
-            .voice{
-                .type = NOTE_ON,
-                .u{
-                    .note_on{
-                        .note{0},
-                        .velocity{0}}
-                }
-            }
-        }
+        .type{NOTE_OFF},
+        .note_on{
+            .note{0},
+            .velocity{1}
+        },
     };
 
     Message copy = message;
 
-    ASSERT_TRUE(message == message);
-    ASSERT_TRUE(message == copy);
+    EXPECT_THAT(message, MessageMatches(copy));
+    EXPECT_THAT(message, MessageMatches(copy));
 
-    copy.type = CHANNEL_MODE;
-    ASSERT_FALSE(message == copy);
-
-    copy = message;
-    copy.u.voice.type = NOTE_OFF;
-    ASSERT_FALSE(message == copy);
+    copy.type = NOTE_ON;
+    EXPECT_THAT(message, Not(MessageMatches(copy)));
 
     copy = message;
-    copy.u.voice.u.note_on.note = 1;
-    ASSERT_FALSE(message == copy);
+    copy.note_on.note = 1;
+    EXPECT_THAT(message, Not(MessageMatches(copy)));
 
     copy = message;
-    copy.u.voice.u.note_on.velocity = 1;
-    ASSERT_FALSE(message == copy);
+    copy.note_on.velocity = 0;
+    EXPECT_THAT(message, Not(MessageMatches(copy)));
 }
