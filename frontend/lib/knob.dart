@@ -61,14 +61,15 @@ class Knob extends StatelessWidget {
         },
         child: Transform.rotate(
           angle: _angle - m.pi / 4,
-          child: ClipOval(
-            child: Container(
-              color: Theme.of(context).colorScheme.onSurface,
-              child: Icon(
-                Icons.arrow_upward,
-                color: Theme.of(context).colorScheme.primary,
-                size: size,
-              ),
+          child: Container(
+            decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.background,
+              shape: BoxShape.circle,
+            ),
+            child: Icon(
+              Icons.arrow_upward,
+              color: Theme.of(context).colorScheme.primary,
+              size: size,
             ),
           ),
         ),
