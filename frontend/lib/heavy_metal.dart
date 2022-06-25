@@ -22,7 +22,6 @@ import 'package:provider/provider.dart';
 
 import 'consumer_stompbox.dart';
 import 'parameter.dart';
-import 'stompbox.dart';
 
 class HeavyMetal extends StatelessWidget {
   const HeavyMetal({

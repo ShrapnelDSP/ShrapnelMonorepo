@@ -43,11 +43,9 @@ class _PedalboardState extends State<Pedalboard> {
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            TubeScreamerParameterProvider(
-              child: TubeScreamer(
-                onTap: () => _activateGear(GearId.tubeScreamer),
-                full: _activeGear == GearId.tubeScreamer,
-              ),
+            TubeScreamer(
+              onTap: () => _activateGear(GearId.tubeScreamer),
+              full: _activeGear == GearId.tubeScreamer,
             ),
             NoiseGate(
                     onTap: () => _activateGear(GearId.noiseGate),
