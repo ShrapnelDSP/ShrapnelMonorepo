@@ -65,11 +65,9 @@ class _PedalboardState extends State<Pedalboard> {
           onTap: () => _activateGear(GearId.valvestate),
           full: _activeGear == GearId.valvestate,
         ),
-        ChorusParameterProvider(
-          child: Chorus(
-            onTap: () => _activateGear(GearId.chorus),
-            full: _activeGear == GearId.chorus,
-          ),
+        Chorus(
+          onTap: () => _activateGear(GearId.chorus),
+          full: _activeGear == GearId.chorus,
         ),
       ],
     );
