@@ -20,8 +20,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'consumer_stompbox.dart';
 import 'parameter.dart';
+import 'stompbox.dart';
 
 class TubeScreamer extends StatelessWidget {
   const TubeScreamer({
@@ -67,7 +67,7 @@ class TubeScreamer extends StatelessWidget {
           ),
         );
       },
-      child: ConsumerStompbox(
+      child: Stompbox(
         name: 'Tube Screamer',
         onCardTap: onTap,
         full: full,

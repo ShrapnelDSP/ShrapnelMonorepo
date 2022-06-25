@@ -20,8 +20,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'consumer_stompbox.dart';
 import 'parameter.dart';
+import 'stompbox.dart';
 
 class Chorus extends StatelessWidget {
   const Chorus({
@@ -67,7 +67,7 @@ class Chorus extends StatelessWidget {
           ),
         );
       },
-      child: ConsumerStompbox(
+      child: Stompbox(
         name: 'Chorus',
         onCardTap: onTap,
         full: full,

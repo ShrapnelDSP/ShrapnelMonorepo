@@ -20,8 +20,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'consumer_stompbox.dart';
 import 'parameter.dart';
+import 'stompbox.dart';
 
 class NoiseGate extends StatelessWidget {
   const NoiseGate({
@@ -69,7 +69,7 @@ class NoiseGate extends StatelessWidget {
           ),
         );
       },
-      child: ConsumerStompbox(
+      child: Stompbox(
         name: 'Noise Gate',
         onCardTap: onTap,
         full: full,
