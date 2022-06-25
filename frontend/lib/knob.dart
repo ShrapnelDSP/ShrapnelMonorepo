@@ -46,7 +46,7 @@ class Knob extends StatelessWidget {
   Widget build(BuildContext context) {
     final distanceToAngle = 0.007 * (max - min);
     final _normalisedValue = (value - min) / (max - min);
-    final _angle = minAngle + _normalisedValue * sweepAngle * 2 * m.pi / 360;
+    final _angle = (minAngle + _normalisedValue * sweepAngle) * 2 * m.pi / 360;
 
     return Transform.rotate(
       angle: m.pi / 4,
