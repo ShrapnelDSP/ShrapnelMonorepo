@@ -23,15 +23,6 @@ import 'package:provider/provider.dart';
 import 'consumer_stompbox.dart';
 import 'parameter.dart';
 
-class _NoiseGateParameterBypass extends AudioParameterDoubleModel {
-  _NoiseGateParameterBypass({required ParameterService parameterService})
-      : super(
-          name: 'Bypass',
-          id: 'noiseGateBypass',
-          parameterService: parameterService,
-        );
-}
-
 class NoiseGate extends StatelessWidget {
   const NoiseGate({
     Key? key,
@@ -48,98 +39,48 @@ class NoiseGate extends StatelessWidget {
       create: (context) {
         final parameterService =
             Provider.of<ParameterService>(context, listen: false);
-        return _NoiseGateParameterBypass(
-          parameterService: parameterService,
+        return StompboxModel(
+          parameters: [
+            AudioParameterDoubleModel(
+              name: 'Attack',
+              id: 'noiseGateAttack',
+              parameterService: parameterService,
+            ),
+            AudioParameterDoubleModel(
+              name: 'Hysteresis',
+              id: 'noiseGateHysteresis',
+              parameterService: parameterService,
+            ),
+            AudioParameterDoubleModel(
+              name: 'Release',
+              id: 'noiseGateRelease',
+              parameterService: parameterService,
+            ),
+            AudioParameterDoubleModel(
+              name: 'Threshold',
+              id: 'noiseGateThreshold',
+              parameterService: parameterService,
+            ),
+          ],
+          bypass: AudioParameterDoubleModel(
+            name: 'Bypass',
+            id: 'noiseGateBypass',
+            parameterService: parameterService,
+          ),
         );
       },
-      child: ChangeNotifierProvider(
-        create: (context) {
-          final parameterService =
-              Provider.of<ParameterService>(context, listen: false);
-          return StompboxModel(
-            parameters: [
-              AudioParameterDoubleModel(
-                name: 'Attack',
-                id: 'noiseGateAttack',
-                parameterService: parameterService,
-              ),
-              AudioParameterDoubleModel(
-                name: 'Hysteresis',
-                id: 'noiseGateHysteresis',
-                parameterService: parameterService,
-              ),
-              AudioParameterDoubleModel(
-                name: 'Release',
-                id: 'noiseGateRelease',
-                parameterService: parameterService,
-              ),
-              AudioParameterDoubleModel(
-                name: 'Threshold',
-                id: 'noiseGateThreshold',
-                parameterService: parameterService,
-              ),
-            ],
-          );
-        },
-        child: Consumer<_NoiseGateParameterBypass>(
-          builder: (_, bypass, __) => ConsumerStompbox(
-            parameterName: const [
-              'Threshold',
-              'Hysteresis',
-              'Attack',
-              'Release',
-            ],
-            name: 'Noise Gate',
-            onCardTap: onTap,
-            full: full,
-            onBypassTap: () =>
-                bypass.onUserChanged((bypass.value > 0.5) ? 0 : 1),
-            bypass: bypass.value > 0.5,
-            primarySwatch: Colors.red,
-          ),
-        ),
+      child: ConsumerStompbox(
+        parameterName: const [
+          'Threshold',
+          'Hysteresis',
+          'Attack',
+          'Release',
+        ],
+        name: 'Noise Gate',
+        onCardTap: onTap,
+        full: full,
+        primarySwatch: Colors.red,
       ),
     );
   }
 }
-
-/*
-class NoiseGateParameterProvider extends StatelessWidget {
-  const NoiseGateParameterProvider({
-    Key? key,
-    required this.child,
-  }) : super(key: key);
-
-  final Widget child;
-
-  @override
-  Widget build(BuildContext context) =>
-      Consumer<ParameterService>(builder: (_, parameterService, __) {
-        return MultiProvider(
-          providers: [
-            ChangeNotifierProvider(
-              create: (_) => _NoiseGateParameterBypass(
-                parameterService: parameterService,
-              ),
-            ),
-            ChangeNotifierProvider(
-              create: (_) => _NoiseGateParameterHysteresis(
-                parameterService: parameterService,
-              ),
-            ),
-            ChangeNotifierProvider(
-              create: (_) => _NoiseGateParameterRelease(
-                parameterService: parameterService,
-              ),
-            ),
-            ChangeNotifierProvider(
-              create: (_) => _NoiseGateParameterThreshold(
-                parameterService: parameterService,
-              ),
-            ),
-          ],
-          child: child,
-        );
-      });
-}
-*/

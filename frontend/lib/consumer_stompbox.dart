@@ -22,39 +22,37 @@ import 'package:provider/provider.dart';
 
 import 'consumer_knob.dart';
 import 'parameter.dart';
+import 'util/conditional_parent.dart';
 
 class StompboxModel extends ChangeNotifier {
-    StompboxModel({required this.parameters});
+  StompboxModel({required this.parameters, required this.bypass});
 
-    List<AudioParameterDoubleModel> parameters;
+  List<AudioParameterDoubleModel> parameters;
+  AudioParameterDoubleModel bypass;
 }
 
 class ConsumerStompbox extends StatelessWidget {
   const ConsumerStompbox({
     Key? key,
     required this.parameterName,
-    required this.bypass,
     required this.name,
     required this.full,
     required this.onCardTap,
-    required this.onBypassTap,
     required this.primarySwatch,
   }) : super(key: key);
 
   final List<String> parameterName;
 
-  final bool bypass;
   final String name;
 
   final bool full;
   final Function() onCardTap;
-  final Function() onBypassTap;
 
   final MaterialColor primarySwatch;
 
   Widget knobWithLabel(BuildContext context, int index, double scaleFactor) {
     return ChangeNotifierProvider<AudioParameterDoubleModel>.value(
-            value: Provider.of<StompboxModel>(context).parameters[index],
+      value: Provider.of<StompboxModel>(context).parameters[index],
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
@@ -139,28 +137,6 @@ class ConsumerStompbox extends StatelessWidget {
     return [];
   }
 
-  Widget bypassButton(BuildContext context, double scaleFactor) {
-    final button = Container(
-      width: scaleFactor * 19,
-      height: scaleFactor * 19,
-      decoration: BoxDecoration(
-        color: bypass
-            ? Theme.of(context).colorScheme.surface
-            : Theme.of(context).colorScheme.primary,
-        shape: BoxShape.circle,
-      ),
-    );
-
-    if (full) {
-      return GestureDetector(
-        onTap: full ? onBypassTap : () {/* not interactive */},
-        child: button,
-      );
-    }
-
-    return button;
-  }
-
   @override
   Widget build(BuildContext context) {
     final scaleFactor = full ? 3.0 : 1.0;
@@ -182,28 +158,37 @@ class ConsumerStompbox extends StatelessWidget {
             child: Card(
               child: Container(
                 margin: EdgeInsets.all(scaleFactor * 10),
-                child: Stack(alignment: Alignment.center, children: <Widget>[
-                  ...knobs(context, scaleFactor),
-                  Positioned(
-                    top: scaleFactor * 70,
-                    child: Text(name),
-                  ),
-                  Positioned(
-                    top: scaleFactor * 95,
-                    child: Container(
-                      width: scaleFactor * 25,
-                      height: scaleFactor * 25,
-                      decoration: BoxDecoration(
-                        color: Theme.of(context).colorScheme.background,
-                        shape: BoxShape.circle,
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: <Widget>[
+                    ...knobs(context, scaleFactor),
+                    Positioned(
+                      top: scaleFactor * 70,
+                      child: Text(name),
+                    ),
+                    Positioned(
+                      top: scaleFactor * 95,
+                      child: Container(
+                        width: scaleFactor * 25,
+                        height: scaleFactor * 25,
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).colorScheme.background,
+                          shape: BoxShape.circle,
+                        ),
                       ),
                     ),
-                  ),
-                  Positioned(
-                    top: scaleFactor * 98,
-                    child: bypassButton(context, scaleFactor),
-                  ),
-                ]),
+                    Positioned(
+                      top: scaleFactor * 98,
+                      child: ChangeNotifierProvider.value(
+                        value: context.watch<StompboxModel>().bypass,
+                        child: BypassButton(
+                          size: scaleFactor * 19,
+                          isEnabled: full,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
@@ -212,3 +197,37 @@ class ConsumerStompbox extends StatelessWidget {
     );
   }
 }
+
+class BypassButton extends StatelessWidget {
+  const BypassButton({Key? key, required this.size, required this.isEnabled})
+      : super(key: key);
+
+  final double size;
+  final bool isEnabled;
+
+  @override
+  Widget build(BuildContext context) {
+    final bypass = context.watch<AudioParameterDoubleModel>();
+
+    return ConditionalParent(
+      condition: isEnabled,
+      builder: (child) => GestureDetector(
+        onTap: () {
+          bypass.onUserChanged((bypass.value > 0.5) ? 0 : 1);
+        },
+        child: child,
+      ),
+      child: Container(
+        width: size,
+        height: size,
+        decoration: BoxDecoration(
+          color: bypass.value > 0.5
+              ? Theme.of(context).colorScheme.surface
+              : Theme.of(context).colorScheme.primary,
+          shape: BoxShape.circle,
+        ),
+      ),
+    );
+  }
+}
+
