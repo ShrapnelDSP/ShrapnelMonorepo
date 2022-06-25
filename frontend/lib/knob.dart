@@ -55,9 +55,8 @@ class Knob extends StatelessWidget {
           final changeInY = details.delta.dy;
           final changeInValue = distanceToAngle * -changeInY;
           final newValue = value + changeInValue;
-          final double clippedValue = m.min(m.max(newValue, min), max);
 
-          onChanged(clippedValue);
+          onChanged(newValue.clamp(min, max));
         },
         child: Transform.rotate(
           angle: _angle - m.pi / 4,
