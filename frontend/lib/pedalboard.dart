@@ -48,8 +48,8 @@ class _PedalboardState extends State<Pedalboard> {
               full: _activeGear == GearId.tubeScreamer,
             ),
             NoiseGate(
-                    onTap: () => _activateGear(GearId.noiseGate),
-                    full: _activeGear == GearId.noiseGate,
+              onTap: () => _activateGear(GearId.noiseGate),
+              full: _activeGear == GearId.noiseGate,
             ),
             HeavyMetal(
               onTap: () => _activateGear(GearId.heavyMetal),
