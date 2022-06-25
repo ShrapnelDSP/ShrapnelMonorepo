@@ -71,36 +71,32 @@ class Chorus extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Consumer4<_ChorusParameterBypass, _ChorusParameterDepth,
-            _ChorusParameterMix, _ChorusParameterRate>(
-          builder: (_, bypass, depth, mix, rate, __) => Stompbox(
-            value: [
-              rate.value,
-              depth.value,
-              mix.value,
-            ],
-            onChanged: [
-              rate.onUserChanged,
-              depth.onUserChanged,
-              mix.onUserChanged,
-            ],
-            parameterName: [
-              rate.name,
-              depth.name,
-              mix.name,
-            ],
-            name: 'Chorus',
-            onCardTap: onTap,
-            full: full,
-            onBypassTap: () =>
-                bypass.onUserChanged((bypass.value > 0.5) ? 0 : 1),
-            bypass: bypass.value > 0.5,
-            primarySwatch: Colors.blue,
-          ),
-        ),
-      ],
+    return Consumer4<_ChorusParameterBypass, _ChorusParameterDepth,
+        _ChorusParameterMix, _ChorusParameterRate>(
+      builder: (_, bypass, depth, mix, rate, __) => Stompbox(
+        value: [
+          rate.value,
+          depth.value,
+          mix.value,
+        ],
+        onChanged: [
+          rate.onUserChanged,
+          depth.onUserChanged,
+          mix.onUserChanged,
+        ],
+        parameterName: [
+          rate.name,
+          depth.name,
+          mix.name,
+        ],
+        name: 'Chorus',
+        onCardTap: onTap,
+        full: full,
+        onBypassTap: () =>
+            bypass.onUserChanged((bypass.value > 0.5) ? 0 : 1),
+        bypass: bypass.value > 0.5,
+        primarySwatch: Colors.blue,
+      ),
     );
   }
 }

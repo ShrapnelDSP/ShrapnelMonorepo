@@ -61,27 +61,15 @@ class _PedalboardState extends State<Pedalboard> {
             ),
           ],
         ),
-        ValvestateParameterProvider(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Valvestate(
-                onTap: () => _activateGear(GearId.valvestate),
-                full: _activeGear == GearId.valvestate,
-              ),
-            ],
-          ),
+        Valvestate(
+          onTap: () => _activateGear(GearId.valvestate),
+          full: _activeGear == GearId.valvestate,
         ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            ChorusParameterProvider(
-              child: Chorus(
-                onTap: () => _activateGear(GearId.chorus),
-                full: _activeGear == GearId.chorus,
-              ),
-            ),
-          ],
+        ChorusParameterProvider(
+          child: Chorus(
+            onTap: () => _activateGear(GearId.chorus),
+            full: _activeGear == GearId.chorus,
+          ),
         ),
       ],
     );

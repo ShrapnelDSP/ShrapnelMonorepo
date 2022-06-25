@@ -20,7 +20,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'knob.dart';
+import 'knob_with_label.dart';
 import 'parameter.dart';
 import 'util/conditional_parent.dart';
 
@@ -157,40 +157,6 @@ class _KnobPosition {
   final double? top;
   final double? left;
   final double? right;
-}
-
-// TODO pull the state from consumer button up to here for the label
-class KnobWithLabel extends StatelessWidget {
-  const KnobWithLabel({
-    Key? key,
-    required this.isEnabled,
-    required this.knobSize,
-  }) : super(key: key);
-
-  final bool isEnabled;
-  final double knobSize;
-
-  @override
-  Widget build(BuildContext context) {
-    final parameter = Provider.of<AudioParameterDoubleModel>(context);
-
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-        Knob(
-          onChanged: isEnabled ? parameter.onUserChanged : (_) {},
-          value: parameter.value,
-          size: knobSize,
-        ),
-        if (isEnabled) const SizedBox(height: 10),
-        if (isEnabled)
-          Text(
-            parameter.name,
-            textAlign: TextAlign.center,
-          ),
-      ],
-    );
-  }
 }
 
 class _BypassButton extends StatelessWidget {
