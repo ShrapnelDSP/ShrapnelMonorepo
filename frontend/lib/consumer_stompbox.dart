@@ -20,7 +20,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'consumer_knob.dart';
+import 'knob.dart';
 import 'parameter.dart';
 import 'util/conditional_parent.dart';
 
@@ -34,14 +34,11 @@ class StompboxModel extends ChangeNotifier {
 class ConsumerStompbox extends StatelessWidget {
   const ConsumerStompbox({
     Key? key,
-    required this.parameterName,
     required this.name,
     required this.full,
     required this.onCardTap,
     required this.primarySwatch,
   }) : super(key: key);
-
-  final List<String> parameterName;
 
   final String name;
 
@@ -50,91 +47,47 @@ class ConsumerStompbox extends StatelessWidget {
 
   final MaterialColor primarySwatch;
 
-  Widget knobWithLabel(BuildContext context, int index, double scaleFactor) {
-    return ChangeNotifierProvider<AudioParameterDoubleModel>.value(
-      value: Provider.of<StompboxModel>(context).parameters[index],
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          ConsumerKnob(
-            size: scaleFactor * 25,
-          ),
-          if (full) const SizedBox(height: 10),
-          if (full)
-            Text(
-              parameterName[index],
-              textAlign: TextAlign.center,
-            ),
-        ],
-      ),
-    );
-  }
-
   List<Widget> knobs(BuildContext context, double scaleFactor) {
-    if (parameterName.length == 1) {
-      return [
-        Positioned(
-          top: 0,
-          child: knobWithLabel(context, 0, scaleFactor),
-        ),
-      ];
-    } else if (parameterName.length == 2) {
-      return [
-        Positioned(
-          left: 0,
-          top: 0,
-          child: knobWithLabel(context, 0, scaleFactor),
-        ),
-        Positioned(
-          right: 0,
-          top: 0,
-          child: knobWithLabel(context, 1, scaleFactor),
-        ),
-      ];
-    } else if (parameterName.length == 3) {
-      return [
-        Positioned(
-          left: 0,
-          top: 0,
-          child: knobWithLabel(context, 0, scaleFactor),
-        ),
-        Positioned(
-          right: 0,
-          top: 0,
-          child: knobWithLabel(context, 1, scaleFactor),
-        ),
-        Positioned(
-          top: scaleFactor * 35,
-          child: knobWithLabel(context, 2, scaleFactor),
-        ),
-      ];
-    } else if (parameterName.length == 4) {
-      return [
-        Positioned(
-          left: 0,
-          top: 0,
-          child: knobWithLabel(context, 0, scaleFactor),
-        ),
-        Positioned(
-          right: 0,
-          top: 0,
-          child: knobWithLabel(context, 1, scaleFactor),
-        ),
-        Positioned(
-          left: 0,
-          top: scaleFactor * 35,
-          child: knobWithLabel(context, 2, scaleFactor),
-        ),
-        Positioned(
-          right: 0,
-          top: scaleFactor * 35,
-          child: knobWithLabel(context, 3, scaleFactor),
-        ),
-      ];
-    }
+    final layouts = <int, List<_KnobPosition>>{
+      1: [const _KnobPosition(top: 0)],
+      2: [
+        const _KnobPosition(left: 0, top: 0),
+        const _KnobPosition(right: 0, top: 0),
+      ],
+      3: [
+        const _KnobPosition(left: 0, top: 0),
+        const _KnobPosition(right: 0, top: 0),
+        _KnobPosition(top: 35 * scaleFactor),
+      ],
+      4: [
+        const _KnobPosition(left: 0, top: 0),
+        const _KnobPosition(right: 0, top: 0),
+        _KnobPosition(left: 0, top: 35 * scaleFactor),
+        _KnobPosition(right: 0, top: 35 * scaleFactor),
+      ],
+    };
 
-    assert(false, 'Number of parameters must be between 1 and 4');
-    return [];
+    final parameters = Provider.of<StompboxModel>(context).parameters;
+    assert(layouts.containsKey(parameters.length),
+        'Number of parameters must be one of ${layouts.keys}, not ${parameters.length}');
+
+    final layout = layouts[parameters.length]!;
+
+    return List<Widget>.generate(
+        parameters.length,
+        (index) => Positioned(
+              top: layout[index].top,
+              left: layout[index].left,
+              right: layout[index].right,
+              child: ChangeNotifierProvider.value(
+                value: parameters[index],
+                child: KnobWithLabel(
+                  isEnabled: full,
+                  knobSize: scaleFactor * 25,
+                ),
+              ),
+            ),
+        growable: false);
   }
 
   @override
@@ -181,7 +134,7 @@ class ConsumerStompbox extends StatelessWidget {
                       top: scaleFactor * 98,
                       child: ChangeNotifierProvider.value(
                         value: context.watch<StompboxModel>().bypass,
-                        child: BypassButton(
+                        child: _BypassButton(
                           size: scaleFactor * 19,
                           isEnabled: full,
                         ),
@@ -198,8 +151,50 @@ class ConsumerStompbox extends StatelessWidget {
   }
 }
 
-class BypassButton extends StatelessWidget {
-  const BypassButton({Key? key, required this.size, required this.isEnabled})
+class _KnobPosition {
+  const _KnobPosition({this.top, this.left, this.right});
+
+  final double? top;
+  final double? left;
+  final double? right;
+}
+
+// TODO pull the state from consumer button up to here for the label
+class KnobWithLabel extends StatelessWidget {
+  const KnobWithLabel({
+    Key? key,
+    required this.isEnabled,
+    required this.knobSize,
+  }) : super(key: key);
+
+  final bool isEnabled;
+  final double knobSize;
+
+  @override
+  Widget build(BuildContext context) {
+    final parameter = Provider.of<AudioParameterDoubleModel>(context);
+
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        Knob(
+          onChanged: isEnabled ? parameter.onUserChanged : (_) {},
+          value: parameter.value,
+          size: knobSize,
+        ),
+        if (isEnabled) const SizedBox(height: 10),
+        if (isEnabled)
+          Text(
+            parameter.name,
+            textAlign: TextAlign.center,
+          ),
+      ],
+    );
+  }
+}
+
+class _BypassButton extends StatelessWidget {
+  const _BypassButton({Key? key, required this.size, required this.isEnabled})
       : super(key: key);
 
   final double size;
@@ -230,4 +225,3 @@ class BypassButton extends StatelessWidget {
     );
   }
 }
-

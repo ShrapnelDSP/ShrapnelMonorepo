@@ -70,12 +70,6 @@ class NoiseGate extends StatelessWidget {
         );
       },
       child: ConsumerStompbox(
-        parameterName: const [
-          'Threshold',
-          'Hysteresis',
-          'Attack',
-          'Release',
-        ],
         name: 'Noise Gate',
         onCardTap: onTap,
         full: full,
