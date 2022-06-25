@@ -37,7 +37,10 @@ class Chorus extends StatelessWidget {
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (context) {
-        final parameterService = Provider.of<ParameterService>(context, listen: false,);
+        final parameterService = Provider.of<ParameterService>(
+          context,
+          listen: false,
+        );
 
         return StompboxModel(
           parameters: [

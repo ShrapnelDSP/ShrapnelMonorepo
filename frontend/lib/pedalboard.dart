@@ -53,11 +53,9 @@ class _PedalboardState extends State<Pedalboard> {
                     onTap: () => _activateGear(GearId.noiseGate),
                     full: _activeGear == GearId.noiseGate,
             ),
-            HeavyMetalParameterProvider(
-              child: HeavyMetal(
-                onTap: () => _activateGear(GearId.heavyMetal),
-                full: _activeGear == GearId.heavyMetal,
-              ),
+            HeavyMetal(
+              onTap: () => _activateGear(GearId.heavyMetal),
+              full: _activeGear == GearId.heavyMetal,
             ),
           ],
         ),
