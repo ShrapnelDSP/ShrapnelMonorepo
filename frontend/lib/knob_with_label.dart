@@ -45,7 +45,7 @@ class KnobWithLabel extends StatelessWidget {
           value: parameter.value,
           size: knobSize,
         ),
-        if (isEnabled) const SizedBox(height: 10),
+        if (isEnabled) const SizedBox(height: 5),
         if (isEnabled)
           Text(
             parameter.name,

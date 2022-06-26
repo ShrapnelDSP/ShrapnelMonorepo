@@ -95,9 +95,11 @@ class Stompbox extends StatelessWidget {
     final scaleFactor = full ? 3.0 : 1.0;
 
     return Theme(
-      data: ThemeData(
-        brightness: Theme.of(context).brightness,
-        primarySwatch: primarySwatch,
+      data: Theme.of(context).copyWith(
+        colorScheme: ColorScheme.fromSwatch(
+          primarySwatch: primarySwatch,
+          brightness: Brightness.dark,
+        ),
       ),
       /* Builder required to create new context, which makes
        * Theme.of return the new theme defined above
