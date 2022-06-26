@@ -18,8 +18,8 @@
  */
 
 import 'dart:math' as m;
-
 import 'package:flutter/material.dart';
+import 'package:vector_math/vector_math_64.dart';
 
 class Knob extends StatelessWidget {
   const Knob({
@@ -47,7 +47,6 @@ class Knob extends StatelessWidget {
     final distanceToAngle = 0.007 * (max - min);
     final _normalisedValue = (value - min) / (max - min);
     final _angle = (minAngle + _normalisedValue * sweepAngle) * 2 * m.pi / 360;
-    print('Knob size $size');
 
     return Transform.rotate(
       angle: m.pi / 4,
@@ -63,32 +62,16 @@ class Knob extends StatelessWidget {
           angle: -m.pi / 4,
           child: CustomPaint(
             painter: KnobArc(
-                minAngle: minAngle * 2 * m.pi / 360,
-                maxAngle: maxAngle * 2 * m.pi / 360,
-                currentAngle: _angle,
-                arcWidth: size * 0.08,
-                backgroundColor: Theme.of(context).colorScheme.background,
-                primaryColor: Theme.of(context).colorScheme.primary,
-                ),
+              minAngle: minAngle * 2 * m.pi / 360,
+              maxAngle: maxAngle * 2 * m.pi / 360,
+              currentAngle: _angle,
+              arcWidth: size * 0.08,
+              backgroundColor: Theme.of(context).colorScheme.background,
+              primaryColor: Theme.of(context).colorScheme.primary,
+            ),
             child: SizedBox(
               height: size,
               width: size,
-              child: Center(
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.background,
-                    shape: BoxShape.circle,
-                  ),
-                  child: Transform.rotate(
-                    angle: _angle,
-                    child: Icon(
-                      Icons.arrow_upward,
-                      color: Theme.of(context).colorScheme.primary,
-                      size: size * 0.8,
-                    ),
-                  ),
-                ),
-              ),
             ),
           ),
         ),
@@ -98,12 +81,14 @@ class Knob extends StatelessWidget {
 }
 
 class KnobArc extends CustomPainter {
-  KnobArc({required this.arcWidth,
-      required this.minAngle,
-      required this.maxAngle,
-      required this.currentAngle,
-      required this.backgroundColor,
-      required this.primaryColor,});
+  const KnobArc({
+    required this.arcWidth,
+    required this.minAngle,
+    required this.maxAngle,
+    required this.currentAngle,
+    required this.backgroundColor,
+    required this.primaryColor,
+  }) : super();
 
   final double minAngle;
   final double maxAngle;
@@ -111,19 +96,20 @@ class KnobArc extends CustomPainter {
   final double arcWidth;
   final Color primaryColor;
   final Color backgroundColor;
-  late double sweepAngle = maxAngle - minAngle;
 
   @override
   void paint(Canvas canvas, Size size) {
     final background = Paint()
       ..color = backgroundColor
       ..style = PaintingStyle.stroke
-      ..strokeWidth = arcWidth;
+      ..strokeWidth = arcWidth
+      ..strokeCap = StrokeCap.round;
 
     final primary = Paint()
       ..color = primaryColor
       ..style = PaintingStyle.stroke
-      ..strokeWidth = arcWidth;
+      ..strokeWidth = arcWidth
+      ..strokeCap = StrokeCap.round;
 
     final bounds = Offset.zero & size;
 
@@ -131,6 +117,22 @@ class KnobArc extends CustomPainter {
         bounds, -m.pi / 2 + minAngle, maxAngle - minAngle, false, background);
     canvas.drawArc(
         bounds, -m.pi / 2 + minAngle, currentAngle - minAngle, false, primary);
+
+    background.style = PaintingStyle.fill;
+    canvas.drawCircle(
+        size.center(Offset.zero), size.width * 0.50 - arcWidth - 1, background);
+
+    // create the knob with tip at the origin
+    var knob = Path()..relativeLineTo(0, size.width * 0.13);
+    // move the tip up to near the edge of the inner circle
+    knob = knob.transform(
+        Matrix4.translation(Vector3(0, -size.width * 0.30, 0)).storage);
+    knob = knob.transform(Matrix4.rotationZ(currentAngle).storage);
+    knob = knob.transform(
+        Matrix4.translation(Vector3(size.width / 2, size.height / 2, 0))
+            .storage);
+
+    canvas.drawPath(knob, primary);
   }
 
   @override
