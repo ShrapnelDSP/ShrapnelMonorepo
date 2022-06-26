@@ -36,24 +36,24 @@ class Knob extends StatelessWidget {
   final double max;
   final double size;
 
-  static const double minAngle = -160;
-  static const double maxAngle = 160;
+  static const double minAngle = -0.85 * m.pi;
+  static const double maxAngle = -minAngle;
   static const double sweepAngle = maxAngle - minAngle;
 
   final ValueChanged<double> onChanged;
 
   @override
   Widget build(BuildContext context) {
-    final distanceToAngle = 0.007 * (max - min);
+    final distanceToValue = 0.003 * (max - min);
     final _normalisedValue = (value - min) / (max - min);
-    final _angle = (minAngle + _normalisedValue * sweepAngle) * 2 * m.pi / 360;
+    final _angle = minAngle + _normalisedValue * sweepAngle;
 
     return Transform.rotate(
       angle: m.pi / 4,
       child: GestureDetector(
         onVerticalDragUpdate: (DragUpdateDetails details) {
           final changeInY = details.delta.dy;
-          final changeInValue = distanceToAngle * -changeInY;
+          final changeInValue = distanceToValue * -changeInY;
           final newValue = value + changeInValue;
 
           onChanged(newValue.clamp(min, max));
@@ -61,9 +61,9 @@ class Knob extends StatelessWidget {
         child: Transform.rotate(
           angle: -m.pi / 4,
           child: CustomPaint(
-            painter: KnobArc(
-              minAngle: minAngle * 2 * m.pi / 360,
-              maxAngle: maxAngle * 2 * m.pi / 360,
+            painter: _KnobArc(
+              minAngle: minAngle,
+              maxAngle: maxAngle,
               currentAngle: _angle,
               arcWidth: size * 0.08,
               backgroundColor: Theme.of(context).colorScheme.background,
@@ -80,8 +80,8 @@ class Knob extends StatelessWidget {
   }
 }
 
-class KnobArc extends CustomPainter {
-  const KnobArc({
+class _KnobArc extends CustomPainter {
+  const _KnobArc({
     required this.arcWidth,
     required this.minAngle,
     required this.maxAngle,
@@ -137,7 +137,6 @@ class KnobArc extends CustomPainter {
 
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) {
-    // TODO: repaint only if something changed
     return true;
   }
 }
