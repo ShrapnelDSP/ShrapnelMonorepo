@@ -60,18 +60,20 @@ class Knob extends StatelessWidget {
         },
         child: Transform.rotate(
           angle: -m.pi / 4,
-          child: CustomPaint(
-            painter: _KnobArc(
-              minAngle: minAngle,
-              maxAngle: maxAngle,
-              currentAngle: _angle,
-              arcWidth: size * 0.08,
-              backgroundColor: Theme.of(context).colorScheme.background,
-              primaryColor: Theme.of(context).colorScheme.primary,
-            ),
-            child: SizedBox(
-              height: size,
-              width: size,
+          child: ClipRect(
+            child: CustomPaint(
+              painter: _KnobArc(
+                minAngle: minAngle,
+                maxAngle: maxAngle,
+                currentAngle: _angle,
+                arcWidth: size * 0.08,
+                backgroundColor: Theme.of(context).colorScheme.background,
+                primaryColor: Theme.of(context).colorScheme.primary,
+              ),
+              child: SizedBox(
+                height: size,
+                width: size,
+              ),
             ),
           ),
         ),
@@ -99,6 +101,7 @@ class _KnobArc extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
+
     final background = Paint()
       ..color = backgroundColor
       ..style = PaintingStyle.stroke
@@ -111,7 +114,7 @@ class _KnobArc extends CustomPainter {
       ..strokeWidth = arcWidth
       ..strokeCap = StrokeCap.round;
 
-    final bounds = Offset.zero & size;
+    final bounds = Offset(arcWidth/2, arcWidth/2) & Size.fromRadius(size.width/2 - arcWidth/2);
 
     canvas.drawArc(
         bounds, -m.pi / 2 + minAngle, maxAngle - minAngle, false, background);
@@ -120,13 +123,13 @@ class _KnobArc extends CustomPainter {
 
     background.style = PaintingStyle.fill;
     canvas.drawCircle(
-        size.center(Offset.zero), size.width * 0.50 - arcWidth - 1, background);
+        size.center(Offset.zero), size.width * 0.50 - arcWidth * 1.5, background);
 
     // create the knob with tip at the origin
     var knob = Path()..relativeLineTo(0, size.width * 0.13);
     // move the tip up to near the edge of the inner circle
     knob = knob.transform(
-        Matrix4.translation(Vector3(0, -size.width * 0.30, 0)).storage);
+        Matrix4.translation(Vector3(0, -size.width * 0.28, 0)).storage);
     knob = knob.transform(Matrix4.rotationZ(currentAngle).storage);
     knob = knob.transform(
         Matrix4.translation(Vector3(size.width / 2, size.height / 2, 0))
