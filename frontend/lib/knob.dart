@@ -47,6 +47,7 @@ class Knob extends StatelessWidget {
     final distanceToAngle = 0.007 * (max - min);
     final _normalisedValue = (value - min) / (max - min);
     final _angle = (minAngle + _normalisedValue * sweepAngle) * 2 * m.pi / 360;
+    print('Knob size $size');
 
     return Transform.rotate(
       angle: m.pi / 4,
@@ -59,20 +60,82 @@ class Knob extends StatelessWidget {
           onChanged(newValue.clamp(min, max));
         },
         child: Transform.rotate(
-          angle: _angle - m.pi / 4,
-          child: Container(
-            decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.background,
-              shape: BoxShape.circle,
-            ),
-            child: Icon(
-              Icons.arrow_upward,
-              color: Theme.of(context).colorScheme.primary,
-              size: size,
+          angle: -m.pi / 4,
+          child: CustomPaint(
+            painter: KnobArc(
+                minAngle: minAngle * 2 * m.pi / 360,
+                maxAngle: maxAngle * 2 * m.pi / 360,
+                currentAngle: _angle,
+                arcWidth: size * 0.08,
+                backgroundColor: Theme.of(context).colorScheme.background,
+                primaryColor: Theme.of(context).colorScheme.primary,
+                ),
+            child: SizedBox(
+              height: size,
+              width: size,
+              child: Center(
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.background,
+                    shape: BoxShape.circle,
+                  ),
+                  child: Transform.rotate(
+                    angle: _angle,
+                    child: Icon(
+                      Icons.arrow_upward,
+                      color: Theme.of(context).colorScheme.primary,
+                      size: size * 0.8,
+                    ),
+                  ),
+                ),
+              ),
             ),
           ),
         ),
       ),
     );
+  }
+}
+
+class KnobArc extends CustomPainter {
+  KnobArc({required this.arcWidth,
+      required this.minAngle,
+      required this.maxAngle,
+      required this.currentAngle,
+      required this.backgroundColor,
+      required this.primaryColor,});
+
+  final double minAngle;
+  final double maxAngle;
+  final double currentAngle;
+  final double arcWidth;
+  final Color primaryColor;
+  final Color backgroundColor;
+  late double sweepAngle = maxAngle - minAngle;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final background = Paint()
+      ..color = backgroundColor
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = arcWidth;
+
+    final primary = Paint()
+      ..color = primaryColor
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = arcWidth;
+
+    final bounds = Offset.zero & size;
+
+    canvas.drawArc(
+        bounds, -m.pi / 2 + minAngle, maxAngle - minAngle, false, background);
+    canvas.drawArc(
+        bounds, -m.pi / 2 + minAngle, currentAngle - minAngle, false, primary);
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) {
+    // TODO: repaint only if something changed
+    return true;
   }
 }
