@@ -19,27 +19,13 @@
 
 #include "gtest/gtest.h"
 #include "gmock/gmock.h"
+#include "midi_util.h"
 
 #include "midi.h"
 
-using testing::_;
-using testing::AllOf;
-using testing::Field;
-using testing::ExplainMatchResult;
 using testing::Not;
 
 using namespace shrapnel::midi;
-
-MATCHER_P(MessageMatches, other, "")
-{
-    return ExplainMatchResult(
-            AllOf(Field("type", &Message::type, other.type),
-                  Field("note on", &Message::note_on, Field("note", &NoteOnOff::note, other.note_on.note)),
-                  Field("note on", &Message::note_on, Field("velocity", &NoteOnOff::velocity, other.note_on.velocity))),
-                  arg, result_listener);
-
-}
-
 
 class MidiMessage : public ::testing::Test
 {
@@ -48,7 +34,7 @@ class MidiMessage : public ::testing::Test
     MidiMessage() {}
 };
 
-TEST_F(MidiMessage, Equality)
+TEST_F(MidiMessage, Matcher)
 {
     Message message{
         .type{NOTE_OFF},
@@ -60,7 +46,6 @@ TEST_F(MidiMessage, Equality)
 
     Message copy = message;
 
-    EXPECT_THAT(message, MessageMatches(copy));
     EXPECT_THAT(message, MessageMatches(copy));
 
     copy.type = NOTE_ON;
