@@ -23,8 +23,11 @@
 namespace shrapnel {
 namespace midi {
 
-Decoder::Decoder(std::function<void(Message)> _on_message_decoded) : on_message_decoded{_on_message_decoded}, state{IDLE}, current_message{0}, data_count{0} {
-}
+Decoder::Decoder(std::function<void(Message)> _on_message_decoded) :
+    on_message_decoded{_on_message_decoded},
+    state{IDLE},
+    current_status{0},
+    data_count{0} {}
 
 void Decoder::decode(uint8_t byte)
 {
@@ -47,9 +50,17 @@ void Decoder::decode(uint8_t byte)
 
 Decoder::State Decoder::decode_idle(uint8_t byte)
 {
+    /* Running status allows data to be sent with no status byte. In this case,
+     * the previous status is reused. */
+    if(!is_status_byte(byte))
+    {
+        auto next_state = decode_message(byte);
+        return next_state;
+    }
+
     if(byte == NOTE_ON)
     {
-        current_message = byte;
+        current_status = byte;
         return GOT_MESSAGE;
     }
     return IDLE;
@@ -57,9 +68,9 @@ Decoder::State Decoder::decode_idle(uint8_t byte)
 
 Decoder::State Decoder::decode_message(uint8_t byte)
 {
-    assert(is_status_byte(current_message));
+    assert(is_status_byte(current_status));
 
-    switch(current_message)
+    switch(current_status)
     {
     case NOTE_ON:
         received_data[data_count] = byte;
@@ -73,7 +84,6 @@ Decoder::State Decoder::decode_message(uint8_t byte)
                     .velocity{received_data[1]}
                 },
             });
-            current_message = 0;
             data_count = 0;
             return IDLE;
         }
