@@ -19,6 +19,7 @@
 
 #include "gtest/gtest.h"
 #include "gmock/gmock.h"
+#include "midi_util.h"
 
 #include "midi.h"
 
@@ -36,26 +37,17 @@ class MidiDecoder : public ::testing::Test
     Decoder sut;
 };
 
-#if 0
 TEST_F(MidiDecoder, NoteOn)
 {
     Message expected{
-        .type{CHANNEL_VOICE},
-        .u{
-            .voice{
-                .type = NOTE_ON,
-                .u{
-                    .note_on{
-                        .note{0},
-                        .velocity{0}
-                    }
-                }
-            }
-        }
+        .type{NOTE_ON},
+        .note_on{
+            .note{0},
+            .velocity{1},
+        },
     };
 
-    EXPECT_CALL(receiver, Call(expected))
-        .Times(1);
+    EXPECT_CALL(receiver, Call(MessageMatches(expected))).Times(1);
 
     std::vector<uint8_t> bytes {
         0x90,
@@ -63,8 +55,12 @@ TEST_F(MidiDecoder, NoteOn)
         0x01,
     };
 
-    for (auto byte : bytes){
+    for (auto byte : bytes) {
         sut.decode(byte);
     }
 }
-#endif
+
+// TODO Channel Mode message is not treated as Control Change
+// TODO System exclusive message does not upset decoder
+// TODO other unknown message does not upset decoder
+

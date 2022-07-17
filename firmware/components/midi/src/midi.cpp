@@ -24,7 +24,7 @@ namespace shrapnel {
 namespace midi {
 
 Decoder::Decoder(std::function<void(Message)> _on_message_decoded) : on_message_decoded{_on_message_decoded}, state{IDLE}, current_message{0}, data_count{0} {
-    (void)on_message_decoded;};
+}
 
 void Decoder::decode(uint8_t byte)
 {

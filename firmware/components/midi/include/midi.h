@@ -16,6 +16,7 @@
  * You should have received a copy of the GNU General Public License along with
  * ShrapnelDSP. If not, see <https://www.gnu.org/licenses/>.
  */
+#pragma once
 
 #include <assert.h>
 #include <cstdint>
@@ -26,35 +27,36 @@
 namespace shrapnel {
 namespace midi {
 
-enum MessageGroupType {
-    CHANNEL_VOICE,
-    CHANNEL_MODE,
-    SYSTEM_COMMON,
-    SYSTEM_REAL_TIME,
-    SYSTEM_EXCLUSIVE,
-};
-
 enum MessageType {
     NOTE_OFF = 0x80,
     NOTE_ON = 0x90,
-    POLY_KEY_PRESSURE = 0xA0,
     CONTROL_CHANGE = 0xB0,
     PROGRAM_CHANGE = 0xC0,
-    CHANNEL_PRESSURE = 0xD0,
-    PITCH_BEND = 0xE0,
-};
-
-struct NoteOnOff {
-    uint8_t note;
-    uint8_t velocity;
 };
 
 struct Message {
+    struct NoteOnOff {
+        uint8_t note;
+        uint8_t velocity;
+    };
+
+    struct ControlChange {
+        uint8_t control;
+        uint8_t value;
+    };
+
+    struct ProgramChange {
+        uint8_t a;
+    };
+
     MessageType type;
     union {
         NoteOnOff note_on;
         NoteOnOff note_off;
+        ControlChange control_change;
+        ProgramChange program_change;
     };
+
 
     friend std::ostream& operator<<(std::ostream&  out, const Message& message) {
         out << '{';
@@ -66,6 +68,8 @@ struct Message {
         case NOTE_OFF:
             out << "note off " << +message.note_on.note << ' ' << +message.note_on.velocity;
             break;
+        case PROGRAM_CHANGE:
+        case CONTROL_CHANGE:
         default:
             out << +message.type;
             break;
@@ -110,7 +114,7 @@ class Decoder {
     State decode_message(uint8_t byte);
 
     uint8_t current_message;
-    int data_count;
+    std::size_t data_count;
     std::array<uint8_t, 2> received_data;
 
     constexpr static const char *TAG = "midi";
