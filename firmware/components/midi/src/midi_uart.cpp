@@ -16,19 +16,15 @@ EspMidiUart::EspMidiUart(uart_port_t a_uart, gpio_num_t rx_io) : uart(a_uart) {
 
     ESP_ERROR_CHECK(uart_set_pin(uart, UART_PIN_NO_CHANGE, rx_io, UART_PIN_NO_CHANGE, UART_PIN_NO_CHANGE));
 
-    QueueHandle_t uart_queue = nullptr;
-
     ESP_ERROR_CHECK(uart_param_config(uart, &config));
 
     ESP_ERROR_CHECK(uart_driver_install(
                 uart,
                 UART_FIFO_LEN + 1,
                 0,
-                10,
-                &uart_queue,
+                0,
+                NULL,
                 0));
-
-    assert(uart_queue != nullptr);
 }
 
 uint8_t EspMidiUart::get_byte(void) {
