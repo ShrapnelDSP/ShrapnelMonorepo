@@ -7,6 +7,7 @@ idf_component_register( SRCS main.cpp
                             hardware
                             i2s
                             mdns
+                            midi
                             nvs_flash
                             pcm3060
                             protocol_examples_common

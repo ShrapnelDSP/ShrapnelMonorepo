@@ -34,8 +34,6 @@
 #   define GPIO_I2C_SDA GPIO_NUM_13
 #   define GPIO_I2C_SCL GPIO_NUM_12
 
-#   define I2C_NUM I2C_NUM_0
-
 #   define I2S_NUM         (1)             //PCM3060 pin
 /* The only other option conflicts with the UART0 used for debugging */
 #   define I2S_MCK_IO      (GPIO_NUM_0)    //6/9
@@ -51,8 +49,6 @@
 #   define GPIO_I2C_SDA GPIO_NUM_22
 #   define GPIO_I2C_SCL GPIO_NUM_23
 
-#   define I2C_NUM I2C_NUM_0
-
 #   define I2S_NUM         (1)             //PCM3060 pin
 /* The only other option conflicts with the UART0 used for debugging */
 #   define I2S_MCK_IO      (GPIO_NUM_0)    //6
@@ -65,3 +61,8 @@
 #else
 #error Invalid hardware define
 #endif
+
+#define I2C_NUM I2C_NUM_0
+#define UART_NUM_MIDI UART_NUM_1
+#define GPIO_NUM_MIDI GPIO_NUM_26
+
