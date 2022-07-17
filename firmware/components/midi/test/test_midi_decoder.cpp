@@ -96,35 +96,28 @@ TEST_F(MidiDecoder, NoteOnRunningStatus)
     }
 }
 
-#if 0
 TEST_F(MidiDecoder, ControlChange)
 {
-    Message expected_first{
+    Message expected{
         .type{CONTROL_CHANGE},
         .control_change{
-            .number{0},
+            .control{0},
             .value{1},
         },
     };
 
-    InSequence sequence;
-
-    EXPECT_CALL(receiver, Call(MessageMatches(expected_first))).Times(1);
-    EXPECT_CALL(receiver, Call(MessageMatches(expected_second))).Times(1);
+    EXPECT_CALL(receiver, Call(MessageMatches(expected))).Times(1);
 
     std::vector<uint8_t> bytes {
-        0x90,
+        0xB0,
         0x00,
         0x01,
-        0x02,
-        0x03,
     };
 
     for (auto byte : bytes) {
         sut.decode(byte);
     }
 }
-#endif
 
 // TODO Channel Mode message is not treated as Control Change
 // TODO System exclusive message does not upset decoder

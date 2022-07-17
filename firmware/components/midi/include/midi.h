@@ -100,6 +100,9 @@ class Decoder {
 
     private:
 
+    void output_message();
+
+
     Callback on_message_decoded;
 
     static inline bool is_status_byte(uint8_t byte) {

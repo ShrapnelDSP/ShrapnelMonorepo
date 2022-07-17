@@ -58,8 +58,10 @@ Decoder::State Decoder::decode_idle(uint8_t byte)
         return next_state;
     }
 
-    if(byte == NOTE_ON)
+    switch(byte)
     {
+    case CONTROL_CHANGE:
+    case NOTE_ON:
         current_status = byte;
         return GOT_MESSAGE;
     }
@@ -72,18 +74,13 @@ Decoder::State Decoder::decode_message(uint8_t byte)
 
     switch(current_status)
     {
+    case CONTROL_CHANGE:
     case NOTE_ON:
         received_data[data_count] = byte;
         data_count++;
         if(data_count == 2)
         {
-            on_message_decoded({
-                .type{NOTE_ON},
-                .note_on{
-                    .note{received_data[0]},
-                    .velocity{received_data[1]}
-                },
-            });
+            output_message();
             data_count = 0;
             return IDLE;
         }
@@ -94,6 +91,30 @@ Decoder::State Decoder::decode_message(uint8_t byte)
     }
 
     return GOT_MESSAGE;
+}
+
+void Decoder::output_message()
+{
+    Message message{};
+
+    switch(current_status)
+    {
+    case NOTE_ON:
+        message.type = NOTE_ON;
+        message.note_on.note = received_data[0];
+        message.note_on.velocity = received_data[1];
+        break;
+    case CONTROL_CHANGE:
+        message.type = CONTROL_CHANGE;
+        message.control_change.control = received_data[0];
+        message.control_change.value = received_data[1];
+        break;
+    default:
+        assert(false);
+        break;
+    }
+
+    on_message_decoded(message);
 }
 
 }
