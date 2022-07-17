@@ -46,7 +46,7 @@ struct Message {
     };
 
     struct ProgramChange {
-        uint8_t a;
+        uint8_t number;
     };
 
     MessageType type;
@@ -56,7 +56,6 @@ struct Message {
         ControlChange control_change;
         ProgramChange program_change;
     };
-
 
     friend std::ostream& operator<<(std::ostream&  out, const Message& message) {
         out << '{';
@@ -68,8 +67,12 @@ struct Message {
         case NOTE_OFF:
             out << "note off " << +message.note_on.note << ' ' << +message.note_on.velocity;
             break;
-        case PROGRAM_CHANGE:
         case CONTROL_CHANGE:
+            out << "control change " << +message.control_change.control << ' ' << +message.control_change.value;
+            break;
+        case PROGRAM_CHANGE:
+            out << "program change " << +message.program_change.number;
+            break;
         default:
             out << +message.type;
             break;
@@ -113,7 +116,7 @@ class Decoder {
     State decode_idle(uint8_t byte);
     State decode_message(uint8_t byte);
 
-    uint8_t current_message;
+    uint8_t current_status;
     std::size_t data_count;
     std::array<uint8_t, 2> received_data;
 

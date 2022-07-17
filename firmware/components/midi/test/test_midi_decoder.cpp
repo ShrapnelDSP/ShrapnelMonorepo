@@ -23,7 +23,7 @@
 
 #include "midi.h"
 
-using testing::_;
+using testing::InSequence;
 
 using namespace shrapnel::midi;
 
@@ -59,6 +59,72 @@ TEST_F(MidiDecoder, NoteOn)
         sut.decode(byte);
     }
 }
+
+TEST_F(MidiDecoder, NoteOnRunningStatus)
+{
+    Message expected_first{
+        .type{NOTE_ON},
+        .note_on{
+            .note{0},
+            .velocity{1},
+        },
+    };
+
+    Message expected_second{
+        .type{NOTE_ON},
+        .note_on{
+            .note{2},
+            .velocity{3},
+        },
+    };
+
+    InSequence sequence;
+
+    EXPECT_CALL(receiver, Call(MessageMatches(expected_first))).Times(1);
+    EXPECT_CALL(receiver, Call(MessageMatches(expected_second))).Times(1);
+
+    std::vector<uint8_t> bytes {
+        0x90,
+        0x00,
+        0x01,
+        0x02,
+        0x03,
+    };
+
+    for (auto byte : bytes) {
+        sut.decode(byte);
+    }
+}
+
+#if 0
+TEST_F(MidiDecoder, ControlChange)
+{
+    Message expected_first{
+        .type{CONTROL_CHANGE},
+        .control_change{
+            .number{0},
+            .value{1},
+        },
+    };
+
+    InSequence sequence;
+
+    EXPECT_CALL(receiver, Call(MessageMatches(expected_first))).Times(1);
+    EXPECT_CALL(receiver, Call(MessageMatches(expected_second))).Times(1);
+
+    std::vector<uint8_t> bytes {
+        0x90,
+        0x00,
+        0x01,
+        0x02,
+        0x03,
+    };
+
+    for (auto byte : bytes) {
+        sut.decode(byte);
+    }
+}
+#endif
 
 // TODO Channel Mode message is not treated as Control Change
 // TODO System exclusive message does not upset decoder
