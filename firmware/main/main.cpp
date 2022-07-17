@@ -47,6 +47,7 @@
 #include "esp_http_server.h"
 #include "hardware.h"
 #include "i2s.h"
+#include "midi_uart.h"
 #include "pcm3060.h"
 #include "profiling.h"
 
@@ -442,7 +443,7 @@ extern "C" void app_main(void)
     /* Start the mdns service */
     start_mdns();
 
-#if 1
+#if 0
     rc = xTaskCreate(i2s_profiling_task, "i2s profiling", 2000, NULL, tskIDLE_PRIORITY + 2, NULL);
     if(rc != pdPASS)
     {
@@ -464,6 +465,14 @@ extern "C" void app_main(void)
 
     ESP_LOGI(TAG, "setup done");
     ESP_LOGI(TAG, "stack: %d", uxTaskGetStackHighWaterMark(NULL));
+
+    auto midi_uart = new midi::EspMidiUart(UART_NUM_MIDI, GPIO_NUM_MIDI);
+    while(1)
+    {
+        uint8_t byte = midi_uart->get_byte();
+        ESP_LOGI(TAG, "midi got byte 0x%02x", byte);
+    }
+
 }
 
 }
