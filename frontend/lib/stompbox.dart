@@ -48,46 +48,34 @@ class Stompbox extends StatelessWidget {
   final MaterialColor primarySwatch;
 
   List<Widget> knobs(BuildContext context, double scaleFactor) {
-    final layouts = <int, List<_KnobPosition>>{
-      1: [const _KnobPosition(top: 0)],
-      2: [
-        const _KnobPosition(left: 0, top: 0),
-        const _KnobPosition(right: 0, top: 0),
-      ],
-      3: [
-        const _KnobPosition(left: 0, top: 0),
-        const _KnobPosition(right: 0, top: 0),
-        _KnobPosition(top: 35 * scaleFactor),
-      ],
-      4: [
-        const _KnobPosition(left: 0, top: 0),
-        const _KnobPosition(right: 0, top: 0),
-        _KnobPosition(left: 0, top: 35 * scaleFactor),
-        _KnobPosition(right: 0, top: 35 * scaleFactor),
-      ],
-    };
-
     final parameters = Provider.of<StompboxModel>(context).parameters;
-    assert(layouts.containsKey(parameters.length),
-        'Number of parameters must be one of ${layouts.keys}, not ${parameters.length}');
-
-    final layout = layouts[parameters.length]!;
 
     return List<Widget>.generate(
-        parameters.length,
-        (index) => Positioned(
-              top: layout[index].top,
-              left: layout[index].left,
-              right: layout[index].right,
-              child: ChangeNotifierProvider.value(
-                value: parameters[index],
-                child: KnobWithLabel(
-                  isEnabled: full,
-                  knobSize: scaleFactor * 25,
+      (parameters.length + 1) ~/ 2,
+      (i) {
+        return Row(
+          children: List<Widget>.generate(
+            2 * i + 1 >= parameters.length ? 1 : 2,
+            (j) {
+              return ChangeNotifierProvider.value(
+                value: parameters[2 * i + j],
+                child: Expanded(
+                  child: Padding(
+                    padding: EdgeInsets.only(bottom: scaleFactor * 3),
+                    child: KnobWithLabel(
+                      isEnabled: full,
+                      knobSize: scaleFactor * 25,
+                    ),
+                  ),
                 ),
-              ),
-            ),
-        growable: false);
+              );
+            },
+            growable: false,
+          ),
+        );
+      },
+      growable: false,
+    );
   }
 
   @override
@@ -111,35 +99,26 @@ class Stompbox extends StatelessWidget {
           child: GestureDetector(
             onTap: onCardTap,
             child: Card(
-              child: Container(
-                margin: EdgeInsets.all(scaleFactor * 10),
-                child: Stack(
-                  alignment: Alignment.center,
+              child: Padding(
+                padding: EdgeInsets.all(scaleFactor * 8),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     ...knobs(context, scaleFactor),
-                    Positioned(
-                      top: scaleFactor * 70,
-                      child: Text(name),
-                    ),
-                    Positioned(
-                      top: scaleFactor * 95,
-                      child: Container(
-                        width: scaleFactor * 25,
-                        height: scaleFactor * 25,
-                        decoration: BoxDecoration(
-                          color: Theme.of(context).colorScheme.background,
-                          shape: BoxShape.circle,
-                        ),
-                      ),
-                    ),
-                    Positioned(
-                      top: scaleFactor * 98,
-                      child: ChangeNotifierProvider.value(
-                        value: context.watch<StompboxModel>().bypass,
-                        child: _BypassButton(
-                          size: scaleFactor * 19,
-                          isEnabled: full,
-                        ),
+                    Expanded(
+                        child: Center(
+                            child: Text(
+                      name,
+                      style: DefaultTextStyle.of(context)
+                          .style
+                          .apply(fontSizeFactor: scaleFactor),
+                      textAlign: TextAlign.center,
+                    ))),
+                    ChangeNotifierProvider.value(
+                      value: context.watch<StompboxModel>().bypass,
+                      child: _BypassButton(
+                        size: scaleFactor * 23,
+                        isEnabled: full,
                       ),
                     ),
                   ],
@@ -151,14 +130,6 @@ class Stompbox extends StatelessWidget {
       ),
     );
   }
-}
-
-class _KnobPosition {
-  const _KnobPosition({this.top, this.left, this.right});
-
-  final double? top;
-  final double? left;
-  final double? right;
 }
 
 class _BypassButton extends StatelessWidget {
@@ -184,10 +155,20 @@ class _BypassButton extends StatelessWidget {
         width: size,
         height: size,
         decoration: BoxDecoration(
-          color: bypass.value > 0.5
-              ? Theme.of(context).colorScheme.surface
-              : Theme.of(context).colorScheme.primary,
+          color: Theme.of(context).colorScheme.background,
           shape: BoxShape.circle,
+        ),
+        child: Center(
+          child: Container(
+            width: size * 0.8,
+            height: size * 0.8,
+            decoration: BoxDecoration(
+              color: bypass.value > 0.5
+                  ? Theme.of(context).colorScheme.surface
+                  : Theme.of(context).colorScheme.primary,
+              shape: BoxShape.circle,
+            ),
+          ),
         ),
       ),
     );
