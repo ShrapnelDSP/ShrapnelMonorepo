@@ -108,6 +108,12 @@ void Decoder::output_message()
         message.type = CONTROL_CHANGE;
         message.control_change.control = received_data[0];
         message.control_change.value = received_data[1];
+
+        // Channel Mode messages should be ignored
+        if((message.control_change.control & 0xF8) == 0x78)
+        {
+            return;
+        }
         break;
     default:
         assert(false);
