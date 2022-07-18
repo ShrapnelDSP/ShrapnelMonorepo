@@ -61,6 +61,50 @@ TEST_F(MidiDecoder, NoteOn)
     }
 }
 
+TEST_F(MidiDecoder, NoteOff)
+{
+    Message expected{
+        .type{NOTE_OFF},
+        .note_off{
+            .note{0},
+            .velocity{1},
+        },
+    };
+
+    EXPECT_CALL(receiver, Call(MessageMatches(expected))).Times(1);
+
+    std::vector<uint8_t> bytes {
+        0x80,
+        0x00,
+        0x01,
+    };
+
+    for (auto byte : bytes) {
+        sut.decode(byte);
+    }
+}
+
+TEST_F(MidiDecoder, ProgramChange)
+{
+    Message expected{
+        .type{PROGRAM_CHANGE},
+        .program_change{
+            .number{0},
+        },
+    };
+
+    EXPECT_CALL(receiver, Call(MessageMatches(expected))).Times(1);
+
+    std::vector<uint8_t> bytes {
+        0xC0,
+        0x00,
+    };
+
+    for (auto byte : bytes) {
+        sut.decode(byte);
+    }
+}
+
 TEST_F(MidiDecoder, NoteOnRunningStatus)
 {
     Message expected_first{
@@ -139,5 +183,9 @@ TEST_F(MidiDecoder, ChannelModeIsNotControlChange)
 }
 
 // TODO System exclusive message does not upset decoder
-// TODO other unknown message does not upset decoder
+// TODO Unimplemented commands do not upset decoder (Pitch bend change, 0xE0 0x00
+// TODO Bank select:
+//      Control Change 0x00 followed by Control change 0x20, finally followed
+//      by program change is used to select a program from a 14-bit bank
+//      address.
 

@@ -62,6 +62,8 @@ Decoder::State Decoder::decode_idle(uint8_t byte)
     {
     case CONTROL_CHANGE:
     case NOTE_ON:
+    case NOTE_OFF:
+    case PROGRAM_CHANGE:
         current_status = byte;
         return GOT_MESSAGE;
     }
@@ -76,6 +78,7 @@ Decoder::State Decoder::decode_message(uint8_t byte)
     {
     case CONTROL_CHANGE:
     case NOTE_ON:
+    case NOTE_OFF:
         received_data[data_count] = byte;
         data_count++;
         if(data_count == 2)
@@ -85,6 +88,10 @@ Decoder::State Decoder::decode_message(uint8_t byte)
             return IDLE;
         }
         break;
+    case PROGRAM_CHANGE:
+        received_data[0] = byte;
+        output_message();
+        return IDLE;
     default:
         assert(false);
         break;
@@ -104,6 +111,11 @@ void Decoder::output_message()
         message.note_on.note = received_data[0];
         message.note_on.velocity = received_data[1];
         break;
+    case NOTE_OFF:
+        message.type = NOTE_OFF;
+        message.note_off.note = received_data[0];
+        message.note_off.velocity = received_data[1];
+        break;
     case CONTROL_CHANGE:
         message.type = CONTROL_CHANGE;
         message.control_change.control = received_data[0];
@@ -114,6 +126,10 @@ void Decoder::output_message()
         {
             return;
         }
+        break;
+    case PROGRAM_CHANGE:
+        message.type = PROGRAM_CHANGE;
+        message.program_change.number = received_data[0];
         break;
     default:
         assert(false);
