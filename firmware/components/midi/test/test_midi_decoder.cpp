@@ -24,6 +24,7 @@
 #include "midi.h"
 
 using testing::InSequence;
+using testing::_;
 
 using namespace shrapnel::midi;
 
@@ -119,7 +120,24 @@ TEST_F(MidiDecoder, ControlChange)
     }
 }
 
-// TODO Channel Mode message is not treated as Control Change
+TEST_F(MidiDecoder, ChannelModeIsNotControlChange)
+{
+    EXPECT_CALL(receiver, Call(_)).Times(0);
+
+    for (uint8_t second_byte = 0x78; second_byte <= 0x7F; second_byte++)
+    {
+        std::vector<uint8_t> bytes {
+            0xB0,
+            second_byte,
+            0x01,
+        };
+
+        for (auto byte : bytes) {
+            sut.decode(byte);
+        }
+    }
+}
+
 // TODO System exclusive message does not upset decoder
 // TODO other unknown message does not upset decoder
 
