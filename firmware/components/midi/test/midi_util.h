@@ -1,13 +1,17 @@
 #pragma once
 
 #include "gmock/gmock.h"
+#include <ostream>
 #include "midi.h"
 
 using testing::AllOf;
 using testing::Field;
 using testing::ExplainMatchResult;
 
-using namespace shrapnel::midi;
+namespace shrapnel {
+namespace midi {
+
+std::ostream& operator <<(std::ostream& out, const Message& message);
 
 MATCHER_P(NoteOnMatches, other, "")
 {
@@ -74,4 +78,7 @@ MATCHER_P(MessageMatches, other, "")
     }
 
     return false;
+}
+
+}
 }

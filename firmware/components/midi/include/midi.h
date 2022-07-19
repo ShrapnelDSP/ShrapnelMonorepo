@@ -20,12 +20,12 @@
 
 #include <assert.h>
 #include <cstdint>
-#include <functional>
-#include <ostream>
-#include <unordered_map>
+#include <etl/string_stream.h>
 
 namespace shrapnel {
 namespace midi {
+
+struct Message;
 
 enum MessageType {
     NOTE_OFF = 0x80,
@@ -57,18 +57,19 @@ struct Message {
         ProgramChange program_change;
     };
 
-    friend std::ostream& operator<<(std::ostream&  out, const Message& message) {
-        out << '{';
+    friend etl::string_stream& operator<<(etl::string_stream&  out, const Message& message) {
+        out << "{";
+
         switch(message.type)
         {
         case NOTE_ON:
-            out << "note on " << +message.note_on.note << ' ' << +message.note_on.velocity;
+            out << "note on " << +message.note_on.note << " " << +message.note_on.velocity;
             break;
         case NOTE_OFF:
-            out << "note off " << +message.note_on.note << ' ' << +message.note_on.velocity;
+            out << "note off " << +message.note_on.note << " " << +message.note_on.velocity;
             break;
         case CONTROL_CHANGE:
-            out << "control change " << +message.control_change.control << ' ' << +message.control_change.value;
+            out << "control change " << +message.control_change.control << " " << +message.control_change.value;
             break;
         case PROGRAM_CHANGE:
             out << "program change " << +message.program_change.number;
@@ -78,9 +79,12 @@ struct Message {
             break;
         }
 
-        out << '}';
+        out << "}";
         return out;
     }
+
+#if defined(TESTING)
+#endif
 };
 
 class Decoder {
