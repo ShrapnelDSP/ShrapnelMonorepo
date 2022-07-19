@@ -37,8 +37,9 @@
 #include <sys/param.h>
 #include <driver/i2c.h>
 #include <driver/gpio.h>
+#include <etl/string.h>
+#include <etl/string_stream.h>
 #include "nvs_flash.h"
-#include "esp_heap_trace.h"
 #include "esp_netif.h"
 #include "esp_debug_helpers.h"
 #include "mdns.h"
@@ -545,20 +546,12 @@ extern "C" void app_main(void)
     auto midi_uart = new midi::EspMidiUart(UART_NUM_MIDI, GPIO_NUM_MIDI);
     auto midi_decoder = new midi::Decoder(
             [] (midi::Message message) {
-                ESP_ERROR_CHECK(heap_trace_start(HEAP_TRACE_ALL));
-                {
-                std::ostringstream buffer;
-                buffer << message;
-                ESP_LOGI(TAG, "%s", buffer.str().c_str());
-                }
-                ESP_ERROR_CHECK(heap_trace_stop());
-                heap_trace_dump();
+                etl::string<32> buffer;
+                etl::string_stream stream{buffer};
+                stream << message;
+                ESP_LOGI(TAG, "%s", buffer.data());
             }
             );
-
-    /* Does the ostringstream use dynamic allocation? */
-    heap_trace_record_t heap_trace[32];
-    ESP_ERROR_CHECK(heap_trace_init_standalone(heap_trace, 32));
 
     while(1)
     {

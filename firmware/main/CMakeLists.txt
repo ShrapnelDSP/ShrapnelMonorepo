@@ -4,6 +4,7 @@ idf_component_register( SRCS main.cpp
                             cmd_handling
                             driver
                             esp_http_server
+                            etl
                             hardware
                             i2s
                             mdns
