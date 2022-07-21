@@ -59,7 +59,7 @@ struct Message {
     };
 
     friend etl::string_stream& operator<<(etl::string_stream&  out, const Message& message) {
-        out << "{";
+        out << "{ channel " << message.channel << " ";
 
         switch(message.type)
         {
