@@ -38,9 +38,10 @@ TEST_F(MidiMessage, Matcher)
 {
     Message message{
         .type{NOTE_OFF},
+        .channel{1},
         .note_on{
-            .note{0},
-            .velocity{1}
+            .note{2},
+            .velocity{3}
         },
     };
 
@@ -52,7 +53,11 @@ TEST_F(MidiMessage, Matcher)
     EXPECT_THAT(message, Not(MessageMatches(copy)));
 
     copy = message;
-    copy.note_on.note = 1;
+    copy.channel = 0;
+    EXPECT_THAT(message, Not(MessageMatches(copy)));
+
+    copy = message;
+    copy.note_on.note = 0;
     EXPECT_THAT(message, Not(MessageMatches(copy)));
 
     copy = message;

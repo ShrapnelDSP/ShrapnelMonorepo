@@ -25,8 +25,6 @@
 namespace shrapnel {
 namespace midi {
 
-struct Message;
-
 enum MessageType {
     NOTE_OFF = 0x80,
     NOTE_ON = 0x90,
@@ -35,6 +33,8 @@ enum MessageType {
 };
 
 struct Message {
+    typedef uint8_t midi_channel_t;
+
     struct NoteOnOff {
         uint8_t note;
         uint8_t velocity;
@@ -50,6 +50,7 @@ struct Message {
     };
 
     MessageType type;
+    midi_channel_t channel;
     union {
         NoteOnOff note_on;
         NoteOnOff note_off;
@@ -82,9 +83,6 @@ struct Message {
         out << "}";
         return out;
     }
-
-#if defined(TESTING)
-#endif
 };
 
 class Decoder {

@@ -53,6 +53,13 @@ MATCHER_P(MessageMatches, other, "")
         return false;
     }
 
+    if(arg.channel != other.channel)
+    {
+        *result_listener << "Message channels don't match, expected " <<
+            other.channel << " but got " << arg.channel;
+        return false;
+    }
+
     switch(other.type)
     {
     case NOTE_ON:

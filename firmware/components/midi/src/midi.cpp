@@ -58,7 +58,7 @@ Decoder::State Decoder::decode_idle(uint8_t byte)
         return next_state;
     }
 
-    switch(byte)
+    switch(byte & 0xF0)
     {
     case CONTROL_CHANGE:
     case NOTE_ON:
@@ -74,7 +74,7 @@ Decoder::State Decoder::decode_message(uint8_t byte)
 {
     assert(is_status_byte(current_status));
 
-    switch(current_status)
+    switch(current_status & 0xF0)
     {
     case CONTROL_CHANGE:
     case NOTE_ON:
@@ -104,7 +104,7 @@ void Decoder::output_message()
 {
     Message message{};
 
-    switch(current_status)
+    switch(current_status & 0xF0)
     {
     case NOTE_ON:
         message.type = NOTE_ON;
@@ -136,6 +136,7 @@ void Decoder::output_message()
         break;
     }
 
+    message.channel = (current_status & 0x0F) + 1;
     on_message_decoded(message);
 }
 
