@@ -52,7 +52,7 @@ Decoder::State Decoder::decode_idle(uint8_t byte)
 {
     /* Running status allows data to be sent with no status byte. In this case,
      * the previous status is reused. */
-    if(!is_status_byte(byte))
+    if(!is_status_byte(byte) && is_status_byte(current_status))
     {
         auto next_state = decode_message(byte);
         return next_state;

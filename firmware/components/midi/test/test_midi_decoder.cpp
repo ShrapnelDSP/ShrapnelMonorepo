@@ -212,8 +212,62 @@ TEST_F(MidiDecoder, ChannelNumber)
     }
 }
 
+TEST_F(MidiDecoder, IgnoresUnimplementedMessages)
+{
+    Message expected{
+        .type{NOTE_ON},
+        .channel{1},
+        .note_on{
+            .note{0},
+            .velocity{1},
+        },
+    };
+
+    EXPECT_CALL(receiver, Call(MessageMatches(expected))).Times(1);
+
+    std::vector<uint8_t> bytes {
+        0xE0,
+        0x00,
+        0x90,
+        0x00,
+        0x01,
+    };
+
+    for (auto byte : bytes) {
+        sut.decode(byte);
+    }
+}
+
+TEST_F(MidiDecoder, DISABLED_UnimplementedMessageDoesNotUpsetRunningStatus)
+{
+    /* TODO Make this test pass */
+    Message expected{
+        .type{NOTE_ON},
+        .channel{1},
+        .note_on{
+            .note{0},
+            .velocity{1},
+        },
+    };
+
+    EXPECT_CALL(receiver, Call(MessageMatches(expected))).Times(1);
+
+    std::vector<uint8_t> bytes {
+        0x90,
+        0x00,
+        0x01,
+        0xE0,
+        0x00,
+        0x00,
+        0x01,
+    };
+
+    for (auto byte : bytes) {
+        sut.decode(byte);
+    }
+}
+
 // TODO System exclusive message does not upset decoder
-// TODO Unimplemented commands do not upset decoder (Pitch bend change, 0xE0 0x00
 // TODO Bank select:
 //      Control Change 0x00 followed by Control change 0x20, finally followed
 //      by program change is used to select a program from a 14-bit bank
