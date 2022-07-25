@@ -17,8 +17,10 @@
  * ShrapnelDSP. If not, see <https://www.gnu.org/licenses/>.
  */
 
+#include <midi.h>
 #include <stdio.h>
 #include <math.h>
+#include <sstream>
 
 #define LOG_LOCAL_LEVEL ESP_LOG_DEBUG
 #include "esp_log.h"
@@ -35,6 +37,8 @@
 #include <sys/param.h>
 #include <driver/i2c.h>
 #include <driver/gpio.h>
+#include <etl/string.h>
+#include <etl/string_stream.h>
 #include "nvs_flash.h"
 #include "esp_netif.h"
 #include "esp_debug_helpers.h"
@@ -50,6 +54,7 @@
 #include "midi_uart.h"
 #include "pcm3060.h"
 #include "profiling.h"
+#include "heap.h"
 
 #define TAG "main"
 #define QUEUE_LEN 20
@@ -467,12 +472,24 @@ extern "C" void app_main(void)
     ESP_LOGI(TAG, "stack: %d", uxTaskGetStackHighWaterMark(NULL));
 
     auto midi_uart = new midi::EspMidiUart(UART_NUM_MIDI, GPIO_NUM_MIDI);
+    auto midi_decoder = new midi::Decoder(
+            [] (midi::Message message) {
+                etl::string<32> buffer;
+                etl::string_stream stream{buffer};
+                stream << message;
+                ESP_LOGI(TAG, "%s", buffer.data());
+            }
+            );
+
     while(1)
     {
+        auto heap_trace = ScopedHeapTracing<16>();
+
         uint8_t byte = midi_uart->get_byte();
         ESP_LOGI(TAG, "midi got byte 0x%02x", byte);
-    }
 
+        midi_decoder->decode(byte);
+    }
 }
 
 }
