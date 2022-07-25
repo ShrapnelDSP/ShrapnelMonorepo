@@ -6,6 +6,7 @@ idf_component_register( SRCS main.cpp
                             esp_http_server
                             etl
                             hardware
+                            heap_tracing
                             i2s
                             mdns
                             midi
