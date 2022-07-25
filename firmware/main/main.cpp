@@ -54,6 +54,7 @@
 #include "midi_uart.h"
 #include "pcm3060.h"
 #include "profiling.h"
+#include "heap.h"
 
 #define TAG "main"
 #define QUEUE_LEN 20
@@ -482,12 +483,13 @@ extern "C" void app_main(void)
 
     while(1)
     {
+        auto heap_trace = ScopedHeapTracing<16>();
+
         uint8_t byte = midi_uart->get_byte();
         ESP_LOGI(TAG, "midi got byte 0x%02x", byte);
 
         midi_decoder->decode(byte);
     }
-
 }
 
 }
