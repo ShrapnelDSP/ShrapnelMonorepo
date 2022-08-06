@@ -1,0 +1,4 @@
+<map id="shrapnel::TaskBase::start" name="shrapnel::TaskBase::start">
+<area shape="rect" id="node1" title="Call this from the derived class&#39; constructor as the last step to start the task." alt="" coords="249,5,385,47"/>
+<area shape="rect" id="node2" href="$classshrapnel_1_1CommandHandlingTask.html#af180e4cbbf5f51774c3ddd6b88f1a21b" title=" " alt="" coords="5,5,201,47"/>
+</map>
