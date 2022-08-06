@@ -1,0 +1,60 @@
+[DOCUMENT]
+TITLE: ShrapnelDSP
+
+[COMPOSITE_REQUIREMENT]
+UID: FIRMWARE-WIFI-HIGH-001
+STATEMENT: Wi-Fi shall be used to enable networking
+
+[REQUIREMENT]
+UID: FIRMWARE-WIFI-LOW-001
+STATEMENT: Wi-Fi shall be in Access Point mode out of the box
+RATIONALE: Enables frontend to provision credentials for Wi-Fi station
+
+[REQUIREMENT]
+UID: FIRMWARE-WIFI-LOW-002
+STATEMENT: >>>
+Wi-Fi shall return to Access Point mode after 5 minutes of failing to connect
+to configured station
+<<<
+RATIONALE: Enables reconfiguring station if the Wi-Fi credentials have changed
+
+[REQUIREMENT]
+UID: FIRMWARE-WIFI-LOW-003
+STATEMENT: >>>
+Wi-Fi Access Point shall implement
+`espressif's Wi-Fi Provisioning feature <https://docs.espressif.com/projects/esp-idf/en/v4.4.1/esp32/api-reference/provisioning/wifi_provisioning.html>`_
+<<<
+RATIONALE: >>>
+This provides many useful features, like scanning in the ESP32, so
+that any scanned AP is something the ESP32 can actually connect to. We also get
+feedback about the provisioning status. There are open source frontend
+implementations available for iOS, Android and
+`Flutter <https://pub.dev/packages/esp_softap_provisioning>`_.
+<<<
+
+[/COMPOSITE_REQUIREMENT]
+
+[COMPOSITE_REQUIREMENT]
+UID: FIRMWARE-STANDALONE-001
+STATEMENT: The product shall support standalone operation without the Wi-Fi based frontend
+RATIONALE: >>>
+It should be possible to use the product for a live performance where there
+might not be a computer available to control the product.
+<<<
+
+[/COMPOSITE_REQUIREMENT]
+
+[COMPOSITE_REQUIREMENT]
+UID: FIRMWARE-PRESETS-HIGH-001
+
+[/COMPOSITE_REQUIREMENT]
+
+[COMPOSITE_REQUIREMENT]
+UID: FIRMWARE-STANDALONE-HIGH-001
+STATEMENT: The product shall support standalone operation without the Wi-Fi based frontend
+RATIONALE: >>>
+It should be possible to use the product for a live performance where there
+might not be a computer available to control the product.
+<<<
+
+[/COMPOSITE_REQUIREMENT]

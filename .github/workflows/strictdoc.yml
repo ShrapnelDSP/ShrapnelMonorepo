@@ -1,0 +1,32 @@
+name: StrictDoc Github Pages
+
+# TODO deploy to pages only for push on master
+#      strictod export should be checked for success on all branches
+on: pull_request
+
+jobs:
+  generate:
+    name: Generate StrictDoc
+    runs-on: ubuntu-latest
+    container: barabas5532/strictdoc:0.0.26
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Debug working directory
+        run: pwd
+
+      - name: StrictDoc export
+        working-directory: /data/ShrapnelMonorepo/requirements
+        run: strictdoc export .
+
+      - name: Debug output directory
+        run: ls -Ral .
+
+      - name: Deploy to GitHub Pages
+        uses: crazy-max/ghaction-github-pages@v3
+        with:
+          target_branch: gh-pages
+          build_dir: /data/ShrapnelMonorepo/requirements/docs/output/html
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
