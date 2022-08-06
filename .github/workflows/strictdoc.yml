@@ -78,7 +78,7 @@ jobs:
           flutter-pub-${{ github.job }}-
 
     - run: flutter pub get
-    - run: dart doc
+    - run: dart doc .
 
     - uses: actions/upload-artifact@v3
       with:
