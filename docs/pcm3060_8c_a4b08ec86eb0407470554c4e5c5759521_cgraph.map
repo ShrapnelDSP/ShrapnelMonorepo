@@ -1,6 +1,0 @@
-<map id="pcm3060_power_up" name="pcm3060_power_up">
-<area shape="rect" id="node1" title="perform power up sequence" alt="" coords="5,31,144,57"/>
-<area shape="rect" id="node2" href="$pcm3060_8c.html#aea1e9d4122342b16a072fc515ed9c4a2" title=" " alt="" coords="193,5,274,32"/>
-<area shape="rect" id="node4" href="$pcm3060_8c.html#a7a286e614c8a6c8e30f9408395cbd4cc" title=" " alt="" coords="192,56,275,83"/>
-<area shape="rect" id="node3" href="$i2c_8c.html#a45e8e37789f0b27a7fe24b58795787f7" title=" " alt="" coords="323,5,428,32"/>
-</map>

@@ -1,4 +1,0 @@
-<map id="gate_init" name="gate_init">
-<area shape="rect" id="node1" title="Initialise the effect." alt="" coords="5,5,76,32"/>
-<area shape="rect" id="node2" href="$noise__gate_8cpp.html#a5d3ba76b4666ac1820b498aaf04ea22e" title="Reset the state." alt="" coords="124,5,207,32"/>
-</map>

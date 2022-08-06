@@ -1,6 +1,0 @@
-<map id="pcm3060_power_down" name="pcm3060_power_down">
-<area shape="rect" id="node1" title="perform power down sequence" alt="" coords="5,31,160,57"/>
-<area shape="rect" id="node2" href="$pcm3060_8c.html#aea1e9d4122342b16a072fc515ed9c4a2" title=" " alt="" coords="209,5,290,32"/>
-<area shape="rect" id="node4" href="$pcm3060_8c.html#a7a286e614c8a6c8e30f9408395cbd4cc" title=" " alt="" coords="208,56,291,83"/>
-<area shape="rect" id="node3" href="$i2c_8c.html#a45e8e37789f0b27a7fe24b58795787f7" title=" " alt="" coords="339,5,444,32"/>
-</map>

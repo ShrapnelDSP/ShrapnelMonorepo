@@ -1,4 +1,0 @@
-<map id="gate_set_threshold" name="gate_set_threshold">
-<area shape="rect" id="node1" title="Set the threshold and hysteresis value in dBFS." alt="" coords="5,5,137,32"/>
-<area shape="rect" id="node2" href="$noise__gate_8cpp.html#afb2354391bb81545d92334434552ab4b" title=" " alt="" coords="185,5,272,32"/>
-</map>

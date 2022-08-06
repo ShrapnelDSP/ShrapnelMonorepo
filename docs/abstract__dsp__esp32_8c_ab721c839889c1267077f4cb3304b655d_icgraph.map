@@ -1,8 +1,0 @@
-<map id="dspal_biquad_design_lowpass" name="dspal_biquad_design_lowpass">
-<area shape="rect" id="node1" title=" " alt="" coords="841,5,984,47"/>
-<area shape="rect" id="node2" href="$noise__gate_8cpp.html#a2691256497a1cec4e14434f48eccfb56" title="Set the sample rate in Hz." alt="" coords="643,13,793,39"/>
-<area shape="rect" id="node3" href="$process_8cpp.html#ab530789c5aeb0c1c38d5917bfd7a111f" title=" " alt="" coords="503,13,595,39"/>
-<area shape="rect" id="node4" href="$i2s_8cpp.html#a4e37f563a34c1a559515cc40782caf07" title=" " alt="" coords="313,13,455,39"/>
-<area shape="rect" id="node5" href="$i2s_8cpp.html#a78c8fe8089980bf7c440301d3171eac6" title=" " alt="" coords="187,13,265,39"/>
-<area shape="rect" id="node6" href="$namespaceshrapnel.html#a9f09f4ea750643310af9143a53735b7d" title=" " alt="" coords="5,13,139,39"/>
-</map>
