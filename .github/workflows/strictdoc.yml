@@ -8,7 +8,9 @@ jobs:
   generate:
     name: Generate StrictDoc
     runs-on: ubuntu-latest
-    container: barabas5532/strictdoc:0.0.26
+    container:
+      image: barabas5532/strictdoc:0.0.26
+      options: --workdir=/data
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -17,7 +19,7 @@ jobs:
         run: pwd
 
       - name: StrictDoc export
-        working-directory: /data/ShrapnelMonorepo/requirements
+        working-directory: /data/requirements
         run: strictdoc export .
 
       - name: Debug output directory
@@ -27,6 +29,6 @@ jobs:
         uses: crazy-max/ghaction-github-pages@v3
         with:
           target_branch: gh-pages
-          build_dir: /data/ShrapnelMonorepo/requirements/docs/output/html
+          build_dir: /data/requirements/docs/output/html
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
