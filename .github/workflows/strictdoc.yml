@@ -80,10 +80,13 @@ jobs:
     - run: flutter pub get
     - run: dart doc .
 
+    - run: pwd
+    - run: ls -R doc
+
     - uses: actions/upload-artifact@v3
       with:
         name: frontend-docs
-        path: doc/api
+        path: frontend/doc/api
         retention-days: 5
 
   deploy:
