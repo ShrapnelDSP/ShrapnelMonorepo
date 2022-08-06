@@ -22,10 +22,28 @@ jobs:
       - name: Debug output directory
         run: ls -Ral .
 
+      - uses: actions/upload-artifact@v3
+        with:
+          name: html
+          path: output/html
+          retention-days: 5
+
+  deploy:
+    name: Deploy to GitHub Pages
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v3
+        with:
+          name: html
+          path: html
+
+      - name: Display structure of downloaded files
+        run: ls -R
+
       - name: Deploy to GitHub Pages
         uses: crazy-max/ghaction-github-pages@v3
         with:
-          target_branch: gh-pages
-          build_dir: output/html
+          keep_history: true
+          allow_empty_commit: false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
