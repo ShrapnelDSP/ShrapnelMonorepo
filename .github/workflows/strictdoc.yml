@@ -29,6 +29,7 @@ jobs:
           retention-days: 5
 
   deploy:
+    needs: generate
     name: Deploy to GitHub Pages
     runs-on: ubuntu-latest
     steps:
