@@ -1,11 +1,11 @@
 name: StrictDoc Github Pages
 
 # TODO deploy to pages only for push on master
-#      strictod export should be checked for success on all branches
+#      strictdoc and doxygen export should be checked for success on all branches
 on: pull_request
 
 jobs:
-  generate:
+  strictdoc:
     name: Generate StrictDoc
     runs-on: ubuntu-latest
     container: barabas5532/strictdoc:0.0.26
@@ -24,23 +24,42 @@ jobs:
 
       - uses: actions/upload-artifact@v3
         with:
-          name: html
+          name: requirements
           path: output/html
           retention-days: 5
 
+  doxygen:
+    name: Generate Doxygen
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Doxygen
+        uses: mattnotmitt/doxygen-action@v1.9.4
+
+      - name: Debug output directory
+        run: ls -Ral docs
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: docs
+          path: docs/html
+          retention-days: 5
+
   deploy:
-    needs: generate
+    needs: [strictdoc, doxygen]
     name: Deploy to GitHub Pages
     runs-on: ubuntu-latest
     steps:
       - uses: actions/download-artifact@v3
         with:
-          name: html
           path: html
 
       - name: Display structure of downloaded files
         run: ls -R
 
+      # TODO https://github.com/peaceiris/actions-gh-pages is more popular
       - name: Deploy to GitHub Pages
         uses: crazy-max/ghaction-github-pages@v3
         with:
