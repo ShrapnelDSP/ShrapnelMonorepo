@@ -44,6 +44,7 @@ jobs:
       - name: Deploy to GitHub Pages
         uses: crazy-max/ghaction-github-pages@v3
         with:
+          build_dir: html
           keep_history: true
           allow_empty_commit: false
         env:
