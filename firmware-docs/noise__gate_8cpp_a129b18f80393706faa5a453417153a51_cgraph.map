@@ -1,0 +1,5 @@
+<map id="gate_analyse" name="gate_analyse">
+<area shape="rect" id="node1" title="Analyse the audio." alt="" coords="5,13,104,39"/>
+<area shape="rect" id="node2" href="$classshrapnel_1_1dsp_1_1IirFilter.html#a53cb5a72d2a310cd4b35d4329af682f0" title=" " alt="" coords="152,5,296,47"/>
+<area shape="rect" id="node3" href="$iir__universal_8c.html#a738b77e8a79f0c754dba3af19fbd4e30" title=" " alt="" coords="344,13,429,39"/>
+</map>
