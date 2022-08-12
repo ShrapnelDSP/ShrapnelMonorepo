@@ -39,7 +39,7 @@ jobs:
 
     - name: Doxygen warnings
       if: always()
-      run: echo docs/warnings.log
+      run: cat docs/warnings.log
 
     - uses: actions/upload-artifact@v3
       with:
