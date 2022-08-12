@@ -1,8 +1,9 @@
-name: StrictDoc Github Pages
+name: Github Pages Build and Deploy
 
-# TODO deploy to pages only for push on master
-#      strictdoc and doxygen export should be checked for success on all branches
-on: pull_request
+on:
+  pull_request:
+  push:
+    branches: [ master ]
 
 env:
   FLUTTER_VERSION: '3.0.3'
@@ -17,14 +18,8 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v3
 
-    - name: Debug working directory
-      run: pwd
-
     - name: StrictDoc export
       run: strictdoc export requirements
-
-    - name: Debug output directory
-      run: ls -Ral .
 
     - uses: actions/upload-artifact@v3
       with:
@@ -41,9 +36,6 @@ jobs:
 
     - name: Doxygen
       uses: mattnotmitt/doxygen-action@v1.9.4
-
-    - name: Debug output directory
-      run: ls -Ral docs
 
     - uses: actions/upload-artifact@v3
       with:
@@ -80,9 +72,6 @@ jobs:
     - run: flutter pub get
     - run: dart doc .
 
-    - run: pwd
-    - run: ls -R doc
-
     - uses: actions/upload-artifact@v3
       with:
         name: frontend-docs
@@ -90,6 +79,7 @@ jobs:
         retention-days: 5
 
   deploy:
+    if: github.ref == 'refs/heads/master'
     needs: [strictdoc, doxygen, dart-doc]
     name: Deploy to GitHub Pages
     runs-on: ubuntu-latest
@@ -97,9 +87,6 @@ jobs:
     - uses: actions/download-artifact@v3
       with:
         path: html
-
-    - name: Display structure of downloaded files
-      run: ls -R
 
     - name: Deploy to GitHub Pages
       uses: peaceiris/actions-gh-pages@v3
