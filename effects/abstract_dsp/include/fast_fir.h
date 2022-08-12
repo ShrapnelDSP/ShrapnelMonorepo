@@ -49,8 +49,6 @@ class FastFir final {
 
     public:
     /** Initialise the filter
-     *
-     * \param coefficients A buffer containing the filter coefficients
      */
     FastFir(std::unique_ptr<Convolution> a_convolution) : signal{}, convolution{std::move(a_convolution)} {}
 
