@@ -1,0 +1,95 @@
+name: Github Pages Build and Deploy
+
+on:
+  pull_request:
+  push:
+    branches: [ master ]
+
+env:
+  FLUTTER_VERSION: '3.0.3'
+  FLUTTER_CHANNEL: 'stable'
+
+jobs:
+  strictdoc:
+    name: Generate StrictDoc
+    runs-on: ubuntu-latest
+    container: barabas5532/strictdoc:0.0.26
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    - name: StrictDoc export
+      run: strictdoc export requirements
+
+    - uses: actions/upload-artifact@v3
+      with:
+        name: requirements
+        path: output/html
+        retention-days: 5
+
+  doxygen:
+    name: Generate Doxygen
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    - name: Doxygen
+      uses: mattnotmitt/doxygen-action@v1.9.4
+
+    - uses: actions/upload-artifact@v3
+      with:
+        name: firmware-docs
+        path: docs/html
+        retention-days: 5
+
+  dart-doc:
+    name: Generate dart doc
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory:
+          frontend
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Install flutter
+      uses: subosito/flutter-action@v2
+      with:
+        flutter-version: ${{ env.FLUTTER_VERSION }}
+        channel: ${{ env.FLUTTER_CHANNEL }}
+        cache: true
+        cache-key: ${{ github.job }}
+
+    - name: Flutter pub cache
+      uses: actions/cache@v2
+      with:
+        path: ${{ env.PUB_CACHE }}
+        key: flutter-pub-${{ github.job }}-${{ hashFiles('**/pubspec.lock') }}
+        restore-keys: |
+          flutter-pub-${{ github.job }}-
+
+    - run: flutter pub get
+    - run: dart doc .
+
+    - uses: actions/upload-artifact@v3
+      with:
+        name: frontend-docs
+        path: frontend/doc/api
+        retention-days: 5
+
+  deploy:
+    if: github.ref == 'refs/heads/master'
+    needs: [strictdoc, doxygen, dart-doc]
+    name: Deploy to GitHub Pages
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/download-artifact@v3
+      with:
+        path: html
+
+    - name: Deploy to GitHub Pages
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: html
