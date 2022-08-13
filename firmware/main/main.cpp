@@ -17,10 +17,8 @@
  * ShrapnelDSP. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include <midi.h>
 #include <stdio.h>
 #include <math.h>
-#include <sstream>
 
 #define LOG_LOCAL_LEVEL ESP_LOG_DEBUG
 #include "esp_log.h"
@@ -50,11 +48,11 @@
 #include "esp_http_server.h"
 #include "hardware.h"
 #include "i2s.h"
+#include "midi.h"
 #include "midi_uart.h"
 #include "pcm3060.h"
 #include "profiling.h"
 #include "wifi_provisioning.h"
-#include "heap.h"
 
 #define TAG "main"
 #define QUEUE_LEN 20
@@ -545,18 +543,18 @@ extern "C" void app_main(void)
     ESP_LOGI(TAG, "stack: %d", uxTaskGetStackHighWaterMark(NULL));
 
     auto midi_uart = new midi::EspMidiUart(UART_NUM_MIDI, GPIO_NUM_MIDI);
-    auto midi_decoder = new midi::Decoder(
-            [] (midi::Message message) {
-                etl::string<32> buffer;
-                etl::string_stream stream{buffer};
-                stream << message;
-                ESP_LOGI(TAG, "%s", buffer.data());
-            }
-            );
+
+    auto log_midi_message = [] (midi::Message message) {
+            etl::string<40> buffer;
+            etl::string_stream stream{buffer};
+            stream << message;
+            ESP_LOGI(TAG, "%s", buffer.data());
+    };
+
+    auto midi_decoder = new midi::Decoder(log_midi_message);
 
     while(1)
     {
-        auto heap_trace = ScopedHeapTracing<16>();
 
         uint8_t byte = midi_uart->get_byte();
         ESP_LOGI(TAG, "midi got byte 0x%02x", byte);

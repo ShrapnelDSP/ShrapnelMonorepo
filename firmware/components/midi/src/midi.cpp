@@ -19,11 +19,12 @@
 
 #include "midi.h"
 #include "esp_log.h"
+#include <etl/delegate.h>
 
 namespace shrapnel {
 namespace midi {
 
-Decoder::Decoder(std::function<void(Message)> _on_message_decoded) :
+Decoder::Decoder(Callback _on_message_decoded) :
     on_message_decoded{_on_message_decoded},
     state{IDLE},
     current_status{0},

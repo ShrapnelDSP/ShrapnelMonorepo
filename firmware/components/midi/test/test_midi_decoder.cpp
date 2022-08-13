@@ -32,9 +32,10 @@ class MidiDecoder : public ::testing::Test
 {
     protected:
 
-    MidiDecoder() : sut(receiver.AsStdFunction()) {}
+    MidiDecoder() : sut(receiver_fn) {}
 
     testing::MockFunction<void(shrapnel::midi::Message)> receiver;
+    std::function<void(shrapnel::midi::Message)> receiver_fn = receiver.AsStdFunction();
     Decoder sut;
 };
 

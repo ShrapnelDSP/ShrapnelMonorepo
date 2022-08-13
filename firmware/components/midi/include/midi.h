@@ -20,6 +20,7 @@
 
 #include <assert.h>
 #include <cstdint>
+#include <etl/delegate.h>
 #include <etl/string_stream.h>
 
 namespace shrapnel {
@@ -87,7 +88,7 @@ struct Message {
 
 class Decoder {
     public:
-    using Callback = std::function<void(Message)>;
+    using Callback = etl::delegate<void(Message)>;
 
     /**
      * \param on_message_decoded Called when a message has been decoded
