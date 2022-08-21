@@ -64,7 +64,7 @@ void main() {
                 provisioningFactory: () {
                   log.info('Creating provisioning connection');
                   // ignore: literal_only_boolean_expressions, dead_code
-                  if (false) {
+                  if (true) {
                     return FakeProvisioning();
                     // ignore: dead_code
                   } else {

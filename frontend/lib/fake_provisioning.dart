@@ -5,7 +5,7 @@ import 'package:esp_softap_provisioning/esp_softap_provisioning.dart';
 // ignore: implementation_imports
 import 'package:esp_softap_provisioning/src/connection_models.dart';
 
-class FakeProvisioning extends ProvisioningBase {
+class FakeProvisioning implements Provisioning {
   final ssidHint = <String>[
     'fail at sendWifiConfig',
     'fail at applyWifiConfig',
@@ -53,7 +53,6 @@ class FakeProvisioning extends ProvisioningBase {
   @override
   Future<Uint8List> sendReceiveCustomData(Uint8List data,
       {int packageSize = 256}) {
-    // TODO: implement sendReceiveCustomData
     throw UnimplementedError();
   }
 
@@ -98,5 +97,18 @@ class FakeProvisioning extends ProvisioningBase {
     }
 
     return mac;
+  }
+
+  // Security and transport should be treated as private. They are never
+  // intialised, so any usage will throw.
+  @override
+  late Security security;
+
+  @override
+  late Transport transport;
+
+  @override
+  Future<void> dispose() {
+      return Future<void>.value();
   }
 }

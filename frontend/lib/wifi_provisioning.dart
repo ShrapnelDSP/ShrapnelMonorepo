@@ -354,10 +354,10 @@ enum WifiProvisioningState {
 class WifiProvisioningProvider extends ChangeNotifier {
   WifiProvisioningProvider({required this.provisioningFactory});
 
-  /// Will be called to construct an instance of [ProvisioningBase]
-  ProvisioningBase Function() provisioningFactory;
+  /// Will be called to construct an instance of [Provisioning]
+  Provisioning Function() provisioningFactory;
 
-  ProvisioningBase? provisioning;
+  Provisioning? provisioning;
 
   var _statePrivate = WifiProvisioningState.initial;
 
