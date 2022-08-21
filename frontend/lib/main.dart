@@ -60,21 +60,13 @@ void main() {
           create: (_) => RobustWebsocket(
               uri: Uri.parse('http://guitar-dsp.local:8080/websocket'))),
       ChangeNotifierProvider(
-          create: (_) => WifiProvisioningProvider(
-                provisioningFactory: () {
-                  log.info('Creating provisioning connection');
-                  // ignore: literal_only_boolean_expressions, dead_code
-                  if (true) {
-                    return FakeProvisioning();
-                    // ignore: dead_code
-                  } else {
-                    return Provisioning(
-                      security: Security1(pop: 'abcd1234'),
-                      transport: TransportHTTP('guitar-dsp.local'),
-                    );
-                  }
-                },
-              )),
+          create: (_) => WifiProvisioningProvider(provisioningFactory: () {
+                log.info('Creating provisioning connection');
+                return Provisioning(
+                  security: Security1(pop: 'abcd1234'),
+                  transport: TransportHTTP('guitar-dsp.local'),
+                );
+              })),
     ],
     child: const MyApp(),
   ));
