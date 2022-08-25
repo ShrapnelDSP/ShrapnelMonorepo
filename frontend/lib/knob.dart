@@ -101,7 +101,6 @@ class _KnobArc extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-
     final background = Paint()
       ..color = backgroundColor
       ..style = PaintingStyle.stroke
@@ -114,7 +113,8 @@ class _KnobArc extends CustomPainter {
       ..strokeWidth = arcWidth
       ..strokeCap = StrokeCap.round;
 
-    final bounds = Offset(arcWidth/2, arcWidth/2) & Size.fromRadius(size.width/2 - arcWidth/2);
+    final bounds = Offset(arcWidth / 2, arcWidth / 2) &
+        Size.fromRadius(size.width / 2 - arcWidth / 2);
 
     canvas.drawArc(
         bounds, -m.pi / 2 + minAngle, maxAngle - minAngle, false, background);
@@ -122,8 +122,8 @@ class _KnobArc extends CustomPainter {
         bounds, -m.pi / 2 + minAngle, currentAngle - minAngle, false, primary);
 
     background.style = PaintingStyle.fill;
-    canvas.drawCircle(
-        size.center(Offset.zero), size.width * 0.50 - arcWidth * 1.5, background);
+    canvas.drawCircle(size.center(Offset.zero),
+        size.width * 0.50 - arcWidth * 1.5, background);
 
     // create the knob with tip at the origin
     var knob = Path()..relativeLineTo(0, size.width * 0.13);
