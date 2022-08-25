@@ -4,8 +4,8 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, user-scalable=no">
-  <meta name="description" content="API docs for the knobWithLabel method from the Stompbox class, for the Dart programming language.">
-  <title>knobWithLabel method - Stompbox class - stompbox library - Dart API</title>
+  <meta name="description" content="API docs for the ConditionalParent constructor from Class ConditionalParent from the conditional_parent library, for the Dart programming language.">
+  <title>ConditionalParent constructor - ConditionalParent - conditional_parent library - Dart API</title>
 
 
   
@@ -30,11 +30,11 @@
   <button id="sidenav-left-toggle" type="button">&nbsp;</button>
   <ol class="breadcrumbs gt-separated dark hidden-xs">
     <li><a href="../../index.html">shrapnel</a></li>
-    <li><a href="../../stompbox/stompbox-library.html">stompbox</a></li>
-    <li><a href="../../stompbox/Stompbox-class.html">Stompbox</a></li>
-    <li class="self-crumb">knobWithLabel method</li>
+    <li><a href="../../util_conditional_parent/util_conditional_parent-library.html">conditional_parent</a></li>
+    <li><a href="../../util_conditional_parent/ConditionalParent-class.html">ConditionalParent</a></li>
+    <li class="self-crumb">ConditionalParent const constructor</li>
   </ol>
-  <div class="self-name">knobWithLabel</div>
+  <div class="self-name">ConditionalParent</div>
   <form class="search navbar-right" role="search">
     <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
   </form>
@@ -45,45 +45,32 @@
 
   <div id="dartdoc-main-content" class="main-content">
       <div>
-<h1><span class="kind-method">knobWithLabel</span> method 
+<h1><span class="kind-constructor">ConditionalParent</span> constructor 
     <a href="https://dart.dev/null-safety" class="feature feature-null-safety" title="Supports the null safety language feature.">Null safety</a>
 </h1></div>
 
-    <section class="multi-line-signature">
-      
-
-<span class="returntype"><a href="https://api.flutter.dev/flutter/widgets/Widget-class.html">Widget</a></span>
-<span class="name ">knobWithLabel</span>(<wbr><ol class="parameter-list"><li><span class="parameter" id="knobWithLabel-param-index"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span> <span class="parameter-name">index</span>, </span></li>
-<li><span class="parameter" id="knobWithLabel-param-scaleFactor"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/double-class.html">double</a></span> <span class="parameter-name">scaleFactor</span></span></li>
+    <section class="multi-line-signature">const
+      <span class="name ">ConditionalParent</span>(<wbr><ol class="parameter-list"><li><span class="parameter" id="-param-key">{<span class="type-annotation"><a href="https://api.flutter.dev/flutter/foundation/Key-class.html">Key</a>?</span> <span class="parameter-name">key</span>, </span></li>
+<li><span class="parameter" id="-param-condition"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">condition</span>, </span></li>
+<li><span class="parameter" id="-param-builder"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/widgets/Widget-class.html">Widget</a></span> <span class="parameter-name">builder</span>(<ol class="parameter-list"><li><span class="parameter" id="param-child"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/widgets/Widget-class.html">Widget</a></span> <span class="parameter-name">child</span></span></li>
+</ol>
+), </span></li>
+<li><span class="parameter" id="-param-child"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/widgets/Widget-class.html">Widget</a></span> <span class="parameter-name">child</span>}</span></li>
 </ol>)
-
-      
-
     </section>
+
     
 
 
     
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">Widget knobWithLabel(int index, double scaleFactor) {
-  return Column(
-    mainAxisAlignment: MainAxisAlignment.center,
-    children: &lt;Widget&gt;[
-      Knob(
-        value: value[index],
-        onChanged: full ? onChanged[index] : (_) {&#47;* not interactive *&#47;},
-        size: scaleFactor * 25,
-      ),
-      if (full) const SizedBox(height: 10),
-      if (full)
-        Text(
-          parameterName[index],
-          textAlign: TextAlign.center,
-        ),
-    ],
-  );
-}</code></pre>
+  <pre class="language-dart"><code class="language-dart">const ConditionalParent(
+    {Key? key,
+    required this.condition,
+    required this.builder,
+    required this.child})
+    : super(key: key);</code></pre>
 </section>
 
 
@@ -98,43 +85,34 @@
 
 <ol class="breadcrumbs gt-separated dark hidden-l" id="sidebar-nav">
   <li><a href="../../index.html">shrapnel</a></li>
-  <li><a href="../../stompbox/stompbox-library.html">stompbox</a></li>
-  <li><a href="../../stompbox/Stompbox-class.html">Stompbox</a></li>
-  <li class="self-crumb">knobWithLabel method</li>
+  <li><a href="../../util_conditional_parent/util_conditional_parent-library.html">conditional_parent</a></li>
+  <li><a href="../../util_conditional_parent/ConditionalParent-class.html">ConditionalParent</a></li>
+  <li class="self-crumb">ConditionalParent const constructor</li>
 </ol>
 
 
-    <h5>Stompbox class</h5>
+    <h5>ConditionalParent class</h5>
     <ol>
 
-        <li class="section-title"><a href="../../stompbox/Stompbox-class.html#constructors">Constructors</a></li>
-          <li><a href="../../stompbox/Stompbox/Stompbox.html">Stompbox</a></li>
+        <li class="section-title"><a href="../../util_conditional_parent/ConditionalParent-class.html#constructors">Constructors</a></li>
+          <li><a href="../../util_conditional_parent/ConditionalParent/ConditionalParent.html">ConditionalParent</a></li>
 
 
     <li class="section-title">
-      <a href="../../stompbox/Stompbox-class.html#instance-properties">Properties</a>
+      <a href="../../util_conditional_parent/ConditionalParent-class.html#instance-properties">Properties</a>
     </li>
-    <li><a href="../../stompbox/Stompbox/bypass.html">bypass</a></li>
-    <li><a href="../../stompbox/Stompbox/full.html">full</a></li>
+    <li><a href="../../util_conditional_parent/ConditionalParent/builder.html">builder</a></li>
+    <li><a href="../../util_conditional_parent/ConditionalParent/child.html">child</a></li>
+    <li><a href="../../util_conditional_parent/ConditionalParent/condition.html">condition</a></li>
     <li class="inherited"><a href="https://api.flutter.dev/flutter/widgets/Widget/hashCode.html">hashCode</a></li>
     <li class="inherited"><a href="https://api.flutter.dev/flutter/widgets/Widget/key.html">key</a></li>
-    <li><a href="../../stompbox/Stompbox/name.html">name</a></li>
-    <li><a href="../../stompbox/Stompbox/onBypassTap.html">onBypassTap</a></li>
-    <li><a href="../../stompbox/Stompbox/onCardTap.html">onCardTap</a></li>
-    <li><a href="../../stompbox/Stompbox/onChanged.html">onChanged</a></li>
-    <li><a href="../../stompbox/Stompbox/parameterName.html">parameterName</a></li>
-    <li><a href="../../stompbox/Stompbox/primarySwatch.html">primarySwatch</a></li>
     <li class="inherited"><a href="https://api.flutter.dev/flutter/dart-core/Object/runtimeType.html">runtimeType</a></li>
-    <li><a href="../../stompbox/Stompbox/value.html">value</a></li>
 
-    <li class="section-title"><a href="../../stompbox/Stompbox-class.html#instance-methods">Methods</a></li>
-    <li><a href="../../stompbox/Stompbox/build.html">build</a></li>
-    <li><a href="../../stompbox/Stompbox/bypassButton.html">bypassButton</a></li>
+    <li class="section-title"><a href="../../util_conditional_parent/ConditionalParent-class.html#instance-methods">Methods</a></li>
+    <li><a href="../../util_conditional_parent/ConditionalParent/build.html">build</a></li>
     <li class="inherited"><a href="https://api.flutter.dev/flutter/widgets/StatelessWidget/createElement.html">createElement</a></li>
     <li class="inherited"><a href="https://api.flutter.dev/flutter/foundation/DiagnosticableTree/debugDescribeChildren.html">debugDescribeChildren</a></li>
     <li class="inherited"><a href="https://api.flutter.dev/flutter/widgets/Widget/debugFillProperties.html">debugFillProperties</a></li>
-    <li><a href="../../stompbox/Stompbox/knobs.html">knobs</a></li>
-    <li><a href="../../stompbox/Stompbox/knobWithLabel.html">knobWithLabel</a></li>
     <li class="inherited"><a href="https://api.flutter.dev/flutter/dart-core/Object/noSuchMethod.html">noSuchMethod</a></li>
     <li class="inherited"><a href="https://api.flutter.dev/flutter/foundation/DiagnosticableTree/toDiagnosticsNode.html">toDiagnosticsNode</a></li>
     <li class="inherited"><a href="https://api.flutter.dev/flutter/foundation/Diagnosticable/toString.html">toString</a></li>
@@ -142,7 +120,7 @@
     <li class="inherited"><a href="https://api.flutter.dev/flutter/foundation/DiagnosticableTree/toStringShallow.html">toStringShallow</a></li>
     <li class="inherited"><a href="https://api.flutter.dev/flutter/widgets/Widget/toStringShort.html">toStringShort</a></li>
 
-    <li class="section-title inherited"><a href="../../stompbox/Stompbox-class.html#operators">Operators</a></li>
+    <li class="section-title inherited"><a href="../../util_conditional_parent/ConditionalParent-class.html#operators">Operators</a></li>
     <li class="inherited"><a href="https://api.flutter.dev/flutter/widgets/Widget/operator_equals.html">operator ==</a></li>
 
 
@@ -150,7 +128,7 @@
 
 </ol>
 
-  </div><!--/.sidebar-offcanvas-->
+  </div><!--/.sidebar-offcanvas-left-->
 
   <div id="dartdoc-sidebar-right" class="sidebar sidebar-offcanvas-right">
   </div><!--/.sidebar-offcanvas-->

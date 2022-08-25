@@ -107,53 +107,56 @@ and</li>
   <h2><span>Implementation</span></h2>
   <pre class="language-dart"><code class="language-dart">@override
 Widget build(BuildContext context) {
-  return Row(
-    children: [
-      Builder(
-        builder: (context) {
-          final channel = Provider.of&lt;_ValvestateParameterChannel&gt;(context);
-          final gain = Provider.of&lt;_ValvestateParameterGain&gt;(context);
-          final bass = Provider.of&lt;_ValvestateParameterBass&gt;(context);
-          final middle = Provider.of&lt;_ValvestateParameterMiddle&gt;(context);
-          final treble = Provider.of&lt;_ValvestateParameterTreble&gt;(context);
-          final contour = Provider.of&lt;_ValvestateParameterContour&gt;(context);
-          final volume = Provider.of&lt;_ValvestateParameterVolume&gt;(context);
+  return ChangeNotifierProvider(
+    create: (context) {
+      final parameterService =
+          Provider.of&lt;ParameterService&gt;(context, listen: false);
 
-          return Amplifier(
-            parameter: [
-              channel.value,
-              gain.value,
-              bass.value,
-              middle.value,
-              treble.value,
-              contour.value,
-              volume.value,
-            ],
-            onChanged: [
-              channel.onUserChanged,
-              gain.onUserChanged,
-              bass.onUserChanged,
-              middle.onUserChanged,
-              treble.onUserChanged,
-              contour.onUserChanged,
-              volume.onUserChanged,
-            ],
-            parameterName: [
-              channel.name,
-              gain.name,
-              bass.name,
-              middle.name,
-              treble.name,
-              contour.name,
-              volume.name,
-            ],
-            name: &#39;VALVESTATE 8100&#39;,
-            onTap: onTap,
-            full: full,
-          );
-        },
-      ),
-    ],
+      return AmplifierModel(
+        parameters: [
+          AudioParameterDoubleModel(
+            name: &#39;OD1&#47;OD2&#39;,
+            id: &#39;ampChannel&#39;,
+            parameterService: parameterService,
+          ),
+          AudioParameterDoubleModel(
+            name: &#39;GAIN&#39;,
+            id: &#39;ampGain&#39;,
+            parameterService: parameterService,
+          ),
+          AudioParameterDoubleModel(
+            name: &#39;BASS&#39;,
+            id: &#39;bass&#39;,
+            parameterService: parameterService,
+          ),
+          AudioParameterDoubleModel(
+            name: &#39;MIDDLE&#39;,
+            id: &#39;middle&#39;,
+            parameterService: parameterService,
+          ),
+          AudioParameterDoubleModel(
+            name: &#39;TREBLE&#39;,
+            id: &#39;treble&#39;,
+            parameterService: parameterService,
+          ),
+          AudioParameterDoubleModel(
+            name: &#39;CONTOUR&#39;,
+            id: &#39;contour&#39;,
+            parameterService: parameterService,
+          ),
+          AudioParameterDoubleModel(
+            name: &#39;VOLUME&#39;,
+            id: &#39;volume&#39;,
+            parameterService: parameterService,
+          ),
+        ],
+      );
+    },
+    child: Amplifier(
+      name: &#39;VALVESTATE 8100&#39;,
+      onTap: onTap,
+      full: full,
+    ),
   );
 }</code></pre>
 </section>

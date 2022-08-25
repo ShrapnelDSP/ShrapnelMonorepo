@@ -107,30 +107,35 @@ and</li>
   <h2><span>Implementation</span></h2>
   <pre class="language-dart"><code class="language-dart">@override
 Widget build(BuildContext context) {
-  final distanceToAngle = 0.007 * (max - min);
+  final distanceToValue = 0.003 * (max - min);
   final _normalisedValue = (value - min) &#47; (max - min);
-  final _angle = minAngle + _normalisedValue * sweepAngle * 2 * m.pi &#47; 360;
+  final _angle = minAngle + _normalisedValue * sweepAngle;
 
   return Transform.rotate(
     angle: m.pi &#47; 4,
     child: GestureDetector(
       onVerticalDragUpdate: (DragUpdateDetails details) {
         final changeInY = details.delta.dy;
-        final changeInValue = distanceToAngle * -changeInY;
+        final changeInValue = distanceToValue * -changeInY;
         final newValue = value + changeInValue;
-        final double clippedValue = m.min(m.max(newValue, min), max);
 
-        onChanged(clippedValue);
+        onChanged(newValue.clamp(min, max));
       },
       child: Transform.rotate(
-        angle: _angle - m.pi &#47; 4,
-        child: ClipOval(
-          child: Container(
-            color: Theme.of(context).colorScheme.onSurface,
-            child: Icon(
-              Icons.arrow_upward,
-              color: Theme.of(context).colorScheme.primary,
-              size: size,
+        angle: -m.pi &#47; 4,
+        child: ClipRect(
+          child: CustomPaint(
+            painter: _KnobArc(
+              minAngle: minAngle,
+              maxAngle: maxAngle,
+              currentAngle: _angle,
+              arcWidth: size * 0.08,
+              backgroundColor: Theme.of(context).colorScheme.background,
+              primaryColor: Theme.of(context).colorScheme.primary,
+            ),
+            child: SizedBox(
+              height: size,
+              width: size,
             ),
           ),
         ),

@@ -107,43 +107,49 @@ and</li>
   <h2><span>Implementation</span></h2>
   <pre class="language-dart"><code class="language-dart">@override
 Widget build(BuildContext context) {
-  return Row(
-    children: [
-      Consumer5&lt;
-          _HeavyMetalParameterBypass,
-          _HeavyMetalParameterDistortion,
-          _HeavyMetalParameterHigh,
-          _HeavyMetalParameterLevel,
-          _HeavyMetalParameterLow&gt;(
-        builder: (_, bypass, distortion, high, level, low, __) =&gt; Stompbox(
-          value: [
-            level.value,
-            low.value,
-            high.value,
-            distortion.value,
-          ],
-          onChanged: [
-            level.onUserChanged,
-            low.onUserChanged,
-            high.onUserChanged,
-            distortion.onUserChanged,
-          ],
-          parameterName: [
-            level.name,
-            low.name,
-            high.name,
-            distortion.name,
-          ],
-          name: &#39;Heavy Metal&#39;,
-          onCardTap: onTap,
-          full: full,
-          onBypassTap: () =&gt;
-              bypass.onUserChanged((bypass.value &gt; 0.5) ? 0 : 1),
-          bypass: bypass.value &gt; 0.5,
-          primarySwatch: Colors.deepOrange,
+  return ChangeNotifierProvider(
+    create: (BuildContext context) {
+      final parameterService = Provider.of&lt;ParameterService&gt;(
+        context,
+        listen: false,
+      );
+
+      return StompboxModel(
+        parameters: [
+          AudioParameterDoubleModel(
+            name: &#39;LEVEL&#39;,
+            id: &#39;heavyMetalLevel&#39;,
+            parameterService: parameterService,
+          ),
+          AudioParameterDoubleModel(
+            name: &#39;LOW&#39;,
+            id: &#39;heavyMetalLow&#39;,
+            parameterService: parameterService,
+          ),
+          AudioParameterDoubleModel(
+            name: &#39;HIGH&#39;,
+            id: &#39;heavyMetalHigh&#39;,
+            parameterService: parameterService,
+          ),
+          AudioParameterDoubleModel(
+            name: &#39;DISTORTION&#39;,
+            id: &#39;heavyMetalDistortion&#39;,
+            parameterService: parameterService,
+          ),
+        ],
+        bypass: AudioParameterDoubleModel(
+          name: &#39;Bypass&#39;,
+          id: &#39;heavyMetalBypass&#39;,
+          parameterService: parameterService,
         ),
-      ),
-    ],
+      );
+    },
+    child: Stompbox(
+      name: &#39;Heavy Metal&#39;,
+      onCardTap: onTap,
+      full: full,
+      primarySwatch: Colors.deepOrange,
+    ),
   );
 }</code></pre>
 </section>

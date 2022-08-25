@@ -107,44 +107,46 @@ and</li>
   <h2><span>Implementation</span></h2>
   <pre class="language-dart"><code class="language-dart">@override
 Widget build(BuildContext context) {
-  return Row(
-    children: [
-      Consumer5&lt;
-          _NoiseGateParameterAttack,
-          _NoiseGateParameterBypass,
-          _NoiseGateParameterHysteresis,
-          _NoiseGateParameterRelease,
-          _NoiseGateParameterThreshold&gt;(
-        builder: (_, attack, bypass, hysteresis, release, threshold, __) =&gt;
-            Stompbox(
-          value: [
-            threshold.value,
-            hysteresis.value,
-            attack.value,
-            release.value,
-          ],
-          onChanged: [
-            threshold.onUserChanged,
-            hysteresis.onUserChanged,
-            attack.onUserChanged,
-            release.onUserChanged,
-          ],
-          parameterName: [
-            threshold.name,
-            hysteresis.name,
-            attack.name,
-            release.name,
-          ],
-          name: &#39;Noise Gate&#39;,
-          onCardTap: onTap,
-          full: full,
-          onBypassTap: () =&gt;
-              bypass.onUserChanged((bypass.value &gt; 0.5) ? 0 : 1),
-          bypass: bypass.value &gt; 0.5,
-          primarySwatch: Colors.red,
+  return ChangeNotifierProvider(
+    create: (context) {
+      final parameterService =
+          Provider.of&lt;ParameterService&gt;(context, listen: false);
+      return StompboxModel(
+        parameters: [
+          AudioParameterDoubleModel(
+            name: &#39;Attack&#39;,
+            id: &#39;noiseGateAttack&#39;,
+            parameterService: parameterService,
+          ),
+          AudioParameterDoubleModel(
+            name: &#39;Hysteresis&#39;,
+            id: &#39;noiseGateHysteresis&#39;,
+            parameterService: parameterService,
+          ),
+          AudioParameterDoubleModel(
+            name: &#39;Release&#39;,
+            id: &#39;noiseGateRelease&#39;,
+            parameterService: parameterService,
+          ),
+          AudioParameterDoubleModel(
+            name: &#39;Threshold&#39;,
+            id: &#39;noiseGateThreshold&#39;,
+            parameterService: parameterService,
+          ),
+        ],
+        bypass: AudioParameterDoubleModel(
+          name: &#39;Bypass&#39;,
+          id: &#39;noiseGateBypass&#39;,
+          parameterService: parameterService,
         ),
-      ),
-    ],
+      );
+    },
+    child: Stompbox(
+      name: &#39;Noise Gate&#39;,
+      onCardTap: onTap,
+      full: full,
+      primarySwatch: Colors.red,
+    ),
   );
 }</code></pre>
 </section>

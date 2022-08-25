@@ -4,8 +4,8 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, user-scalable=no">
-  <meta name="description" content="API docs for the build method from the ValvestateParameterProvider class, for the Dart programming language.">
-  <title>build method - ValvestateParameterProvider class - valvestate library - Dart API</title>
+  <meta name="description" content="API docs for the build method from the KnobWithLabel class, for the Dart programming language.">
+  <title>build method - KnobWithLabel class - knob_with_label library - Dart API</title>
 
 
   
@@ -30,8 +30,8 @@
   <button id="sidenav-left-toggle" type="button">&nbsp;</button>
   <ol class="breadcrumbs gt-separated dark hidden-xs">
     <li><a href="../../index.html">shrapnel</a></li>
-    <li><a href="../../valvestate/valvestate-library.html">valvestate</a></li>
-    <li><a href="../../valvestate/ValvestateParameterProvider-class.html">ValvestateParameterProvider</a></li>
+    <li><a href="../../knob_with_label/knob_with_label-library.html">knob_with_label</a></li>
+    <li><a href="../../knob_with_label/KnobWithLabel-class.html">KnobWithLabel</a></li>
     <li class="self-crumb">build method</li>
   </ol>
   <div class="self-name">build</div>
@@ -93,7 +93,7 @@ and</li>
 <li>any ambient state obtained from the <code>context</code> using
 <a href="https://api.flutter.dev/flutter/widgets/BuildContext/dependOnInheritedWidgetOfExactType.html">BuildContext.dependOnInheritedWidgetOfExactType</a>.</li>
 </ul>
-<p>If a widget's <a href="../../valvestate/ValvestateParameterProvider/build.html">build</a> method is to depend on anything else, use a
+<p>If a widget's <a href="../../knob_with_label/KnobWithLabel/build.html">build</a> method is to depend on anything else, use a
 <a href="https://api.flutter.dev/flutter/widgets/StatefulWidget-class.html">StatefulWidget</a> instead.</p>
 <p>See also:</p>
 <ul>
@@ -106,49 +106,26 @@ and</li>
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
   <pre class="language-dart"><code class="language-dart">@override
-Widget build(BuildContext context) =&gt;
-    Consumer&lt;ParameterService&gt;(builder: (_, parameterService, __) {
-      return MultiProvider(
-        providers: [
-          ChangeNotifierProvider(
-            create: (_) =&gt; _ValvestateParameterChannel(
-              parameterService: parameterService,
-            ),
-          ),
-          ChangeNotifierProvider(
-            create: (_) =&gt; _ValvestateParameterGain(
-              parameterService: parameterService,
-            ),
-          ),
-          ChangeNotifierProvider(
-            create: (_) =&gt; _ValvestateParameterBass(
-              parameterService: parameterService,
-            ),
-          ),
-          ChangeNotifierProvider(
-            create: (_) =&gt; _ValvestateParameterMiddle(
-              parameterService: parameterService,
-            ),
-          ),
-          ChangeNotifierProvider(
-            create: (_) =&gt; _ValvestateParameterTreble(
-              parameterService: parameterService,
-            ),
-          ),
-          ChangeNotifierProvider(
-            create: (_) =&gt; _ValvestateParameterContour(
-              parameterService: parameterService,
-            ),
-          ),
-          ChangeNotifierProvider(
-            create: (_) =&gt; _ValvestateParameterVolume(
-              parameterService: parameterService,
-            ),
-          ),
-        ],
-        child: child,
-      );
-    });</code></pre>
+Widget build(BuildContext context) {
+  final parameter = Provider.of&lt;AudioParameterDoubleModel&gt;(context);
+
+  return Column(
+    mainAxisAlignment: MainAxisAlignment.center,
+    children: &lt;Widget&gt;[
+      Knob(
+        onChanged: isEnabled ? parameter.onUserChanged : (_) {},
+        value: parameter.value,
+        size: knobSize,
+      ),
+      if (isEnabled) const SizedBox(height: 5),
+      if (isEnabled)
+        Text(
+          parameter.name,
+          textAlign: TextAlign.center,
+        ),
+    ],
+  );
+}</code></pre>
 </section>
 
 
@@ -163,29 +140,30 @@ Widget build(BuildContext context) =&gt;
 
 <ol class="breadcrumbs gt-separated dark hidden-l" id="sidebar-nav">
   <li><a href="../../index.html">shrapnel</a></li>
-  <li><a href="../../valvestate/valvestate-library.html">valvestate</a></li>
-  <li><a href="../../valvestate/ValvestateParameterProvider-class.html">ValvestateParameterProvider</a></li>
+  <li><a href="../../knob_with_label/knob_with_label-library.html">knob_with_label</a></li>
+  <li><a href="../../knob_with_label/KnobWithLabel-class.html">KnobWithLabel</a></li>
   <li class="self-crumb">build method</li>
 </ol>
 
 
-    <h5>ValvestateParameterProvider class</h5>
+    <h5>KnobWithLabel class</h5>
     <ol>
 
-        <li class="section-title"><a href="../../valvestate/ValvestateParameterProvider-class.html#constructors">Constructors</a></li>
-          <li><a href="../../valvestate/ValvestateParameterProvider/ValvestateParameterProvider.html">ValvestateParameterProvider</a></li>
+        <li class="section-title"><a href="../../knob_with_label/KnobWithLabel-class.html#constructors">Constructors</a></li>
+          <li><a href="../../knob_with_label/KnobWithLabel/KnobWithLabel.html">KnobWithLabel</a></li>
 
 
     <li class="section-title">
-      <a href="../../valvestate/ValvestateParameterProvider-class.html#instance-properties">Properties</a>
+      <a href="../../knob_with_label/KnobWithLabel-class.html#instance-properties">Properties</a>
     </li>
-    <li><a href="../../valvestate/ValvestateParameterProvider/child.html">child</a></li>
     <li class="inherited"><a href="https://api.flutter.dev/flutter/widgets/Widget/hashCode.html">hashCode</a></li>
+    <li><a href="../../knob_with_label/KnobWithLabel/isEnabled.html">isEnabled</a></li>
     <li class="inherited"><a href="https://api.flutter.dev/flutter/widgets/Widget/key.html">key</a></li>
+    <li><a href="../../knob_with_label/KnobWithLabel/knobSize.html">knobSize</a></li>
     <li class="inherited"><a href="https://api.flutter.dev/flutter/dart-core/Object/runtimeType.html">runtimeType</a></li>
 
-    <li class="section-title"><a href="../../valvestate/ValvestateParameterProvider-class.html#instance-methods">Methods</a></li>
-    <li><a href="../../valvestate/ValvestateParameterProvider/build.html">build</a></li>
+    <li class="section-title"><a href="../../knob_with_label/KnobWithLabel-class.html#instance-methods">Methods</a></li>
+    <li><a href="../../knob_with_label/KnobWithLabel/build.html">build</a></li>
     <li class="inherited"><a href="https://api.flutter.dev/flutter/widgets/StatelessWidget/createElement.html">createElement</a></li>
     <li class="inherited"><a href="https://api.flutter.dev/flutter/foundation/DiagnosticableTree/debugDescribeChildren.html">debugDescribeChildren</a></li>
     <li class="inherited"><a href="https://api.flutter.dev/flutter/widgets/Widget/debugFillProperties.html">debugFillProperties</a></li>
@@ -196,7 +174,7 @@ Widget build(BuildContext context) =&gt;
     <li class="inherited"><a href="https://api.flutter.dev/flutter/foundation/DiagnosticableTree/toStringShallow.html">toStringShallow</a></li>
     <li class="inherited"><a href="https://api.flutter.dev/flutter/widgets/Widget/toStringShort.html">toStringShort</a></li>
 
-    <li class="section-title inherited"><a href="../../valvestate/ValvestateParameterProvider-class.html#operators">Operators</a></li>
+    <li class="section-title inherited"><a href="../../knob_with_label/KnobWithLabel-class.html#operators">Operators</a></li>
     <li class="inherited"><a href="https://api.flutter.dev/flutter/widgets/Widget/operator_equals.html">operator ==</a></li>
 
 

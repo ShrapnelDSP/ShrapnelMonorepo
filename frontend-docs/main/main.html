@@ -69,6 +69,8 @@
     print(&#39;${record.level.name}: ${record.time}: ${record.message}&#39;);
   });
 
+  GoogleFonts.config.allowRuntimeFetching = false;
+
   runApp(MultiProvider(
     providers: [
       ChangeNotifierProvider(
