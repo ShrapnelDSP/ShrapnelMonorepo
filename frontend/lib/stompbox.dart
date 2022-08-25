@@ -18,141 +18,64 @@
  */
 
 import 'package:flutter/material.dart';
-import 'knob.dart';
+import 'package:provider/provider.dart';
+
+import 'knob_with_label.dart';
+import 'parameter.dart';
+import 'util/conditional_parent.dart';
+
+class StompboxModel extends ChangeNotifier {
+  StompboxModel({required this.parameters, required this.bypass});
+
+  List<AudioParameterDoubleModel> parameters;
+  AudioParameterDoubleModel bypass;
+}
 
 class Stompbox extends StatelessWidget {
   const Stompbox({
     Key? key,
-    required this.value,
-    required this.onChanged,
-    required this.parameterName,
-    required this.bypass,
     required this.name,
     required this.full,
     required this.onCardTap,
-    required this.onBypassTap,
     required this.primarySwatch,
   }) : super(key: key);
 
-  final List<double> value;
-  final List<ValueChanged<double>> onChanged;
-  final List<String> parameterName;
-
-  final bool bypass;
   final String name;
 
   final bool full;
   final Function() onCardTap;
-  final Function() onBypassTap;
 
   final MaterialColor primarySwatch;
 
-  Widget knobWithLabel(int index, double scaleFactor) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-        Knob(
-          value: value[index],
-          onChanged: full ? onChanged[index] : (_) {/* not interactive */},
-          size: scaleFactor * 25,
-        ),
-        if (full) const SizedBox(height: 10),
-        if (full)
-          Text(
-            parameterName[index],
-            textAlign: TextAlign.center,
+  List<Widget> knobs(BuildContext context, double scaleFactor) {
+    final parameters = Provider.of<StompboxModel>(context).parameters;
+
+    return List<Widget>.generate(
+      (parameters.length + 1) ~/ 2,
+      (i) {
+        return Row(
+          children: List<Widget>.generate(
+            2 * i + 1 >= parameters.length ? 1 : 2,
+            (j) {
+              return ChangeNotifierProvider.value(
+                value: parameters[2 * i + j],
+                child: Expanded(
+                  child: Padding(
+                    padding: EdgeInsets.only(bottom: scaleFactor * 3),
+                    child: KnobWithLabel(
+                      isEnabled: full,
+                      knobSize: scaleFactor * 25,
+                    ),
+                  ),
+                ),
+              );
+            },
+            growable: false,
           ),
-      ],
+        );
+      },
+      growable: false,
     );
-  }
-
-  List<Widget> knobs(double scaleFactor) {
-    if (value.length == 1) {
-      return [
-        Positioned(
-          top: 0,
-          child: knobWithLabel(0, scaleFactor),
-        ),
-      ];
-    } else if (value.length == 2) {
-      return [
-        Positioned(
-          left: 0,
-          top: 0,
-          child: knobWithLabel(0, scaleFactor),
-        ),
-        Positioned(
-          right: 0,
-          top: 0,
-          child: knobWithLabel(1, scaleFactor),
-        ),
-      ];
-    } else if (value.length == 3) {
-      return [
-        Positioned(
-          left: 0,
-          top: 0,
-          child: knobWithLabel(0, scaleFactor),
-        ),
-        Positioned(
-          right: 0,
-          top: 0,
-          child: knobWithLabel(1, scaleFactor),
-        ),
-        Positioned(
-          top: scaleFactor * 35,
-          child: knobWithLabel(2, scaleFactor),
-        ),
-      ];
-    } else if (value.length == 4) {
-      return [
-        Positioned(
-          left: 0,
-          top: 0,
-          child: knobWithLabel(0, scaleFactor),
-        ),
-        Positioned(
-          right: 0,
-          top: 0,
-          child: knobWithLabel(1, scaleFactor),
-        ),
-        Positioned(
-          left: 0,
-          top: scaleFactor * 35,
-          child: knobWithLabel(2, scaleFactor),
-        ),
-        Positioned(
-          right: 0,
-          top: scaleFactor * 35,
-          child: knobWithLabel(3, scaleFactor),
-        ),
-      ];
-    }
-
-    assert(false, 'Number of parameters must be between 1 and 4');
-    return [];
-  }
-
-  Widget bypassButton(BuildContext context, double scaleFactor) {
-    final button = Container(
-      width: scaleFactor * 19,
-      height: scaleFactor * 19,
-      decoration: BoxDecoration(
-        color: bypass
-            ? Theme.of(context).colorScheme.surface
-            : Theme.of(context).colorScheme.primary,
-        shape: BoxShape.circle,
-      ),
-    );
-
-    if (full) {
-      return GestureDetector(
-        onTap: full ? onBypassTap : () {/* not interactive */},
-        child: button,
-      );
-    }
-
-    return button;
   }
 
   @override
@@ -160,9 +83,11 @@ class Stompbox extends StatelessWidget {
     final scaleFactor = full ? 3.0 : 1.0;
 
     return Theme(
-      data: ThemeData(
-        brightness: Theme.of(context).brightness,
-        primarySwatch: primarySwatch,
+      data: Theme.of(context).copyWith(
+        colorScheme: ColorScheme.fromSwatch(
+          primarySwatch: primarySwatch,
+          brightness: Brightness.dark,
+        ),
       ),
       /* Builder required to create new context, which makes
        * Theme.of return the new theme defined above
@@ -174,31 +99,74 @@ class Stompbox extends StatelessWidget {
           child: GestureDetector(
             onTap: onCardTap,
             child: Card(
-              child: Container(
-                margin: EdgeInsets.all(scaleFactor * 10),
-                child: Stack(alignment: Alignment.center, children: <Widget>[
-                  ...knobs(scaleFactor),
-                  Positioned(
-                    top: scaleFactor * 70,
-                    child: Text(name),
-                  ),
-                  Positioned(
-                    top: scaleFactor * 95,
-                    child: Container(
-                      width: scaleFactor * 25,
-                      height: scaleFactor * 25,
-                      decoration: BoxDecoration(
-                        color: Theme.of(context).colorScheme.background,
-                        shape: BoxShape.circle,
+              child: Padding(
+                padding: EdgeInsets.all(scaleFactor * 8),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    ...knobs(context, scaleFactor),
+                    Expanded(
+                        child: Center(
+                            child: Text(
+                      name,
+                      style: DefaultTextStyle.of(context)
+                          .style
+                          .apply(fontSizeFactor: scaleFactor),
+                      textAlign: TextAlign.center,
+                    ))),
+                    ChangeNotifierProvider.value(
+                      value: context.watch<StompboxModel>().bypass,
+                      child: _BypassButton(
+                        size: scaleFactor * 23,
+                        isEnabled: full,
                       ),
                     ),
-                  ),
-                  Positioned(
-                    top: scaleFactor * 98,
-                    child: bypassButton(context, scaleFactor),
-                  ),
-                ]),
+                  ],
+                ),
               ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _BypassButton extends StatelessWidget {
+  const _BypassButton({Key? key, required this.size, required this.isEnabled})
+      : super(key: key);
+
+  final double size;
+  final bool isEnabled;
+
+  @override
+  Widget build(BuildContext context) {
+    final bypass = context.watch<AudioParameterDoubleModel>();
+
+    return ConditionalParent(
+      condition: isEnabled,
+      builder: (child) => GestureDetector(
+        onTap: () {
+          bypass.onUserChanged((bypass.value > 0.5) ? 0 : 1);
+        },
+        child: child,
+      ),
+      child: Container(
+        width: size,
+        height: size,
+        decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.background,
+          shape: BoxShape.circle,
+        ),
+        child: Center(
+          child: Container(
+            width: size * 0.8,
+            height: size * 0.8,
+            decoration: BoxDecoration(
+              color: bypass.value > 0.5
+                  ? Theme.of(context).colorScheme.surface
+                  : Theme.of(context).colorScheme.primary,
+              shape: BoxShape.circle,
             ),
           ),
         ),

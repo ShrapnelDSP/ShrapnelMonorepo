@@ -43,47 +43,27 @@ class _PedalboardState extends State<Pedalboard> {
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            TubeScreamerParameterProvider(
-              child: TubeScreamer(
-                onTap: () => _activateGear(GearId.tubeScreamer),
-                full: _activeGear == GearId.tubeScreamer,
-              ),
+            TubeScreamer(
+              onTap: () => _activateGear(GearId.tubeScreamer),
+              full: _activeGear == GearId.tubeScreamer,
             ),
-            NoiseGateParameterProvider(
-              child: NoiseGate(
-                onTap: () => _activateGear(GearId.noiseGate),
-                full: _activeGear == GearId.noiseGate,
-              ),
+            NoiseGate(
+              onTap: () => _activateGear(GearId.noiseGate),
+              full: _activeGear == GearId.noiseGate,
             ),
-            HeavyMetalParameterProvider(
-              child: HeavyMetal(
-                onTap: () => _activateGear(GearId.heavyMetal),
-                full: _activeGear == GearId.heavyMetal,
-              ),
+            HeavyMetal(
+              onTap: () => _activateGear(GearId.heavyMetal),
+              full: _activeGear == GearId.heavyMetal,
             ),
           ],
         ),
-        ValvestateParameterProvider(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Valvestate(
-                onTap: () => _activateGear(GearId.valvestate),
-                full: _activeGear == GearId.valvestate,
-              ),
-            ],
-          ),
+        Valvestate(
+          onTap: () => _activateGear(GearId.valvestate),
+          full: _activeGear == GearId.valvestate,
         ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            ChorusParameterProvider(
-              child: Chorus(
-                onTap: () => _activateGear(GearId.chorus),
-                full: _activeGear == GearId.chorus,
-              ),
-            ),
-          ],
+        Chorus(
+          onTap: () => _activateGear(GearId.chorus),
+          full: _activeGear == GearId.chorus,
         ),
       ],
     );

@@ -23,69 +23,6 @@ import 'package:provider/provider.dart';
 import 'amplifier.dart';
 import 'parameter.dart';
 
-class _ValvestateParameterChannel extends AudioParameterDoubleModel {
-  _ValvestateParameterChannel({required ParameterService parameterService})
-      : super(
-          name: 'OD1/OD2',
-          id: 'ampChannel',
-          parameterService: parameterService,
-        );
-}
-
-class _ValvestateParameterGain extends AudioParameterDoubleModel {
-  _ValvestateParameterGain({required ParameterService parameterService})
-      : super(
-          name: 'GAIN',
-          id: 'ampGain',
-          parameterService: parameterService,
-        );
-}
-
-class _ValvestateParameterBass extends AudioParameterDoubleModel {
-  _ValvestateParameterBass({required ParameterService parameterService})
-      : super(
-          name: 'BASS',
-          id: 'bass',
-          parameterService: parameterService,
-        );
-}
-
-class _ValvestateParameterMiddle extends AudioParameterDoubleModel {
-  _ValvestateParameterMiddle({required ParameterService parameterService})
-      : super(
-          name: 'MIDDLE',
-          id: 'middle',
-          parameterService: parameterService,
-        );
-}
-
-class _ValvestateParameterTreble extends AudioParameterDoubleModel {
-  _ValvestateParameterTreble({required ParameterService parameterService})
-      : super(
-          name: 'TREBLE',
-          id: 'treble',
-          parameterService: parameterService,
-        );
-}
-
-class _ValvestateParameterContour extends AudioParameterDoubleModel {
-  _ValvestateParameterContour({required ParameterService parameterService})
-      : super(
-          name: 'CONTOUR',
-          id: 'contour',
-          parameterService: parameterService,
-        );
-}
-
-class _ValvestateParameterVolume extends AudioParameterDoubleModel {
-  _ValvestateParameterVolume({required ParameterService parameterService})
-      : super(
-          name: 'VOLUME',
-          id: 'volume',
-          parameterService: parameterService,
-        );
-}
-
 class Valvestate extends StatelessWidget {
   const Valvestate({
     Key? key,
@@ -98,107 +35,56 @@ class Valvestate extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Builder(
-          builder: (context) {
-            final channel = Provider.of<_ValvestateParameterChannel>(context);
-            final gain = Provider.of<_ValvestateParameterGain>(context);
-            final bass = Provider.of<_ValvestateParameterBass>(context);
-            final middle = Provider.of<_ValvestateParameterMiddle>(context);
-            final treble = Provider.of<_ValvestateParameterTreble>(context);
-            final contour = Provider.of<_ValvestateParameterContour>(context);
-            final volume = Provider.of<_ValvestateParameterVolume>(context);
+    return ChangeNotifierProvider(
+      create: (context) {
+        final parameterService =
+            Provider.of<ParameterService>(context, listen: false);
 
-            return Amplifier(
-              parameter: [
-                channel.value,
-                gain.value,
-                bass.value,
-                middle.value,
-                treble.value,
-                contour.value,
-                volume.value,
-              ],
-              onChanged: [
-                channel.onUserChanged,
-                gain.onUserChanged,
-                bass.onUserChanged,
-                middle.onUserChanged,
-                treble.onUserChanged,
-                contour.onUserChanged,
-                volume.onUserChanged,
-              ],
-              parameterName: [
-                channel.name,
-                gain.name,
-                bass.name,
-                middle.name,
-                treble.name,
-                contour.name,
-                volume.name,
-              ],
-              name: 'VALVESTATE 8100',
-              onTap: onTap,
-              full: full,
-            );
-          },
-        ),
-      ],
-    );
-  }
-}
-
-class ValvestateParameterProvider extends StatelessWidget {
-  const ValvestateParameterProvider({
-    Key? key,
-    required this.child,
-  }) : super(key: key);
-
-  final Widget child;
-
-  @override
-  Widget build(BuildContext context) =>
-      Consumer<ParameterService>(builder: (_, parameterService, __) {
-        return MultiProvider(
-          providers: [
-            ChangeNotifierProvider(
-              create: (_) => _ValvestateParameterChannel(
-                parameterService: parameterService,
-              ),
+        return AmplifierModel(
+          parameters: [
+            AudioParameterDoubleModel(
+              name: 'OD1/OD2',
+              id: 'ampChannel',
+              parameterService: parameterService,
             ),
-            ChangeNotifierProvider(
-              create: (_) => _ValvestateParameterGain(
-                parameterService: parameterService,
-              ),
+            AudioParameterDoubleModel(
+              name: 'GAIN',
+              id: 'ampGain',
+              parameterService: parameterService,
             ),
-            ChangeNotifierProvider(
-              create: (_) => _ValvestateParameterBass(
-                parameterService: parameterService,
-              ),
+            AudioParameterDoubleModel(
+              name: 'BASS',
+              id: 'bass',
+              parameterService: parameterService,
             ),
-            ChangeNotifierProvider(
-              create: (_) => _ValvestateParameterMiddle(
-                parameterService: parameterService,
-              ),
+            AudioParameterDoubleModel(
+              name: 'MIDDLE',
+              id: 'middle',
+              parameterService: parameterService,
             ),
-            ChangeNotifierProvider(
-              create: (_) => _ValvestateParameterTreble(
-                parameterService: parameterService,
-              ),
+            AudioParameterDoubleModel(
+              name: 'TREBLE',
+              id: 'treble',
+              parameterService: parameterService,
             ),
-            ChangeNotifierProvider(
-              create: (_) => _ValvestateParameterContour(
-                parameterService: parameterService,
-              ),
+            AudioParameterDoubleModel(
+              name: 'CONTOUR',
+              id: 'contour',
+              parameterService: parameterService,
             ),
-            ChangeNotifierProvider(
-              create: (_) => _ValvestateParameterVolume(
-                parameterService: parameterService,
-              ),
+            AudioParameterDoubleModel(
+              name: 'VOLUME',
+              id: 'volume',
+              parameterService: parameterService,
             ),
           ],
-          child: child,
         );
-      });
+      },
+      child: Amplifier(
+        name: 'VALVESTATE 8100',
+        onTap: onTap,
+        full: full,
+      ),
+    );
+  }
 }

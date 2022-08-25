@@ -18,6 +18,7 @@
  */
 
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:logging/logging.dart';
 import 'package:provider/provider.dart';
 
@@ -32,6 +33,8 @@ void main() {
     // ignore: avoid_print
     print('${record.level.name}: ${record.time}: ${record.message}');
   });
+
+  GoogleFonts.config.allowRuntimeFetching = false;
 
   runApp(MultiProvider(
     providers: [
@@ -53,6 +56,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         brightness: Brightness.dark,
         primarySwatch: Colors.orange,
+        fontFamily: 'Noto Sans',
       ),
       home: const MyHomePage(title: 'Flutter Demo Home Page'),
       debugShowCheckedModeBanner: false,

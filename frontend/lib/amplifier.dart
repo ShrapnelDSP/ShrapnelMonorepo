@@ -18,54 +18,43 @@
  */
 
 import 'package:flutter/material.dart';
-import 'knob.dart';
+import 'package:provider/provider.dart';
+
+import 'knob_with_label.dart';
+import 'parameter.dart';
+
+class AmplifierModel extends ChangeNotifier {
+  AmplifierModel({required this.parameters});
+
+  List<AudioParameterDoubleModel> parameters;
+}
 
 class Amplifier extends StatelessWidget {
   const Amplifier({
     Key? key,
-    required this.parameter,
-    required this.onChanged,
-    required this.parameterName,
     required this.name,
     required this.onTap,
     required this.full,
   }) : super(key: key);
-
-  final List<double> parameter;
-  final List<ValueChanged<double>> onChanged;
-  final List<String> parameterName;
 
   final bool full;
   final Function() onTap;
 
   final String name;
 
-  Widget knobWithLabel(int index, double scaleFactor) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-        Knob(
-          value: parameter[index],
-          onChanged:
-              full ? onChanged[index] : (ignored) {/* not interactive */},
-          size: scaleFactor * 25,
-        ),
-        if (full) const SizedBox(height: 10),
-        if (full)
-          Text(
-            parameterName[index],
-            textAlign: TextAlign.center,
-          ),
-      ],
-    );
-  }
-
-  List<Widget> knobs(double scaleFactor) {
+  List<Widget> knobs(BuildContext context, double scaleFactor) {
     final knobs = <Widget>[];
+    final parameters = Provider.of<AmplifierModel>(context).parameters;
 
-    for (var i = 0; i < parameter.length; i++) {
-      knobs.add(knobWithLabel(i, scaleFactor));
-      if (i < parameter.length - 1) {
+    for (var i = 0; i < parameters.length; i++) {
+      knobs.add(ChangeNotifierProvider.value(
+        value: parameters[i],
+        child: KnobWithLabel(
+          isEnabled: full,
+          knobSize: scaleFactor * 25,
+        ),
+      ));
+      if (i < parameters.length - 1) {
         knobs.add(SizedBox(width: scaleFactor * 10));
       }
     }
@@ -80,10 +69,11 @@ class Amplifier extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Card(
-        child: Container(
-          margin: EdgeInsets.all(scaleFactor * 10),
+        child: Padding(
+          padding: EdgeInsets.all(scaleFactor * 10),
           child: Row(
-            children: knobs(scaleFactor),
+            mainAxisSize: MainAxisSize.min,
+            children: knobs(context, scaleFactor),
           ),
         ),
       ),
