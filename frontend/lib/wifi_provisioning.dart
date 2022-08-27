@@ -47,7 +47,7 @@ class _Strings {
   static const wifiPasswordSubmitButtonText = 'Join';
 }
 
-final log = Logger('wifi_provisioning');
+final _log = Logger('wifi_provisioning');
 
 class _WifiPasswordDialog extends StatefulWidget {
   @override
@@ -223,6 +223,7 @@ class WifiProvisioningScreen extends StatelessWidget {
               const Text(_Strings.initialMessage, textAlign: TextAlign.center),
         ),
         ElevatedButton(
+          key: const Key('wifi provisioning start'),
           onPressed: provisioning.start,
           child: const Text(_Strings.initialButtonText),
         ),
@@ -373,7 +374,7 @@ class WifiProvisioningProvider extends ChangeNotifier {
 
   set _state(WifiProvisioningState newState) {
     _statePrivate = newState;
-    log.fine('state: $_statePrivate');
+    _log.fine('state: $_statePrivate');
     notifyListeners();
   }
 
@@ -393,7 +394,7 @@ class WifiProvisioningProvider extends ChangeNotifier {
 
   /// Connect to device and start provisioning process
   Future<void> start() async {
-    log.info('started');
+    _log.info('started');
     if (state != WifiProvisioningState.initial &&
         state != WifiProvisioningState.sessionFailure &&
         state != WifiProvisioningState.failure) {
@@ -407,13 +408,13 @@ class WifiProvisioningProvider extends ChangeNotifier {
     _state = WifiProvisioningState.connecting;
     final isConnected = await provisioning!.establishSession();
     if (_state != WifiProvisioningState.connecting) {
-      log.info('establishSession cancelled');
+      _log.info('establishSession cancelled');
       return;
     }
 
-    log.info('scanning');
+    _log.info('scanning');
     if (!isConnected) {
-      log.severe('establish session failed');
+      _log.severe('establish session failed');
       _state = WifiProvisioningState.sessionFailure;
       return;
     }
@@ -423,12 +424,12 @@ class WifiProvisioningProvider extends ChangeNotifier {
     final accessPoints = await provisioning!.startScanWiFi();
 
     if (_state != WifiProvisioningState.scanning) {
-      log.info('scanning cancelled');
+      _log.info('scanning cancelled');
       return;
     }
 
     if (accessPoints == null) {
-      log.severe('scanning failed');
+      _log.severe('scanning failed');
       _state = WifiProvisioningState.sessionFailure;
       return;
     }
@@ -455,26 +456,26 @@ class WifiProvisioningProvider extends ChangeNotifier {
     final ssid = accessPoints![selectedAccessPoint!]['ssid'] as String;
 
     _state = WifiProvisioningState.testing;
-    log.info('send wifi');
+    _log.info('send wifi');
     var success =
         await provisioning!.sendWifiConfig(ssid: ssid, password: passphrase);
     if (!success) {
-      log.severe('send wifi config failed');
+      _log.severe('send wifi config failed');
       _state = WifiProvisioningState.sessionFailure;
       return;
     }
 
-    log.info('apply wifi');
+    _log.info('apply wifi');
     success = await provisioning!.applyWifiConfig();
     if (!success) {
-      log.severe('apply wifi config failed');
+      _log.severe('apply wifi config failed');
       _state = WifiProvisioningState.sessionFailure;
       return;
     }
 
     _status = await _pollWifiStatusWithTimeout(const Duration(seconds: 10));
     if (!_status.isSuccess()) {
-      log.severe('could not connect to provisioned access point '
+      _log.severe('could not connect to provisioned access point '
           '${_status?.state.toString()} '
           '${_status?.failedReason?.toString()}');
       _state = WifiProvisioningState.failure;
@@ -488,7 +489,7 @@ class WifiProvisioningProvider extends ChangeNotifier {
   Future<ConnectionStatus?> _pollWifiStatusWithTimeout(Duration timeout) async {
     var keepGoing = true;
     final timer = Timer(timeout, () {
-      log.warning('Connection to provisioned access point timed out');
+      _log.warning('Connection to provisioned access point timed out');
       keepGoing = false;
     });
     ConnectionStatus? status;

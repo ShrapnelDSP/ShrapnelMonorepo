@@ -23,7 +23,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:logging/logging.dart';
 import 'package:provider/provider.dart';
 
-import 'fake_provisioning.dart';
 import 'parameter.dart';
 import 'pedalboard.dart';
 import 'robust_websocket.dart';
@@ -103,6 +102,7 @@ class MyHomePage extends StatelessWidget {
           Container(
             margin: const EdgeInsets.all(10),
             child: ElevatedButton(
+              key: const Key('wifi provisioning button'),
               child: const Text('WiFi Provisioning'),
               onPressed: () {
                 Navigator.push<ProvisioningPage>(
