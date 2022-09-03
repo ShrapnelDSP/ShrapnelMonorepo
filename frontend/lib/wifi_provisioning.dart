@@ -420,7 +420,6 @@ class WifiProvisioningProvider extends ChangeNotifier {
     }
 
     _state = WifiProvisioningState.scanning;
-    // TODO need to remove duplicate SSID here
     final accessPoints = await provisioning!.startScanWiFi();
 
     if (_state != WifiProvisioningState.scanning) {
@@ -433,6 +432,10 @@ class WifiProvisioningProvider extends ChangeNotifier {
       _state = WifiProvisioningState.sessionFailure;
       return;
     }
+
+    // Remove duplicate SSIDs
+    final seenSsids = <String>{};
+    accessPoints.retainWhere((x) => seenSsids.add(x['ssid'] as String));
 
     _accessPoints = accessPoints;
   }
