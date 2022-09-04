@@ -103,6 +103,7 @@ class _WifiPasswordDialogState extends State<_WifiPasswordDialog> {
                   ),
                   Container(height: 16),
                   TextField(
+                    key: const Key('password text field'),
                     controller: _controller,
                     onSubmitted: (_) => submitWifiPassword(context),
                     obscureText: _isObscure,
@@ -122,7 +123,10 @@ class _WifiPasswordDialogState extends State<_WifiPasswordDialog> {
                     ),
                   ),
                   Container(height: 8),
+                  // TODO FlatButton or RaisedButton is recommended instead of
+                  // this
                   MaterialButton(
+                    key: const Key('password submit button'),
                     onPressed: () {
                       submitWifiPassword(context);
                     },

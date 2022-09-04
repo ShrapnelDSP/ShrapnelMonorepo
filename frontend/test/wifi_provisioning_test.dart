@@ -1,8 +1,6 @@
-import 'dart:math';
-
 import 'package:esp_softap_provisioning/esp_softap_provisioning.dart';
+import 'package:esp_softap_provisioning/src/connection_models.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
@@ -53,10 +51,6 @@ void main() {
       ],
       child: const MyApp(),
     );
-
-    final fontData = rootBundle.load('google_fonts/NotoSans-Medium.ttf');
-    final fontLoader = FontLoader('Noto Sans')..addFont(fontData);
-    await fontLoader.load();
   });
 
   testWidgets('WiFi provisioning warns if already connected to device',
@@ -78,8 +72,8 @@ void main() {
 
     provisioningFactory = () {
       mockProvisioning = MockProvisioning();
-      when(mockProvisioning.establishSession())
-          .thenAnswer((_) => Future.delayed(const Duration(milliseconds: 500), () => true));
+      when(mockProvisioning.establishSession()).thenAnswer(
+          (_) => Future.delayed(const Duration(milliseconds: 500), () => true));
       when(mockProvisioning.startScanWiFi()).thenAnswer((_) => Future.value([
             _createFakeWifi(
               ssid: 'test SSID',
@@ -99,8 +93,7 @@ void main() {
     };
 
     await tester.tap(find.byKey(const Key('wifi provisioning start')));
-    final count = await tester.pumpAndSettle();
-    debugPrint('pumped $count times');
+    await tester.pumpAndSettle();
 
     await tester.pump(const Duration(seconds: 1));
 
@@ -110,6 +103,33 @@ void main() {
     await tester.tap(ssidCard.first);
     await tester.pumpAndSettle();
 
+    when(
+      mockProvisioning.sendWifiConfig(
+        ssid: 'test SSID',
+        password: 'password',
+      ),
+    ).thenAnswer((_) => Future.delayed(const Duration(seconds: 1), () => true));
+    when(
+      mockProvisioning.applyWifiConfig(),
+    ).thenAnswer((_) => Future.value(true));
+    when(
+      mockProvisioning.getStatus(),
+    ).thenAnswer((_) => Future.value(ConnectionStatus(
+          state: WifiConnectionState.Connected,
+          ip: '1.2.3.4',
+        )));
+
+    final passwordField = find.byKey(const Key('password text field'));
+    await tester.enterText(passwordField, 'password');
+    await tester.tap(find.byKey(const Key('password submit button')));
+
+    await tester.pump(const Duration(milliseconds: 500));
+
+    expect(find.text('Testing...'), findsOneWidget);
+
+    await tester.pump(const Duration(seconds: 1));
+
+    expect(find.textContaining('success'), findsOneWidget);
   });
 
   testWidgets('WiFi provisioning fails if not connected to access point',
@@ -126,9 +146,149 @@ void main() {
     };
 
     await tester.tap(find.byKey(const Key('wifi provisioning start')));
-    final count = await tester.pumpAndSettle();
-    debugPrint('pumped $count times');
+    await tester.pumpAndSettle();
 
     expect(find.textContaining('failed'), findsOneWidget);
   });
+
+  testWidgets('WiFi provisioning fails if incorrect password is provided',
+      (tester) async {
+    await tester.pumpWidget(sut);
+
+    await tester.tap(find.byKey(const Key('wifi provisioning button')));
+    await tester.pumpAndSettle();
+
+    provisioningFactory = () {
+      mockProvisioning = MockProvisioning();
+      when(mockProvisioning.establishSession()).thenAnswer(
+          (_) => Future.delayed(const Duration(milliseconds: 500), () => true));
+      when(mockProvisioning.startScanWiFi()).thenAnswer((_) => Future.value([
+            _createFakeWifi(
+              ssid: 'test SSID',
+              channel: 5,
+              rssi: -70,
+              mac: [0x50, 0x51, 0x52, 0x53, 0x54, 0x55],
+              auth: 'wpa',
+            ),
+            _createFakeWifi(
+              ssid: 'test SSID',
+              channel: 6,
+              rssi: -71,
+              mac: [0x60, 0x61, 0x62, 0x63, 0x64, 0x65],
+              auth: 'wpa',
+            ),
+          ]));
+    };
+
+    await tester.tap(find.byKey(const Key('wifi provisioning start')));
+    await tester.pumpAndSettle();
+
+    await tester.pump(const Duration(seconds: 1));
+
+    final ssidCard = find.textContaining('test SSID');
+    expect(ssidCard, findsOneWidget);
+
+    await tester.tap(ssidCard.first);
+    await tester.pumpAndSettle();
+
+    when(
+      mockProvisioning.sendWifiConfig(
+        ssid: 'test SSID',
+        password: 'password',
+      ),
+    ).thenAnswer((_) => Future.delayed(const Duration(seconds: 1), () => true));
+    when(
+      mockProvisioning.applyWifiConfig(),
+    ).thenAnswer((_) => Future.value(true));
+    when(
+      mockProvisioning.getStatus(),
+    ).thenAnswer((_) => Future.value(ConnectionStatus(
+          state: WifiConnectionState.ConnectionFailed,
+          failedReason: WifiConnectFailedReason.AuthError,
+        )));
+
+    final passwordField = find.byKey(const Key('password text field'));
+    await tester.enterText(passwordField, 'password');
+    await tester.tap(find.byKey(const Key('password submit button')));
+
+    await tester.pump(const Duration(milliseconds: 500));
+
+    expect(find.text('Testing...'), findsOneWidget);
+
+    await tester.pump(const Duration(seconds: 1));
+
+    expect(find.textContaining('failed to connect'), findsOneWidget);
+  });
+
+
+  testWidgets('WiFi provisioning fails if incorrect SSID is provided',
+      (tester) async {
+    await tester.pumpWidget(sut);
+
+    await tester.tap(find.byKey(const Key('wifi provisioning button')));
+    await tester.pumpAndSettle();
+
+    provisioningFactory = () {
+      mockProvisioning = MockProvisioning();
+      when(mockProvisioning.establishSession()).thenAnswer(
+          (_) => Future.delayed(const Duration(milliseconds: 500), () => true));
+      when(mockProvisioning.startScanWiFi()).thenAnswer((_) => Future.value([
+            _createFakeWifi(
+              ssid: 'test SSID',
+              channel: 5,
+              rssi: -70,
+              mac: [0x50, 0x51, 0x52, 0x53, 0x54, 0x55],
+              auth: 'wpa',
+            ),
+            _createFakeWifi(
+              ssid: 'test SSID',
+              channel: 6,
+              rssi: -71,
+              mac: [0x60, 0x61, 0x62, 0x63, 0x64, 0x65],
+              auth: 'wpa',
+            ),
+          ]));
+    };
+
+    await tester.tap(find.byKey(const Key('wifi provisioning start')));
+    await tester.pumpAndSettle();
+
+    await tester.pump(const Duration(seconds: 1));
+
+    final ssidCard = find.textContaining('test SSID');
+    expect(ssidCard, findsOneWidget);
+
+    await tester.tap(ssidCard.first);
+    await tester.pumpAndSettle();
+
+    when(
+      mockProvisioning.sendWifiConfig(
+        ssid: 'test SSID',
+        password: 'password',
+      ),
+    ).thenAnswer((_) => Future.delayed(const Duration(seconds: 1), () => true));
+    when(
+      mockProvisioning.applyWifiConfig(),
+    ).thenAnswer((_) => Future.value(true));
+    when(
+      mockProvisioning.getStatus(),
+    ).thenAnswer((_) => Future.value(ConnectionStatus(
+          state: WifiConnectionState.ConnectionFailed,
+          failedReason: WifiConnectFailedReason.NetworkNotFound,
+        )));
+
+    final passwordField = find.byKey(const Key('password text field'));
+    await tester.enterText(passwordField, 'password');
+    await tester.tap(find.byKey(const Key('password submit button')));
+
+    await tester.pump(const Duration(milliseconds: 500));
+
+    expect(find.text('Testing...'), findsOneWidget);
+
+    await tester.pump(const Duration(seconds: 1));
+
+    expect(find.textContaining('not found'), findsOneWidget);
+  });
+
+
 }
