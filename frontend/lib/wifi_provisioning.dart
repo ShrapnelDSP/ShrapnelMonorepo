@@ -18,6 +18,8 @@
  */
 
 import 'dart:async';
+import 'dart:convert';
+
 import 'package:esp_softap_provisioning/esp_softap_provisioning.dart';
 // ignore: implementation_imports
 import 'package:esp_softap_provisioning/src/connection_models.dart';
@@ -58,6 +60,7 @@ class _WifiPasswordDialogState extends State<_WifiPasswordDialog> {
   late TextEditingController _controller;
 
   bool _isObscure = true;
+  final _formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
@@ -72,10 +75,12 @@ class _WifiPasswordDialogState extends State<_WifiPasswordDialog> {
   }
 
   void submitWifiPassword(BuildContext context) {
-    final provisioning =
-        Provider.of<WifiProvisioningProvider>(context, listen: false);
-    provisioning.join(_controller.value.text);
-    Navigator.pop(context);
+    if (_formKey.currentState!.validate()) {
+      final provisioning =
+          Provider.of<WifiProvisioningProvider>(context, listen: false);
+      provisioning.join(_controller.value.text);
+      Navigator.pop(context);
+    }
   }
 
   @override
@@ -92,47 +97,76 @@ class _WifiPasswordDialogState extends State<_WifiPasswordDialog> {
             insetPadding: EdgeInsets.symmetric(horizontal: insets),
             child: Padding(
               padding: const EdgeInsets.all(8),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    provisioning
-                            .accessPoints![provisioning.selectedAccessPoint!]
-                        ['ssid'] as String,
-                    style: Theme.of(context).textTheme.titleLarge,
-                  ),
-                  Container(height: 16),
-                  TextField(
-                    key: const Key('password text field'),
-                    controller: _controller,
-                    onSubmitted: (_) => submitWifiPassword(context),
-                    obscureText: _isObscure,
-                    decoration: InputDecoration(
-                      border: const OutlineInputBorder(),
-                      labelText: 'Password',
-                      suffixIcon: IconButton(
-                        icon: Icon(_isObscure
-                            ? Icons.visibility
-                            : Icons.visibility_off),
-                        onPressed: () {
-                          setState(() {
-                            _isObscure = !_isObscure;
-                          });
-                        },
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      provisioning
+                              .accessPoints![provisioning.selectedAccessPoint!]
+                          ['ssid'] as String,
+                      style: Theme.of(context).textTheme.titleLarge,
+                    ),
+                    Container(height: 16),
+                    TextFormField(
+                      key: const Key('password text field'),
+                      controller: _controller,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'must not be empty';
+                        }
+
+                        try {
+                          ascii.encode(value);
+                        }
+                        // The code to check if the error will be thrown would
+                        // be a duplicate of the code that throws the error. We
+                        // disable the lint to avoid the duplication.
+                        // ignore: avoid_catching_errors
+                        on ArgumentError catch (e) {
+                          _log.warning(e);
+                          return 'contains invalid characters';
+                        }
+
+                        if (value.length > 32) {
+                          return 'must be shorter than 33 characters';
+                        }
+
+                        if (value.length < 8) {
+                          return 'must be longer than 7 characters';
+                        }
+
+                        return null;
+                      },
+                      obscureText: _isObscure,
+                      decoration: InputDecoration(
+                        border: const OutlineInputBorder(),
+                        labelText: 'Password',
+                        suffixIcon: IconButton(
+                          icon: Icon(_isObscure
+                              ? Icons.visibility
+                              : Icons.visibility_off),
+                          onPressed: () {
+                            setState(() {
+                              _isObscure = !_isObscure;
+                            });
+                          },
+                        ),
                       ),
                     ),
-                  ),
-                  Container(height: 8),
-                  // TODO FlatButton or RaisedButton is recommended instead of
-                  // this
-                  MaterialButton(
-                    key: const Key('password submit button'),
-                    onPressed: () {
-                      submitWifiPassword(context);
-                    },
-                    child: const Text(_Strings.wifiPasswordSubmitButtonText),
-                  ),
-                ],
+                    Container(height: 8),
+                    // TODO FlatButton or RaisedButton is recommended instead of
+                    // this
+                    MaterialButton(
+                      key: const Key('password submit button'),
+                      onPressed: () {
+                        submitWifiPassword(context);
+                      },
+                      child: const Text(_Strings.wifiPasswordSubmitButtonText),
+                    ),
+                  ],
+                ),
               ),
             ),
           );

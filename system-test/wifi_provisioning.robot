@@ -53,6 +53,9 @@ Not Connected to Firmware Access Point
 
 # provision hidden SSID
 
+# provision 32 byte raw hex passkey. This is not actually supported by the
+# provisioning library. It always utf8 encodes the password
+
 # frontend error when using invalid SSID. This is only possible after adding
 # hidden SSID support.
 

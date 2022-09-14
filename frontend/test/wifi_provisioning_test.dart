@@ -290,5 +290,66 @@ void main() {
     expect(find.textContaining('not found'), findsOneWidget);
   });
 
+  testWidgets('WiFi provisioning fails if invalid password is provided',
+      (tester) async {
+    await tester.pumpWidget(sut);
 
+    await tester.tap(find.byKey(const Key('wifi provisioning button')));
+    await tester.pumpAndSettle();
+
+    provisioningFactory = () {
+      mockProvisioning = MockProvisioning();
+      when(mockProvisioning.establishSession()).thenAnswer(
+          (_) => Future.delayed(const Duration(milliseconds: 500), () => true));
+      when(mockProvisioning.startScanWiFi()).thenAnswer((_) => Future.value([
+            _createFakeWifi(
+              ssid: 'test SSID',
+              channel: 5,
+              rssi: -70,
+              mac: [0x50, 0x51, 0x52, 0x53, 0x54, 0x55],
+              auth: 'wpa',
+            ),
+            _createFakeWifi(
+              ssid: 'test SSID',
+              channel: 6,
+              rssi: -71,
+              mac: [0x60, 0x61, 0x62, 0x63, 0x64, 0x65],
+              auth: 'wpa',
+            ),
+          ]));
+    };
+
+    await tester.tap(find.byKey(const Key('wifi provisioning start')));
+    await tester.pumpAndSettle();
+
+    await tester.pump(const Duration(seconds: 1));
+
+    final ssidCard = find.textContaining('test SSID');
+    expect(ssidCard, findsOneWidget);
+
+    await tester.tap(ssidCard.first);
+    await tester.pumpAndSettle();
+
+    final passwordField = find.byKey(const Key('password text field'));
+    final submitButton = find.byKey(const Key('password submit button'));
+
+
+    Future<void> submitPassword(String password) async {
+        await tester.enterText(passwordField, password);
+        await tester.tap(submitButton);
+        await tester.pump();
+    }
+
+    await submitPassword('');
+    expect(find.textContaining('must not be empty'), findsOneWidget);
+
+    await submitPassword('a' * 7);
+    expect(find.textContaining('longer than 7'), findsOneWidget);
+
+    await submitPassword('a' * 33);
+    expect(find.textContaining('shorter than 33'), findsOneWidget);
+
+    await submitPassword('😊');
+    expect(find.textContaining('contains invalid characters'), findsOneWidget);
+  });
 }
