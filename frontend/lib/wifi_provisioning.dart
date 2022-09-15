@@ -59,7 +59,6 @@ class _WifiPasswordDialog extends StatefulWidget {
 class _WifiPasswordDialogState extends State<_WifiPasswordDialog> {
   late TextEditingController _controller;
 
-  bool _isObscure = true;
   final _formKey = GlobalKey<FormState>();
 
   @override
@@ -78,7 +77,7 @@ class _WifiPasswordDialogState extends State<_WifiPasswordDialog> {
     if (_formKey.currentState!.validate()) {
       final provisioning =
           Provider.of<WifiProvisioningProvider>(context, listen: false);
-      provisioning.join(_controller.value.text);
+      provisioning.join(null, _controller.value.text);
       Navigator.pop(context);
     }
   }
@@ -109,59 +108,166 @@ class _WifiPasswordDialogState extends State<_WifiPasswordDialog> {
                       style: Theme.of(context).textTheme.titleLarge,
                     ),
                     Container(height: 16),
-                    TextFormField(
-                      key: const Key('password text field'),
+                    PasswordTextFormField(
                       controller: _controller,
+                    ),
+                    Container(height: 8),
+                    ElevatedButton(
+                      key: const Key('password submit button'),
+                      onPressed: () {
+                        submitWifiPassword(context);
+                      },
+                      child: const Text(_Strings.wifiPasswordSubmitButtonText),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          );
+        },
+      );
+}
+
+class PasswordTextFormField extends StatefulWidget {
+  const PasswordTextFormField({
+    Key? key,
+    required this.controller,
+  }) : super(key: key);
+
+  final TextEditingController controller;
+
+  @override
+  State<PasswordTextFormField> createState() => _PasswordTextFormFieldState();
+}
+
+class _PasswordTextFormFieldState extends State<PasswordTextFormField> {
+  bool _isObscure = true;
+
+  @override
+  Widget build(BuildContext context) {
+    return TextFormField(
+      key: const Key('password text field'),
+      controller: widget.controller,
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return 'must not be empty';
+        }
+
+        try {
+          ascii.encode(value);
+        }
+        // The code to check if the error will be thrown would
+        // be a duplicate of the code that throws the error. We
+        // disable the lint to avoid the duplication.
+        // ignore: avoid_catching_errors
+        on ArgumentError catch (e) {
+          _log.warning(e);
+          return 'contains invalid characters';
+        }
+
+        if (value.length > 64) {
+          return 'must be shorter than 65 characters';
+        }
+
+        if (value.length < 8) {
+          return 'must be longer than 7 characters';
+        }
+
+        return null;
+      },
+      obscureText: _isObscure,
+      decoration: InputDecoration(
+        border: const OutlineInputBorder(),
+        labelText: 'Password',
+        suffixIcon: IconButton(
+          icon: Icon(_isObscure ? Icons.visibility : Icons.visibility_off),
+          onPressed: () {
+            setState(() {
+              _isObscure = !_isObscure;
+            });
+          },
+        ),
+      ),
+    );
+  }
+}
+
+class _WifiDialog extends StatefulWidget {
+  @override
+  State<_WifiDialog> createState() => _WifiDialogState();
+}
+
+class _WifiDialogState extends State<_WifiDialog> {
+  late TextEditingController _ssidController;
+  late TextEditingController _passwordController;
+
+  final _formKey = GlobalKey<FormState>();
+
+  @override
+  void initState() {
+    super.initState();
+    _ssidController = TextEditingController();
+    _passwordController = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    _ssidController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) => Consumer<WifiProvisioningProvider>(
+        builder: (context, provisioning, _) {
+          final screenWidth = MediaQuery.of(context).size.width;
+          const dialogWidth = 300;
+          var insets = (screenWidth - dialogWidth) / 2;
+          if (insets < 8) {
+            insets = 8;
+          }
+
+          return Dialog(
+            insetPadding: EdgeInsets.symmetric(horizontal: insets),
+            child: Padding(
+              padding: const EdgeInsets.all(8),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Text('Advanced configuration'),
+                    Container(height: 16),
+                    TextFormField(
+                      key: const Key('ssid text field'),
+                      controller: _ssidController,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'must not be empty';
-                        }
-
-                        try {
-                          ascii.encode(value);
-                        }
-                        // The code to check if the error will be thrown would
-                        // be a duplicate of the code that throws the error. We
-                        // disable the lint to avoid the duplication.
-                        // ignore: avoid_catching_errors
-                        on ArgumentError catch (e) {
-                          _log.warning(e);
-                          return 'contains invalid characters';
                         }
 
                         if (value.length > 32) {
                           return 'must be shorter than 33 characters';
                         }
 
-                        if (value.length < 8) {
-                          return 'must be longer than 7 characters';
-                        }
-
                         return null;
                       },
-                      obscureText: _isObscure,
-                      decoration: InputDecoration(
-                        border: const OutlineInputBorder(),
-                        labelText: 'Password',
-                        suffixIcon: IconButton(
-                          icon: Icon(_isObscure
-                              ? Icons.visibility
-                              : Icons.visibility_off),
-                          onPressed: () {
-                            setState(() {
-                              _isObscure = !_isObscure;
-                            });
-                          },
-                        ),
+                      decoration: const InputDecoration(
+                        border: OutlineInputBorder(),
+                        labelText: 'SSID',
                       ),
                     ),
                     Container(height: 8),
-                    // TODO FlatButton or RaisedButton is recommended instead of
-                    // this
-                    MaterialButton(
-                      key: const Key('password submit button'),
+                    PasswordTextFormField(controller: _passwordController),
+                    Container(height: 8),
+                    ElevatedButton(
+                      key: const Key('advanced submit button'),
                       onPressed: () {
-                        submitWifiPassword(context);
+                        if (_formKey.currentState!.validate()) {
+                          provisioning.join(_ssidController.value.text,
+                              _passwordController.value.text);
+                          Navigator.pop(context);
+                        }
                       },
                       child: const Text(_Strings.wifiPasswordSubmitButtonText),
                     ),
@@ -191,50 +297,74 @@ class _WifiScanningScreenState extends State<_WifiScanningScreen> {
     if (accessPointCount == 0) {
       child = const Text('Scanning...');
     } else {
-      child = ListView.builder(
+      child = Padding(
         padding: const EdgeInsets.all(8),
-        itemCount: accessPointCount,
-        itemBuilder: (context, index) {
-          final ssid = provisioning.accessPoints![index]['ssid'] as String;
-          final bssid = provisioning.accessPoints![index]['bssid'] as List<int>;
-          final bssidFormatted = <String>[];
+        child: Column(
+          children: [
+            Expanded(
+              child: ListView.builder(
+                shrinkWrap: true,
+                itemCount: accessPointCount,
+                itemBuilder: (context, index) {
+                  final ssid =
+                      provisioning.accessPoints![index]['ssid'] as String;
+                  final bssid =
+                      provisioning.accessPoints![index]['bssid'] as List<int>;
+                  final bssidFormatted = <String>[];
 
-          for (final byte in bssid) {
-            bssidFormatted
-                .add(byte.toRadixString(16).padLeft(2, '0').toUpperCase());
-          }
+                  for (final byte in bssid) {
+                    bssidFormatted.add(
+                        byte.toRadixString(16).padLeft(2, '0').toUpperCase());
+                  }
 
-          final bssidString = bssidFormatted.join(':');
+                  final bssidString = bssidFormatted.join(':');
 
-          return Card(
-            child: ListTile(
-              title: Text(ssid),
-              subtitle: Text('BSSID: $bssidString\n'
-                  'Security: ${provisioning.accessPoints![index]['auth']}'),
-              // TODO there are supposed to be wifi_2_bar and wifi_1_bar icons
-              //      too, but these are missing from the Icons class for some
-              //      reason
-              trailing: Tooltip(
-                message:
-                    'RSSI: ${provisioning.accessPoints![index]['rssi'] as int}',
-                child: Icon(
-                    provisioning.accessPoints![index]['rssi'] as int > -65
-                        ? Icons.wifi
-                        : Icons.signal_wifi_0_bar),
+                  return Card(
+                    child: ListTile(
+                      title: Text(ssid),
+                      subtitle: Text('BSSID: $bssidString\n'
+                          'Security: ${provisioning.accessPoints![index]['auth']}'),
+                      // TODO there are supposed to be wifi_2_bar and wifi_1_bar icons
+                      //      too, but these are missing from the Icons class for some
+                      //      reason
+                      trailing: Tooltip(
+                        message:
+                            'RSSI: ${provisioning.accessPoints![index]['rssi'] as int}',
+                        child: Icon(
+                            provisioning.accessPoints![index]['rssi'] as int >
+                                    -65
+                                ? Icons.wifi
+                                : Icons.signal_wifi_0_bar),
+                      ),
+                      onTap: () {
+                        provisioning.selectedAccessPoint = index;
+                        showDialog<void>(
+                            context: context,
+                            builder: (context) => ChangeNotifierProvider<
+                                    WifiProvisioningProvider>.value(
+                                  value: provisioning,
+                                  child: _WifiPasswordDialog(),
+                                ));
+                      },
+                    ),
+                  );
+                },
               ),
-              onTap: () {
-                provisioning.selectedAccessPoint = index;
+            ),
+            ElevatedButton(
+              onPressed: () {
                 showDialog<void>(
                     context: context,
                     builder: (context) =>
                         ChangeNotifierProvider<WifiProvisioningProvider>.value(
                           value: provisioning,
-                          child: _WifiPasswordDialog(),
+                          child: _WifiDialog(),
                         ));
               },
-            ),
-          );
-        },
+              child: const Text('Advanced configuration'),
+            )
+          ],
+        ),
       );
     }
 
@@ -479,22 +609,26 @@ class WifiProvisioningProvider extends ChangeNotifier {
   }
 
   // TODO cancel if reset is called
-  Future<void> join(String passphrase) async {
+  Future<void> join(String? ssid, String passphrase) async {
     if (state != WifiProvisioningState.scanning) {
       throw StateError('join called in unexpected state ${_state.toString()}');
     }
 
-    if (selectedAccessPoint == null) {
-      throw StateError('join called when selectedAccessPoint is null');
-    }
+    if (ssid == null) {
+      if (selectedAccessPoint == null) {
+        throw StateError('join called when selectedAccessPoint is null');
+      }
 
-    if (selectedAccessPoint! < 0 ||
-        selectedAccessPoint! > accessPoints!.length) {
-      throw StateError(
-          'join called when selectedAccessPoint has invalid value $selectedAccessPoint');
-    }
+      if (selectedAccessPoint! < 0 ||
+          selectedAccessPoint! > accessPoints!.length) {
+        throw StateError(
+            'join called when selectedAccessPoint has invalid value $selectedAccessPoint');
+      }
 
-    final ssid = accessPoints![selectedAccessPoint!]['ssid'] as String;
+      // Assigning a default value to a null parameter is allowed
+      // ignore: parameter_assignments
+      ssid = accessPoints![selectedAccessPoint!]['ssid'] as String;
+    }
 
     _state = WifiProvisioningState.testing;
     _log.info('send wifi');

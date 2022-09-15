@@ -346,10 +346,81 @@ void main() {
     await submitPassword('a' * 7);
     expect(find.textContaining('longer than 7'), findsOneWidget);
 
-    await submitPassword('a' * 33);
-    expect(find.textContaining('shorter than 33'), findsOneWidget);
+    await submitPassword('a' * 65);
+    expect(find.textContaining('shorter than 65'), findsOneWidget);
 
     await submitPassword('😊');
     expect(find.textContaining('contains invalid characters'), findsOneWidget);
+  });
+
+  testWidgets('WiFi provisioning can succeed when using hidden SSID', (tester) async {
+    await tester.pumpWidget(sut);
+
+    await tester.tap(find.byKey(const Key('wifi provisioning button')));
+    await tester.pumpAndSettle();
+
+    provisioningFactory = () {
+      mockProvisioning = MockProvisioning();
+      when(mockProvisioning.establishSession()).thenAnswer(
+          (_) => Future.delayed(const Duration(milliseconds: 500), () => true));
+      when(mockProvisioning.startScanWiFi()).thenAnswer((_) => Future.value([
+            _createFakeWifi(
+              ssid: 'test SSID',
+              channel: 5,
+              rssi: -70,
+              mac: [0x50, 0x51, 0x52, 0x53, 0x54, 0x55],
+              auth: 'wpa',
+            ),
+            _createFakeWifi(
+              ssid: 'test SSID',
+              channel: 6,
+              rssi: -71,
+              mac: [0x60, 0x61, 0x62, 0x63, 0x64, 0x65],
+              auth: 'wpa',
+            ),
+          ]));
+    };
+
+    await tester.tap(find.byKey(const Key('wifi provisioning start')));
+    await tester.pumpAndSettle();
+
+    await tester.pump(const Duration(seconds: 1));
+
+    final ssidCard = find.textContaining('test SSID');
+    expect(ssidCard, findsOneWidget);
+
+    await tester.tap(find.textContaining('Advanced'));
+    await tester.pumpAndSettle();
+
+    when(
+      mockProvisioning.sendWifiConfig(
+        ssid: 'hidden SSID',
+        password: 'password',
+      ),
+    ).thenAnswer((_) => Future.delayed(const Duration(seconds: 1), () => true));
+    when(
+      mockProvisioning.applyWifiConfig(),
+    ).thenAnswer((_) => Future.value(true));
+    when(
+      mockProvisioning.getStatus(),
+    ).thenAnswer((_) => Future.value(ConnectionStatus(
+          state: WifiConnectionState.Connected,
+          ip: '1.2.3.4',
+        )));
+
+    final ssidField = find.byKey(const Key('ssid text field'));
+    await tester.enterText(ssidField, 'hidden SSID');
+
+    final passwordField = find.byKey(const Key('password text field'));
+    await tester.enterText(passwordField, 'password');
+    await tester.tap(find.byKey(const Key('advanced submit button')));
+
+    await tester.pump(const Duration(milliseconds: 500));
+
+    expect(find.text('Testing...'), findsOneWidget);
+
+    await tester.pump(const Duration(seconds: 1));
+
+    expect(find.textContaining('success'), findsOneWidget);
   });
 }

@@ -101,9 +101,9 @@ class MyHomePage extends StatelessWidget {
         actions: [
           Container(
             margin: const EdgeInsets.all(10),
-            child: ElevatedButton(
+            child: IconButton(
+              icon: const Icon(Icons.settings),
               key: const Key('wifi provisioning button'),
-              child: const Text('WiFi Provisioning'),
               onPressed: () {
                 Navigator.push<ProvisioningPage>(
                   context,

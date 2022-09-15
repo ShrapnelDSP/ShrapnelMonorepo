@@ -2,8 +2,14 @@ cmake_minimum_required(VERSION 3.13)
 
 set(CMAKE_CXX_STANDARD 20)
 
-# Use the example Wi-Fi configuration tools
-set(EXTRA_COMPONENT_DIRS $ENV{IDF_PATH}/examples/common_components/protocol_examples_common)
+option(SHRAPNEL_RESET_WIFI_CREDENTIALS
+       "Remove the provisioning Wi-Fi credentials at power up"
+       OFF
+)
+
+if(SHRAPNEL_RESET_WIFI_CREDENTIALS)
+    add_compile_definitions(SHRAPNEL_RESET_WIFI_CREDENTIALS=1)
+endif()
 
 list(APPEND EXTRA_COMPONENT_DIRS ../effects)
 list(APPEND EXTRA_COMPONENT_DIRS ../thirdparty/esp-idf-components)

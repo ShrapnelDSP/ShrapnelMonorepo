@@ -38,7 +38,6 @@
 #include "nvs_flash.h"
 #include "esp_netif.h"
 #include "esp_debug_helpers.h"
-#include "protocol_examples_common.h"
 #include "mdns.h"
 
 #include "audio_param.h"
@@ -182,6 +181,7 @@ static httpd_handle_t start_webserver(void)
     httpd_handle_t server = NULL;
     httpd_config_t config = HTTPD_DEFAULT_CONFIG();
     config.server_port = 8080;
+    config.ctrl_port = 8081;
     config.max_open_sockets = MAX_CLIENTS;
 
     // Start the httpd server
@@ -194,7 +194,7 @@ static httpd_handle_t start_webserver(void)
         return server;
     }
 
-    ESP_LOGI(TAG, "Error starting server!");
+    ESP_LOGE(TAG, "Error starting server!");
     return NULL;
 }
 
@@ -485,6 +485,11 @@ extern "C" void app_main(void)
 
     {
         wifi_provisioning::WiFiProvisioning wifi_provisioning{};
+
+#if SHRAPNEL_RESET_WIFI_CREDENTIALS
+        ESP_LOGW(TAG, "Reseting wifi provisioning");
+        wifi_prov_mgr_reset_provisioning();
+#endif
 
         if(!wifi_provisioning.is_provisioned())
         {

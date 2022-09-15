@@ -10,7 +10,6 @@ idf_component_register( SRCS main.cpp
                             midi
                             nvs_flash
                             pcm3060
-                            protocol_examples_common
                             queue
                             wifi
                         PRIV_REQUIRES compiler_warning_flags
