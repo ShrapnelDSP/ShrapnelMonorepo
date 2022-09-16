@@ -17,6 +17,7 @@
  * ShrapnelDSP. If not, see <https://www.gnu.org/licenses/>.
  */
 
+#include <esp_wifi_types.h>
 #include <stdio.h>
 #include <math.h>
 
@@ -206,7 +207,7 @@ static void stop_webserver(httpd_handle_t server)
     httpd_stop(server);
 }
 
-static void disconnect_handler(void* arg, esp_event_base_t event_base, 
+static void disconnect_handler(void* arg, esp_event_base_t event_base,
                                int32_t event_id, void* event_data)
 {
     (void)event_base;
@@ -221,7 +222,7 @@ static void disconnect_handler(void* arg, esp_event_base_t event_base,
     }
 }
 
-static void connect_handler(void* arg, esp_event_base_t event_base, 
+static void connect_handler(void* arg, esp_event_base_t event_base,
                             int32_t event_id, void* event_data)
 {
     (void)event_base;
@@ -232,6 +233,21 @@ static void connect_handler(void* arg, esp_event_base_t event_base,
     if (*server == nullptr) {
         ESP_LOGI(TAG, "Starting webserver");
         *server = start_webserver();
+    }
+}
+
+static void wifi_start_handler(void *arg, esp_event_base_t event_base,
+                               int32_t event_id, void* event_data)
+{
+    (void)event_data;
+    (void)arg;
+    assert(event_base == WIFI_EVENT);
+    assert(event_id == WIFI_EVENT_STA_START);
+
+    int rc = esp_wifi_connect();
+    if(rc != ESP_OK)
+    {
+        ESP_LOGE(TAG, "wifi connect failed %d", rc);
     }
 }
 
@@ -469,12 +485,6 @@ extern "C" void app_main(void)
     }
 #endif
 
-    /* Register event handlers to stop the server when Wi-Fi or Ethernet is disconnected,
-     * and re-start it upon connection.
-     */
-    ESP_ERROR_CHECK(esp_event_handler_register(IP_EVENT, IP_EVENT_STA_GOT_IP, &connect_handler, &_server));
-    ESP_ERROR_CHECK(esp_event_handler_register(WIFI_EVENT, WIFI_EVENT_STA_DISCONNECTED, &disconnect_handler, &_server));
-
     esp_netif_create_default_wifi_sta();
     esp_netif_create_default_wifi_ap();
     wifi_init_config_t cfg = WIFI_INIT_CONFIG_DEFAULT();
@@ -501,6 +511,25 @@ extern "C" void app_main(void)
      *      not working. Probably the AP passphrase was changed since we got
      *      provisionined.
      */
+
+    /* Register event handlers to stop the server when Wi-Fi or Ethernet is disconnected,
+     * and re-start it upon connection.
+     */
+    ESP_ERROR_CHECK(esp_event_handler_register(
+                IP_EVENT,
+                IP_EVENT_STA_GOT_IP,
+                connect_handler,
+                &_server));
+    ESP_ERROR_CHECK(esp_event_handler_register(
+                WIFI_EVENT,
+                WIFI_EVENT_STA_DISCONNECTED,
+                disconnect_handler,
+                &_server));
+    ESP_ERROR_CHECK(esp_event_handler_register(
+                WIFI_EVENT,
+                WIFI_EVENT_STA_START,
+                wifi_start_handler,
+                nullptr));
 
     /* Start Wi-Fi station */
     ESP_ERROR_CHECK(esp_wifi_set_mode(WIFI_MODE_STA));

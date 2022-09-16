@@ -54,28 +54,40 @@ private:
 
     Queue<Event> queue;
 
-static void event_handler(void* arg, esp_event_base_t event_base,
-                          int32_t event_id, void* event_data)
+static void provisioning_event_handler(void* arg, esp_event_base_t event_base,
+                                       int32_t event_id, void* event_data)
 {
     assert(arg != nullptr);
+    assert(event_base == WIFI_PROV_EVENT);
 
     auto queue = static_cast<Queue<Event> *>(arg);
 
     if (event_base == WIFI_PROV_EVENT) {
         switch (event_id) {
+            case WIFI_PROV_INIT:
+                ESP_LOGI(TAG, "Provisioning initialised");
+                break;
             case WIFI_PROV_START:
                 ESP_LOGI(TAG, "Provisioning started");
                 break;
             case WIFI_PROV_CRED_RECV: {
                 wifi_sta_config_t *wifi_sta_cfg = (wifi_sta_config_t *)event_data;
-                ESP_LOGI(TAG, "Received Wi-Fi credentials"
-                         "\n\tSSID     : %s\n\tPassword : %s",
-                         (const char *) wifi_sta_cfg->ssid,
-                         (const char *) wifi_sta_cfg->password);
+                ESP_LOGI(TAG, "Received Wi-Fi credentials");
+                ESP_LOGI(TAG, "SSID:");
+                ESP_LOG_BUFFER_HEXDUMP(
+                        TAG,
+                        wifi_sta_cfg->ssid,
+                        sizeof(wifi_sta_cfg->ssid),
+                        ESP_LOG_INFO);
+                ESP_LOGI(TAG, "Password:");
+                ESP_LOG_BUFFER_HEXDUMP( TAG,
+                        wifi_sta_cfg->password,
+                        sizeof(wifi_sta_cfg->password),
+                        ESP_LOG_INFO);
                 break;
             }
             case WIFI_PROV_CRED_FAIL: {
-                wifi_prov_sta_fail_reason_t *reason = (wifi_prov_sta_fail_reason_t *)event_data;
+                auto reason = (wifi_prov_sta_fail_reason_t *)event_data;
                 ESP_LOGE(TAG, "Provisioning failed!\n\tReason : %s",
                          (*reason == WIFI_PROV_STA_AUTH_ERROR) ?
                          "Wi-Fi station authentication failed" : "Wi-Fi access-point not found");
@@ -103,21 +115,34 @@ static void event_handler(void* arg, esp_event_base_t event_base,
                 ESP_LOGI(TAG, "Provisioning end");
                 break;
             default:
+                ESP_LOGE(TAG, "Unhandled provisioning event: %d", event_id);
                 break;
         }
-    } else if (event_base == WIFI_EVENT && event_id == WIFI_EVENT_STA_START) {
+    }
+}
+
+static void wifi_event_handler(void* arg, esp_event_base_t event_base,
+                               int32_t event_id, void* event_data)
+{
+   (void) arg;
+
+   if (event_base == WIFI_EVENT && event_id == WIFI_EVENT_STA_START) {
         // TODO this is causing an error when not provisioned. Is it doing
         // anything productive?
+        ESP_LOGE(TAG, "\n\n\n\n\n=======================================================================");
+        ESP_LOGE(TAG, "calling connect");
         int rc = esp_wifi_connect();
         if(rc != ESP_OK)
         {
             ESP_LOGE(TAG, "wifi connect failed %d", rc);
         }
+    } else if (event_base == WIFI_EVENT && event_id == WIFI_EVENT_STA_DISCONNECTED) {
+        ESP_LOGI(TAG, "Disconnected");
     } else if (event_base == IP_EVENT && event_id == IP_EVENT_STA_GOT_IP) {
         ip_event_got_ip_t* event = (ip_event_got_ip_t*) event_data;
         ESP_LOGI(TAG, "Connected with IP Address:" IPSTR, IP2STR(&event->ip_info.ip));
-    } else if (event_base == WIFI_EVENT && event_id == WIFI_EVENT_STA_DISCONNECTED) {
-        ESP_LOGI(TAG, "Disconnected");
+    } else {
+        ESP_LOGE(TAG, "Unhandled wifi event: %s %d", event_base, event_id);
     }
 }
 
@@ -133,13 +158,25 @@ static void get_device_service_name(char *service_name, size_t max)
 public:
 WiFiProvisioning(void) : queue(1)
 {
-    ESP_ERROR_CHECK(esp_event_handler_register(WIFI_PROV_EVENT, ESP_EVENT_ANY_ID, &event_handler, &queue));
-    ESP_ERROR_CHECK(esp_event_handler_register(WIFI_EVENT, ESP_EVENT_ANY_ID, &event_handler, &queue));
-    ESP_ERROR_CHECK(esp_event_handler_register(IP_EVENT, IP_EVENT_STA_GOT_IP, &event_handler, &queue));
+    // XXX: Make sure to deregister the handlers in the destructor
+    ESP_ERROR_CHECK(esp_event_handler_register(
+                WIFI_PROV_EVENT,
+                ESP_EVENT_ANY_ID,
+                provisioning_event_handler,
+                &queue));
+    ESP_ERROR_CHECK(esp_event_handler_register(
+                WIFI_EVENT,
+                ESP_EVENT_ANY_ID,
+                wifi_event_handler,
+                nullptr));
+    ESP_ERROR_CHECK(esp_event_handler_register(
+                IP_EVENT,
+                IP_EVENT_STA_GOT_IP,
+                wifi_event_handler,
+                nullptr));
 
     wifi_prov_mgr_config_t config = {
         .scheme = wifi_prov_scheme_softap,
-        .scheme_event_handler = WIFI_PROV_EVENT_HANDLER_NONE
     };
 
     ESP_ERROR_CHECK(wifi_prov_mgr_init(config));
@@ -197,6 +234,19 @@ void wait_for_provisioning(void)
 
 
 ~WiFiProvisioning() {
+    ESP_ERROR_CHECK(esp_event_handler_unregister(
+                WIFI_PROV_EVENT,
+                ESP_EVENT_ANY_ID,
+                provisioning_event_handler));
+    ESP_ERROR_CHECK(esp_event_handler_unregister(
+                WIFI_EVENT,
+                ESP_EVENT_ANY_ID,
+                wifi_event_handler));
+    ESP_ERROR_CHECK(esp_event_handler_unregister(
+                IP_EVENT,
+                IP_EVENT_STA_GOT_IP,
+                wifi_event_handler));
+
     wifi_prov_mgr_deinit();
 }
 
