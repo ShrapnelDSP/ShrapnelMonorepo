@@ -107,7 +107,7 @@ static esp_err_t websocket_get_handler(httpd_req_t *req)
 
     if(req->method == HTTP_GET)
     {
-        ESP_LOGE(TAG, "before handshake");
+        ESP_LOGI(TAG, "Got websocket upgrade request");
         return ESP_OK;
     }
 
