@@ -239,7 +239,6 @@ void main() {
     expect(find.textContaining('failed to connect'), findsOneWidget);
   });
 
-
   testWidgets('WiFi provisioning fails if incorrect SSID is provided',
       (tester) async {
     await tester.pumpWidget(sut);
@@ -352,11 +351,10 @@ void main() {
     final passwordField = find.byKey(const Key('password text field'));
     final submitButton = find.byKey(const Key('password submit button'));
 
-
     Future<void> submitPassword(String password) async {
-        await tester.enterText(passwordField, password);
-        await tester.tap(submitButton);
-        await tester.pump();
+      await tester.enterText(passwordField, password);
+      await tester.tap(submitButton);
+      await tester.pump();
     }
 
     await submitPassword('');
@@ -372,7 +370,8 @@ void main() {
     expect(find.textContaining('contains invalid characters'), findsOneWidget);
   });
 
-  testWidgets('WiFi provisioning can succeed when using hidden SSID', (tester) async {
+  testWidgets('WiFi provisioning can succeed when using hidden SSID',
+      (tester) async {
     await tester.pumpWidget(sut);
 
     await tester.tap(find.byKey(const Key('wifi provisioning button')));
