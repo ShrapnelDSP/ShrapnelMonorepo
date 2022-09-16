@@ -168,7 +168,7 @@ packages:
       path: "."
       ref: shrapnel
       resolved-ref: ac325cc8303587e2fb557ffb06021d1dad10df66
-      url: "git@github.com:Barabas5532/esp_softap_provisioning.git"
+      url: "https://github.com/ShrapnelDSP/esp_softap_provisioning.git"
     source: git
     version: "1.0.1"
   fake_async:

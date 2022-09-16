@@ -11,7 +11,7 @@ environment:
 dependencies:
   esp_softap_provisioning:
     git:
-      url: git@github.com:Barabas5532/esp_softap_provisioning.git
+      url: https://github.com/ShrapnelDSP/esp_softap_provisioning.git
       ref: shrapnel
   flutter:
     sdk: flutter
