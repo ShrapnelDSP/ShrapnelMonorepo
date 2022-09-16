@@ -115,7 +115,7 @@ static void provisioning_event_handler(void* arg, esp_event_base_t event_base,
                 ESP_LOGI(TAG, "Provisioning end");
                 break;
             default:
-                ESP_LOGE(TAG, "Unhandled provisioning event: %d", event_id);
+                ESP_LOGW(TAG, "Unhandled provisioning event: %d", event_id);
                 break;
         }
     }
@@ -126,23 +126,27 @@ static void wifi_event_handler(void* arg, esp_event_base_t event_base,
 {
    (void) arg;
 
-   if (event_base == WIFI_EVENT && event_id == WIFI_EVENT_STA_START) {
-        // TODO this is causing an error when not provisioned. Is it doing
-        // anything productive?
-        ESP_LOGE(TAG, "\n\n\n\n\n=======================================================================");
-        ESP_LOGE(TAG, "calling connect");
-        int rc = esp_wifi_connect();
-        if(rc != ESP_OK)
-        {
-            ESP_LOGE(TAG, "wifi connect failed %d", rc);
-        }
+    if (event_base == WIFI_EVENT && event_id == WIFI_EVENT_SCAN_DONE) {
+        ESP_LOGI(TAG, "WIFI_EVENT_SCAN_DONE");
+    } else if (event_base == WIFI_EVENT && event_id == WIFI_EVENT_STA_START) {
+        ESP_LOGI(TAG, "WIFI_EVENT_STA_START");
+    } else if (event_base == WIFI_EVENT && event_id == WIFI_EVENT_STA_CONNECTED) {
+        ESP_LOGI(TAG, "WIFI_EVENT_STA_CONNECTED");
     } else if (event_base == WIFI_EVENT && event_id == WIFI_EVENT_STA_DISCONNECTED) {
-        ESP_LOGI(TAG, "Disconnected");
+        ESP_LOGE(TAG, "WIFI_EVENT_STA_DISCONNECTED");
     } else if (event_base == IP_EVENT && event_id == IP_EVENT_STA_GOT_IP) {
         ip_event_got_ip_t* event = (ip_event_got_ip_t*) event_data;
         ESP_LOGI(TAG, "Connected with IP Address:" IPSTR, IP2STR(&event->ip_info.ip));
+    } else if (event_base == WIFI_EVENT && event_id == WIFI_EVENT_AP_START) {
+        ESP_LOGI(TAG, "WIFI_EVENT_AP_START");
+    } else if (event_base == WIFI_EVENT && event_id == WIFI_EVENT_AP_STOP) {
+        ESP_LOGI(TAG, "WIFI_EVENT_AP_STOP");
+    } else if (event_base == WIFI_EVENT && event_id == WIFI_EVENT_AP_STACONNECTED) {
+        ESP_LOGI(TAG, "WIFI_EVENT_AP_STACONNECTED");
+    } else if (event_base == WIFI_EVENT && event_id == WIFI_EVENT_AP_STADISCONNECTED) {
+        ESP_LOGE(TAG, "WIFI_EVENT_AP_STADISCONNECTED");
     } else {
-        ESP_LOGE(TAG, "Unhandled wifi event: %s %d", event_base, event_id);
+        ESP_LOGW(TAG, "Unhandled wifi event: %s %d", event_base, event_id);
     }
 }
 
@@ -231,7 +235,6 @@ void wait_for_provisioning(void)
 
     ESP_LOGI(TAG, "Provisioning finished");
 }
-
 
 ~WiFiProvisioning() {
     ESP_ERROR_CHECK(esp_event_handler_unregister(

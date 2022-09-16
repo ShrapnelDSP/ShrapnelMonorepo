@@ -17,7 +17,6 @@
  * ShrapnelDSP. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include <esp_wifi_types.h>
 #include <stdio.h>
 #include <math.h>
 
@@ -504,6 +503,8 @@ extern "C" void app_main(void)
         if(!wifi_provisioning.is_provisioned())
         {
              wifi_provisioning.wait_for_provisioning();
+             /* start the websocket server */
+             connect_handler(&_server, IP_EVENT, IP_EVENT_STA_GOT_IP, nullptr);
         }
     }
 
