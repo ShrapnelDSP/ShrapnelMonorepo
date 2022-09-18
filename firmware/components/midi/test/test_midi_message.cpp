@@ -19,11 +19,13 @@
 
 #include "gtest/gtest.h"
 #include "gmock/gmock.h"
+#include <utility>
 #include "midi_util.h"
 
 #include "midi.h"
 
 using testing::Not;
+using testing::Eq;
 
 using namespace shrapnel::midi;
 
@@ -37,30 +39,28 @@ class MidiMessage : public ::testing::Test
 TEST_F(MidiMessage, Matcher)
 {
     Message message{
-        .type{NOTE_OFF},
         .channel{1},
-        .note_on{
-            .note{2},
-            .velocity{3}
+        .parameters{
+            Message::NoteOff{.note = 2, .velocity = 3}
         },
     };
 
     Message copy = message;
 
-    EXPECT_THAT(message, MessageMatches(copy));
+    EXPECT_THAT(message, Eq(copy));
 
-    copy.type = NOTE_ON;
-    EXPECT_THAT(message, Not(MessageMatches(copy)));
-
-    copy = message;
-    copy.channel = 0;
-    EXPECT_THAT(message, Not(MessageMatches(copy)));
+    copy.parameters = Message::NoteOn{.note = 2, .velocity = 3};
+    EXPECT_THAT(message, Not(Eq(copy)));
 
     copy = message;
-    copy.note_on.note = 0;
-    EXPECT_THAT(message, Not(MessageMatches(copy)));
+    copy.parameters = Message::NoteOff{.note = 0, .velocity = 3};
+    EXPECT_THAT(message, Not(Eq(copy)));
 
     copy = message;
-    copy.note_on.velocity = 0;
-    EXPECT_THAT(message, Not(MessageMatches(copy)));
+    copy.parameters = Message::NoteOff{.note = 2, .velocity = 0};
+    EXPECT_THAT(message, Not(Eq(copy)));
+
+    copy = message;
+    copy.parameters = Message::NoteOn{.note = 2, .velocity = 0};
+    EXPECT_THAT(message, Not(Eq(copy)));
 }

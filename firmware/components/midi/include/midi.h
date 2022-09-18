@@ -19,9 +19,11 @@
 #pragma once
 
 #include <assert.h>
+#include <compare>
 #include <cstdint>
 #include <etl/delegate.h>
 #include <etl/string_stream.h>
+#include <variant>
 
 namespace shrapnel {
 namespace midi {
@@ -34,54 +36,80 @@ enum MessageType {
 };
 
 struct Message {
-    typedef uint8_t midi_channel_t;
+    // TODO since every variant member has unique type, we can probably stop
+    //      using the index
+    enum {
+        NOTE_ON,
+        NOTE_OFF,
+        CONTROL_CHANGE,
+        PROGRAM_CHANGE,
+    };
 
-    struct NoteOnOff {
+    using midi_channel_t = uint8_t ;
+
+    struct NoteOn {
         uint8_t note;
         uint8_t velocity;
+
+        std::strong_ordering operator<=>(const NoteOn &other) const = default;
+    };
+
+    struct NoteOff {
+        uint8_t note;
+        uint8_t velocity;
+
+        std::strong_ordering operator<=>(const NoteOff &other) const = default;
     };
 
     struct ControlChange {
         uint8_t control;
         uint8_t value;
+
+        std::strong_ordering operator<=>(const ControlChange &other) const = default;
     };
 
     struct ProgramChange {
         uint8_t number;
+
+        std::strong_ordering operator<=>(const ProgramChange &other) const = default;
     };
 
-    MessageType type;
     midi_channel_t channel;
-    union {
-        NoteOnOff note_on;
-        NoteOnOff note_off;
-        ControlChange control_change;
-        ProgramChange program_change;
-    };
+    std::variant<NoteOn, NoteOff, ControlChange, ProgramChange> parameters;
+
+    std::weak_ordering operator<=>(const Message &other) const = default;
 
     friend etl::string_stream& operator<<(etl::string_stream&  out, const Message& message) {
         out << "{ channel " << message.channel << " ";
 
-        switch(message.type)
+        switch(message.parameters.index())
         {
-        case NOTE_ON:
-            out << "note on " << +message.note_on.note << " " << +message.note_on.velocity;
+        case NOTE_ON: {
+            auto param = std::get<NOTE_ON>(message.parameters);
+            out << "note on " << +param.note << " " << +param.velocity;
             break;
-        case NOTE_OFF:
-            out << "note off " << +message.note_on.note << " " << +message.note_on.velocity;
+        }
+        case NOTE_OFF: {
+            auto param = std::get<NOTE_OFF>(message.parameters);
+            out << "note off " << +param.note << " " << +param.velocity;
             break;
-        case CONTROL_CHANGE:
-            out << "control change " << +message.control_change.control << " " << +message.control_change.value;
+        }
+        case CONTROL_CHANGE: {
+            auto param = std::get<CONTROL_CHANGE>(message.parameters);
+            out << "control change " << +param.control << " " << +param.value;
             break;
-        case PROGRAM_CHANGE:
-            out << "program change " << +message.program_change.number;
+        }
+        case PROGRAM_CHANGE: {
+            auto param = std::get<PROGRAM_CHANGE>(message.parameters);
+            out << "program change " << +param.number;
             break;
+        }
         default:
-            out << +message.type;
+            out << +message.parameters.index();
             break;
         }
 
-        out << "}";
+        out << " }";
         return out;
     }
 };

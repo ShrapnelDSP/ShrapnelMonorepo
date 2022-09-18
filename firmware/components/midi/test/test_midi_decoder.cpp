@@ -42,15 +42,13 @@ class MidiDecoder : public ::testing::Test
 TEST_F(MidiDecoder, NoteOn)
 {
     Message expected{
-        .type{NOTE_ON},
         .channel{1},
-        .note_on{
-            .note{0},
-            .velocity{1},
+        .parameters{
+            Message::NoteOn{.note{0}, .velocity{1}},
         },
     };
 
-    EXPECT_CALL(receiver, Call(MessageMatches(expected))).Times(1);
+    EXPECT_CALL(receiver, Call(expected)).Times(1);
 
     std::vector<uint8_t> bytes {
         0x90,
@@ -66,15 +64,13 @@ TEST_F(MidiDecoder, NoteOn)
 TEST_F(MidiDecoder, NoteOff)
 {
     Message expected{
-        .type{NOTE_OFF},
         .channel{1},
-        .note_off{
-            .note{0},
-            .velocity{1},
+        .parameters{
+            Message::NoteOff{.note{0}, .velocity{1}},
         },
     };
 
-    EXPECT_CALL(receiver, Call(MessageMatches(expected))).Times(1);
+    EXPECT_CALL(receiver, Call(expected)).Times(1);
 
     std::vector<uint8_t> bytes {
         0x80,
@@ -90,14 +86,13 @@ TEST_F(MidiDecoder, NoteOff)
 TEST_F(MidiDecoder, ProgramChange)
 {
     Message expected{
-        .type{PROGRAM_CHANGE},
         .channel{1},
-        .program_change{
-            .number{0},
+        .parameters{
+            Message::ProgramChange{.number{0}},
         },
     };
 
-    EXPECT_CALL(receiver, Call(MessageMatches(expected))).Times(1);
+    EXPECT_CALL(receiver, Call(expected)).Times(1);
 
     std::vector<uint8_t> bytes {
         0xC0,
@@ -112,27 +107,23 @@ TEST_F(MidiDecoder, ProgramChange)
 TEST_F(MidiDecoder, NoteOnRunningStatus)
 {
     Message expected_first{
-        .type{NOTE_ON},
         .channel{1},
-        .note_on{
-            .note{0},
-            .velocity{1},
+        .parameters{
+            Message::NoteOn{.note{0}, .velocity{1}},
         },
     };
 
     Message expected_second{
-        .type{NOTE_ON},
         .channel{1},
-        .note_on{
-            .note{2},
-            .velocity{3},
+        .parameters{
+            Message::NoteOn{.note{2}, .velocity{3}},
         },
     };
 
     InSequence sequence;
 
-    EXPECT_CALL(receiver, Call(MessageMatches(expected_first))).Times(1);
-    EXPECT_CALL(receiver, Call(MessageMatches(expected_second))).Times(1);
+    EXPECT_CALL(receiver, Call(expected_first)).Times(1);
+    EXPECT_CALL(receiver, Call(expected_second)).Times(1);
 
     std::vector<uint8_t> bytes {
         0x90,
@@ -150,15 +141,13 @@ TEST_F(MidiDecoder, NoteOnRunningStatus)
 TEST_F(MidiDecoder, ControlChange)
 {
     Message expected{
-        .type{CONTROL_CHANGE},
         .channel{1},
-        .control_change{
-            .control{0},
-            .value{1},
+        .parameters{
+            Message::ControlChange{.control{0}, .value{1}},
         },
     };
 
-    EXPECT_CALL(receiver, Call(MessageMatches(expected))).Times(1);
+    EXPECT_CALL(receiver, Call(expected)).Times(1);
 
     std::vector<uint8_t> bytes {
         0xB0,
@@ -192,15 +181,13 @@ TEST_F(MidiDecoder, ChannelModeIsNotControlChange)
 TEST_F(MidiDecoder, ChannelNumber)
 {
     Message expected{
-        .type{NOTE_ON},
         .channel{16},
-        .note_on{
-            .note{0},
-            .velocity{1},
+        .parameters{
+            Message::NoteOn{.note{0}, .velocity{1}},
         },
     };
 
-    EXPECT_CALL(receiver, Call(MessageMatches(expected))).Times(1);
+    EXPECT_CALL(receiver, Call(expected)).Times(1);
 
     std::vector<uint8_t> bytes {
         0x9F,
@@ -216,15 +203,13 @@ TEST_F(MidiDecoder, ChannelNumber)
 TEST_F(MidiDecoder, IgnoresUnimplementedMessages)
 {
     Message expected{
-        .type{NOTE_ON},
         .channel{1},
-        .note_on{
-            .note{0},
-            .velocity{1},
+        .parameters{
+            Message::NoteOn{.note{0}, .velocity{1}},
         },
     };
 
-    EXPECT_CALL(receiver, Call(MessageMatches(expected))).Times(1);
+    EXPECT_CALL(receiver, Call(expected)).Times(1);
 
     std::vector<uint8_t> bytes {
         0xE0,
@@ -243,15 +228,13 @@ TEST_F(MidiDecoder, DISABLED_UnimplementedMessageDoesNotUpsetRunningStatus)
 {
     /* TODO Make this test pass */
     Message expected{
-        .type{NOTE_ON},
         .channel{1},
-        .note_on{
-            .note{0},
-            .velocity{1},
+        .parameters{
+            Message::NoteOn{.note{0}, .velocity{1}},
         },
     };
 
-    EXPECT_CALL(receiver, Call(MessageMatches(expected))).Times(1);
+    EXPECT_CALL(receiver, Call(expected)).Times(1);
 
     std::vector<uint8_t> bytes {
         0x90,

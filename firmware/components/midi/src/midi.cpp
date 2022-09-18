@@ -108,29 +108,33 @@ void Decoder::output_message()
     switch(current_status & 0xF0)
     {
     case NOTE_ON:
-        message.type = NOTE_ON;
-        message.note_on.note = received_data[0];
-        message.note_on.velocity = received_data[1];
+        // TODO how to use a designated initialiser here? This is pretty hard
+        //      to read.
+        message.parameters.emplace<Message::NOTE_ON>(
+            received_data[0],
+            received_data[1]
+        );
         break;
     case NOTE_OFF:
-        message.type = NOTE_OFF;
-        message.note_off.note = received_data[0];
-        message.note_off.velocity = received_data[1];
+        message.parameters.emplace<Message::NOTE_OFF>(
+            received_data[0],
+            received_data[1]
+        );
         break;
     case CONTROL_CHANGE:
-        message.type = CONTROL_CHANGE;
-        message.control_change.control = received_data[0];
-        message.control_change.value = received_data[1];
-
         // Channel Mode messages should be ignored
-        if((message.control_change.control & 0xF8) == 0x78)
+        if((received_data[0] & 0xF8) == 0x78)
         {
             return;
         }
+
+        message.parameters.emplace<Message::CONTROL_CHANGE>(
+            received_data[0],
+            received_data[1]
+        );
         break;
     case PROGRAM_CHANGE:
-        message.type = PROGRAM_CHANGE;
-        message.program_change.number = received_data[0];
+        message.parameters.emplace<Message::PROGRAM_CHANGE>(received_data[0]);
         break;
     default:
         assert(false);
