@@ -110,16 +110,14 @@ void Decoder::output_message()
     case NOTE_ON:
         // TODO how to use a designated initialiser here? This is pretty hard
         //      to read.
-        message.parameters.emplace<Message::NOTE_ON>(
-            received_data[0],
-            received_data[1]
-        );
+        message.parameters = Message::NoteOn{
+            .note = received_data[0],
+            .velocity = received_data[1]};
         break;
     case NOTE_OFF:
-        message.parameters.emplace<Message::NOTE_OFF>(
-            received_data[0],
-            received_data[1]
-        );
+        message.parameters = Message::NoteOff{
+            .note = received_data[0],
+            .velocity = received_data[1]};
         break;
     case CONTROL_CHANGE:
         // Channel Mode messages should be ignored
@@ -128,13 +126,12 @@ void Decoder::output_message()
             return;
         }
 
-        message.parameters.emplace<Message::CONTROL_CHANGE>(
-            received_data[0],
-            received_data[1]
-        );
+        message.parameters = Message::ControlChange{
+            .control = received_data[0],
+            .value = received_data[1]};
         break;
     case PROGRAM_CHANGE:
-        message.parameters.emplace<Message::PROGRAM_CHANGE>(received_data[0]);
+        message.parameters = Message::ProgramChange{.number = received_data[0]};
         break;
     default:
         assert(false);

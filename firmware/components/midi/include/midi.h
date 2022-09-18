@@ -36,15 +36,6 @@ enum MessageType {
 };
 
 struct Message {
-    // TODO since every variant member has unique type, we can probably stop
-    //      using the index
-    enum {
-        NOTE_ON,
-        NOTE_OFF,
-        CONTROL_CHANGE,
-        PROGRAM_CHANGE,
-    };
-
     using midi_channel_t = uint8_t ;
 
     struct NoteOn {
@@ -82,32 +73,24 @@ struct Message {
     friend etl::string_stream& operator<<(etl::string_stream&  out, const Message& message) {
         out << "{ channel " << message.channel << " ";
 
-        switch(message.parameters.index())
-        {
-        case NOTE_ON: {
-            auto param = std::get<NOTE_ON>(message.parameters);
-            out << "note on " << +param.note << " " << +param.velocity;
-            break;
-        }
-        case NOTE_OFF: {
-            auto param = std::get<NOTE_OFF>(message.parameters);
-            out << "note off " << +param.note << " " << +param.velocity;
-            break;
-        }
-        case CONTROL_CHANGE: {
-            auto param = std::get<CONTROL_CHANGE>(message.parameters);
-            out << "control change " << +param.control << " " << +param.value;
-            break;
-        }
-        case PROGRAM_CHANGE: {
-            auto param = std::get<PROGRAM_CHANGE>(message.parameters);
-            out << "program change " << +param.number;
-            break;
-        }
-        default:
-            out << +message.parameters.index();
-            break;
-        }
+        auto print_parameters = [&](auto &param) {
+            using T = std::decay_t<decltype(param)>;
+
+            if constexpr (std::is_same_v<T, NoteOn>) {
+                out << "note on " << +param.note << " " << +param.velocity;
+            } else if constexpr (std::is_same_v<T, NoteOff>) {
+                out << "note off " << +param.note << " " << +param.velocity;
+            } else if constexpr (std::is_same_v<T, ControlChange>) {
+                out << "control change " << +param.control << " " << +param.value;
+            } else if constexpr (std::is_same_v<T, ProgramChange>) {
+                out << "program change " << +param.number;
+            } else {
+                // TODO is there any way to turn this into a compiler error?
+                out << "unknown";
+            }
+        };
+
+        std::visit(print_parameters, message.parameters);
 
         out << " }";
         return out;
