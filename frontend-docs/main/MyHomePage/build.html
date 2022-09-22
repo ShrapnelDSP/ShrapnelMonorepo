@@ -111,6 +111,20 @@ Widget build(BuildContext context) {
     appBar: AppBar(
       title: Text(title),
       actions: [
+        Container(
+          margin: const EdgeInsets.all(10),
+          child: IconButton(
+            icon: const Icon(Icons.settings),
+            key: const Key(&#39;wifi provisioning button&#39;),
+            onPressed: () {
+              Navigator.push&lt;ProvisioningPage&gt;(
+                context,
+                MaterialPageRoute(
+                    builder: (context) =&gt; const ProvisioningPage()),
+              );
+            },
+          ),
+        ),
         const WebSocketStatus(size: kToolbarHeight - 20),
         Container(width: 10),
       ],

@@ -65,8 +65,8 @@
   <pre class="language-dart"><code class="language-dart">void main() {
   Logger.root.level = Level.ALL;
   Logger.root.onRecord.listen((record) {
-    &#47;&#47; ignore: avoid_print
-    print(&#39;${record.level.name}: ${record.time}: ${record.message}&#39;);
+    debugPrint(
+        &#39;${record.level.name.padLeft(&quot;WARNING&quot;.length)} ${formatDateTime(record.time)} ${record.loggerName}: ${record.message}&#39;);
   });
 
   GoogleFonts.config.allowRuntimeFetching = false;
@@ -75,7 +75,15 @@
     providers: [
       ChangeNotifierProvider(
           create: (_) =&gt; RobustWebsocket(
-              uri: Uri.parse(&#39;http:&#47;&#47;guitar-dsp.local&#47;websocket&#39;))),
+              uri: Uri.parse(&#39;http:&#47;&#47;guitar-dsp.local:8080&#47;websocket&#39;))),
+      ChangeNotifierProvider(
+          create: (_) =&gt; WifiProvisioningProvider(provisioningFactory: () {
+                log.info(&#39;Creating provisioning connection&#39;);
+                return Provisioning(
+                  security: Security1(pop: &#39;abcd1234&#39;),
+                  transport: TransportHTTP(&#39;guitar-dsp.local&#39;),
+                );
+              })),
     ],
     child: const MyApp(),
   ));
@@ -104,12 +112,16 @@
   <li class="section-title"><a href="../main/main-library.html#classes">Classes</a></li>
   <li><a href="../main/MyApp-class.html">MyApp</a></li>
   <li><a href="../main/MyHomePage-class.html">MyHomePage</a></li>
+  <li><a href="../main/ProvisioningPage-class.html">ProvisioningPage</a></li>
 
 
 
 
+  <li class="section-title"><a href="../main/main-library.html#properties">Properties</a></li>
+  <li><a href="../main/log.html">log</a></li>
 
   <li class="section-title"><a href="../main/main-library.html#functions">Functions</a></li>
+  <li><a href="../main/formatDateTime.html">formatDateTime</a></li>
   <li><a href="../main/main.html">main</a></li>
 
 

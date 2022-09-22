@@ -14,7 +14,7 @@ var searchData=
   ['set_5fsample_5frate_11',['set_sample_rate',['../classshrapnel_1_1effect_1_1Chorus.html#a928829eccf4e1ab2d3449331efec6b04',1,'shrapnel::effect::Chorus']]],
   ['set_5fvolume_12',['set_volume',['../classshrapnel_1_1effect_1_1valvestate_1_1Valvestate.html#a280f14c7adf6e139ae38617961d892af',1,'shrapnel::effect::valvestate::Valvestate']]],
   ['setup_13',['setup',['../classshrapnel_1_1TaskBase.html#acaf84d39ba9ee68e4f12b30f7e604cee',1,'shrapnel::TaskBase']]],
-  ['start_14',['start',['../classshrapnel_1_1TaskBase.html#aa2b30a40f071e80457c87fc5c225e3bd',1,'shrapnel::TaskBase']]],
+  ['start_14',['start',['../classshrapnel_1_1TaskBase.html#aa2b30a40f071e80457c87fc5c225e3bd',1,'shrapnel::TaskBase::start()'],['../classshrapnel_1_1wifi__provisioning_1_1WiFiProvisioning.html#a52ad94d584e862d50c9c045b9332e6ab',1,'shrapnel::wifi_provisioning::WiFiProvisioning::start()']]],
   ['start_5fmdns_15',['start_mdns',['../namespaceshrapnel.html#a62ed101f04b8c40f7fdc427e6b169353',1,'shrapnel']]],
   ['start_5fwebserver_16',['start_webserver',['../namespaceshrapnel.html#a7ab448c59a74266fc5aaded062ed1961',1,'shrapnel']]],
   ['stop_5fwebserver_17',['stop_webserver',['../namespaceshrapnel.html#ac11c58ef0962c52aa2cbcb5885d6261a',1,'shrapnel']]]

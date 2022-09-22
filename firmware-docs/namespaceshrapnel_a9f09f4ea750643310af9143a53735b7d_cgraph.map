@@ -1,5 +1,5 @@
 <map id="shrapnel::app_main" name="shrapnel::app_main">
-<area shape="rect" id="node1" title=" " alt="" coords="5,415,139,441"/>
+<area shape="rect" id="node1" title=" " alt="" coords="5,440,139,467"/>
 <area shape="rect" id="node2" href="$audio__events_8c.html#a3bc13f0f225db0bb8a8b61358e6a4461" title=" " alt="" coords="221,55,337,81"/>
 <area shape="rect" id="node6" href="$namespaceshrapnel.html#a4bf0b1d7c4fef2839a56059a237d1da6" title=" " alt="" coords="193,167,365,193"/>
 <area shape="rect" id="node8" href="$classshrapnel_1_1AudioParameters.html#a8fd6b42f246729146fd4aef600b2fff2" title=" " alt="" coords="187,218,372,259"/>
@@ -11,6 +11,7 @@
 <area shape="rect" id="node43" href="$pcm3060_8c.html#ae4f3fcba29da4e434a2fb51e429c156b" title="Initialise the driver." alt="" coords="230,567,329,593"/>
 <area shape="rect" id="node44" href="$pcm3060_8c.html#a4b08ec86eb0407470554c4e5c5759521" title="perform power up sequence" alt="" coords="210,617,349,644"/>
 <area shape="rect" id="node48" href="$namespaceshrapnel.html#a62ed101f04b8c40f7fdc427e6b169353" title=" " alt="" coords="208,668,351,695"/>
+<area shape="rect" id="node49" href="$namespaceshrapnel.html#ad3636f58faa95196bef6352b331ed3da" title=" " alt="" coords="215,719,344,761"/>
 <area shape="rect" id="node3" href="$audio__events_8c.html#aaa06bd91aeddc4e4adc054b5a8ab8e92" title=" " alt="" coords="443,24,567,51"/>
 <area shape="rect" id="node4" href="$main_8cpp.html#a956bb48f7ee4a35a535c8858a66596d5" title="Called when an event is triggered." alt="" coords="639,9,821,36"/>
 <area shape="rect" id="node5" href="$namespaceshrapnel.html#a9df539517dd9158cb2b42a9d9e948a73" title=" " alt="" coords="871,5,1045,32"/>
