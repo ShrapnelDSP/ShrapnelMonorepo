@@ -38,7 +38,6 @@
 #include "nvs_flash.h"
 #include "esp_netif.h"
 #include "esp_debug_helpers.h"
-#include "protocol_examples_common.h"
 #include "mdns.h"
 
 #include "audio_param.h"
@@ -50,6 +49,7 @@
 #include "midi_uart.h"
 #include "pcm3060.h"
 #include "profiling.h"
+#include "wifi_provisioning.h"
 
 #define TAG "main"
 #define QUEUE_LEN 20
@@ -107,7 +107,7 @@ static esp_err_t websocket_get_handler(httpd_req_t *req)
 
     if(req->method == HTTP_GET)
     {
-        ESP_LOGE(TAG, "before handshake");
+        ESP_LOGI(TAG, "Got websocket upgrade request");
         return ESP_OK;
     }
 
@@ -180,6 +180,8 @@ static httpd_handle_t start_webserver(void)
 {
     httpd_handle_t server = NULL;
     httpd_config_t config = HTTPD_DEFAULT_CONFIG();
+    config.server_port = 8080;
+    config.ctrl_port = 8081;
     config.max_open_sockets = MAX_CLIENTS;
 
     // Start the httpd server
@@ -192,7 +194,7 @@ static httpd_handle_t start_webserver(void)
         return server;
     }
 
-    ESP_LOGI(TAG, "Error starting server!");
+    ESP_LOGE(TAG, "Error starting server!");
     return NULL;
 }
 
@@ -204,7 +206,7 @@ static void stop_webserver(httpd_handle_t server)
     httpd_stop(server);
 }
 
-static void disconnect_handler(void* arg, esp_event_base_t event_base, 
+static void disconnect_handler(void* arg, esp_event_base_t event_base,
                                int32_t event_id, void* event_data)
 {
     (void)event_base;
@@ -219,7 +221,7 @@ static void disconnect_handler(void* arg, esp_event_base_t event_base,
     }
 }
 
-static void connect_handler(void* arg, esp_event_base_t event_base, 
+static void connect_handler(void* arg, esp_event_base_t event_base,
                             int32_t event_id, void* event_data)
 {
     (void)event_base;
@@ -230,6 +232,21 @@ static void connect_handler(void* arg, esp_event_base_t event_base,
     if (*server == nullptr) {
         ESP_LOGI(TAG, "Starting webserver");
         *server = start_webserver();
+    }
+}
+
+static void wifi_start_handler(void *arg, esp_event_base_t event_base,
+                               int32_t event_id, void* event_data)
+{
+    (void)event_data;
+    (void)arg;
+    assert(event_base == WIFI_EVENT);
+    assert(event_id == WIFI_EVENT_STA_START);
+
+    int rc = esp_wifi_connect();
+    if(rc != ESP_OK)
+    {
+        ESP_LOGE(TAG, "wifi connect failed %d", rc);
     }
 }
 
@@ -311,11 +328,27 @@ static void start_mdns(void)
         return;
     }
 
-    mdns_hostname_set("guitar-dsp");
-    mdns_instance_name_set("Barabas' Guitar Processor");
+    err = mdns_hostname_set("guitar-dsp");
+    if(err) {
+        ESP_LOGE(TAG, "MDNS failed to set host name %d %s", err, esp_err_to_name(err));
+        return;
+    }
+    err = mdns_instance_name_set("Barabas' Guitar Processor");
+    if(err) {
+        ESP_LOGE(TAG, "MDNS failed to set instance name %d %s", err, esp_err_to_name(err));
+        return;
+    }
 
-    mdns_service_add(NULL, "_http", "_tcp", 80, NULL, 0);
-    mdns_service_instance_name_set("_http", "_tcp", "Barabas' Guitar Processor Web Server");
+    err = mdns_service_add(NULL, "_http", "_tcp", 80, NULL, 0);
+    if(err) {
+        ESP_LOGE(TAG, "MDNS failed to add service %d %s", err, esp_err_to_name(err));
+        return;
+    }
+    err = mdns_service_instance_name_set("_http", "_tcp", "Barabas' Guitar Processor Web Server");
+    if(err) {
+        ESP_LOGE(TAG, "MDNS failed to set service name %d %s", err, esp_err_to_name(err));
+        return;
+    }
 }
 
 static void i2c_setup(void)
@@ -451,17 +484,57 @@ extern "C" void app_main(void)
     }
 #endif
 
+    esp_netif_create_default_wifi_sta();
+    esp_netif_create_default_wifi_ap();
+    wifi_init_config_t cfg = WIFI_INIT_CONFIG_DEFAULT();
+    ESP_ERROR_CHECK(esp_wifi_init(&cfg));
+
+    /* Start the mdns service */
+    start_mdns();
+
+    {
+        wifi_provisioning::WiFiProvisioning wifi_provisioning{};
+
+#if SHRAPNEL_RESET_WIFI_CREDENTIALS
+        ESP_LOGW(TAG, "Reseting wifi provisioning");
+        wifi_prov_mgr_reset_provisioning();
+#endif
+
+        if(!wifi_provisioning.is_provisioned())
+        {
+             wifi_provisioning.wait_for_provisioning();
+             /* start the websocket server */
+             connect_handler(&_server, IP_EVENT, IP_EVENT_STA_GOT_IP, nullptr);
+        }
+    }
+
+    /* TODO Need to enter provisioning mode again if the WiFi credentials are
+     *      not working. Probably the AP passphrase was changed since we got
+     *      provisionined.
+     */
+
     /* Register event handlers to stop the server when Wi-Fi or Ethernet is disconnected,
      * and re-start it upon connection.
      */
-    ESP_ERROR_CHECK(esp_event_handler_register(IP_EVENT, IP_EVENT_STA_GOT_IP, &connect_handler, &_server));
-    ESP_ERROR_CHECK(esp_event_handler_register(WIFI_EVENT, WIFI_EVENT_STA_DISCONNECTED, &disconnect_handler, &_server));
+    ESP_ERROR_CHECK(esp_event_handler_register(
+                IP_EVENT,
+                IP_EVENT_STA_GOT_IP,
+                connect_handler,
+                &_server));
+    ESP_ERROR_CHECK(esp_event_handler_register(
+                WIFI_EVENT,
+                WIFI_EVENT_STA_DISCONNECTED,
+                disconnect_handler,
+                &_server));
+    ESP_ERROR_CHECK(esp_event_handler_register(
+                WIFI_EVENT,
+                WIFI_EVENT_STA_START,
+                wifi_start_handler,
+                nullptr));
 
-    /* This helper function configures Wi-Fi or Ethernet, as selected in menuconfig.
-     * Read "Establishing Wi-Fi or Ethernet Connection" section in
-     * examples/protocols/README.md for more information about this function.
-     */
-    ESP_ERROR_CHECK(example_connect());
+    /* Start Wi-Fi station */
+    ESP_ERROR_CHECK(esp_wifi_set_mode(WIFI_MODE_STA));
+    ESP_ERROR_CHECK(esp_wifi_start());
 
     ESP_LOGI(TAG, "setup done");
     ESP_LOGI(TAG, "stack: %d", uxTaskGetStackHighWaterMark(NULL));
