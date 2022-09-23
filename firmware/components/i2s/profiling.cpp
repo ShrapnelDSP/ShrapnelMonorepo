@@ -22,6 +22,7 @@
 #include "i2s.h"
 #include "esp_log.h"
 #include "hal/cpu_hal.h"
+#include "rom/ets_sys.h"
 #include "freertos/task.h"
 #include <assert.h>
 

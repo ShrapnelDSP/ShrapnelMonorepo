@@ -2,6 +2,8 @@
 
 if(ESP_PLATFORM)
 idf_component_register()
+# esp-idf does not support additional flags correctly
+return()
 else()
 add_library(compiler_warning_flags INTERFACE)
 set(COMPONENT_LIB compiler_warning_flags)

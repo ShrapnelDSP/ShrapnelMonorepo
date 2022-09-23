@@ -560,7 +560,7 @@ extern "C" void audio_event_send_callback(const char *message, int fd)
     snprintf(event_message.message, sizeof(event_message.message), "%s", message);
 
     ESP_LOGD(TAG, "%s %s", __FUNCTION__, event_message.message);
-    ESP_LOGD(TAG, "%s %s", __FUNCTION__, pcTaskGetTaskName(NULL));
+    ESP_LOGD(TAG, "%s %s", __FUNCTION__, pcTaskGetName(NULL));
 
     if(errQUEUE_FULL ==
             xQueueSendToBack(shrapnel::out_queue,
