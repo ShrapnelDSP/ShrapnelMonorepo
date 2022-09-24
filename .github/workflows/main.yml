@@ -294,6 +294,9 @@ jobs:
     needs: [flutter-analyze, flutter-format, flutter-test]
     name: Relase frontend for Linux
     runs-on: ubuntu-latest
+    env:
+      CMAKE_C_COMPILER_LAUNCHER: ""
+      CMAKE_CXX_COMPILER_LAUNCHER: ""
     defaults:
       run:
         working-directory:
