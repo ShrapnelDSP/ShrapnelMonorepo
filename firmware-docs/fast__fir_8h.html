@@ -125,17 +125,17 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="profiling_8cpp_source.html#l00047">47</a> of file <a class="el" href="profiling_8cpp_source.html">profiling.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   48</span>{</div>
-<div class="line"><span class="lineno">   49</span>    assert(stage &lt; NUMBER_OF_STAGES);</div>
-<div class="line"><span class="lineno">   50</span> </div>
-<div class="line"><span class="lineno">   51</span>    <span class="keywordflow">if</span>(<a class="code hl_variable" href="profiling_8cpp.html#a4ff804bf46703f603a1541568cef5531">got_semaphore</a>)</div>
-<div class="line"><span class="lineno">   52</span>    {</div>
-<div class="line"><span class="lineno">   53</span>        <a class="code hl_variable" href="profiling_8cpp.html#ade2d6f84e5a6696fba128c5769eef4db">stage_cycles</a>[stage] = cpu_hal_get_cycle_count();</div>
-<div class="line"><span class="lineno">   54</span>    }</div>
-<div class="line"><span class="lineno">   55</span>}</div>
-<div class="ttc" id="aprofiling_8cpp_html_a4ff804bf46703f603a1541568cef5531"><div class="ttname"><a href="profiling_8cpp.html#a4ff804bf46703f603a1541568cef5531">got_semaphore</a></div><div class="ttdeci">static bool got_semaphore</div><div class="ttdef"><b>Definition:</b> <a href="profiling_8cpp_source.html#l00035">profiling.cpp:35</a></div></div>
-<div class="ttc" id="aprofiling_8cpp_html_ade2d6f84e5a6696fba128c5769eef4db"><div class="ttname"><a href="profiling_8cpp.html#ade2d6f84e5a6696fba128c5769eef4db">stage_cycles</a></div><div class="ttdeci">static uint32_t stage_cycles[NUMBER_OF_STAGES]</div><div class="ttdef"><b>Definition:</b> <a href="profiling_8cpp_source.html#l00033">profiling.cpp:33</a></div></div>
+<p class="definition">Definition at line <a class="el" href="profiling_8cpp_source.html#l00048">48</a> of file <a class="el" href="profiling_8cpp_source.html">profiling.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   49</span>{</div>
+<div class="line"><span class="lineno">   50</span>    assert(stage &lt; NUMBER_OF_STAGES);</div>
+<div class="line"><span class="lineno">   51</span> </div>
+<div class="line"><span class="lineno">   52</span>    <span class="keywordflow">if</span>(<a class="code hl_variable" href="profiling_8cpp.html#a4ff804bf46703f603a1541568cef5531">got_semaphore</a>)</div>
+<div class="line"><span class="lineno">   53</span>    {</div>
+<div class="line"><span class="lineno">   54</span>        <a class="code hl_variable" href="profiling_8cpp.html#ade2d6f84e5a6696fba128c5769eef4db">stage_cycles</a>[stage] = cpu_hal_get_cycle_count();</div>
+<div class="line"><span class="lineno">   55</span>    }</div>
+<div class="line"><span class="lineno">   56</span>}</div>
+<div class="ttc" id="aprofiling_8cpp_html_a4ff804bf46703f603a1541568cef5531"><div class="ttname"><a href="profiling_8cpp.html#a4ff804bf46703f603a1541568cef5531">got_semaphore</a></div><div class="ttdeci">static bool got_semaphore</div><div class="ttdef"><b>Definition:</b> <a href="profiling_8cpp_source.html#l00036">profiling.cpp:36</a></div></div>
+<div class="ttc" id="aprofiling_8cpp_html_ade2d6f84e5a6696fba128c5769eef4db"><div class="ttname"><a href="profiling_8cpp.html#ade2d6f84e5a6696fba128c5769eef4db">stage_cycles</a></div><div class="ttdeci">static uint32_t stage_cycles[NUMBER_OF_STAGES]</div><div class="ttdef"><b>Definition:</b> <a href="profiling_8cpp_source.html#l00034">profiling.cpp:34</a></div></div>
 </div><!-- fragment -->
 <p class="reference">Referenced by <a class="el" href="fast__fir_8h_source.html#l00059">shrapnel::dsp::FastFir&lt; N, M, Convolution &gt;::process()</a>.</p>
 <div class="dynheader">

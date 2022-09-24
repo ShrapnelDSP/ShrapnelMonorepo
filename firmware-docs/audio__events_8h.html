@@ -238,7 +238,7 @@ Here is the caller graph for this function:</div>
 <div class="line"><span class="lineno">  560</span>    snprintf(event_message.<a class="code hl_variable" href="structshrapnel_1_1audio__event__message__t.html#a9d92f3f1d777e46613479916053d17b7">message</a>, <span class="keyword">sizeof</span>(event_message.<a class="code hl_variable" href="structshrapnel_1_1audio__event__message__t.html#a9d92f3f1d777e46613479916053d17b7">message</a>), <span class="stringliteral">&quot;%s&quot;</span>, message);</div>
 <div class="line"><span class="lineno">  561</span> </div>
 <div class="line"><span class="lineno">  562</span>    ESP_LOGD(TAG, <span class="stringliteral">&quot;%s %s&quot;</span>, __FUNCTION__, event_message.<a class="code hl_variable" href="structshrapnel_1_1audio__event__message__t.html#a9d92f3f1d777e46613479916053d17b7">message</a>);</div>
-<div class="line"><span class="lineno">  563</span>    ESP_LOGD(TAG, <span class="stringliteral">&quot;%s %s&quot;</span>, __FUNCTION__, pcTaskGetTaskName(NULL));</div>
+<div class="line"><span class="lineno">  563</span>    ESP_LOGD(TAG, <span class="stringliteral">&quot;%s %s&quot;</span>, __FUNCTION__, pcTaskGetName(NULL));</div>
 <div class="line"><span class="lineno">  564</span> </div>
 <div class="line"><span class="lineno">  565</span>    <span class="keywordflow">if</span>(errQUEUE_FULL ==</div>
 <div class="line"><span class="lineno">  566</span>            xQueueSendToBack(<a class="code hl_variable" href="namespaceshrapnel.html#a402cf2cc4ab226e99766f72f8b21ea06">shrapnel::out_queue</a>,</div>
