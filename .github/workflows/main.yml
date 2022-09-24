@@ -290,6 +290,44 @@ jobs:
         parallel: true
         flag-name: "flutter"
 
+  flutter-linux-release:
+    needs: [flutter-analyze, flutter-format, flutter-test]
+    name: Relase frontend for Linux
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        submodules: recursive
+
+    - name: Install flutter
+      uses: subosito/flutter-action@v2
+      with:
+        flutter-version: ${{ env.FLUTTER_VERSION }}
+        channel: ${{ env.FLUTTER_CHANNEL }}
+        cache: true
+        cache-key: ${{ github.job }}
+
+    - name: Flutter pub cache
+      uses: actions/cache@v2
+      with:
+        path: ${{ env.PUB_CACHE }}
+        key: flutter-pub-${{ github.job }}-${{ hashFiles('**/pubspec.lock') }}
+        restore-keys: |
+          flutter-pub-${{ github.job }}-
+
+    - run: flutter pub get
+
+    - name: Generate code
+      run: flutter pub run build_runner build
+
+    - name: Build
+      run: flutter build linux
+
+    - uses: actions/upload-artifact@v3
+      with:
+        name: frontend-linux
+        path: build/linux/x64/release/bundle
+
   coveralls-finish:
     needs: [flutter-test, ctest]
     runs-on: ubuntu-latest
