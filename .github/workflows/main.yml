@@ -336,13 +336,10 @@ jobs:
     - name: Build
       run: flutter build linux
 
-    - name: Debug build folder
-      run: ls -R build
-
     - uses: actions/upload-artifact@v3
       with:
         name: frontend-linux
-        path: build/linux/x64/release/bundle
+        path: frontend/build/linux/x64/release/bundle
 
   coveralls-finish:
     needs: [flutter-test, ctest]
