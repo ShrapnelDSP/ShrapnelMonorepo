@@ -294,6 +294,10 @@ jobs:
     needs: [flutter-analyze, flutter-format, flutter-test]
     name: Relase frontend for Linux
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory:
+          frontend
     steps:
     - uses: actions/checkout@v2
       with:
