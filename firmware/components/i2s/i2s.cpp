@@ -71,7 +71,6 @@ static void event_task(void *param)
                 break;
             case I2S_EVENT_TX_Q_OVF:
             case I2S_EVENT_RX_Q_OVF:
-            case I2S_EVENT_MAX:
             default:
                 ESP_LOGE(TAG, "Unhandled type: %d", e.type);
                 break;

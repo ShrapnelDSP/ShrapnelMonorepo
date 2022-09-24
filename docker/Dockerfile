@@ -1,4 +1,4 @@
-FROM ubuntu:21.04
+FROM ubuntu:22.04
 
 ARG DEBIAN_FRONTEND=noninteractive
 ENV IDF_PATH=/opt/esp-idf
@@ -30,8 +30,7 @@ RUN apt-get install -y \
     bison \
     gperf \
     python3 \
-    python3-pip \
-    python3-setuptools \
+    python3-venv \
     ninja-build \
     ccache \
     libffi-dev \
@@ -44,7 +43,7 @@ RUN rm -rf /var/lib/apt/lists/* && \
     apt-get clean
 
 RUN git clone --shallow-submodules --recurse-submodules --depth 1 \
-    --branch v4.4-shrapnel1 \
+    --branch v5.0-shrapnel1 \
     https://github.com/shrapneldsp/esp-idf.git \
     $IDF_PATH
 

@@ -40,7 +40,6 @@ namespace wifi_provisioning {
 
 class WiFiProvisioning final {
 private:
-
     enum event_type_t {
         EVENT_PROVISIONING_SUCCESSFUL,
         EVENT_PROVISIONING_FAILED,
@@ -201,10 +200,14 @@ static void start(void)
     get_device_service_name(service_name, sizeof(service_name));
 
     wifi_prov_security_t security = WIFI_PROV_SECURITY_1;
-    const char *pop = "abcd1234";
+    constexpr std::string_view proof_of_possession{"abcd1234"};
+    wifi_prov_security1_params_t params{
+        .data{reinterpret_cast<const uint8_t *>(proof_of_possession.data())},
+        .len{proof_of_possession.size()},
+    };
     const char *service_key = NULL;
 
-    ESP_ERROR_CHECK(wifi_prov_mgr_start_provisioning(security, pop, service_name, service_key));
+    ESP_ERROR_CHECK(wifi_prov_mgr_start_provisioning(security, &params, service_name, service_key));
 }
 
 void wait_for_provisioning(void)
