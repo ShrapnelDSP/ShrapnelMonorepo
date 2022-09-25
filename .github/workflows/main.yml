@@ -339,8 +339,8 @@ jobs:
     - name: Create AppImage
       uses: docker://appimagecrafters/appimage-builder:1.1.0
       with:
-        entrypoint: appimage-builder
-        args: --recipe frontend/AppImageBuilder.yml --skip-test
+        entrypoint: bash
+        args: cd frontend; appimage-builder --recipe AppImageBuilder.yml --skip-test
 
     - run: ls -la
     - run: ls -la frontend
@@ -348,7 +348,7 @@ jobs:
     - uses: actions/upload-artifact@v3
       with:
         name: frontend-appimage
-        path: ShrapnelDSP-latest-x86_64.AppImage
+        path: frontend/ShrapnelDSP-latest-x86_64.AppImage
 
   coveralls-finish:
     needs: [flutter-test, ctest]
