@@ -336,10 +336,18 @@ jobs:
     - name: Build
       run: flutter build linux
 
+    - name: Create AppImage
+      uses: docker://appimagecrafters/appimage-builder:1.1.0
+      with:
+        entrypoint: appimage-builder
+        args: --recipe ./AppImageBuilder.yml --skip-test
+
+    - run: ls -la
+
     - uses: actions/upload-artifact@v3
       with:
-        name: frontend-linux
-        path: frontend/build/linux/x64/release/bundle
+        name: frontend-appimage
+        path: frontend/ShrapnelDSP-latest-x86_64.AppImage
 
   coveralls-finish:
     needs: [flutter-test, ctest]
