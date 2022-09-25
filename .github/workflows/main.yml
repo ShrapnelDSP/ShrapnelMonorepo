@@ -340,7 +340,7 @@ jobs:
       uses: docker://appimagecrafters/appimage-builder:1.1.0
       with:
         entrypoint: bash
-        args: cd frontend; appimage-builder --recipe AppImageBuilder.yml --skip-test
+        args: "-c 'cd frontend; appimage-builder --recipe AppImageBuilder.yml --skip-test'"
 
     - run: ls -la
     - run: ls -la frontend
