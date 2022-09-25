@@ -291,7 +291,7 @@ jobs:
         flag-name: "flutter"
 
   flutter-linux-release:
-    needs: [flutter-analyze, flutter-format, flutter-test]
+    #needs: [flutter-analyze, flutter-format, flutter-test]
     name: Relase frontend for Linux
     runs-on: ubuntu-latest
     env:
@@ -340,14 +340,15 @@ jobs:
       uses: docker://appimagecrafters/appimage-builder:1.1.0
       with:
         entrypoint: appimage-builder
-        args: --recipe ./AppImageBuilder.yml --skip-test
+        args: --recipe frontend/AppImageBuilder.yml --skip-test
 
     - run: ls -la
+    - run: ls -la frontend
 
     - uses: actions/upload-artifact@v3
       with:
         name: frontend-appimage
-        path: frontend/ShrapnelDSP-latest-x86_64.AppImage
+        path: ShrapnelDSP-latest-x86_64.AppImage
 
   coveralls-finish:
     needs: [flutter-test, ctest]
