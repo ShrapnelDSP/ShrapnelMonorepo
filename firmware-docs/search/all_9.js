@@ -10,7 +10,7 @@ var searchData=
   ['i2s_5fprocessing_5ftask_7',['i2s_processing_task',['../i2s_8cpp.html#a4e37f563a34c1a559515cc40782caf07',1,'i2s.cpp']]],
   ['i2s_5fprofiling_5ftask_8',['i2s_profiling_task',['../profiling_8cpp.html#a419c836fb596d360dbc40e678127eb90',1,'i2s_profiling_task(void *param):&#160;profiling.cpp'],['../profiling_8h.html#a419c836fb596d360dbc40e678127eb90',1,'i2s_profiling_task(void *param):&#160;profiling.cpp']]],
   ['i2s_5fqueue_9',['i2s_queue',['../i2s_8cpp.html#a9b83a13d267928932fc9d01c7ee09df2',1,'i2s.cpp']]],
-  ['i2s_5fsetup_10',['i2s_setup',['../i2s_8cpp.html#a78c8fe8089980bf7c440301d3171eac6',1,'i2s_setup(gpio_num_t profiling_gpio, shrapnel::AudioParameters *audio_param):&#160;i2s.cpp'],['../i2s_8h.html#a8c3150ee05854c239899ed6913fc9e02',1,'i2s_setup(gpio_num_t profiling_gpio, shrapnel::AudioParameters *audio_params):&#160;i2s.cpp']]],
+  ['i2s_5fsetup_10',['i2s_setup',['../i2s_8h.html#a8c3150ee05854c239899ed6913fc9e02',1,'i2s_setup(gpio_num_t profiling_gpio, shrapnel::AudioParameters *audio_params):&#160;i2s.cpp'],['../i2s_8cpp.html#a78c8fe8089980bf7c440301d3171eac6',1,'i2s_setup(gpio_num_t profiling_gpio, shrapnel::AudioParameters *audio_param):&#160;i2s.cpp']]],
   ['iir_2eh_11',['iir.h',['../iir_8h.html',1,'']]],
   ['iir_5fconcrete_2eh_12',['iir_concrete.h',['../juce_2include_2iir__concrete_8h.html',1,'(Global Namespace)'],['../esp32_2include_2iir__concrete_8h.html',1,'(Global Namespace)']]],
   ['iir_5fprocess_13',['iir_process',['../iir__universal_8c.html#a738b77e8a79f0c754dba3af19fbd4e30',1,'iir_process(const float *input, float *output, int len, float *coeffs, float *w, int coeffs_len):&#160;iir_universal.c'],['../iir__universal_8h.html#a738b77e8a79f0c754dba3af19fbd4e30',1,'iir_process(const float *input, float *output, int len, float *coeffs, float *w, int coeffs_len):&#160;iir_universal.c']]],
@@ -23,5 +23,6 @@ var searchData=
   ['input_5ffilter_2ecpp_20',['input_filter.cpp',['../input__filter_8cpp.html',1,'']]],
   ['input_5ffilter_2eh_21',['input_filter.h',['../input__filter_8h.html',1,'']]],
   ['inputfilter_22',['InputFilter',['../classshrapnel_1_1effect_1_1valvestate_1_1InputFilter.html',1,'shrapnel::effect::valvestate']]],
-  ['is_5fprovisioned_23',['is_provisioned',['../classshrapnel_1_1wifi__provisioning_1_1WiFiProvisioning.html#aa49a508e1049ccf733794e8d920a865a',1,'shrapnel::wifi_provisioning::WiFiProvisioning']]]
+  ['instance_23',['instance',['../classEspHeapTracing.html#af49dc8f718e254d2aa165b56a0cf640e',1,'EspHeapTracing']]],
+  ['is_5fprovisioned_24',['is_provisioned',['../classshrapnel_1_1wifi__provisioning_1_1WiFiProvisioning.html#aa49a508e1049ccf733794e8d920a865a',1,'shrapnel::wifi_provisioning::WiFiProvisioning']]]
 ];

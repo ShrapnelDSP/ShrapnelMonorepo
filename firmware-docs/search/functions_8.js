@@ -8,5 +8,6 @@ var searchData=
   ['i2s_5fsetup_5',['i2s_setup',['../i2s_8cpp.html#a78c8fe8089980bf7c440301d3171eac6',1,'i2s_setup(gpio_num_t profiling_gpio, shrapnel::AudioParameters *audio_param):&#160;i2s.cpp'],['../i2s_8h.html#a8c3150ee05854c239899ed6913fc9e02',1,'i2s_setup(gpio_num_t profiling_gpio, shrapnel::AudioParameters *audio_params):&#160;i2s.cpp']]],
   ['iir_5fprocess_6',['iir_process',['../iir__universal_8h.html#a738b77e8a79f0c754dba3af19fbd4e30',1,'iir_process(const float *input, float *output, int len, float *coeffs, float *w, int coeffs_len):&#160;iir_universal.c'],['../iir__universal_8c.html#a738b77e8a79f0c754dba3af19fbd4e30',1,'iir_process(const float *input, float *output, int len, float *coeffs, float *w, int coeffs_len):&#160;iir_universal.c']]],
   ['iirfilter_7',['IirFilter',['../classshrapnel_1_1dsp_1_1IirFilter.html#a115233b4c64c2e99a41e50dae95a3f57',1,'shrapnel::dsp::IirFilter::IirFilter(void)'],['../classshrapnel_1_1dsp_1_1IirFilter.html#a115233b4c64c2e99a41e50dae95a3f57',1,'shrapnel::dsp::IirFilter::IirFilter(void)']]],
-  ['is_5fprovisioned_8',['is_provisioned',['../classshrapnel_1_1wifi__provisioning_1_1WiFiProvisioning.html#aa49a508e1049ccf733794e8d920a865a',1,'shrapnel::wifi_provisioning::WiFiProvisioning']]]
+  ['instance_8',['instance',['../classEspHeapTracing.html#af49dc8f718e254d2aa165b56a0cf640e',1,'EspHeapTracing']]],
+  ['is_5fprovisioned_9',['is_provisioned',['../classshrapnel_1_1wifi__provisioning_1_1WiFiProvisioning.html#aa49a508e1049ccf733794e8d920a865a',1,'shrapnel::wifi_provisioning::WiFiProvisioning']]]
 ];
