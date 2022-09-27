@@ -149,6 +149,7 @@ class Decoder {
  */
 template<typename T>
 class Configuration {
+    public:
     int getBasicChannel();
     void setBasicChannel(int channel);
 };
@@ -159,6 +160,7 @@ class Configuration {
  * down.
  */
 class PersistentStorage {
+    public:
     virtual void save(const char *key, const void *data, std::size_t data_size) = 0;
     virtual int load(const char *key, void *data, std::size_t data_size) = 0;
 };
