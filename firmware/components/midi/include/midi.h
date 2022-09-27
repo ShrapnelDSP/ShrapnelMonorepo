@@ -158,7 +158,7 @@ class Configuration {
  * The data sent to \ref save should be reloaded by \ref load even after power
  * down.
  */
-class PeristentStorage {
+class PersistentStorage {
     virtual void save(const char *key, const void *data, std::size_t data_size) = 0;
     virtual int load(const char *key, void *data, std::size_t data_size) = 0;
 };
