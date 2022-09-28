@@ -188,7 +188,13 @@ WiFiProvisioning(void) : queue()
 static bool is_provisioned(void)
 {
     bool provisioned = false;
-    ESP_ERROR_CHECK(wifi_prov_mgr_is_provisioned(&provisioned));
+
+    wifi_config_t wifi_cfg;
+    ESP_ERROR_CHECK(esp_wifi_get_config(WIFI_IF_STA, &wifi_cfg));
+
+    if (wifi_cfg.sta.ssid[0] != '\0') {
+        provisioned = true;
+    }
     return provisioned;
 }
 

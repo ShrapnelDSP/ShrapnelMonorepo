@@ -763,20 +763,17 @@ midi::Mapping, 10>>(document);
     /* Start the mdns service */
     start_mdns();
 
+#if SHRAPNEL_RESET_WIFI_CREDENTIALS
+    ESP_LOGW(TAG, "Reseting wifi provisioning");
+#else
+    if(!wifi_provisioning::WiFiProvisioning::is_provisioned())
+#endif
     {
         wifi_provisioning::WiFiProvisioning wifi_provisioning{};
 
-#if SHRAPNEL_RESET_WIFI_CREDENTIALS
-        ESP_LOGW(TAG, "Reseting wifi provisioning");
-        wifi_prov_mgr_reset_provisioning();
-#endif
-
-        if(!wifi_provisioning.is_provisioned())
-        {
-             wifi_provisioning.wait_for_provisioning();
-             /* start the websocket server */
-             connect_handler(&_server, IP_EVENT, IP_EVENT_STA_GOT_IP, nullptr);
-        }
+        wifi_provisioning.wait_for_provisioning();
+        /* start the websocket server */
+        connect_handler(&_server, IP_EVENT, IP_EVENT_STA_GOT_IP, nullptr);
     }
 
     /* TODO Need to enter provisioning mode again if the WiFi credentials are
