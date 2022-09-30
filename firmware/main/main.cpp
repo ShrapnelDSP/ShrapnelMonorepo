@@ -850,7 +850,7 @@ midi::Mapping, 10>>(document);
                 &wifi_queue));
     ESP_ERROR_CHECK(esp_event_handler_register(
                 WIFI_PROV_EVENT,
-                WIFI_PROV_DEINIT,
+                WIFI_PROV_END,
                 wifi_provisioning_done_handler,
                 &wifi_queue));
 
