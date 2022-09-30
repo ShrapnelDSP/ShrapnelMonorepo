@@ -59,7 +59,7 @@ class WifiStateMachine {
     using transition = etl::state_chart_traits::transition<WifiStateMachine>;
     using state = etl::state_chart_traits::state<WifiStateMachine>;
 
-    static const transition transition_table[8];
+    static const transition transition_table[9];
     static const state state_table[5];
 
     private:

@@ -386,7 +386,6 @@ static void stop_webserver(httpd_handle_t server)
     httpd_stop(server);
 }
 
-// TODO move the #if 0 code to the wifi state machine
 static void disconnect_handler(void* arg, esp_event_base_t event_base,
                                int32_t event_id, void* event_data)
 {
@@ -402,14 +401,6 @@ static void disconnect_handler(void* arg, esp_event_base_t event_base,
     {
         ESP_LOGE(TAG, "Failed to send disconnect event to queue");
     }
-#if 0
-    httpd_handle_t* server = (httpd_handle_t*) arg;
-    if (*server) {
-        ESP_LOGI(TAG, "Stopping webserver");
-        stop_webserver(*server);
-        *server = nullptr;
-    }
-#endif
 }
 
 static void connect_handler(void* arg, esp_event_base_t event_base,
@@ -427,13 +418,6 @@ static void connect_handler(void* arg, esp_event_base_t event_base,
     {
         ESP_LOGE(TAG, "Failed to send connect event to queue");
     }
-#if 0
-    httpd_handle_t* server = (httpd_handle_t*) arg;
-    if (*server == nullptr) {
-        ESP_LOGI(TAG, "Starting webserver");
-        *server = start_webserver();
-    }
-#endif
 }
 
 static void wifi_start_handler(void *arg, esp_event_base_t event_base,
@@ -809,21 +793,6 @@ midi::Mapping, 10>>(document);
     /* Start the mdns service */
     start_mdns();
 
-#if 0
-#if SHRAPNEL_RESET_WIFI_CREDENTIALS
-    ESP_LOGW(TAG, "Reseting wifi provisioning");
-#else
-    if()
-#endif
-    {
-        wifi_provisioning::WiFiProvisioning wifi_provisioning{};
-
-        wifi_provisioning.wait_for_provisioning();
-        /* start the websocket server */
-        connect_handler(&_server, IP_EVENT, IP_EVENT_STA_GOT_IP, nullptr);
-    }
-#endif
-
     auto wifi_queue = Queue<wifi::InternalEvent>(3);
     auto wifi_send_event = [&] (wifi::InternalEvent event) {
         auto rc = wifi_queue.send(&event, 0);
@@ -856,7 +825,7 @@ midi::Mapping, 10>>(document);
         wifi::WifiStateMachine,
         wifi,
         wifi::WifiStateMachine::transition_table,
-        8, /* TODO how to do DRY here? sizeof based macro should work */
+        9, /* TODO how to do DRY here? sizeof based macro should work */
         wifi::WifiStateMachine::state_table,
         5, /* TODO how to do DRY here? */
         wifi::State::INIT>();

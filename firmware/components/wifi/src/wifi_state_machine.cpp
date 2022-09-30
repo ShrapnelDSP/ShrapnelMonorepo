@@ -12,6 +12,8 @@ constexpr WifiStateMachine::transition WifiStateMachine::transition_table[]{
 
     WifiStateMachine::transition(State::STARTING,     InternalEvent::STARTED,            State::CONNECTING),
 
+    // Espressif uses the disconnect event to indicate failed connection. Retry when we receive this event
+    WifiStateMachine::transition(State::CONNECTING,   InternalEvent::DISCONNECT,         State::CONNECTING, &WifiStateMachine::connect_to_ap),
     WifiStateMachine::transition(State::CONNECTING,   InternalEvent::CONNECT_SUCCESS,    State::CONNECTED),
     WifiStateMachine::transition(State::CONNECTING,   InternalEvent::CONNECT_TIMEOUT,    State::PROVISIONING),
 
@@ -25,7 +27,7 @@ constexpr WifiStateMachine::state WifiStateMachine::state_table[]{
     WifiStateMachine::state(State::INIT, &WifiStateMachine::check_if_provisioned, nullptr),
     WifiStateMachine::state(State::STARTING, &WifiStateMachine::start, nullptr),
     WifiStateMachine::state(State::CONNECTING, &WifiStateMachine::connect_to_ap, nullptr),
-    WifiStateMachine::state(State::CONNECTED, &WifiStateMachine::on_connected, nullptr),
+    WifiStateMachine::state(State::CONNECTED, &WifiStateMachine::on_connected, &WifiStateMachine::on_disconnected),
     WifiStateMachine::state(
             State::PROVISIONING,
             &WifiStateMachine::provisioning_start,
@@ -50,6 +52,7 @@ void WifiStateMachine::start()
 
 void WifiStateMachine::connect_to_ap()
 {
+    ESP_LOGI(TAG, "Trying to connect to configured AP");
     int rc = esp_wifi_connect();
     if(rc != ESP_OK)
     {
@@ -61,6 +64,12 @@ void WifiStateMachine::on_connected()
 {
     ESP_LOGI(TAG, "wifi connected");
     send_event_user(UserEvent::CONNECTED);
+}
+
+void WifiStateMachine::on_disconnected()
+{
+    ESP_LOGI(TAG, "wifi disconnected");
+    send_event_user(UserEvent::DISCONNECTED);
 }
 
 void WifiStateMachine::provisioning_start()
