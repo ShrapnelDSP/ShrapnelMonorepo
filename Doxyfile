@@ -980,7 +980,8 @@ EXCLUDE_SYMLINKS       = NO
 # exclude all test directories for example use the pattern */test/*
 
 EXCLUDE_PATTERNS       = */test/* \
-                         */build/*
+                         */build/* \
+                         */firmware/managed_components/*
 
 # The EXCLUDE_SYMBOLS tag can be used to specify one or more symbol names
 # (namespaces, classes, functions, etc.) that should be excluded from the
@@ -2582,7 +2583,7 @@ DIAFILE_DIRS           =
 # a preprocessing step. Doxygen will generate a warning when it encounters a
 # \startuml command in this case and will not generate output for the diagram.
 
-PLANTUML_JAR_PATH      =
+PLANTUML_JAR_PATH      = $(PLANTUML_PATH)
 
 # When using plantuml, the PLANTUML_CFG_FILE tag can be used to specify a
 # configuration file for plantuml.

@@ -46,6 +46,26 @@ struct State {
     ETL_END_ENUM_TYPE
 };
 
+/**
+ * \startuml
+ * title Wifi State Machine
+ *
+ * [*] --> INIT
+ * INIT -r-> STARTING: IS_PROVISIONED
+ * INIT --> PROVISIONING: IS_NOT_PROVISIONED
+ *
+ * STARTING --> CONNECTING: STARTED
+ *
+ * CONNECTING --> CONNECTING: DISCONNECT
+ * CONNECTING --> CONNECTED: CONNECT_SUCCESS
+ * CONNECTING --> PROVISIONING: CONNECT_TIMEOUT
+ *
+ * CONNECTED --> CONNECTING: DISCONNECT
+ * CONNECTED --> PROVISIONING: RESET_PROVISIONING
+ *
+ * PROVISIONING --> CONNECTED: PROVISIONING_DONE
+ * \enduml
+ */
 class WifiStateMachine {
     public:
     using internal_event_callback_t = etl::delegate<void(InternalEvent)>;
