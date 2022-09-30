@@ -18,6 +18,11 @@
  */
 
 #include <mutex>
+#include "freertos/portmacro.h"
+#include "freertos/projdefs.h"
+#include "queue.h"
+#include "wifi_provisioning/manager.h"
+#include <etl/state_chart.h>
 #include <stdio.h>
 #include <math.h>
 #include <type_traits>
@@ -66,6 +71,7 @@
 #include "wifi_provisioning.h"
 #include "midi_mapping_api.h"
 #include "queue.h"
+#include "wifi_state_machine.h"
 
 #define TAG "main"
 #define QUEUE_LEN 4
@@ -379,6 +385,7 @@ static void stop_webserver(httpd_handle_t server)
     httpd_stop(server);
 }
 
+// TODO move the #if 0 code to the wifi state machine
 static void disconnect_handler(void* arg, esp_event_base_t event_base,
                                int32_t event_id, void* event_data)
 {
@@ -386,12 +393,22 @@ static void disconnect_handler(void* arg, esp_event_base_t event_base,
     (void)event_id;
     (void)event_data;
 
+    ESP_LOGI(TAG, "WiFi disconnected");
+    auto queue{reinterpret_cast<Queue<wifi::WifiStateMachine::Event>*>(arg)};
+    auto event{wifi::WifiStateMachine::DISCONNECT};
+    int rc{queue->send(&event, 0)};
+    if(rc != pdPASS)
+    {
+        ESP_LOGE(TAG, "Failed to send disconnect event to queue");
+    }
+#if 0
     httpd_handle_t* server = (httpd_handle_t*) arg;
     if (*server) {
         ESP_LOGI(TAG, "Stopping webserver");
         stop_webserver(*server);
         *server = nullptr;
     }
+#endif
 }
 
 static void connect_handler(void* arg, esp_event_base_t event_base,
@@ -401,25 +418,52 @@ static void connect_handler(void* arg, esp_event_base_t event_base,
     (void)event_id;
     (void)event_data;
 
+    ESP_LOGI(TAG, "WiFi connected");
+    auto queue{reinterpret_cast<Queue<wifi::WifiStateMachine::Event>*>(arg)};
+    auto event{wifi::WifiStateMachine::CONNECT_SUCCESS};
+    int rc{queue->send(&event, 0)};
+    if(rc != pdPASS)
+    {
+        ESP_LOGE(TAG, "Failed to send connect event to queue");
+    }
+#if 0
     httpd_handle_t* server = (httpd_handle_t*) arg;
     if (*server == nullptr) {
         ESP_LOGI(TAG, "Starting webserver");
         *server = start_webserver();
     }
+#endif
 }
 
 static void wifi_start_handler(void *arg, esp_event_base_t event_base,
                                int32_t event_id, void* event_data)
 {
     (void)event_data;
-    (void)arg;
     assert(event_base == WIFI_EVENT);
     assert(event_id == WIFI_EVENT_STA_START);
 
-    int rc = esp_wifi_connect();
-    if(rc != ESP_OK)
+    auto queue{reinterpret_cast<Queue<wifi::WifiStateMachine::Event>*>(arg)};
+    auto event{wifi::WifiStateMachine::STARTED};
+    int rc{queue->send(&event, 0)};
+    if(rc != pdPASS)
     {
-        ESP_LOGE(TAG, "wifi connect failed %d", rc);
+        ESP_LOGE(TAG, "Failed to send start event to queue");
+    }
+}
+
+static void wifi_provisioning_done_handler(void *arg, esp_event_base_t event_base,
+                                           int32_t event_id, void* event_data)
+{
+    (void)event_base;
+    (void)event_id;
+    (void)event_data;
+
+    auto queue{reinterpret_cast<Queue<wifi::WifiStateMachine::Event>*>(arg)};
+    auto event{wifi::WifiStateMachine::PROVISIONING_DONE};
+    int rc{queue->send(&event, 0)};
+    if(rc != pdPASS)
+    {
+        ESP_LOGE(TAG, "Failed to send provisioning done event to queue");
     }
 }
 
@@ -763,10 +807,11 @@ midi::Mapping, 10>>(document);
     /* Start the mdns service */
     start_mdns();
 
+#if 0
 #if SHRAPNEL_RESET_WIFI_CREDENTIALS
     ESP_LOGW(TAG, "Reseting wifi provisioning");
 #else
-    if(!wifi_provisioning::WiFiProvisioning::is_provisioned())
+    if()
 #endif
     {
         wifi_provisioning::WiFiProvisioning wifi_provisioning{};
@@ -775,34 +820,49 @@ midi::Mapping, 10>>(document);
         /* start the websocket server */
         connect_handler(&_server, IP_EVENT, IP_EVENT_STA_GOT_IP, nullptr);
     }
+#endif
 
-    /* TODO Need to enter provisioning mode again if the WiFi credentials are
-     *      not working. Probably the AP passphrase was changed since we got
-     *      provisionined.
-     */
+    auto wifi_queue = Queue<wifi::WifiStateMachine::Event>(3);
+    auto wifi_send_event = [&] (wifi::WifiStateMachine::Event event) {
+        auto rc = wifi_queue.send(&event, 0);
+        if(rc != pdPASS)
+        {
+            ESP_LOGE(TAG, "Failed to post wifi event to queue");
+        }
+    };
+    static auto wifi = wifi::WifiStateMachine(wifi_send_event);
+    auto wifi_state_chart = etl::state_chart_ct<
+        wifi::WifiStateMachine,
+        wifi,
+        wifi::WifiStateMachine::transition_table,
+        8, /* TODO how to do DRY here? sizeof based macro should work */
+        wifi::WifiStateMachine::state_table,
+        5, /* TODO how to do DRY here? */
+        wifi::WifiStateMachine::State::INIT>();
+    wifi_state_chart.start();
 
-    /* Register event handlers to stop the server when Wi-Fi or Ethernet is disconnected,
-     * and re-start it upon connection.
-     */
+
+    /* Register event handlers to send events on to wifi state machine */
     ESP_ERROR_CHECK(esp_event_handler_register(
                 IP_EVENT,
                 IP_EVENT_STA_GOT_IP,
                 connect_handler,
-                &_server));
+                &wifi_queue));
     ESP_ERROR_CHECK(esp_event_handler_register(
                 WIFI_EVENT,
                 WIFI_EVENT_STA_DISCONNECTED,
                 disconnect_handler,
-                &_server));
+                &wifi_queue));
     ESP_ERROR_CHECK(esp_event_handler_register(
                 WIFI_EVENT,
                 WIFI_EVENT_STA_START,
                 wifi_start_handler,
-                nullptr));
-
-    /* Start Wi-Fi station */
-    ESP_ERROR_CHECK(esp_wifi_set_mode(WIFI_MODE_STA));
-    ESP_ERROR_CHECK(esp_wifi_start());
+                &wifi_queue));
+    ESP_ERROR_CHECK(esp_event_handler_register(
+                WIFI_PROV_EVENT,
+                WIFI_PROV_DEINIT,
+                wifi_provisioning_done_handler,
+                &wifi_queue));
 
     ESP_LOGI(TAG, "setup done");
     ESP_LOGI(TAG, "stack: %d", uxTaskGetStackHighWaterMark(NULL));
@@ -928,6 +988,10 @@ midi::Mapping, 10>>(document);
                 xTimerReset(clipping_throttle_timer, pdMS_TO_TICKS(10));
             }
         }
+
+        wifi::WifiStateMachine::Event wifi_event;
+        wifi_queue.receive(&wifi_event, 0);
+        wifi_state_chart.process_event(wifi_event);
     }
 }
 

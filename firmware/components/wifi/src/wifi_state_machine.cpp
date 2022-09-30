@@ -1,30 +1,29 @@
 #include "wifi_state_machine.h"
 #include "esp_wifi.h"
 #include "esp_log.h"
+#include "wifi_provisioning.h"
 
 namespace shrapnel {
 namespace wifi {
 
-const etl::array<WifiStateMachine::transition, 7> WifiStateMachine::transitionTable{
-    WifiStateMachine::transition(INIT, IS_PROVISIONED, CONNECTING),
+constexpr WifiStateMachine::transition WifiStateMachine::transition_table[]{
+    WifiStateMachine::transition(INIT, IS_PROVISIONED, STARTING),
     WifiStateMachine::transition(INIT, IS_NOT_PROVISIONED, PROVISIONING),
+
+    WifiStateMachine::transition(STARTING, STARTED, CONNECTING),
 
     WifiStateMachine::transition(CONNECTING, CONNECT_SUCCESS, CONNECTED),
     WifiStateMachine::transition(CONNECTING, CONNECT_TIMEOUT, PROVISIONING),
 
     WifiStateMachine::transition(CONNECTED, DISCONNECT, CONNECTING),
-    // TODO when the reset even is called, we need to uninstall wifi event
-    // handlers registered by main after provisioning is complete. We do not
-    // want to start the websocket server while provisioning is still active.
-    // Should we send all the WiFi events through this state machine so that we
-    // can prevent them from reaching the app while provisioning?
     WifiStateMachine::transition(CONNECTED, RESET_PROVISIONING, PROVISIONING),
 
     WifiStateMachine::transition(PROVISIONING, PROVISIONING_DONE, CONNECTED),
 };
 
-const etl::array<WifiStateMachine::state, 4> WifiStateMachine::state_table{
+constexpr WifiStateMachine::state WifiStateMachine::state_table[]{
     WifiStateMachine::state(INIT, &WifiStateMachine::check_if_provisioned, nullptr),
+    WifiStateMachine::state(STARTING, &WifiStateMachine::start, nullptr),
     WifiStateMachine::state(CONNECTING, &WifiStateMachine::connect_to_ap, nullptr),
     WifiStateMachine::state(CONNECTED, &WifiStateMachine::on_connected, nullptr),
     WifiStateMachine::state(
@@ -35,27 +34,27 @@ const etl::array<WifiStateMachine::state, 4> WifiStateMachine::state_table{
 
 void WifiStateMachine::check_if_provisioned()
 {
-    // TODO look this up using esp_wifi API, or maybe refactor wifi
-    // provisioning to do that
-    bool provisioned = false;
-    if(provisioned) {
-        // TODO is this a recursive call? we might have to post this event to a
-        // queue and then call process event from the main task
-        process_event(IS_PROVISIONED);
-    } else {
-        process_event(IS_NOT_PROVISIONED);
-    }
+    bool is_provisioned = wifi_provisioning::WiFiProvisioning::is_provisioned();
+#if SHRAPNEL_RESET_WIFI_CREDENTIALS
+    ESP_LOGW(TAG, "Reseting wifi provisioning");
+    is_provisioned = false;
+#endif
+    send_event(is_provisioned ? IS_PROVISIONED : IS_NOT_PROVISIONED);
+}
+
+void WifiStateMachine::start()
+{
+    ESP_ERROR_CHECK(esp_wifi_set_mode(WIFI_MODE_STA));
+    ESP_ERROR_CHECK(esp_wifi_start());
 }
 
 void WifiStateMachine::connect_to_ap()
 {
-    // XXX This requires that there is an event handler installed that
-    //     connects to the AP in response to the start event. This is done in
-    //     the main file.
-    //     Should there be two state here? One waiting for the wifi start
-    //     event, and the other waiting for the got IP event.
-    ESP_ERROR_CHECK(esp_wifi_set_mode(WIFI_MODE_STA));
-    ESP_ERROR_CHECK(esp_wifi_start());
+    int rc = esp_wifi_connect();
+    if(rc != ESP_OK)
+    {
+        ESP_LOGE(TAG, "wifi connect failed %d", rc);
+    }
 }
 
 void WifiStateMachine::on_connected()
@@ -64,6 +63,28 @@ void WifiStateMachine::on_connected()
     // want to send an event to some other part of the app, that will cause the
     // server to start.
     ESP_LOGI(TAG, "wifi connected");
+}
+
+void WifiStateMachine::provisioning_start()
+{
+    ESP_LOGI(TAG, "provisioning start");
+
+    assert(!provisioning.get());
+    provisioning = std::make_unique<wifi_provisioning::WiFiProvisioning>();
+    // TODO merge these state machines into a single state machine?
+    //      This blocks the calling thread until provisioning is complete.
+    //
+    //      There is a simple state machine inside this function, it should be
+    //      easy to merge to here, and make it not block.
+    provisioning->wait_for_provisioning();
+}
+
+void WifiStateMachine::provisioning_done()
+{
+    ESP_LOGI(TAG, "provisioning done");
+
+    assert(provisioning.get());
+    provisioning = nullptr;
 }
 
 }
