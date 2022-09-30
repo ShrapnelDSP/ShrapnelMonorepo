@@ -1,4 +1,5 @@
 #include "etl/state_chart.h"
+#include "etl/enum_type.h"
 #include "wifi_provisioning.h"
 #include "etl/delegate.h"
 #include <memory>
@@ -6,9 +7,8 @@
 namespace shrapnel {
 namespace wifi {
 
-class WifiStateMachine {
-    public:
-    enum Event {
+struct InternalEvent {
+    enum enum_type {
         IS_PROVISIONED,
         IS_NOT_PROVISIONED,
         STARTED,
@@ -19,17 +19,42 @@ class WifiStateMachine {
         PROVISIONING_DONE,
     };
 
-    using SendEventCallback = etl::delegate<void(Event)>;
+    ETL_DECLARE_ENUM_TYPE(InternalEvent, int)
+    ETL_END_ENUM_TYPE
+};
 
-    WifiStateMachine(SendEventCallback a_send_event) : send_event(a_send_event) {};
+struct UserEvent {
+    enum enum_type {
+        CONNECTED,
+        DISCONNECTED,
+    };
 
-    enum State {
+    ETL_DECLARE_ENUM_TYPE(UserEvent, int)
+    ETL_END_ENUM_TYPE
+};
+
+struct State {
+    enum enum_type {
         INIT,
         STARTING,
         CONNECTING,
         CONNECTED,
         PROVISIONING,
     };
+
+    ETL_DECLARE_ENUM_TYPE(State, int)
+    ETL_END_ENUM_TYPE
+};
+
+class WifiStateMachine {
+    public:
+    using internal_event_callback_t = etl::delegate<void(InternalEvent)>;
+    using user_event_callback_t = etl::delegate<void(UserEvent)>;
+
+    WifiStateMachine(internal_event_callback_t a_send_event_internal, user_event_callback_t a_send_event_user) :
+        send_event_internal(a_send_event_internal),
+        send_event_user(a_send_event_user)
+    {};
 
     using transition = etl::state_chart_traits::transition<WifiStateMachine>;
     using state = etl::state_chart_traits::state<WifiStateMachine>;
@@ -45,14 +70,13 @@ class WifiStateMachine {
     void provisioning_done();
     void start();
     void connect_to_ap();
-    // notify app that connection was successful
     void on_connected();
-    // notify app that we have disconnected
     void on_disconnected();
 
     static constexpr char TAG[] = "wifi_state_machine";
 
-    SendEventCallback send_event;
+    internal_event_callback_t send_event_internal;
+    user_event_callback_t send_event_user;
 
     std::unique_ptr<wifi_provisioning::WiFiProvisioning> provisioning = nullptr;
 };

@@ -7,27 +7,27 @@ namespace shrapnel {
 namespace wifi {
 
 constexpr WifiStateMachine::transition WifiStateMachine::transition_table[]{
-    WifiStateMachine::transition(INIT, IS_PROVISIONED, STARTING),
-    WifiStateMachine::transition(INIT, IS_NOT_PROVISIONED, PROVISIONING),
+    WifiStateMachine::transition(State::INIT,         InternalEvent::IS_PROVISIONED,     State::STARTING),
+    WifiStateMachine::transition(State::INIT,         InternalEvent::IS_NOT_PROVISIONED, State::PROVISIONING),
 
-    WifiStateMachine::transition(STARTING, STARTED, CONNECTING),
+    WifiStateMachine::transition(State::STARTING,     InternalEvent::STARTED,            State::CONNECTING),
 
-    WifiStateMachine::transition(CONNECTING, CONNECT_SUCCESS, CONNECTED),
-    WifiStateMachine::transition(CONNECTING, CONNECT_TIMEOUT, PROVISIONING),
+    WifiStateMachine::transition(State::CONNECTING,   InternalEvent::CONNECT_SUCCESS,    State::CONNECTED),
+    WifiStateMachine::transition(State::CONNECTING,   InternalEvent::CONNECT_TIMEOUT,    State::PROVISIONING),
 
-    WifiStateMachine::transition(CONNECTED, DISCONNECT, CONNECTING),
-    WifiStateMachine::transition(CONNECTED, RESET_PROVISIONING, PROVISIONING),
+    WifiStateMachine::transition(State::CONNECTED,    InternalEvent::DISCONNECT,         State::CONNECTING),
+    WifiStateMachine::transition(State::CONNECTED,    InternalEvent::RESET_PROVISIONING, State::PROVISIONING),
 
-    WifiStateMachine::transition(PROVISIONING, PROVISIONING_DONE, CONNECTED),
+    WifiStateMachine::transition(State::PROVISIONING, InternalEvent::PROVISIONING_DONE,  State::CONNECTED),
 };
 
 constexpr WifiStateMachine::state WifiStateMachine::state_table[]{
-    WifiStateMachine::state(INIT, &WifiStateMachine::check_if_provisioned, nullptr),
-    WifiStateMachine::state(STARTING, &WifiStateMachine::start, nullptr),
-    WifiStateMachine::state(CONNECTING, &WifiStateMachine::connect_to_ap, nullptr),
-    WifiStateMachine::state(CONNECTED, &WifiStateMachine::on_connected, nullptr),
+    WifiStateMachine::state(State::INIT, &WifiStateMachine::check_if_provisioned, nullptr),
+    WifiStateMachine::state(State::STARTING, &WifiStateMachine::start, nullptr),
+    WifiStateMachine::state(State::CONNECTING, &WifiStateMachine::connect_to_ap, nullptr),
+    WifiStateMachine::state(State::CONNECTED, &WifiStateMachine::on_connected, nullptr),
     WifiStateMachine::state(
-            PROVISIONING,
+            State::PROVISIONING,
             &WifiStateMachine::provisioning_start,
             &WifiStateMachine::provisioning_done),
 };
@@ -39,7 +39,7 @@ void WifiStateMachine::check_if_provisioned()
     ESP_LOGW(TAG, "Reseting wifi provisioning");
     is_provisioned = false;
 #endif
-    send_event(is_provisioned ? IS_PROVISIONED : IS_NOT_PROVISIONED);
+    send_event_internal(is_provisioned ? InternalEvent::IS_PROVISIONED : InternalEvent::IS_NOT_PROVISIONED);
 }
 
 void WifiStateMachine::start()
@@ -59,10 +59,8 @@ void WifiStateMachine::connect_to_ap()
 
 void WifiStateMachine::on_connected()
 {
-    // TODO let the application configure what happens here. We will probably
-    // want to send an event to some other part of the app, that will cause the
-    // server to start.
     ESP_LOGI(TAG, "wifi connected");
+    send_event_user(UserEvent::CONNECTED);
 }
 
 void WifiStateMachine::provisioning_start()

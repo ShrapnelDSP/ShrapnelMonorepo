@@ -382,6 +382,7 @@ static void stop_webserver(httpd_handle_t server)
     /* TODO need to stop tasks that use the web server first */
 
     // Stop the httpd server
+    // XXX: this blocks until the server is stopped
     httpd_stop(server);
 }
 
@@ -394,8 +395,8 @@ static void disconnect_handler(void* arg, esp_event_base_t event_base,
     (void)event_data;
 
     ESP_LOGI(TAG, "WiFi disconnected");
-    auto queue{reinterpret_cast<Queue<wifi::WifiStateMachine::Event>*>(arg)};
-    auto event{wifi::WifiStateMachine::DISCONNECT};
+    auto queue{reinterpret_cast<Queue<wifi::InternalEvent>*>(arg)};
+    wifi::InternalEvent event{wifi::InternalEvent::DISCONNECT};
     int rc{queue->send(&event, 0)};
     if(rc != pdPASS)
     {
@@ -419,8 +420,8 @@ static void connect_handler(void* arg, esp_event_base_t event_base,
     (void)event_data;
 
     ESP_LOGI(TAG, "WiFi connected");
-    auto queue{reinterpret_cast<Queue<wifi::WifiStateMachine::Event>*>(arg)};
-    auto event{wifi::WifiStateMachine::CONNECT_SUCCESS};
+    auto queue{reinterpret_cast<Queue<wifi::InternalEvent>*>(arg)};
+    wifi::InternalEvent event{wifi::InternalEvent::CONNECT_SUCCESS};
     int rc{queue->send(&event, 0)};
     if(rc != pdPASS)
     {
@@ -442,8 +443,8 @@ static void wifi_start_handler(void *arg, esp_event_base_t event_base,
     assert(event_base == WIFI_EVENT);
     assert(event_id == WIFI_EVENT_STA_START);
 
-    auto queue{reinterpret_cast<Queue<wifi::WifiStateMachine::Event>*>(arg)};
-    auto event{wifi::WifiStateMachine::STARTED};
+    auto queue{reinterpret_cast<Queue<wifi::InternalEvent>*>(arg)};
+    wifi::InternalEvent event{wifi::InternalEvent::STARTED};
     int rc{queue->send(&event, 0)};
     if(rc != pdPASS)
     {
@@ -458,8 +459,9 @@ static void wifi_provisioning_done_handler(void *arg, esp_event_base_t event_bas
     (void)event_id;
     (void)event_data;
 
-    auto queue{reinterpret_cast<Queue<wifi::WifiStateMachine::Event>*>(arg)};
-    auto event{wifi::WifiStateMachine::PROVISIONING_DONE};
+    ESP_LOGI(TAG, "Provisioning done");
+    auto queue{reinterpret_cast<Queue<wifi::InternalEvent>*>(arg)};
+    wifi::InternalEvent event{wifi::InternalEvent::PROVISIONING_DONE};
     int rc{queue->send(&event, 0)};
     if(rc != pdPASS)
     {
@@ -822,15 +824,34 @@ midi::Mapping, 10>>(document);
     }
 #endif
 
-    auto wifi_queue = Queue<wifi::WifiStateMachine::Event>(3);
-    auto wifi_send_event = [&] (wifi::WifiStateMachine::Event event) {
+    auto wifi_queue = Queue<wifi::InternalEvent>(3);
+    auto wifi_send_event = [&] (wifi::InternalEvent event) {
         auto rc = wifi_queue.send(&event, 0);
         if(rc != pdPASS)
         {
             ESP_LOGE(TAG, "Failed to post wifi event to queue");
         }
     };
-    static auto wifi = wifi::WifiStateMachine(wifi_send_event);
+    auto app_send_event = [&] (wifi::UserEvent event) {
+        ESP_LOGI(TAG, "Wifi event: %d", event.get_value());
+
+        switch(event)
+        {
+            case wifi::UserEvent::CONNECTED:
+                ESP_LOGI(TAG, "Starting webserver");
+                _server = start_webserver();
+                break;
+            case wifi::UserEvent::DISCONNECTED:
+                ESP_LOGI(TAG, "Stopping webserver");
+                stop_webserver(_server);
+                _server = nullptr;
+                break;
+            default:
+                ESP_LOGE(TAG, "Unhandled event %d", event.get_value());
+                break;
+        }
+    };
+    static auto wifi = wifi::WifiStateMachine(wifi_send_event, app_send_event);
     auto wifi_state_chart = etl::state_chart_ct<
         wifi::WifiStateMachine,
         wifi,
@@ -838,7 +859,7 @@ midi::Mapping, 10>>(document);
         8, /* TODO how to do DRY here? sizeof based macro should work */
         wifi::WifiStateMachine::state_table,
         5, /* TODO how to do DRY here? */
-        wifi::WifiStateMachine::State::INIT>();
+        wifi::State::INIT>();
     wifi_state_chart.start();
 
 
@@ -989,9 +1010,11 @@ midi::Mapping, 10>>(document);
             }
         }
 
-        wifi::WifiStateMachine::Event wifi_event;
-        wifi_queue.receive(&wifi_event, 0);
-        wifi_state_chart.process_event(wifi_event);
+        wifi::InternalEvent wifi_event;
+        while(pdPASS == wifi_queue.receive(&wifi_event, 0))
+        {
+            wifi_state_chart.process_event(wifi_event);
+        }
     }
 }
 
@@ -1027,6 +1050,9 @@ extern "C" void audio_event_send_callback(const AppMessage &message)
         return;
     }
 
+    // XXX: server is accessed from outside the main thread here. It is
+    // probably incorrect, and will break when the server is being torn down
+    // concurrently to an audio event going out.
     esp_err_t rc = httpd_queue_work(
             shrapnel::_server,
             shrapnel::websocket_send,

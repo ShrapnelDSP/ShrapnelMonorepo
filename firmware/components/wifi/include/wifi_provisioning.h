@@ -179,7 +179,9 @@ WiFiProvisioning(void) : queue()
                 nullptr));
 
     wifi_prov_mgr_config_t config = {
-        .scheme = wifi_prov_scheme_softap,
+        .scheme{wifi_prov_scheme_softap},
+        .scheme_event_handler{.event_cb{nullptr}, .user_data{nullptr}},
+        .app_event_handler{.event_cb{nullptr}, .user_data{nullptr}},
     };
 
     ESP_ERROR_CHECK(wifi_prov_mgr_init(config));
