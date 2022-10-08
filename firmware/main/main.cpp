@@ -794,6 +794,7 @@ midi::Mapping, 10>>(document);
     start_mdns();
 
     auto wifi_queue = Queue<wifi::InternalEvent>(3);
+
     auto wifi_send_event = [&] (wifi::InternalEvent event) {
         auto rc = wifi_queue.send(&event, 0);
         if(rc != pdPASS)
@@ -801,9 +802,8 @@ midi::Mapping, 10>>(document);
             ESP_LOGE(TAG, "Failed to post wifi event to queue");
         }
     };
-    auto app_send_event = [&] (wifi::UserEvent event) {
-        ESP_LOGI(TAG, "Wifi event: %d", event.get_value());
 
+    auto app_send_event = [&] (wifi::UserEvent event) {
         switch(event)
         {
             case wifi::UserEvent::CONNECTED:
@@ -820,7 +820,11 @@ midi::Mapping, 10>>(document);
                 break;
         }
     };
-    static auto wifi = wifi::WifiStateMachine(wifi_send_event, app_send_event);
+
+    static auto wifi = wifi::WifiStateMachine(
+            wifi_send_event,
+            app_send_event);
+
     auto wifi_state_chart = etl::state_chart_ct<
         wifi::WifiStateMachine,
         wifi,
@@ -830,7 +834,6 @@ midi::Mapping, 10>>(document);
         5, /* TODO how to do DRY here? */
         wifi::State::INIT>();
     wifi_state_chart.start();
-
 
     /* Register event handlers to send events on to wifi state machine */
     ESP_ERROR_CHECK(esp_event_handler_register(
@@ -892,6 +895,9 @@ midi::Mapping, 10>>(document);
 
     while(1)
     {
+        vTaskDelay(pdMS_TO_TICKS(10));
+        auto tick_count_start = xTaskGetTickCount();
+
         if(auto byte = midi_uart->get_byte(pdMS_TO_TICKS(10)); byte.has_value())
         {
             ESP_LOGI(TAG, "midi got byte 0x%02x", *byte);
@@ -982,7 +988,28 @@ midi::Mapping, 10>>(document);
         wifi::InternalEvent wifi_event;
         while(pdPASS == wifi_queue.receive(&wifi_event, 0))
         {
+            wifi::State state{wifi_state_chart.get_state_id()};
+            ESP_LOGI(TAG, "state: %s event: %s", state.c_str(), wifi_event.c_str());
+
             wifi_state_chart.process_event(wifi_event);
+
+            wifi::State new_state{wifi_state_chart.get_state_id()};
+            if(new_state != state)
+            {
+                ESP_LOGI(TAG, "changed to state: %s", new_state.c_str());
+            }
+        }
+
+        /* Check if the current iteration of the main loop took too long. This
+         * might be caused by blocking while handling events.
+         *
+         * It can also be caused by another thread that has a higher priority
+         * than the main thread.
+         */
+        auto tick_count_iteration = xTaskGetTickCount() - tick_count_start;
+        if(tick_count_iteration > pdMS_TO_TICKS(5))
+        {
+            ESP_LOGW(TAG, "slow iteration: %d ms", pdTICKS_TO_MS(tick_count_iteration));
         }
     }
 }
