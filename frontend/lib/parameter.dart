@@ -23,7 +23,6 @@ import 'dart:convert';
 import 'package:flutter/widgets.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:logging/logging.dart';
-import 'package:provider/provider.dart';
 import 'package:rxdart/transformers.dart';
 
 import 'robust_websocket.dart';
@@ -131,7 +130,8 @@ class ParameterService extends ChangeNotifier {
     log.finer(event);
 
     final parameterToUpdate = AudioParameterDouble.fromJson(
-        json.decode(event) as Map<String, dynamic>);
+      json.decode(event) as Map<String, dynamic>,
+    );
 
     for (final p in _parameters) {
       if (p.id == parameterToUpdate.id) {
@@ -143,9 +143,10 @@ class ParameterService extends ChangeNotifier {
     log.warning("Couldn't find parameter with id ${parameterToUpdate.id}");
   }
 
-  List<String> get parameterNames
-  {
-      return _parameters.map((param) => '${param.groupName} ${param.name}').toList();
+  List<String> get parameterNames {
+    return _parameters
+        .map((param) => '${param.groupName} ${param.name}')
+        .toList();
   }
 
   @override

@@ -25,10 +25,10 @@ import 'parameter.dart';
 
 class Valvestate extends StatelessWidget {
   const Valvestate({
-    Key? key,
+    super.key,
     required this.full,
     required this.onTap,
-  }) : super(key: key);
+  });
 
   static const _name = 'VALVESTATE 8100';
   final bool full;

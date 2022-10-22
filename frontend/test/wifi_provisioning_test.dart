@@ -72,28 +72,35 @@ void main() {
     );
   });
 
-  testWidgets('WiFi provisioning warns if already connected to device',
-      (tester) async {
-    // Set up fake websocket to look like we are alredy connected to the
-    // ShrapnelDSP device, which means WiFi was already provisionined
-    // successfully.
+  testWidgets(
+    'WiFi provisioning warns if already connected to device',
+    (tester) async {
+      // Set up fake websocket to look like we are alredy connected to the
+      // ShrapnelDSP device, which means WiFi was already provisionined
+      // successfully.
 
-    // Expect that instead of the provisioning page openening, a message
-    // appears explaining to the user that there is nothing to do, the device
-    // is already provisionined.
-  }, skip: true);
+      // Expect that instead of the provisioning page openening, a message
+      // appears explaining to the user that there is nothing to do, the device
+      // is already provisionined.
+    },
+    skip: true,
+  );
 
-  testWidgets('WiFi provisioning can succeed', (tester) async {
-    await tester.pumpWidget(sut);
+  testWidgets(
+    'WiFi provisioning can succeed',
+    (tester) async {
+      await tester.pumpWidget(sut);
 
-    await tester.tap(find.byKey(const Key('wifi provisioning button')));
-    await tester.pumpAndSettle();
+      await tester.tap(find.byKey(const Key('wifi provisioning button')));
+      await tester.pumpAndSettle();
 
-    provisioningFactory = () {
-      mockProvisioning = MockProvisioning();
-      when(mockProvisioning.establishSession()).thenAnswer(
-          (_) => Future.delayed(const Duration(milliseconds: 500), () => true));
-      when(mockProvisioning.startScanWiFi()).thenAnswer((_) => Future.value([
+      provisioningFactory = () {
+        mockProvisioning = MockProvisioning();
+        when(mockProvisioning.establishSession()).thenAnswer(
+          (_) => Future.delayed(const Duration(milliseconds: 500), () => true),
+        );
+        when(mockProvisioning.startScanWiFi()).thenAnswer(
+          (_) => Future.value([
             _createFakeWifi(
               ssid: 'test SSID',
               channel: 5,
@@ -108,48 +115,56 @@ void main() {
               mac: [0x60, 0x61, 0x62, 0x63, 0x64, 0x65],
               auth: 'wpa',
             ),
-          ]));
-    };
+          ]),
+        );
+      };
 
-    await tester.tap(find.byKey(const Key('wifi provisioning start')));
-    await tester.pumpAndSettle();
+      await tester.tap(find.byKey(const Key('wifi provisioning start')));
+      await tester.pumpAndSettle();
 
-    await tester.pump(const Duration(seconds: 1));
+      await tester.pump(const Duration(seconds: 1));
 
-    final ssidCard = find.textContaining('test SSID');
-    expect(ssidCard, findsOneWidget);
+      final ssidCard = find.textContaining('test SSID');
+      expect(ssidCard, findsOneWidget);
 
-    await tester.tap(ssidCard.first);
-    await tester.pumpAndSettle();
+      await tester.tap(ssidCard.first);
+      await tester.pumpAndSettle();
 
-    when(
-      mockProvisioning.sendWifiConfig(
-        ssid: 'test SSID',
-        password: 'password',
-      ),
-    ).thenAnswer((_) => Future.delayed(const Duration(seconds: 1), () => true));
-    when(
-      mockProvisioning.applyWifiConfig(),
-    ).thenAnswer((_) => Future.value(true));
-    when(
-      mockProvisioning.getStatus(),
-    ).thenAnswer((_) => Future.value(ConnectionStatus(
-          state: WifiConnectionState.Connected,
-          ip: '1.2.3.4',
-        )));
+      when(
+        mockProvisioning.sendWifiConfig(
+          ssid: 'test SSID',
+          password: 'password',
+        ),
+      ).thenAnswer(
+        (_) => Future.delayed(const Duration(seconds: 1), () => true),
+      );
+      when(
+        mockProvisioning.applyWifiConfig(),
+      ).thenAnswer((_) => Future.value(true));
+      when(
+        mockProvisioning.getStatus(),
+      ).thenAnswer(
+        (_) => Future.value(
+          ConnectionStatus(
+            state: WifiConnectionState.Connected,
+            ip: '1.2.3.4',
+          ),
+        ),
+      );
 
-    final passwordField = find.byKey(const Key('password text field'));
-    await tester.enterText(passwordField, 'password');
-    await tester.tap(find.byKey(const Key('password submit button')));
+      final passwordField = find.byKey(const Key('password text field'));
+      await tester.enterText(passwordField, 'password');
+      await tester.tap(find.byKey(const Key('password submit button')));
 
-    await tester.pump(const Duration(milliseconds: 500));
+      await tester.pump(const Duration(milliseconds: 500));
 
-    expect(find.text('Testing...'), findsOneWidget);
+      expect(find.text('Testing...'), findsOneWidget);
 
-    await tester.pump(const Duration(seconds: 1));
+      await tester.pump(const Duration(seconds: 1));
 
-    expect(find.textContaining('success'), findsOneWidget);
-  });
+      expect(find.textContaining('success'), findsOneWidget);
+    },
+  );
 
   testWidgets('WiFi provisioning fails if not connected to access point',
       (tester) async {
@@ -180,23 +195,26 @@ void main() {
     provisioningFactory = () {
       mockProvisioning = MockProvisioning();
       when(mockProvisioning.establishSession()).thenAnswer(
-          (_) => Future.delayed(const Duration(milliseconds: 500), () => true));
-      when(mockProvisioning.startScanWiFi()).thenAnswer((_) => Future.value([
-            _createFakeWifi(
-              ssid: 'test SSID',
-              channel: 5,
-              rssi: -70,
-              mac: [0x50, 0x51, 0x52, 0x53, 0x54, 0x55],
-              auth: 'wpa',
-            ),
-            _createFakeWifi(
-              ssid: 'test SSID',
-              channel: 6,
-              rssi: -71,
-              mac: [0x60, 0x61, 0x62, 0x63, 0x64, 0x65],
-              auth: 'wpa',
-            ),
-          ]));
+        (_) => Future.delayed(const Duration(milliseconds: 500), () => true),
+      );
+      when(mockProvisioning.startScanWiFi()).thenAnswer(
+        (_) => Future.value([
+          _createFakeWifi(
+            ssid: 'test SSID',
+            channel: 5,
+            rssi: -70,
+            mac: [0x50, 0x51, 0x52, 0x53, 0x54, 0x55],
+            auth: 'wpa',
+          ),
+          _createFakeWifi(
+            ssid: 'test SSID',
+            channel: 6,
+            rssi: -71,
+            mac: [0x60, 0x61, 0x62, 0x63, 0x64, 0x65],
+            auth: 'wpa',
+          ),
+        ]),
+      );
     };
 
     await tester.tap(find.byKey(const Key('wifi provisioning start')));
@@ -221,10 +239,14 @@ void main() {
     ).thenAnswer((_) => Future.value(true));
     when(
       mockProvisioning.getStatus(),
-    ).thenAnswer((_) => Future.value(ConnectionStatus(
+    ).thenAnswer(
+      (_) => Future.value(
+        ConnectionStatus(
           state: WifiConnectionState.ConnectionFailed,
           failedReason: WifiConnectFailedReason.AuthError,
-        )));
+        ),
+      ),
+    );
 
     final passwordField = find.byKey(const Key('password text field'));
     await tester.enterText(passwordField, 'password');
@@ -249,23 +271,26 @@ void main() {
     provisioningFactory = () {
       mockProvisioning = MockProvisioning();
       when(mockProvisioning.establishSession()).thenAnswer(
-          (_) => Future.delayed(const Duration(milliseconds: 500), () => true));
-      when(mockProvisioning.startScanWiFi()).thenAnswer((_) => Future.value([
-            _createFakeWifi(
-              ssid: 'test SSID',
-              channel: 5,
-              rssi: -70,
-              mac: [0x50, 0x51, 0x52, 0x53, 0x54, 0x55],
-              auth: 'wpa',
-            ),
-            _createFakeWifi(
-              ssid: 'test SSID',
-              channel: 6,
-              rssi: -71,
-              mac: [0x60, 0x61, 0x62, 0x63, 0x64, 0x65],
-              auth: 'wpa',
-            ),
-          ]));
+        (_) => Future.delayed(const Duration(milliseconds: 500), () => true),
+      );
+      when(mockProvisioning.startScanWiFi()).thenAnswer(
+        (_) => Future.value([
+          _createFakeWifi(
+            ssid: 'test SSID',
+            channel: 5,
+            rssi: -70,
+            mac: [0x50, 0x51, 0x52, 0x53, 0x54, 0x55],
+            auth: 'wpa',
+          ),
+          _createFakeWifi(
+            ssid: 'test SSID',
+            channel: 6,
+            rssi: -71,
+            mac: [0x60, 0x61, 0x62, 0x63, 0x64, 0x65],
+            auth: 'wpa',
+          ),
+        ]),
+      );
     };
 
     await tester.tap(find.byKey(const Key('wifi provisioning start')));
@@ -290,10 +315,14 @@ void main() {
     ).thenAnswer((_) => Future.value(true));
     when(
       mockProvisioning.getStatus(),
-    ).thenAnswer((_) => Future.value(ConnectionStatus(
+    ).thenAnswer(
+      (_) => Future.value(
+        ConnectionStatus(
           state: WifiConnectionState.ConnectionFailed,
           failedReason: WifiConnectFailedReason.NetworkNotFound,
-        )));
+        ),
+      ),
+    );
 
     final passwordField = find.byKey(const Key('password text field'));
     await tester.enterText(passwordField, 'password');
@@ -318,23 +347,26 @@ void main() {
     provisioningFactory = () {
       mockProvisioning = MockProvisioning();
       when(mockProvisioning.establishSession()).thenAnswer(
-          (_) => Future.delayed(const Duration(milliseconds: 500), () => true));
-      when(mockProvisioning.startScanWiFi()).thenAnswer((_) => Future.value([
-            _createFakeWifi(
-              ssid: 'test SSID',
-              channel: 5,
-              rssi: -70,
-              mac: [0x50, 0x51, 0x52, 0x53, 0x54, 0x55],
-              auth: 'wpa',
-            ),
-            _createFakeWifi(
-              ssid: 'test SSID',
-              channel: 6,
-              rssi: -71,
-              mac: [0x60, 0x61, 0x62, 0x63, 0x64, 0x65],
-              auth: 'wpa',
-            ),
-          ]));
+        (_) => Future.delayed(const Duration(milliseconds: 500), () => true),
+      );
+      when(mockProvisioning.startScanWiFi()).thenAnswer(
+        (_) => Future.value([
+          _createFakeWifi(
+            ssid: 'test SSID',
+            channel: 5,
+            rssi: -70,
+            mac: [0x50, 0x51, 0x52, 0x53, 0x54, 0x55],
+            auth: 'wpa',
+          ),
+          _createFakeWifi(
+            ssid: 'test SSID',
+            channel: 6,
+            rssi: -71,
+            mac: [0x60, 0x61, 0x62, 0x63, 0x64, 0x65],
+            auth: 'wpa',
+          ),
+        ]),
+      );
     };
 
     await tester.tap(find.byKey(const Key('wifi provisioning start')));
@@ -380,23 +412,26 @@ void main() {
     provisioningFactory = () {
       mockProvisioning = MockProvisioning();
       when(mockProvisioning.establishSession()).thenAnswer(
-          (_) => Future.delayed(const Duration(milliseconds: 500), () => true));
-      when(mockProvisioning.startScanWiFi()).thenAnswer((_) => Future.value([
-            _createFakeWifi(
-              ssid: 'test SSID',
-              channel: 5,
-              rssi: -70,
-              mac: [0x50, 0x51, 0x52, 0x53, 0x54, 0x55],
-              auth: 'wpa',
-            ),
-            _createFakeWifi(
-              ssid: 'test SSID',
-              channel: 6,
-              rssi: -71,
-              mac: [0x60, 0x61, 0x62, 0x63, 0x64, 0x65],
-              auth: 'wpa',
-            ),
-          ]));
+        (_) => Future.delayed(const Duration(milliseconds: 500), () => true),
+      );
+      when(mockProvisioning.startScanWiFi()).thenAnswer(
+        (_) => Future.value([
+          _createFakeWifi(
+            ssid: 'test SSID',
+            channel: 5,
+            rssi: -70,
+            mac: [0x50, 0x51, 0x52, 0x53, 0x54, 0x55],
+            auth: 'wpa',
+          ),
+          _createFakeWifi(
+            ssid: 'test SSID',
+            channel: 6,
+            rssi: -71,
+            mac: [0x60, 0x61, 0x62, 0x63, 0x64, 0x65],
+            auth: 'wpa',
+          ),
+        ]),
+      );
     };
 
     await tester.tap(find.byKey(const Key('wifi provisioning start')));
@@ -421,10 +456,14 @@ void main() {
     ).thenAnswer((_) => Future.value(true));
     when(
       mockProvisioning.getStatus(),
-    ).thenAnswer((_) => Future.value(ConnectionStatus(
+    ).thenAnswer(
+      (_) => Future.value(
+        ConnectionStatus(
           state: WifiConnectionState.Connected,
           ip: '1.2.3.4',
-        )));
+        ),
+      ),
+    );
 
     final ssidField = find.byKey(const Key('ssid text field'));
     await tester.enterText(ssidField, 'hidden SSID');

@@ -25,10 +25,10 @@ import 'stompbox.dart';
 
 class TubeScreamer extends StatelessWidget {
   const TubeScreamer({
-    Key? key,
+    super.key,
     required this.full,
     required this.onTap,
-  }) : super(key: key);
+  });
 
   static const _name = 'Tube Screamer';
   final bool full;

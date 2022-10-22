@@ -49,36 +49,43 @@ void main() {
   Logger.root.level = Level.ALL;
   Logger.root.onRecord.listen((record) {
     debugPrint(
-        '${record.level.name.padLeft("WARNING".length)} ${formatDateTime(record.time)} ${record.loggerName}: ${record.message}');
+      '${record.level.name.padLeft("WARNING".length)} '
+      '${formatDateTime(record.time)} '
+      '${record.loggerName}: '
+      '${record.message}',
+    );
   });
 
   GoogleFonts.config.allowRuntimeFetching = false;
 
-  final websocket = RobustWebsocket(
-              uri: Uri.parse('http://guitar-dsp.local:8080/websocket'));
-  runApp(MultiProvider(
-    providers: [
-      ChangeNotifierProvider.value(value: websocket),
-      ChangeNotifierProvider(
-          create: (_) => WifiProvisioningProvider(provisioningFactory: () {
-                log.info('Creating provisioning connection');
-                return Provisioning(
-                  security: Security1(pop: 'abcd1234'),
-                  transport: TransportHTTP('guitar-dsp.local'),
-                );
-              },),
+  final websocket =
+      RobustWebsocket(uri: Uri.parse('http://guitar-dsp.local:8080/websocket'));
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider.value(value: websocket),
+        ChangeNotifierProvider(
+          create: (_) => WifiProvisioningProvider(
+            provisioningFactory: () {
+              log.info('Creating provisioning connection');
+              return Provisioning(
+                security: Security1(pop: 'abcd1234'),
+                transport: TransportHTTP('guitar-dsp.local'),
+              );
+            },
           ),
-    ChangeNotifierProvider(
-            create: (_) =>
-                ParameterService(websocket: websocket),
-          )
-    ],
-    child: const MyApp(),
-  ));
+        ),
+        ChangeNotifierProvider(
+          create: (_) => ParameterService(websocket: websocket),
+        )
+      ],
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -96,7 +103,7 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatelessWidget {
-  const MyHomePage({Key? key, required this.title}) : super(key: key);
+  const MyHomePage({super.key, required this.title});
   final String title;
 
   @override
@@ -108,11 +115,12 @@ class MyHomePage extends StatelessWidget {
           IconButton(
             icon: const Icon(Icons.question_mark),
             key: const Key('MIDI mapping button'),
-            onPressed:  () {
+            onPressed: () {
               Navigator.push(
                 context,
                 MaterialPageRoute<MidiMappingPage>(
-                    builder: (context) => const MidiMappingPage()),
+                  builder: (context) => const MidiMappingPage(),
+                ),
               );
             },
           ),
@@ -123,7 +131,8 @@ class MyHomePage extends StatelessWidget {
               Navigator.push<ProvisioningPage>(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => const ProvisioningPage()),
+                  builder: (context) => const ProvisioningPage(),
+                ),
               );
             },
           ),
@@ -132,15 +141,15 @@ class MyHomePage extends StatelessWidget {
           Container(width: 10),
         ],
       ),
-        body: const Center(
-          child: Pedalboard(),
-        ),
+      body: const Center(
+        child: Pedalboard(),
+      ),
     );
   }
 }
 
 class ProvisioningPage extends StatelessWidget {
-  const ProvisioningPage({Key? key}) : super(key: key);
+  const ProvisioningPage({super.key});
 
   @override
   Widget build(BuildContext context) {

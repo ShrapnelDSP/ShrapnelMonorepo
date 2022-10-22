@@ -26,10 +26,10 @@ import 'tube_screamer.dart';
 import 'valvestate.dart';
 
 class Pedalboard extends StatefulWidget {
-  const Pedalboard({Key? key}) : super(key: key);
+  const Pedalboard({super.key});
 
   @override
-  _PedalboardState createState() => _PedalboardState();
+  State<Pedalboard> createState() => _PedalboardState();
 }
 
 class _PedalboardState extends State<Pedalboard> {

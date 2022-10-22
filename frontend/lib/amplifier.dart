@@ -31,11 +31,11 @@ class AmplifierModel extends ChangeNotifier {
 
 class Amplifier extends StatelessWidget {
   const Amplifier({
-    Key? key,
+    super.key,
     required this.name,
     required this.onTap,
     required this.full,
-  }) : super(key: key);
+  });
 
   final bool full;
   final Function() onTap;
@@ -47,13 +47,15 @@ class Amplifier extends StatelessWidget {
     final parameters = Provider.of<AmplifierModel>(context).parameters;
 
     for (var i = 0; i < parameters.length; i++) {
-      knobs.add(ChangeNotifierProvider.value(
-        value: parameters[i],
-        child: KnobWithLabel(
-          isEnabled: full,
-          knobSize: scaleFactor * 25,
+      knobs.add(
+        ChangeNotifierProvider.value(
+          value: parameters[i],
+          child: KnobWithLabel(
+            isEnabled: full,
+            knobSize: scaleFactor * 25,
+          ),
         ),
-      ));
+      );
       if (i < parameters.length - 1) {
         knobs.add(SizedBox(width: scaleFactor * 10));
       }

@@ -23,7 +23,7 @@ import 'package:provider/provider.dart';
 import 'robust_websocket.dart';
 
 class WebSocketStatus extends StatelessWidget {
-  const WebSocketStatus({Key? key, required this.size}) : super(key: key);
+  const WebSocketStatus({super.key, required this.size});
 
   final double size;
 
@@ -38,8 +38,9 @@ class WebSocketStatus extends StatelessWidget {
         width: size,
         height: size,
         decoration: BoxDecoration(
-            color: isConnected ? Colors.green : Colors.red,
-            shape: BoxShape.circle),
+          color: isConnected ? Colors.green : Colors.red,
+          shape: BoxShape.circle,
+        ),
       ),
     );
   }

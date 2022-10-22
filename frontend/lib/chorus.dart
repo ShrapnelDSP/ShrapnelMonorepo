@@ -25,10 +25,10 @@ import 'stompbox.dart';
 
 class Chorus extends StatelessWidget {
   const Chorus({
-    Key? key,
+    super.key,
     required this.full,
     required this.onTap,
-  }) : super(key: key);
+  });
 
   static const _name = 'Chorus';
   final bool full;

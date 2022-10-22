@@ -9,25 +9,26 @@ class MidiMappingPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: const Text('MIDI Mapping'),
-        ),
-        body: DataTable(
-          columns: const [
-            DataColumn(label: Text('MIDI channel')),
-            DataColumn(label: Text('CC number')),
-            DataColumn(label: Text('Parameter')),
-          ],
-          rows: const [
-            DataRow(
-              cells: [
-                DataCell(MidiChannelDropdown()),
-                DataCell(MidiCCDropdown()),
-                DataCell(ParametersDropdown()),
-              ],
-            ),
-          ],
-        ));
+      appBar: AppBar(
+        title: const Text('MIDI Mapping'),
+      ),
+      body: DataTable(
+        columns: const [
+          DataColumn(label: Text('MIDI channel')),
+          DataColumn(label: Text('CC number')),
+          DataColumn(label: Text('Parameter')),
+        ],
+        rows: const [
+          DataRow(
+            cells: [
+              DataCell(MidiChannelDropdown()),
+              DataCell(MidiCCDropdown()),
+              DataCell(ParametersDropdown()),
+            ],
+          ),
+        ],
+      ),
+    );
   }
 }
 
@@ -38,7 +39,9 @@ class MidiChannelDropdown extends StatelessWidget {
   Widget build(BuildContext context) {
     return DropdownButton(
       items: List<DropdownMenuItem<int>>.generate(
-          16, (i) => DropdownMenuItem(value: i + 1, child: Text('${i + 1}'))),
+        16,
+        (i) => DropdownMenuItem(value: i + 1, child: Text('${i + 1}')),
+      ),
       onChanged: (_) {},
       value: 1,
     );
@@ -52,7 +55,9 @@ class MidiCCDropdown extends StatelessWidget {
   Widget build(BuildContext context) {
     return DropdownButton(
       items: List<DropdownMenuItem<int>>.generate(
-          128, (i) => DropdownMenuItem(value: i, child: Text('$i'))),
+        128,
+        (i) => DropdownMenuItem(value: i, child: Text('$i')),
+      ),
       onChanged: (_) {},
       value: 1,
     );
@@ -69,10 +74,12 @@ class ParametersDropdown extends StatelessWidget {
       items: [
         const DropdownMenuItem(child: Text('None')),
         ...parameters
-            .map((parameterName) => DropdownMenuItem(
-                  value: parameterName,
-                  child: Text(parameterName),
-                ))
+            .map(
+              (parameterName) => DropdownMenuItem(
+                value: parameterName,
+                child: Text(parameterName),
+              ),
+            )
             .toList()
       ],
       onChanged: (_) {},

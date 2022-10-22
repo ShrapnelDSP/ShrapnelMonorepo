@@ -25,10 +25,10 @@ import 'stompbox.dart';
 
 class NoiseGate extends StatelessWidget {
   const NoiseGate({
-    Key? key,
+    super.key,
     required this.full,
     required this.onTap,
-  }) : super(key: key);
+  });
 
   static const _name = 'Noise Gate';
   final bool full;

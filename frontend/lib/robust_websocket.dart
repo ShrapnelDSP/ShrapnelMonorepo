@@ -94,11 +94,15 @@ class RobustWebsocket extends ChangeNotifier {
 
     _ws = WebSocket.fromUpgradedSocket(socket, serverSide: false);
 
-    _ws!.listen((dynamic data) {
-      onData?.call(data);
-    }, onError: (Object e) {
-      log.warning('websocket error: $e');
-    }, onDone: _reconnect);
+    _ws!.listen(
+      (dynamic data) {
+        onData?.call(data);
+      },
+      onError: (Object e) {
+        log.warning('websocket error: $e');
+      },
+      onDone: _reconnect,
+    );
 
     _ws!.pingInterval = const Duration(seconds: 1);
 

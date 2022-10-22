@@ -25,10 +25,10 @@ import 'stompbox.dart';
 
 class HeavyMetal extends StatelessWidget {
   const HeavyMetal({
-    Key? key,
+    super.key,
     required this.full,
     required this.onTap,
-  }) : super(key: key);
+  });
 
   static const _name = 'Heavy Metal';
 

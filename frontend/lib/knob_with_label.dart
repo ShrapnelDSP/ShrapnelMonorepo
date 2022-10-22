@@ -25,10 +25,10 @@ import 'parameter.dart';
 
 class KnobWithLabel extends StatelessWidget {
   const KnobWithLabel({
-    Key? key,
+    super.key,
     required this.isEnabled,
     required this.knobSize,
-  }) : super(key: key);
+  });
 
   final bool isEnabled;
   final double knobSize;
