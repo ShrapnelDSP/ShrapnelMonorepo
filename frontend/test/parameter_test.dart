@@ -32,7 +32,11 @@ void main() {
     final parameterService = MockParameterService();
 
     final parameter = AudioParameterDoubleModel(
-        name: 'TestName', id: 'test', parameterService: parameterService);
+      groupName: 'TestGroup',
+      name: 'TestName',
+      id: 'test',
+      parameterService: parameterService,
+    );
     parameter.value = 0;
 
     final expected = <String, dynamic>{
@@ -50,7 +54,11 @@ void main() {
     final parameterService = MockParameterService();
 
     final parameter = AudioParameterDoubleModel(
-        name: 'TestName', id: 'test', parameterService: parameterService);
+      groupName: 'TestGroup',
+      name: 'TestName',
+      id: 'test',
+      parameterService: parameterService,
+    );
     parameter.value = 0;
 
     verify(parameterService.sink.add(parameter.toJson()));
@@ -60,7 +68,11 @@ void main() {
     final parameterService = MockParameterService();
 
     final parameter = AudioParameterDoubleModel(
-        name: 'TestName', id: 'test', parameterService: parameterService);
+      groupName: 'TestGroup',
+      name: 'TestName',
+      id: 'test',
+      parameterService: parameterService,
+    );
     parameter.value = 0;
 
     verify(parameterService.registerParameter(parameter));

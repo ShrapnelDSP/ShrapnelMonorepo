@@ -30,6 +30,7 @@ class NoiseGate extends StatelessWidget {
     required this.onTap,
   }) : super(key: key);
 
+  static const _name = 'Noise Gate';
   final bool full;
   final void Function() onTap;
 
@@ -42,27 +43,32 @@ class NoiseGate extends StatelessWidget {
         return StompboxModel(
           parameters: [
             AudioParameterDoubleModel(
+              groupName: _name,
               name: 'Attack',
               id: 'noiseGateAttack',
               parameterService: parameterService,
             ),
             AudioParameterDoubleModel(
+              groupName: _name,
               name: 'Hysteresis',
               id: 'noiseGateHysteresis',
               parameterService: parameterService,
             ),
             AudioParameterDoubleModel(
+              groupName: _name,
               name: 'Release',
               id: 'noiseGateRelease',
               parameterService: parameterService,
             ),
             AudioParameterDoubleModel(
+              groupName: _name,
               name: 'Threshold',
               id: 'noiseGateThreshold',
               parameterService: parameterService,
             ),
           ],
           bypass: AudioParameterDoubleModel(
+            groupName: _name,
             name: 'Bypass',
             id: 'noiseGateBypass',
             parameterService: parameterService,
@@ -70,7 +76,7 @@ class NoiseGate extends StatelessWidget {
         );
       },
       child: Stompbox(
-        name: 'Noise Gate',
+        name: _name,
         onCardTap: onTap,
         full: full,
         primarySwatch: Colors.red,

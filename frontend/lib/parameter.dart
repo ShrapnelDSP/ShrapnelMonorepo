@@ -51,6 +51,7 @@ class AudioParameterDouble {
 
 class AudioParameterDoubleModel extends ChangeNotifier {
   AudioParameterDoubleModel({
+    required this.groupName,
     required this.name,
     required this.id,
     required this.parameterService,
@@ -61,6 +62,7 @@ class AudioParameterDoubleModel extends ChangeNotifier {
   @protected
   double _value = 0.5;
 
+  final String groupName;
   final String name;
   final String id;
   final ParameterService parameterService;
@@ -141,25 +143,14 @@ class ParameterService extends ChangeNotifier {
     log.warning("Couldn't find parameter with id ${parameterToUpdate.id}");
   }
 
+  List<String> get parameterNames
+  {
+      return _parameters.map((param) => '${param.groupName} ${param.name}').toList();
+  }
+
   @override
   void dispose() {
     sink.close();
     super.dispose();
   }
-}
-
-class ParameterServiceProvider extends StatelessWidget {
-  const ParameterServiceProvider({
-    Key? key,
-    required this.child,
-  }) : super(key: key);
-
-  final Widget child;
-
-  @override
-  Widget build(BuildContext context) => ChangeNotifierProvider(
-        create: (_) =>
-            ParameterService(websocket: context.read<RobustWebsocket>()),
-        child: child,
-      );
 }

@@ -23,6 +23,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:logging/logging.dart';
 import 'package:provider/provider.dart';
 
+import 'midi_mapping.dart';
 import 'parameter.dart';
 import 'pedalboard.dart';
 import 'robust_websocket.dart';
@@ -53,11 +54,11 @@ void main() {
 
   GoogleFonts.config.allowRuntimeFetching = false;
 
+  final websocket = RobustWebsocket(
+              uri: Uri.parse('http://guitar-dsp.local:8080/websocket'));
   runApp(MultiProvider(
     providers: [
-      ChangeNotifierProvider(
-          create: (_) => RobustWebsocket(
-              uri: Uri.parse('http://guitar-dsp.local:8080/websocket'))),
+      ChangeNotifierProvider.value(value: websocket),
       ChangeNotifierProvider(
           create: (_) => WifiProvisioningProvider(provisioningFactory: () {
                 log.info('Creating provisioning connection');
@@ -65,7 +66,12 @@ void main() {
                   security: Security1(pop: 'abcd1234'),
                   transport: TransportHTTP('guitar-dsp.local'),
                 );
-              })),
+              },),
+          ),
+    ChangeNotifierProvider(
+            create: (_) =>
+                ParameterService(websocket: websocket),
+          )
     ],
     child: const MyApp(),
   ));
@@ -99,29 +105,36 @@ class MyHomePage extends StatelessWidget {
       appBar: AppBar(
         title: Text(title),
         actions: [
-          Container(
-            margin: const EdgeInsets.all(10),
-            child: IconButton(
-              icon: const Icon(Icons.settings),
-              key: const Key('wifi provisioning button'),
-              onPressed: () {
-                Navigator.push<ProvisioningPage>(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const ProvisioningPage()),
-                );
-              },
-            ),
+          IconButton(
+            icon: const Icon(Icons.question_mark),
+            key: const Key('MIDI mapping button'),
+            onPressed:  () {
+              Navigator.push(
+                context,
+                MaterialPageRoute<MidiMappingPage>(
+                    builder: (context) => const MidiMappingPage()),
+              );
+            },
           ),
+          IconButton(
+            icon: const Icon(Icons.settings),
+            key: const Key('wifi provisioning button'),
+            onPressed: () {
+              Navigator.push<ProvisioningPage>(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const ProvisioningPage()),
+              );
+            },
+          ),
+          Container(width: 10),
           const WebSocketStatus(size: kToolbarHeight - 20),
           Container(width: 10),
         ],
       ),
-      body: const ParameterServiceProvider(
-        child: Center(
+        body: const Center(
           child: Pedalboard(),
         ),
-      ),
     );
   }
 }

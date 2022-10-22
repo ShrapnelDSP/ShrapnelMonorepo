@@ -30,6 +30,8 @@ class HeavyMetal extends StatelessWidget {
     required this.onTap,
   }) : super(key: key);
 
+  static const _name = 'Heavy Metal';
+
   final bool full;
   final void Function() onTap;
 
@@ -45,27 +47,32 @@ class HeavyMetal extends StatelessWidget {
         return StompboxModel(
           parameters: [
             AudioParameterDoubleModel(
+              groupName: _name,
               name: 'LEVEL',
               id: 'heavyMetalLevel',
               parameterService: parameterService,
             ),
             AudioParameterDoubleModel(
+              groupName: _name,
               name: 'LOW',
               id: 'heavyMetalLow',
               parameterService: parameterService,
             ),
             AudioParameterDoubleModel(
+              groupName: _name,
               name: 'HIGH',
               id: 'heavyMetalHigh',
               parameterService: parameterService,
             ),
             AudioParameterDoubleModel(
+              groupName: _name,
               name: 'DISTORTION',
               id: 'heavyMetalDistortion',
               parameterService: parameterService,
             ),
           ],
           bypass: AudioParameterDoubleModel(
+            groupName: _name,
             name: 'Bypass',
             id: 'heavyMetalBypass',
             parameterService: parameterService,
@@ -73,7 +80,7 @@ class HeavyMetal extends StatelessWidget {
         );
       },
       child: Stompbox(
-        name: 'Heavy Metal',
+        name: _name,
         onCardTap: onTap,
         full: full,
         primarySwatch: Colors.deepOrange,
