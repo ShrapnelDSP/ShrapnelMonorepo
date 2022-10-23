@@ -73,14 +73,12 @@ class ParametersDropdown extends StatelessWidget {
     return DropdownButton<String>(
       items: [
         const DropdownMenuItem(child: Text('None')),
-        ...parameters
-            .map(
+        ...parameters.map(
               (parameterName) => DropdownMenuItem(
                 value: parameterName,
                 child: Text(parameterName),
               ),
             )
-            .toList()
       ],
       onChanged: (_) {},
     );

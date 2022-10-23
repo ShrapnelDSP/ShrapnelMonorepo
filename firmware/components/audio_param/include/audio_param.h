@@ -20,12 +20,16 @@
 #pragma once
 
 #include "etl/map.h"
+#include "etl/string.h"
 #include <atomic>
 #include <string>
 #include <memory>
 #include <vector>
 
 namespace shrapnel {
+namespace parameters {
+
+using id_t = etl::string<32>;
 
 class AudioParameterFloat {
     public:
@@ -65,7 +69,7 @@ class AudioParameters final {
      * should work.
      */
     public:
-    using MapType = etl::map<std::string, std::unique_ptr<AudioParameterFloat>, 100>;
+    using MapType = etl::map<id_t, std::unique_ptr<AudioParameterFloat>, 100>;
 
     AudioParameters();
 
@@ -76,19 +80,19 @@ class AudioParameters final {
      *
      * \return 0 on success
      */
-    int update(const std::string param, float value);
+    int update(const id_t &param, float value);
 
     /** Get the normalised value of a parameter */
-    float get(const std::string &param);
+    float get(const id_t &param);
 
     /** Get denormalised value of parameter
      *
      * \param param Name of the parameter to get
      */
-    std::atomic<float> *get_raw_parameter(const std::string param);
+    std::atomic<float> *get_raw_parameter(const id_t &param);
 
     int create_and_add_parameter(
-        std::string name,
+        const id_t &name,
         float minimum,
         float maximum,
         float default_value);
@@ -100,4 +104,5 @@ class AudioParameters final {
     MapType parameters;
 };
 
+}
 }
