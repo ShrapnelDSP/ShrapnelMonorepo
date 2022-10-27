@@ -6,20 +6,31 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part 'models.freezed.dart';
 part 'models.g.dart';
 
-
-// TODO: should we have a single type that includes all the possible messages
-//       that will arrive through the websocket interface? It might make parsing
-//       easier, since we can just call a single fromJson for any received
-//       message.
-
-@freezed
-class GetResponse with _$GetResponse {
-  const factory GetResponse({
+@Freezed(unionKey: 'messageType')
+class MidiApiMessage with _$MidiApiMessage {
+  @FreezedUnionValue('MidiMap::get::request')
+  const factory MidiApiMessage.getRequest() = GetRequest;
+  @FreezedUnionValue('MidiMap::get::response')
+  const factory MidiApiMessage.getResponse({
     required Map<String, MidiMapping> mappings,
-  }) = _GetResponse;
+  }) = GetResponse;
+  @FreezedUnionValue('MidiMap::create::request')
+  const factory MidiApiMessage.createRequest({
+    required MidiMapping mapping,
+  }) = CreateRequest;
+  @FreezedUnionValue('MidiMap::create::response')
+  const factory MidiApiMessage.createResponse({
+    required Map<String, MidiMapping> mapping,
+  }) = CreateResponse;
+  @FreezedUnionValue('MidiMap::update')
+  const factory MidiApiMessage.update({
+    required Map<String, MidiMapping> mapping,
+  }) = Update;
+  @FreezedUnionValue('MidiMap::remove')
+  const factory MidiApiMessage.remove({required String id}) = Remove;
 
-  factory GetResponse.fromJson(Map<String, dynamic> json) =>
-      _$GetResponseFromJson(json);
+  factory MidiApiMessage.fromJson(Map<String, dynamic> json) =>
+      _$MidiApiMessageFromJson(json);
 }
 
 @freezed
@@ -30,5 +41,6 @@ class MidiMapping with _$MidiMapping {
     @JsonKey(name: 'parameter_id') required String parameterId,
   }) = _MidiMapping;
 
-  factory MidiMapping.fromJson(Map<String, dynamic> json) => _$MidiMappingFromJson(json);
+  factory MidiMapping.fromJson(Map<String, dynamic> json) =>
+      _$MidiMappingFromJson(json);
 }

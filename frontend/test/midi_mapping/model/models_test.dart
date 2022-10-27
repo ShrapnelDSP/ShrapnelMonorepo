@@ -26,13 +26,14 @@ void main() {
   test('Encode to json', () {
     const expected = '''
     {
+      "messageType": "MidiMap::get::response",
       "mappings": {
         "1": { "midi_channel": 0, "cc_number": 1, "parameter_id": "gain" },
         "2": { "midi_channel": 0, "cc_number": 2, "parameter_id": "tone" }
       }
     }''';
 
-    const message = GetResponse(
+    const message = MidiApiMessage.getResponse(
       mappings: {
         '1': MidiMapping(
           midiChannel: 0,
@@ -47,7 +48,7 @@ void main() {
       },
     );
 
-    final actual = json.decode(json.encode(message)) as Map<String, dynamic>;
+    final actual = message.toJson();
 
     expect(actual, json.decode(expected));
   });
@@ -55,13 +56,14 @@ void main() {
   test('Decode from json', () {
     const jsonString = '''
     {
+      "messageType": "MidiMap::get::response",
       "mappings": {
         "1": { "midi_channel": 0, "cc_number": 1, "parameter_id": "gain" },
         "2": { "midi_channel": 0, "cc_number": 2, "parameter_id": "tone" }
       }
     }''';
 
-    const expected = GetResponse(
+    const expected = MidiApiMessage.getResponse(
       mappings: {
         '1': MidiMapping(
           midiChannel: 0,
@@ -76,8 +78,8 @@ void main() {
       },
     );
 
-    final actual =
-        GetResponse.fromJson(json.decode(jsonString) as Map<String, dynamic>);
+    final actual = MidiApiMessage.fromJson(
+        json.decode(jsonString) as Map<String, dynamic>);
 
     expect(actual, expected);
   });
@@ -85,28 +87,34 @@ void main() {
   test('Decode from json with missing fields throws Error', () {
     const jsonString = '''
     {
+      "messageType": "MidiMap::get::response",
       "mappings": {
         "1": { "cc_number": 1, "parameter_id": "gain" }
       }
     }''';
 
     expect(
-        () => GetResponse.fromJson(
-            json.decode(jsonString) as Map<String, dynamic>),
-        throwsA(const TypeMatcher<Error>()));
+      () => MidiApiMessage.fromJson(
+        json.decode(jsonString) as Map<String, dynamic>,
+      ),
+      throwsA(const TypeMatcher<Error>()),
+    );
   });
 
   test('Decode from json with missing values throws Error', () {
     const jsonString = '''
     {
+      "messageType": "MidiMap::get::response",
       "mappings": {
         "1": { "midi_channel": null, "cc_number": 1, "parameter_id": "gain" }
       }
     }''';
 
     expect(
-        () => GetResponse.fromJson(
-            json.decode(jsonString) as Map<String, dynamic>),
-        throwsA(const TypeMatcher<Error>()));
+      () => MidiApiMessage.fromJson(
+        json.decode(jsonString) as Map<String, dynamic>,
+      ),
+      throwsA(const TypeMatcher<Error>()),
+    );
   });
 }

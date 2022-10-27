@@ -19,24 +19,22 @@ class MidiMappingService extends ChangeNotifier {
   Completer<Tuple2<String, MidiMapping>>? createMappingCompleter;
 
   Future<Map<String, MidiMapping>> getMapping() async {
-    const message = <String, dynamic>{
-      'messageType': 'MidiMap::get::request',
-    };
+    const message = MidiApiMessage.getRequest();
 
     final response = websocket.stream
-        .where(
-          (event) => event.isGetResponse(),
+        .map(
+          MidiApiMessage.fromJson,
         )
+        .where((event) => event is GetResponse)
+        .map((event) => event as GetResponse)
+        .map((event) => event.mappings)
         .timeout(
           responseTimeout,
           onTimeout: (_) =>
               throw TimeoutException('Waiting for response timed out'),
         )
-        .map(
-          (event) => GetResponse.fromJson(event).mappings,
-        )
         .first;
-    websocket.send(message);
+    websocket.send(message.toJson());
     unawaited(response.then((value) => mappings = value));
     return response;
   }
@@ -47,10 +45,4 @@ class MidiMappingService extends ChangeNotifier {
     createMappingCompleter = Completer();
     return createMappingCompleter!.future;
   }
-}
-
-extension on Map<String, dynamic> {
-  bool isGetResponse() =>
-      containsKey('messageType') &&
-      this['messageType'] == 'MidiMap::get::response';
 }
