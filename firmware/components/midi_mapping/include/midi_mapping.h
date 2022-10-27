@@ -37,15 +37,19 @@
  * - Update a mapping
  * - Delete a mapping
  *
- * \todo how to nicely show a JSON object template/schema?
+ * \todo how to nicely show a JSON object template/schema? AWS docs include a
+ * few of those, maybe reference their style.
  *
  * ~~~
- * MidiMappingEntry:
- *   id: int
+ * MidiMapping:
  *   midi_channel: int
  *   cc_number: int
  *   parameter_id: string
  * ~~~
+ *
+ * \note In the examples of this table, UUIDs are replaced with `...` for
+ * brevity. Normally these would look like
+ * `12345678-abcd-0000-0000-000000000000`.
  *
  * <table>
  * <tr><th> Message type <th> Parameters <th> Direction <th> Behaviour <th> Example
@@ -54,7 +58,7 @@
  *   <td> None
  *   <td> UI -> Firmware
  *   <td> The firmware will send a single `MidiMap::get::response` that
- *        includes a list of all midi mappings.
+ *        includes a list of all MIDI mappings.
  *   <td>
  *   ~~~
  *   {
@@ -63,33 +67,30 @@
  *   ~~~
  * <tr>
  *   <td> `MidiMap::get::response`
- *   <td> `mappings` (array of `MidiMappingEntry`): The list of all midi mappings
+ *   <td> `mappings` (map of `UUID` to `MidiMapping`): The list of all MIDI mappings
  *   <td> Firmware -> UI
  *   <td> Sent in response to `MidiMap::get::request`
  *   <td>
  *   ~~~
  *   {
  *     "messageType": "MidiMap::get::response",
- *     "mappings": [
- *       { "id": 0, "midi_channel": 0, "cc_number": 1, "parameter_id": "gain" },
- *       { "id": 1, "midi_channel": 0, "cc_number": 2, "parameter_id": "tone" }
- *     ]
+ *     "mappings": {
+ *       "...": { "midi_channel": 0, "cc_number": 1, "parameter_id": "gain" },
+ *       "...": { "midi_channel": 0, "cc_number": 2, "parameter_id": "tone" }
+ *     }
  *   }
  *   ~~~
  * <tr>
- *   <td> `MidiMap::create`
- *   <td> `mapping` (`MidiMappingEntry`): The MIDI mapping to create
+ *   <td> `MidiMap::create::request`
+ *   <td> `mapping` (`MidiMapping`): The MIDI mapping to create
  *   <td> UI -> Firmware
- *   <td> Firmware creates a new MIDI mapping according to the parameters. The
- *        id field is ignored, and a new ID is assigned by the firmware. TODO:
- *        how does the frontend get to know about the ID, in case it wants to
- *        update this mapping?
+ *   <td> Firmware creates a new MIDI mapping according to the parameters.
+ *        A response will be sent, which includes the ID.
  *   <td>
  *   ~~~
  *   {
- *     "messageType": "MidiMap::create",
+ *     "messageType": "MidiMap::create::request",
  *     "mapping": {
- *       "id": 0,
  *       "midi_channel": 0,
  *       "cc_number": 1,
  *       "parameter_id": "gain"
@@ -97,8 +98,26 @@
  *   }
  *   ~~~
  * <tr>
+ *   <td> `MidiMap::create::response`
+ *   <td> `mapping` (`MidiMapping`): The newly created MIDI mapping
+ *   <td> UI -> Firmware
+ *   <td> Indicates that a new MIDI mapping was created successfully.
+ *   <td>
+ *   ~~~
+ *   {
+ *     "messageType": "MidiMap::create::response",
+ *     "mapping": {
+ *       "...": {
+ *         "midi_channel": 0,
+ *         "cc_number": 1,
+ *         "parameter_id": "gain"
+ *       }
+ *     }
+ *   }
+ *   ~~~
+ * <tr>
  *   <td> `MidiMap::update`
- *   <td> `mapping` (`MidiMappingEntry`): The MIDI mapping to update
+ *   <td> `mapping` (`MidiMapping`): The MIDI mapping to update
  *   <td> UI -> Firmware
  *   <td> Firmware updates an existing MIDI mapping according to the parameters.
  *   <td>
@@ -106,25 +125,24 @@
  *   {
  *     "messageType": "MidiMap::update",
  *     "mapping": {
- *       "id": 0,
- *       "midi_channel": 0,
- *       "cc_number": 1,
- *       "parameter_id": "gain"
+ *       "...": {
+ *         "midi_channel": 0,
+ *         "cc_number": 1,
+ *         "parameter_id": "gain"
+ *       }
  *     }
  *   }
  *   ~~~
  * <tr>
  *   <td> `MidiMap::remove`
- *   <td> `id` (`int`): The ID of the MIDI mapping to remove
+ *   <td> `id` (`UUID`): The ID of the MIDI mapping to remove
  *   <td> UI -> Firmware
  *   <td> Firmware removes the specified MIDI mapping .
- *        TODO: If we are using the array index as an ID, this causes all
- *        elements after the removed one to have their IDs changed.
  *   <td>
  *   ~~~
  *   {
  *     "messageType": "MidiMap::remove",
- *     "id": 0
+ *     "id": "..."
  *   }
  *   ~~~
  * </table>
@@ -138,10 +156,17 @@
 namespace shrapnel {
 namespace midi {
 
-using mapping_id_t = int;
+// A uuid represented as a string
+#if 0
+etl::string<
+    16 /* bytes */
+    * 2 /* characters per heaxadecimal byte */
+    + 4 /* dashes */>;
+#endif
 
-struct MappingEntry {
-    mapping_id_t id;
+using mapping_id_t = uint8_t[16];
+
+struct Mapping {
     uint8_t midi_channel;
     uint8_t cc_number;
     parameters::id_t parameter_name;
@@ -153,9 +178,9 @@ class Mapping {
 
     static constexpr std::size_t MAX_COUNT = 128;
 
-    etl::array<MappingEntry, MAX_COUNT> get(MappingEntry mapping);
-    void create(MappingEntry mapping);
-    void update(MappingEntry mapping);
+    etl::map<mapping_id_t, Mapping, MAX_COUNT> get();
+    void create(const Mapping &mapping);
+    void update(const mapping_id_t &id, const Mapping &mapping);
     void remove(mapping_id_t id);
 
     /** React to a MIDI message by updating an audio parameter if there is a

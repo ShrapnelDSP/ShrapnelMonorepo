@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'parameter.dart';
+import '../../parameter.dart';
 
 class MidiMappingPage extends StatelessWidget {
   const MidiMappingPage({super.key});
