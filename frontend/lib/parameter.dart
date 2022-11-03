@@ -143,10 +143,11 @@ class ParameterService extends ChangeNotifier {
     log.warning("Couldn't find parameter with id ${parameterToUpdate.id}");
   }
 
-  List<String> get parameterNames {
-    return _parameters
-        .map((param) => '${param.groupName} ${param.name}')
-        .toList();
+  Map<String, String> get parameterNames {
+    return Map.fromEntries(
+      _parameters.map(
+          (param) => MapEntry(param.id, '${param.groupName}: ${param.name}')),
+    );
   }
 
   @override

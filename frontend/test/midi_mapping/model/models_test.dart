@@ -79,7 +79,8 @@ void main() {
     );
 
     final actual = MidiApiMessage.fromJson(
-        json.decode(jsonString) as Map<String, dynamic>);
+      json.decode(jsonString) as Map<String, dynamic>,
+    );
 
     expect(actual, expected);
   });
@@ -116,5 +117,43 @@ void main() {
       ),
       throwsA(const TypeMatcher<Error>()),
     );
+  });
+
+  test('Create request', () {
+    const requestJson = '''
+    {
+      "messageType": "MidiMap::create::request",
+      "mapping": {
+        "123": {
+          "midi_channel": 0,
+          "cc_number": 1,
+          "parameter_id": "gain"
+        }
+      }
+    }''';
+
+    const request = MidiApiMessage.createRequest(
+      mapping: <String, MidiMapping>{
+        '123': MidiMapping(
+          midiChannel: 0,
+          ccNumber: 1,
+          parameterId: 'gain',
+        ),
+      },
+    );
+
+    expect(request.toJson(), json.decode(requestJson));
+    expect(
+      MidiApiMessage.fromJson(
+        json.decode(json.encode(request)) as Map<String, dynamic>,
+      ),
+      request,
+    );
+  });
+
+  test('freezed as map value sanity test', () {
+    final map = <String, MidiMapping>{};
+    map['test'] = const MidiMapping(midiChannel: 5, ccNumber: 5, parameterId: 'test');
+    expect(map.length, 1);
   });
 }

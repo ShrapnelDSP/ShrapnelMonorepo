@@ -23,6 +23,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:logging/logging.dart';
 import 'package:provider/provider.dart';
 
+import 'json_websocket.dart';
+import 'midi_mapping/model/service.dart';
 import 'midi_mapping/view/midi_mapping.dart';
 import 'parameter.dart';
 import 'pedalboard.dart';
@@ -77,7 +79,10 @@ void main() {
         ),
         ChangeNotifierProvider(
           create: (_) => ParameterService(websocket: websocket),
-        )
+        ),
+        ChangeNotifierProvider(
+            create: (_) => MidiMappingService(
+                websocket: JsonWebsocket(websocket: websocket)))
       ],
       child: const MyApp(),
     ),
@@ -91,10 +96,23 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'ShrapnelDSP',
-      theme: ThemeData(
-        brightness: Brightness.dark,
-        primarySwatch: Colors.orange,
-        fontFamily: 'Noto Sans',
+      theme: ThemeData.from(
+        colorScheme: ColorScheme(
+          primary: Colors.orange,
+          secondary: Colors.red,
+          surface: Colors.grey[800]!,
+          background: Colors.grey[850]!,
+          error: Colors.red[700]!,
+          onPrimary: Colors.black,
+          onSecondary: Colors.white,
+          onSurface: Colors.white,
+          onBackground: Colors.white,
+          onError: Colors.black,
+          brightness: Brightness.dark,
+        ),
+        textTheme: Typography().white.apply(
+          fontFamily: 'Noto Sans',
+        ),
       ),
       home: const MyHomePage(title: 'ShrapnelDSP'),
       debugShowCheckedModeBanner: false,
@@ -113,13 +131,16 @@ class MyHomePage extends StatelessWidget {
         title: Text(title),
         actions: [
           IconButton(
-            icon: const Icon(Icons.question_mark),
-            key: const Key('MIDI mapping button'),
+            icon: const Icon(Icons.map_outlined),
+            key: const Key('midi-mapping-button'),
             onPressed: () {
               Navigator.push(
                 context,
                 MaterialPageRoute<MidiMappingPage>(
-                  builder: (context) => const MidiMappingPage(),
+                  builder: (context) {
+                    context.read<MidiMappingService>().getMapping();
+                    return const MidiMappingPage();
+                  },
                 ),
               );
             },

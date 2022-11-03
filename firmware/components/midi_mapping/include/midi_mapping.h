@@ -85,15 +85,16 @@
  *   <td> `mapping` (`MidiMapping`): The MIDI mapping to create
  *   <td> UI -> Firmware
  *   <td> Firmware creates a new MIDI mapping according to the parameters.
- *        A response will be sent, which includes the ID.
  *   <td>
  *   ~~~
  *   {
  *     "messageType": "MidiMap::create::request",
  *     "mapping": {
- *       "midi_channel": 0,
- *       "cc_number": 1,
- *       "parameter_id": "gain"
+ *       "...": {
+ *         "midi_channel": 0,
+ *         "cc_number": 1,
+ *         "parameter_id": "gain"
+ *       }
  *     }
  *   }
  *   ~~~

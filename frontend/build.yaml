@@ -4,3 +4,9 @@ targets:
       json_serializable:
         options:
           explicit_to_json: true
+      freezed:
+        options:
+          # Setting this to true causes a map containing a freezed class to become immutable, but
+          # only during widget and integration tests. This seems like a bug. Let's leave it disabled
+          # until the test is finished, then recheck.
+          make_collections_unmodifiable: false

@@ -51,9 +51,9 @@ void main() {
     expect(listenerCount, 0);
     expect(uut.mappings, isEmpty);
 
-    final response = uut.getMapping();
+    uut.getMapping();
     controller.add(responseJson);
-    await expectLater(await response, responseMapping);
+    await Future<void>.delayed(const Duration(seconds: 1));
     expect(uut.mappings, responseMapping);
 
     // delay required for the event loop to process cancelling the subscription

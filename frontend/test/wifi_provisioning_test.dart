@@ -25,6 +25,7 @@ import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:provider/provider.dart';
 import 'package:shrapnel/main.dart';
+import 'package:shrapnel/parameter.dart';
 import 'package:shrapnel/robust_websocket.dart';
 import 'package:shrapnel/wifi_provisioning.dart';
 
@@ -50,6 +51,7 @@ Map<String, dynamic> _createFakeWifi({
 void main() {
   late Widget sut;
   late MockProvisioning mockProvisioning;
+  late RobustWebsocket websocket;
   Function()? provisioningFactory;
   MockProvisioning provisioningFactoryWrapper() {
     provisioningFactory!.call();
@@ -57,15 +59,17 @@ void main() {
   }
 
   setUp(() async {
+    websocket = MockRobustWebsocket();
     sut = MultiProvider(
       providers: [
-        ChangeNotifierProvider<RobustWebsocket>(
-          create: (_) => MockRobustWebsocket(),
-        ),
+        ChangeNotifierProvider.value(value: websocket),
         ChangeNotifierProvider(
           create: (context) => WifiProvisioningProvider(
             provisioningFactory: provisioningFactoryWrapper,
           ),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => ParameterService(websocket: websocket),
         ),
       ],
       child: const MyApp(),

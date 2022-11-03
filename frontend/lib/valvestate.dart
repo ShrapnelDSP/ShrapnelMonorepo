@@ -30,7 +30,7 @@ class Valvestate extends StatelessWidget {
     required this.onTap,
   });
 
-  static const _name = 'VALVESTATE 8100';
+  static const _name = 'Valvestate';
   final bool full;
   final void Function() onTap;
 
@@ -51,37 +51,37 @@ class Valvestate extends StatelessWidget {
             ),
             AudioParameterDoubleModel(
               groupName: _name,
-              name: 'GAIN',
+              name: 'Gain',
               id: 'ampGain',
               parameterService: parameterService,
             ),
             AudioParameterDoubleModel(
               groupName: _name,
-              name: 'BASS',
+              name: 'Bass',
               id: 'bass',
               parameterService: parameterService,
             ),
             AudioParameterDoubleModel(
               groupName: _name,
-              name: 'MIDDLE',
+              name: 'Middle',
               id: 'middle',
               parameterService: parameterService,
             ),
             AudioParameterDoubleModel(
               groupName: _name,
-              name: 'TREBLE',
+              name: 'Treble',
               id: 'treble',
               parameterService: parameterService,
             ),
             AudioParameterDoubleModel(
               groupName: _name,
-              name: 'CONTOUR',
+              name: 'Contour',
               id: 'contour',
               parameterService: parameterService,
             ),
             AudioParameterDoubleModel(
               groupName: _name,
-              name: 'VOLUME',
+              name: 'Volume',
               id: 'volume',
               parameterService: parameterService,
             ),

@@ -16,7 +16,7 @@ class MidiApiMessage with _$MidiApiMessage {
   }) = GetResponse;
   @FreezedUnionValue('MidiMap::create::request')
   const factory MidiApiMessage.createRequest({
-    required MidiMapping mapping,
+    required Map<String, MidiMapping> mapping,
   }) = CreateRequest;
   @FreezedUnionValue('MidiMap::create::response')
   const factory MidiApiMessage.createResponse({

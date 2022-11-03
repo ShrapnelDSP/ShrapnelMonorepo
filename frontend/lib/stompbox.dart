@@ -84,9 +84,8 @@ class Stompbox extends StatelessWidget {
 
     return Theme(
       data: Theme.of(context).copyWith(
-        colorScheme: ColorScheme.fromSwatch(
-          primarySwatch: primarySwatch,
-          brightness: Brightness.dark,
+        colorScheme: Theme.of(context).colorScheme.copyWith(
+          primary: primarySwatch.shade400,
         ),
       ),
       /* Builder required to create new context, which makes
