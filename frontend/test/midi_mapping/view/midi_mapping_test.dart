@@ -15,6 +15,64 @@ import 'package:shrapnel/robust_websocket.dart';
 
 import 'midi_mapping_test.mocks.dart';
 
+class MidiMappingPageObject {
+  const MidiMappingPageObject(this.tester);
+
+  final WidgetTester tester;
+
+  Finder findMappingRows() => find.byType(MidiChannelDropdown);
+  Finder findPage() => find.text('MIDI Mapping');
+
+  Future<void> openCreateDialog() async {
+    await tester.tap(find.byType(FloatingActionButton));
+    await tester.pumpAndSettle();
+  }
+
+  Future<void> selectMidiChannel(int channel) async {
+    await tester.tap(
+      find.ancestor(
+        of: find.text('MIDI channel'),
+        matching: find.byType(DropdownButton<int>),
+      ),
+    );
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('$channel').last);
+    await tester.pumpAndSettle();
+  }
+
+  Future<void> selectCcNumber(int ccNumber) async {
+    await tester.tap(
+      find.ancestor(
+        of: find.text('CC number'),
+        matching: find.byType(DropdownButton<int>),
+      ),
+    );
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('$ccNumber').last);
+    await tester.pumpAndSettle();
+  }
+
+  Future<void> selectParameter(String name) async
+  {
+    await tester.tap(
+      find.ancestor(
+        of: find.text('Parameter'),
+        matching: find.byType(DropdownButton<String>),
+      ),
+    );
+    await tester.pumpAndSettle();
+    final valvestateGainParameter = find.text(name).last;
+    await tester.tap(valvestateGainParameter);
+    await tester.pumpAndSettle();
+  }
+
+  Future<void> submitCreateDialog() async {
+    await tester.tap(find.text('Create'));
+    await tester.pumpAndSettle();
+  }
+
+}
+
 @GenerateMocks([JsonWebsocket])
 @GenerateNiceMocks([MockSpec<RobustWebsocket>()])
 void main() {
@@ -41,6 +99,8 @@ void main() {
 
     await tester.pumpWidget(sut);
 
+    final midiMappingPage = MidiMappingPageObject(tester);
+
     final getRequest = json.decodeAsMap(
       '''
       {
@@ -48,6 +108,7 @@ void main() {
       }
       ''',
     );
+
     when(
       api.send(getRequest),
     ).thenAnswer(
@@ -71,8 +132,8 @@ void main() {
     await tester.tap(find.byKey(const Key('midi-mapping-button')));
     await tester.pumpAndSettle();
 
-    expect(find.text('MIDI Mapping'), findsOneWidget);
-    expect(find.byType(DataRow), findsNothing);
+    expect(midiMappingPage.findPage(), findsOneWidget);
+    expect(midiMappingPage.findMappingRows(), findsNothing);
     verify(api.send(getRequest));
 
     final createRequest = json.decodeAsMap(
@@ -90,10 +151,8 @@ void main() {
       ''',
     );
 
-    when(
-      api.send(createRequest),
-    ).thenAnswer(
-      (actualCall) {
+    when(api.send(createRequest)).thenAnswer(
+      (_) {
         apiController.add(
           json.decodeAsMap(
             '''
@@ -113,39 +172,9 @@ void main() {
       },
     );
 
-    // Create a new MIDI map using the FAB
-    // This opens a dialog where the mapping can be initially configured
-    await tester.tap(find.byType(FloatingActionButton));
-    await tester.pumpAndSettle();
-
-    // Change all the parameters to valid values and submit the dialog
-    await tester.tap(
-      find.ancestor(
-        of: find.text('MIDI channel'),
-        matching: find.byType(DropdownButton<int>),
-      ),
-    );
-    await tester.pumpAndSettle();
-    await tester.tap(find.text('1').last);
-    await tester.pumpAndSettle();
-
-    await tester.tap(
-      find.ancestor(
-        of: find.text('CC number'),
-        matching: find.byType(DropdownButton<int>),
-      ),
-    );
-    await tester.pumpAndSettle();
-    await tester.tap(find.text('2').last);
-    await tester.pumpAndSettle();
-
-    await tester.tap(
-      find.ancestor(
-        of: find.text('Parameter'),
-        matching: find.byType(DropdownButton<String>),
-      ),
-    );
-    await tester.pumpAndSettle();
+    await midiMappingPage.openCreateDialog();
+    await midiMappingPage.selectMidiChannel(1);
+    await midiMappingPage.selectCcNumber(2);
     // XXX: There is a bug in flutter where the DropdownButton's popup menu is
     //      unreliable during tests: https://github.com/flutter/flutter/issues/82908
     //
@@ -153,17 +182,13 @@ void main() {
     // it actually works during the test. This is more likely if something is
     // picked from the top of the list. When changing the parameter name, make
     // sure that the parameter ID in the stub is also updated.
-    final valvestateGainParameter = find.text('Noise Gate: Release').last;
-    await tester.tap(valvestateGainParameter);
-    await tester.pumpAndSettle();
+    await midiMappingPage.selectParameter('Noise Gate: Release');
+    await midiMappingPage.submitCreateDialog();
 
-    await tester.tap(find.text('Create'));
     verify(api.send(createRequest));
 
-    await tester.pumpAndSettle();
-
     // Expect new mapping visible in UI
-    expect(find.byType(MidiChannelDropdown), findsOneWidget);
+    expect(midiMappingPage.findMappingRows(), findsOneWidget);
 
     await apiController.close();
   });
