@@ -23,10 +23,17 @@ class MidiMappingPageObject {
   Finder findMappingRows() => find.byType(MidiChannelDropdown);
   Finder findPage() => find.text('MIDI Mapping');
 
-  Future<void> openCreateDialog() async {
+  Future<MidiMappingCreatePageObject> openCreateDialog() async {
     await tester.tap(find.byType(FloatingActionButton));
     await tester.pumpAndSettle();
+    return MidiMappingCreatePageObject(tester);
   }
+}
+
+class MidiMappingCreatePageObject {
+  const MidiMappingCreatePageObject(this.tester);
+
+  final WidgetTester tester;
 
   Future<void> selectMidiChannel(int channel) async {
     await tester.tap(
@@ -52,8 +59,7 @@ class MidiMappingPageObject {
     await tester.pumpAndSettle();
   }
 
-  Future<void> selectParameter(String name) async
-  {
+  Future<void> selectParameter(String name) async {
     await tester.tap(
       find.ancestor(
         of: find.text('Parameter'),
@@ -70,7 +76,6 @@ class MidiMappingPageObject {
     await tester.tap(find.text('Create'));
     await tester.pumpAndSettle();
   }
-
 }
 
 @GenerateMocks([JsonWebsocket])
@@ -109,9 +114,7 @@ void main() {
       ''',
     );
 
-    when(
-      api.send(getRequest),
-    ).thenAnswer(
+    when(api.send(getRequest)).thenAnswer(
       (actualCall) {
         apiController.add(
           json.decodeAsMap(
@@ -172,9 +175,9 @@ void main() {
       },
     );
 
-    await midiMappingPage.openCreateDialog();
-    await midiMappingPage.selectMidiChannel(1);
-    await midiMappingPage.selectCcNumber(2);
+    final midiMappingCreatePage = await midiMappingPage.openCreateDialog();
+    await midiMappingCreatePage.selectMidiChannel(1);
+    await midiMappingCreatePage.selectCcNumber(2);
     // XXX: There is a bug in flutter where the DropdownButton's popup menu is
     //      unreliable during tests: https://github.com/flutter/flutter/issues/82908
     //
@@ -182,8 +185,8 @@ void main() {
     // it actually works during the test. This is more likely if something is
     // picked from the top of the list. When changing the parameter name, make
     // sure that the parameter ID in the stub is also updated.
-    await midiMappingPage.selectParameter('Noise Gate: Release');
-    await midiMappingPage.submitCreateDialog();
+    await midiMappingCreatePage.selectParameter('Noise Gate: Release');
+    await midiMappingCreatePage.submitCreateDialog();
 
     verify(api.send(createRequest));
 
