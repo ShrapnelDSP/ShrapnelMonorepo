@@ -60,8 +60,6 @@ class MidiMappingService extends ChangeNotifier {
   void createMapping(
     Tuple2<String, MidiMapping> mapping,
   ) {
-    final message = MidiApiMessage.createRequest(mapping: mapping.toMap());
-
     final response = websocket.stream
         .map(
           MidiApiMessage.fromJson,
@@ -95,10 +93,15 @@ class MidiMappingService extends ChangeNotifier {
       ),
     );
     */
+
+    final message = MidiApiMessage.createRequest(mapping: mapping.toMap());
     websocket.send(message.toJson());
   }
 
   Future<void> updateMapping(Tuple2<String, MidiMapping> mapping) async {
+    __mappings.addAll(mapping.toMap());
+    notifyListeners();
+
     final message = MidiApiMessage.update(mapping: mapping.toMap());
     websocket.send(message.toJson());
   }

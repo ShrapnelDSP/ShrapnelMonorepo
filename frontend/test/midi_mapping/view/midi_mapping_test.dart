@@ -28,6 +28,37 @@ class MidiMappingPageObject {
     await tester.pumpAndSettle();
     return MidiMappingCreatePageObject(tester);
   }
+
+  Future<void> updateMidiChannel({
+    required String id,
+    required int value,
+  }) async {
+    print(find.byKey(Key('$id-midi-channel-dropdown')));
+    await tester.tap(find.byKey(Key('$id-midi-channel-dropdown')).last);
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('$value').last);
+    await tester.pumpAndSettle();
+  }
+
+  Future<void> updateCcNumber({
+    required String id,
+    required int value,
+  }) async {
+    await tester.tap(find.byKey(Key('$id-cc-number-dropdown')).last);
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('$value').last);
+    await tester.pumpAndSettle();
+  }
+
+  Future<void> updateParameter({
+    required String id,
+    required String value,
+  }) async {
+    await tester.tap(find.byKey(Key('$id-parameter-id-dropdown')).last);
+    await tester.pumpAndSettle();
+    await tester.tap(find.text(value).last);
+    await tester.pumpAndSettle();
+  }
 }
 
 class MidiMappingCreatePageObject {
@@ -67,6 +98,7 @@ class MidiMappingCreatePageObject {
       ),
     );
     await tester.pumpAndSettle();
+    // TODO give this a more general name
     final valvestateGainParameter = find.text(name).last;
     await tester.tap(valvestateGainParameter);
     await tester.pumpAndSettle();
@@ -84,10 +116,7 @@ void main() {
   testWidgets('Midi mapping can be created', (tester) async {
     final apiController = StreamController<Map<String, dynamic>>.broadcast();
     final websocket = MockRobustWebsocket();
-
     final api = MockJsonWebsocket();
-    throwOnMissingStub(api);
-
     final sut = MultiProvider(
       providers: [
         ChangeNotifierProvider<RobustWebsocket>.value(value: websocket),
@@ -139,6 +168,9 @@ void main() {
     expect(midiMappingPage.findMappingRows(), findsNothing);
     verify(api.send(getRequest));
 
+    // TODO the mapping ID is hardcoded
+    // Dependency inject a UUID service, and make it return a fake value for
+    // testing
     final createRequest = json.decodeAsMap(
       '''
       {
@@ -191,6 +223,7 @@ void main() {
     verify(api.send(createRequest));
 
     // Expect new mapping visible in UI
+    // TODO check the correct value is visible in all dropdowns
     expect(midiMappingPage.findMappingRows(), findsOneWidget);
 
     await apiController.close();
@@ -199,19 +232,127 @@ void main() {
   testWidgets(
     'Midi mapping can be edited',
     (tester) async {
-      //await tester.pumpWidget();
+      final apiController = StreamController<Map<String, dynamic>>.broadcast();
+      final websocket = MockRobustWebsocket();
+      final api = MockJsonWebsocket();
+      final sut = MultiProvider(
+        providers: [
+          ChangeNotifierProvider<RobustWebsocket>.value(value: websocket),
+          ChangeNotifierProvider(
+            create: (_) => ParameterService(websocket: websocket),
+          ),
+          Provider<JsonWebsocket>.value(value: api),
+          ChangeNotifierProvider(
+            create: (_) => MidiMappingService(websocket: api),
+          ),
+        ],
+        child: const MyApp(),
+      );
+
+      await tester.pumpWidget(sut);
+
+      final midiMappingPage = MidiMappingPageObject(tester);
+
+      final getRequest = json.decodeAsMap(
+        '''
+        {
+          "messageType": "MidiMap::get::request"
+        }
+        ''',
+      );
+
+      when(api.send(getRequest)).thenAnswer(
+        (actualCall) {
+          apiController.add(
+            json.decodeAsMap(
+              '''
+              {
+                "messageType": "MidiMap::get::response",
+                "mappings": {
+                  "123": { "midi_channel": 1, "cc_number": 2, "parameter_id": "ampGain" }
+                }
+              }
+              ''',
+            ),
+          );
+        },
+      );
+
+      when(api.stream).thenAnswer((_) => apiController.stream);
 
       // Open the page
+      await tester.tap(find.byKey(const Key('midi-mapping-button')));
+      await tester.pumpAndSettle();
 
-      // Expect get request, and respond with a mapping
+      expect(midiMappingPage.findPage(), findsOneWidget);
+      expect(midiMappingPage.findMappingRows(), findsOneWidget);
+      verify(api.send(getRequest));
 
-      // Change a field of the mapping
+      await midiMappingPage.updateMidiChannel(id: '123', value: 3);
+      verify(
+        api.send(
+          json.decodeAsMap(
+            '''
+            {
+              "messageType": "MidiMap::update",
+              "mapping": {
+                "123": {
+                  "midi_channel": 3,
+                  "cc_number": 2,
+                  "parameter_id": "ampGain"
+                }
+              }
+            }
+            ''',
+          ),
+        ),
+      );
 
-      // Expect JSON message to update mapping transmitted
+      await midiMappingPage.updateCcNumber(id: '123', value: 4);
+      verify(
+        api.send(
+          json.decodeAsMap(
+            '''
+            {
+              "messageType": "MidiMap::update",
+              "mapping": {
+                "123": {
+                  "midi_channel": 3,
+                  "cc_number": 4,
+                  "parameter_id": "ampGain"
+                }
+              }
+            }
+            ''',
+          ),
+        ),
+      );
 
-      // Expect new mapping visible in UI
+      await midiMappingPage.updateParameter(
+        id: '123',
+        value: 'Valvestate: Contour',
+      );
+      verify(
+        api.send(
+          json.decodeAsMap(
+            '''
+            {
+              "messageType": "MidiMap::update",
+              "mapping": {
+                "123": {
+                  "midi_channel": 3,
+                  "cc_number": 4,
+                  "parameter_id": "contour"
+                }
+              }
+            }
+            ''',
+          ),
+        ),
+      );
+
+      // TODO Expect new mapping visible in UI
     },
-    skip: true,
   );
 }
 
