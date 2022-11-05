@@ -105,4 +105,12 @@ class MidiMappingService extends ChangeNotifier {
     final message = MidiApiMessage.update(mapping: mapping.toMap());
     websocket.send(message.toJson());
   }
+
+  Future<void> deleteMapping({required String id}) async {
+    __mappings.remove(id);
+    notifyListeners();
+
+    final message = MidiApiMessage.remove(id: id);
+    websocket.send(message.toJson());
+  }
 }

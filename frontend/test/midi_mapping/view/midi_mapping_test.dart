@@ -33,7 +33,6 @@ class MidiMappingPageObject {
     required String id,
     required int value,
   }) async {
-    print(find.byKey(Key('$id-midi-channel-dropdown')));
     await tester.tap(find.byKey(Key('$id-midi-channel-dropdown')).last);
     await tester.pumpAndSettle();
     await tester.tap(find.text('$value').last);
@@ -57,6 +56,11 @@ class MidiMappingPageObject {
     await tester.tap(find.byKey(Key('$id-parameter-id-dropdown')).last);
     await tester.pumpAndSettle();
     await tester.tap(find.text(value).last);
+    await tester.pumpAndSettle();
+  }
+
+  Future<void> deleteMapping({required String id}) async {
+    await tester.tap(find.byKey(Key('$id-delete-button')).last);
     await tester.pumpAndSettle();
   }
 }
@@ -352,8 +356,93 @@ void main() {
       );
 
       // TODO Expect new mapping visible in UI
+
+      await apiController.close();
     },
   );
+
+  testWidgets(
+    'MIDI mapping can be deleted',
+    (tester) async {
+      await tester.binding.setSurfaceSize(const Size(1920, 1080));
+
+      final apiController = StreamController<Map<String, dynamic>>.broadcast();
+      final websocket = MockRobustWebsocket();
+      final api = MockJsonWebsocket();
+      final sut = MultiProvider(
+        providers: [
+          ChangeNotifierProvider<RobustWebsocket>.value(value: websocket),
+          ChangeNotifierProvider(
+            create: (_) => ParameterService(websocket: websocket),
+          ),
+          Provider<JsonWebsocket>.value(value: api),
+          ChangeNotifierProvider(
+            create: (_) => MidiMappingService(websocket: api),
+          ),
+        ],
+        child: const MyApp(),
+      );
+
+      await tester.pumpWidget(sut);
+
+      final midiMappingPage = MidiMappingPageObject(tester);
+
+      final getRequest = json.decodeAsMap(
+        '''
+        {
+          "messageType": "MidiMap::get::request"
+        }
+        ''',
+      );
+
+      when(api.send(getRequest)).thenAnswer(
+        (actualCall) {
+          apiController.add(
+            json.decodeAsMap(
+              '''
+              {
+                "messageType": "MidiMap::get::response",
+                "mappings": {
+                  "123": { "midi_channel": 1, "cc_number": 2, "parameter_id": "ampGain" }
+                }
+              }
+              ''',
+            ),
+          );
+        },
+      );
+
+      when(api.stream).thenAnswer((_) => apiController.stream);
+
+      // Open the page
+      await tester.tap(find.byKey(const Key('midi-mapping-button')));
+      await tester.pumpAndSettle();
+
+      expect(midiMappingPage.findPage(), findsOneWidget);
+      expect(midiMappingPage.findMappingRows(), findsOneWidget);
+      verify(api.send(getRequest));
+
+      await midiMappingPage.deleteMapping(id: '123');
+
+      verify(
+        api.send(
+          json.decodeAsMap(
+            '''
+          {
+            "messageType": "MidiMap::remove",
+            "id": "123"
+          }
+          ''',
+          ),
+        ),
+      );
+      expect(midiMappingPage.findMappingRows(), findsNothing);
+
+      await apiController.close();
+    },
+  );
+
+  // TODO test rollback on create timeout
 }
 
 extension on JsonCodec {

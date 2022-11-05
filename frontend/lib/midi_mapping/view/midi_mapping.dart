@@ -27,15 +27,18 @@ class MidiMappingPage extends StatelessWidget {
               DataColumn(label: Text('MIDI channel')),
               DataColumn(label: Text('CC number')),
               DataColumn(label: Text('Parameter')),
+              DataColumn(label: Text('Delete')),
             ],
             rows: midiMappingService.mappings.entries
                 .map(
-                  (mapping) => DataRow(
-                    key: ValueKey(mapping.key),
+                  (mapping) {
+                    final id = mapping.key;
+                    return DataRow(
+                    key: ValueKey(id),
                     cells: [
                       DataCell(
                         MidiChannelDropdown(
-                          key: Key('${mapping.key}-midi-channel-dropdown'),
+                          key: Key('$id-midi-channel-dropdown'),
                           mapping: mapping.toTuple2(),
                           onChanged: (value) => midiMappingService
                               .updateMapping(mapping.toTuple2().copyWith(
@@ -48,7 +51,7 @@ class MidiMappingPage extends StatelessWidget {
                       ),
                       DataCell(
                         MidiCCDropdown(
-                          key: Key('${mapping.key}-cc-number-dropdown'),
+                          key: Key('$id-cc-number-dropdown'),
                           mapping: mapping.toTuple2(),
                           onChanged: (value) =>
                               midiMappingService.updateMapping(
@@ -62,7 +65,7 @@ class MidiMappingPage extends StatelessWidget {
                       ),
                       DataCell(
                         ParametersDropdown(
-                          key: Key('${mapping.key}-parameter-id-dropdown'),
+                          key: Key('$id-parameter-id-dropdown'),
                           mapping: mapping.toTuple2(),
                           onChanged: (value) {
                             midiMappingService.updateMapping(
@@ -75,8 +78,16 @@ class MidiMappingPage extends StatelessWidget {
                           },
                         ),
                       ),
+                      DataCell(
+                        IconButton(
+                          key: Key('$id-delete-button'),
+                          icon: const Icon(Icons.delete),
+                          onPressed: () => midiMappingService.deleteMapping(id: id),
+                        )
+                      ),
                     ],
-                  ),
+                  );
+                  },
                 )
                 .toList(growable: false),
           ),
