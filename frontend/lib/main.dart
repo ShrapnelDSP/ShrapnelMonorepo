@@ -81,8 +81,10 @@ void main() {
           create: (_) => ParameterService(websocket: websocket),
         ),
         ChangeNotifierProvider(
-            create: (_) => MidiMappingService(
-                websocket: JsonWebsocket(websocket: websocket)))
+          create: (_) => MidiMappingService(
+            websocket: JsonWebsocket(websocket: websocket),
+          ),
+        )
       ],
       child: const MyApp(),
     ),
@@ -111,8 +113,8 @@ class MyApp extends StatelessWidget {
           brightness: Brightness.dark,
         ),
         textTheme: Typography().white.apply(
-          fontFamily: 'Noto Sans',
-        ),
+              fontFamily: 'Noto Sans',
+            ),
       ),
       home: const MyHomePage(title: 'ShrapnelDSP'),
       debugShowCheckedModeBanner: false,

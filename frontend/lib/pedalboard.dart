@@ -21,7 +21,6 @@ import 'package:flutter/material.dart';
 
 import 'chorus.dart';
 import 'heavy_metal.dart';
-import 'knob.dart';
 import 'noise_gate.dart';
 import 'tube_screamer.dart';
 import 'valvestate.dart';

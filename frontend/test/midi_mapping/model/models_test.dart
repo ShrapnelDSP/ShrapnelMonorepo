@@ -159,31 +159,56 @@ void main() {
     expect(map.length, 1);
   });
 
-  test('Single element map decoding', () {
-    const entryJson = '''
-      {
-        "123": {
-          "midi_channel": 0,
-          "cc_number": 1,
-          "parameter_id": "gain"
-        }
-      }''';
+  group('MappingEntry: ', () {
+    test('encode and decode', () {
+      const entryJson = '''
+        {
+          "123": {
+            "midi_channel": 0,
+            "cc_number": 1,
+            "parameter_id": "gain"
+          }
+        }''';
 
-    const entry = MidiMappingEntry(
-      id: '123',
-      mapping: MidiMapping(
-        midiChannel: 0,
-        ccNumber: 1,
-        parameterId: 'gain',
-      ),
-    );
+      const entry = MidiMappingEntry(
+        id: '123',
+        mapping: MidiMapping(
+          midiChannel: 0,
+          ccNumber: 1,
+          parameterId: 'gain',
+        ),
+      );
 
-    expect(entry.toJson(), json.decode(entryJson));
-    expect(
-      MidiMappingEntry.fromJson(
-        json.decode(json.encode(entry)) as Map<String, dynamic>,
-      ),
-      entry,
-    );
+      expect(entry.toJson(), json.decode(entryJson));
+      expect(
+        MidiMappingEntry.fromJson(
+          json.decode(json.encode(entry)) as Map<String, dynamic>,
+        ),
+        entry,
+      );
+    });
+
+    test('throws if input is invalid', () {
+      const entryJson = '''
+        {
+          "123": {
+            "midi_channel": 0,
+            "cc_number": 1,
+            "parameter_id": "gain"
+          },
+          "456": {
+            "midi_channel": 2,
+            "cc_number": 3,
+            "parameter_id": "volume"
+          }
+        }''';
+
+      expect(
+        () => MidiMappingEntry.fromJson(
+          json.decode(entryJson) as Map<String, dynamic>,
+        ),
+        throwsA(isFormatException),
+      );
+    });
   });
 }

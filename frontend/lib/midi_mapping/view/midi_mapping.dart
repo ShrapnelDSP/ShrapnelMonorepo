@@ -45,32 +45,34 @@ class MidiMappingPage extends StatelessWidget {
                         ),
                       ),
                     ),
-                      DataCell(
-                        MidiCCDropdown(
-                          key: Key('${mapping.id}-cc-number-dropdown'),
-                          value: mapping.mapping.ccNumber,
-                          onChanged: (value) =>
-                              midiMappingService.updateMapping(
-                                mapping.copyWith.mapping(ccNumber: value!),
-                          ),
+                    DataCell(
+                      MidiCCDropdown(
+                        key: Key('${mapping.id}-cc-number-dropdown'),
+                        value: mapping.mapping.ccNumber,
+                        onChanged: (value) => midiMappingService.updateMapping(
+                          mapping.copyWith.mapping(ccNumber: value!),
                         ),
                       ),
-                      DataCell(
-                        ParametersDropdown(
-                          key: Key('${mapping.id}-parameter-id-dropdown'),
-                          value: mapping.mapping.parameterId,
-                          onChanged: (value) {
-                            midiMappingService.updateMapping(
-                                mapping.copyWith.mapping(parameterId: value!),
-                            );
-                          },
-                        ),
+                    ),
+                    DataCell(
+                      ParametersDropdown(
+                        key: Key('${mapping.id}-parameter-id-dropdown'),
+                        value: mapping.mapping.parameterId,
+                        onChanged: (value) {
+                          midiMappingService.updateMapping(
+                            mapping.copyWith.mapping(parameterId: value!),
+                          );
+                        },
                       ),
-                    DataCell(IconButton(
-                      key: Key('${mapping.id}-delete-button'),
-                      icon: const Icon(Icons.delete),
-                      onPressed: () => midiMappingService.deleteMapping(id: mapping.id),
-                    )),
+                    ),
+                    DataCell(
+                      IconButton(
+                        key: Key('${mapping.id}-delete-button'),
+                        icon: const Icon(Icons.delete),
+                        onPressed: () =>
+                            midiMappingService.deleteMapping(id: mapping.id),
+                      ),
+                    ),
                   ],
                 );
               },

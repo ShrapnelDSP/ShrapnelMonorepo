@@ -42,14 +42,15 @@ class MidiMappingService extends ChangeNotifier {
         .timeout(
           responseTimeout,
           onTimeout: (_) => throw TimeoutException(
-              'Waiting for response to get request timed out',),
+            'Waiting for response to get request timed out',
+          ),
         )
         .first
         .then((value) {
-          __mappings.clear();
-          __mappings.addAll(value);
-          notifyListeners();
-        });
+      __mappings.clear();
+      __mappings.addAll(value);
+      notifyListeners();
+    });
 
     websocket.send(message.toJson());
   }
@@ -69,7 +70,8 @@ class MidiMappingService extends ChangeNotifier {
         .timeout(
           responseTimeout,
           onTimeout: (_) => throw TimeoutException(
-              'Waiting for response to create request timed out',),
+            'Waiting for response to create request timed out',
+          ),
         )
         .firstWhere((event) => event == mapping);
 

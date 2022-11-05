@@ -85,8 +85,8 @@ class Stompbox extends StatelessWidget {
     return Theme(
       data: Theme.of(context).copyWith(
         colorScheme: Theme.of(context).colorScheme.copyWith(
-          primary: primarySwatch.shade400,
-        ),
+              primary: primarySwatch.shade400,
+            ),
       ),
       /* Builder required to create new context, which makes
        * Theme.of return the new theme defined above
@@ -105,14 +105,16 @@ class Stompbox extends StatelessWidget {
                   children: <Widget>[
                     ...knobs(context, scaleFactor),
                     Expanded(
-                        child: Center(
-                            child: Text(
-                      name,
-                      style: DefaultTextStyle.of(context)
-                          .style
-                          .apply(fontSizeFactor: scaleFactor),
-                      textAlign: TextAlign.center,
-                    ),),),
+                      child: Center(
+                        child: Text(
+                          name,
+                          style: DefaultTextStyle.of(context)
+                              .style
+                              .apply(fontSizeFactor: scaleFactor),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    ),
                     ChangeNotifierProvider.value(
                       value: context.watch<StompboxModel>().bypass,
                       child: _BypassButton(

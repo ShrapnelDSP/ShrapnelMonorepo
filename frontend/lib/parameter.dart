@@ -146,7 +146,8 @@ class ParameterService extends ChangeNotifier {
   Map<String, String> get parameterNames {
     return Map.fromEntries(
       _parameters.map(
-          (param) => MapEntry(param.id, '${param.groupName}: ${param.name}')),
+        (param) => MapEntry(param.id, '${param.groupName}: ${param.name}'),
+      ),
     );
   }
 
