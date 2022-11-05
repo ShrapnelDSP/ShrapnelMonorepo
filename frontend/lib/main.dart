@@ -29,6 +29,7 @@ import 'midi_mapping/view/midi_mapping.dart';
 import 'parameter.dart';
 import 'pedalboard.dart';
 import 'robust_websocket.dart';
+import 'util/uuid.dart';
 import 'websocket_status.dart';
 import 'wifi_provisioning.dart';
 
@@ -62,6 +63,7 @@ void main() {
 
   final websocket =
       RobustWebsocket(uri: Uri.parse('http://guitar-dsp.local:8080/websocket'));
+  final uuid = Uuid();
   runApp(
     MultiProvider(
       providers: [
@@ -84,7 +86,8 @@ void main() {
           create: (_) => MidiMappingService(
             websocket: JsonWebsocket(websocket: websocket),
           ),
-        )
+        ),
+        ChangeNotifierProvider.value(value: uuid),
       ],
       child: const MyApp(),
     ),

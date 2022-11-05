@@ -12,6 +12,7 @@ import 'package:shrapnel/midi_mapping/model/service.dart';
 import 'package:shrapnel/midi_mapping/view/midi_mapping.dart';
 import 'package:shrapnel/parameter.dart';
 import 'package:shrapnel/robust_websocket.dart';
+import 'package:shrapnel/util/uuid.dart';
 
 import 'midi_mapping_test.mocks.dart';
 
@@ -112,13 +113,14 @@ class MidiMappingCreatePageObject {
   }
 }
 
-@GenerateMocks([JsonWebsocket])
+@GenerateMocks([JsonWebsocket, Uuid])
 @GenerateNiceMocks([MockSpec<RobustWebsocket>()])
 void main() {
   testWidgets('Midi mapping can be created', (tester) async {
     final apiController = StreamController<Map<String, dynamic>>.broadcast();
     final websocket = MockRobustWebsocket();
     final api = MockJsonWebsocket();
+    final uuid = MockUuid();
     final sut = MultiProvider(
       providers: [
         ChangeNotifierProvider<RobustWebsocket>.value(value: websocket),
@@ -129,6 +131,7 @@ void main() {
         ChangeNotifierProvider(
           create: (_) => MidiMappingService(websocket: api),
         ),
+        ChangeNotifierProvider<Uuid>.value(value: uuid),
       ],
       child: const MyApp(),
     );
@@ -170,9 +173,8 @@ void main() {
     expect(midiMappingPage.findMappingRows(), findsNothing);
     verify(api.send(getRequest));
 
-    // TODO the mapping ID is hardcoded
-    // Dependency inject a UUID service, and make it return a fake value for
-    // testing
+    when(uuid.v4()).thenReturn('123');
+
     final createRequest = json.decodeAsMap(
       '''
       {
@@ -236,6 +238,7 @@ void main() {
     final apiController = StreamController<Map<String, dynamic>>.broadcast();
     final websocket = MockRobustWebsocket();
     final api = MockJsonWebsocket();
+    final uuid = MockUuid();
     final sut = MultiProvider(
       providers: [
         ChangeNotifierProvider<RobustWebsocket>.value(value: websocket),
@@ -246,6 +249,7 @@ void main() {
         ChangeNotifierProvider(
           create: (_) => MidiMappingService(websocket: api),
         ),
+        ChangeNotifierProvider<Uuid>.value(value: uuid),
       ],
       child: const MyApp(),
     );
@@ -285,6 +289,8 @@ void main() {
 
     expect(midiMappingPage.findPage(), findsOneWidget);
     expect(midiMappingPage.findMappingRows(), findsNothing);
+
+    when(uuid.v4()).thenReturn('123');
 
     // TODO the mapping ID is hardcoded
     // Dependency inject a UUID service, and make it return a fake value for
