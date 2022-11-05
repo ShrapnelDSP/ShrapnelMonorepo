@@ -51,6 +51,8 @@
  * brevity. Normally these would look like
  * `12345678-abcd-0000-0000-000000000000`.
  *
+ * \todo 0 is not a valid midi channel
+ *
  * <table>
  * <tr><th> Message type <th> Parameters <th> Direction <th> Behaviour <th> Example
  * <tr>

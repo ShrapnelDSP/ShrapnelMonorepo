@@ -21,7 +21,6 @@ class MidiMappingService extends ChangeNotifier {
 
   /// The mappings that are currently considered to be present.
   ///
-  /// TODO:
   /// This is updated optimistically with respect to the back end. When create
   /// is called, the mapping is added, assuming that the backend will not error.
   /// If there is an error, the mapping is removed.
@@ -29,10 +28,10 @@ class MidiMappingService extends ChangeNotifier {
 
   JsonWebsocket websocket;
 
-  void getMapping() {
+  Future<void> getMapping() async {
     const message = MidiApiMessage.getRequest();
 
-    websocket.stream
+    final response = websocket.stream
         .map(
           MidiApiMessage.fromJson,
         )
@@ -41,23 +40,24 @@ class MidiMappingService extends ChangeNotifier {
         .map((event) => event.mappings)
         .timeout(
           responseTimeout,
-          onTimeout: (_) => throw TimeoutException(
-            'Waiting for response to get request timed out',
-          ),
         )
-        .first
-        .then((value) {
+        .first;
+
+    websocket.send(message.toJson());
+
+    try {
+      final value = await response;
       __mappings.clear();
       __mappings.addAll(value);
       notifyListeners();
-    });
-
-    websocket.send(message.toJson());
+    } on TimeoutException {
+      // ignore
+    }
   }
 
-  void createMapping(
+  Future<void> createMapping(
     MidiMappingEntry mapping,
-  ) {
+  ) async {
     final response = websocket.stream
         .map(
           MidiApiMessage.fromJson,
@@ -67,34 +67,23 @@ class MidiMappingService extends ChangeNotifier {
         .map(
           (event) => event.mapping,
         )
-        .timeout(
-          responseTimeout,
-          onTimeout: (_) => throw TimeoutException(
-            'Waiting for response to create request timed out',
-          ),
-        )
-        .firstWhere((event) => event == mapping);
+        .where((event) => event == mapping)
+        .timeout(responseTimeout)
+        .first;
 
     // optimistically add the mapping to the UI state
     __mappings[mapping.id] = mapping.mapping;
     notifyListeners();
 
-    // roll back if there was an error
-    /*
-    unawaited(
-      response.onError(
-        (e, __) {
-          __mappings.remove(mapping.item1);
-          notifyListeners();
-          throw e! as Exception;
-        },
-        test: (error) => error is TimeoutException,
-      ),
-    );
-    */
-
     final message = MidiApiMessage.createRequest(mapping: mapping);
     websocket.send(message.toJson());
+
+    try {
+      await response;
+    } on TimeoutException {
+      __mappings.remove(mapping.id);
+      notifyListeners();
+    }
   }
 
   Future<void> updateMapping(MidiMappingEntry mapping) async {
