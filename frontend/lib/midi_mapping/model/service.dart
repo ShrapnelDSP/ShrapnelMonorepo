@@ -11,17 +11,15 @@ import '../model/models.dart';
 class MidiMappingService extends ChangeNotifier {
   MidiMappingService({
     required this.websocket,
-  });
+  }) {
+    _mappingsView = UnmodifiableMapView(__mappings);
+  }
 
   static const responseTimeout = Duration(milliseconds: 500);
 
-  Map<String, MidiMapping> __mappings = <String, MidiMapping>{};
-  set _mappings(Map<String, MidiMapping> newValue) {
-    __mappings = newValue;
-    notifyListeners();
-  }
+  final __mappings = <String, MidiMapping>{};
 
-  Map<String, MidiMapping> get _mappings => __mappings;
+  late UnmodifiableMapView<String, MidiMapping> _mappingsView;
 
   /// The mappings that are currently considered to be present.
   ///
@@ -29,10 +27,7 @@ class MidiMappingService extends ChangeNotifier {
   /// This is updated optimistically with respect to the back end. When create
   /// is called, the mapping is added, assuming that the backend will not error.
   /// If there is an error, the mapping is removed.
-  // Maybe this has made the actual mappings unmodifiable?
-  //UnmodifiableMapView<String, MidiMapping> get mappings =>
-  //    UnmodifiableMapView(_mappings);
-  Map<String, MidiMapping> get mappings => __mappings;
+  UnmodifiableMapView<String, MidiMapping> get mappings => _mappingsView;
 
   JsonWebsocket websocket;
 
@@ -49,10 +44,14 @@ class MidiMappingService extends ChangeNotifier {
         .timeout(
           responseTimeout,
           onTimeout: (_) => throw TimeoutException(
-              'Waiting for response to get request timed out'),
+              'Waiting for response to get request timed out',),
         )
         .first
-        .then((value) => _mappings = value);
+        .then((value) {
+          __mappings.clear();
+          __mappings.addAll(value);
+          notifyListeners();
+        });
 
     websocket.send(message.toJson());
   }
@@ -72,7 +71,7 @@ class MidiMappingService extends ChangeNotifier {
         .timeout(
           responseTimeout,
           onTimeout: (_) => throw TimeoutException(
-              'Waiting for response to create request timed out'),
+              'Waiting for response to create request timed out',),
         )
         .firstWhere((event) => event == mapping);
 
