@@ -39,7 +39,7 @@ class MidiMappingPage extends StatelessWidget {
                     DataCell(
                       MidiChannelDropdown(
                         key: Key('${mapping.id}-midi-channel-dropdown'),
-                        mapping: mapping,
+                        value: mapping.mapping.midiChannel,
                         onChanged: (value) => midiMappingService.updateMapping(
                           mapping.copyWith.mapping(midiChannel: value!),
                         ),
@@ -48,7 +48,7 @@ class MidiMappingPage extends StatelessWidget {
                       DataCell(
                         MidiCCDropdown(
                           key: Key('${mapping.id}-cc-number-dropdown'),
-                          mapping: mapping,
+                          value: mapping.mapping.ccNumber,
                           onChanged: (value) =>
                               midiMappingService.updateMapping(
                                 mapping.copyWith.mapping(ccNumber: value!),
@@ -58,7 +58,7 @@ class MidiMappingPage extends StatelessWidget {
                       DataCell(
                         ParametersDropdown(
                           key: Key('${mapping.id}-parameter-id-dropdown'),
-                          mapping: mapping,
+                          value: mapping.mapping.parameterId,
                           onChanged: (value) {
                             midiMappingService.updateMapping(
                                 mapping.copyWith.mapping(parameterId: value!),
@@ -203,12 +203,12 @@ class CreateMappingDialogState extends State<CreateMappingDialog> {
 
 class MidiChannelDropdown extends StatelessWidget {
   const MidiChannelDropdown({
-    required this.mapping,
+    required this.value,
     required this.onChanged,
     super.key,
   });
 
-  final MidiMappingEntry mapping;
+  final int value;
   final void Function(int?) onChanged;
 
   @override
@@ -219,19 +219,19 @@ class MidiChannelDropdown extends StatelessWidget {
         (i) => DropdownMenuItem(value: i + 1, child: Text('${i + 1}')),
       ),
       onChanged: onChanged,
-      value: mapping.mapping.midiChannel,
+      value: value,
     );
   }
 }
 
 class MidiCCDropdown extends StatelessWidget {
   const MidiCCDropdown({
-    required this.mapping,
+    required this.value,
     required this.onChanged,
     super.key,
   });
 
-  final MidiMappingEntry mapping;
+  final int value;
   final void Function(int?) onChanged;
 
   @override
@@ -242,19 +242,19 @@ class MidiCCDropdown extends StatelessWidget {
         (i) => DropdownMenuItem(value: i, child: Text('$i')),
       ),
       onChanged: onChanged,
-      value: mapping.mapping.ccNumber,
+      value: value,
     );
   }
 }
 
 class ParametersDropdown extends StatelessWidget {
   const ParametersDropdown({
-    required this.mapping,
+    required this.value,
     required this.onChanged,
     super.key,
   });
 
-  final MidiMappingEntry mapping;
+  final String value;
   final void Function(String?) onChanged;
 
   @override
@@ -272,7 +272,7 @@ class ParametersDropdown extends StatelessWidget {
         )
       ],
       onChanged: onChanged,
-      value: mapping.mapping.parameterId,
+      value: value,
     );
   }
 }
