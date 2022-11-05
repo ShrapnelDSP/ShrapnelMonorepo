@@ -133,13 +133,14 @@ void main() {
     }''';
 
     const request = MidiApiMessage.createRequest(
-      mapping: <String, MidiMapping>{
-        '123': MidiMapping(
+      mapping: MidiMappingEntry(
+        id: '123',
+        mapping: MidiMapping(
           midiChannel: 0,
           ccNumber: 1,
           parameterId: 'gain',
         ),
-      },
+      ),
     );
 
     expect(request.toJson(), json.decode(requestJson));
@@ -153,7 +154,36 @@ void main() {
 
   test('freezed as map value sanity test', () {
     final map = <String, MidiMapping>{};
-    map['test'] = const MidiMapping(midiChannel: 5, ccNumber: 5, parameterId: 'test');
+    map['test'] =
+        const MidiMapping(midiChannel: 5, ccNumber: 5, parameterId: 'test');
     expect(map.length, 1);
+  });
+
+  test('Single element map decoding', () {
+    const entryJson = '''
+      {
+        "123": {
+          "midi_channel": 0,
+          "cc_number": 1,
+          "parameter_id": "gain"
+        }
+      }''';
+
+    const entry = MidiMappingEntry(
+      id: '123',
+      mapping: MidiMapping(
+        midiChannel: 0,
+        ccNumber: 1,
+        parameterId: 'gain',
+      ),
+    );
+
+    expect(entry.toJson(), json.decode(entryJson));
+    expect(
+      MidiMappingEntry.fromJson(
+        json.decode(json.encode(entry)) as Map<String, dynamic>,
+      ),
+      entry,
+    );
   });
 }

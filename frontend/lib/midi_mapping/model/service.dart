@@ -2,10 +2,8 @@ import 'dart:async';
 import 'dart:collection';
 
 import 'package:flutter/material.dart';
-import 'package:tuple/tuple.dart';
 
 import '../../json_websocket.dart';
-import '../../util/tuple_extensions.dart';
 import '../model/models.dart';
 
 class MidiMappingService extends ChangeNotifier {
@@ -57,7 +55,7 @@ class MidiMappingService extends ChangeNotifier {
   }
 
   void createMapping(
-    Tuple2<String, MidiMapping> mapping,
+    MidiMappingEntry mapping,
   ) {
     final response = websocket.stream
         .map(
@@ -66,7 +64,7 @@ class MidiMappingService extends ChangeNotifier {
         .where((event) => event is CreateResponse)
         .map((event) => event as CreateResponse)
         .map(
-          (event) => event.mapping.toTuple2(),
+          (event) => event.mapping,
         )
         .timeout(
           responseTimeout,
@@ -76,7 +74,7 @@ class MidiMappingService extends ChangeNotifier {
         .firstWhere((event) => event == mapping);
 
     // optimistically add the mapping to the UI state
-    __mappings.addAll(mapping.toMap());
+    __mappings[mapping.id] = mapping.mapping;
     notifyListeners();
 
     // roll back if there was an error
@@ -93,15 +91,15 @@ class MidiMappingService extends ChangeNotifier {
     );
     */
 
-    final message = MidiApiMessage.createRequest(mapping: mapping.toMap());
+    final message = MidiApiMessage.createRequest(mapping: mapping);
     websocket.send(message.toJson());
   }
 
-  Future<void> updateMapping(Tuple2<String, MidiMapping> mapping) async {
-    __mappings.addAll(mapping.toMap());
+  Future<void> updateMapping(MidiMappingEntry mapping) async {
+    __mappings[mapping.id] = mapping.mapping;
     notifyListeners();
 
-    final message = MidiApiMessage.update(mapping: mapping.toMap());
+    final message = MidiApiMessage.update(mapping: mapping);
     websocket.send(message.toJson());
   }
 

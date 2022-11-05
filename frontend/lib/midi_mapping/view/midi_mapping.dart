@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:tuple/tuple.dart';
 
 import '../../parameter.dart';
-import '../../util/tuple_extensions.dart';
 import '../model/models.dart';
 import '../model/service.dart';
 
@@ -29,67 +27,54 @@ class MidiMappingPage extends StatelessWidget {
               DataColumn(label: Text('Parameter')),
               DataColumn(label: Text('Delete')),
             ],
-            rows: midiMappingService.mappings.entries
-                .map(
-                  (mapping) {
-                    final id = mapping.key;
-                    return DataRow(
-                    key: ValueKey(id),
-                    cells: [
-                      DataCell(
-                        MidiChannelDropdown(
-                          key: Key('$id-midi-channel-dropdown'),
-                          mapping: mapping.toTuple2(),
-                          onChanged: (value) => midiMappingService
-                              .updateMapping(mapping.toTuple2().copyWith(
-                                    item2: mapping.value.copyWith(
-                                      midiChannel: value!,
-                                    ),
-                                  ),
-                          ),
+            rows: midiMappingService.mappings.entries.map(
+              (mapEntry) {
+                final mapping = MidiMappingEntry(
+                  id: mapEntry.key,
+                  mapping: mapEntry.value,
+                );
+                return DataRow(
+                  key: ValueKey(mapping.id),
+                  cells: [
+                    DataCell(
+                      MidiChannelDropdown(
+                        key: Key('${mapping.id}-midi-channel-dropdown'),
+                        mapping: mapping,
+                        onChanged: (value) => midiMappingService.updateMapping(
+                          mapping.copyWith.mapping(midiChannel: value!),
                         ),
                       ),
+                    ),
                       DataCell(
                         MidiCCDropdown(
-                          key: Key('$id-cc-number-dropdown'),
-                          mapping: mapping.toTuple2(),
+                          key: Key('${mapping.id}-cc-number-dropdown'),
+                          mapping: mapping,
                           onChanged: (value) =>
                               midiMappingService.updateMapping(
-                            mapping.toTuple2().copyWith(
-                                  item2: mapping.value.copyWith(
-                                    ccNumber: value!,
-                                  ),
-                                ),
+                                mapping.copyWith.mapping(ccNumber: value!),
                           ),
                         ),
                       ),
                       DataCell(
                         ParametersDropdown(
-                          key: Key('$id-parameter-id-dropdown'),
-                          mapping: mapping.toTuple2(),
+                          key: Key('${mapping.id}-parameter-id-dropdown'),
+                          mapping: mapping,
                           onChanged: (value) {
                             midiMappingService.updateMapping(
-                              mapping.toTuple2().copyWith(
-                                    item2: mapping.value.copyWith(
-                                      parameterId: value!,
-                                    ),
-                                  ),
+                                mapping.copyWith.mapping(parameterId: value!),
                             );
                           },
                         ),
                       ),
-                      DataCell(
-                        IconButton(
-                          key: Key('$id-delete-button'),
-                          icon: const Icon(Icons.delete),
-                          onPressed: () => midiMappingService.deleteMapping(id: id),
-                        )
-                      ),
-                    ],
-                  );
-                  },
-                )
-                .toList(growable: false),
+                    DataCell(IconButton(
+                      key: Key('${mapping.id}-delete-button'),
+                      icon: const Icon(Icons.delete),
+                      onPressed: () => midiMappingService.deleteMapping(id: mapping.id),
+                    )),
+                  ],
+                );
+              },
+            ).toList(growable: false),
           ),
         ),
       ),
@@ -187,9 +172,9 @@ class CreateMappingDialogState extends State<CreateMappingDialog> {
                   if (_formKey.currentState!.validate()) {
                     Navigator.pop(context);
                     mappings.createMapping(
-                      Tuple2<String, MidiMapping>(
-                        '123',
-                        MidiMapping(
+                      MidiMappingEntry(
+                        id: '123',
+                        mapping: MidiMapping(
                           midiChannel: channel!,
                           ccNumber: ccNumber!,
                           parameterId: parameter!,
@@ -223,7 +208,7 @@ class MidiChannelDropdown extends StatelessWidget {
     super.key,
   });
 
-  final Tuple2<String, MidiMapping> mapping;
+  final MidiMappingEntry mapping;
   final void Function(int?) onChanged;
 
   @override
@@ -234,7 +219,7 @@ class MidiChannelDropdown extends StatelessWidget {
         (i) => DropdownMenuItem(value: i + 1, child: Text('${i + 1}')),
       ),
       onChanged: onChanged,
-      value: mapping.item2.midiChannel,
+      value: mapping.mapping.midiChannel,
     );
   }
 }
@@ -246,7 +231,7 @@ class MidiCCDropdown extends StatelessWidget {
     super.key,
   });
 
-  final Tuple2<String, MidiMapping> mapping;
+  final MidiMappingEntry mapping;
   final void Function(int?) onChanged;
 
   @override
@@ -257,7 +242,7 @@ class MidiCCDropdown extends StatelessWidget {
         (i) => DropdownMenuItem(value: i, child: Text('$i')),
       ),
       onChanged: onChanged,
-      value: mapping.item2.ccNumber,
+      value: mapping.mapping.ccNumber,
     );
   }
 }
@@ -269,7 +254,7 @@ class ParametersDropdown extends StatelessWidget {
     super.key,
   });
 
-  final Tuple2<String, MidiMapping> mapping;
+  final MidiMappingEntry mapping;
   final void Function(String?) onChanged;
 
   @override
@@ -287,7 +272,7 @@ class ParametersDropdown extends StatelessWidget {
         )
       ],
       onChanged: onChanged,
-      value: mapping.item2.parameterId,
+      value: mapping.mapping.parameterId,
     );
   }
 }

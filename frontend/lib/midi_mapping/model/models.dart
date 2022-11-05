@@ -16,15 +16,15 @@ class MidiApiMessage with _$MidiApiMessage {
   }) = GetResponse;
   @FreezedUnionValue('MidiMap::create::request')
   const factory MidiApiMessage.createRequest({
-    required Map<String, MidiMapping> mapping,
+    required MidiMappingEntry mapping,
   }) = CreateRequest;
   @FreezedUnionValue('MidiMap::create::response')
   const factory MidiApiMessage.createResponse({
-    required Map<String, MidiMapping> mapping,
+    required MidiMappingEntry mapping,
   }) = CreateResponse;
   @FreezedUnionValue('MidiMap::update')
   const factory MidiApiMessage.update({
-    required Map<String, MidiMapping> mapping,
+    required MidiMappingEntry mapping,
   }) = Update;
   @FreezedUnionValue('MidiMap::remove')
   const factory MidiApiMessage.remove({required String id}) = Remove;
@@ -43,4 +43,34 @@ class MidiMapping with _$MidiMapping {
 
   factory MidiMapping.fromJson(Map<String, dynamic> json) =>
       _$MidiMappingFromJson(json);
+}
+
+@freezed
+class MidiMappingEntry with _$MidiMappingEntry {
+  const factory MidiMappingEntry({
+    required String id,
+    required MidiMapping mapping,
+  }) = _MidiMappingEntry;
+
+  const MidiMappingEntry._();
+
+  factory MidiMappingEntry.fromJson(Map<String, dynamic> json) {
+    if (json.length != 1) {
+      throw FormatException(
+        'Expected a single entry in map, but got ${json.length}',
+        json,
+      );
+    }
+
+    return MidiMappingEntry(
+      id: json.keys.first,
+      mapping: MidiMapping.fromJson(json.values.first as Map<String, dynamic>),
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return <String, dynamic>{
+      id: mapping.toJson(),
+    };
+  }
 }
