@@ -176,15 +176,6 @@ void main() {
       final fakeWebsocket = MockJsonWebsocket();
       final uut = MidiMappingService(websocket: fakeWebsocket);
 
-      final requestJson = json.decode(
-        '''
-        {
-          "messageType": "MidiMap::create::request",
-          "123": { "midi_channel": 1, "cc_number": 2, "parameter_id": "gain" }
-        }
-        ''',
-      ) as Map<String, dynamic>;
-
       when(fakeWebsocket.stream).thenAnswer((_) => controller.stream);
 
       expect(listenerCount, 0);
