@@ -102,9 +102,7 @@ class MidiMappingCreatePageObject {
       ),
     );
     await tester.pumpAndSettle();
-    // TODO give this a more general name
-    final valvestateGainParameter = find.text(name).last;
-    await tester.tap(valvestateGainParameter);
+    await tester.tap(find.text(name).last);
     await tester.pumpAndSettle();
   }
 
