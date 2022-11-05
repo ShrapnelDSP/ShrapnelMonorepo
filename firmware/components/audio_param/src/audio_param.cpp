@@ -20,9 +20,10 @@
 #include "audio_param.h"
 
 namespace shrapnel {
+namespace parameters {
 
 AudioParameterFloat::AudioParameterFloat(
-        std::string a_name,
+        const id_t &a_name,
         float a_minimum,
         float a_maximum,
         float default_value) :
@@ -61,7 +62,7 @@ std::atomic<float> *AudioParameterFloat::get_raw_parameter(void)
 AudioParameters::AudioParameters() {}
 
 int AudioParameters::create_and_add_parameter(
-        std::string name,
+        const id_t &name,
         float minimum,
         float maximum,
         float default_value)
@@ -76,7 +77,7 @@ int AudioParameters::create_and_add_parameter(
     return 0;
 }
 
-int AudioParameters::update(const std::string param, float value)
+int AudioParameters::update(const id_t &param, float value)
 {
     (void) param;
     (void) value;
@@ -93,7 +94,7 @@ int AudioParameters::update(const std::string param, float value)
     return 0;
 }
 
-float AudioParameters::get(const std::string &param)
+float AudioParameters::get(const id_t &param)
 {
     auto element = parameters.find(param);
 
@@ -105,7 +106,7 @@ float AudioParameters::get(const std::string &param)
     return parameters[param]->get();
 }
 
-std::atomic<float> *AudioParameters::get_raw_parameter(const std::string param)
+std::atomic<float> *AudioParameters::get_raw_parameter(const id_t &param)
 {
     auto element = parameters.find(param);
 
@@ -127,4 +128,5 @@ AudioParameters::MapType::iterator AudioParameters::end()
     return parameters.end();
 }
 
+}
 }

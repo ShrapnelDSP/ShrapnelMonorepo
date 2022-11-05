@@ -33,7 +33,7 @@ using id_t = etl::string<32>;
 
 class AudioParameterFloat {
     public:
-    AudioParameterFloat(std::string name, float minimum, float maximum, float default_value);
+    AudioParameterFloat(const id_t &name, float minimum, float maximum, float default_value);
 
     /** Update a parameter
      *
@@ -48,7 +48,7 @@ class AudioParameterFloat {
      */
     std::atomic<float> *get_raw_parameter(void);
 
-    std::string name;
+    id_t name;
 
     private:
     std::atomic<float> value;

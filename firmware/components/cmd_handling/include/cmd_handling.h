@@ -69,6 +69,7 @@
 #include "task.h"
 #include "queue.h"
 #include <iterator>
+#include <string_view>
 
 namespace shrapnel {
 
@@ -221,7 +222,7 @@ done:
     cJSON *json;
     Message message;
 
-    static constexpr char *TAG = "cmd_handling";
+    static inline const char *TAG = "cmd_handling";
 };
 
 }
