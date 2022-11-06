@@ -170,10 +170,14 @@
  * </table>
  *
  */
+
+#include <array>
 #include <cstdint>
-#include <etl/array.h>
 #include <etl/string.h>
+#include <esp_log.h>
+
 #include "audio_param.h"
+#include "midi.h"
 
 namespace shrapnel {
 namespace midi {
@@ -186,29 +190,89 @@ etl::string<
     + 4 /* dashes */>;
 #endif
 
-using mapping_id_t = uint8_t[16];
-
 struct Mapping {
+    using id_t = std::array<uint8_t, 16>;
+
     uint8_t midi_channel;
     uint8_t cc_number;
     parameters::id_t parameter_name;
+
+    Mapping(
+            uint8_t a_midi_channel,
+            uint8_t a_cc_number,
+            parameters::id_t a_parameter_name
+    ) : midi_channel{a_midi_channel},
+        cc_number{a_cc_number},
+        parameter_name{a_parameter_name} {};
 };
 
-class Mapping {
+template<typename AudioParametersT, std::size_t N>
+class MappingManager final {
     public:
-    Mapping(std::shared_ptr<AudioParameters> param);
+    using MapType = etl::map<Mapping::id_t, Mapping, N>;
 
-    static constexpr std::size_t MAX_COUNT = 128;
+    MappingManager(std::shared_ptr<AudioParametersT> a_parameters) : parameters{a_parameters} {};
 
-    etl::map<mapping_id_t, Mapping, MAX_COUNT> get();
-    void create(const Mapping &mapping);
-    void update(const mapping_id_t &id, const Mapping &mapping);
-    void remove(mapping_id_t id);
+    MapType get() {
+        return mappings;
+    };
+    /// \return non-zero on failure
+    int create(const std::pair<const Mapping::id_t, Mapping> &mapping) {
+        if(mappings.full()) {
+            ESP_LOGE(TAG, "Failed to create new midi mapping, map is full");
+            return -1;
+        }
+
+        mappings.insert(mapping);
+        return 0;
+    };
+    /// \return non-zero on failure
+    int update(const std::pair<const Mapping::id_t, Mapping> &mapping) {
+        if(!mappings.contains(mapping.first))
+        {
+            ESP_LOGE(TAG, "Does not contain key");
+            ESP_LOG_BUFFER_HEX_LEVEL(TAG, mapping.first.data(), mapping.first.size(), ESP_LOG_ERROR);
+            return -1;
+        }
+
+        mappings.erase(mapping.first);
+        mappings.insert(mapping);
+        return 0;
+    };
+    void remove(const Mapping::id_t &id) {
+        mappings.erase(id);
+    };
 
     /** React to a MIDI message by updating an audio parameter if there is a
      * mapping registered
      */
-    void process_message(Message message);
+    void process_message(Message message) {
+        auto cc_params = get_if<Message::ControlChange>(&message.parameters);
+        if(!cc_params) return;
+
+        for(const auto &mapping : mappings)
+        {
+            if(mapping.second.midi_channel != message.channel)
+            {
+                continue;
+            }
+
+            if(mapping.second.cc_number != cc_params->control)
+            {
+                continue;
+            }
+
+            parameters->update(
+                    mapping.second.parameter_name,
+                    cc_params->value / float(CC_VALUE_MAX));
+        }
+    };
+
+    private:
+    std::shared_ptr<AudioParametersT> parameters;
+    MapType mappings;
+
+    static constexpr char TAG[] = "midi_mapping";
 };
 
 }

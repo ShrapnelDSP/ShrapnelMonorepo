@@ -46,11 +46,12 @@ class MockAudioParameterFloat;
 class MockAudioParameters
 {
     public:
-    using MapType = std::map<std::string, std::unique_ptr<MockAudioParameterFloat>>;
+    using id_t = shrapnel::parameters::id_t;
+    using MapType = std::map<id_t, std::unique_ptr<MockAudioParameterFloat>>;
 
-    MOCK_METHOD(int, update, (std::string param, float value), ());
+    MOCK_METHOD(int, update, (id_t param, float value), ());
     MOCK_METHOD(int, create_and_add_parameter, (
-        std::string name,
+        id_t name,
         float minimum,
         float maximum,
         float default_value), ());

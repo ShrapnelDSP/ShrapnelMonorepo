@@ -23,11 +23,13 @@
 #include "audio_param.h"
 #include <memory>
 
+using namespace shrapnel;
+
 class AudioParams : public ::testing::Test
 {
     protected:
 
-    using AudioParameters = shrapnel::AudioParameters;
+    using AudioParameters = parameters::AudioParameters;
 
     AudioParams()
     {
@@ -102,13 +104,13 @@ TEST_F(AudioParams, Iterate)
     uut.create_and_add_parameter("test1", 0, 10, 1);
     uut.create_and_add_parameter("test2", 0, 10, 2);
 
-    std::map<std::string, float> expected{
+    std::map<parameters::id_t, float> expected{
        {"test", 5}, // defined in test fixture
        {"test1", 1},
        {"test2", 2},
     };
 
-    std::map<std::string, float> actual{};
+    std::map<parameters::id_t, float> actual{};
 
     for(const auto& [key, value] : uut)
     {
