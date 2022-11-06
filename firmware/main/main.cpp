@@ -49,6 +49,7 @@
 #include "hardware.h"
 #include "i2s.h"
 #include "midi.h"
+#include "midi_mapping_json_parser.h"
 #include "midi_uart.h"
 #include "pcm3060.h"
 #include "profiling.h"
@@ -381,6 +382,8 @@ static void failed_alloc_callback(size_t size, uint32_t caps, const char *functi
 
 extern "C" void app_main(void)
 {
+    json_test();
+
     ESP_ERROR_CHECK(heap_caps_register_failed_alloc_callback(failed_alloc_callback));
 
     ESP_ERROR_CHECK(nvs_flash_init());

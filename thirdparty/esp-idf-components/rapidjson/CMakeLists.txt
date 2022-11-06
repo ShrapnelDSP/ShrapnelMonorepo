@@ -1,0 +1,6 @@
+if(NOT DEFINED TESTING)
+idf_component_register(INCLUDE_DIRS rapidjson/include)
+else()
+add_library(rapidjson INTERFACE)
+target_include_directories(rapidjson INTERFACE rapidjson/include)
+endif()

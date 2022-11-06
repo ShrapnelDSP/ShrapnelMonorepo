@@ -10,6 +10,7 @@ idf_component_register( SRCS main.cpp
                             i2s
                             mdns
                             midi
+                            midi_mapping
                             nvs_flash
                             pcm3060
                             queue

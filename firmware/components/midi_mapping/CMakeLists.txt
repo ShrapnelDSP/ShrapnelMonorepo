@@ -1,7 +1,7 @@
 if(NOT DEFINED TESTING)
-    idf_component_register(SRCS src/midi_uart.cpp src/midi.cpp
+    idf_component_register(SRCS src/midi_mapping.cpp
                            INCLUDE_DIRS include
-                           REQUIRES etl audio_param midi
+                           REQUIRES etl audio_param midi rapidjson
                            PRIV_REQUIRES compiler_warning_flags)
 else()
     add_executable(midi_mapping_test
@@ -15,6 +15,7 @@ else()
     target_link_libraries(midi_mapping_test PRIVATE log)
     target_link_libraries(midi_mapping_test PRIVATE audio_param_mock)
     target_link_libraries(midi_mapping_test PRIVATE midi_mock)
+    target_link_libraries(midi_mapping_test PRIVATE rapidjson)
 
     target_link_libraries(midi_mapping_test PRIVATE gtest_main)
     target_link_libraries(midi_mapping_test PRIVATE gmock)
