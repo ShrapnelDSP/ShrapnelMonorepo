@@ -7,6 +7,7 @@ else()
     add_executable(midi_mapping_test
                    src/midi_mapping.cpp
                    test/test_midi_mapping.cpp
+                   test/test_json_parser.cpp
                    )
 
     target_include_directories(midi_mapping_test PRIVATE include)
