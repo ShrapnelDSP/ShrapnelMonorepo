@@ -25,12 +25,16 @@
 
 #include "audio_events.h"
 
+#include "task.h"
+#include "queue.h"
+
+namespace {
+
 using testing::_;
 using testing::Return;
 using testing::StrEq;
 
-#include "task.h"
-#include "queue.h"
+using id_t = shrapnel::parameters::id_t;
 
 template <typename T>
 class MockQueue : public shrapnel::QueueBase<T>
@@ -46,7 +50,6 @@ class MockAudioParameterFloat;
 class MockAudioParameters
 {
     public:
-    using id_t = shrapnel::parameters::id_t;
     using MapType = std::map<id_t, std::unique_ptr<MockAudioParameterFloat>>;
 
     MOCK_METHOD(int, update, (id_t param, float value), ());
@@ -150,7 +153,7 @@ TEST_F(CmdHandling, ValidMessage)
                     Return(true)
                 ));
 
-    EXPECT_CALL(param, update("tight", 1.0f))
+    EXPECT_CALL(param, update(id_t("tight"), 1.0f))
         .Times(1)
         .WillRepeatedly(Return(0));
 
@@ -187,4 +190,6 @@ TEST_F(CmdHandling, InitialiseParameters)
     EXPECT_CALL(event, send(StrEq(message), -1)).Times(1);
 
     cmd.work();
+}
+
 }
