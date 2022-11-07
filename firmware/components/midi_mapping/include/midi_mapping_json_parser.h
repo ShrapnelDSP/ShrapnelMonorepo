@@ -2,6 +2,7 @@
 
 // Disable warning inside rapidjson
 // https://github.com/Tencent/rapidjson/issues/1700
+#include "audio_param.h"
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wclass-memaccess"
 #pragma GCC diagnostic ignored "-Wzero-as-null-pointer-constant"
@@ -67,46 +68,54 @@ class MappingApiMessageBuilder final {
             goto error;
         }
 
+        if(!document["messageType"].IsString()) {
+            ESP_LOGE(TAG, "messageType is not string");
+            goto error;
+        }
+
         {
             const char *message_type = document["messageType"].GetString();
 
             if(0 == strcmp(message_type, "MidiMap::get::request")) {
                 return GetRequest();
             }
-#if 0
-            else if(0 == strcmp(message_type, "MidiMap::create::request") {
-#if 0
-                if(!document.hasMember("mapping")) {
+            else if(0 == strcmp(message_type, "MidiMap::create::request")) {
+                if(!document.HasMember("mapping")) {
                     ESP_LOGE(TAG, "midi_channel is missing");
                     goto error;
                 }
 
-                auto &mapping = document.getObject();
+                auto mapping = document.GetObject();
 
-                if(!document.hasMember("midi_channel")) {
+                if(!document.HasMember("midi_channel")) {
                     ESP_LOGE(TAG, "midi_channel is missing");
                     goto error;
                 }
 
-                if(!document.hasMember("cc_number")) {
+                if(!document.HasMember("cc_number")) {
                     ESP_LOGE(TAG, "cc_number is missing");
                     goto error;
                 }
 
-                if(!document.hasMember("parameter_id")) {
+                if(!document.HasMember("parameter_id")) {
                     ESP_LOGE(TAG, "parameter_id is missing");
                     goto error;
                 }
 
 
-                return CreateRequest{{0},};
-#endif
+                //return CreateRequest{{{0}, {0, 0, Mapping::id_t("")}}};
+                return CreateRequest({
+                        Mapping::id_t{
+                            0, 1,  2,  3,  4,  5,  6,  7,
+                            8, 9, 10, 11, 12, 13, 14, 15
+                        },
+                        Mapping{1, 2, parameters::id_t("gain")}}
+                    );
             }
 
 #if 0
             if(0 == strcmp("MidiMap::update")
             if(0 == strcmp("MidiMap::remove")
-#endif
 #endif
         }
 

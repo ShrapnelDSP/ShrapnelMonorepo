@@ -83,8 +83,8 @@ TEST_F(MappingApiMessageTest, CreateRequest)
       "messageType": "MidiMap::create::request",
       "mapping": {
         "00010203-0405-0607-0809-0a0b0c0d0e0f": {
-          "midi_channel": 0,
-          "cc_number": 1,
+          "midi_channel": 1,
+          "cc_number": 2,
           "parameter_id": "gain"
         }
       }
@@ -93,6 +93,23 @@ TEST_F(MappingApiMessageTest, CreateRequest)
     auto result = sut.from_json(json);
 
     EXPECT_THAT(std::holds_alternative<std::monostate>(result), true);
+
+#if 0
+    CreateRequest({
+            Mapping::id_t{
+                0, 1,  2,  3,  4,  5,  6,  7,
+                8, 9, 10, 11, 12, 13, 14, 15
+            },
+            Mapping{1, 2, parameters::id_t("gain")}});
+#endif
 }
+
+// TODO a lot of the edge cases are not tested here. We need to test every
+// field in every message under these conditions:
+//
+// - The field is missing
+// - The field is present, but has the wrong type of value inside of it
+// - The field is present, and contains a value of the correct type that is out
+//   of range or invalid for the field
 
 }
