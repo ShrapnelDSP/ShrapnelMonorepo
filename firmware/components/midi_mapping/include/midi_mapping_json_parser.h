@@ -54,27 +54,33 @@ using MappingApiMessage = std::variant<std::monostate, GetRequest, GetResponse, 
 
 class MappingApiMessageBuilder final {
     public:
+
+    /** Convert the message into a object represting it.
+     *
+     * \return The output variant will contain \p std::monostate on an error.
+     */
     static MappingApiMessage from_json(const char *str) {
         rapidjson::Document document;
         document.Parse(str);
 
         if(document.HasParseError()) {
             ESP_LOGE(TAG, "failed to parse message");
-            goto error;
+            return std::monostate();
         }
 
-        if(!document.HasMember("messageType")) {
+        auto message_type_member = document.FindMember("messageType");
+        if(message_type_member == document.MemberEnd()) {
             ESP_LOGE(TAG, "messageType is missing");
             goto error;
         }
 
-        if(!document["messageType"].IsString()) {
+        if(!message_type_member->value.IsString()) {
             ESP_LOGE(TAG, "messageType is not string");
             goto error;
         }
 
         {
-            const char *message_type = document["messageType"].GetString();
+            const char *message_type = message_type_member->value.GetString();
 
             if(0 == strcmp(message_type, "MidiMap::get::request")) {
                 return GetRequest();
