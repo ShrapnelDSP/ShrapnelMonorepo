@@ -204,6 +204,8 @@ struct Mapping {
     ) : midi_channel{a_midi_channel},
         cc_number{a_cc_number},
         parameter_name{a_parameter_name} {};
+
+    std::strong_ordering operator<=>(const Mapping &other) const = default;
 };
 
 template<typename AudioParametersT, std::size_t N>

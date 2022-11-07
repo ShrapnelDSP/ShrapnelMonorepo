@@ -86,24 +86,44 @@ class MappingApiMessageBuilder final {
                 return GetRequest();
             }
             else if(0 == strcmp(message_type, "MidiMap::create::request")) {
-                if(!document.HasMember("mapping")) {
+                // TODO move this parser to a function
+                auto mapping_member = document.FindMember("mapping");
+                if(mapping_member == document.MemberEnd()) {
+                    ESP_LOGE(TAG, "mapping is missing");
+                    goto error;
+                }
+
+                auto &mapping = mapping_member->value;
+                if(!mapping.IsObject())
+                {
+                    ESP_LOGE(TAG, "mapping is not object");
+                    goto error;
+                }
+
+                // XXX There should be only one key, so we take the first one
+                //     and ignore the rest
+                auto mapping_entry_member = mapping.GetObject().begin();
+
+                if(mapping_entry_member == mapping.GetObject().end())
+                {
+                    ESP_LOGE(TAG, "mapping is empty");
+                    goto error;
+                }
+
+                //auto &mapping_id = mapping_entry_member->name;
+                auto &mapping_entry = mapping_entry_member->value;
+
+                if(!mapping_entry.HasMember("midi_channel")) {
                     ESP_LOGE(TAG, "midi_channel is missing");
                     goto error;
                 }
 
-                auto mapping = document.GetObject();
-
-                if(!document.HasMember("midi_channel")) {
-                    ESP_LOGE(TAG, "midi_channel is missing");
-                    goto error;
-                }
-
-                if(!document.HasMember("cc_number")) {
+                if(!mapping_entry.HasMember("cc_number")) {
                     ESP_LOGE(TAG, "cc_number is missing");
                     goto error;
                 }
 
-                if(!document.HasMember("parameter_id")) {
+                if(!mapping_entry.HasMember("parameter_id")) {
                     ESP_LOGE(TAG, "parameter_id is missing");
                     goto error;
                 }
@@ -113,7 +133,6 @@ class MappingApiMessageBuilder final {
                 return CreateRequest({
                         Mapping::id_t{
                             0, 1,  2,  3,  4,  5,  6,  7,
-                            8, 9, 10, 11, 12, 13, 14, 15
                         },
                         Mapping{1, 2, parameters::id_t("gain")}}
                     );

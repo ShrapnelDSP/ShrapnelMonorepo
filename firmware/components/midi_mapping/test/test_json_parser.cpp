@@ -1,5 +1,6 @@
 #include "gtest/gtest.h"
 #include "gmock/gmock.h"
+#include <bits/ranges_util.h>
 #include <variant>
 
 #include "midi_mapping_json_parser.h"
@@ -7,6 +8,7 @@
 namespace {
 
 using namespace shrapnel::midi;
+using namespace shrapnel;
 
 class MappingApiMessageTest : public ::testing::Test
 {
@@ -92,8 +94,22 @@ TEST_F(MappingApiMessageTest, CreateRequest)
 
     auto result = sut.from_json(json);
 
-    EXPECT_THAT(std::holds_alternative<std::monostate>(result), true);
+    EXPECT_THAT(std::holds_alternative<CreateRequest>(result), true);
 
+    if (auto message = std::get_if<CreateRequest>(&result)) {
+        auto expected = CreateRequest({
+            Mapping::id_t{
+                0, 1,  2,  3,  4,  5,  6,  7,
+                8, 9, 10, 11, 12, 13, 14, 15
+            },
+            Mapping{1, 2, parameters::id_t("gain")}});
+
+        // TODO need a custom matcher to get readable error output or at least
+        //      a stringify operator for the classes used here
+        EXPECT_THAT(*message, expected);
+    } else {
+        assert(false);
+    }
 #if 0
     CreateRequest({
             Mapping::id_t{
