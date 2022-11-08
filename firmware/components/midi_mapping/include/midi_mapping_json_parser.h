@@ -96,6 +96,10 @@ struct CreateRequest {
         return out;
     }
 
+    // TODO Is there any reason to use etl::optional over std::optional?
+    //
+    // std::optional is already required to not use dynamic allocation
+    // https://en.cppreference.com/w/cpp/utility/optional
     static etl::optional<CreateRequest> from_json(const rapidjson::Value &json)
     {
         if(!json.IsObject())
