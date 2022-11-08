@@ -6,7 +6,9 @@
 
 namespace {
 
+using namespace shrapnel;
 using namespace shrapnel::midi;
+
 using id_t = shrapnel::parameters::id_t;
 using ::testing::Not;
 
@@ -108,6 +110,17 @@ TEST_F(MidiMapping, Remove)
     sut.create({{1}, {1, 2, "gain"}});
     sut.remove({1});
     EXPECT_THAT(sut.get().size(), 0);
+}
+
+TEST(MidiMappingPod, ToString)
+{
+    auto mapping = Mapping(1, 2, parameters::id_t("test"));
+
+    etl::string<64> buffer;
+    etl::string_stream stream{buffer};
+    stream << mapping;
+
+    EXPECT_THAT(std::string(buffer.data()), "{ channel 1 cc number 2 name test }");
 }
 
 }
