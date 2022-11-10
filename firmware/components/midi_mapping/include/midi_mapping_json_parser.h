@@ -1,9 +1,10 @@
 #pragma once
 
-// Disable warning inside rapidjson
-// https://github.com/Tencent/rapidjson/issues/1700
 #include "audio_param.h"
 #include <cstring>
+
+// Disable warning inside rapidjson
+// https://github.com/Tencent/rapidjson/issues/1700
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wclass-memaccess"
 #pragma GCC diagnostic ignored "-Wzero-as-null-pointer-constant"
@@ -15,6 +16,7 @@
 
 #include "midi_mapping.h"
 #include <variant>
+#include <optional>
 
 namespace shrapnel {
 namespace midi {
@@ -96,16 +98,12 @@ struct CreateRequest {
         return out;
     }
 
-    // TODO Is there any reason to use etl::optional over std::optional?
-    //
-    // std::optional is already required to not use dynamic allocation
-    // https://en.cppreference.com/w/cpp/utility/optional
-    static etl::optional<CreateRequest> from_json(const rapidjson::Value &json)
+    static std::optional<CreateRequest> from_json(const rapidjson::Value &json)
     {
         if(!json.IsObject())
         {
             ESP_LOGE(TAG, "mapping is not object");
-            return etl::nullopt;
+            return std::nullopt;
         }
 
         // XXX There should be only one key, so we take the first one
@@ -115,7 +113,7 @@ struct CreateRequest {
         if(mapping_entry_member == json.GetObject().end())
         {
             ESP_LOGE(TAG, "mapping is empty");
-            return etl::nullopt;
+            return std::nullopt;
         }
 
         auto &mapping_id = mapping_entry_member->name;
@@ -124,19 +122,19 @@ struct CreateRequest {
         auto midi_channel = mapping_entry.FindMember("midi_channel");
         if(midi_channel == mapping_entry.MemberEnd()) {
             ESP_LOGE(TAG, "midi_channel is missing");
-            return etl::nullopt;
+            return std::nullopt;
         }
 
         auto cc_number = mapping_entry.FindMember("cc_number");
         if(cc_number == mapping_entry.MemberEnd()) {
             ESP_LOGE(TAG, "cc_number is missing");
-            return etl::nullopt;
+            return std::nullopt;
         }
 
         auto parameter_id = mapping_entry.FindMember("parameter_id");
         if(parameter_id == mapping_entry.MemberEnd()) {
             ESP_LOGE(TAG, "parameter_id is missing");
-            return etl::nullopt;
+            return std::nullopt;
         }
 
         // TODO range check before narrowing conversion to uint8_t
