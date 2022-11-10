@@ -185,6 +185,37 @@ TEST_F(MappingApiMessageTest, DISABLED_Update)
     }
 }
 
+#if 0
+TEST_F(MappingApiMessageTest, NotDocument)
+{
+    auto json = "2";
+
+    auto result = sut.from_json(json);
+
+    EXPECT_THAT(std::holds_alternative<std::monostate>(result), true);
+}
+#endif
+
+TEST_F(MappingApiMessageTest, FuzzerCrash0)
+{
+    auto json = R"("{
+    "m "Mi
+    "mag"
+ {
+    "009-0a0b0c0d0e0f": {
+    "midi_channel": 1,
+        "r": 2,
+    "para": ""
+        }
+    }
+})";
+
+    auto result = sut.from_json(json);
+
+    EXPECT_THAT(std::holds_alternative<std::monostate>(result), true);
+}
+
+
 // TODO a lot of the edge cases are not tested here. We need to test every
 // field in every message under these conditions:
 //
