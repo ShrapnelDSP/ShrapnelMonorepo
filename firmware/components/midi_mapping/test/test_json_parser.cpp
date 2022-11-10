@@ -194,6 +194,15 @@ TEST_F(MappingApiMessageTest, NotDocument)
     EXPECT_THAT(std::holds_alternative<std::monostate>(result), true);
 }
 
+TEST_F(MappingApiMessageTest, EmptyKeys)
+{
+    auto json = R"({"messageType":"MidiMap::create::request","mapping":{"":0,"":{"":0,"":0,"":""}}})";
+
+    auto result = sut.from_json(json);
+
+    EXPECT_THAT(std::holds_alternative<std::monostate>(result), true);
+}
+
 // TODO a lot of the edge cases are not tested here. We need to test every
 // field in every message under these conditions:
 //

@@ -119,9 +119,20 @@ struct CreateRequest {
         auto &mapping_id = mapping_entry_member->name;
         auto &mapping_entry = mapping_entry_member->value;
 
+        if(!mapping_entry.IsObject())
+        {
+            ESP_LOGE(TAG, "mapping entry is not object");
+            return std::nullopt;
+        }
+
         auto midi_channel = mapping_entry.FindMember("midi_channel");
         if(midi_channel == mapping_entry.MemberEnd()) {
             ESP_LOGE(TAG, "midi_channel is missing");
+            return std::nullopt;
+        }
+
+        if(!midi_channel->value.IsInt()) {
+            ESP_LOGE(TAG, "midi_channel is not int");
             return std::nullopt;
         }
 
@@ -131,9 +142,19 @@ struct CreateRequest {
             return std::nullopt;
         }
 
+        if(!cc_number->value.IsInt()) {
+            ESP_LOGE(TAG, "cc_number is not int");
+            return std::nullopt;
+        }
+
         auto parameter_id = mapping_entry.FindMember("parameter_id");
         if(parameter_id == mapping_entry.MemberEnd()) {
             ESP_LOGE(TAG, "parameter_id is missing");
+            return std::nullopt;
+        }
+
+        if(!parameter_id->value.IsString()) {
+            ESP_LOGE(TAG, "parameter_id is not string");
             return std::nullopt;
         }
 
