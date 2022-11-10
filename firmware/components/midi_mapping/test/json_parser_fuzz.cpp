@@ -5,12 +5,9 @@
 
 int main(int argc, char* argv[])
 {
-    std::string line;
-    while(std::getline(std::cin, line))
-    {
-        auto message = shrapnel::midi::MappingApiMessageBuilder::from_json(line.c_str());
-        std::cout << message.index() << std::endl;
-    }
-
+    std::string json;
+    std::getline(std::cin, json, '\0');
+    auto message = shrapnel::midi::MappingApiMessageBuilder::from_json(json.c_str());
+    std::cout << message.index() << std::endl;
     return 0;
 }

@@ -190,6 +190,12 @@ class MappingApiMessageBuilder final {
             return std::monostate();
         }
 
+        if(!document.IsObject())
+        {
+            ESP_LOGE(TAG, "document is not object");
+            return std::monostate();
+        }
+
         auto message_type_member = document.FindMember("messageType");
         if(message_type_member == document.MemberEnd()) {
             ESP_LOGE(TAG, "messageType is missing");
