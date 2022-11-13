@@ -30,13 +30,8 @@ std::optional<MappingApiMessage> parse_json(const char *json)
     rapidjson::Document document;
     document.Parse(json);
 
-    // TODO remove tests with invalid documents, and assert here
-    // We should use valid docuemnts for this test
-    if(document.HasParseError())
-    {
-        return std::nullopt;
-    }
-
+    assert(!document.HasParseError() && "Testing with invalid documents will "
+            "not excercise the function under test");
     return from_json<MappingApiMessage>(document);
 }
 
@@ -101,14 +96,6 @@ TEST_F(MappingApiMessageTest, MissingMessageType)
     auto json = R"({
         "hello": "world"
     })";
-
-    auto result = parse_json(json);
-    EXPECT_THAT(result.has_value(), false);
-}
-
-TEST_F(MappingApiMessageTest, InvalidInput)
-{
-    auto json = R"(invalid)";
 
     auto result = parse_json(json);
     EXPECT_THAT(result.has_value(), false);
