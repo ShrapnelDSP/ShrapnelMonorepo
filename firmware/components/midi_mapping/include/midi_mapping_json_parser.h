@@ -78,59 +78,6 @@ struct Update {
 
     std::strong_ordering operator<=>(const Update &other) const = default;
 
-    static std::optional<Update> from_json(const rapidjson::Value &json)
-    {
-        if(!json.IsObject())
-        {
-            ESP_LOGE(TAG, "mapping is not object");
-            return std::nullopt;
-        }
-
-        // XXX There should be only one key, so we take the first one
-        //     and ignore the rest
-        auto mapping_entry_member = json.GetObject().begin();
-
-        if(mapping_entry_member == json.GetObject().end())
-        {
-            ESP_LOGE(TAG, "mapping is empty");
-            return std::nullopt;
-        }
-
-        auto &mapping_id = mapping_entry_member->name;
-        auto &mapping_entry = mapping_entry_member->value;
-
-        auto midi_channel = mapping_entry.FindMember("midi_channel");
-        if(midi_channel == mapping_entry.MemberEnd()) {
-            ESP_LOGE(TAG, "midi_channel is missing");
-            return std::nullopt;
-        }
-
-        auto cc_number = mapping_entry.FindMember("cc_number");
-        if(cc_number == mapping_entry.MemberEnd()) {
-            ESP_LOGE(TAG, "cc_number is missing");
-            return std::nullopt;
-        }
-
-        auto parameter_id = mapping_entry.FindMember("parameter_id");
-        if(parameter_id == mapping_entry.MemberEnd()) {
-            ESP_LOGE(TAG, "parameter_id is missing");
-            return std::nullopt;
-        }
-
-        // TODO range check before narrowing conversion to uint8_t
-        auto out = Update({
-                Mapping::id_t{0},
-                Mapping{
-                static_cast<uint8_t>(midi_channel->value.GetInt()),
-                static_cast<uint8_t>(cc_number->value.GetInt()),
-                parameters::id_t(parameter_id->value.GetString())}}
-            );
-
-        parse_uuid(out.mapping.first, mapping_id.GetString());
-
-        return out;
-    }
-
     static constexpr char TAG[] = "Update";
 };
 
@@ -206,6 +153,13 @@ std::optional<CreateRequest> from_json(const rapidjson::Value &json)
     return CreateRequest(*mapping);
 }
 
+static std::optional<Update> from_json(const rapidjson::Value &json)
+{
+    auto mapping = from_json<std::pair<Mapping::id_t, Mapping>>(json);
+    return Update(*mapping);
+}
+
+
 /** Convert the message into a object representing it.
  *
  * \return The output variant will contain \p std::monostate on an error.
@@ -254,7 +208,7 @@ std::optional<MappingApiMessage> from_json(const rapidjson::Value &json) {
             }
 
             auto &mapping = mapping_member->value;
-            auto out = Update::from_json(mapping);
+            auto out = from_json(mapping);
             if(out.has_value())
             {
                 return *out;
