@@ -235,10 +235,10 @@ std::optional<MappingApiMessage> from_json(const rapidjson::Value &json) {
         };
 
         const etl::map<std::string, std::function<MappingApiMessage()>, 4> lut{
-            { "MidiMap::get::request", [&]{return MappingApiMessage(unwrap(from_json<GetRequest>(json)));} },
-            { "MidiMap::create::request", [&]{return MappingApiMessage(unwrap(from_json<CreateRequest>(json)));} },
-            { "MidiMap::update", [&]{return MappingApiMessage(unwrap(from_json<Update>(json)));} },
-            { "MidiMap::remove", [&]{return MappingApiMessage(unwrap(from_json<Remove>(json)));} },
+            { "MidiMap::get::request", [&]{return unwrap(from_json<GetRequest>(json));} },
+            { "MidiMap::create::request", [&]{return unwrap(from_json<CreateRequest>(json));} },
+            { "MidiMap::update", [&]{return unwrap(from_json<Update>(json));} },
+            { "MidiMap::remove", [&]{return unwrap(from_json<Remove>(json));} },
         };
 
         const char *message_type = message_type_member->value.GetString();
