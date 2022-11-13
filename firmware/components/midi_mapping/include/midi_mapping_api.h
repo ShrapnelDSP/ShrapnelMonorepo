@@ -42,7 +42,7 @@ struct Remove {
     std::strong_ordering operator<=>(const Remove &other) const = default;
 };
 
-using MappingApiMessage = std::variant<std::monostate, GetRequest, GetResponse, CreateRequest, CreateResponse, Update, Remove>;
+using MappingApiMessage = std::variant<GetRequest, GetResponse, CreateRequest, CreateResponse, Update, Remove>;
 
 }
 }

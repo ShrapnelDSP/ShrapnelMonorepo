@@ -19,17 +19,10 @@
 namespace shrapnel {
 namespace midi {
 
-// TODO move forward declarations to new headers
 int parse_uuid(Mapping::id_t &uuid, const char *string);
 
 template<typename T>
 std::optional<T> from_json(const rapidjson::Value &json);
-
-template<>
-std::optional<std::pair<Mapping::id_t, Mapping>> from_json(const rapidjson::Value &json);
-
-template<>
-std::optional<CreateRequest> from_json(const rapidjson::Value &json);
 
 template<>
 std::optional<GetRequest> from_json(const rapidjson::Value &json)
@@ -155,8 +148,6 @@ std::optional<Remove> from_json(const rapidjson::Value &json) {
 }
 
 /** Convert the message into a object representing it.
- *
- * \return The output variant will contain \p std::monostate on an error.
  */
 template<>
 std::optional<MappingApiMessage> from_json(const rapidjson::Value &json) {
@@ -174,21 +165,11 @@ std::optional<MappingApiMessage> from_json(const rapidjson::Value &json) {
     }
 
     {
-        auto unwrap = [&](auto opt) -> MappingApiMessage {
-            if(opt.has_value())
-            {
-                return *opt;
-            }
-            else {
-                return std::monostate();
-            }
-        };
-
-        const etl::map<std::string, std::function<MappingApiMessage()>, 4> lut{
-            { "MidiMap::get::request", [&]{return unwrap(from_json<GetRequest>(json));} },
-            { "MidiMap::create::request", [&]{return unwrap(from_json<CreateRequest>(json));} },
-            { "MidiMap::update", [&]{return unwrap(from_json<Update>(json));} },
-            { "MidiMap::remove", [&]{return unwrap(from_json<Remove>(json));} },
+        const etl::map<std::string, std::function<std::optional<MappingApiMessage>()>, 4> lut{
+            { "MidiMap::get::request", [&]{return from_json<GetRequest>(json);} },
+            { "MidiMap::create::request", [&]{return from_json<CreateRequest>(json);} },
+            { "MidiMap::update", [&]{return from_json<Update>(json);} },
+            { "MidiMap::remove", [&]{return from_json<Remove>(json);} },
         };
 
         const char *message_type = message_type_member->value.GetString();
@@ -200,7 +181,7 @@ std::optional<MappingApiMessage> from_json(const rapidjson::Value &json) {
     }
 
 error:
-    return std::monostate();
+    return std::nullopt;
 }
 
 /// return non-zero on error

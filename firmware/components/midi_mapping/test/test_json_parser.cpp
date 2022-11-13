@@ -25,8 +25,7 @@ namespace {
 using namespace shrapnel::midi;
 using namespace shrapnel;
 
-// TODO retrun std::optional, and remove the monostate from variant
-MappingApiMessage parse_json(const char *json)
+std::optional<MappingApiMessage> parse_json(const char *json)
 {
     rapidjson::Document document;
     document.Parse(json);
@@ -35,13 +34,10 @@ MappingApiMessage parse_json(const char *json)
     // We should use valid docuemnts for this test
     if(document.HasParseError())
     {
-        return std::monostate();
+        return std::nullopt;
     }
 
-    auto out = from_json<MappingApiMessage>(document);
-    // for now, there is always a value, because we use monostate to indicate error
-    assert(out.has_value());
-    return *out;
+    return from_json<MappingApiMessage>(document);
 }
 
 
@@ -76,8 +72,8 @@ TEST_F(MappingApiMessageTest, GetRequest)
     })";
 
     auto result = parse_json(json);
-
-    EXPECT_THAT(std::holds_alternative<GetRequest>(result), true);
+    EXPECT_THAT(result.has_value(), true);
+    EXPECT_THAT(std::holds_alternative<GetRequest>(*result), true);
 }
 
 TEST_F(MappingApiMessageTest, UnknownMessageType)
@@ -87,8 +83,7 @@ TEST_F(MappingApiMessageTest, UnknownMessageType)
     })";
 
     auto result = parse_json(json);
-
-    EXPECT_THAT(std::holds_alternative<std::monostate>(result), true);
+    EXPECT_THAT(result.has_value(), false);
 }
 
 TEST_F(MappingApiMessageTest, NotStringMessageType)
@@ -98,8 +93,7 @@ TEST_F(MappingApiMessageTest, NotStringMessageType)
     })";
 
     auto result = parse_json(json);
-
-    EXPECT_THAT(std::holds_alternative<std::monostate>(result), true);
+    EXPECT_THAT(result.has_value(), false);
 }
 
 TEST_F(MappingApiMessageTest, MissingMessageType)
@@ -109,8 +103,7 @@ TEST_F(MappingApiMessageTest, MissingMessageType)
     })";
 
     auto result = parse_json(json);
-
-    EXPECT_THAT(std::holds_alternative<std::monostate>(result), true);
+    EXPECT_THAT(result.has_value(), false);
 }
 
 TEST_F(MappingApiMessageTest, InvalidInput)
@@ -118,8 +111,7 @@ TEST_F(MappingApiMessageTest, InvalidInput)
     auto json = R"(invalid)";
 
     auto result = parse_json(json);
-
-    EXPECT_THAT(std::holds_alternative<std::monostate>(result), true);
+    EXPECT_THAT(result.has_value(), false);
 }
 
 TEST_F(MappingApiMessageTest, CreateRequest)
@@ -136,10 +128,10 @@ TEST_F(MappingApiMessageTest, CreateRequest)
     })";
 
     auto result = parse_json(json);
+    EXPECT_THAT(result.has_value(), true);
+    EXPECT_THAT(std::holds_alternative<CreateRequest>(*result), true);
 
-    EXPECT_THAT(std::holds_alternative<CreateRequest>(result), true);
-
-    if (auto message = std::get_if<CreateRequest>(&result)) {
+    if (auto message = std::get_if<CreateRequest>(&(*result))) {
         auto expected = CreateRequest({
             Mapping::id_t{
                 0, 1,  2,  3,  4,  5,  6,  7,
@@ -167,10 +159,10 @@ TEST_F(MappingApiMessageTest, Update)
     })";
 
     auto result = parse_json(json);
+    EXPECT_THAT(result.has_value(), true);
+    EXPECT_THAT(std::holds_alternative<Update>(*result), true);
 
-    EXPECT_THAT(std::holds_alternative<Update>(result), true);
-
-    if (auto message = std::get_if<Update>(&result)) {
+    if (auto message = std::get_if<Update>(&(*result))) {
         auto expected = Update({
             Mapping::id_t{
                 0, 1,  2,  3,  4,  5,  6,  7,
@@ -192,10 +184,10 @@ TEST_F(MappingApiMessageTest, Remove)
     })";
 
     auto result = parse_json(json);
+    EXPECT_THAT(result.has_value(), true);
+    EXPECT_THAT(std::holds_alternative<Remove>(*result), true);
 
-    EXPECT_THAT(std::holds_alternative<Remove>(result), true);
-
-    if (auto message = std::get_if<Remove>(&result)) {
+    if (auto message = std::get_if<Remove>(&(*result))) {
         auto expected = Remove(Mapping::id_t{
                 0, 1,  2,  3,  4,  5,  6,  7,
                 8, 9, 10, 11, 12, 13, 14, 15
