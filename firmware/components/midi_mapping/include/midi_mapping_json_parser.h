@@ -80,6 +80,66 @@ int parse_uuid(Mapping::id_t &uuid, const char *string)
     return 0;
 }
 
+template<typename T>
+std::optional<T> from_json(const rapidjson::Value &json);
+
+template<>
+std::optional<std::pair<Mapping::id_t, Mapping>> from_json(const rapidjson::Value &json)
+{
+    constexpr char TAG[] = "pair<mapping::id, mapping> from_json";
+
+    if(!json.IsObject())
+    {
+        ESP_LOGE(TAG, "mapping is not object");
+        return std::nullopt;
+    }
+
+    // XXX There should be only one key, so we take the first one
+    //     and ignore the rest
+    auto mapping_entry_member = json.GetObject().begin();
+
+    if(mapping_entry_member == json.GetObject().end())
+    {
+        ESP_LOGE(TAG, "mapping is empty");
+        return std::nullopt;
+    }
+
+    auto &mapping_id = mapping_entry_member->name;
+    auto &mapping_entry = mapping_entry_member->value;
+
+    // TODO extract function: MidiMapping::from_json
+    auto midi_channel = mapping_entry.FindMember("midi_channel");
+    if(midi_channel == mapping_entry.MemberEnd()) {
+        ESP_LOGE(TAG, "midi_channel is missing");
+        return std::nullopt;
+    }
+
+    auto cc_number = mapping_entry.FindMember("cc_number");
+    if(cc_number == mapping_entry.MemberEnd()) {
+        ESP_LOGE(TAG, "cc_number is missing");
+        return std::nullopt;
+    }
+
+    auto parameter_id = mapping_entry.FindMember("parameter_id");
+    if(parameter_id == mapping_entry.MemberEnd()) {
+        ESP_LOGE(TAG, "parameter_id is missing");
+        return std::nullopt;
+    }
+
+    // TODO range check before narrowing conversion to uint8_t
+    std::pair<Mapping::id_t, Mapping> out{
+            Mapping::id_t{0},
+            Mapping{
+                static_cast<uint8_t>(midi_channel->value.GetInt()),
+                static_cast<uint8_t>(cc_number->value.GetInt()),
+                parameters::id_t(parameter_id->value.GetString())
+            }
+    };
+
+    parse_uuid(out.first, mapping_id.GetString());
+    return out;
+}
+
 struct GetRequest {};
 
 struct GetResponse {
@@ -99,57 +159,11 @@ struct CreateRequest {
         return out;
     }
 
-    static std::optional<CreateRequest> from_json(const rapidjson::Value &json)
+    static std::optional<CreateRequest> bad_from_json(const rapidjson::Value &json)
     {
-        if(!json.IsObject())
-        {
-            ESP_LOGE(TAG, "mapping is not object");
-            return std::nullopt;
-        }
+        auto mapping = from_json<std::pair<Mapping::id_t, Mapping>>(json);
 
-        // XXX There should be only one key, so we take the first one
-        //     and ignore the rest
-        auto mapping_entry_member = json.GetObject().begin();
-
-        if(mapping_entry_member == json.GetObject().end())
-        {
-            ESP_LOGE(TAG, "mapping is empty");
-            return std::nullopt;
-        }
-
-        auto &mapping_id = mapping_entry_member->name;
-        auto &mapping_entry = mapping_entry_member->value;
-
-        auto midi_channel = mapping_entry.FindMember("midi_channel");
-        if(midi_channel == mapping_entry.MemberEnd()) {
-            ESP_LOGE(TAG, "midi_channel is missing");
-            return std::nullopt;
-        }
-
-        auto cc_number = mapping_entry.FindMember("cc_number");
-        if(cc_number == mapping_entry.MemberEnd()) {
-            ESP_LOGE(TAG, "cc_number is missing");
-            return std::nullopt;
-        }
-
-        auto parameter_id = mapping_entry.FindMember("parameter_id");
-        if(parameter_id == mapping_entry.MemberEnd()) {
-            ESP_LOGE(TAG, "parameter_id is missing");
-            return std::nullopt;
-        }
-
-        // TODO range check before narrowing conversion to uint8_t
-        auto out = CreateRequest({
-                Mapping::id_t{0},
-                Mapping{
-                static_cast<uint8_t>(midi_channel->value.GetInt()),
-                static_cast<uint8_t>(cc_number->value.GetInt()),
-                parameters::id_t(parameter_id->value.GetString())}}
-            );
-
-        parse_uuid(out.mapping.first, mapping_id.GetString());
-
-        return out;
+        return CreateRequest(*mapping);
     }
 
     static constexpr char TAG[] = "CreateRequest";
@@ -271,7 +285,7 @@ class MappingApiMessageBuilder final {
                 }
 
                 auto &mapping = mapping_member->value;
-                auto out = CreateRequest::from_json(mapping);
+                auto out = CreateRequest::bad_from_json(mapping);
                 if(out.has_value())
                 {
                     return *out;
