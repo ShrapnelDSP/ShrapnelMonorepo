@@ -1,8 +1,5 @@
 #pragma once
 
-// TODO move the message structs to another file
-
-#include "audio_param.h"
 #include <cstring>
 
 // Disable warning inside rapidjson
@@ -16,8 +13,7 @@
 #include "rapidjson/writer.h"
 #pragma GCC diagnostic pop
 
-#include "midi_mapping.h"
-#include <variant>
+#include "midi_mapping_api.h"
 #include <optional>
 
 namespace shrapnel {
@@ -32,62 +28,8 @@ std::optional<T> from_json(const rapidjson::Value &json);
 template<>
 std::optional<std::pair<Mapping::id_t, Mapping>> from_json(const rapidjson::Value &json);
 
-class CreateRequest;
-
 template<>
 std::optional<CreateRequest> from_json(const rapidjson::Value &json);
-
-// TODO move implementations to a stream utility file
-template<typename T1, typename T2>
-etl::string_stream& operator<<(etl::string_stream& out, const std::pair<T1, T2>& pair);
-
-template<typename T, std::size_t MAX_SIZE>
-etl::string_stream& operator<<(etl::string_stream& out, const std::array<T, MAX_SIZE>& array);
-
-
-struct GetRequest {};
-
-struct GetResponse {
-    //etl::imap mappings,
-
-    std::strong_ordering operator<=>(const GetResponse &other) const = default;
-};
-
-struct CreateRequest {
-    std::pair<Mapping::id_t, Mapping> mapping;
-
-    std::strong_ordering operator<=>(const CreateRequest &other) const = default;
-
-    // TODO prefer free function STL style over tightly coupled members
-    friend etl::string_stream& operator<<(etl::string_stream&  out, const CreateRequest& self) {
-        out << "{ " << self.mapping << " }";
-        return out;
-    }
-
-    static constexpr char TAG[] = "CreateRequest";
-};
-
-struct CreateResponse {
-    std::pair<Mapping::id_t, Mapping> mapping;
-
-    std::strong_ordering operator<=>(const CreateResponse &other) const = default;
-};
-
-struct Update {
-    std::pair<Mapping::id_t, Mapping> mapping;
-
-    std::strong_ordering operator<=>(const Update &other) const = default;
-
-    static constexpr char TAG[] = "Update";
-};
-
-struct Remove {
-    Mapping::id_t id;
-
-    std::strong_ordering operator<=>(const Remove &other) const = default;
-};
-
-using MappingApiMessage = std::variant<std::monostate, GetRequest, GetResponse, CreateRequest, CreateResponse, Update, Remove>;
 
 template<>
 std::optional<GetRequest> from_json(const rapidjson::Value &json)
