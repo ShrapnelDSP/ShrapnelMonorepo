@@ -76,7 +76,7 @@ TEST_F(MappingApiMessageTest, GetRequest)
       "messageType": "MidiMap::get::request"
     })";
 
-    auto result = sut.from_json(json);
+    auto result = sut.bad_from_json(json);
 
     EXPECT_THAT(std::holds_alternative<GetRequest>(result), true);
 }
@@ -87,7 +87,7 @@ TEST_F(MappingApiMessageTest, UnknownMessageType)
       "messageType": "unknown"
     })";
 
-    auto result = sut.from_json(json);
+    auto result = sut.bad_from_json(json);
 
     EXPECT_THAT(std::holds_alternative<std::monostate>(result), true);
 }
@@ -98,7 +98,7 @@ TEST_F(MappingApiMessageTest, NotStringMessageType)
       "messageType": 42
     })";
 
-    auto result = sut.from_json(json);
+    auto result = sut.bad_from_json(json);
 
     EXPECT_THAT(std::holds_alternative<std::monostate>(result), true);
 }
@@ -109,7 +109,7 @@ TEST_F(MappingApiMessageTest, MissingMessageType)
         "hello": "world"
     })";
 
-    auto result = sut.from_json(json);
+    auto result = sut.bad_from_json(json);
 
     EXPECT_THAT(std::holds_alternative<std::monostate>(result), true);
 }
@@ -118,7 +118,7 @@ TEST_F(MappingApiMessageTest, InvalidInput)
 {
     auto json = R"(invalid)";
 
-    auto result = sut.from_json(json);
+    auto result = sut.bad_from_json(json);
 
     EXPECT_THAT(std::holds_alternative<std::monostate>(result), true);
 }
@@ -136,7 +136,7 @@ TEST_F(MappingApiMessageTest, CreateRequest)
       }
     })";
 
-    auto result = sut.from_json(json);
+    auto result = sut.bad_from_json(json);
 
     EXPECT_THAT(std::holds_alternative<CreateRequest>(result), true);
 
@@ -167,7 +167,7 @@ TEST_F(MappingApiMessageTest, Update)
       }
     })";
 
-    auto result = sut.from_json(json);
+    auto result = sut.bad_from_json(json);
 
     EXPECT_THAT(std::holds_alternative<Update>(result), true);
 
@@ -192,7 +192,7 @@ TEST_F(MappingApiMessageTest, Remove)
       "id": "00010203-0405-0607-0809-0a0b0c0d0e0f"
     })";
 
-    auto result = sut.from_json(json);
+    auto result = sut.bad_from_json(json);
 
     EXPECT_THAT(std::holds_alternative<Remove>(result), true);
 
