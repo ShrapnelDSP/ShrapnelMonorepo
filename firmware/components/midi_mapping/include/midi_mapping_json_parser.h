@@ -90,6 +90,13 @@ struct Remove {
 using MappingApiMessage = std::variant<std::monostate, GetRequest, GetResponse, CreateRequest, CreateResponse, Update, Remove>;
 
 template<>
+std::optional<GetRequest> from_json(const rapidjson::Value &json)
+{
+    (void) json;
+    return GetRequest();
+}
+
+template<>
 std::optional<std::pair<Mapping::id_t, Mapping>> from_json(const rapidjson::Value &json)
 {
     constexpr char TAG[] = "pair<mapping::id, mapping> from_json";
@@ -149,16 +156,53 @@ std::optional<std::pair<Mapping::id_t, Mapping>> from_json(const rapidjson::Valu
 template<>
 std::optional<CreateRequest> from_json(const rapidjson::Value &json)
 {
-    auto mapping = from_json<std::pair<Mapping::id_t, Mapping>>(json);
+    constexpr char TAG[] = "Update from_json";
+
+    auto mapping_member = json.FindMember("mapping");
+    if(mapping_member == json.MemberEnd()) {
+        ESP_LOGE(TAG, "mapping is missing");
+        return std::nullopt;
+    }
+
+    auto mapping = from_json<std::pair<Mapping::id_t, Mapping>>(mapping_member->value);
     return CreateRequest(*mapping);
 }
 
-static std::optional<Update> from_json(const rapidjson::Value &json)
+template<>
+std::optional<Update> from_json(const rapidjson::Value &json)
 {
-    auto mapping = from_json<std::pair<Mapping::id_t, Mapping>>(json);
+    constexpr char TAG[] = "Update from_json";
+
+    auto mapping_member = json.FindMember("mapping");
+    if(mapping_member == json.MemberEnd()) {
+        ESP_LOGE(TAG, "mapping is missing");
+        return std::nullopt;
+    }
+
+    auto mapping = from_json<std::pair<Mapping::id_t, Mapping>>(mapping_member->value);
     return Update(*mapping);
 }
 
+template<>
+std::optional<Remove> from_json(const rapidjson::Value &json) {
+    constexpr char TAG[] = "Remove from_json";
+
+    auto id_member = json.FindMember("id");
+    if(id_member == json.MemberEnd()) {
+        ESP_LOGE(TAG, "id is missing");
+        return std::nullopt;
+    }
+
+    Mapping::id_t uuid{};
+    int rc = parse_uuid(uuid, id_member->value.GetString());
+    if(rc != 0)
+    {
+        ESP_LOGE(TAG, "Failed to parse UUID");
+        return std::nullopt;
+    }
+
+    return Remove(uuid);
+}
 
 /** Convert the message into a object representing it.
  *
@@ -183,17 +227,16 @@ std::optional<MappingApiMessage> from_json(const rapidjson::Value &json) {
         const char *message_type = message_type_member->value.GetString();
 
         if(0 == strcmp(message_type, "MidiMap::get::request")) {
-            return GetRequest();
-        }
-        else if(0 == strcmp(message_type, "MidiMap::create::request")) {
-            auto mapping_member = json.FindMember("mapping");
-            if(mapping_member == json.MemberEnd()) {
-                ESP_LOGE(TAG, "mapping is missing");
-                goto error;
+            auto out = from_json<GetRequest>(json);
+            if(out.has_value())
+            {
+                return *out;
             }
 
-            auto &mapping = mapping_member->value;
-            auto out = from_json<CreateRequest>(mapping);
+            return std::monostate();
+        }
+        else if(0 == strcmp(message_type, "MidiMap::create::request")) {
+            auto out = from_json<CreateRequest>(json);
             if(out.has_value())
             {
                 return *out;
@@ -201,14 +244,7 @@ std::optional<MappingApiMessage> from_json(const rapidjson::Value &json) {
 
             return std::monostate();
         } else if(0 == strcmp(message_type, "MidiMap::update")) {
-            auto mapping_member = json.FindMember("mapping");
-            if(mapping_member == json.MemberEnd()) {
-                ESP_LOGE(TAG, "mapping is missing");
-                goto error;
-            }
-
-            auto &mapping = mapping_member->value;
-            auto out = from_json(mapping);
+            auto out = from_json<Update>(json);
             if(out.has_value())
             {
                 return *out;
@@ -216,28 +252,19 @@ std::optional<MappingApiMessage> from_json(const rapidjson::Value &json) {
 
             return std::monostate();
         } else if(0 == strcmp(message_type, "MidiMap::remove")) {
-            auto id_member = json.FindMember("id");
-            if(id_member == json.MemberEnd()) {
-                ESP_LOGE(TAG, "id is missing");
-                goto error;
-            }
-
-            Mapping::id_t uuid{};
-            int rc = parse_uuid(uuid, id_member->value.GetString());
-            if(rc != 0)
+            auto out = from_json<Remove>(json);
+            if(out.has_value())
             {
-                ESP_LOGE(TAG, "Failed to parse UUID");
-                goto error;
+                return *out;
             }
 
-            return Remove(uuid);
+            return std::monostate();
         }
     }
 
 error:
     return std::monostate();
 }
-
 
 /// return non-zero on error
 int parse_uuid(Mapping::id_t &uuid, const char *string)
