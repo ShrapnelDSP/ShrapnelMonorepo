@@ -154,7 +154,7 @@ TEST_F(MappingApiMessageTest, CreateRequest)
     }
 }
 
-TEST_F(MappingApiMessageTest, DISABLED_Update)
+TEST_F(MappingApiMessageTest, Update)
 {
     auto json = R"({
       "messageType": "MidiMap::update",

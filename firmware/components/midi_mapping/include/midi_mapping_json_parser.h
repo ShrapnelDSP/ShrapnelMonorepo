@@ -93,6 +93,7 @@ struct CreateRequest {
 
     std::strong_ordering operator<=>(const CreateRequest &other) const = default;
 
+    // TODO prefer free function STL style over tightly coupled members
     friend etl::string_stream& operator<<(etl::string_stream&  out, const CreateRequest& self) {
         out << "{ " << self.mapping << " }";
         return out;
@@ -164,6 +165,61 @@ struct Update {
     std::pair<Mapping::id_t, Mapping> mapping;
 
     std::strong_ordering operator<=>(const Update &other) const = default;
+
+    static std::optional<Update> from_json(const rapidjson::Value &json)
+    {
+        if(!json.IsObject())
+        {
+            ESP_LOGE(TAG, "mapping is not object");
+            return std::nullopt;
+        }
+
+        // XXX There should be only one key, so we take the first one
+        //     and ignore the rest
+        auto mapping_entry_member = json.GetObject().begin();
+
+        if(mapping_entry_member == json.GetObject().end())
+        {
+            ESP_LOGE(TAG, "mapping is empty");
+            return std::nullopt;
+        }
+
+        auto &mapping_id = mapping_entry_member->name;
+        auto &mapping_entry = mapping_entry_member->value;
+
+        auto midi_channel = mapping_entry.FindMember("midi_channel");
+        if(midi_channel == mapping_entry.MemberEnd()) {
+            ESP_LOGE(TAG, "midi_channel is missing");
+            return std::nullopt;
+        }
+
+        auto cc_number = mapping_entry.FindMember("cc_number");
+        if(cc_number == mapping_entry.MemberEnd()) {
+            ESP_LOGE(TAG, "cc_number is missing");
+            return std::nullopt;
+        }
+
+        auto parameter_id = mapping_entry.FindMember("parameter_id");
+        if(parameter_id == mapping_entry.MemberEnd()) {
+            ESP_LOGE(TAG, "parameter_id is missing");
+            return std::nullopt;
+        }
+
+        // TODO range check before narrowing conversion to uint8_t
+        auto out = Update({
+                Mapping::id_t{0},
+                Mapping{
+                static_cast<uint8_t>(midi_channel->value.GetInt()),
+                static_cast<uint8_t>(cc_number->value.GetInt()),
+                parameters::id_t(parameter_id->value.GetString())}}
+            );
+
+        parse_uuid(out.mapping.first, mapping_id.GetString());
+
+        return out;
+    }
+
+    static constexpr char TAG[] = "Update";
 };
 
 struct Remove {
@@ -216,6 +272,21 @@ class MappingApiMessageBuilder final {
 
                 auto &mapping = mapping_member->value;
                 auto out = CreateRequest::from_json(mapping);
+                if(out.has_value())
+                {
+                    return *out;
+                }
+
+                return std::monostate();
+            } else if(0 == strcmp(message_type, "MidiMap::update")) {
+                auto mapping_member = document.FindMember("mapping");
+                if(mapping_member == document.MemberEnd()) {
+                    ESP_LOGE(TAG, "mapping is missing");
+                    goto error;
+                }
+
+                auto &mapping = mapping_member->value;
+                auto out = Update::from_json(mapping);
                 if(out.has_value())
                 {
                     return *out;
