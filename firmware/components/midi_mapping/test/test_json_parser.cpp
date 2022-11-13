@@ -44,6 +44,26 @@ namespace {
 using namespace shrapnel::midi;
 using namespace shrapnel;
 
+// TODO retrun std::optional, and remove the monostate from variant
+MappingApiMessage parse_json(const char *json)
+{
+    rapidjson::Document document;
+    document.Parse(json);
+
+    // TODO remove tests with invalid documents, and assert here
+    // We should use valid docuemnts for this test
+    if(document.HasParseError())
+    {
+        return std::monostate();
+    }
+
+    auto out = from_json<MappingApiMessage>(document);
+    // for now, there is always a value, because we use monostate to indicate error
+    assert(out.has_value());
+    return *out;
+}
+
+
 #if 0
 std::ostream& operator <<(std::ostream& out, const CreateRequest& message)
 {
@@ -59,9 +79,7 @@ class MappingApiMessageTest : public ::testing::Test
 {
     protected:
 
-    MappingApiMessageTest() : sut() {}
-
-    MappingApiMessageBuilder sut;
+    MappingApiMessageTest() {}
 };
 
 // Test plan
@@ -76,7 +94,7 @@ TEST_F(MappingApiMessageTest, GetRequest)
       "messageType": "MidiMap::get::request"
     })";
 
-    auto result = sut.bad_from_json(json);
+    auto result = parse_json(json);
 
     EXPECT_THAT(std::holds_alternative<GetRequest>(result), true);
 }
@@ -87,7 +105,7 @@ TEST_F(MappingApiMessageTest, UnknownMessageType)
       "messageType": "unknown"
     })";
 
-    auto result = sut.bad_from_json(json);
+    auto result = parse_json(json);
 
     EXPECT_THAT(std::holds_alternative<std::monostate>(result), true);
 }
@@ -98,7 +116,7 @@ TEST_F(MappingApiMessageTest, NotStringMessageType)
       "messageType": 42
     })";
 
-    auto result = sut.bad_from_json(json);
+    auto result = parse_json(json);
 
     EXPECT_THAT(std::holds_alternative<std::monostate>(result), true);
 }
@@ -109,7 +127,7 @@ TEST_F(MappingApiMessageTest, MissingMessageType)
         "hello": "world"
     })";
 
-    auto result = sut.bad_from_json(json);
+    auto result = parse_json(json);
 
     EXPECT_THAT(std::holds_alternative<std::monostate>(result), true);
 }
@@ -118,7 +136,7 @@ TEST_F(MappingApiMessageTest, InvalidInput)
 {
     auto json = R"(invalid)";
 
-    auto result = sut.bad_from_json(json);
+    auto result = parse_json(json);
 
     EXPECT_THAT(std::holds_alternative<std::monostate>(result), true);
 }
@@ -136,7 +154,7 @@ TEST_F(MappingApiMessageTest, CreateRequest)
       }
     })";
 
-    auto result = sut.bad_from_json(json);
+    auto result = parse_json(json);
 
     EXPECT_THAT(std::holds_alternative<CreateRequest>(result), true);
 
@@ -167,7 +185,7 @@ TEST_F(MappingApiMessageTest, Update)
       }
     })";
 
-    auto result = sut.bad_from_json(json);
+    auto result = parse_json(json);
 
     EXPECT_THAT(std::holds_alternative<Update>(result), true);
 
@@ -192,7 +210,7 @@ TEST_F(MappingApiMessageTest, Remove)
       "id": "00010203-0405-0607-0809-0a0b0c0d0e0f"
     })";
 
-    auto result = sut.bad_from_json(json);
+    auto result = parse_json(json);
 
     EXPECT_THAT(std::holds_alternative<Remove>(result), true);
 
