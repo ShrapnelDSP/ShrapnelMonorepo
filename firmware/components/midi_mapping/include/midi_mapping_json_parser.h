@@ -226,6 +226,47 @@ std::optional<MappingApiMessage> from_json(const rapidjson::Value &json) {
     {
         const char *message_type = message_type_member->value.GetString();
 
+        using functionType = std::function<MappingApiMessage()>;
+        std::map<std::string, functionType> lut;
+
+        auto unwrap = [&](auto opt) -> MappingApiMessage {
+            if(opt.has_value())
+            {
+                return *opt;
+            }
+            else {
+                return std::monostate();
+            }
+        };
+
+        lut.emplace(
+                std::make_pair(std::string("MidiMap::get::request"),
+                               functionType([&]{return MappingApiMessage(unwrap(from_json<GetRequest>(json)));})
+                )
+        );
+        lut.emplace(
+                std::make_pair(std::string("MidiMap::create::request"),
+                               functionType([&]{return MappingApiMessage(unwrap(from_json<CreateRequest>(json)));})
+                )
+        );
+        lut.emplace(
+                std::make_pair(std::string("MidiMap::update"),
+                               functionType([&]{return MappingApiMessage(unwrap(from_json<Update>(json)));})
+                )
+        );
+        lut.emplace(
+                std::make_pair(std::string("MidiMap::remove"),
+                               functionType([&]{return MappingApiMessage(unwrap(from_json<Remove>(json)));})
+                )
+        );
+
+        if(auto f = lut.find(message_type); f != lut.end())
+        {
+            ESP_LOGI(TAG, "found %s", message_type);
+            return f->second();
+        }
+
+#if 0
         if(0 == strcmp(message_type, "MidiMap::get::request")) {
             auto out = from_json<GetRequest>(json);
             if(out.has_value())
@@ -260,6 +301,7 @@ std::optional<MappingApiMessage> from_json(const rapidjson::Value &json) {
 
             return std::monostate();
         }
+#endif
     }
 
 error:
