@@ -185,6 +185,29 @@ TEST_F(MappingApiMessageTest, Update)
     }
 }
 
+TEST_F(MappingApiMessageTest, Remove)
+{
+    auto json = R"({
+      "messageType": "MidiMap::remove",
+      "id": "00010203-0405-0607-0809-0a0b0c0d0e0f"
+    })";
+
+    auto result = sut.from_json(json);
+
+    EXPECT_THAT(std::holds_alternative<Remove>(result), true);
+
+    if (auto message = std::get_if<Remove>(&result)) {
+        auto expected = Remove(Mapping::id_t{
+                0, 1,  2,  3,  4,  5,  6,  7,
+                8, 9, 10, 11, 12, 13, 14, 15
+            });
+
+        EXPECT_THAT(*message, expected);
+    } else {
+        assert(false);
+    }
+}
+
 // TODO a lot of the edge cases are not tested here. We need to test every
 // field in every message under these conditions:
 //

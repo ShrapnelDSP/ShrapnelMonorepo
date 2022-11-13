@@ -293,12 +293,23 @@ class MappingApiMessageBuilder final {
                 }
 
                 return std::monostate();
-            }
+            } else if(0 == strcmp(message_type, "MidiMap::remove")) {
+                auto id_member = document.FindMember("id");
+                if(id_member == document.MemberEnd()) {
+                    ESP_LOGE(TAG, "id is missing");
+                    goto error;
+                }
 
-#if 0
-            if(0 == strcmp("MidiMap::update")
-            if(0 == strcmp("MidiMap::remove")
-#endif
+                Mapping::id_t uuid{};
+                int rc = parse_uuid(uuid, id_member->value.GetString());
+                if(rc != 0)
+                {
+                    ESP_LOGE(TAG, "Failed to parse UUID");
+                    goto error;
+                }
+
+                return Remove(uuid);
+            }
         }
 
 error:
