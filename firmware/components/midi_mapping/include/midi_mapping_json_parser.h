@@ -97,6 +97,36 @@ std::optional<GetRequest> from_json(const rapidjson::Value &json)
 }
 
 template<>
+std::optional<Mapping> from_json(const rapidjson::Value &json)
+{
+    constexpr char TAG[] = "Mapping from_json";
+    auto midi_channel = json.FindMember("midi_channel");
+    if(midi_channel == json.MemberEnd()) {
+        ESP_LOGE(TAG, "midi_channel is missing");
+        return std::nullopt;
+    }
+
+    auto cc_number = json.FindMember("cc_number");
+    if(cc_number == json.MemberEnd()) {
+        ESP_LOGE(TAG, "cc_number is missing");
+        return std::nullopt;
+    }
+
+    auto parameter_id = json.FindMember("parameter_id");
+    if(parameter_id == json.MemberEnd()) {
+        ESP_LOGE(TAG, "parameter_id is missing");
+        return std::nullopt;
+    }
+
+    // TODO range check before narrowing conversion to uint8_t
+    return Mapping{
+        static_cast<uint8_t>(midi_channel->value.GetInt()),
+        static_cast<uint8_t>(cc_number->value.GetInt()),
+        parameters::id_t(parameter_id->value.GetString())
+    };
+}
+
+template<>
 std::optional<std::pair<Mapping::id_t, Mapping>> from_json(const rapidjson::Value &json)
 {
     constexpr char TAG[] = "pair<mapping::id, mapping> from_json";
@@ -120,35 +150,13 @@ std::optional<std::pair<Mapping::id_t, Mapping>> from_json(const rapidjson::Valu
     auto &mapping_id = mapping_entry_member->name;
     auto &mapping_entry = mapping_entry_member->value;
 
-    // TODO extract function: MidiMapping::from_json
-    auto midi_channel = mapping_entry.FindMember("midi_channel");
-    if(midi_channel == mapping_entry.MemberEnd()) {
-        ESP_LOGE(TAG, "midi_channel is missing");
+    auto mapping = from_json<Mapping>(mapping_entry);
+
+    if(!mapping.has_value()) {
         return std::nullopt;
     }
 
-    auto cc_number = mapping_entry.FindMember("cc_number");
-    if(cc_number == mapping_entry.MemberEnd()) {
-        ESP_LOGE(TAG, "cc_number is missing");
-        return std::nullopt;
-    }
-
-    auto parameter_id = mapping_entry.FindMember("parameter_id");
-    if(parameter_id == mapping_entry.MemberEnd()) {
-        ESP_LOGE(TAG, "parameter_id is missing");
-        return std::nullopt;
-    }
-
-    // TODO range check before narrowing conversion to uint8_t
-    std::pair<Mapping::id_t, Mapping> out{
-            Mapping::id_t{0},
-            Mapping{
-                static_cast<uint8_t>(midi_channel->value.GetInt()),
-                static_cast<uint8_t>(cc_number->value.GetInt()),
-                parameters::id_t(parameter_id->value.GetString())
-            }
-    };
-
+    std::pair<Mapping::id_t, Mapping> out{ Mapping::id_t{0}, *mapping };
     parse_uuid(out.first, mapping_id.GetString());
     return out;
 }
