@@ -1,6 +1,7 @@
 if(NOT DEFINED TESTING)
     idf_component_register(SRCS src/midi_mapping.cpp
                                 src/midi_mapping_json_parser.cpp
+                                src/midi_mapping_json_builder.cpp
                            INCLUDE_DIRS include
                            REQUIRES etl audio_param midi rapidjson
                            PRIV_REQUIRES compiler_warning_flags)
@@ -8,6 +9,7 @@ else()
     add_executable(midi_mapping_test
                    src/midi_mapping.cpp
                    src/midi_mapping_json_parser.cpp
+                   src/midi_mapping_json_builder.cpp
                    test/test_midi_mapping.cpp
                    test/test_json_parser.cpp
                    test/test_json_builder.cpp

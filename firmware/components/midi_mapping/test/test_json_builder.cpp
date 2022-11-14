@@ -30,9 +30,6 @@ TEST(MappingJsonBuilder, Mapping)
 {
     Mapping input{1, 2, "test"};
 
-    auto result = write_json(input);
-    EXPECT_THAT(result, "{ todo }");
-
     rapidjson::Document document;
     auto roundtrip = from_json<Mapping>(to_json(document, input));
     EXPECT_THAT(roundtrip, input);
