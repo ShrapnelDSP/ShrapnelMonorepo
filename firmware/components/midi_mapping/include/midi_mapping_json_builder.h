@@ -19,12 +19,21 @@ namespace midi {
 
 // TODO Document should be const, but we can't get it's allocator when it is.
 // Maybe just document that implementations must not change the document?
-// Maybe pass the allocator instead of the document?
+// Maybe pass the allocator instead of the document? Allocator can't be const either.
 template<typename T>
 rapidjson::Value to_json(rapidjson::Document &document, const T &object);
 
 template<>
 rapidjson::Value to_json(rapidjson::Document &document, const Mapping &object);
+
+template<>
+rapidjson::Value to_json(rapidjson::Document &document, const std::pair<Mapping::id_t, Mapping> &object);
+
+template<>
+rapidjson::Value to_json(rapidjson::Document &document, const CreateResponse &object);
+
+template<>
+rapidjson::Value to_json(rapidjson::Document &document, const MappingApiMessage &object);
 
 #if 0
 template<>
