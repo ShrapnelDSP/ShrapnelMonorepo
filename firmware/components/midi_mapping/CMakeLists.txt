@@ -1,5 +1,6 @@
 if(NOT DEFINED TESTING)
     idf_component_register(SRCS src/midi_mapping.cpp
+                                src/midi_mapping_api.cpp
                                 src/midi_mapping_json_parser.cpp
                                 src/midi_mapping_json_builder.cpp
                            INCLUDE_DIRS include
@@ -8,6 +9,7 @@ if(NOT DEFINED TESTING)
 else()
     add_executable(midi_mapping_test
                    src/midi_mapping.cpp
+                   src/midi_mapping_api.cpp
                    src/midi_mapping_json_parser.cpp
                    src/midi_mapping_json_builder.cpp
                    test/test_midi_mapping.cpp

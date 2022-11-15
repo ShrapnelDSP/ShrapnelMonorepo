@@ -20,8 +20,8 @@
 #include <stdio.h>
 #include <math.h>
 
-#define LOG_LOCAL_LEVEL ESP_LOG_DEBUG
 #include "esp_log.h"
+#define LOG_LOCAL_LEVEL ESP_LOG_VERBOSE
 
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
@@ -54,10 +54,12 @@
 #include "pcm3060.h"
 #include "profiling.h"
 #include "wifi_provisioning.h"
+#include "midi_mapping_api.h"
 
 #define TAG "main"
-#define QUEUE_LEN 20
+#define QUEUE_LEN 4
 #define MAX_CLIENTS 3
+// TODO consider replacing this with sizeof(shrapnel::parameters::message::json)
 #define MAX_WEBSOCKET_PAYLOAD_SIZE 128
 #define ARRAY_LENGTH(a) (sizeof(a)/sizeof(a[0]))
 
@@ -141,6 +143,20 @@ static esp_err_t websocket_get_handler(httpd_req_t *req)
     if(rc != pdTRUE)
     {
         ESP_LOGE(TAG, "%s failed to send to queue", __FUNCTION__);
+    }
+
+    rapidjson::Document document;
+    document.Parse(message.json);
+    if(!document.HasParseError())
+    {
+        auto message = midi::from_json<midi::MappingApiMessage>(document.GetObject());
+        if(message.has_value())
+        {
+            etl::string<256> buffer;
+            etl::string_stream stream{buffer};
+            stream << *message;
+            ESP_LOGI(TAG, "decoded %s", buffer.data());
+        }
     }
 
     ESP_LOGI(TAG, "%s stack %d", __FUNCTION__, uxTaskGetStackHighWaterMark(NULL));
@@ -382,8 +398,6 @@ static void failed_alloc_callback(size_t size, uint32_t caps, const char *functi
 
 extern "C" void app_main(void)
 {
-    json_test();
-
     ESP_ERROR_CHECK(heap_caps_register_failed_alloc_callback(failed_alloc_callback));
 
     ESP_ERROR_CHECK(nvs_flash_init());

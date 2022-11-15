@@ -79,7 +79,7 @@ class CommandHandling final
     public:
     struct Message
     {
-        char json[128];
+        char json[256];
         int fd;
     };
 

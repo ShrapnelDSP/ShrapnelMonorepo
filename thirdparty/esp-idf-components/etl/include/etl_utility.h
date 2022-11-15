@@ -4,6 +4,8 @@
 #include <utility>
 #include <array>
 
+namespace shrapnel {
+namespace midi {
 
 template<typename T1, typename T2>
 etl::string_stream& operator<<(etl::string_stream& out, const std::pair<T1, T2>& pair)
@@ -22,4 +24,7 @@ etl::string_stream& operator<<(etl::string_stream& out, const std::array<T, MAX_
     }
     out << "]";
     return out;
+}
+
+}
 }

@@ -1,7 +1,6 @@
 #pragma once
 
 #include "audio_param.h"
-#include "etl_utility.h"
 #include "midi_mapping.h"
 #include <variant>
 #include <utility>
@@ -20,11 +19,6 @@ struct CreateRequest {
     std::pair<Mapping::id_t, Mapping> mapping;
     std::strong_ordering operator<=>(const CreateRequest &other) const = default;
 
-    // TODO prefer free function STL style over tightly coupled members
-    friend etl::string_stream& operator<<(etl::string_stream&  out, const CreateRequest& self) {
-        out << "{ " << self.mapping << " }";
-        return out;
-    }
 };
 
 struct CreateResponse {
@@ -43,6 +37,15 @@ struct Remove {
 };
 
 using MappingApiMessage = std::variant<GetRequest, GetResponse, CreateRequest, CreateResponse, Update, Remove>;
+
+
+etl::string_stream& operator<<(etl::string_stream&  out, const GetRequest& self);
+etl::string_stream& operator<<(etl::string_stream&  out, const GetResponse& self);
+etl::string_stream& operator<<(etl::string_stream&  out, const CreateRequest& self);
+etl::string_stream& operator<<(etl::string_stream&  out, const CreateResponse& self);
+etl::string_stream& operator<<(etl::string_stream&  out, const Update& self);
+etl::string_stream& operator<<(etl::string_stream&  out, const Remove& self);
+etl::string_stream& operator<<(etl::string_stream&  out, const MappingApiMessage& self);
 
 }
 }
