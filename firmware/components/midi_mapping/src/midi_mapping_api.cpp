@@ -41,20 +41,18 @@ etl::string_stream& operator<<(etl::string_stream&  out, const MappingApiMessage
     auto print = [&](const auto &message) {
         using T = std::decay_t<decltype(message)>;
 
-        // TODO can we just replace this with out << message? The type is
-        //      already statically known because of auto
         if constexpr (std::is_same_v<T, GetRequest>) {
-            out << message;
+            out << "<GetRequest>" << message;
         } else if constexpr (std::is_same_v<T, GetResponse>) {
-            out << message;
+            out << "<GetResponse>" << message;
         } else if constexpr (std::is_same_v<T, CreateRequest>) {
-            out << message;
+            out << "<CreateRequest>" << message;
         } else if constexpr (std::is_same_v<T, CreateResponse>) {
-            out << message;
+            out << "<CreateResponse>" << message;
         } else if constexpr (std::is_same_v<T, Update>) {
-            out << message;
+            out << "<Update>" << message;
         } else if constexpr (std::is_same_v<T, Remove>) {
-            out << message;
+            out << "<Remove>" << message;
         } else {
             out << "Unknown";
         }
@@ -64,18 +62,18 @@ etl::string_stream& operator<<(etl::string_stream&  out, const MappingApiMessage
 
 #else
 
-    if constexpr (auto message = std::get_if<GetRequest>(&self)) {
-        out << message;
-    } else if constexpr (auto message = std::get_if<GetResponse>(&self)) {
-        out << message;
-    } else if constexpr (auto message = std::get_if<CreateRequest>(&self)) {
-        out << message;
-    } else if constexpr (auto message = std::get_if<CreateResponse>(&self)) {
-        out << message;
-    } else if constexpr (auto message = std::get_if<Update>(&self)) {
-        out << message;
-    } else if constexpr (auto message = std::get_if<Remove>(&self)) {
-        out << message;
+    if (auto message = std::get_if<GetRequest>(&self)) {
+        out << "<GetRequest>" << *message;
+    } else if (auto message = std::get_if<GetResponse>(&self)) {
+        out << "<GetResponse>" << *message;
+    } else if (auto message = std::get_if<CreateRequest>(&self)) {
+        out << "<CreateRequest>" << *message;
+    } else if (auto message = std::get_if<CreateResponse>(&self)) {
+        out << "<CreateResponse>" << *message;
+    } else if (auto message = std::get_if<Update>(&self)) {
+        out << "<Update>" << *message;
+    } else if (auto message = std::get_if<Remove>(&self)) {
+        out << "<Remove>" << *message;
     } else {
         out << "Unknown";
     }
