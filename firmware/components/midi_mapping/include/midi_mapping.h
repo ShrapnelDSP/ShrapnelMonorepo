@@ -51,19 +51,17 @@
  *
  * \page ws_api_midi MIDI mapping JSON messages
  *
- * - Get list of all mappings
- * - Create a new mapping
- * - Update a mapping
- * - Delete a mapping
+ * This page documents the message format used for messages related to managing
+ * the mapping of MIDI messages to audio parameters.
  *
- * \todo how to nicely show a JSON object template/schema? AWS docs include a
- * few of those, maybe reference their style.
+ * The `MidiMapping` object is defined as follows:
  *
  * ~~~
- * MidiMapping:
- *   midi_channel: int
- *   cc_number: int
- *   parameter_id: string
+ * {
+ *   "midi_channel": integer,
+ *   "cc_number": integer,
+ *   "parameter_id": "string"
+ * }
  * ~~~
  *
  * \note In the examples of this table, UUIDs are replaced with `...` for
