@@ -27,7 +27,6 @@ namespace {
 namespace shrapnel {
 namespace midi {
 
-// TODO put full specialisations in a cpp file to avoid ODR violation
 template<>
 rapidjson::Value to_json(rapidjson::Document &document, const Mapping &object)
 {
