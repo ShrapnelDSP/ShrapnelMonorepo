@@ -35,10 +35,11 @@
 namespace shrapnel {
 namespace midi {
 
-
-// TODO Document should be const, but we can't get it's allocator when it is.
-// Maybe just document that implementations must not change the document?
-// Maybe pass the allocator instead of the document? Allocator can't be const either.
+/** Convert \p object to a JSON value
+ *
+ * \note The \p document must not by modified by this function. It is only
+ *       passed in so that its allocator member can be accessed.
+ */
 template<typename T>
 rapidjson::Value to_json(rapidjson::Document &document, const T &object);
 
