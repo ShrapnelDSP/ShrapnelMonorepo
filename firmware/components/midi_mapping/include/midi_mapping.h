@@ -120,7 +120,7 @@
  * <tr>
  *   <td> `MidiMap::create::response`
  *   <td> `mapping` (`MidiMapping`): The newly created MIDI mapping
- *   <td> UI -> Firmware
+ *   <td> Firmware -> UI
  *   <td> Indicates that a new MIDI mapping was created successfully.
  *   <td>
  *   ~~~
