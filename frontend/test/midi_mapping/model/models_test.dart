@@ -28,21 +28,21 @@ void main() {
     {
       "messageType": "MidiMap::get::response",
       "mappings": {
-        "1": { "midi_channel": 0, "cc_number": 1, "parameter_id": "gain" },
-        "2": { "midi_channel": 0, "cc_number": 2, "parameter_id": "tone" }
+        "1": { "midi_channel": 1, "cc_number": 2, "parameter_id": "gain" },
+        "2": { "midi_channel": 3, "cc_number": 4, "parameter_id": "tone" }
       }
     }''';
 
     const message = MidiApiMessage.getResponse(
       mappings: {
         '1': MidiMapping(
-          midiChannel: 0,
-          ccNumber: 1,
+          midiChannel: 1,
+          ccNumber: 2,
           parameterId: 'gain',
         ),
         '2': MidiMapping(
-          midiChannel: 0,
-          ccNumber: 2,
+          midiChannel: 3,
+          ccNumber: 4,
           parameterId: 'tone',
         ),
       },
@@ -58,21 +58,21 @@ void main() {
     {
       "messageType": "MidiMap::get::response",
       "mappings": {
-        "1": { "midi_channel": 0, "cc_number": 1, "parameter_id": "gain" },
-        "2": { "midi_channel": 0, "cc_number": 2, "parameter_id": "tone" }
+        "1": { "midi_channel": 1, "cc_number": 2, "parameter_id": "gain" },
+        "2": { "midi_channel": 3, "cc_number": 4, "parameter_id": "tone" }
       }
     }''';
 
     const expected = MidiApiMessage.getResponse(
       mappings: {
         '1': MidiMapping(
-          midiChannel: 0,
-          ccNumber: 1,
+          midiChannel: 1,
+          ccNumber: 2,
           parameterId: 'gain',
         ),
         '2': MidiMapping(
-          midiChannel: 0,
-          ccNumber: 2,
+          midiChannel: 3,
+          ccNumber: 4,
           parameterId: 'tone',
         ),
       },
@@ -125,8 +125,8 @@ void main() {
       "messageType": "MidiMap::create::request",
       "mapping": {
         "123": {
-          "midi_channel": 0,
-          "cc_number": 1,
+          "midi_channel": 1,
+          "cc_number": 2,
           "parameter_id": "gain"
         }
       }
@@ -136,8 +136,8 @@ void main() {
       mapping: MidiMappingEntry(
         id: '123',
         mapping: MidiMapping(
-          midiChannel: 0,
-          ccNumber: 1,
+          midiChannel: 1,
+          ccNumber: 2,
           parameterId: 'gain',
         ),
       ),
@@ -164,8 +164,8 @@ void main() {
       const entryJson = '''
         {
           "123": {
-            "midi_channel": 0,
-            "cc_number": 1,
+            "midi_channel": 1,
+            "cc_number": 2,
             "parameter_id": "gain"
           }
         }''';
@@ -173,8 +173,8 @@ void main() {
       const entry = MidiMappingEntry(
         id: '123',
         mapping: MidiMapping(
-          midiChannel: 0,
-          ccNumber: 1,
+          midiChannel: 1,
+          ccNumber: 2,
           parameterId: 'gain',
         ),
       );
@@ -192,13 +192,13 @@ void main() {
       const entryJson = '''
         {
           "123": {
-            "midi_channel": 0,
-            "cc_number": 1,
+            "midi_channel": 1,
+            "cc_number": 2,
             "parameter_id": "gain"
           },
           "456": {
-            "midi_channel": 2,
-            "cc_number": 3,
+            "midi_channel": 3,
+            "cc_number": 4,
             "parameter_id": "volume"
           }
         }''';

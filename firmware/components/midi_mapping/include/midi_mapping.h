@@ -70,8 +70,6 @@
  * brevity. Normally these would look like
  * `12345678-abcd-0000-0000-000000000000`.
  *
- * \todo 0 is not a valid midi channel
- *
  * <table>
  * <tr><th> Message type <th> Parameters <th> Direction <th> Behaviour <th> Example
  * <tr>
@@ -96,8 +94,8 @@
  *   {
  *     "messageType": "MidiMap::get::response",
  *     "mappings": {
- *       "...": { "midi_channel": 0, "cc_number": 1, "parameter_id": "gain" },
- *       "...": { "midi_channel": 0, "cc_number": 2, "parameter_id": "tone" }
+ *       "...": { "midi_channel": 1, "cc_number": 2, "parameter_id": "gain" },
+ *       "...": { "midi_channel": 3, "cc_number": 4, "parameter_id": "tone" }
  *     }
  *   }
  *   ~~~
@@ -112,7 +110,7 @@
  *     "messageType": "MidiMap::create::request",
  *     "mapping": {
  *       "...": {
- *         "midi_channel": 0,
+ *         "midi_channel": 1,
  *         "cc_number": 1,
  *         "parameter_id": "gain"
  *       }
@@ -130,7 +128,7 @@
  *     "messageType": "MidiMap::create::response",
  *     "mapping": {
  *       "...": {
- *         "midi_channel": 0,
+ *         "midi_channel": 1,
  *         "cc_number": 1,
  *         "parameter_id": "gain"
  *       }
@@ -148,7 +146,7 @@
  *     "messageType": "MidiMap::update",
  *     "mapping": {
  *       "...": {
- *         "midi_channel": 0,
+ *         "midi_channel": 1,
  *         "cc_number": 1,
  *         "parameter_id": "gain"
  *       }
