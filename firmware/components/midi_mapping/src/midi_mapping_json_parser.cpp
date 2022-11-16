@@ -23,9 +23,8 @@ namespace shrapnel {
 namespace midi {
 
 template<>
-std::optional<GetRequest> from_json(const rapidjson::Value &json)
+std::optional<GetRequest> from_json(const rapidjson::Value &)
 {
-    (void) json;
     return GetRequest();
 }
 
