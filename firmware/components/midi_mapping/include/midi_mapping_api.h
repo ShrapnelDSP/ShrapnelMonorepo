@@ -57,6 +57,7 @@ struct Remove {
 using MappingApiMessage = std::variant<GetRequest, GetResponse, CreateRequest, CreateResponse, Update, Remove>;
 
 
+etl::string_stream& operator<<(etl::string_stream&  out, const Mapping& self);
 etl::string_stream& operator<<(etl::string_stream&  out, const GetRequest& self);
 etl::string_stream& operator<<(etl::string_stream&  out, const GetResponse& self);
 etl::string_stream& operator<<(etl::string_stream&  out, const CreateRequest& self);

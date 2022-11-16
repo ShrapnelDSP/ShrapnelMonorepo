@@ -24,6 +24,15 @@
 namespace shrapnel {
 namespace midi {
 
+etl::string_stream& operator<<(etl::string_stream&  out, const Mapping& self) {
+    out << "{";
+    out << " channel " << self.midi_channel;
+    out << " cc number " << self.cc_number;
+    out << " name " << self.parameter_name;
+    out << " }";
+    return out;
+}
+
 etl::string_stream& operator<<(etl::string_stream&  out, const GetRequest&) {
     out << "{}";
     return out;

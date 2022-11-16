@@ -22,6 +22,7 @@
 #include <memory>
 
 #include "midi_mapping.h"
+#include "midi_mapping_api.h"
 
 namespace {
 

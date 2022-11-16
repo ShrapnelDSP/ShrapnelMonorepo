@@ -172,7 +172,6 @@
 
 #include <array>
 #include <cstdint>
-#include <etl/string.h>
 #include <esp_log.h>
 
 #include "audio_param.h"
@@ -205,15 +204,6 @@ struct Mapping {
         parameter_name{a_parameter_name} {};
 
     std::strong_ordering operator<=>(const Mapping &other) const = default;
-
-    friend etl::string_stream& operator<<(etl::string_stream&  out, const Mapping& self) {
-        out << "{";
-        out << " channel " << self.midi_channel;
-        out << " cc number " << self.cc_number;
-        out << " name " << self.parameter_name;
-        out << " }";
-        return out;
-    }
 };
 
 template<typename AudioParametersT, std::size_t N>
