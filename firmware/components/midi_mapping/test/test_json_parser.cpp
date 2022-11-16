@@ -54,18 +54,6 @@ std::optional<MappingApiMessage> parse_json(const char *json)
     return from_json<MappingApiMessage>(document);
 }
 
-
-#if 0
-std::ostream& operator <<(std::ostream& out, const CreateRequest& message)
-{
-    etl::string<32> buffer;
-    etl::string_stream stream{buffer};
-    stream << message;
-
-    return out << buffer.data();
-}
-#endif
-
 class MappingApiMessageTest : public ::testing::Test
 {
     protected:
