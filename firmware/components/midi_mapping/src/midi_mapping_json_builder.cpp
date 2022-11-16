@@ -18,6 +18,7 @@
  */
 
 #include "midi_mapping_json_builder.h"
+#include "midi_mapping_api.h"
 
 namespace {
     constexpr char TAG[] = "midi_mapping_json_builder";
@@ -94,6 +95,17 @@ rapidjson::Value to_json(rapidjson::Document &document, const CreateResponse &ob
 }
 
 template<>
+rapidjson::Value to_json(rapidjson::Document &document, const GetResponse &object)
+{
+    rapidjson::Value json;
+    json.SetObject();
+
+    rapidjson::Value mappings = to_json(document, object.mappings);
+    json.AddMember("mappings", mappings, document.GetAllocator());
+    return json;
+}
+
+template<>
 rapidjson::Value to_json(rapidjson::Document &document, const MappingApiMessage &object)
 {
     rapidjson::Value json;
@@ -108,6 +120,10 @@ rapidjson::Value to_json(rapidjson::Document &document, const MappingApiMessage 
             auto message_json = to_json(document, message);
             json.Swap(message_json);
             json.AddMember("messageType", "MidiMap::create::response", document.GetAllocator());
+        } else if constexpr (std::is_same_v<T, GetResponse>) {
+            auto message_json = to_json(document, message);
+            json.Swap(message_json);
+            json.AddMember("messageType", "MidiMap::get::response", document.GetAllocator());
         } else {
             ESP_LOGE(TAG, "No handler registered for message");
         }

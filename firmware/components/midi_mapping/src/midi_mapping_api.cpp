@@ -24,7 +24,7 @@
 namespace shrapnel {
 namespace midi {
 
-etl::string_stream& operator<<(etl::string_stream&  out, const GetRequest& self) {
+etl::string_stream& operator<<(etl::string_stream&  out, const GetRequest&) {
     out << "{}";
     return out;
 }
