@@ -180,14 +180,6 @@
 namespace shrapnel {
 namespace midi {
 
-// A uuid represented as a string
-#if 0
-etl::string<
-    16 /* bytes */
-    * 2 /* characters per heaxadecimal byte */
-    + 4 /* dashes */>;
-#endif
-
 struct Mapping {
     using id_t = std::array<uint8_t, 16>;
 
