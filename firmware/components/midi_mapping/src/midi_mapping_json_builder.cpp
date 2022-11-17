@@ -19,6 +19,7 @@
 
 #include "midi_mapping_json_builder.h"
 #include "midi_mapping_api.h"
+#include "midi_message_type.h"
 
 namespace {
     constexpr char TAG[] = "midi_mapping_json_builder";
@@ -108,27 +109,24 @@ template<>
 rapidjson::Value to_json(rapidjson::Document &document, const MappingApiMessage &object)
 {
     rapidjson::Value json;
-    json.SetObject();
 
     // TODO any way to make this DRY? We need to call to_json with the correct
     // type, and add the messageType field with the correct value
     auto visitor = [&](const auto &message) {
         using T = std::decay_t<decltype(message)>;
 
-        if constexpr (std::is_same_v<T, CreateResponse>) {
-            auto message_json = to_json(document, message);
-            json.Swap(message_json);
-            json.AddMember("messageType", "MidiMap::create::response", document.GetAllocator());
-        } else if constexpr (std::is_same_v<T, GetResponse>) {
-            auto message_json = to_json(document, message);
-            json.Swap(message_json);
-            json.AddMember("messageType", "MidiMap::get::response", document.GetAllocator());
+        if constexpr (std::is_same_v<T, CreateResponse> ||
+                      std::is_same_v<T, GetResponse>) {
+            json = to_json(document, message);
         } else {
             ESP_LOGE(TAG, "No handler registered for message");
         }
+
+        json.AddMember("messageType", rapidjson::StringRef(get_message_type<T>()), document.GetAllocator());
     };
 
     std::visit(visitor, object);
+
     return json;
 }
 

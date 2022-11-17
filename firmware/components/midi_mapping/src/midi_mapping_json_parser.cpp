@@ -18,6 +18,7 @@
  */
 
 #include "midi_mapping_json_parser.h"
+#include "midi_message_type.h"
 
 namespace shrapnel {
 namespace midi {
@@ -161,10 +162,10 @@ std::optional<MappingApiMessage> from_json(const rapidjson::Value &json) {
 
     {
         const etl::map<std::string, std::function<std::optional<MappingApiMessage>()>, 4> lut{
-            { "MidiMap::get::request", [&]{return from_json<GetRequest>(json);} },
-            { "MidiMap::create::request", [&]{return from_json<CreateRequest>(json);} },
-            { "MidiMap::update", [&]{return from_json<Update>(json);} },
-            { "MidiMap::remove", [&]{return from_json<Remove>(json);} },
+            { get_message_type<GetRequest>(), [&]{return from_json<GetRequest>(json);} },
+            { get_message_type<CreateRequest>(), [&]{return from_json<CreateRequest>(json);} },
+            { get_message_type<Update>(), [&]{return from_json<Update>(json);} },
+            { get_message_type<Remove>(), [&]{return from_json<Remove>(json);} },
         };
 
         const char *message_type = message_type_member->value.GetString();
