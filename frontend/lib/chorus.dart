@@ -25,11 +25,12 @@ import 'stompbox.dart';
 
 class Chorus extends StatelessWidget {
   const Chorus({
-    Key? key,
+    super.key,
     required this.full,
     required this.onTap,
-  }) : super(key: key);
+  });
 
+  static const _name = 'Chorus';
   final bool full;
   final void Function() onTap;
 
@@ -45,22 +46,26 @@ class Chorus extends StatelessWidget {
         return StompboxModel(
           parameters: [
             AudioParameterDoubleModel(
+              groupName: _name,
               name: 'DEPTH',
               id: 'chorusDepth',
               parameterService: parameterService,
             ),
             AudioParameterDoubleModel(
+              groupName: _name,
               name: 'MIX',
               id: 'chorusMix',
               parameterService: parameterService,
             ),
             AudioParameterDoubleModel(
+              groupName: _name,
               name: 'RATE',
               id: 'chorusRate',
               parameterService: parameterService,
             ),
           ],
           bypass: AudioParameterDoubleModel(
+            groupName: _name,
             name: 'Bypass',
             id: 'chorusBypass',
             parameterService: parameterService,
@@ -68,7 +73,7 @@ class Chorus extends StatelessWidget {
         );
       },
       child: Stompbox(
-        name: 'Chorus',
+        name: _name,
         onCardTap: onTap,
         full: full,
         primarySwatch: Colors.blue,

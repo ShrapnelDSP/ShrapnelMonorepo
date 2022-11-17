@@ -7,3 +7,9 @@
 [submodule "firmware/components/etl/etl"]
 	path = thirdparty/esp-idf-components/etl/etl
 	url = https://github.com/ETLCPP/etl.git
+[submodule "thirdparty/doxygen-awesome-css"]
+	path = thirdparty/doxygen-awesome-css
+	url = https://github.com/jothepro/doxygen-awesome-css.git
+[submodule "thirdparty/esp-idf-components/rapidjson/rapidjson"]
+	path = thirdparty/esp-idf-components/rapidjson/rapidjson
+	url = git@github.com:Tencent/rapidjson.git

@@ -25,11 +25,12 @@ import 'stompbox.dart';
 
 class TubeScreamer extends StatelessWidget {
   const TubeScreamer({
-    Key? key,
+    super.key,
     required this.full,
     required this.onTap,
-  }) : super(key: key);
+  });
 
+  static const _name = 'Tube Screamer';
   final bool full;
   final void Function() onTap;
 
@@ -45,22 +46,26 @@ class TubeScreamer extends StatelessWidget {
         return StompboxModel(
           parameters: [
             AudioParameterDoubleModel(
+              groupName: _name,
               name: 'DRIVE',
               id: 'tubeScreamerDrive',
               parameterService: parameterService,
             ),
             AudioParameterDoubleModel(
+              groupName: _name,
               name: 'TONE',
               id: 'tubeScreamerTone',
               parameterService: parameterService,
             ),
             AudioParameterDoubleModel(
+              groupName: _name,
               name: 'LEVEL',
               id: 'tubeScreamerLevel',
               parameterService: parameterService,
             ),
           ],
           bypass: AudioParameterDoubleModel(
+            groupName: _name,
             name: 'Bypass',
             id: 'tubeScreamerBypass',
             parameterService: parameterService,
@@ -68,7 +73,7 @@ class TubeScreamer extends StatelessWidget {
         );
       },
       child: Stompbox(
-        name: 'Tube Screamer',
+        name: _name,
         onCardTap: onTap,
         full: full,
         primarySwatch: Colors.green,

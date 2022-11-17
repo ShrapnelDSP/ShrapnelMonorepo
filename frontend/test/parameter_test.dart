@@ -32,7 +32,11 @@ void main() {
     final parameterService = MockParameterService();
 
     final parameter = AudioParameterDoubleModel(
-        name: 'TestName', id: 'test', parameterService: parameterService);
+      groupName: 'TestGroup',
+      name: 'TestName',
+      id: 'test',
+      parameterService: parameterService,
+    );
     parameter.value = 0;
 
     final expected = <String, dynamic>{
@@ -46,21 +50,33 @@ void main() {
     expect(actual, expected);
   });
 
-  test('Notifies ParameterService onUserChanged', () {
-    final parameterService = MockParameterService();
+  test(
+    'Notifies ParameterService onUserChanged',
+    () {
+      final parameterService = MockParameterService();
 
-    final parameter = AudioParameterDoubleModel(
-        name: 'TestName', id: 'test', parameterService: parameterService);
-    parameter.value = 0;
+      final parameter = AudioParameterDoubleModel(
+        groupName: 'TestGroup',
+        name: 'TestName',
+        id: 'test',
+        parameterService: parameterService,
+      );
+      parameter.value = 0;
 
-    verify(parameterService.sink.add(parameter.toJson()));
-  }, skip: 'How to use the generated fake stream to set up verify?');
+      verify(parameterService.sink.add(parameter.toJson()));
+    },
+    skip: 'How to use the generated fake stream to set up verify?',
+  );
 
   test('Adds itself to parameter service', () {
     final parameterService = MockParameterService();
 
     final parameter = AudioParameterDoubleModel(
-        name: 'TestName', id: 'test', parameterService: parameterService);
+      groupName: 'TestGroup',
+      name: 'TestName',
+      id: 'test',
+      parameterService: parameterService,
+    );
     parameter.value = 0;
 
     verify(parameterService.registerParameter(parameter));

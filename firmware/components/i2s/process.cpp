@@ -160,7 +160,7 @@ void process_samples(int32_t *buf, size_t buf_len)
     ESP_LOGD(TAG, "stack: %d", uxTaskGetStackHighWaterMark(NULL));
 }
 
-esp_err_t process_init(shrapnel::AudioParameters *audio_params)
+esp_err_t process_init(shrapnel::parameters::AudioParameters *audio_params)
 {
     ESP_ERROR_CHECK(gate_init());
     gate_set_sample_rate(SAMPLE_RATE);

@@ -4,6 +4,9 @@ if(NOT DEFINED TESTING)
                            REQUIRES etl
                            PRIV_REQUIRES driver compiler_warning_flags)
 else()
+    add_library(midi_mock INTERFACE)
+    target_include_directories(midi_mock INTERFACE include)
+
     add_executable(midi_test
                    src/midi.cpp
                    test/midi_util.cpp

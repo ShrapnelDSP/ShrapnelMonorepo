@@ -70,8 +70,10 @@ class FakeProvisioning implements Provisioning {
   }
 
   @override
-  Future<Uint8List> sendReceiveCustomData(Uint8List data,
-      {int packageSize = 256}) {
+  Future<Uint8List> sendReceiveCustomData(
+    Uint8List data, {
+    int packageSize = 256,
+  }) {
     throw UnimplementedError();
   }
 
@@ -87,15 +89,16 @@ class FakeProvisioning implements Provisioning {
 
   @override
   Future<List<Map<String, dynamic>>?> startScanWiFi() => Future.delayed(
-      const Duration(milliseconds: 500),
-      () => <Map<String, dynamic>>[
-            _createFakeWifi(0),
-            _createFakeWifi(1),
-            _createFakeWifi(2),
-            _createFakeWifi(3),
-            _createFakeWifi(4),
-            _createFakeWifi(5),
-          ]);
+        const Duration(milliseconds: 500),
+        () => <Map<String, dynamic>>[
+          _createFakeWifi(0),
+          _createFakeWifi(1),
+          _createFakeWifi(2),
+          _createFakeWifi(3),
+          _createFakeWifi(4),
+          _createFakeWifi(5),
+        ],
+      );
 
   Map<String, dynamic> _createFakeWifi(int id) => <String, dynamic>{
         'ssid': 'SSID $id, ${id < ssidHint.length ? ssidHint[id] : ''}',

@@ -17,6 +17,7 @@
  * ShrapnelDSP. If not, see <https://www.gnu.org/licenses/>.
  */
 
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
@@ -27,6 +28,7 @@ import 'package:logging/logging.dart';
 
 final log = Logger('robust_websocket');
 
+/// Auto-reconnecting websocket client
 class RobustWebsocket extends ChangeNotifier {
   RobustWebsocket({required this.uri}) {
     _connect();
@@ -94,16 +96,24 @@ class RobustWebsocket extends ChangeNotifier {
 
     _ws = WebSocket.fromUpgradedSocket(socket, serverSide: false);
 
-    _ws!.listen((dynamic data) {
-      onData?.call(data);
-    }, onError: (Object e) {
-      log.warning('websocket error: $e');
-    }, onDone: _reconnect);
+    _ws!.listen(
+      (dynamic data) {
+        onData?.call(data);
+        _streamController.add(data);
+      },
+      onError: (Object e) {
+        log.warning('websocket error: $e');
+      },
+      onDone: _reconnect,
+    );
 
     _ws!.pingInterval = const Duration(seconds: 1);
 
     onConnect?.call();
   }
+
+  final _streamController = StreamController<dynamic>.broadcast();
+  Stream<dynamic> get stream => _streamController.stream;
 
   void sendMessage(String s) {
     _ws?.add(s);
@@ -112,6 +122,7 @@ class RobustWebsocket extends ChangeNotifier {
   @override
   void dispose() {
     _ws?.close(1001);
+    _streamController.close();
     super.dispose();
   }
 }

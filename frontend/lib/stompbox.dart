@@ -33,12 +33,12 @@ class StompboxModel extends ChangeNotifier {
 
 class Stompbox extends StatelessWidget {
   const Stompbox({
-    Key? key,
+    super.key,
     required this.name,
     required this.full,
     required this.onCardTap,
     required this.primarySwatch,
-  }) : super(key: key);
+  });
 
   final String name;
 
@@ -84,10 +84,9 @@ class Stompbox extends StatelessWidget {
 
     return Theme(
       data: Theme.of(context).copyWith(
-        colorScheme: ColorScheme.fromSwatch(
-          primarySwatch: primarySwatch,
-          brightness: Brightness.dark,
-        ),
+        colorScheme: Theme.of(context).colorScheme.copyWith(
+              primary: primarySwatch.shade400,
+            ),
       ),
       /* Builder required to create new context, which makes
        * Theme.of return the new theme defined above
@@ -106,14 +105,16 @@ class Stompbox extends StatelessWidget {
                   children: <Widget>[
                     ...knobs(context, scaleFactor),
                     Expanded(
-                        child: Center(
-                            child: Text(
-                      name,
-                      style: DefaultTextStyle.of(context)
-                          .style
-                          .apply(fontSizeFactor: scaleFactor),
-                      textAlign: TextAlign.center,
-                    ))),
+                      child: Center(
+                        child: Text(
+                          name,
+                          style: DefaultTextStyle.of(context)
+                              .style
+                              .apply(fontSizeFactor: scaleFactor),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    ),
                     ChangeNotifierProvider.value(
                       value: context.watch<StompboxModel>().bypass,
                       child: _BypassButton(
@@ -133,8 +134,7 @@ class Stompbox extends StatelessWidget {
 }
 
 class _BypassButton extends StatelessWidget {
-  const _BypassButton({Key? key, required this.size, required this.isEnabled})
-      : super(key: key);
+  const _BypassButton({required this.size, required this.isEnabled});
 
   final double size;
   final bool isEnabled;

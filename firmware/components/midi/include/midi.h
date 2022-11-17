@@ -28,6 +28,8 @@
 namespace shrapnel {
 namespace midi {
 
+int constexpr CC_VALUE_MAX = 127;
+
 enum MessageType {
     NOTE_OFF = 0x80,
     NOTE_ON = 0x90,

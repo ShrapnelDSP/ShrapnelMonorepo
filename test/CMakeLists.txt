@@ -3,7 +3,7 @@ project (Tutorial
          LANGUAGES C CXX
          )
 
-# GoogleTest requires at least C++11
+# This project uses C++20 features
 set(CMAKE_CXX_STANDARD 20)
 
 include(FetchContent)
@@ -35,8 +35,10 @@ add_subdirectory(../firmware/components/audio_events audio_events)
 add_subdirectory(../firmware/components/audio_param audio_param)
 add_subdirectory(../firmware/components/cmd_handling cmd_handling)
 add_subdirectory(../firmware/components/midi midi)
+add_subdirectory(../firmware/components/midi_mapping midi_mapping)
 add_subdirectory(../thirdparty/esp-idf-components/etl etl)
 add_subdirectory(../firmware/components/queue queue)
 add_subdirectory(../firmware/components/task task)
 add_subdirectory(../firmware/components/compiler_warning_flags compiler_warning_flags)
 add_subdirectory(../thirdparty/esp-idf-components/esp-dsp esp_dsp)
+add_subdirectory(../thirdparty/esp-idf-components/rapidjson rapidjson)

@@ -23,7 +23,6 @@ import 'dart:convert';
 import 'package:flutter/widgets.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:logging/logging.dart';
-import 'package:provider/provider.dart';
 import 'package:rxdart/transformers.dart';
 
 import 'robust_websocket.dart';
@@ -51,6 +50,7 @@ class AudioParameterDouble {
 
 class AudioParameterDoubleModel extends ChangeNotifier {
   AudioParameterDoubleModel({
+    required this.groupName,
     required this.name,
     required this.id,
     required this.parameterService,
@@ -61,6 +61,7 @@ class AudioParameterDoubleModel extends ChangeNotifier {
   @protected
   double _value = 0.5;
 
+  final String groupName;
   final String name;
   final String id;
   final ParameterService parameterService;
@@ -129,7 +130,8 @@ class ParameterService extends ChangeNotifier {
     log.finer(event);
 
     final parameterToUpdate = AudioParameterDouble.fromJson(
-        json.decode(event) as Map<String, dynamic>);
+      json.decode(event) as Map<String, dynamic>,
+    );
 
     for (final p in _parameters) {
       if (p.id == parameterToUpdate.id) {
@@ -141,25 +143,17 @@ class ParameterService extends ChangeNotifier {
     log.warning("Couldn't find parameter with id ${parameterToUpdate.id}");
   }
 
+  Map<String, String> get parameterNames {
+    return Map.fromEntries(
+      _parameters.map(
+        (param) => MapEntry(param.id, '${param.groupName}: ${param.name}'),
+      ),
+    );
+  }
+
   @override
   void dispose() {
     sink.close();
     super.dispose();
   }
-}
-
-class ParameterServiceProvider extends StatelessWidget {
-  const ParameterServiceProvider({
-    Key? key,
-    required this.child,
-  }) : super(key: key);
-
-  final Widget child;
-
-  @override
-  Widget build(BuildContext context) => ChangeNotifierProvider(
-        create: (_) =>
-            ParameterService(websocket: context.read<RobustWebsocket>()),
-        child: child,
-      );
 }

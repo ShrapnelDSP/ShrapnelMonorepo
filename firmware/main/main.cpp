@@ -20,8 +20,8 @@
 #include <stdio.h>
 #include <math.h>
 
-#define LOG_LOCAL_LEVEL ESP_LOG_DEBUG
 #include "esp_log.h"
+#define LOG_LOCAL_LEVEL ESP_LOG_VERBOSE
 
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
@@ -49,22 +49,25 @@
 #include "hardware.h"
 #include "i2s.h"
 #include "midi.h"
+#include "midi_mapping_json_parser.h"
 #include "midi_uart.h"
 #include "pcm3060.h"
 #include "profiling.h"
 #include "wifi_provisioning.h"
+#include "midi_mapping_api.h"
 
 #define TAG "main"
-#define QUEUE_LEN 20
+#define QUEUE_LEN 4
 #define MAX_CLIENTS 3
+// TODO consider replacing this with sizeof(shrapnel::parameters::message::json)
 #define MAX_WEBSOCKET_PAYLOAD_SIZE 128
 #define ARRAY_LENGTH(a) (sizeof(a)/sizeof(a[0]))
 
 namespace shrapnel {
 
-static Queue<CommandHandling<AudioParameters>::Message> *in_queue;
-static AudioParameters *audio_params;
-static CommandHandlingTask<AudioParameters> *cmd_handling_task;
+static Queue<CommandHandling<parameters::AudioParameters>::Message> *in_queue;
+static parameters::AudioParameters *audio_params;
+static CommandHandlingTask<parameters::AudioParameters> *cmd_handling_task;
 static EventSend event_send{};
 
 static QueueHandle_t out_queue;
@@ -98,7 +101,7 @@ static void i2c_setup(void);
 
 static esp_err_t websocket_get_handler(httpd_req_t *req)
 {
-    CommandHandling<AudioParameters>::Message message{};
+    CommandHandling<parameters::AudioParameters>::Message message{};
 
     httpd_ws_frame_t pkt = {
         .final = false,
@@ -140,6 +143,20 @@ static esp_err_t websocket_get_handler(httpd_req_t *req)
     if(rc != pdTRUE)
     {
         ESP_LOGE(TAG, "%s failed to send to queue", __FUNCTION__);
+    }
+
+    rapidjson::Document document;
+    document.Parse(message.json);
+    if(!document.HasParseError())
+    {
+        auto message = midi::from_json<midi::MappingApiMessage>(document.GetObject());
+        if(message.has_value())
+        {
+            etl::string<256> buffer;
+            etl::string_stream stream{buffer};
+            stream << *message;
+            ESP_LOGI(TAG, "decoded %s", buffer.data());
+        }
     }
 
     ESP_LOGI(TAG, "%s stack %d", __FUNCTION__, uxTaskGetStackHighWaterMark(NULL));
@@ -391,13 +408,13 @@ extern "C" void app_main(void)
     assert(work_semaphore);
     xSemaphoreGive(work_semaphore);
 
-    in_queue = new Queue<CommandHandling<AudioParameters>::Message>(QUEUE_LEN);
+    in_queue = new Queue<CommandHandling<parameters::AudioParameters>::Message>(QUEUE_LEN);
     assert(in_queue);
 
     out_queue = xQueueCreate(QUEUE_LEN, sizeof(audio_event_message_t));
     assert(out_queue);
 
-    audio_params = new AudioParameters();
+    audio_params = new parameters::AudioParameters();
 
     audio_params->create_and_add_parameter("ampGain", 0, 1, 0.5);
     audio_params->create_and_add_parameter("ampChannel", 0, 1, 0);
@@ -420,7 +437,7 @@ extern "C" void app_main(void)
     audio_params->create_and_add_parameter("chorusMix", 0, 1, 0.8);
     audio_params->create_and_add_parameter("chorusBypass", 0, 1, 0);
 
-    cmd_handling_task = new CommandHandlingTask<AudioParameters>(
+    cmd_handling_task = new CommandHandlingTask<parameters::AudioParameters>(
             5,
             in_queue,
             audio_params,

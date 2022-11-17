@@ -23,9 +23,13 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:logging/logging.dart';
 import 'package:provider/provider.dart';
 
+import 'json_websocket.dart';
+import 'midi_mapping/model/service.dart';
+import 'midi_mapping/view/midi_mapping.dart';
 import 'parameter.dart';
 import 'pedalboard.dart';
 import 'robust_websocket.dart';
+import 'util/uuid.dart';
 import 'websocket_status.dart';
 import 'wifi_provisioning.dart';
 
@@ -48,40 +52,72 @@ void main() {
   Logger.root.level = Level.ALL;
   Logger.root.onRecord.listen((record) {
     debugPrint(
-        '${record.level.name.padLeft("WARNING".length)} ${formatDateTime(record.time)} ${record.loggerName}: ${record.message}');
+      '${record.level.name.padLeft("WARNING".length)} '
+      '${formatDateTime(record.time)} '
+      '${record.loggerName}: '
+      '${record.message}',
+    );
   });
 
   GoogleFonts.config.allowRuntimeFetching = false;
 
-  runApp(MultiProvider(
-    providers: [
-      ChangeNotifierProvider(
-          create: (_) => RobustWebsocket(
-              uri: Uri.parse('http://guitar-dsp.local:8080/websocket'))),
-      ChangeNotifierProvider(
-          create: (_) => WifiProvisioningProvider(provisioningFactory: () {
-                log.info('Creating provisioning connection');
-                return Provisioning(
-                  security: Security1(pop: 'abcd1234'),
-                  transport: TransportHTTP('guitar-dsp.local'),
-                );
-              })),
-    ],
-    child: const MyApp(),
-  ));
+  final websocket =
+      RobustWebsocket(uri: Uri.parse('http://guitar-dsp.local:8080/websocket'));
+  final uuid = Uuid();
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider.value(value: websocket),
+        ChangeNotifierProvider(
+          create: (_) => WifiProvisioningProvider(
+            provisioningFactory: () {
+              log.info('Creating provisioning connection');
+              return Provisioning(
+                security: Security1(pop: 'abcd1234'),
+                transport: TransportHTTP('guitar-dsp.local'),
+              );
+            },
+          ),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => ParameterService(websocket: websocket),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => MidiMappingService(
+            websocket: JsonWebsocket(websocket: websocket),
+          ),
+        ),
+        ChangeNotifierProvider.value(value: uuid),
+      ],
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'ShrapnelDSP',
-      theme: ThemeData(
-        brightness: Brightness.dark,
-        primarySwatch: Colors.orange,
-        fontFamily: 'Noto Sans',
+      theme: ThemeData.from(
+        colorScheme: ColorScheme(
+          primary: Colors.orange,
+          secondary: Colors.red,
+          surface: Colors.grey[800]!,
+          background: Colors.grey[850]!,
+          error: Colors.red[700]!,
+          onPrimary: Colors.black,
+          onSecondary: Colors.white,
+          onSurface: Colors.white,
+          onBackground: Colors.white,
+          onError: Colors.black,
+          brightness: Brightness.dark,
+        ),
+        textTheme: Typography().white.apply(
+              fontFamily: 'Noto Sans',
+            ),
       ),
       home: const MyHomePage(title: 'ShrapnelDSP'),
       debugShowCheckedModeBanner: false,
@@ -90,7 +126,7 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatelessWidget {
-  const MyHomePage({Key? key, required this.title}) : super(key: key);
+  const MyHomePage({super.key, required this.title});
   final String title;
 
   @override
@@ -99,35 +135,47 @@ class MyHomePage extends StatelessWidget {
       appBar: AppBar(
         title: Text(title),
         actions: [
-          Container(
-            margin: const EdgeInsets.all(10),
-            child: IconButton(
-              icon: const Icon(Icons.settings),
-              key: const Key('wifi provisioning button'),
-              onPressed: () {
-                Navigator.push<ProvisioningPage>(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const ProvisioningPage()),
-                );
-              },
-            ),
+          IconButton(
+            icon: const Icon(Icons.map_outlined),
+            key: const Key('midi-mapping-button'),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute<MidiMappingPage>(
+                  builder: (context) {
+                    context.read<MidiMappingService>().getMapping();
+                    return const MidiMappingPage();
+                  },
+                ),
+              );
+            },
           ),
+          IconButton(
+            icon: const Icon(Icons.settings),
+            key: const Key('wifi provisioning button'),
+            onPressed: () {
+              Navigator.push<ProvisioningPage>(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const ProvisioningPage(),
+                ),
+              );
+            },
+          ),
+          Container(width: 10),
           const WebSocketStatus(size: kToolbarHeight - 20),
           Container(width: 10),
         ],
       ),
-      body: const ParameterServiceProvider(
-        child: Center(
-          child: Pedalboard(),
-        ),
+      body: const Center(
+        child: Pedalboard(),
       ),
     );
   }
 }
 
 class ProvisioningPage extends StatelessWidget {
-  const ProvisioningPage({Key? key}) : super(key: key);
+  const ProvisioningPage({super.key});
 
   @override
   Widget build(BuildContext context) {

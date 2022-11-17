@@ -25,11 +25,12 @@ import 'parameter.dart';
 
 class Valvestate extends StatelessWidget {
   const Valvestate({
-    Key? key,
+    super.key,
     required this.full,
     required this.onTap,
-  }) : super(key: key);
+  });
 
+  static const _name = 'Valvestate';
   final bool full;
   final void Function() onTap;
 
@@ -43,37 +44,44 @@ class Valvestate extends StatelessWidget {
         return AmplifierModel(
           parameters: [
             AudioParameterDoubleModel(
+              groupName: _name,
               name: 'OD1/OD2',
               id: 'ampChannel',
               parameterService: parameterService,
             ),
             AudioParameterDoubleModel(
-              name: 'GAIN',
+              groupName: _name,
+              name: 'Gain',
               id: 'ampGain',
               parameterService: parameterService,
             ),
             AudioParameterDoubleModel(
-              name: 'BASS',
+              groupName: _name,
+              name: 'Bass',
               id: 'bass',
               parameterService: parameterService,
             ),
             AudioParameterDoubleModel(
-              name: 'MIDDLE',
+              groupName: _name,
+              name: 'Middle',
               id: 'middle',
               parameterService: parameterService,
             ),
             AudioParameterDoubleModel(
-              name: 'TREBLE',
+              groupName: _name,
+              name: 'Treble',
               id: 'treble',
               parameterService: parameterService,
             ),
             AudioParameterDoubleModel(
-              name: 'CONTOUR',
+              groupName: _name,
+              name: 'Contour',
               id: 'contour',
               parameterService: parameterService,
             ),
             AudioParameterDoubleModel(
-              name: 'VOLUME',
+              groupName: _name,
+              name: 'Volume',
               id: 'volume',
               parameterService: parameterService,
             ),
@@ -81,7 +89,7 @@ class Valvestate extends StatelessWidget {
         );
       },
       child: Amplifier(
-        name: 'VALVESTATE 8100',
+        name: _name,
         onTap: onTap,
         full: full,
       ),

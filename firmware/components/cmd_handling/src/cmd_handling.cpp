@@ -18,5 +18,3 @@
  */
 
 #include "cmd_handling.h"
-
-

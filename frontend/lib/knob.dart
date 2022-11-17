@@ -19,17 +19,17 @@
 
 import 'dart:math' as m;
 import 'package:flutter/material.dart';
-import 'package:vector_math/vector_math_64.dart';
+import 'package:vector_math/vector_math_64.dart' show Vector3;
 
 class Knob extends StatelessWidget {
   const Knob({
-    Key? key,
+    super.key,
     required this.value,
     required this.onChanged,
     this.min = 0,
     this.max = 1,
     this.size = 50,
-  }) : super(key: key);
+  });
 
   final double value;
   final double min;
@@ -45,8 +45,8 @@ class Knob extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final distanceToValue = 0.003 * (max - min);
-    final _normalisedValue = (value - min) / (max - min);
-    final _angle = minAngle + _normalisedValue * sweepAngle;
+    final normalisedValue = (value - min) / (max - min);
+    final angle = minAngle + normalisedValue * sweepAngle;
 
     return Transform.rotate(
       angle: m.pi / 4,
@@ -65,7 +65,7 @@ class Knob extends StatelessWidget {
               painter: _KnobArc(
                 minAngle: minAngle,
                 maxAngle: maxAngle,
-                currentAngle: _angle,
+                currentAngle: angle,
                 arcWidth: size * 0.08,
                 backgroundColor: Theme.of(context).colorScheme.background,
                 primaryColor: Theme.of(context).colorScheme.primary,
@@ -117,23 +117,37 @@ class _KnobArc extends CustomPainter {
         Size.fromRadius(size.width / 2 - arcWidth / 2);
 
     canvas.drawArc(
-        bounds, -m.pi / 2 + minAngle, maxAngle - minAngle, false, background);
+      bounds,
+      -m.pi / 2 + minAngle,
+      maxAngle - minAngle,
+      false,
+      background,
+    );
     canvas.drawArc(
-        bounds, -m.pi / 2 + minAngle, currentAngle - minAngle, false, primary);
+      bounds,
+      -m.pi / 2 + minAngle,
+      currentAngle - minAngle,
+      false,
+      primary,
+    );
 
     background.style = PaintingStyle.fill;
-    canvas.drawCircle(size.center(Offset.zero),
-        size.width * 0.50 - arcWidth * 1.5, background);
+    canvas.drawCircle(
+      size.center(Offset.zero),
+      size.width * 0.50 - arcWidth * 1.5,
+      background,
+    );
 
     // create the knob with tip at the origin
     var knob = Path()..relativeLineTo(0, size.width * 0.13);
     // move the tip up to near the edge of the inner circle
     knob = knob.transform(
-        Matrix4.translation(Vector3(0, -size.width * 0.28, 0)).storage);
+      Matrix4.translation(Vector3(0, -size.width * 0.28, 0)).storage,
+    );
     knob = knob.transform(Matrix4.rotationZ(currentAngle).storage);
     knob = knob.transform(
-        Matrix4.translation(Vector3(size.width / 2, size.height / 2, 0))
-            .storage);
+      Matrix4.translation(Vector3(size.width / 2, size.height / 2, 0)).storage,
+    );
 
     canvas.drawPath(knob, primary);
   }

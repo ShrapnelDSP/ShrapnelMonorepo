@@ -130,9 +130,9 @@ class _WifiPasswordDialogState extends State<_WifiPasswordDialog> {
 
 class PasswordTextFormField extends StatefulWidget {
   const PasswordTextFormField({
-    Key? key,
+    super.key,
     required this.controller,
-  }) : super(key: key);
+  });
 
   final TextEditingController controller;
 
@@ -264,8 +264,10 @@ class _WifiDialogState extends State<_WifiDialog> {
                       key: const Key('advanced submit button'),
                       onPressed: () {
                         if (_formKey.currentState!.validate()) {
-                          provisioning.join(_ssidController.value.text,
-                              _passwordController.value.text);
+                          provisioning.join(
+                            _ssidController.value.text,
+                            _passwordController.value.text,
+                          );
                           Navigator.pop(context);
                         }
                       },
@@ -314,7 +316,8 @@ class _WifiScanningScreenState extends State<_WifiScanningScreen> {
 
                   for (final byte in bssid) {
                     bssidFormatted.add(
-                        byte.toRadixString(16).padLeft(2, '0').toUpperCase());
+                      byte.toRadixString(16).padLeft(2, '0').toUpperCase(),
+                    );
                   }
 
                   final bssidString = bssidFormatted.join(':');
@@ -322,8 +325,10 @@ class _WifiScanningScreenState extends State<_WifiScanningScreen> {
                   return Card(
                     child: ListTile(
                       title: Text(ssid),
-                      subtitle: Text('BSSID: $bssidString\n'
-                          'Security: ${provisioning.accessPoints![index]['auth']}'),
+                      subtitle: Text(
+                        'BSSID: $bssidString\n'
+                        'Security: ${provisioning.accessPoints![index]['auth']}',
+                      ),
                       // TODO there are supposed to be wifi_2_bar and wifi_1_bar icons
                       //      too, but these are missing from the Icons class for some
                       //      reason
@@ -331,20 +336,21 @@ class _WifiScanningScreenState extends State<_WifiScanningScreen> {
                         message:
                             'RSSI: ${provisioning.accessPoints![index]['rssi'] as int}',
                         child: Icon(
-                            provisioning.accessPoints![index]['rssi'] as int >
-                                    -65
-                                ? Icons.wifi
-                                : Icons.signal_wifi_0_bar),
+                          provisioning.accessPoints![index]['rssi'] as int > -65
+                              ? Icons.wifi
+                              : Icons.signal_wifi_0_bar,
+                        ),
                       ),
                       onTap: () {
                         provisioning.selectedAccessPoint = index;
                         showDialog<void>(
-                            context: context,
-                            builder: (context) => ChangeNotifierProvider<
-                                    WifiProvisioningProvider>.value(
-                                  value: provisioning,
-                                  child: _WifiPasswordDialog(),
-                                ));
+                          context: context,
+                          builder: (context) => ChangeNotifierProvider<
+                              WifiProvisioningProvider>.value(
+                            value: provisioning,
+                            child: _WifiPasswordDialog(),
+                          ),
+                        );
                       },
                     ),
                   );
@@ -354,12 +360,13 @@ class _WifiScanningScreenState extends State<_WifiScanningScreen> {
             ElevatedButton(
               onPressed: () {
                 showDialog<void>(
-                    context: context,
-                    builder: (context) =>
-                        ChangeNotifierProvider<WifiProvisioningProvider>.value(
-                          value: provisioning,
-                          child: _WifiDialog(),
-                        ));
+                  context: context,
+                  builder: (context) =>
+                      ChangeNotifierProvider<WifiProvisioningProvider>.value(
+                    value: provisioning,
+                    child: _WifiDialog(),
+                  ),
+                );
               },
               child: const Text('Advanced configuration'),
             )
@@ -375,54 +382,59 @@ class _WifiScanningScreenState extends State<_WifiScanningScreen> {
 }
 
 class WifiProvisioningScreen extends StatelessWidget {
-  WifiProvisioningScreen({Key? key}) : super(key: key);
+  WifiProvisioningScreen({super.key});
 
   Widget buildInitial(BuildContext context) {
     final provisioning =
         Provider.of<WifiProvisioningProvider>(context, listen: false);
 
     return Center(
-        child: Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Container(
-          margin: const EdgeInsets.all(10),
-          child:
-              const Text(_Strings.initialMessage, textAlign: TextAlign.center),
-        ),
-        ElevatedButton(
-          key: const Key('wifi provisioning start'),
-          onPressed: provisioning.start,
-          child: const Text(_Strings.initialButtonText),
-        ),
-      ],
-    ));
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Container(
+            margin: const EdgeInsets.all(10),
+            child: const Text(
+              _Strings.initialMessage,
+              textAlign: TextAlign.center,
+            ),
+          ),
+          ElevatedButton(
+            key: const Key('wifi provisioning start'),
+            onPressed: provisioning.start,
+            child: const Text(_Strings.initialButtonText),
+          ),
+        ],
+      ),
+    );
   }
 
   Widget buildConnecting(BuildContext context) {
     return Center(
-        child: Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Container(
-          margin: const EdgeInsets.all(10),
-          child: const Text(_Strings.connectingMessage),
-        ),
-      ],
-    ));
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Container(
+            margin: const EdgeInsets.all(10),
+            child: const Text(_Strings.connectingMessage),
+          ),
+        ],
+      ),
+    );
   }
 
   Widget buildTesting(BuildContext context) {
     return Center(
-        child: Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Container(
-          margin: const EdgeInsets.all(10),
-          child: const Text(_Strings.testingMessage),
-        ),
-      ],
-    ));
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Container(
+            margin: const EdgeInsets.all(10),
+            child: const Text(_Strings.testingMessage),
+          ),
+        ],
+      ),
+    );
   }
 
   Widget buildSessionFailure(BuildContext context) {
@@ -430,81 +442,88 @@ class WifiProvisioningScreen extends StatelessWidget {
         Provider.of<WifiProvisioningProvider>(context, listen: false);
 
     return Center(
-        child: Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Container(
-          margin: const EdgeInsets.all(10),
-          child: const Text(_Strings.sessionFailureMesssage,
-              textAlign: TextAlign.center),
-        ),
-        ElevatedButton(
-          onPressed: provisioning.start,
-          child: const Text(_Strings.retryButtonText),
-        ),
-      ],
-    ));
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Container(
+            margin: const EdgeInsets.all(10),
+            child: const Text(
+              _Strings.sessionFailureMesssage,
+              textAlign: TextAlign.center,
+            ),
+          ),
+          ElevatedButton(
+            onPressed: provisioning.start,
+            child: const Text(_Strings.retryButtonText),
+          ),
+        ],
+      ),
+    );
   }
 
   Widget buildFailure(BuildContext context) {
     final provisioning = Provider.of<WifiProvisioningProvider>(context);
 
     return Center(
-        child: Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Container(
-          margin: const EdgeInsets.all(10),
-          child: Text(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Container(
+            margin: const EdgeInsets.all(10),
+            child: Text(
               provisioning.status?.failedReason == null
                   ? _Strings.failureMessage
                   : '${_Strings.failureMessage} ${_Strings.failureReasonMessage[provisioning.status!.failedReason]!}',
-              textAlign: TextAlign.center),
-        ),
-        ElevatedButton(
-          onPressed: provisioning.start,
-          child: const Text(_Strings.retryButtonText),
-        ),
-      ],
-    ));
+              textAlign: TextAlign.center,
+            ),
+          ),
+          ElevatedButton(
+            onPressed: provisioning.start,
+            child: const Text(_Strings.retryButtonText),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<WifiProvisioningProvider>(builder: (_, provisioning, __) {
-      Widget child;
-      switch (provisioning.state) {
-        case WifiProvisioningState.initial:
-          child = buildInitial(context);
-          break;
-        case WifiProvisioningState.connecting:
-          child = buildConnecting(context);
-          break;
-        case WifiProvisioningState.sessionFailure:
-          child = buildSessionFailure(context);
-          break;
-        case WifiProvisioningState.scanning:
-          child = _WifiScanningScreen();
-          break;
-        case WifiProvisioningState.testing:
-          child = buildTesting(context);
-          break;
-        case WifiProvisioningState.failure:
-          child = buildFailure(context);
-          break;
-        default:
-          child = Text(provisioning.state.toString());
-          break;
-      }
+    return Consumer<WifiProvisioningProvider>(
+      builder: (_, provisioning, __) {
+        Widget child;
+        switch (provisioning.state) {
+          case WifiProvisioningState.initial:
+            child = buildInitial(context);
+            break;
+          case WifiProvisioningState.connecting:
+            child = buildConnecting(context);
+            break;
+          case WifiProvisioningState.sessionFailure:
+            child = buildSessionFailure(context);
+            break;
+          case WifiProvisioningState.scanning:
+            child = _WifiScanningScreen();
+            break;
+          case WifiProvisioningState.testing:
+            child = buildTesting(context);
+            break;
+          case WifiProvisioningState.failure:
+            child = buildFailure(context);
+            break;
+          default:
+            child = Text(provisioning.state.toString());
+            break;
+        }
 
-      return WillPopScope(
-        onWillPop: () {
-          provisioning.reset();
-          return Future.value(true);
-        },
-        child: child,
-      );
-    });
+        return WillPopScope(
+          onWillPop: () {
+            provisioning.reset();
+            return Future.value(true);
+          },
+          child: child,
+        );
+      },
+    );
   }
 }
 
@@ -622,7 +641,9 @@ class WifiProvisioningProvider extends ChangeNotifier {
       if (selectedAccessPoint! < 0 ||
           selectedAccessPoint! > accessPoints!.length) {
         throw StateError(
-            'join called when selectedAccessPoint has invalid value $selectedAccessPoint');
+          'join called when selectedAccessPoint has invalid value '
+          '$selectedAccessPoint',
+        );
       }
 
       // Assigning a default value to a null parameter is allowed
@@ -650,9 +671,11 @@ class WifiProvisioningProvider extends ChangeNotifier {
 
     _status = await _pollWifiStatusWithTimeout(const Duration(seconds: 10));
     if (!_status.isSuccess()) {
-      _log.severe('could not connect to provisioned access point '
-          '${_status?.state.toString()} '
-          '${_status?.failedReason?.toString()}');
+      _log.severe(
+        'could not connect to provisioned access point '
+        '${_status?.state.toString()} '
+        '${_status?.failedReason?.toString()}',
+      );
       _state = WifiProvisioningState.failure;
       return;
     }
