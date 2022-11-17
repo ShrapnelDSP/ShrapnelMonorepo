@@ -97,11 +97,5 @@ rapidjson::Value to_json(rapidjson::Document &document, const etl::map<Mapping::
     return json;
 }
 
-
-#if 0
-template<>
-rapidjson::Value to_json(rapidjson::Document &document, const GetResponse &object)
-#endif
-
 }
 }
