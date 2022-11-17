@@ -9,6 +9,10 @@
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
@@ -20,6 +24,7 @@ MathJax.Hub.Config({
 </script>
 <script type="text/javascript" async="async" src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js"></script>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
+<link href="doxygen-awesome.css" rel="stylesheet" type="text/css"/>
 </head>
 <body>
 <div id="top"><!-- do not remove this div, it is closed by doxygen! -->
@@ -54,6 +59,23 @@ $(function() {
 /* @license-end */
 </script>
 <div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(document).ready(function(){initNavTree('audio__param_8h_source.html',''); initResizable(); });
+/* @license-end */
+</script>
+<div id="doc-content">
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -68,11 +90,6 @@ $(function() {
 </iframe>
 </div>
 
-<div id="nav-path" class="navpath">
-  <ul>
-<li class="navelem"><a class="el" href="dir_d9edf6c004b4a7ff14fe9ae7a92214ee.html">firmware</a></li><li class="navelem"><a class="el" href="dir_a7f1045ea2c2de513e4829d3edd7d5b7.html">components</a></li><li class="navelem"><a class="el" href="dir_05562540d2892fca37f05669ca30d544.html">audio_param</a></li><li class="navelem"><a class="el" href="dir_949739764e80a3396455ca512c5534f3.html">include</a></li>  </ul>
-</div>
-</div><!-- top -->
 <div class="header">
   <div class="headertitle"><div class="title">audio_param.h</div></div>
 </div><!--header-->
@@ -99,88 +116,98 @@ $(function() {
 <div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="preprocessor">#pragma once</span></div>
 <div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span> </div>
 <div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="preprocessor">#include &quot;etl/map.h&quot;</span></div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="preprocessor">#include &lt;atomic&gt;</span></div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="preprocessor">#include &lt;string&gt;</span></div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="preprocessor">#include &lt;memory&gt;</span></div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="preprocessor">#include &lt;vector&gt;</span></div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span> </div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno"><a class="line" href="namespaceshrapnel.html">   28</a></span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespaceshrapnel.html">shrapnel</a> {</div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span> </div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno"><a class="line" href="classshrapnel_1_1AudioParameterFloat.html">   30</a></span><span class="keyword">class </span><a class="code hl_class" href="classshrapnel_1_1AudioParameterFloat.html">AudioParameterFloat</a> {</div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>    <span class="keyword">public</span>:</div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>    <a class="code hl_function" href="classshrapnel_1_1AudioParameterFloat.html#a0a08710f8fb54b5ac04f087707c8598a">AudioParameterFloat</a>(std::string <a class="code hl_variable" href="classshrapnel_1_1AudioParameterFloat.html#a2c5f2cabc8604f956f0b65804870f066">name</a>, <span class="keywordtype">float</span> minimum, <span class="keywordtype">float</span> maximum, <span class="keywordtype">float</span> default_value);</div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="preprocessor">#include &quot;etl/string.h&quot;</span></div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="preprocessor">#include &lt;atomic&gt;</span></div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="preprocessor">#include &lt;string&gt;</span></div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="preprocessor">#include &lt;memory&gt;</span></div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><span class="preprocessor">#include &lt;vector&gt;</span></div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span> </div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno"><a class="line" href="namespaceshrapnel.html">   29</a></span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespaceshrapnel.html">shrapnel</a> {</div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno"><a class="line" href="namespaceshrapnel_1_1parameters.html">   30</a></span><span class="keyword">namespace </span>parameters {</div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span> </div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno"><a class="line" href="namespaceshrapnel_1_1parameters.html#a5506267ab65b64b98595a4269027196b">   32</a></span><span class="keyword">using </span><a class="code hl_typedef" href="namespaceshrapnel_1_1parameters.html#a5506267ab65b64b98595a4269027196b">id_t</a> = etl::string&lt;32&gt;;</div>
 <div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span> </div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classshrapnel_1_1AudioParameterFloat.html#ac409260a5047cc343832738ed4cac420">update</a>(<span class="keywordtype">float</span> value);</div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span> </div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>    <span class="keywordtype">float</span> <a class="code hl_function" href="classshrapnel_1_1AudioParameterFloat.html#a0219f36f9d3bfbdecbf80003e0b0634d">get</a>(<span class="keywordtype">void</span>);</div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span> </div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>    std::atomic&lt;float&gt; *<a class="code hl_function" href="classshrapnel_1_1AudioParameterFloat.html#aa79ed4136c38fba51b1d29d15d6ff64e">get_raw_parameter</a>(<span class="keywordtype">void</span>);</div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno"><a class="line" href="classshrapnel_1_1parameters_1_1AudioParameterFloat.html">   34</a></span><span class="keyword">class </span><a class="code hl_class" href="classshrapnel_1_1parameters_1_1AudioParameterFloat.html">AudioParameterFloat</a> {</div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>    <span class="keyword">public</span>:</div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>    <a class="code hl_function" href="classshrapnel_1_1parameters_1_1AudioParameterFloat.html#a775aaf00d21addce79cc647ce644467b">AudioParameterFloat</a>(<span class="keyword">const</span> <a class="code hl_typedef" href="namespaceshrapnel_1_1parameters.html#a5506267ab65b64b98595a4269027196b">id_t</a> &amp;<a class="code hl_variable" href="classshrapnel_1_1parameters_1_1AudioParameterFloat.html#a920d0aab2ee7a9cade98fdee516d380b">name</a>, <span class="keywordtype">float</span> minimum, <span class="keywordtype">float</span> maximum, <span class="keywordtype">float</span> default_value);</div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span> </div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classshrapnel_1_1parameters_1_1AudioParameterFloat.html#a4746a6da46d63038a0b4e8fe6e9c7e91">update</a>(<span class="keywordtype">float</span> value);</div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span> </div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>    <span class="keywordtype">float</span> <a class="code hl_function" href="classshrapnel_1_1parameters_1_1AudioParameterFloat.html#a221045938d57c9112ef7dcc2c90c2662">get</a>(<span class="keywordtype">void</span>);</div>
 <div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span> </div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno"><a class="line" href="classshrapnel_1_1AudioParameterFloat.html#a2c5f2cabc8604f956f0b65804870f066">   47</a></span>    std::string <a class="code hl_variable" href="classshrapnel_1_1AudioParameterFloat.html#a2c5f2cabc8604f956f0b65804870f066">name</a>;</div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span> </div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>    <span class="keyword">private</span>:</div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>    std::atomic&lt;float&gt; value;</div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>    <span class="keywordtype">float</span> minimum;</div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>    <span class="keywordtype">float</span> maximum;</div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>};</div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span> </div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno"><a class="line" href="classshrapnel_1_1AudioParameters.html">   55</a></span><span class="keyword">class </span><a class="code hl_class" href="classshrapnel_1_1AudioParameters.html">AudioParameters</a> final {</div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>    <span class="comment">/* TODO how to avoid having to increase size manually when more effects are</span></div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span><span class="comment">     * added?</span></div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span><span class="comment">     *</span></div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span><span class="comment">     * We don&#39;t want to use heap allocation when the parameters are registered.</span></div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span><span class="comment">     * Maybe some constexpr functions could be used to register the parameters?</span></div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span><span class="comment">     *</span></div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span><span class="comment">     * ETL provides template dedcution guide and make template for etl::map.</span></div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span><span class="comment">     * These deduce the size from the initialiser. Passing an already</span></div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span><span class="comment">     * initialised etl::map using one of these methods to the constructor</span></div>
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span><span class="comment">     * should work.</span></div>
-<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span><span class="comment">     */</span></div>
-<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>    <span class="keyword">public</span>:</div>
-<div class="line"><a id="l00068" name="l00068"></a><span class="lineno"><a class="line" href="classshrapnel_1_1AudioParameters.html#a8fe41dfb2b9b4fa5b5be606aa8eb1d6f">   68</a></span>    <span class="keyword">using </span><a class="code hl_typedef" href="classshrapnel_1_1AudioParameters.html#a8fe41dfb2b9b4fa5b5be606aa8eb1d6f">MapType</a> = etl::map&lt;std::string, std::unique_ptr&lt;AudioParameterFloat&gt;, 100&gt;;</div>
-<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span> </div>
-<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>    <a class="code hl_function" href="classshrapnel_1_1AudioParameters.html#ab84bea911413bbe600740fcaaae51910">AudioParameters</a>();</div>
-<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span> </div>
-<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>    <span class="keywordtype">int</span> <a class="code hl_function" href="classshrapnel_1_1AudioParameters.html#adbdff15b4dee12acf28191b8b8912382">update</a>(<span class="keyword">const</span> std::string param, <span class="keywordtype">float</span> value);</div>
-<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span> </div>
-<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>    <span class="keywordtype">float</span> <a class="code hl_function" href="classshrapnel_1_1AudioParameters.html#a0019d52f5950466fe2a26dd58786b849">get</a>(<span class="keyword">const</span> std::string &amp;param);</div>
-<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span> </div>
-<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>    std::atomic&lt;float&gt; *<a class="code hl_function" href="classshrapnel_1_1AudioParameters.html#a4ffc221fcb7640697851ee05495e43eb">get_raw_parameter</a>(<span class="keyword">const</span> std::string param);</div>
-<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span> </div>
-<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>    <span class="keywordtype">int</span> <a class="code hl_function" href="classshrapnel_1_1AudioParameters.html#a8fd6b42f246729146fd4aef600b2fff2">create_and_add_parameter</a>(</div>
-<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>        std::string name,</div>
-<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>        <span class="keywordtype">float</span> minimum,</div>
-<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>        <span class="keywordtype">float</span> maximum,</div>
-<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>        <span class="keywordtype">float</span> default_value);</div>
-<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span> </div>
-<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>    MapType::iterator <a class="code hl_function" href="classshrapnel_1_1AudioParameters.html#acbacb2d465147b3d82210b86ebc24c98">begin</a>();</div>
-<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>    MapType::iterator <a class="code hl_function" href="classshrapnel_1_1AudioParameters.html#a10cb8e17f41e9683a45cb4a158845bb2">end</a>();</div>
-<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span> </div>
-<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>    <span class="keyword">private</span>:</div>
-<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>    <a class="code hl_typedef" href="classshrapnel_1_1AudioParameters.html#a8fe41dfb2b9b4fa5b5be606aa8eb1d6f">MapType</a> parameters;</div>
-<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>};</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>    std::atomic&lt;float&gt; *<a class="code hl_function" href="classshrapnel_1_1parameters_1_1AudioParameterFloat.html#ae12554d40347008e135dbd2d041fc0c6">get_raw_parameter</a>(<span class="keywordtype">void</span>);</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span> </div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno"><a class="line" href="classshrapnel_1_1parameters_1_1AudioParameterFloat.html#a920d0aab2ee7a9cade98fdee516d380b">   51</a></span>    <a class="code hl_typedef" href="namespaceshrapnel_1_1parameters.html#a5506267ab65b64b98595a4269027196b">id_t</a> <a class="code hl_variable" href="classshrapnel_1_1parameters_1_1AudioParameterFloat.html#a920d0aab2ee7a9cade98fdee516d380b">name</a>;</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span> </div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>    <span class="keyword">private</span>:</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>    std::atomic&lt;float&gt; value;</div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>    <span class="keywordtype">float</span> minimum;</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>    <span class="keywordtype">float</span> maximum;</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>};</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span> </div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno"><a class="line" href="classshrapnel_1_1parameters_1_1AudioParameters.html">   59</a></span><span class="keyword">class </span><a class="code hl_class" href="classshrapnel_1_1parameters_1_1AudioParameters.html">AudioParameters</a> final {</div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>    <span class="comment">/* TODO how to avoid having to increase size manually when more effects are</span></div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span><span class="comment">     * added?</span></div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span><span class="comment">     *</span></div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span><span class="comment">     * We don&#39;t want to use heap allocation when the parameters are registered.</span></div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span><span class="comment">     * Maybe some constexpr functions could be used to register the parameters?</span></div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span><span class="comment">     *</span></div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span><span class="comment">     * ETL provides template dedcution guide and make template for etl::map.</span></div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span><span class="comment">     * These deduce the size from the initialiser. Passing an already</span></div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span><span class="comment">     * initialised etl::map using one of these methods to the constructor</span></div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span><span class="comment">     * should work.</span></div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span><span class="comment">     */</span></div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>    <span class="keyword">public</span>:</div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno"><a class="line" href="classshrapnel_1_1parameters_1_1AudioParameters.html#a35a29120484ebf0e5047da83a1d617c1">   72</a></span>    <span class="keyword">using </span><a class="code hl_typedef" href="classshrapnel_1_1parameters_1_1AudioParameters.html#a35a29120484ebf0e5047da83a1d617c1">MapType</a> = etl::map&lt;id_t, std::unique_ptr&lt;AudioParameterFloat&gt;, 100&gt;;</div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span> </div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>    <a class="code hl_function" href="classshrapnel_1_1parameters_1_1AudioParameters.html#af3aebb031546145ba520ecf820810d90">AudioParameters</a>();</div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span> </div>
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>    <span class="keywordtype">int</span> <a class="code hl_function" href="classshrapnel_1_1parameters_1_1AudioParameters.html#a38e40ddb4bc6600390e861a0e4604bc4">update</a>(<span class="keyword">const</span> <a class="code hl_typedef" href="namespaceshrapnel_1_1parameters.html#a5506267ab65b64b98595a4269027196b">id_t</a> &amp;param, <span class="keywordtype">float</span> value);</div>
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span> </div>
+<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>    <span class="keywordtype">float</span> <a class="code hl_function" href="classshrapnel_1_1parameters_1_1AudioParameters.html#a5768e32026fbd91cb0ce79dde66b207e">get</a>(<span class="keyword">const</span> <a class="code hl_typedef" href="namespaceshrapnel_1_1parameters.html#a5506267ab65b64b98595a4269027196b">id_t</a> &amp;param);</div>
+<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span> </div>
+<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>    std::atomic&lt;float&gt; *<a class="code hl_function" href="classshrapnel_1_1parameters_1_1AudioParameters.html#a6350b5ab5bf4fe890bdab1e8a103d100">get_raw_parameter</a>(<span class="keyword">const</span> <a class="code hl_typedef" href="namespaceshrapnel_1_1parameters.html#a5506267ab65b64b98595a4269027196b">id_t</a> &amp;param);</div>
+<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span> </div>
+<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>    <span class="keywordtype">int</span> <a class="code hl_function" href="classshrapnel_1_1parameters_1_1AudioParameters.html#a1e342efdc1f73f922880c296fa9cd241">create_and_add_parameter</a>(</div>
+<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>        <span class="keyword">const</span> <a class="code hl_typedef" href="namespaceshrapnel_1_1parameters.html#a5506267ab65b64b98595a4269027196b">id_t</a> &amp;name,</div>
+<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>        <span class="keywordtype">float</span> minimum,</div>
+<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>        <span class="keywordtype">float</span> maximum,</div>
+<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>        <span class="keywordtype">float</span> default_value);</div>
+<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span> </div>
+<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>    MapType::iterator <a class="code hl_function" href="classshrapnel_1_1parameters_1_1AudioParameters.html#a9a285022c312b44ce205e229d34b6545">begin</a>();</div>
+<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>    MapType::iterator <a class="code hl_function" href="classshrapnel_1_1parameters_1_1AudioParameters.html#af0f1588cfb103c4fa17fa2f4b4ebc1ad">end</a>();</div>
 <div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span> </div>
-<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>}</div>
-<div class="ttc" id="aclassshrapnel_1_1AudioParameterFloat_html"><div class="ttname"><a href="classshrapnel_1_1AudioParameterFloat.html">shrapnel::AudioParameterFloat</a></div><div class="ttdef"><b>Definition:</b> <a href="audio__param_8h_source.html#l00030">audio_param.h:30</a></div></div>
-<div class="ttc" id="aclassshrapnel_1_1AudioParameterFloat_html_a0219f36f9d3bfbdecbf80003e0b0634d"><div class="ttname"><a href="classshrapnel_1_1AudioParameterFloat.html#a0219f36f9d3bfbdecbf80003e0b0634d">shrapnel::AudioParameterFloat::get</a></div><div class="ttdeci">float get(void)</div><div class="ttdoc">Get the normalised value of a parameter.</div><div class="ttdef"><b>Definition:</b> <a href="audio__param_8cpp_source.html#l00050">audio_param.cpp:50</a></div></div>
-<div class="ttc" id="aclassshrapnel_1_1AudioParameterFloat_html_a0a08710f8fb54b5ac04f087707c8598a"><div class="ttname"><a href="classshrapnel_1_1AudioParameterFloat.html#a0a08710f8fb54b5ac04f087707c8598a">shrapnel::AudioParameterFloat::AudioParameterFloat</a></div><div class="ttdeci">AudioParameterFloat(std::string name, float minimum, float maximum, float default_value)</div><div class="ttdef"><b>Definition:</b> <a href="audio__param_8cpp_source.html#l00024">audio_param.cpp:24</a></div></div>
-<div class="ttc" id="aclassshrapnel_1_1AudioParameterFloat_html_a2c5f2cabc8604f956f0b65804870f066"><div class="ttname"><a href="classshrapnel_1_1AudioParameterFloat.html#a2c5f2cabc8604f956f0b65804870f066">shrapnel::AudioParameterFloat::name</a></div><div class="ttdeci">std::string name</div><div class="ttdef"><b>Definition:</b> <a href="audio__param_8h_source.html#l00047">audio_param.h:47</a></div></div>
-<div class="ttc" id="aclassshrapnel_1_1AudioParameterFloat_html_aa79ed4136c38fba51b1d29d15d6ff64e"><div class="ttname"><a href="classshrapnel_1_1AudioParameterFloat.html#aa79ed4136c38fba51b1d29d15d6ff64e">shrapnel::AudioParameterFloat::get_raw_parameter</a></div><div class="ttdeci">std::atomic&lt; float &gt; * get_raw_parameter(void)</div><div class="ttdoc">Get denormalised value of parameter.</div><div class="ttdef"><b>Definition:</b> <a href="audio__param_8cpp_source.html#l00056">audio_param.cpp:56</a></div></div>
-<div class="ttc" id="aclassshrapnel_1_1AudioParameterFloat_html_ac409260a5047cc343832738ed4cac420"><div class="ttname"><a href="classshrapnel_1_1AudioParameterFloat.html#ac409260a5047cc343832738ed4cac420">shrapnel::AudioParameterFloat::update</a></div><div class="ttdeci">void update(float value)</div><div class="ttdoc">Update a parameter.</div><div class="ttdef"><b>Definition:</b> <a href="audio__param_8cpp_source.html#l00034">audio_param.cpp:34</a></div></div>
-<div class="ttc" id="aclassshrapnel_1_1AudioParameters_html"><div class="ttname"><a href="classshrapnel_1_1AudioParameters.html">shrapnel::AudioParameters</a></div><div class="ttdef"><b>Definition:</b> <a href="audio__param_8h_source.html#l00055">audio_param.h:55</a></div></div>
-<div class="ttc" id="aclassshrapnel_1_1AudioParameters_html_a0019d52f5950466fe2a26dd58786b849"><div class="ttname"><a href="classshrapnel_1_1AudioParameters.html#a0019d52f5950466fe2a26dd58786b849">shrapnel::AudioParameters::get</a></div><div class="ttdeci">float get(const std::string &amp;param)</div><div class="ttdoc">Get the normalised value of a parameter.</div><div class="ttdef"><b>Definition:</b> <a href="audio__param_8cpp_source.html#l00096">audio_param.cpp:96</a></div></div>
-<div class="ttc" id="aclassshrapnel_1_1AudioParameters_html_a10cb8e17f41e9683a45cb4a158845bb2"><div class="ttname"><a href="classshrapnel_1_1AudioParameters.html#a10cb8e17f41e9683a45cb4a158845bb2">shrapnel::AudioParameters::end</a></div><div class="ttdeci">MapType::iterator end()</div><div class="ttdef"><b>Definition:</b> <a href="audio__param_8cpp_source.html#l00125">audio_param.cpp:125</a></div></div>
-<div class="ttc" id="aclassshrapnel_1_1AudioParameters_html_a4ffc221fcb7640697851ee05495e43eb"><div class="ttname"><a href="classshrapnel_1_1AudioParameters.html#a4ffc221fcb7640697851ee05495e43eb">shrapnel::AudioParameters::get_raw_parameter</a></div><div class="ttdeci">std::atomic&lt; float &gt; * get_raw_parameter(const std::string param)</div><div class="ttdoc">Get denormalised value of parameter.</div><div class="ttdef"><b>Definition:</b> <a href="audio__param_8cpp_source.html#l00108">audio_param.cpp:108</a></div></div>
-<div class="ttc" id="aclassshrapnel_1_1AudioParameters_html_a8fd6b42f246729146fd4aef600b2fff2"><div class="ttname"><a href="classshrapnel_1_1AudioParameters.html#a8fd6b42f246729146fd4aef600b2fff2">shrapnel::AudioParameters::create_and_add_parameter</a></div><div class="ttdeci">int create_and_add_parameter(std::string name, float minimum, float maximum, float default_value)</div><div class="ttdef"><b>Definition:</b> <a href="audio__param_8cpp_source.html#l00063">audio_param.cpp:63</a></div></div>
-<div class="ttc" id="aclassshrapnel_1_1AudioParameters_html_a8fe41dfb2b9b4fa5b5be606aa8eb1d6f"><div class="ttname"><a href="classshrapnel_1_1AudioParameters.html#a8fe41dfb2b9b4fa5b5be606aa8eb1d6f">shrapnel::AudioParameters::MapType</a></div><div class="ttdeci">etl::map&lt; std::string, std::unique_ptr&lt; AudioParameterFloat &gt;, 100 &gt; MapType</div><div class="ttdef"><b>Definition:</b> <a href="audio__param_8h_source.html#l00068">audio_param.h:68</a></div></div>
-<div class="ttc" id="aclassshrapnel_1_1AudioParameters_html_ab84bea911413bbe600740fcaaae51910"><div class="ttname"><a href="classshrapnel_1_1AudioParameters.html#ab84bea911413bbe600740fcaaae51910">shrapnel::AudioParameters::AudioParameters</a></div><div class="ttdeci">AudioParameters()</div><div class="ttdef"><b>Definition:</b> <a href="audio__param_8cpp_source.html#l00061">audio_param.cpp:61</a></div></div>
-<div class="ttc" id="aclassshrapnel_1_1AudioParameters_html_acbacb2d465147b3d82210b86ebc24c98"><div class="ttname"><a href="classshrapnel_1_1AudioParameters.html#acbacb2d465147b3d82210b86ebc24c98">shrapnel::AudioParameters::begin</a></div><div class="ttdeci">MapType::iterator begin()</div><div class="ttdef"><b>Definition:</b> <a href="audio__param_8cpp_source.html#l00120">audio_param.cpp:120</a></div></div>
-<div class="ttc" id="aclassshrapnel_1_1AudioParameters_html_adbdff15b4dee12acf28191b8b8912382"><div class="ttname"><a href="classshrapnel_1_1AudioParameters.html#adbdff15b4dee12acf28191b8b8912382">shrapnel::AudioParameters::update</a></div><div class="ttdeci">int update(const std::string param, float value)</div><div class="ttdoc">Update a parameter.</div><div class="ttdef"><b>Definition:</b> <a href="audio__param_8cpp_source.html#l00079">audio_param.cpp:79</a></div></div>
-<div class="ttc" id="anamespaceshrapnel_html"><div class="ttname"><a href="namespaceshrapnel.html">shrapnel</a></div><div class="ttdef"><b>Definition:</b> <a href="audio__param_8h_source.html#l00028">audio_param.h:28</a></div></div>
+<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>    <span class="keyword">private</span>:</div>
+<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>    <a class="code hl_typedef" href="classshrapnel_1_1parameters_1_1AudioParameters.html#a35a29120484ebf0e5047da83a1d617c1">MapType</a> parameters;</div>
+<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>};</div>
+<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span> </div>
+<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>}</div>
+<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>}</div>
+<div class="ttc" id="aclassshrapnel_1_1parameters_1_1AudioParameterFloat_html"><div class="ttname"><a href="classshrapnel_1_1parameters_1_1AudioParameterFloat.html">shrapnel::parameters::AudioParameterFloat</a></div><div class="ttdef"><b>Definition:</b> <a href="audio__param_8h_source.html#l00034">audio_param.h:34</a></div></div>
+<div class="ttc" id="aclassshrapnel_1_1parameters_1_1AudioParameterFloat_html_a221045938d57c9112ef7dcc2c90c2662"><div class="ttname"><a href="classshrapnel_1_1parameters_1_1AudioParameterFloat.html#a221045938d57c9112ef7dcc2c90c2662">shrapnel::parameters::AudioParameterFloat::get</a></div><div class="ttdeci">float get(void)</div><div class="ttdoc">Get the normalised value of a parameter.</div><div class="ttdef"><b>Definition:</b> <a href="audio__param_8cpp_source.html#l00051">audio_param.cpp:51</a></div></div>
+<div class="ttc" id="aclassshrapnel_1_1parameters_1_1AudioParameterFloat_html_a4746a6da46d63038a0b4e8fe6e9c7e91"><div class="ttname"><a href="classshrapnel_1_1parameters_1_1AudioParameterFloat.html#a4746a6da46d63038a0b4e8fe6e9c7e91">shrapnel::parameters::AudioParameterFloat::update</a></div><div class="ttdeci">void update(float value)</div><div class="ttdoc">Update a parameter.</div><div class="ttdef"><b>Definition:</b> <a href="audio__param_8cpp_source.html#l00035">audio_param.cpp:35</a></div></div>
+<div class="ttc" id="aclassshrapnel_1_1parameters_1_1AudioParameterFloat_html_a775aaf00d21addce79cc647ce644467b"><div class="ttname"><a href="classshrapnel_1_1parameters_1_1AudioParameterFloat.html#a775aaf00d21addce79cc647ce644467b">shrapnel::parameters::AudioParameterFloat::AudioParameterFloat</a></div><div class="ttdeci">AudioParameterFloat(const id_t &amp;name, float minimum, float maximum, float default_value)</div><div class="ttdef"><b>Definition:</b> <a href="audio__param_8cpp_source.html#l00025">audio_param.cpp:25</a></div></div>
+<div class="ttc" id="aclassshrapnel_1_1parameters_1_1AudioParameterFloat_html_a920d0aab2ee7a9cade98fdee516d380b"><div class="ttname"><a href="classshrapnel_1_1parameters_1_1AudioParameterFloat.html#a920d0aab2ee7a9cade98fdee516d380b">shrapnel::parameters::AudioParameterFloat::name</a></div><div class="ttdeci">id_t name</div><div class="ttdef"><b>Definition:</b> <a href="audio__param_8h_source.html#l00051">audio_param.h:51</a></div></div>
+<div class="ttc" id="aclassshrapnel_1_1parameters_1_1AudioParameterFloat_html_ae12554d40347008e135dbd2d041fc0c6"><div class="ttname"><a href="classshrapnel_1_1parameters_1_1AudioParameterFloat.html#ae12554d40347008e135dbd2d041fc0c6">shrapnel::parameters::AudioParameterFloat::get_raw_parameter</a></div><div class="ttdeci">std::atomic&lt; float &gt; * get_raw_parameter(void)</div><div class="ttdoc">Get denormalised value of parameter.</div><div class="ttdef"><b>Definition:</b> <a href="audio__param_8cpp_source.html#l00057">audio_param.cpp:57</a></div></div>
+<div class="ttc" id="aclassshrapnel_1_1parameters_1_1AudioParameters_html"><div class="ttname"><a href="classshrapnel_1_1parameters_1_1AudioParameters.html">shrapnel::parameters::AudioParameters</a></div><div class="ttdef"><b>Definition:</b> <a href="audio__param_8h_source.html#l00059">audio_param.h:59</a></div></div>
+<div class="ttc" id="aclassshrapnel_1_1parameters_1_1AudioParameters_html_a1e342efdc1f73f922880c296fa9cd241"><div class="ttname"><a href="classshrapnel_1_1parameters_1_1AudioParameters.html#a1e342efdc1f73f922880c296fa9cd241">shrapnel::parameters::AudioParameters::create_and_add_parameter</a></div><div class="ttdeci">int create_and_add_parameter(const id_t &amp;name, float minimum, float maximum, float default_value)</div><div class="ttdef"><b>Definition:</b> <a href="audio__param_8cpp_source.html#l00064">audio_param.cpp:64</a></div></div>
+<div class="ttc" id="aclassshrapnel_1_1parameters_1_1AudioParameters_html_a35a29120484ebf0e5047da83a1d617c1"><div class="ttname"><a href="classshrapnel_1_1parameters_1_1AudioParameters.html#a35a29120484ebf0e5047da83a1d617c1">shrapnel::parameters::AudioParameters::MapType</a></div><div class="ttdeci">etl::map&lt; id_t, std::unique_ptr&lt; AudioParameterFloat &gt;, 100 &gt; MapType</div><div class="ttdef"><b>Definition:</b> <a href="audio__param_8h_source.html#l00072">audio_param.h:72</a></div></div>
+<div class="ttc" id="aclassshrapnel_1_1parameters_1_1AudioParameters_html_a38e40ddb4bc6600390e861a0e4604bc4"><div class="ttname"><a href="classshrapnel_1_1parameters_1_1AudioParameters.html#a38e40ddb4bc6600390e861a0e4604bc4">shrapnel::parameters::AudioParameters::update</a></div><div class="ttdeci">int update(const id_t &amp;param, float value)</div><div class="ttdoc">Update a parameter.</div><div class="ttdef"><b>Definition:</b> <a href="audio__param_8cpp_source.html#l00080">audio_param.cpp:80</a></div></div>
+<div class="ttc" id="aclassshrapnel_1_1parameters_1_1AudioParameters_html_a5768e32026fbd91cb0ce79dde66b207e"><div class="ttname"><a href="classshrapnel_1_1parameters_1_1AudioParameters.html#a5768e32026fbd91cb0ce79dde66b207e">shrapnel::parameters::AudioParameters::get</a></div><div class="ttdeci">float get(const id_t &amp;param)</div><div class="ttdoc">Get the normalised value of a parameter.</div><div class="ttdef"><b>Definition:</b> <a href="audio__param_8cpp_source.html#l00097">audio_param.cpp:97</a></div></div>
+<div class="ttc" id="aclassshrapnel_1_1parameters_1_1AudioParameters_html_a6350b5ab5bf4fe890bdab1e8a103d100"><div class="ttname"><a href="classshrapnel_1_1parameters_1_1AudioParameters.html#a6350b5ab5bf4fe890bdab1e8a103d100">shrapnel::parameters::AudioParameters::get_raw_parameter</a></div><div class="ttdeci">std::atomic&lt; float &gt; * get_raw_parameter(const id_t &amp;param)</div><div class="ttdoc">Get denormalised value of parameter.</div><div class="ttdef"><b>Definition:</b> <a href="audio__param_8cpp_source.html#l00109">audio_param.cpp:109</a></div></div>
+<div class="ttc" id="aclassshrapnel_1_1parameters_1_1AudioParameters_html_a9a285022c312b44ce205e229d34b6545"><div class="ttname"><a href="classshrapnel_1_1parameters_1_1AudioParameters.html#a9a285022c312b44ce205e229d34b6545">shrapnel::parameters::AudioParameters::begin</a></div><div class="ttdeci">MapType::iterator begin()</div><div class="ttdef"><b>Definition:</b> <a href="audio__param_8cpp_source.html#l00121">audio_param.cpp:121</a></div></div>
+<div class="ttc" id="aclassshrapnel_1_1parameters_1_1AudioParameters_html_af0f1588cfb103c4fa17fa2f4b4ebc1ad"><div class="ttname"><a href="classshrapnel_1_1parameters_1_1AudioParameters.html#af0f1588cfb103c4fa17fa2f4b4ebc1ad">shrapnel::parameters::AudioParameters::end</a></div><div class="ttdeci">MapType::iterator end()</div><div class="ttdef"><b>Definition:</b> <a href="audio__param_8cpp_source.html#l00126">audio_param.cpp:126</a></div></div>
+<div class="ttc" id="aclassshrapnel_1_1parameters_1_1AudioParameters_html_af3aebb031546145ba520ecf820810d90"><div class="ttname"><a href="classshrapnel_1_1parameters_1_1AudioParameters.html#af3aebb031546145ba520ecf820810d90">shrapnel::parameters::AudioParameters::AudioParameters</a></div><div class="ttdeci">AudioParameters()</div><div class="ttdef"><b>Definition:</b> <a href="audio__param_8cpp_source.html#l00062">audio_param.cpp:62</a></div></div>
+<div class="ttc" id="anamespaceshrapnel_1_1parameters_html_a5506267ab65b64b98595a4269027196b"><div class="ttname"><a href="namespaceshrapnel_1_1parameters.html#a5506267ab65b64b98595a4269027196b">shrapnel::parameters::id_t</a></div><div class="ttdeci">etl::string&lt; 32 &gt; id_t</div><div class="ttdef"><b>Definition:</b> <a href="audio__param_8h_source.html#l00032">audio_param.h:32</a></div></div>
+<div class="ttc" id="anamespaceshrapnel_html"><div class="ttname"><a href="namespaceshrapnel.html">shrapnel</a></div><div class="ttdef"><b>Definition:</b> <a href="audio__param_8h_source.html#l00029">audio_param.h:29</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
+</div><!-- doc-content -->
 <!-- start footer part -->
-<hr class="footer"/><address class="footer"><small>
-Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.4
-</small></address>
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="dir_d9edf6c004b4a7ff14fe9ae7a92214ee.html">firmware</a></li><li class="navelem"><a class="el" href="dir_a7f1045ea2c2de513e4829d3edd7d5b7.html">components</a></li><li class="navelem"><a class="el" href="dir_05562540d2892fca37f05669ca30d544.html">audio_param</a></li><li class="navelem"><a class="el" href="dir_949739764e80a3396455ca512c5534f3.html">include</a></li><li class="navelem"><a class="el" href="audio__param_8h.html">audio_param.h</a></li>
+    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.4 </li>
+  </ul>
+</div>
 </body>
 </html>

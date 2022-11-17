@@ -117,27 +117,32 @@ Widget build(BuildContext context) {
       return StompboxModel(
         parameters: [
           AudioParameterDoubleModel(
+            groupName: _name,
             name: &#39;LEVEL&#39;,
             id: &#39;heavyMetalLevel&#39;,
             parameterService: parameterService,
           ),
           AudioParameterDoubleModel(
+            groupName: _name,
             name: &#39;LOW&#39;,
             id: &#39;heavyMetalLow&#39;,
             parameterService: parameterService,
           ),
           AudioParameterDoubleModel(
+            groupName: _name,
             name: &#39;HIGH&#39;,
             id: &#39;heavyMetalHigh&#39;,
             parameterService: parameterService,
           ),
           AudioParameterDoubleModel(
+            groupName: _name,
             name: &#39;DISTORTION&#39;,
             id: &#39;heavyMetalDistortion&#39;,
             parameterService: parameterService,
           ),
         ],
         bypass: AudioParameterDoubleModel(
+          groupName: _name,
           name: &#39;Bypass&#39;,
           id: &#39;heavyMetalBypass&#39;,
           parameterService: parameterService,
@@ -145,7 +150,7 @@ Widget build(BuildContext context) {
       );
     },
     child: Stompbox(
-      name: &#39;Heavy Metal&#39;,
+      name: _name,
       onCardTap: onTap,
       full: full,
       primarySwatch: Colors.deepOrange,

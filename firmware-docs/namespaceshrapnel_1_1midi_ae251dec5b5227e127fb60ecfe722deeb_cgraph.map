@@ -1,0 +1,7 @@
+<map id="shrapnel::midi::from_json" name="shrapnel::midi::from_json">
+<area shape="rect" id="node1" title="Convert the message into a object representing it." alt="" coords="5,111,169,138"/>
+<area shape="rect" id="node2" href="$namespaceshrapnel_1_1midi.html#ab312cca91e576cb523ac926b9584c6ca" title=" " alt="" coords="217,5,439,47"/>
+<area shape="rect" id="node3" href="$namespaceshrapnel_1_1midi.html#a06c1584d6468a990a968f1112b6ffdd3" title=" " alt="" coords="226,71,430,112"/>
+<area shape="rect" id="node4" href="$namespaceshrapnel_1_1midi.html#a9e8ec3d7f4c54acbbe15790df0f404f3" title=" " alt="" coords="237,136,419,177"/>
+<area shape="rect" id="node5" href="$namespaceshrapnel_1_1midi.html#af9d09aa6f84d609de12d075760f890f6" title=" " alt="" coords="239,201,417,243"/>
+</map>

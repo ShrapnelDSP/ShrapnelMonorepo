@@ -107,40 +107,42 @@ and</li>
   <h2><span>Implementation</span></h2>
   <pre class="language-dart"><code class="language-dart">@override
 Widget build(BuildContext context) {
-  return Consumer&lt;WifiProvisioningProvider&gt;(builder: (_, provisioning, __) {
-    Widget child;
-    switch (provisioning.state) {
-      case WifiProvisioningState.initial:
-        child = buildInitial(context);
-        break;
-      case WifiProvisioningState.connecting:
-        child = buildConnecting(context);
-        break;
-      case WifiProvisioningState.sessionFailure:
-        child = buildSessionFailure(context);
-        break;
-      case WifiProvisioningState.scanning:
-        child = _WifiScanningScreen();
-        break;
-      case WifiProvisioningState.testing:
-        child = buildTesting(context);
-        break;
-      case WifiProvisioningState.failure:
-        child = buildFailure(context);
-        break;
-      default:
-        child = Text(provisioning.state.toString());
-        break;
-    }
+  return Consumer&lt;WifiProvisioningProvider&gt;(
+    builder: (_, provisioning, __) {
+      Widget child;
+      switch (provisioning.state) {
+        case WifiProvisioningState.initial:
+          child = buildInitial(context);
+          break;
+        case WifiProvisioningState.connecting:
+          child = buildConnecting(context);
+          break;
+        case WifiProvisioningState.sessionFailure:
+          child = buildSessionFailure(context);
+          break;
+        case WifiProvisioningState.scanning:
+          child = _WifiScanningScreen();
+          break;
+        case WifiProvisioningState.testing:
+          child = buildTesting(context);
+          break;
+        case WifiProvisioningState.failure:
+          child = buildFailure(context);
+          break;
+        default:
+          child = Text(provisioning.state.toString());
+          break;
+      }
 
-    return WillPopScope(
-      onWillPop: () {
-        provisioning.reset();
-        return Future.value(true);
-      },
-      child: child,
-    );
-  });
+      return WillPopScope(
+        onWillPop: () {
+          provisioning.reset();
+          return Future.value(true);
+        },
+        child: child,
+      );
+    },
+  );
 }</code></pre>
 </section>
 

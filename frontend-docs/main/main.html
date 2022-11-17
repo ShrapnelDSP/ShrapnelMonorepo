@@ -66,27 +66,46 @@
   Logger.root.level = Level.ALL;
   Logger.root.onRecord.listen((record) {
     debugPrint(
-        &#39;${record.level.name.padLeft(&quot;WARNING&quot;.length)} ${formatDateTime(record.time)} ${record.loggerName}: ${record.message}&#39;);
+      &#39;${record.level.name.padLeft(&quot;WARNING&quot;.length)} &#39;
+      &#39;${formatDateTime(record.time)} &#39;
+      &#39;${record.loggerName}: &#39;
+      &#39;${record.message}&#39;,
+    );
   });
 
   GoogleFonts.config.allowRuntimeFetching = false;
 
-  runApp(MultiProvider(
-    providers: [
-      ChangeNotifierProvider(
-          create: (_) =&gt; RobustWebsocket(
-              uri: Uri.parse(&#39;http:&#47;&#47;guitar-dsp.local:8080&#47;websocket&#39;))),
-      ChangeNotifierProvider(
-          create: (_) =&gt; WifiProvisioningProvider(provisioningFactory: () {
-                log.info(&#39;Creating provisioning connection&#39;);
-                return Provisioning(
-                  security: Security1(pop: &#39;abcd1234&#39;),
-                  transport: TransportHTTP(&#39;guitar-dsp.local&#39;),
-                );
-              })),
-    ],
-    child: const MyApp(),
-  ));
+  final websocket =
+      RobustWebsocket(uri: Uri.parse(&#39;http:&#47;&#47;guitar-dsp.local:8080&#47;websocket&#39;));
+  final uuid = Uuid();
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider.value(value: websocket),
+        ChangeNotifierProvider(
+          create: (_) =&gt; WifiProvisioningProvider(
+            provisioningFactory: () {
+              log.info(&#39;Creating provisioning connection&#39;);
+              return Provisioning(
+                security: Security1(pop: &#39;abcd1234&#39;),
+                transport: TransportHTTP(&#39;guitar-dsp.local&#39;),
+              );
+            },
+          ),
+        ),
+        ChangeNotifierProvider(
+          create: (_) =&gt; ParameterService(websocket: websocket),
+        ),
+        ChangeNotifierProvider(
+          create: (_) =&gt; MidiMappingService(
+            websocket: JsonWebsocket(websocket: websocket),
+          ),
+        ),
+        ChangeNotifierProvider.value(value: uuid),
+      ],
+      child: const MyApp(),
+    ),
+  );
 }</code></pre>
 </section>
 

@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['name_0',['name',['../classshrapnel_1_1AudioParameterFloat.html#a2c5f2cabc8604f956f0b65804870f066',1,'shrapnel::AudioParameterFloat']]],
+  ['name_0',['name',['../classshrapnel_1_1parameters_1_1AudioParameterFloat.html#a920d0aab2ee7a9cade98fdee516d380b',1,'shrapnel::parameters::AudioParameterFloat']]],
   ['noise_5fgate_2ecpp_1',['noise_gate.cpp',['../noise__gate_8cpp.html',1,'']]],
   ['noise_5fgate_2eh_2',['noise_gate.h',['../noise__gate_8h.html',1,'']]],
   ['note_3',['note',['../structshrapnel_1_1midi_1_1Message_1_1NoteOn.html#ae16150bffaedd0c9c1ce7dd767b463eb',1,'shrapnel::midi::Message::NoteOn::note()'],['../structshrapnel_1_1midi_1_1Message_1_1NoteOff.html#a956f0f53e35e1dfda0e40c53b3e4c346',1,'shrapnel::midi::Message::NoteOff::note()']]],

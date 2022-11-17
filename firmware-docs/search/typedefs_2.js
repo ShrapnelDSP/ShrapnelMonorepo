@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['maptype_0',['MapType',['../classshrapnel_1_1AudioParameters.html#a8fe41dfb2b9b4fa5b5be606aa8eb1d6f',1,'shrapnel::AudioParameters']]],
-  ['midi_5fchannel_5ft_1',['midi_channel_t',['../structshrapnel_1_1midi_1_1Message.html#a9983b4f69924a743aea6a7e819f4ce0f',1,'shrapnel::midi::Message']]]
+  ['id_5ft_0',['id_t',['../structshrapnel_1_1midi_1_1Mapping.html#a212fd4d87c151bab5982bc9138990a02',1,'shrapnel::midi::Mapping::id_t()'],['../namespaceshrapnel_1_1parameters.html#a5506267ab65b64b98595a4269027196b',1,'shrapnel::parameters::id_t()']]]
 ];

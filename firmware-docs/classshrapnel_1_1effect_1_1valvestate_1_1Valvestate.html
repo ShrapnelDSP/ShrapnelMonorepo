@@ -9,6 +9,10 @@
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
@@ -20,6 +24,7 @@ MathJax.Hub.Config({
 </script>
 <script type="text/javascript" async="async" src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js"></script>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
+<link href="doxygen-awesome.css" rel="stylesheet" type="text/css"/>
 </head>
 <body>
 <div id="top"><!-- do not remove this div, it is closed by doxygen! -->
@@ -54,6 +59,23 @@ $(function() {
 /* @license-end */
 </script>
 <div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(document).ready(function(){initNavTree('classshrapnel_1_1effect_1_1valvestate_1_1Valvestate.html',''); initResizable(); });
+/* @license-end */
+</script>
+<div id="doc-content">
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -68,11 +90,6 @@ $(function() {
 </iframe>
 </div>
 
-<div id="nav-path" class="navpath">
-  <ul>
-<li class="navelem"><a class="el" href="namespaceshrapnel.html">shrapnel</a></li><li class="navelem"><a class="el" href="namespaceshrapnel_1_1effect.html">effect</a></li><li class="navelem"><a class="el" href="namespaceshrapnel_1_1effect_1_1valvestate.html">valvestate</a></li><li class="navelem"><a class="el" href="classshrapnel_1_1effect_1_1valvestate_1_1Valvestate.html">Valvestate</a></li>  </ul>
-</div>
-</div><!-- top -->
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a>  </div>
@@ -158,16 +175,8 @@ Public Member Functions</h2></td></tr>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><img src="classshrapnel_1_1effect_1_1valvestate_1_1Valvestate_a42f2f6749648daf577cb40bf85564494_cgraph.png" border="0" usemap="#aclassshrapnel_1_1effect_1_1valvestate_1_1Valvestate_a42f2f6749648daf577cb40bf85564494_cgraph" alt=""/></div>
-<map name="aclassshrapnel_1_1effect_1_1valvestate_1_1Valvestate_a42f2f6749648daf577cb40bf85564494_cgraph" id="aclassshrapnel_1_1effect_1_1valvestate_1_1Valvestate_a42f2f6749648daf577cb40bf85564494_cgraph">
-<area shape="rect" title=" " alt="" coords="5,90,180,131"/>
-<area shape="rect" href="classContourFilter.html#a934f8c64010e0434fb88f96a01865738" title=" " alt="" coords="243,5,388,32"/>
-<area shape="rect" href="classshrapnel_1_1effect_1_1valvestate_1_1FMVFilter.html#a1a63e9981469f1ae6eca95d4cf76bcbb" title=" " alt="" coords="228,57,403,98"/>
-<area shape="rect" href="classshrapnel_1_1effect_1_1valvestate_1_1GainControl.html#ac5c7d32b1b4a40768d1bc20130dad75f" title=" " alt="" coords="228,122,403,163"/>
-<area shape="rect" href="classshrapnel_1_1effect_1_1valvestate_1_1InputFilter.html#ad5d84e0e19e8a3f4ec3058b217d69c6e" title=" " alt="" coords="228,187,403,229"/>
-<area shape="rect" href="classshrapnel_1_1dsp_1_1IirFilter.html#a0849f4c727beedd3b29f6b8ff50f6b02" title=" " alt="" coords="451,90,595,131"/>
-<area shape="rect" href="classshrapnel_1_1dsp_1_1IirFilter.html#aa09e7c1ab99d85c0fdd1c98c80636550" title=" " alt="" coords="451,187,595,229"/>
-</map>
+<div class="center"><iframe scrolling="no" frameborder="0" src="classshrapnel_1_1effect_1_1valvestate_1_1Valvestate_a42f2f6749648daf577cb40bf85564494_cgraph.svg" width="600" height="235"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
 </div>
 
 </div>
@@ -222,18 +231,8 @@ Here is the call graph for this function:</div>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><img src="classshrapnel_1_1effect_1_1valvestate_1_1Valvestate_a9636b34accae16b0e8681d701816eca5_cgraph.png" border="0" usemap="#aclassshrapnel_1_1effect_1_1valvestate_1_1Valvestate_a9636b34accae16b0e8681d701816eca5_cgraph" alt=""/></div>
-<map name="aclassshrapnel_1_1effect_1_1valvestate_1_1Valvestate_a9636b34accae16b0e8681d701816eca5_cgraph" id="aclassshrapnel_1_1effect_1_1valvestate_1_1Valvestate_a9636b34accae16b0e8681d701816eca5_cgraph">
-<area shape="rect" title=" " alt="" coords="5,123,180,164"/>
-<area shape="rect" href="classshrapnel_1_1effect_1_1valvestate_1_1Clipping.html#ac3012b2a5521ab0f7aefd9fb52f926b8" title=" " alt="" coords="228,5,403,47"/>
-<area shape="rect" href="classContourFilter.html#a2baf26150cbf88c8261ba2b42ae83703" title=" " alt="" coords="241,71,389,98"/>
-<area shape="rect" href="classshrapnel_1_1effect_1_1valvestate_1_1FMVFilter.html#a1054a330bdb72fa1d10e8fcc6bc51edb" title=" " alt="" coords="228,123,403,164"/>
-<area shape="rect" href="classshrapnel_1_1effect_1_1valvestate_1_1GainControl.html#a8f5ff9dee05742cd426f78eab0e42edb" title=" " alt="" coords="228,188,403,229"/>
-<area shape="rect" href="classshrapnel_1_1effect_1_1valvestate_1_1InputFilter.html#a1452168fb958f39f748f76bae75b907f" title=" " alt="" coords="228,253,403,295"/>
-<area shape="rect" href="wave__shape_8cpp.html#a737ee48b7321d3c9c5fb0c49bc6f14af" title=" " alt="" coords="479,13,567,39"/>
-<area shape="rect" href="classshrapnel_1_1dsp_1_1IirFilter.html#a53cb5a72d2a310cd4b35d4329af682f0" title=" " alt="" coords="451,155,595,196"/>
-<area shape="rect" href="iir__universal_8c.html#a738b77e8a79f0c754dba3af19fbd4e30" title=" " alt="" coords="643,162,728,189"/>
-</map>
+<div class="center"><iframe scrolling="no" frameborder="0" src="classshrapnel_1_1effect_1_1valvestate_1_1Valvestate_a9636b34accae16b0e8681d701816eca5_cgraph.svg" width="734" height="300"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
 </div>
 
 </div>
@@ -270,15 +269,8 @@ Here is the call graph for this function:</div>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><img src="classshrapnel_1_1effect_1_1valvestate_1_1Valvestate_a97e42d4d01d1120464aceb8c3c2dcb86_cgraph.png" border="0" usemap="#aclassshrapnel_1_1effect_1_1valvestate_1_1Valvestate_a97e42d4d01d1120464aceb8c3c2dcb86_cgraph" alt=""/></div>
-<map name="aclassshrapnel_1_1effect_1_1valvestate_1_1Valvestate_a97e42d4d01d1120464aceb8c3c2dcb86_cgraph" id="aclassshrapnel_1_1effect_1_1valvestate_1_1Valvestate_a97e42d4d01d1120464aceb8c3c2dcb86_cgraph">
-<area shape="rect" title=" " alt="" coords="5,100,180,141"/>
-<area shape="rect" href="classshrapnel_1_1effect_1_1valvestate_1_1FMVFilter.html#a825b1d349a4bcb1e4250174b4de9a7a4" title=" " alt="" coords="228,5,403,47"/>
-<area shape="rect" href="classshrapnel_1_1effect_1_1valvestate_1_1InputFilter.html#a2b8b63ac88d63972aac7d67121e9f97c" title=" " alt="" coords="228,71,403,112"/>
-<area shape="rect" href="classContourFilter.html#ac12574e070f454adde05a20b80407d16" title=" " alt="" coords="250,137,381,163"/>
-<area shape="rect" href="classshrapnel_1_1effect_1_1valvestate_1_1GainControl.html#aeff6e479058004d15d749a5c5a504461" title=" " alt="" coords="228,188,403,229"/>
-<area shape="rect" href="classshrapnel_1_1dsp_1_1IirFilter.html#a0849f4c727beedd3b29f6b8ff50f6b02" title=" " alt="" coords="451,100,595,141"/>
-</map>
+<div class="center"><iframe scrolling="no" frameborder="0" src="classshrapnel_1_1effect_1_1valvestate_1_1Valvestate_a97e42d4d01d1120464aceb8c3c2dcb86_cgraph.svg" width="600" height="235"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
 </div>
 
 </div>
@@ -309,12 +301,8 @@ Here is the call graph for this function:</div>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><img src="classshrapnel_1_1effect_1_1valvestate_1_1Valvestate_a000102bdfca76953f1c7f6e2f6a11d8e_cgraph.png" border="0" usemap="#aclassshrapnel_1_1effect_1_1valvestate_1_1Valvestate_a000102bdfca76953f1c7f6e2f6a11d8e_cgraph" alt=""/></div>
-<map name="aclassshrapnel_1_1effect_1_1valvestate_1_1Valvestate_a000102bdfca76953f1c7f6e2f6a11d8e_cgraph" id="aclassshrapnel_1_1effect_1_1valvestate_1_1Valvestate_a000102bdfca76953f1c7f6e2f6a11d8e_cgraph">
-<area shape="rect" title=" " alt="" coords="5,5,180,47"/>
-<area shape="rect" href="classContourFilter.html#a882a98cba62c5082d3afa3ebc828fe65" title=" " alt="" coords="228,5,348,47"/>
-<area shape="rect" href="classshrapnel_1_1dsp_1_1IirFilter.html#aa09e7c1ab99d85c0fdd1c98c80636550" title=" " alt="" coords="396,5,540,47"/>
-</map>
+<div class="center"><iframe scrolling="no" frameborder="0" src="classshrapnel_1_1effect_1_1valvestate_1_1Valvestate_a000102bdfca76953f1c7f6e2f6a11d8e_cgraph.svg" width="546" height="52"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
 </div>
 
 </div>
@@ -361,12 +349,8 @@ Here is the call graph for this function:</div>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><img src="classshrapnel_1_1effect_1_1valvestate_1_1Valvestate_a3dc9593f8e440e58d3ddefc6bfe8f37e_cgraph.png" border="0" usemap="#aclassshrapnel_1_1effect_1_1valvestate_1_1Valvestate_a3dc9593f8e440e58d3ddefc6bfe8f37e_cgraph" alt=""/></div>
-<map name="aclassshrapnel_1_1effect_1_1valvestate_1_1Valvestate_a3dc9593f8e440e58d3ddefc6bfe8f37e_cgraph" id="aclassshrapnel_1_1effect_1_1valvestate_1_1Valvestate_a3dc9593f8e440e58d3ddefc6bfe8f37e_cgraph">
-<area shape="rect" title=" " alt="" coords="5,5,180,47"/>
-<area shape="rect" href="classshrapnel_1_1effect_1_1valvestate_1_1FMVFilter.html#a98ef2d50b4b3529f4154b2f46900c3cf" title=" " alt="" coords="228,5,409,47"/>
-<area shape="rect" href="classshrapnel_1_1dsp_1_1IirFilter.html#aa09e7c1ab99d85c0fdd1c98c80636550" title=" " alt="" coords="457,5,601,47"/>
-</map>
+<div class="center"><iframe scrolling="no" frameborder="0" src="classshrapnel_1_1effect_1_1valvestate_1_1Valvestate_a3dc9593f8e440e58d3ddefc6bfe8f37e_cgraph.svg" width="607" height="52"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
 </div>
 
 </div>
@@ -407,12 +391,8 @@ Here is the call graph for this function:</div>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><img src="classshrapnel_1_1effect_1_1valvestate_1_1Valvestate_a813c3b0d5212e73dd829859c0ada1073_cgraph.png" border="0" usemap="#aclassshrapnel_1_1effect_1_1valvestate_1_1Valvestate_a813c3b0d5212e73dd829859c0ada1073_cgraph" alt=""/></div>
-<map name="aclassshrapnel_1_1effect_1_1valvestate_1_1Valvestate_a813c3b0d5212e73dd829859c0ada1073_cgraph" id="aclassshrapnel_1_1effect_1_1valvestate_1_1Valvestate_a813c3b0d5212e73dd829859c0ada1073_cgraph">
-<area shape="rect" title=" " alt="" coords="5,5,180,47"/>
-<area shape="rect" href="classshrapnel_1_1effect_1_1valvestate_1_1GainControl.html#a21755e85c7ea233796c12d6c485f4b75" title=" " alt="" coords="228,5,420,47"/>
-<area shape="rect" href="classshrapnel_1_1dsp_1_1IirFilter.html#aa09e7c1ab99d85c0fdd1c98c80636550" title=" " alt="" coords="468,5,612,47"/>
-</map>
+<div class="center"><iframe scrolling="no" frameborder="0" src="classshrapnel_1_1effect_1_1valvestate_1_1Valvestate_a813c3b0d5212e73dd829859c0ada1073_cgraph.svg" width="618" height="52"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
 </div>
 
 </div>
@@ -445,9 +425,13 @@ Here is the call graph for this function:</div>
 <li>effects/valvestate/src/<a class="el" href="valvestate_8cpp_source.html">valvestate.cpp</a></li>
 </ul>
 </div><!-- contents -->
+</div><!-- doc-content -->
 <!-- start footer part -->
-<hr class="footer"/><address class="footer"><small>
-Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.4
-</small></address>
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="namespaceshrapnel.html">shrapnel</a></li><li class="navelem"><a class="el" href="namespaceshrapnel_1_1effect.html">effect</a></li><li class="navelem"><a class="el" href="namespaceshrapnel_1_1effect_1_1valvestate.html">valvestate</a></li><li class="navelem"><a class="el" href="classshrapnel_1_1effect_1_1valvestate_1_1Valvestate.html">Valvestate</a></li>
+    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.4 </li>
+  </ul>
+</div>
 </body>
 </html>

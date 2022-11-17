@@ -9,6 +9,10 @@
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
@@ -20,6 +24,7 @@ MathJax.Hub.Config({
 </script>
 <script type="text/javascript" async="async" src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js"></script>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
+<link href="doxygen-awesome.css" rel="stylesheet" type="text/css"/>
 </head>
 <body>
 <div id="top"><!-- do not remove this div, it is closed by doxygen! -->
@@ -54,6 +59,23 @@ $(function() {
 /* @license-end */
 </script>
 <div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(document).ready(function(){initNavTree('delayline__c_8cpp.html',''); initResizable(); });
+/* @license-end */
+</script>
+<div id="doc-content">
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -68,11 +90,6 @@ $(function() {
 </iframe>
 </div>
 
-<div id="nav-path" class="navpath">
-  <ul>
-<li class="navelem"><a class="el" href="dir_63bb297c276a119495816091bcd678e9.html">effects</a></li><li class="navelem"><a class="el" href="dir_4dd29be76a1e4902177758ddecb725ac.html">abstract_dsp</a></li><li class="navelem"><a class="el" href="dir_a48185ca72eb19f891a5c34412c9c9cf.html">universal</a></li>  </ul>
-</div>
-</div><!-- top -->
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Data Structures</a> &#124;
@@ -136,11 +153,8 @@ Functions</h2></td></tr>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><img src="delayline__c_8cpp_aa3ea43e1dcd855cb482ee8d7e4c6b950_icgraph.png" border="0" usemap="#adelayline__c_8cpp_aa3ea43e1dcd855cb482ee8d7e4c6b950_icgraph" alt=""/></div>
-<map name="adelayline__c_8cpp_aa3ea43e1dcd855cb482ee8d7e4c6b950_icgraph" id="adelayline__c_8cpp_aa3ea43e1dcd855cb482ee8d7e4c6b950_icgraph">
-<area shape="rect" title=" " alt="" coords="209,13,363,39"/>
-<area shape="rect" href="classshrapnel_1_1effect_1_1Chorus.html#a928829eccf4e1ab2d3449331efec6b04" title=" " alt="" coords="5,5,161,47"/>
-</map>
+<div class="center"><iframe scrolling="no" frameborder="0" src="delayline__c_8cpp_aa3ea43e1dcd855cb482ee8d7e4c6b950_icgraph.svg" width="368" height="52"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
 </div>
 
 </div>
@@ -170,11 +184,8 @@ Here is the caller graph for this function:</div>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><img src="delayline__c_8cpp_a91d55c2a92525ad8f7614885e9d9fb54_icgraph.png" border="0" usemap="#adelayline__c_8cpp_a91d55c2a92525ad8f7614885e9d9fb54_icgraph" alt=""/></div>
-<map name="adelayline__c_8cpp_a91d55c2a92525ad8f7614885e9d9fb54_icgraph" id="adelayline__c_8cpp_a91d55c2a92525ad8f7614885e9d9fb54_icgraph">
-<area shape="rect" title=" " alt="" coords="209,13,368,39"/>
-<area shape="rect" href="classshrapnel_1_1effect_1_1Chorus.html#a928829eccf4e1ab2d3449331efec6b04" title=" " alt="" coords="5,5,161,47"/>
-</map>
+<div class="center"><iframe scrolling="no" frameborder="0" src="delayline__c_8cpp_a91d55c2a92525ad8f7614885e9d9fb54_icgraph.svg" width="374" height="52"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
 </div>
 
 </div>
@@ -206,11 +217,8 @@ Here is the caller graph for this function:</div>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><img src="delayline__c_8cpp_af68889c2abe22b30af482aaa5b41c621_icgraph.png" border="0" usemap="#adelayline__c_8cpp_af68889c2abe22b30af482aaa5b41c621_icgraph" alt=""/></div>
-<map name="adelayline__c_8cpp_af68889c2abe22b30af482aaa5b41c621_icgraph" id="adelayline__c_8cpp_af68889c2abe22b30af482aaa5b41c621_icgraph">
-<area shape="rect" title=" " alt="" coords="209,5,348,47"/>
-<area shape="rect" href="classshrapnel_1_1effect_1_1Chorus.html#aa8c2d5c2e577530b614fd8d2630f32a3" title=" " alt="" coords="5,5,161,47"/>
-</map>
+<div class="center"><iframe scrolling="no" frameborder="0" src="delayline__c_8cpp_af68889c2abe22b30af482aaa5b41c621_icgraph.svg" width="354" height="52"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
 </div>
 
 </div>
@@ -252,11 +260,8 @@ Here is the caller graph for this function:</div>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><img src="delayline__c_8cpp_aa53306eedd2d18301f9295a7fb801c2e_icgraph.png" border="0" usemap="#adelayline__c_8cpp_aa53306eedd2d18301f9295a7fb801c2e_icgraph" alt=""/></div>
-<map name="adelayline__c_8cpp_aa53306eedd2d18301f9295a7fb801c2e_icgraph" id="adelayline__c_8cpp_aa53306eedd2d18301f9295a7fb801c2e_icgraph">
-<area shape="rect" title=" " alt="" coords="209,5,355,47"/>
-<area shape="rect" href="classshrapnel_1_1effect_1_1Chorus.html#aa8c2d5c2e577530b614fd8d2630f32a3" title=" " alt="" coords="5,5,161,47"/>
-</map>
+<div class="center"><iframe scrolling="no" frameborder="0" src="delayline__c_8cpp_aa53306eedd2d18301f9295a7fb801c2e_icgraph.svg" width="360" height="52"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
 </div>
 
 </div>
@@ -298,19 +303,20 @@ Here is the caller graph for this function:</div>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><img src="delayline__c_8cpp_a58e848033be861a7db4b0e00ce45e6d9_icgraph.png" border="0" usemap="#adelayline__c_8cpp_a58e848033be861a7db4b0e00ce45e6d9_icgraph" alt=""/></div>
-<map name="adelayline__c_8cpp_a58e848033be861a7db4b0e00ce45e6d9_icgraph" id="adelayline__c_8cpp_a58e848033be861a7db4b0e00ce45e6d9_icgraph">
-<area shape="rect" title=" " alt="" coords="209,5,344,47"/>
-<area shape="rect" href="classshrapnel_1_1effect_1_1Chorus.html#aa8c2d5c2e577530b614fd8d2630f32a3" title=" " alt="" coords="5,5,161,47"/>
-</map>
+<div class="center"><iframe scrolling="no" frameborder="0" src="delayline__c_8cpp_a58e848033be861a7db4b0e00ce45e6d9_icgraph.svg" width="350" height="52"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
 </div>
 
 </div>
 </div>
 </div><!-- contents -->
+</div><!-- doc-content -->
 <!-- start footer part -->
-<hr class="footer"/><address class="footer"><small>
-Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.4
-</small></address>
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="dir_63bb297c276a119495816091bcd678e9.html">effects</a></li><li class="navelem"><a class="el" href="dir_4dd29be76a1e4902177758ddecb725ac.html">abstract_dsp</a></li><li class="navelem"><a class="el" href="dir_a48185ca72eb19f891a5c34412c9c9cf.html">universal</a></li><li class="navelem"><a class="el" href="delayline__c_8cpp.html">delayline_c.cpp</a></li>
+    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.4 </li>
+  </ul>
+</div>
 </body>
 </html>

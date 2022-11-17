@@ -79,7 +79,9 @@
     if (selectedAccessPoint! &lt; 0 ||
         selectedAccessPoint! &gt; accessPoints!.length) {
       throw StateError(
-          &#39;join called when selectedAccessPoint has invalid value $selectedAccessPoint&#39;);
+        &#39;join called when selectedAccessPoint has invalid value &#39;
+        &#39;$selectedAccessPoint&#39;,
+      );
     }
 
     &#47;&#47; Assigning a default value to a null parameter is allowed
@@ -107,9 +109,11 @@
 
   _status = await _pollWifiStatusWithTimeout(const Duration(seconds: 10));
   if (!_status.isSuccess()) {
-    _log.severe(&#39;could not connect to provisioned access point &#39;
-        &#39;${_status?.state.toString()} &#39;
-        &#39;${_status?.failedReason?.toString()}&#39;);
+    _log.severe(
+      &#39;could not connect to provisioned access point &#39;
+      &#39;${_status?.state.toString()} &#39;
+      &#39;${_status?.failedReason?.toString()}&#39;,
+    );
     _state = WifiProvisioningState.failure;
     return;
   }

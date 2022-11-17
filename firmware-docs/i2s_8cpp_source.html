@@ -9,6 +9,10 @@
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
@@ -20,6 +24,7 @@ MathJax.Hub.Config({
 </script>
 <script type="text/javascript" async="async" src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js"></script>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
+<link href="doxygen-awesome.css" rel="stylesheet" type="text/css"/>
 </head>
 <body>
 <div id="top"><!-- do not remove this div, it is closed by doxygen! -->
@@ -54,6 +59,23 @@ $(function() {
 /* @license-end */
 </script>
 <div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(document).ready(function(){initNavTree('i2s_8cpp_source.html',''); initResizable(); });
+/* @license-end */
+</script>
+<div id="doc-content">
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -68,11 +90,6 @@ $(function() {
 </iframe>
 </div>
 
-<div id="nav-path" class="navpath">
-  <ul>
-<li class="navelem"><a class="el" href="dir_d9edf6c004b4a7ff14fe9ae7a92214ee.html">firmware</a></li><li class="navelem"><a class="el" href="dir_a7f1045ea2c2de513e4829d3edd7d5b7.html">components</a></li><li class="navelem"><a class="el" href="dir_7092270a206f379af139e0c789bb92ec.html">i2s</a></li>  </ul>
-</div>
-</div><!-- top -->
 <div class="header">
   <div class="headertitle"><div class="title">i2s.cpp</div></div>
 </div><!--header-->
@@ -160,7 +177,7 @@ $(function() {
 <div class="line"><a id="l00081" name="l00081"></a><span class="lineno"><a class="line" href="i2s_8cpp.html#a4e37f563a34c1a559515cc40782caf07">   81</a></span><span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code hl_function" href="i2s_8cpp.html#a4e37f563a34c1a559515cc40782caf07">i2s_processing_task</a>(<span class="keywordtype">void</span> *param)</div>
 <div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>{</div>
 <div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>    (void) param;</div>
-<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>    <span class="keyword">auto</span> audio_param = <span class="keyword">reinterpret_cast&lt;</span><a class="code hl_class" href="classshrapnel_1_1AudioParameters.html">shrapnel::AudioParameters</a> *<span class="keyword">&gt;</span>(param);</div>
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>    <span class="keyword">auto</span> audio_param = <span class="keyword">reinterpret_cast&lt;</span><a class="code hl_class" href="classshrapnel_1_1parameters_1_1AudioParameters.html">shrapnel::parameters::AudioParameters</a> *<span class="keyword">&gt;</span>(param);</div>
 <div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span> </div>
 <div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>    <span class="keywordtype">size_t</span> tx_rx_size;</div>
 <div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span> </div>
@@ -204,7 +221,7 @@ $(function() {
 <div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>    }</div>
 <div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span> </div>
 <div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span> </div>
-<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span>    err = <a class="code hl_function" href="process_8cpp.html#ab530789c5aeb0c1c38d5917bfd7a111f">process_init</a>(audio_param);</div>
+<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span>    err = <a class="code hl_function" href="process_8cpp.html#a159f752dbd8aa42d765e604910814129">process_init</a>(audio_param);</div>
 <div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>    <span class="keywordflow">if</span>(err != ESP_OK)</div>
 <div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span>    {</div>
 <div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span>        ESP_LOGE(TAG, <span class="stringliteral">&quot;process_init failed %d, %s&quot;</span>, err, esp_err_to_name(err));</div>
@@ -281,7 +298,7 @@ $(function() {
 <div class="line"><a id="l00202" name="l00202"></a><span class="lineno">  202</span>    }</div>
 <div class="line"><a id="l00203" name="l00203"></a><span class="lineno">  203</span>}</div>
 <div class="line"><a id="l00204" name="l00204"></a><span class="lineno">  204</span> </div>
-<div class="line"><a id="l00205" name="l00205"></a><span class="lineno"><a class="line" href="i2s_8cpp.html#a78c8fe8089980bf7c440301d3171eac6">  205</a></span>esp_err_t <a class="code hl_function" href="i2s_8cpp.html#a78c8fe8089980bf7c440301d3171eac6">i2s_setup</a>(gpio_num_t profiling_gpio, <a class="code hl_class" href="classshrapnel_1_1AudioParameters.html">shrapnel::AudioParameters</a> *audio_param)</div>
+<div class="line"><a id="l00205" name="l00205"></a><span class="lineno"><a class="line" href="i2s_8cpp.html#a445c7079217d08d4767549802dade8a0">  205</a></span>esp_err_t <a class="code hl_function" href="i2s_8cpp.html#a445c7079217d08d4767549802dade8a0">i2s_setup</a>(gpio_num_t profiling_gpio, <a class="code hl_class" href="classshrapnel_1_1parameters_1_1AudioParameters.html">shrapnel::parameters::AudioParameters</a> *audio_param)</div>
 <div class="line"><a id="l00206" name="l00206"></a><span class="lineno">  206</span>{</div>
 <div class="line"><a id="l00207" name="l00207"></a><span class="lineno">  207</span>    esp_err_t err;</div>
 <div class="line"><a id="l00208" name="l00208"></a><span class="lineno">  208</span> </div>
@@ -322,25 +339,29 @@ $(function() {
 <div class="line"><a id="l00243" name="l00243"></a><span class="lineno">  243</span> </div>
 <div class="line"><a id="l00244" name="l00244"></a><span class="lineno">  244</span>    <span class="keywordflow">return</span> ESP_OK;</div>
 <div class="line"><a id="l00245" name="l00245"></a><span class="lineno">  245</span>}</div>
-<div class="ttc" id="aclassshrapnel_1_1AudioParameters_html"><div class="ttname"><a href="classshrapnel_1_1AudioParameters.html">shrapnel::AudioParameters</a></div><div class="ttdef"><b>Definition:</b> <a href="audio__param_8h_source.html#l00055">audio_param.h:55</a></div></div>
+<div class="ttc" id="aclassshrapnel_1_1parameters_1_1AudioParameters_html"><div class="ttname"><a href="classshrapnel_1_1parameters_1_1AudioParameters.html">shrapnel::parameters::AudioParameters</a></div><div class="ttdef"><b>Definition:</b> <a href="audio__param_8h_source.html#l00059">audio_param.h:59</a></div></div>
 <div class="ttc" id="afloat__convert_8h_html"><div class="ttname"><a href="float__convert_8h.html">float_convert.h</a></div></div>
 <div class="ttc" id="afloat__convert_8h_html_ae9b18f6b920e3401ec41278b57e6817b"><div class="ttname"><a href="float__convert_8h.html#ae9b18f6b920e3401ec41278b57e6817b">float_to_int32</a></div><div class="ttdeci">static int32_t float_to_int32(float f)</div><div class="ttdef"><b>Definition:</b> <a href="float__convert_8h_source.html#l00031">float_convert.h:31</a></div></div>
 <div class="ttc" id="ahardware_8h_html"><div class="ttname"><a href="hardware_8h.html">hardware.h</a></div></div>
 <div class="ttc" id="ai2s_8cpp_html_a0826d7a742c16e16a62704cc59fd4ba2"><div class="ttname"><a href="i2s_8cpp.html#a0826d7a742c16e16a62704cc59fd4ba2">event_task</a></div><div class="ttdeci">static void event_task(void *param)</div><div class="ttdef"><b>Definition:</b> <a href="i2s_8cpp_source.html#l00055">i2s.cpp:55</a></div></div>
 <div class="ttc" id="ai2s_8cpp_html_a4025221c11b823336cd64a55623f8a1e"><div class="ttname"><a href="i2s_8cpp.html#a4025221c11b823336cd64a55623f8a1e">rx_buf</a></div><div class="ttdeci">static int32_t rx_buf[2 *DMA_BUF_SIZE]</div><div class="ttdef"><b>Definition:</b> <a href="i2s_8cpp_source.html#l00051">i2s.cpp:51</a></div></div>
+<div class="ttc" id="ai2s_8cpp_html_a445c7079217d08d4767549802dade8a0"><div class="ttname"><a href="i2s_8cpp.html#a445c7079217d08d4767549802dade8a0">i2s_setup</a></div><div class="ttdeci">esp_err_t i2s_setup(gpio_num_t profiling_gpio, shrapnel::parameters::AudioParameters *audio_param)</div><div class="ttdef"><b>Definition:</b> <a href="i2s_8cpp_source.html#l00205">i2s.cpp:205</a></div></div>
 <div class="ttc" id="ai2s_8cpp_html_a4e37f563a34c1a559515cc40782caf07"><div class="ttname"><a href="i2s_8cpp.html#a4e37f563a34c1a559515cc40782caf07">i2s_processing_task</a></div><div class="ttdeci">static void i2s_processing_task(void *param)</div><div class="ttdef"><b>Definition:</b> <a href="i2s_8cpp_source.html#l00081">i2s.cpp:81</a></div></div>
-<div class="ttc" id="ai2s_8cpp_html_a78c8fe8089980bf7c440301d3171eac6"><div class="ttname"><a href="i2s_8cpp.html#a78c8fe8089980bf7c440301d3171eac6">i2s_setup</a></div><div class="ttdeci">esp_err_t i2s_setup(gpio_num_t profiling_gpio, shrapnel::AudioParameters *audio_param)</div><div class="ttdef"><b>Definition:</b> <a href="i2s_8cpp_source.html#l00205">i2s.cpp:205</a></div></div>
 <div class="ttc" id="ai2s_8cpp_html_a9b83a13d267928932fc9d01c7ee09df2"><div class="ttname"><a href="i2s_8cpp.html#a9b83a13d267928932fc9d01c7ee09df2">i2s_queue</a></div><div class="ttdeci">static QueueHandle_t i2s_queue</div><div class="ttdef"><b>Definition:</b> <a href="i2s_8cpp_source.html#l00047">i2s.cpp:47</a></div></div>
 <div class="ttc" id="ai2s_8cpp_html_aa5ff31a870fe9e98978a1013e6735d45"><div class="ttname"><a href="i2s_8cpp.html#aa5ff31a870fe9e98978a1013e6735d45">g_profiling_gpio</a></div><div class="ttdeci">gpio_num_t g_profiling_gpio</div><div class="ttdef"><b>Definition:</b> <a href="i2s_8cpp_source.html#l00053">i2s.cpp:53</a></div></div>
 <div class="ttc" id="ai2s_8h_html"><div class="ttname"><a href="i2s_8h.html">i2s.h</a></div></div>
 <div class="ttc" id="anoise__gate_8cpp_html_a63433fe701b4e06f2cfdd50509e660db"><div class="ttname"><a href="noise__gate_8cpp.html#a63433fe701b4e06f2cfdd50509e660db">sample_rate</a></div><div class="ttdeci">static float sample_rate</div><div class="ttdef"><b>Definition:</b> <a href="noise__gate_8cpp_source.html#l00046">noise_gate.cpp:46</a></div></div>
+<div class="ttc" id="aprocess_8cpp_html_a159f752dbd8aa42d765e604910814129"><div class="ttname"><a href="process_8cpp.html#a159f752dbd8aa42d765e604910814129">process_init</a></div><div class="ttdeci">esp_err_t process_init(shrapnel::parameters::AudioParameters *audio_params)</div><div class="ttdef"><b>Definition:</b> <a href="process_8cpp_source.html#l00163">process.cpp:163</a></div></div>
 <div class="ttc" id="aprocess_8cpp_html_a450bec865b55b9890f4050f1ab0dba5c"><div class="ttname"><a href="process_8cpp.html#a450bec865b55b9890f4050f1ab0dba5c">process_samples</a></div><div class="ttdeci">void process_samples(int32_t *buf, size_t buf_len)</div><div class="ttdef"><b>Definition:</b> <a href="process_8cpp_source.html#l00086">process.cpp:86</a></div></div>
-<div class="ttc" id="aprocess_8cpp_html_ab530789c5aeb0c1c38d5917bfd7a111f"><div class="ttname"><a href="process_8cpp.html#ab530789c5aeb0c1c38d5917bfd7a111f">process_init</a></div><div class="ttdeci">esp_err_t process_init(shrapnel::AudioParameters *audio_params)</div><div class="ttdef"><b>Definition:</b> <a href="process_8cpp_source.html#l00163">process.cpp:163</a></div></div>
 <div class="ttc" id="aprocess_8h_html"><div class="ttname"><a href="process_8h.html">process.h</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
+</div><!-- doc-content -->
 <!-- start footer part -->
-<hr class="footer"/><address class="footer"><small>
-Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.4
-</small></address>
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="dir_d9edf6c004b4a7ff14fe9ae7a92214ee.html">firmware</a></li><li class="navelem"><a class="el" href="dir_a7f1045ea2c2de513e4829d3edd7d5b7.html">components</a></li><li class="navelem"><a class="el" href="dir_7092270a206f379af139e0c789bb92ec.html">i2s</a></li><li class="navelem"><a class="el" href="i2s_8cpp.html">i2s.cpp</a></li>
+    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.4 </li>
+  </ul>
+</div>
 </body>
 </html>

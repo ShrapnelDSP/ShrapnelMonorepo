@@ -1,7 +1,0 @@
-<map id="shrapnel::AudioParameters::get_raw_parameter" name="shrapnel::AudioParameters::get_raw_parameter">
-<area shape="rect" id="node1" title="Get denormalised value of parameter." alt="" coords="643,5,820,47"/>
-<area shape="rect" id="node2" href="$process_8cpp.html#ab530789c5aeb0c1c38d5917bfd7a111f" title=" " alt="" coords="503,13,595,39"/>
-<area shape="rect" id="node3" href="$i2s_8cpp.html#a4e37f563a34c1a559515cc40782caf07" title=" " alt="" coords="313,13,455,39"/>
-<area shape="rect" id="node4" href="$i2s_8cpp.html#a78c8fe8089980bf7c440301d3171eac6" title=" " alt="" coords="187,13,265,39"/>
-<area shape="rect" id="node5" href="$namespaceshrapnel.html#a9f09f4ea750643310af9143a53735b7d" title=" " alt="" coords="5,13,139,39"/>
-</map>

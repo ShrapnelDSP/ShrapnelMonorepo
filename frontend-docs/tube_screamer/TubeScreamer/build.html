@@ -117,22 +117,26 @@ Widget build(BuildContext context) {
       return StompboxModel(
         parameters: [
           AudioParameterDoubleModel(
+            groupName: _name,
             name: &#39;DRIVE&#39;,
             id: &#39;tubeScreamerDrive&#39;,
             parameterService: parameterService,
           ),
           AudioParameterDoubleModel(
+            groupName: _name,
             name: &#39;TONE&#39;,
             id: &#39;tubeScreamerTone&#39;,
             parameterService: parameterService,
           ),
           AudioParameterDoubleModel(
+            groupName: _name,
             name: &#39;LEVEL&#39;,
             id: &#39;tubeScreamerLevel&#39;,
             parameterService: parameterService,
           ),
         ],
         bypass: AudioParameterDoubleModel(
+          groupName: _name,
           name: &#39;Bypass&#39;,
           id: &#39;tubeScreamerBypass&#39;,
           parameterService: parameterService,
@@ -140,7 +144,7 @@ Widget build(BuildContext context) {
       );
     },
     child: Stompbox(
-      name: &#39;Tube Screamer&#39;,
+      name: _name,
       onCardTap: onTap,
       full: full,
       primarySwatch: Colors.green,

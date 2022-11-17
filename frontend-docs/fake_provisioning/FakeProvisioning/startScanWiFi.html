@@ -76,15 +76,16 @@
   <h2><span>Implementation</span></h2>
   <pre class="language-dart"><code class="language-dart">@override
 Future&lt;List&lt;Map&lt;String, dynamic&gt;&gt;?&gt; startScanWiFi() =&gt; Future.delayed(
-    const Duration(milliseconds: 500),
-    () =&gt; &lt;Map&lt;String, dynamic&gt;&gt;[
-          _createFakeWifi(0),
-          _createFakeWifi(1),
-          _createFakeWifi(2),
-          _createFakeWifi(3),
-          _createFakeWifi(4),
-          _createFakeWifi(5),
-        ]);</code></pre>
+      const Duration(milliseconds: 500),
+      () =&gt; &lt;Map&lt;String, dynamic&gt;&gt;[
+        _createFakeWifi(0),
+        _createFakeWifi(1),
+        _createFakeWifi(2),
+        _createFakeWifi(3),
+        _createFakeWifi(4),
+        _createFakeWifi(5),
+      ],
+    );</code></pre>
 </section>
 
 

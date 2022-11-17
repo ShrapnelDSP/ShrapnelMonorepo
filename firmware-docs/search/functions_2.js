@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['begin_0',['begin',['../classshrapnel_1_1AudioParameters.html#acbacb2d465147b3d82210b86ebc24c98',1,'shrapnel::AudioParameters']]]
+  ['begin_0',['begin',['../classshrapnel_1_1parameters_1_1AudioParameters.html#a9a285022c312b44ce205e229d34b6545',1,'shrapnel::parameters::AudioParameters']]]
 ];

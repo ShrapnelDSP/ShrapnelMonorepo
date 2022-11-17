@@ -1,0 +1,4 @@
+<map id="shrapnel::midi::parse_uuid" name="shrapnel::midi::parse_uuid">
+<area shape="rect" id="node1" title="return non&#45;zero on error" alt="" coords="217,5,388,32"/>
+<area shape="rect" id="node2" href="$namespaceshrapnel_1_1midi.html#aed2b96bd6d4afdcc8507cb7b5f0ef4bc" title="Convert the message into a object representing it." alt="" coords="5,5,169,32"/>
+</map>

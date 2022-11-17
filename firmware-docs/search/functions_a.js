@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['operator_3c_3d_3e_0',['operator&lt;=&gt;',['../structshrapnel_1_1midi_1_1Message_1_1NoteOn.html#add863d645e0452bb0ac43f7739cf5804',1,'shrapnel::midi::Message::NoteOn::operator&lt;=&gt;()'],['../structshrapnel_1_1midi_1_1Message_1_1NoteOff.html#a8beefb777339c584dba81624664a7273',1,'shrapnel::midi::Message::NoteOff::operator&lt;=&gt;()'],['../structshrapnel_1_1midi_1_1Message_1_1ControlChange.html#a9c53addf1bc45bb7465be7f77e87ed56',1,'shrapnel::midi::Message::ControlChange::operator&lt;=&gt;()'],['../structshrapnel_1_1midi_1_1Message_1_1ProgramChange.html#ae4fb72abd101fb0f4d617f3fddb88fd7',1,'shrapnel::midi::Message::ProgramChange::operator&lt;=&gt;()'],['../structshrapnel_1_1midi_1_1Message.html#ae58756b30f1b248c292f84f1c7b82df7',1,'shrapnel::midi::Message::operator&lt;=&gt;()']]]
+  ['mapping_0',['Mapping',['../structshrapnel_1_1midi_1_1Mapping.html#a6050952f5b5e3bb7cdc04e2dd5cf5706',1,'shrapnel::midi::Mapping']]],
+  ['mappingmanager_1',['MappingManager',['../classshrapnel_1_1midi_1_1MappingManager.html#a7233a28e7d459ea626aa2d91595a3ae7',1,'shrapnel::midi::MappingManager']]]
 ];

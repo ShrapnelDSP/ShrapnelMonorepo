@@ -114,27 +114,32 @@ Widget build(BuildContext context) {
       return StompboxModel(
         parameters: [
           AudioParameterDoubleModel(
+            groupName: _name,
             name: &#39;Attack&#39;,
             id: &#39;noiseGateAttack&#39;,
             parameterService: parameterService,
           ),
           AudioParameterDoubleModel(
+            groupName: _name,
             name: &#39;Hysteresis&#39;,
             id: &#39;noiseGateHysteresis&#39;,
             parameterService: parameterService,
           ),
           AudioParameterDoubleModel(
+            groupName: _name,
             name: &#39;Release&#39;,
             id: &#39;noiseGateRelease&#39;,
             parameterService: parameterService,
           ),
           AudioParameterDoubleModel(
+            groupName: _name,
             name: &#39;Threshold&#39;,
             id: &#39;noiseGateThreshold&#39;,
             parameterService: parameterService,
           ),
         ],
         bypass: AudioParameterDoubleModel(
+          groupName: _name,
           name: &#39;Bypass&#39;,
           id: &#39;noiseGateBypass&#39;,
           parameterService: parameterService,
@@ -142,7 +147,7 @@ Widget build(BuildContext context) {
       );
     },
     child: Stompbox(
-      name: &#39;Noise Gate&#39;,
+      name: _name,
       onCardTap: onTap,
       full: full,
       primarySwatch: Colors.red,

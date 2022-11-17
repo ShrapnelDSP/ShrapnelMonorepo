@@ -69,23 +69,25 @@
   final provisioning = Provider.of&lt;WifiProvisioningProvider&gt;(context);
 
   return Center(
-      child: Column(
-    mainAxisAlignment: MainAxisAlignment.center,
-    children: [
-      Container(
-        margin: const EdgeInsets.all(10),
-        child: Text(
+    child: Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Container(
+          margin: const EdgeInsets.all(10),
+          child: Text(
             provisioning.status?.failedReason == null
                 ? _Strings.failureMessage
                 : &#39;${_Strings.failureMessage} ${_Strings.failureReasonMessage[provisioning.status!.failedReason]!}&#39;,
-            textAlign: TextAlign.center),
-      ),
-      ElevatedButton(
-        onPressed: provisioning.start,
-        child: const Text(_Strings.retryButtonText),
-      ),
-    ],
-  ));
+            textAlign: TextAlign.center,
+          ),
+        ),
+        ElevatedButton(
+          onPressed: provisioning.start,
+          child: const Text(_Strings.retryButtonText),
+        ),
+      ],
+    ),
+  );
 }</code></pre>
 </section>
 

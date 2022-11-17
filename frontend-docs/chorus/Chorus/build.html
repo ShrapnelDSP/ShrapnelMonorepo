@@ -117,22 +117,26 @@ Widget build(BuildContext context) {
       return StompboxModel(
         parameters: [
           AudioParameterDoubleModel(
+            groupName: _name,
             name: &#39;DEPTH&#39;,
             id: &#39;chorusDepth&#39;,
             parameterService: parameterService,
           ),
           AudioParameterDoubleModel(
+            groupName: _name,
             name: &#39;MIX&#39;,
             id: &#39;chorusMix&#39;,
             parameterService: parameterService,
           ),
           AudioParameterDoubleModel(
+            groupName: _name,
             name: &#39;RATE&#39;,
             id: &#39;chorusRate&#39;,
             parameterService: parameterService,
           ),
         ],
         bypass: AudioParameterDoubleModel(
+          groupName: _name,
           name: &#39;Bypass&#39;,
           id: &#39;chorusBypass&#39;,
           parameterService: parameterService,
@@ -140,7 +144,7 @@ Widget build(BuildContext context) {
       );
     },
     child: Stompbox(
-      name: &#39;Chorus&#39;,
+      name: _name,
       onCardTap: onTap,
       full: full,
       primarySwatch: Colors.blue,

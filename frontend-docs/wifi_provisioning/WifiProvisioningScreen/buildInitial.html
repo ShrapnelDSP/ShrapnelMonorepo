@@ -70,21 +70,24 @@
       Provider.of&lt;WifiProvisioningProvider&gt;(context, listen: false);
 
   return Center(
-      child: Column(
-    mainAxisAlignment: MainAxisAlignment.center,
-    children: [
-      Container(
-        margin: const EdgeInsets.all(10),
-        child:
-            const Text(_Strings.initialMessage, textAlign: TextAlign.center),
-      ),
-      ElevatedButton(
-        key: const Key(&#39;wifi provisioning start&#39;),
-        onPressed: provisioning.start,
-        child: const Text(_Strings.initialButtonText),
-      ),
-    ],
-  ));
+    child: Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Container(
+          margin: const EdgeInsets.all(10),
+          child: const Text(
+            _Strings.initialMessage,
+            textAlign: TextAlign.center,
+          ),
+        ),
+        ElevatedButton(
+          key: const Key(&#39;wifi provisioning start&#39;),
+          onPressed: provisioning.start,
+          child: const Text(_Strings.initialButtonText),
+        ),
+      ],
+    ),
+  );
 }</code></pre>
 </section>
 

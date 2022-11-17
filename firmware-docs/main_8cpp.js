@@ -1,0 +1,26 @@
+var main_8cpp =
+[
+    [ "shrapnel::audio_event_message_t", "structshrapnel_1_1audio__event__message__t.html", "structshrapnel_1_1audio__event__message__t" ],
+    [ "app_main", "main_8cpp.html#a9f09f4ea750643310af9143a53735b7d", null ],
+    [ "audio_event_send_callback", "main_8cpp.html#a956bb48f7ee4a35a535c8858a66596d5", null ],
+    [ "connect_handler", "main_8cpp.html#a4bf0b1d7c4fef2839a56059a237d1da6", null ],
+    [ "disconnect_handler", "main_8cpp.html#ae3cbca1e45f686a5790d51825e2754a2", null ],
+    [ "failed_alloc_callback", "main_8cpp.html#a9f01b77156c5fc53346d256b9735e6f8", null ],
+    [ "i2c_setup", "main_8cpp.html#a2b47dde02734c93bbdabfd97cb23dd2a", null ],
+    [ "start_mdns", "main_8cpp.html#a62ed101f04b8c40f7fdc427e6b169353", null ],
+    [ "start_webserver", "main_8cpp.html#a7ab448c59a74266fc5aaded062ed1961", null ],
+    [ "stop_webserver", "main_8cpp.html#ac11c58ef0962c52aa2cbcb5885d6261a", null ],
+    [ "ui_get_handler", "main_8cpp.html#a39fa0ecf6c29c9e280780ff1fe11517a", null ],
+    [ "websocket_get_handler", "main_8cpp.html#ac411c31b2f0dc2242fd12980da5b843d", null ],
+    [ "websocket_send", "main_8cpp.html#a9df539517dd9158cb2b42a9d9e948a73", null ],
+    [ "wifi_start_handler", "main_8cpp.html#ad3636f58faa95196bef6352b331ed3da", null ],
+    [ "_server", "main_8cpp.html#a14fc4d7d4bcc6e89ccd89f7f9e07fb97", null ],
+    [ "audio_params", "main_8cpp.html#ab730eff37b9fd09b53baf222b86d8c4f", null ],
+    [ "cmd_handling_task", "main_8cpp.html#a34bece8606142f53ff7b3802d7f70c38", null ],
+    [ "event_send", "main_8cpp.html#ab0359eebd8a91c4c12b08d9465f8d8c3", null ],
+    [ "in_queue", "main_8cpp.html#a0a1f181e084436dcd88a9d722d763048", null ],
+    [ "out_queue", "main_8cpp.html#a402cf2cc4ab226e99766f72f8b21ea06", null ],
+    [ "ui", "main_8cpp.html#a7e01d080294d5dae6e2840562e397fb7", null ],
+    [ "websocket", "main_8cpp.html#a0b7d44945a5a79cfff45cbd9f59a6d93", null ],
+    [ "work_semaphore", "main_8cpp.html#ab9671c2bf7feea52d1ba947c71395a73", null ]
+];

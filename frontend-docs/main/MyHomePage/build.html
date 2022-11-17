@@ -111,28 +111,40 @@ Widget build(BuildContext context) {
     appBar: AppBar(
       title: Text(title),
       actions: [
-        Container(
-          margin: const EdgeInsets.all(10),
-          child: IconButton(
-            icon: const Icon(Icons.settings),
-            key: const Key(&#39;wifi provisioning button&#39;),
-            onPressed: () {
-              Navigator.push&lt;ProvisioningPage&gt;(
-                context,
-                MaterialPageRoute(
-                    builder: (context) =&gt; const ProvisioningPage()),
-              );
-            },
-          ),
+        IconButton(
+          icon: const Icon(Icons.map_outlined),
+          key: const Key(&#39;midi-mapping-button&#39;),
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute&lt;MidiMappingPage&gt;(
+                builder: (context) {
+                  context.read&lt;MidiMappingService&gt;().getMapping();
+                  return const MidiMappingPage();
+                },
+              ),
+            );
+          },
         ),
+        IconButton(
+          icon: const Icon(Icons.settings),
+          key: const Key(&#39;wifi provisioning button&#39;),
+          onPressed: () {
+            Navigator.push&lt;ProvisioningPage&gt;(
+              context,
+              MaterialPageRoute(
+                builder: (context) =&gt; const ProvisioningPage(),
+              ),
+            );
+          },
+        ),
+        Container(width: 10),
         const WebSocketStatus(size: kToolbarHeight - 20),
         Container(width: 10),
       ],
     ),
-    body: const ParameterServiceProvider(
-      child: Center(
-        child: Pedalboard(),
-      ),
+    body: const Center(
+      child: Pedalboard(),
     ),
   );
 }</code></pre>

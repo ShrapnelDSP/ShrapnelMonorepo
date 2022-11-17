@@ -9,6 +9,10 @@
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
@@ -20,6 +24,7 @@ MathJax.Hub.Config({
 </script>
 <script type="text/javascript" async="async" src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js"></script>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
+<link href="doxygen-awesome.css" rel="stylesheet" type="text/css"/>
 </head>
 <body>
 <div id="top"><!-- do not remove this div, it is closed by doxygen! -->
@@ -54,6 +59,23 @@ $(function() {
 /* @license-end */
 </script>
 <div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(document).ready(function(){initNavTree('i2s_8cpp.html',''); initResizable(); });
+/* @license-end */
+</script>
+<div id="doc-content">
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -68,11 +90,6 @@ $(function() {
 </iframe>
 </div>
 
-<div id="nav-path" class="navpath">
-  <ul>
-<li class="navelem"><a class="el" href="dir_d9edf6c004b4a7ff14fe9ae7a92214ee.html">firmware</a></li><li class="navelem"><a class="el" href="dir_a7f1045ea2c2de513e4829d3edd7d5b7.html">components</a></li><li class="navelem"><a class="el" href="dir_7092270a206f379af139e0c789bb92ec.html">i2s</a></li>  </ul>
-</div>
-</div><!-- top -->
 <div class="header">
   <div class="summary">
 <a href="#func-members">Functions</a> &#124;
@@ -89,8 +106,8 @@ Functions</h2></td></tr>
 <tr class="separator:a0826d7a742c16e16a62704cc59fd4ba2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4e37f563a34c1a559515cc40782caf07"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="i2s_8cpp.html#a4e37f563a34c1a559515cc40782caf07">i2s_processing_task</a> (void *param)</td></tr>
 <tr class="separator:a4e37f563a34c1a559515cc40782caf07"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a78c8fe8089980bf7c440301d3171eac6"><td class="memItemLeft" align="right" valign="top">esp_err_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="i2s_8cpp.html#a78c8fe8089980bf7c440301d3171eac6">i2s_setup</a> (gpio_num_t profiling_gpio, <a class="el" href="classshrapnel_1_1AudioParameters.html">shrapnel::AudioParameters</a> *audio_param)</td></tr>
-<tr class="separator:a78c8fe8089980bf7c440301d3171eac6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a445c7079217d08d4767549802dade8a0"><td class="memItemLeft" align="right" valign="top">esp_err_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="i2s_8cpp.html#a445c7079217d08d4767549802dade8a0">i2s_setup</a> (gpio_num_t profiling_gpio, <a class="el" href="classshrapnel_1_1parameters_1_1AudioParameters.html">shrapnel::parameters::AudioParameters</a> *audio_param)</td></tr>
+<tr class="separator:a445c7079217d08d4767549802dade8a0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
 Variables</h2></td></tr>
@@ -159,12 +176,8 @@ Variables</h2></td></tr>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><img src="i2s_8cpp_a0826d7a742c16e16a62704cc59fd4ba2_icgraph.png" border="0" usemap="#ai2s_8cpp_a0826d7a742c16e16a62704cc59fd4ba2_icgraph" alt=""/></div>
-<map name="ai2s_8cpp_a0826d7a742c16e16a62704cc59fd4ba2_icgraph" id="ai2s_8cpp_a0826d7a742c16e16a62704cc59fd4ba2_icgraph">
-<area shape="rect" title=" " alt="" coords="313,5,400,32"/>
-<area shape="rect" href="i2s_8cpp.html#a78c8fe8089980bf7c440301d3171eac6" title=" " alt="" coords="187,5,265,32"/>
-<area shape="rect" href="namespaceshrapnel.html#a9f09f4ea750643310af9143a53735b7d" title=" " alt="" coords="5,5,139,32"/>
-</map>
+<div class="center"><iframe scrolling="no" frameborder="0" src="i2s_8cpp_a0826d7a742c16e16a62704cc59fd4ba2_icgraph.svg" width="406" height="38"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
 </div>
 
 </div>
@@ -196,7 +209,7 @@ Here is the caller graph for this function:</div>
 <p class="definition">Definition at line <a class="el" href="i2s_8cpp_source.html#l00081">81</a> of file <a class="el" href="i2s_8cpp_source.html">i2s.cpp</a>.</p>
 <div class="fragment"><div class="line"><span class="lineno">   82</span>{</div>
 <div class="line"><span class="lineno">   83</span>    (void) param;</div>
-<div class="line"><span class="lineno">   84</span>    <span class="keyword">auto</span> audio_param = <span class="keyword">reinterpret_cast&lt;</span><a class="code hl_class" href="classshrapnel_1_1AudioParameters.html">shrapnel::AudioParameters</a> *<span class="keyword">&gt;</span>(param);</div>
+<div class="line"><span class="lineno">   84</span>    <span class="keyword">auto</span> audio_param = <span class="keyword">reinterpret_cast&lt;</span><a class="code hl_class" href="classshrapnel_1_1parameters_1_1AudioParameters.html">shrapnel::parameters::AudioParameters</a> *<span class="keyword">&gt;</span>(param);</div>
 <div class="line"><span class="lineno">   85</span> </div>
 <div class="line"><span class="lineno">   86</span>    <span class="keywordtype">size_t</span> tx_rx_size;</div>
 <div class="line"><span class="lineno">   87</span> </div>
@@ -240,7 +253,7 @@ Here is the caller graph for this function:</div>
 <div class="line"><span class="lineno">  125</span>    }</div>
 <div class="line"><span class="lineno">  126</span> </div>
 <div class="line"><span class="lineno">  127</span> </div>
-<div class="line"><span class="lineno">  128</span>    err = <a class="code hl_function" href="process_8cpp.html#ab530789c5aeb0c1c38d5917bfd7a111f">process_init</a>(audio_param);</div>
+<div class="line"><span class="lineno">  128</span>    err = <a class="code hl_function" href="process_8cpp.html#a159f752dbd8aa42d765e604910814129">process_init</a>(audio_param);</div>
 <div class="line"><span class="lineno">  129</span>    <span class="keywordflow">if</span>(err != ESP_OK)</div>
 <div class="line"><span class="lineno">  130</span>    {</div>
 <div class="line"><span class="lineno">  131</span>        ESP_LOGE(TAG, <span class="stringliteral">&quot;process_init failed %d, %s&quot;</span>, err, esp_err_to_name(err));</div>
@@ -316,12 +329,12 @@ Here is the caller graph for this function:</div>
 <div class="line"><span class="lineno">  201</span>        }</div>
 <div class="line"><span class="lineno">  202</span>    }</div>
 <div class="line"><span class="lineno">  203</span>}</div>
-<div class="ttc" id="aclassshrapnel_1_1AudioParameters_html"><div class="ttname"><a href="classshrapnel_1_1AudioParameters.html">shrapnel::AudioParameters</a></div><div class="ttdef"><b>Definition:</b> <a href="audio__param_8h_source.html#l00055">audio_param.h:55</a></div></div>
+<div class="ttc" id="aclassshrapnel_1_1parameters_1_1AudioParameters_html"><div class="ttname"><a href="classshrapnel_1_1parameters_1_1AudioParameters.html">shrapnel::parameters::AudioParameters</a></div><div class="ttdef"><b>Definition:</b> <a href="audio__param_8h_source.html#l00059">audio_param.h:59</a></div></div>
 <div class="ttc" id="afloat__convert_8h_html_ae9b18f6b920e3401ec41278b57e6817b"><div class="ttname"><a href="float__convert_8h.html#ae9b18f6b920e3401ec41278b57e6817b">float_to_int32</a></div><div class="ttdeci">static int32_t float_to_int32(float f)</div><div class="ttdef"><b>Definition:</b> <a href="float__convert_8h_source.html#l00031">float_convert.h:31</a></div></div>
 <div class="ttc" id="ai2s_8cpp_html_a4025221c11b823336cd64a55623f8a1e"><div class="ttname"><a href="i2s_8cpp.html#a4025221c11b823336cd64a55623f8a1e">rx_buf</a></div><div class="ttdeci">static int32_t rx_buf[2 *DMA_BUF_SIZE]</div><div class="ttdef"><b>Definition:</b> <a href="i2s_8cpp_source.html#l00051">i2s.cpp:51</a></div></div>
 <div class="ttc" id="anoise__gate_8cpp_html_a63433fe701b4e06f2cfdd50509e660db"><div class="ttname"><a href="noise__gate_8cpp.html#a63433fe701b4e06f2cfdd50509e660db">sample_rate</a></div><div class="ttdeci">static float sample_rate</div><div class="ttdef"><b>Definition:</b> <a href="noise__gate_8cpp_source.html#l00046">noise_gate.cpp:46</a></div></div>
+<div class="ttc" id="aprocess_8cpp_html_a159f752dbd8aa42d765e604910814129"><div class="ttname"><a href="process_8cpp.html#a159f752dbd8aa42d765e604910814129">process_init</a></div><div class="ttdeci">esp_err_t process_init(shrapnel::parameters::AudioParameters *audio_params)</div><div class="ttdef"><b>Definition:</b> <a href="process_8cpp_source.html#l00163">process.cpp:163</a></div></div>
 <div class="ttc" id="aprocess_8cpp_html_a450bec865b55b9890f4050f1ab0dba5c"><div class="ttname"><a href="process_8cpp.html#a450bec865b55b9890f4050f1ab0dba5c">process_samples</a></div><div class="ttdeci">void process_samples(int32_t *buf, size_t buf_len)</div><div class="ttdef"><b>Definition:</b> <a href="process_8cpp_source.html#l00086">process.cpp:86</a></div></div>
-<div class="ttc" id="aprocess_8cpp_html_ab530789c5aeb0c1c38d5917bfd7a111f"><div class="ttname"><a href="process_8cpp.html#ab530789c5aeb0c1c38d5917bfd7a111f">process_init</a></div><div class="ttdeci">esp_err_t process_init(shrapnel::AudioParameters *audio_params)</div><div class="ttdef"><b>Definition:</b> <a href="process_8cpp_source.html#l00163">process.cpp:163</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="float__convert_8h_source.html#l00031">float_to_int32()</a>, <a class="el" href="i2s_8cpp_source.html#l00047">i2s_queue</a>, <a class="el" href="process_8cpp_source.html#l00163">process_init()</a>, <a class="el" href="process_8cpp_source.html#l00086">process_samples()</a>, <a class="el" href="i2s_8cpp_source.html#l00051">rx_buf</a>, and <a class="el" href="noise__gate_8cpp_source.html#l00046">sample_rate</a>.</p>
 
@@ -329,50 +342,20 @@ Here is the caller graph for this function:</div>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><img src="i2s_8cpp_a4e37f563a34c1a559515cc40782caf07_cgraph.png" border="0" usemap="#ai2s_8cpp_a4e37f563a34c1a559515cc40782caf07_cgraph" alt=""/></div>
-<map name="ai2s_8cpp_a4e37f563a34c1a559515cc40782caf07_cgraph" id="ai2s_8cpp_a4e37f563a34c1a559515cc40782caf07_cgraph">
-<area shape="rect" title=" " alt="" coords="5,470,147,497"/>
-<area shape="rect" href="float__convert_8h.html#ae9b18f6b920e3401ec41278b57e6817b" title=" " alt="" coords="406,470,505,497"/>
-<area shape="rect" href="process_8cpp.html#ab530789c5aeb0c1c38d5917bfd7a111f" title=" " alt="" coords="211,267,303,294"/>
-<area shape="rect" href="process_8cpp.html#a450bec865b55b9890f4050f1ab0dba5c" title=" " alt="" coords="195,521,319,547"/>
-<area shape="rect" href="noise__gate_8cpp.html#a949bfebe851dee44040d83bbd068dad1" title="Initialise the effect." alt="" coords="420,166,491,193"/>
-<area shape="rect" href="noise__gate_8cpp.html#a4868a6f017c846668c1b09d32b833099" title="Set the attack time in milliseconds." alt="" coords="398,419,513,446"/>
-<area shape="rect" href="noise__gate_8cpp.html#a184d915d5eb18d4743c6e3008bb47e62" title="Set the buffer size in number of samples." alt="" coords="385,217,526,243"/>
-<area shape="rect" href="noise__gate_8cpp.html#a4fccad713cee272e388c9c45fc97037e" title="Set the hold time in milliseconds." alt="" coords="404,267,507,294"/>
-<area shape="rect" href="noise__gate_8cpp.html#abe525a07b8cb6f0557740cc4100428a9" title="Set the release time in milliseconds." alt="" coords="395,318,516,345"/>
-<area shape="rect" href="noise__gate_8cpp.html#a2691256497a1cec4e14434f48eccfb56" title="Set the sample rate in Hz." alt="" coords="380,49,531,75"/>
-<area shape="rect" href="noise__gate_8cpp.html#a82e62ed410acc03c8179d8245de13e12" title="Set the threshold and hysteresis value in dBFS." alt="" coords="389,369,521,395"/>
-<area shape="rect" href="classshrapnel_1_1AudioParameters.html#a4ffc221fcb7640697851ee05495e43eb" title="Get denormalised value of parameter." alt="" coords="367,100,544,141"/>
-<area shape="rect" href="noise__gate_8cpp.html#a5d3ba76b4666ac1820b498aaf04ea22e" title="Reset the state." alt="" coords="623,166,705,193"/>
-<area shape="rect" href="abstract__dsp__esp32_8c.html#ab721c839889c1267077f4cb3304b655d" title=" " alt="" coords="593,5,735,47"/>
-<area shape="rect" href="classshrapnel_1_1dsp_1_1IirFilter.html#aa09e7c1ab99d85c0fdd1c98c80636550" title=" " alt="" coords="592,71,736,112"/>
-<area shape="rect" href="noise__gate_8cpp.html#afb2354391bb81545d92334434552ab4b" title=" " alt="" coords="621,369,707,395"/>
-<area shape="rect" href="process_8cpp.html#a9785ac35cd7c86538882d5311fd66bf1" title=" " alt="" coords="399,673,512,699"/>
-<area shape="rect" href="noise__gate_8cpp.html#a129b18f80393706faa5a453417153a51" title="Analyse the audio." alt="" coords="406,723,505,750"/>
-<area shape="rect" href="noise__gate_8cpp.html#a3a59d391339a038f91650058680b00d6" title="Apply the precalculated gain to the audio." alt="" coords="405,775,505,802"/>
-<area shape="rect" href="profiling_8cpp.html#a3171d2be3fbf00e49982243e9869735a" title=" " alt="" coords="385,521,526,547"/>
-<area shape="rect" href="profiling_8cpp.html#ac05fdc10ded37340f2ab202bbc184d20" title=" " alt="" coords="406,571,505,598"/>
-<area shape="rect" href="profiling_8cpp.html#a9f4516d77db32a65ee99933c6c9d3802" title=" " alt="" coords="406,622,505,649"/>
-<area shape="rect" href="classshrapnel_1_1dsp_1_1IirFilter.html#a53cb5a72d2a310cd4b35d4329af682f0" title=" " alt="" coords="592,713,736,755"/>
-<area shape="rect" href="iir__universal_8c.html#a738b77e8a79f0c754dba3af19fbd4e30" title=" " alt="" coords="784,721,869,747"/>
-<area shape="rect" href="abstract__dsp__esp32_8c.html#a52d208742d325a0cdb7225bd9fe0e902" title=" " alt="" coords="612,779,716,806"/>
-</map>
+<div class="center"><iframe scrolling="no" frameborder="0" src="i2s_8cpp_a4e37f563a34c1a559515cc40782caf07_cgraph.svg" width="850" height="822"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
 </div>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><img src="i2s_8cpp_a4e37f563a34c1a559515cc40782caf07_icgraph.png" border="0" usemap="#ai2s_8cpp_a4e37f563a34c1a559515cc40782caf07_icgraph" alt=""/></div>
-<map name="ai2s_8cpp_a4e37f563a34c1a559515cc40782caf07_icgraph" id="ai2s_8cpp_a4e37f563a34c1a559515cc40782caf07_icgraph">
-<area shape="rect" title=" " alt="" coords="313,5,455,32"/>
-<area shape="rect" href="i2s_8cpp.html#a78c8fe8089980bf7c440301d3171eac6" title=" " alt="" coords="187,5,265,32"/>
-<area shape="rect" href="namespaceshrapnel.html#a9f09f4ea750643310af9143a53735b7d" title=" " alt="" coords="5,5,139,32"/>
-</map>
+<div class="center"><iframe scrolling="no" frameborder="0" src="i2s_8cpp_a4e37f563a34c1a559515cc40782caf07_icgraph.svg" width="460" height="38"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
 </div>
 
 </div>
 </div>
-<a id="a78c8fe8089980bf7c440301d3171eac6" name="a78c8fe8089980bf7c440301d3171eac6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a78c8fe8089980bf7c440301d3171eac6">&#9670;&nbsp;</a></span>i2s_setup()</h2>
+<a id="a445c7079217d08d4767549802dade8a0" name="a445c7079217d08d4767549802dade8a0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a445c7079217d08d4767549802dade8a0">&#9670;&nbsp;</a></span>i2s_setup()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -386,7 +369,7 @@ Here is the caller graph for this function:</div>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classshrapnel_1_1AudioParameters.html">shrapnel::AudioParameters</a> *&#160;</td>
+          <td class="paramtype"><a class="el" href="classshrapnel_1_1parameters_1_1AudioParameters.html">shrapnel::parameters::AudioParameters</a> *&#160;</td>
           <td class="paramname"><em>audio_params</em>&#160;</td>
         </tr>
         <tr>
@@ -450,49 +433,18 @@ Here is the caller graph for this function:</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="i2s_8cpp_source.html#l00055">event_task()</a>, <a class="el" href="i2s_8cpp_source.html#l00053">g_profiling_gpio</a>, and <a class="el" href="i2s_8cpp_source.html#l00081">i2s_processing_task()</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="main_8cpp_source.html#l00382">shrapnel::app_main()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="main_8cpp_source.html#l00399">shrapnel::app_main()</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><img src="i2s_8cpp_a78c8fe8089980bf7c440301d3171eac6_cgraph.png" border="0" usemap="#ai2s_8cpp_a78c8fe8089980bf7c440301d3171eac6_cgraph" alt=""/></div>
-<map name="ai2s_8cpp_a78c8fe8089980bf7c440301d3171eac6_cgraph" id="ai2s_8cpp_a78c8fe8089980bf7c440301d3171eac6_cgraph">
-<area shape="rect" title=" " alt="" coords="5,445,84,471"/>
-<area shape="rect" href="i2s_8cpp.html#a0826d7a742c16e16a62704cc59fd4ba2" title=" " alt="" coords="159,419,246,446"/>
-<area shape="rect" href="i2s_8cpp.html#a4e37f563a34c1a559515cc40782caf07" title=" " alt="" coords="132,470,273,497"/>
-<area shape="rect" href="float__convert_8h.html#ae9b18f6b920e3401ec41278b57e6817b" title=" " alt="" coords="533,470,631,497"/>
-<area shape="rect" href="process_8cpp.html#ab530789c5aeb0c1c38d5917bfd7a111f" title=" " alt="" coords="337,267,429,294"/>
-<area shape="rect" href="process_8cpp.html#a450bec865b55b9890f4050f1ab0dba5c" title=" " alt="" coords="321,521,445,547"/>
-<area shape="rect" href="noise__gate_8cpp.html#a949bfebe851dee44040d83bbd068dad1" title="Initialise the effect." alt="" coords="547,166,617,193"/>
-<area shape="rect" href="noise__gate_8cpp.html#a4868a6f017c846668c1b09d32b833099" title="Set the attack time in milliseconds." alt="" coords="525,419,639,446"/>
-<area shape="rect" href="noise__gate_8cpp.html#a184d915d5eb18d4743c6e3008bb47e62" title="Set the buffer size in number of samples." alt="" coords="511,217,653,243"/>
-<area shape="rect" href="noise__gate_8cpp.html#a4fccad713cee272e388c9c45fc97037e" title="Set the hold time in milliseconds." alt="" coords="531,267,633,294"/>
-<area shape="rect" href="noise__gate_8cpp.html#abe525a07b8cb6f0557740cc4100428a9" title="Set the release time in milliseconds." alt="" coords="521,318,643,345"/>
-<area shape="rect" href="noise__gate_8cpp.html#a2691256497a1cec4e14434f48eccfb56" title="Set the sample rate in Hz." alt="" coords="507,49,657,75"/>
-<area shape="rect" href="noise__gate_8cpp.html#a82e62ed410acc03c8179d8245de13e12" title="Set the threshold and hysteresis value in dBFS." alt="" coords="516,369,648,395"/>
-<area shape="rect" href="classshrapnel_1_1AudioParameters.html#a4ffc221fcb7640697851ee05495e43eb" title="Get denormalised value of parameter." alt="" coords="493,100,671,141"/>
-<area shape="rect" href="noise__gate_8cpp.html#a5d3ba76b4666ac1820b498aaf04ea22e" title="Reset the state." alt="" coords="749,166,832,193"/>
-<area shape="rect" href="abstract__dsp__esp32_8c.html#ab721c839889c1267077f4cb3304b655d" title=" " alt="" coords="719,5,862,47"/>
-<area shape="rect" href="classshrapnel_1_1dsp_1_1IirFilter.html#aa09e7c1ab99d85c0fdd1c98c80636550" title=" " alt="" coords="719,71,863,112"/>
-<area shape="rect" href="noise__gate_8cpp.html#afb2354391bb81545d92334434552ab4b" title=" " alt="" coords="747,369,834,395"/>
-<area shape="rect" href="process_8cpp.html#a9785ac35cd7c86538882d5311fd66bf1" title=" " alt="" coords="525,673,639,699"/>
-<area shape="rect" href="noise__gate_8cpp.html#a129b18f80393706faa5a453417153a51" title="Analyse the audio." alt="" coords="533,723,631,750"/>
-<area shape="rect" href="noise__gate_8cpp.html#a3a59d391339a038f91650058680b00d6" title="Apply the precalculated gain to the audio." alt="" coords="532,775,632,802"/>
-<area shape="rect" href="profiling_8cpp.html#a3171d2be3fbf00e49982243e9869735a" title=" " alt="" coords="511,521,653,547"/>
-<area shape="rect" href="profiling_8cpp.html#ac05fdc10ded37340f2ab202bbc184d20" title=" " alt="" coords="533,571,631,598"/>
-<area shape="rect" href="profiling_8cpp.html#a9f4516d77db32a65ee99933c6c9d3802" title=" " alt="" coords="533,622,631,649"/>
-<area shape="rect" href="classshrapnel_1_1dsp_1_1IirFilter.html#a53cb5a72d2a310cd4b35d4329af682f0" title=" " alt="" coords="719,713,863,755"/>
-<area shape="rect" href="iir__universal_8c.html#a738b77e8a79f0c754dba3af19fbd4e30" title=" " alt="" coords="911,721,996,747"/>
-<area shape="rect" href="abstract__dsp__esp32_8c.html#a52d208742d325a0cdb7225bd9fe0e902" title=" " alt="" coords="739,779,843,806"/>
-</map>
+<div class="center"><iframe scrolling="no" frameborder="0" src="i2s_8cpp_a445c7079217d08d4767549802dade8a0_cgraph.svg" width="976" height="822"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
 </div>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><img src="i2s_8cpp_a78c8fe8089980bf7c440301d3171eac6_icgraph.png" border="0" usemap="#ai2s_8cpp_a78c8fe8089980bf7c440301d3171eac6_icgraph" alt=""/></div>
-<map name="ai2s_8cpp_a78c8fe8089980bf7c440301d3171eac6_icgraph" id="ai2s_8cpp_a78c8fe8089980bf7c440301d3171eac6_icgraph">
-<area shape="rect" title=" " alt="" coords="187,5,265,32"/>
-<area shape="rect" href="namespaceshrapnel.html#a9f09f4ea750643310af9143a53735b7d" title=" " alt="" coords="5,5,139,32"/>
-</map>
+<div class="center"><iframe scrolling="no" frameborder="0" src="i2s_8cpp_a445c7079217d08d4767549802dade8a0_icgraph.svg" width="271" height="38"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
 </div>
 
 </div>
@@ -569,9 +521,13 @@ Here is the caller graph for this function:</div>
 </div>
 </div>
 </div><!-- contents -->
+</div><!-- doc-content -->
 <!-- start footer part -->
-<hr class="footer"/><address class="footer"><small>
-Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.4
-</small></address>
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="dir_d9edf6c004b4a7ff14fe9ae7a92214ee.html">firmware</a></li><li class="navelem"><a class="el" href="dir_a7f1045ea2c2de513e4829d3edd7d5b7.html">components</a></li><li class="navelem"><a class="el" href="dir_7092270a206f379af139e0c789bb92ec.html">i2s</a></li><li class="navelem"><a class="el" href="i2s_8cpp.html">i2s.cpp</a></li>
+    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.4 </li>
+  </ul>
+</div>
 </body>
 </html>

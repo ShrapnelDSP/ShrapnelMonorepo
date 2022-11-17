@@ -70,20 +70,23 @@
       Provider.of&lt;WifiProvisioningProvider&gt;(context, listen: false);
 
   return Center(
-      child: Column(
-    mainAxisAlignment: MainAxisAlignment.center,
-    children: [
-      Container(
-        margin: const EdgeInsets.all(10),
-        child: const Text(_Strings.sessionFailureMesssage,
-            textAlign: TextAlign.center),
-      ),
-      ElevatedButton(
-        onPressed: provisioning.start,
-        child: const Text(_Strings.retryButtonText),
-      ),
-    ],
-  ));
+    child: Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Container(
+          margin: const EdgeInsets.all(10),
+          child: const Text(
+            _Strings.sessionFailureMesssage,
+            textAlign: TextAlign.center,
+          ),
+        ),
+        ElevatedButton(
+          onPressed: provisioning.start,
+          child: const Text(_Strings.retryButtonText),
+        ),
+      ],
+    ),
+  );
 }</code></pre>
 </section>
 

@@ -1,0 +1,57 @@
+var annotated_dup =
+[
+    [ "shrapnel", "namespaceshrapnel.html", [
+      [ "dsp", "namespaceshrapnel_1_1dsp.html", [
+        [ "DelayLine", "classshrapnel_1_1dsp_1_1DelayLine.html", "classshrapnel_1_1dsp_1_1DelayLine" ],
+        [ "FastConvolution", "classshrapnel_1_1dsp_1_1FastConvolution.html", "classshrapnel_1_1dsp_1_1FastConvolution" ],
+        [ "FastFir", "classshrapnel_1_1dsp_1_1FastFir.html", "classshrapnel_1_1dsp_1_1FastFir" ],
+        [ "IirFilter", "classshrapnel_1_1dsp_1_1IirFilter.html", "classshrapnel_1_1dsp_1_1IirFilter" ],
+        [ "IirFilterBase", "classshrapnel_1_1dsp_1_1IirFilterBase.html", "classshrapnel_1_1dsp_1_1IirFilterBase" ]
+      ] ],
+      [ "effect", "namespaceshrapnel_1_1effect.html", [
+        [ "valvestate", "namespaceshrapnel_1_1effect_1_1valvestate.html", [
+          [ "Clipping", "classshrapnel_1_1effect_1_1valvestate_1_1Clipping.html", "classshrapnel_1_1effect_1_1valvestate_1_1Clipping" ],
+          [ "FMVFilter", "classshrapnel_1_1effect_1_1valvestate_1_1FMVFilter.html", "classshrapnel_1_1effect_1_1valvestate_1_1FMVFilter" ],
+          [ "GainControl", "classshrapnel_1_1effect_1_1valvestate_1_1GainControl.html", "classshrapnel_1_1effect_1_1valvestate_1_1GainControl" ],
+          [ "InputFilter", "classshrapnel_1_1effect_1_1valvestate_1_1InputFilter.html", "classshrapnel_1_1effect_1_1valvestate_1_1InputFilter" ],
+          [ "Valvestate", "classshrapnel_1_1effect_1_1valvestate_1_1Valvestate.html", "classshrapnel_1_1effect_1_1valvestate_1_1Valvestate" ]
+        ] ],
+        [ "Chorus", "classshrapnel_1_1effect_1_1Chorus.html", "classshrapnel_1_1effect_1_1Chorus" ]
+      ] ],
+      [ "midi", "namespaceshrapnel_1_1midi.html", [
+        [ "Configuration", "classshrapnel_1_1midi_1_1Configuration.html", "classshrapnel_1_1midi_1_1Configuration" ],
+        [ "CreateRequest", "structshrapnel_1_1midi_1_1CreateRequest.html", "structshrapnel_1_1midi_1_1CreateRequest" ],
+        [ "CreateResponse", "structshrapnel_1_1midi_1_1CreateResponse.html", "structshrapnel_1_1midi_1_1CreateResponse" ],
+        [ "Decoder", "classshrapnel_1_1midi_1_1Decoder.html", "classshrapnel_1_1midi_1_1Decoder" ],
+        [ "EspMidiUart", "classshrapnel_1_1midi_1_1EspMidiUart.html", "classshrapnel_1_1midi_1_1EspMidiUart" ],
+        [ "GetRequest", "structshrapnel_1_1midi_1_1GetRequest.html", null ],
+        [ "GetResponse", "structshrapnel_1_1midi_1_1GetResponse.html", "structshrapnel_1_1midi_1_1GetResponse" ],
+        [ "Mapping", "structshrapnel_1_1midi_1_1Mapping.html", "structshrapnel_1_1midi_1_1Mapping" ],
+        [ "MappingManager", "classshrapnel_1_1midi_1_1MappingManager.html", "classshrapnel_1_1midi_1_1MappingManager" ],
+        [ "Message", "structshrapnel_1_1midi_1_1Message.html", "structshrapnel_1_1midi_1_1Message" ],
+        [ "MidiUartBase", "classshrapnel_1_1midi_1_1MidiUartBase.html", "classshrapnel_1_1midi_1_1MidiUartBase" ],
+        [ "PersistentStorage", "classshrapnel_1_1midi_1_1PersistentStorage.html", "classshrapnel_1_1midi_1_1PersistentStorage" ],
+        [ "Remove", "structshrapnel_1_1midi_1_1Remove.html", "structshrapnel_1_1midi_1_1Remove" ],
+        [ "Update", "structshrapnel_1_1midi_1_1Update.html", "structshrapnel_1_1midi_1_1Update" ]
+      ] ],
+      [ "parameters", "namespaceshrapnel_1_1parameters.html", [
+        [ "AudioParameterFloat", "classshrapnel_1_1parameters_1_1AudioParameterFloat.html", "classshrapnel_1_1parameters_1_1AudioParameterFloat" ],
+        [ "AudioParameters", "classshrapnel_1_1parameters_1_1AudioParameters.html", "classshrapnel_1_1parameters_1_1AudioParameters" ]
+      ] ],
+      [ "wifi_provisioning", "namespaceshrapnel_1_1wifi__provisioning.html", [
+        [ "WiFiProvisioning", "classshrapnel_1_1wifi__provisioning_1_1WiFiProvisioning.html", "classshrapnel_1_1wifi__provisioning_1_1WiFiProvisioning" ]
+      ] ],
+      [ "audio_event_message_t", "structshrapnel_1_1audio__event__message__t.html", "structshrapnel_1_1audio__event__message__t" ],
+      [ "CommandHandling", "classshrapnel_1_1CommandHandling.html", "classshrapnel_1_1CommandHandling" ],
+      [ "CommandHandlingTask", "classshrapnel_1_1CommandHandlingTask.html", "classshrapnel_1_1CommandHandlingTask" ],
+      [ "EventSend", "classshrapnel_1_1EventSend.html", "classshrapnel_1_1EventSend" ],
+      [ "EventSendBase", "classshrapnel_1_1EventSendBase.html", "classshrapnel_1_1EventSendBase" ],
+      [ "Queue", "classshrapnel_1_1Queue.html", "classshrapnel_1_1Queue" ],
+      [ "QueueBase", "classshrapnel_1_1QueueBase.html", "classshrapnel_1_1QueueBase" ],
+      [ "TaskBase", "classshrapnel_1_1TaskBase.html", "classshrapnel_1_1TaskBase" ]
+    ] ],
+    [ "ContourFilter", "classContourFilter.html", "classContourFilter" ],
+    [ "dspal_delayline", "structdspal__delayline.html", "structdspal__delayline" ],
+    [ "EspHeapTracing", "classEspHeapTracing.html", "classEspHeapTracing" ],
+    [ "ScopedHeapTracing", "classScopedHeapTracing.html", "classScopedHeapTracing" ]
+];

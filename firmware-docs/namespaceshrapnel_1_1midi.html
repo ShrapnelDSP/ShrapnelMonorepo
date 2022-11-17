@@ -9,6 +9,10 @@
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
@@ -20,6 +24,7 @@ MathJax.Hub.Config({
 </script>
 <script type="text/javascript" async="async" src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js"></script>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
+<link href="doxygen-awesome.css" rel="stylesheet" type="text/css"/>
 </head>
 <body>
 <div id="top"><!-- do not remove this div, it is closed by doxygen! -->
@@ -54,6 +59,23 @@ $(function() {
 /* @license-end */
 </script>
 <div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(document).ready(function(){initNavTree('namespaceshrapnel_1_1midi.html',''); initResizable(); });
+/* @license-end */
+</script>
+<div id="doc-content">
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -68,15 +90,13 @@ $(function() {
 </iframe>
 </div>
 
-<div id="nav-path" class="navpath">
-  <ul>
-<li class="navelem"><a class="el" href="namespaceshrapnel.html">shrapnel</a></li><li class="navelem"><a class="el" href="namespaceshrapnel_1_1midi.html">midi</a></li>  </ul>
-</div>
-</div><!-- top -->
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Data Structures</a> &#124;
-<a href="#enum-members">Enumerations</a>  </div>
+<a href="#typedef-members">Typedefs</a> &#124;
+<a href="#enum-members">Enumerations</a> &#124;
+<a href="#func-members">Functions</a> &#124;
+<a href="#var-members">Variables</a>  </div>
   <div class="headertitle"><div class="title">shrapnel::midi Namespace Reference</div></div>
 </div><!--header-->
 <div class="contents">
@@ -86,9 +106,21 @@ Data Structures</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classshrapnel_1_1midi_1_1Configuration.html">Configuration</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Implements persistent configuration for MIDI functionality.  <a href="classshrapnel_1_1midi_1_1Configuration.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structshrapnel_1_1midi_1_1CreateRequest.html">CreateRequest</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structshrapnel_1_1midi_1_1CreateResponse.html">CreateResponse</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classshrapnel_1_1midi_1_1Decoder.html">Decoder</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classshrapnel_1_1midi_1_1EspMidiUart.html">EspMidiUart</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structshrapnel_1_1midi_1_1GetRequest.html">GetRequest</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structshrapnel_1_1midi_1_1GetResponse.html">GetResponse</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structshrapnel_1_1midi_1_1Mapping.html">Mapping</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classshrapnel_1_1midi_1_1MappingManager.html">MappingManager</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structshrapnel_1_1midi_1_1Message.html">Message</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -97,6 +129,15 @@ Data Structures</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classshrapnel_1_1midi_1_1PersistentStorage.html">PersistentStorage</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Interface for storing persistent data.  <a href="classshrapnel_1_1midi_1_1PersistentStorage.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structshrapnel_1_1midi_1_1Remove.html">Remove</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structshrapnel_1_1midi_1_1Update.html">Update</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="typedef-members" name="typedef-members"></a>
+Typedefs</h2></td></tr>
+<tr class="memitem:ad9ee9014110e441706a017a889103bd1"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceshrapnel_1_1midi.html#ad9ee9014110e441706a017a889103bd1">MappingApiMessage</a> = std::variant&lt; <a class="el" href="structshrapnel_1_1midi_1_1GetRequest.html">GetRequest</a>, <a class="el" href="structshrapnel_1_1midi_1_1GetResponse.html">GetResponse</a>, <a class="el" href="structshrapnel_1_1midi_1_1CreateRequest.html">CreateRequest</a>, <a class="el" href="structshrapnel_1_1midi_1_1CreateResponse.html">CreateResponse</a>, <a class="el" href="structshrapnel_1_1midi_1_1Update.html">Update</a>, <a class="el" href="structshrapnel_1_1midi_1_1Remove.html">Remove</a> &gt;</td></tr>
+<tr class="separator:ad9ee9014110e441706a017a889103bd1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="enum-members" name="enum-members"></a>
 Enumerations</h2></td></tr>
@@ -106,7 +147,162 @@ Enumerations</h2></td></tr>
 , <a class="el" href="namespaceshrapnel_1_1midi.html#ad87a6a7595532b38466aa350b3d4e7aeaf79d22f3fce6a5960d0357113684fc30">PROGRAM_CHANGE</a> = 0xC0
  }</td></tr>
 <tr class="separator:ad87a6a7595532b38466aa350b3d4e7ae"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
+Functions</h2></td></tr>
+<tr class="memitem:a4d7f2f5d6c81f92e63bcb0b8879551b3"><td class="memItemLeft" align="right" valign="top">etl::string_stream &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceshrapnel_1_1midi.html#a4d7f2f5d6c81f92e63bcb0b8879551b3">operator&lt;&lt;</a> (etl::string_stream &amp;out, const <a class="el" href="structshrapnel_1_1midi_1_1Mapping.html">Mapping</a> &amp;self)</td></tr>
+<tr class="separator:a4d7f2f5d6c81f92e63bcb0b8879551b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3dc01486d4db000642bb5215a53834d2"><td class="memItemLeft" align="right" valign="top">etl::string_stream &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceshrapnel_1_1midi.html#a3dc01486d4db000642bb5215a53834d2">operator&lt;&lt;</a> (etl::string_stream &amp;out, const <a class="el" href="structshrapnel_1_1midi_1_1GetRequest.html">GetRequest</a> &amp;self)</td></tr>
+<tr class="separator:a3dc01486d4db000642bb5215a53834d2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac3e251f40b5858c67d80374fb25b83ec"><td class="memItemLeft" align="right" valign="top">etl::string_stream &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceshrapnel_1_1midi.html#ac3e251f40b5858c67d80374fb25b83ec">operator&lt;&lt;</a> (etl::string_stream &amp;out, const <a class="el" href="structshrapnel_1_1midi_1_1GetResponse.html">GetResponse</a> &amp;self)</td></tr>
+<tr class="separator:ac3e251f40b5858c67d80374fb25b83ec"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a194d563135c45c7b4569555334b0ca5f"><td class="memItemLeft" align="right" valign="top">etl::string_stream &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceshrapnel_1_1midi.html#a194d563135c45c7b4569555334b0ca5f">operator&lt;&lt;</a> (etl::string_stream &amp;out, const <a class="el" href="structshrapnel_1_1midi_1_1CreateRequest.html">CreateRequest</a> &amp;self)</td></tr>
+<tr class="separator:a194d563135c45c7b4569555334b0ca5f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa6b9b379b8567a30054f2619183bb792"><td class="memItemLeft" align="right" valign="top">etl::string_stream &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceshrapnel_1_1midi.html#aa6b9b379b8567a30054f2619183bb792">operator&lt;&lt;</a> (etl::string_stream &amp;out, const <a class="el" href="structshrapnel_1_1midi_1_1CreateResponse.html">CreateResponse</a> &amp;self)</td></tr>
+<tr class="separator:aa6b9b379b8567a30054f2619183bb792"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af39e621c445db624200a08025cda8c74"><td class="memItemLeft" align="right" valign="top">etl::string_stream &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceshrapnel_1_1midi.html#af39e621c445db624200a08025cda8c74">operator&lt;&lt;</a> (etl::string_stream &amp;out, const <a class="el" href="structshrapnel_1_1midi_1_1Update.html">Update</a> &amp;self)</td></tr>
+<tr class="separator:af39e621c445db624200a08025cda8c74"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a17772b0c0c99eb789dc0c2f0791d243c"><td class="memItemLeft" align="right" valign="top">etl::string_stream &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceshrapnel_1_1midi.html#a17772b0c0c99eb789dc0c2f0791d243c">operator&lt;&lt;</a> (etl::string_stream &amp;out, const <a class="el" href="structshrapnel_1_1midi_1_1Remove.html">Remove</a> &amp;self)</td></tr>
+<tr class="separator:a17772b0c0c99eb789dc0c2f0791d243c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7bec202ccff14cb7091cfcec55164715"><td class="memItemLeft" align="right" valign="top">etl::string_stream &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceshrapnel_1_1midi.html#a7bec202ccff14cb7091cfcec55164715">operator&lt;&lt;</a> (etl::string_stream &amp;out, const <a class="el" href="namespaceshrapnel_1_1midi.html#ad9ee9014110e441706a017a889103bd1">MappingApiMessage</a> &amp;self)</td></tr>
+<tr class="separator:a7bec202ccff14cb7091cfcec55164715"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a745f9f03858045cdfabbd014152fbc15"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:a745f9f03858045cdfabbd014152fbc15"><td class="memTemplItemLeft" align="right" valign="top">rapidjson::Value&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceshrapnel_1_1midi.html#a745f9f03858045cdfabbd014152fbc15">to_json</a> (rapidjson::Document &amp;document, const T &amp;object)</td></tr>
+<tr class="memdesc:a745f9f03858045cdfabbd014152fbc15"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert <code>object</code> to a JSON value.  <a href="namespaceshrapnel_1_1midi.html#a745f9f03858045cdfabbd014152fbc15">More...</a><br /></td></tr>
+<tr class="separator:a745f9f03858045cdfabbd014152fbc15"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a93f7983c3e2cbc6a0f28caf93abe1b32"><td class="memItemLeft" align="right" valign="top">template&lt;&gt; </td></tr>
+<tr class="memitem:a93f7983c3e2cbc6a0f28caf93abe1b32"><td class="memTemplItemLeft" align="right" valign="top">rapidjson::Value&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceshrapnel_1_1midi.html#a93f7983c3e2cbc6a0f28caf93abe1b32">to_json</a> (rapidjson::Document &amp;document, const <a class="el" href="structshrapnel_1_1midi_1_1Mapping.html">Mapping</a> &amp;object)</td></tr>
+<tr class="separator:a93f7983c3e2cbc6a0f28caf93abe1b32"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af53ad718226d62828805d71d0daa0037"><td class="memItemLeft" align="right" valign="top">template&lt;&gt; </td></tr>
+<tr class="memitem:af53ad718226d62828805d71d0daa0037"><td class="memTemplItemLeft" align="right" valign="top">rapidjson::Value&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceshrapnel_1_1midi.html#af53ad718226d62828805d71d0daa0037">to_json</a> (rapidjson::Document &amp;document, const std::pair&lt; <a class="el" href="structshrapnel_1_1midi_1_1Mapping.html#a212fd4d87c151bab5982bc9138990a02">Mapping::id_t</a>, <a class="el" href="structshrapnel_1_1midi_1_1Mapping.html">Mapping</a> &gt; &amp;object)</td></tr>
+<tr class="separator:af53ad718226d62828805d71d0daa0037"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5fb2df7e7a30d352a138b208fda681cd"><td class="memItemLeft" align="right" valign="top">template&lt;&gt; </td></tr>
+<tr class="memitem:a5fb2df7e7a30d352a138b208fda681cd"><td class="memTemplItemLeft" align="right" valign="top">rapidjson::Value&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceshrapnel_1_1midi.html#a5fb2df7e7a30d352a138b208fda681cd">to_json</a> (rapidjson::Document &amp;document, const <a class="el" href="structshrapnel_1_1midi_1_1CreateResponse.html">CreateResponse</a> &amp;object)</td></tr>
+<tr class="separator:a5fb2df7e7a30d352a138b208fda681cd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae36b87ea8f245d8e34b035eb1cbe1bbd"><td class="memItemLeft" align="right" valign="top">template&lt;&gt; </td></tr>
+<tr class="memitem:ae36b87ea8f245d8e34b035eb1cbe1bbd"><td class="memTemplItemLeft" align="right" valign="top">rapidjson::Value&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceshrapnel_1_1midi.html#ae36b87ea8f245d8e34b035eb1cbe1bbd">to_json</a> (rapidjson::Document &amp;document, const <a class="el" href="structshrapnel_1_1midi_1_1GetResponse.html">GetResponse</a> &amp;object)</td></tr>
+<tr class="separator:ae36b87ea8f245d8e34b035eb1cbe1bbd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6c42217c7b2669babb823c4ee665fb3b"><td class="memItemLeft" align="right" valign="top">template&lt;&gt; </td></tr>
+<tr class="memitem:a6c42217c7b2669babb823c4ee665fb3b"><td class="memTemplItemLeft" align="right" valign="top">rapidjson::Value&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceshrapnel_1_1midi.html#a6c42217c7b2669babb823c4ee665fb3b">to_json</a> (rapidjson::Document &amp;document, const <a class="el" href="namespaceshrapnel_1_1midi.html#ad9ee9014110e441706a017a889103bd1">MappingApiMessage</a> &amp;object)</td></tr>
+<tr class="separator:a6c42217c7b2669babb823c4ee665fb3b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaf88418567ba49ee236fe21f0136412a"><td class="memTemplParams" colspan="2">template&lt;std::size_t MAX_SIZE&gt; </td></tr>
+<tr class="memitem:aaf88418567ba49ee236fe21f0136412a"><td class="memTemplItemLeft" align="right" valign="top">rapidjson::Value&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceshrapnel_1_1midi.html#aaf88418567ba49ee236fe21f0136412a">to_json</a> (rapidjson::Document &amp;document, const etl::map&lt; <a class="el" href="structshrapnel_1_1midi_1_1Mapping.html#a212fd4d87c151bab5982bc9138990a02">Mapping::id_t</a>, <a class="el" href="structshrapnel_1_1midi_1_1Mapping.html">Mapping</a>, MAX_SIZE &gt; &amp;object)</td></tr>
+<tr class="separator:aaf88418567ba49ee236fe21f0136412a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a28b9d0dddfafc22560e2eaa14006045d"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceshrapnel_1_1midi.html#a28b9d0dddfafc22560e2eaa14006045d">parse_uuid</a> (<a class="el" href="structshrapnel_1_1midi_1_1Mapping.html#a212fd4d87c151bab5982bc9138990a02">Mapping::id_t</a> &amp;uuid, const char *string)</td></tr>
+<tr class="memdesc:a28b9d0dddfafc22560e2eaa14006045d"><td class="mdescLeft">&#160;</td><td class="mdescRight">return non-zero on error  <a href="namespaceshrapnel_1_1midi.html#a28b9d0dddfafc22560e2eaa14006045d">More...</a><br /></td></tr>
+<tr class="separator:a28b9d0dddfafc22560e2eaa14006045d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a716c9b68c7266f2265b1b424bb6d8fd6"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:a716c9b68c7266f2265b1b424bb6d8fd6"><td class="memTemplItemLeft" align="right" valign="top">std::optional&lt; T &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceshrapnel_1_1midi.html#a716c9b68c7266f2265b1b424bb6d8fd6">from_json</a> (const rapidjson::Value &amp;json)</td></tr>
+<tr class="separator:a716c9b68c7266f2265b1b424bb6d8fd6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4c674076b1acf39420f250dae818893a"><td class="memItemLeft" align="right" valign="top">template&lt;&gt; </td></tr>
+<tr class="memitem:a4c674076b1acf39420f250dae818893a"><td class="memTemplItemLeft" align="right" valign="top">std::optional&lt; <a class="el" href="structshrapnel_1_1midi_1_1GetRequest.html">GetRequest</a> &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceshrapnel_1_1midi.html#a4c674076b1acf39420f250dae818893a">from_json</a> (const rapidjson::Value &amp;json)</td></tr>
+<tr class="separator:a4c674076b1acf39420f250dae818893a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad51657a257c72e7075c02af7896316eb"><td class="memItemLeft" align="right" valign="top">template&lt;&gt; </td></tr>
+<tr class="memitem:ad51657a257c72e7075c02af7896316eb"><td class="memTemplItemLeft" align="right" valign="top">std::optional&lt; <a class="el" href="structshrapnel_1_1midi_1_1Mapping.html">Mapping</a> &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceshrapnel_1_1midi.html#ad51657a257c72e7075c02af7896316eb">from_json</a> (const rapidjson::Value &amp;json)</td></tr>
+<tr class="separator:ad51657a257c72e7075c02af7896316eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aed2b96bd6d4afdcc8507cb7b5f0ef4bc"><td class="memItemLeft" align="right" valign="top">template&lt;&gt; </td></tr>
+<tr class="memitem:aed2b96bd6d4afdcc8507cb7b5f0ef4bc"><td class="memTemplItemLeft" align="right" valign="top">std::optional&lt; std::pair&lt; <a class="el" href="structshrapnel_1_1midi_1_1Mapping.html#a212fd4d87c151bab5982bc9138990a02">Mapping::id_t</a>, <a class="el" href="structshrapnel_1_1midi_1_1Mapping.html">Mapping</a> &gt; &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceshrapnel_1_1midi.html#aed2b96bd6d4afdcc8507cb7b5f0ef4bc">from_json</a> (const rapidjson::Value &amp;json)</td></tr>
+<tr class="separator:aed2b96bd6d4afdcc8507cb7b5f0ef4bc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adb51f16466a3fee83efae0e8a334320b"><td class="memItemLeft" align="right" valign="top">template&lt;&gt; </td></tr>
+<tr class="memitem:adb51f16466a3fee83efae0e8a334320b"><td class="memTemplItemLeft" align="right" valign="top">std::optional&lt; <a class="el" href="structshrapnel_1_1midi_1_1CreateRequest.html">CreateRequest</a> &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceshrapnel_1_1midi.html#adb51f16466a3fee83efae0e8a334320b">from_json</a> (const rapidjson::Value &amp;json)</td></tr>
+<tr class="separator:adb51f16466a3fee83efae0e8a334320b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aad12316a79e19947ba3d5700a466f933"><td class="memItemLeft" align="right" valign="top">template&lt;&gt; </td></tr>
+<tr class="memitem:aad12316a79e19947ba3d5700a466f933"><td class="memTemplItemLeft" align="right" valign="top">std::optional&lt; <a class="el" href="structshrapnel_1_1midi_1_1Update.html">Update</a> &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceshrapnel_1_1midi.html#aad12316a79e19947ba3d5700a466f933">from_json</a> (const rapidjson::Value &amp;json)</td></tr>
+<tr class="separator:aad12316a79e19947ba3d5700a466f933"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2b9d2bc58c847f2f2289c90bf47979e6"><td class="memItemLeft" align="right" valign="top">template&lt;&gt; </td></tr>
+<tr class="memitem:a2b9d2bc58c847f2f2289c90bf47979e6"><td class="memTemplItemLeft" align="right" valign="top">std::optional&lt; <a class="el" href="structshrapnel_1_1midi_1_1Remove.html">Remove</a> &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceshrapnel_1_1midi.html#a2b9d2bc58c847f2f2289c90bf47979e6">from_json</a> (const rapidjson::Value &amp;json)</td></tr>
+<tr class="separator:a2b9d2bc58c847f2f2289c90bf47979e6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae251dec5b5227e127fb60ecfe722deeb"><td class="memItemLeft" align="right" valign="top">template&lt;&gt; </td></tr>
+<tr class="memitem:ae251dec5b5227e127fb60ecfe722deeb"><td class="memTemplItemLeft" align="right" valign="top">std::optional&lt; <a class="el" href="namespaceshrapnel_1_1midi.html#ad9ee9014110e441706a017a889103bd1">MappingApiMessage</a> &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceshrapnel_1_1midi.html#ae251dec5b5227e127fb60ecfe722deeb">from_json</a> (const rapidjson::Value &amp;json)</td></tr>
+<tr class="memdesc:ae251dec5b5227e127fb60ecfe722deeb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert the message into a object representing it.  <a href="namespaceshrapnel_1_1midi.html#ae251dec5b5227e127fb60ecfe722deeb">More...</a><br /></td></tr>
+<tr class="separator:ae251dec5b5227e127fb60ecfe722deeb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a93f7983c3e2cbc6a0f28caf93abe1b32"><td class="memItemLeft" align="right" valign="top">template&lt;&gt; </td></tr>
+<tr class="memitem:a93f7983c3e2cbc6a0f28caf93abe1b32"><td class="memTemplItemLeft" align="right" valign="top">rapidjson::Value&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceshrapnel_1_1midi.html#a93f7983c3e2cbc6a0f28caf93abe1b32">to_json</a> (rapidjson::Document &amp;document, const <a class="el" href="structshrapnel_1_1midi_1_1Mapping.html">Mapping</a> &amp;object)</td></tr>
+<tr class="separator:a93f7983c3e2cbc6a0f28caf93abe1b32"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af53ad718226d62828805d71d0daa0037"><td class="memItemLeft" align="right" valign="top">template&lt;&gt; </td></tr>
+<tr class="memitem:af53ad718226d62828805d71d0daa0037"><td class="memTemplItemLeft" align="right" valign="top">rapidjson::Value&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceshrapnel_1_1midi.html#af53ad718226d62828805d71d0daa0037">to_json</a> (rapidjson::Document &amp;document, const std::pair&lt; <a class="el" href="structshrapnel_1_1midi_1_1Mapping.html#a212fd4d87c151bab5982bc9138990a02">Mapping::id_t</a>, <a class="el" href="structshrapnel_1_1midi_1_1Mapping.html">Mapping</a> &gt; &amp;object)</td></tr>
+<tr class="separator:af53ad718226d62828805d71d0daa0037"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5fb2df7e7a30d352a138b208fda681cd"><td class="memItemLeft" align="right" valign="top">template&lt;&gt; </td></tr>
+<tr class="memitem:a5fb2df7e7a30d352a138b208fda681cd"><td class="memTemplItemLeft" align="right" valign="top">rapidjson::Value&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceshrapnel_1_1midi.html#a5fb2df7e7a30d352a138b208fda681cd">to_json</a> (rapidjson::Document &amp;document, const <a class="el" href="structshrapnel_1_1midi_1_1CreateResponse.html">CreateResponse</a> &amp;object)</td></tr>
+<tr class="separator:a5fb2df7e7a30d352a138b208fda681cd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae36b87ea8f245d8e34b035eb1cbe1bbd"><td class="memItemLeft" align="right" valign="top">template&lt;&gt; </td></tr>
+<tr class="memitem:ae36b87ea8f245d8e34b035eb1cbe1bbd"><td class="memTemplItemLeft" align="right" valign="top">rapidjson::Value&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceshrapnel_1_1midi.html#ae36b87ea8f245d8e34b035eb1cbe1bbd">to_json</a> (rapidjson::Document &amp;document, const <a class="el" href="structshrapnel_1_1midi_1_1GetResponse.html">GetResponse</a> &amp;object)</td></tr>
+<tr class="separator:ae36b87ea8f245d8e34b035eb1cbe1bbd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6c42217c7b2669babb823c4ee665fb3b"><td class="memItemLeft" align="right" valign="top">template&lt;&gt; </td></tr>
+<tr class="memitem:a6c42217c7b2669babb823c4ee665fb3b"><td class="memTemplItemLeft" align="right" valign="top">rapidjson::Value&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceshrapnel_1_1midi.html#a6c42217c7b2669babb823c4ee665fb3b">to_json</a> (rapidjson::Document &amp;document, const <a class="el" href="namespaceshrapnel_1_1midi.html#ad9ee9014110e441706a017a889103bd1">MappingApiMessage</a> &amp;object)</td></tr>
+<tr class="separator:a6c42217c7b2669babb823c4ee665fb3b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6ac0cf7a719020ded96bd94b3e2ddfeb"><td class="memItemLeft" align="right" valign="top">template&lt;&gt; </td></tr>
+<tr class="memitem:a6ac0cf7a719020ded96bd94b3e2ddfeb"><td class="memTemplItemLeft" align="right" valign="top">std::optional&lt; <a class="el" href="structshrapnel_1_1midi_1_1GetRequest.html">GetRequest</a> &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceshrapnel_1_1midi.html#a6ac0cf7a719020ded96bd94b3e2ddfeb">from_json</a> (const rapidjson::Value &amp;)</td></tr>
+<tr class="memdesc:a6ac0cf7a719020ded96bd94b3e2ddfeb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert the message into a object representing it.  <a href="namespaceshrapnel_1_1midi.html#a6ac0cf7a719020ded96bd94b3e2ddfeb">More...</a><br /></td></tr>
+<tr class="separator:a6ac0cf7a719020ded96bd94b3e2ddfeb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad51657a257c72e7075c02af7896316eb"><td class="memItemLeft" align="right" valign="top">template&lt;&gt; </td></tr>
+<tr class="memitem:ad51657a257c72e7075c02af7896316eb"><td class="memTemplItemLeft" align="right" valign="top">std::optional&lt; <a class="el" href="structshrapnel_1_1midi_1_1Mapping.html">Mapping</a> &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceshrapnel_1_1midi.html#ad51657a257c72e7075c02af7896316eb">from_json</a> (const rapidjson::Value &amp;json)</td></tr>
+<tr class="memdesc:ad51657a257c72e7075c02af7896316eb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert the message into a object representing it.  <a href="namespaceshrapnel_1_1midi.html#ad51657a257c72e7075c02af7896316eb">More...</a><br /></td></tr>
+<tr class="separator:ad51657a257c72e7075c02af7896316eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aed2b96bd6d4afdcc8507cb7b5f0ef4bc"><td class="memItemLeft" align="right" valign="top">template&lt;&gt; </td></tr>
+<tr class="memitem:aed2b96bd6d4afdcc8507cb7b5f0ef4bc"><td class="memTemplItemLeft" align="right" valign="top">std::optional&lt; std::pair&lt; <a class="el" href="structshrapnel_1_1midi_1_1Mapping.html#a212fd4d87c151bab5982bc9138990a02">Mapping::id_t</a>, <a class="el" href="structshrapnel_1_1midi_1_1Mapping.html">Mapping</a> &gt; &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceshrapnel_1_1midi.html#aed2b96bd6d4afdcc8507cb7b5f0ef4bc">from_json</a> (const rapidjson::Value &amp;json)</td></tr>
+<tr class="memdesc:aed2b96bd6d4afdcc8507cb7b5f0ef4bc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert the message into a object representing it.  <a href="namespaceshrapnel_1_1midi.html#aed2b96bd6d4afdcc8507cb7b5f0ef4bc">More...</a><br /></td></tr>
+<tr class="separator:aed2b96bd6d4afdcc8507cb7b5f0ef4bc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adb51f16466a3fee83efae0e8a334320b"><td class="memItemLeft" align="right" valign="top">template&lt;&gt; </td></tr>
+<tr class="memitem:adb51f16466a3fee83efae0e8a334320b"><td class="memTemplItemLeft" align="right" valign="top">std::optional&lt; <a class="el" href="structshrapnel_1_1midi_1_1CreateRequest.html">CreateRequest</a> &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceshrapnel_1_1midi.html#adb51f16466a3fee83efae0e8a334320b">from_json</a> (const rapidjson::Value &amp;json)</td></tr>
+<tr class="memdesc:adb51f16466a3fee83efae0e8a334320b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert the message into a object representing it.  <a href="namespaceshrapnel_1_1midi.html#adb51f16466a3fee83efae0e8a334320b">More...</a><br /></td></tr>
+<tr class="separator:adb51f16466a3fee83efae0e8a334320b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aad12316a79e19947ba3d5700a466f933"><td class="memItemLeft" align="right" valign="top">template&lt;&gt; </td></tr>
+<tr class="memitem:aad12316a79e19947ba3d5700a466f933"><td class="memTemplItemLeft" align="right" valign="top">std::optional&lt; <a class="el" href="structshrapnel_1_1midi_1_1Update.html">Update</a> &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceshrapnel_1_1midi.html#aad12316a79e19947ba3d5700a466f933">from_json</a> (const rapidjson::Value &amp;json)</td></tr>
+<tr class="memdesc:aad12316a79e19947ba3d5700a466f933"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert the message into a object representing it.  <a href="namespaceshrapnel_1_1midi.html#aad12316a79e19947ba3d5700a466f933">More...</a><br /></td></tr>
+<tr class="separator:aad12316a79e19947ba3d5700a466f933"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2b9d2bc58c847f2f2289c90bf47979e6"><td class="memItemLeft" align="right" valign="top">template&lt;&gt; </td></tr>
+<tr class="memitem:a2b9d2bc58c847f2f2289c90bf47979e6"><td class="memTemplItemLeft" align="right" valign="top">std::optional&lt; <a class="el" href="structshrapnel_1_1midi_1_1Remove.html">Remove</a> &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceshrapnel_1_1midi.html#a2b9d2bc58c847f2f2289c90bf47979e6">from_json</a> (const rapidjson::Value &amp;json)</td></tr>
+<tr class="memdesc:a2b9d2bc58c847f2f2289c90bf47979e6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert the message into a object representing it.  <a href="namespaceshrapnel_1_1midi.html#a2b9d2bc58c847f2f2289c90bf47979e6">More...</a><br /></td></tr>
+<tr class="separator:a2b9d2bc58c847f2f2289c90bf47979e6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae251dec5b5227e127fb60ecfe722deeb"><td class="memItemLeft" align="right" valign="top">template&lt;&gt; </td></tr>
+<tr class="memitem:ae251dec5b5227e127fb60ecfe722deeb"><td class="memTemplItemLeft" align="right" valign="top">std::optional&lt; <a class="el" href="namespaceshrapnel_1_1midi.html#ad9ee9014110e441706a017a889103bd1">MappingApiMessage</a> &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceshrapnel_1_1midi.html#ae251dec5b5227e127fb60ecfe722deeb">from_json</a> (const rapidjson::Value &amp;json)</td></tr>
+<tr class="memdesc:ae251dec5b5227e127fb60ecfe722deeb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert the message into a object representing it.  <a href="namespaceshrapnel_1_1midi.html#ae251dec5b5227e127fb60ecfe722deeb">More...</a><br /></td></tr>
+<tr class="separator:ae251dec5b5227e127fb60ecfe722deeb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab7aac5b3856b86dcdf7375ae7d4f5d14"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:ab7aac5b3856b86dcdf7375ae7d4f5d14"><td class="memTemplItemLeft" align="right" valign="top">constexpr const char *&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceshrapnel_1_1midi.html#ab7aac5b3856b86dcdf7375ae7d4f5d14">get_message_type</a> ()</td></tr>
+<tr class="separator:ab7aac5b3856b86dcdf7375ae7d4f5d14"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a06c1584d6468a990a968f1112b6ffdd3"><td class="memItemLeft" align="right" valign="top">template&lt;&gt; </td></tr>
+<tr class="memitem:a06c1584d6468a990a968f1112b6ffdd3"><td class="memTemplItemLeft" align="right" valign="top">constexpr const char *&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceshrapnel_1_1midi.html#a06c1584d6468a990a968f1112b6ffdd3">get_message_type&lt; GetRequest &gt;</a> ()</td></tr>
+<tr class="separator:a06c1584d6468a990a968f1112b6ffdd3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abb4f0316d6dc3f5960937523b7f19688"><td class="memItemLeft" align="right" valign="top">template&lt;&gt; </td></tr>
+<tr class="memitem:abb4f0316d6dc3f5960937523b7f19688"><td class="memTemplItemLeft" align="right" valign="top">constexpr const char *&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceshrapnel_1_1midi.html#abb4f0316d6dc3f5960937523b7f19688">get_message_type&lt; GetResponse &gt;</a> ()</td></tr>
+<tr class="separator:abb4f0316d6dc3f5960937523b7f19688"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab312cca91e576cb523ac926b9584c6ca"><td class="memItemLeft" align="right" valign="top">template&lt;&gt; </td></tr>
+<tr class="memitem:ab312cca91e576cb523ac926b9584c6ca"><td class="memTemplItemLeft" align="right" valign="top">constexpr const char *&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceshrapnel_1_1midi.html#ab312cca91e576cb523ac926b9584c6ca">get_message_type&lt; CreateRequest &gt;</a> ()</td></tr>
+<tr class="separator:ab312cca91e576cb523ac926b9584c6ca"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:addb294cd29b015c04f0f64dff7cfb587"><td class="memItemLeft" align="right" valign="top">template&lt;&gt; </td></tr>
+<tr class="memitem:addb294cd29b015c04f0f64dff7cfb587"><td class="memTemplItemLeft" align="right" valign="top">constexpr const char *&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceshrapnel_1_1midi.html#addb294cd29b015c04f0f64dff7cfb587">get_message_type&lt; CreateResponse &gt;</a> ()</td></tr>
+<tr class="separator:addb294cd29b015c04f0f64dff7cfb587"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af9d09aa6f84d609de12d075760f890f6"><td class="memItemLeft" align="right" valign="top">template&lt;&gt; </td></tr>
+<tr class="memitem:af9d09aa6f84d609de12d075760f890f6"><td class="memTemplItemLeft" align="right" valign="top">constexpr const char *&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceshrapnel_1_1midi.html#af9d09aa6f84d609de12d075760f890f6">get_message_type&lt; Update &gt;</a> ()</td></tr>
+<tr class="separator:af9d09aa6f84d609de12d075760f890f6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9e8ec3d7f4c54acbbe15790df0f404f3"><td class="memItemLeft" align="right" valign="top">template&lt;&gt; </td></tr>
+<tr class="memitem:a9e8ec3d7f4c54acbbe15790df0f404f3"><td class="memTemplItemLeft" align="right" valign="top">constexpr const char *&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceshrapnel_1_1midi.html#a9e8ec3d7f4c54acbbe15790df0f404f3">get_message_type&lt; Remove &gt;</a> ()</td></tr>
+<tr class="separator:a9e8ec3d7f4c54acbbe15790df0f404f3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
+Variables</h2></td></tr>
+<tr class="memitem:a8305176202c7655644708a6d70914ed2"><td class="memItemLeft" align="right" valign="top">int constexpr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceshrapnel_1_1midi.html#a8305176202c7655644708a6d70914ed2">CC_VALUE_MAX</a> = 127</td></tr>
+<tr class="separator:a8305176202c7655644708a6d70914ed2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<h2 class="groupheader">Typedef Documentation</h2>
+<a id="ad9ee9014110e441706a017a889103bd1" name="ad9ee9014110e441706a017a889103bd1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad9ee9014110e441706a017a889103bd1">&#9670;&nbsp;</a></span>MappingApiMessage</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="namespaceshrapnel_1_1midi.html#ad9ee9014110e441706a017a889103bd1">shrapnel::midi::MappingApiMessage</a> = typedef std::variant&lt;<a class="el" href="structshrapnel_1_1midi_1_1GetRequest.html">GetRequest</a>, <a class="el" href="structshrapnel_1_1midi_1_1GetResponse.html">GetResponse</a>, <a class="el" href="structshrapnel_1_1midi_1_1CreateRequest.html">CreateRequest</a>, <a class="el" href="structshrapnel_1_1midi_1_1CreateResponse.html">CreateResponse</a>, <a class="el" href="structshrapnel_1_1midi_1_1Update.html">Update</a>, <a class="el" href="structshrapnel_1_1midi_1_1Remove.html">Remove</a>&gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="midi__mapping__api_8h_source.html#l00057">57</a> of file <a class="el" href="midi__mapping__api_8h_source.html">midi_mapping_api.h</a>.</p>
+
+</div>
+</div>
 <h2 class="groupheader">Enumeration Type Documentation</h2>
 <a id="ad87a6a7595532b38466aa350b3d4e7ae" name="ad87a6a7595532b38466aa350b3d4e7ae"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ad87a6a7595532b38466aa350b3d4e7ae">&#9670;&nbsp;</a></span>MessageType</h2>
@@ -126,24 +322,1946 @@ Enumerations</h2></td></tr>
 <tr><td class="fieldname"><a id="ad87a6a7595532b38466aa350b3d4e7aeaf79d22f3fce6a5960d0357113684fc30" name="ad87a6a7595532b38466aa350b3d4e7aeaf79d22f3fce6a5960d0357113684fc30"></a>PROGRAM_CHANGE&#160;</td><td class="fielddoc"></td></tr>
 </table>
 
-<p class="definition">Definition at line <a class="el" href="midi_8h_source.html#l00031">31</a> of file <a class="el" href="midi_8h_source.html">midi.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   31</span>                 {</div>
-<div class="line"><span class="lineno">   32</span>    <a class="code hl_enumvalue" href="namespaceshrapnel_1_1midi.html#ad87a6a7595532b38466aa350b3d4e7aea630488f27611a5bef4c441142fb65143">NOTE_OFF</a> = 0x80,</div>
-<div class="line"><span class="lineno">   33</span>    <a class="code hl_enumvalue" href="namespaceshrapnel_1_1midi.html#ad87a6a7595532b38466aa350b3d4e7aeae3fb9dbaf6a8edc1be6286ae5b2e3bcf">NOTE_ON</a> = 0x90,</div>
-<div class="line"><span class="lineno">   34</span>    <a class="code hl_enumvalue" href="namespaceshrapnel_1_1midi.html#ad87a6a7595532b38466aa350b3d4e7aea8b135d1d39b56e9d993d8d62c5ac8743">CONTROL_CHANGE</a> = 0xB0,</div>
-<div class="line"><span class="lineno">   35</span>    <a class="code hl_enumvalue" href="namespaceshrapnel_1_1midi.html#ad87a6a7595532b38466aa350b3d4e7aeaf79d22f3fce6a5960d0357113684fc30">PROGRAM_CHANGE</a> = 0xC0,</div>
-<div class="line"><span class="lineno">   36</span>};</div>
-<div class="ttc" id="anamespaceshrapnel_1_1midi_html_ad87a6a7595532b38466aa350b3d4e7aea630488f27611a5bef4c441142fb65143"><div class="ttname"><a href="namespaceshrapnel_1_1midi.html#ad87a6a7595532b38466aa350b3d4e7aea630488f27611a5bef4c441142fb65143">shrapnel::midi::NOTE_OFF</a></div><div class="ttdeci">@ NOTE_OFF</div><div class="ttdef"><b>Definition:</b> <a href="midi_8h_source.html#l00032">midi.h:32</a></div></div>
-<div class="ttc" id="anamespaceshrapnel_1_1midi_html_ad87a6a7595532b38466aa350b3d4e7aea8b135d1d39b56e9d993d8d62c5ac8743"><div class="ttname"><a href="namespaceshrapnel_1_1midi.html#ad87a6a7595532b38466aa350b3d4e7aea8b135d1d39b56e9d993d8d62c5ac8743">shrapnel::midi::CONTROL_CHANGE</a></div><div class="ttdeci">@ CONTROL_CHANGE</div><div class="ttdef"><b>Definition:</b> <a href="midi_8h_source.html#l00034">midi.h:34</a></div></div>
-<div class="ttc" id="anamespaceshrapnel_1_1midi_html_ad87a6a7595532b38466aa350b3d4e7aeae3fb9dbaf6a8edc1be6286ae5b2e3bcf"><div class="ttname"><a href="namespaceshrapnel_1_1midi.html#ad87a6a7595532b38466aa350b3d4e7aeae3fb9dbaf6a8edc1be6286ae5b2e3bcf">shrapnel::midi::NOTE_ON</a></div><div class="ttdeci">@ NOTE_ON</div><div class="ttdef"><b>Definition:</b> <a href="midi_8h_source.html#l00033">midi.h:33</a></div></div>
-<div class="ttc" id="anamespaceshrapnel_1_1midi_html_ad87a6a7595532b38466aa350b3d4e7aeaf79d22f3fce6a5960d0357113684fc30"><div class="ttname"><a href="namespaceshrapnel_1_1midi.html#ad87a6a7595532b38466aa350b3d4e7aeaf79d22f3fce6a5960d0357113684fc30">shrapnel::midi::PROGRAM_CHANGE</a></div><div class="ttdeci">@ PROGRAM_CHANGE</div><div class="ttdef"><b>Definition:</b> <a href="midi_8h_source.html#l00035">midi.h:35</a></div></div>
+<p class="definition">Definition at line <a class="el" href="midi_8h_source.html#l00033">33</a> of file <a class="el" href="midi_8h_source.html">midi.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   33</span>                 {</div>
+<div class="line"><span class="lineno">   34</span>    <a class="code hl_enumvalue" href="namespaceshrapnel_1_1midi.html#ad87a6a7595532b38466aa350b3d4e7aea630488f27611a5bef4c441142fb65143">NOTE_OFF</a> = 0x80,</div>
+<div class="line"><span class="lineno">   35</span>    <a class="code hl_enumvalue" href="namespaceshrapnel_1_1midi.html#ad87a6a7595532b38466aa350b3d4e7aeae3fb9dbaf6a8edc1be6286ae5b2e3bcf">NOTE_ON</a> = 0x90,</div>
+<div class="line"><span class="lineno">   36</span>    <a class="code hl_enumvalue" href="namespaceshrapnel_1_1midi.html#ad87a6a7595532b38466aa350b3d4e7aea8b135d1d39b56e9d993d8d62c5ac8743">CONTROL_CHANGE</a> = 0xB0,</div>
+<div class="line"><span class="lineno">   37</span>    <a class="code hl_enumvalue" href="namespaceshrapnel_1_1midi.html#ad87a6a7595532b38466aa350b3d4e7aeaf79d22f3fce6a5960d0357113684fc30">PROGRAM_CHANGE</a> = 0xC0,</div>
+<div class="line"><span class="lineno">   38</span>};</div>
+<div class="ttc" id="anamespaceshrapnel_1_1midi_html_ad87a6a7595532b38466aa350b3d4e7aea630488f27611a5bef4c441142fb65143"><div class="ttname"><a href="namespaceshrapnel_1_1midi.html#ad87a6a7595532b38466aa350b3d4e7aea630488f27611a5bef4c441142fb65143">shrapnel::midi::NOTE_OFF</a></div><div class="ttdeci">@ NOTE_OFF</div><div class="ttdef"><b>Definition:</b> <a href="midi_8h_source.html#l00034">midi.h:34</a></div></div>
+<div class="ttc" id="anamespaceshrapnel_1_1midi_html_ad87a6a7595532b38466aa350b3d4e7aea8b135d1d39b56e9d993d8d62c5ac8743"><div class="ttname"><a href="namespaceshrapnel_1_1midi.html#ad87a6a7595532b38466aa350b3d4e7aea8b135d1d39b56e9d993d8d62c5ac8743">shrapnel::midi::CONTROL_CHANGE</a></div><div class="ttdeci">@ CONTROL_CHANGE</div><div class="ttdef"><b>Definition:</b> <a href="midi_8h_source.html#l00036">midi.h:36</a></div></div>
+<div class="ttc" id="anamespaceshrapnel_1_1midi_html_ad87a6a7595532b38466aa350b3d4e7aeae3fb9dbaf6a8edc1be6286ae5b2e3bcf"><div class="ttname"><a href="namespaceshrapnel_1_1midi.html#ad87a6a7595532b38466aa350b3d4e7aeae3fb9dbaf6a8edc1be6286ae5b2e3bcf">shrapnel::midi::NOTE_ON</a></div><div class="ttdeci">@ NOTE_ON</div><div class="ttdef"><b>Definition:</b> <a href="midi_8h_source.html#l00035">midi.h:35</a></div></div>
+<div class="ttc" id="anamespaceshrapnel_1_1midi_html_ad87a6a7595532b38466aa350b3d4e7aeaf79d22f3fce6a5960d0357113684fc30"><div class="ttname"><a href="namespaceshrapnel_1_1midi.html#ad87a6a7595532b38466aa350b3d4e7aeaf79d22f3fce6a5960d0357113684fc30">shrapnel::midi::PROGRAM_CHANGE</a></div><div class="ttdeci">@ PROGRAM_CHANGE</div><div class="ttdef"><b>Definition:</b> <a href="midi_8h_source.html#l00037">midi.h:37</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
+<h2 class="groupheader">Function Documentation</h2>
+<a id="a6ac0cf7a719020ded96bd94b3e2ddfeb" name="a6ac0cf7a719020ded96bd94b3e2ddfeb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6ac0cf7a719020ded96bd94b3e2ddfeb">&#9670;&nbsp;</a></span>from_json() <span class="overload">[1/15]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">std::optional&lt; <a class="el" href="structshrapnel_1_1midi_1_1GetRequest.html">GetRequest</a> &gt; shrapnel::midi::from_json </td>
+          <td>(</td>
+          <td class="paramtype">const rapidjson::Value &amp;&#160;</td>
+          <td class="paramname"><em>json</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Convert the message into a object representing it. </p>
+
+<p class="definition">Definition at line <a class="el" href="midi__mapping__json__parser_8cpp_source.html#l00027">27</a> of file <a class="el" href="midi__mapping__json__parser_8cpp_source.html">midi_mapping_json_parser.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   28</span>{</div>
+<div class="line"><span class="lineno">   29</span>    <span class="keywordflow">return</span> <a class="code hl_struct" href="structshrapnel_1_1midi_1_1GetRequest.html">GetRequest</a>();</div>
+<div class="line"><span class="lineno">   30</span>}</div>
+<div class="ttc" id="astructshrapnel_1_1midi_1_1GetRequest_html"><div class="ttname"><a href="structshrapnel_1_1midi_1_1GetRequest.html">shrapnel::midi::GetRequest</a></div><div class="ttdef"><b>Definition:</b> <a href="midi__mapping__api_8h_source.html#l00030">midi_mapping_api.h:30</a></div></div>
+</div><!-- fragment -->
+</div>
+</div>
+<a id="a716c9b68c7266f2265b1b424bb6d8fd6" name="a716c9b68c7266f2265b1b424bb6d8fd6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a716c9b68c7266f2265b1b424bb6d8fd6">&#9670;&nbsp;</a></span>from_json() <span class="overload">[2/15]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">std::optional&lt; T &gt; shrapnel::midi::from_json </td>
+          <td>(</td>
+          <td class="paramtype">const rapidjson::Value &amp;&#160;</td>
+          <td class="paramname"><em>json</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a4c674076b1acf39420f250dae818893a" name="a4c674076b1acf39420f250dae818893a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4c674076b1acf39420f250dae818893a">&#9670;&nbsp;</a></span>from_json() <span class="overload">[3/15]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">std::optional&lt; <a class="el" href="structshrapnel_1_1midi_1_1GetRequest.html">GetRequest</a> &gt; shrapnel::midi::from_json </td>
+          <td>(</td>
+          <td class="paramtype">const rapidjson::Value &amp;&#160;</td>
+          <td class="paramname"><em>json</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="midi__mapping__json__parser_8cpp_source.html#l00027">27</a> of file <a class="el" href="midi__mapping__json__parser_8cpp_source.html">midi_mapping_json_parser.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   28</span>{</div>
+<div class="line"><span class="lineno">   29</span>    <span class="keywordflow">return</span> <a class="code hl_struct" href="structshrapnel_1_1midi_1_1GetRequest.html">GetRequest</a>();</div>
+<div class="line"><span class="lineno">   30</span>}</div>
+</div><!-- fragment -->
+</div>
+</div>
+<a id="ad51657a257c72e7075c02af7896316eb" name="ad51657a257c72e7075c02af7896316eb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad51657a257c72e7075c02af7896316eb">&#9670;&nbsp;</a></span>from_json() <span class="overload">[4/15]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">std::optional&lt; <a class="el" href="structshrapnel_1_1midi_1_1Mapping.html">Mapping</a> &gt; shrapnel::midi::from_json </td>
+          <td>(</td>
+          <td class="paramtype">const rapidjson::Value &amp;&#160;</td>
+          <td class="paramname"><em>json</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="midi__mapping__json__parser_8cpp_source.html#l00027">27</a> of file <a class="el" href="midi__mapping__json__parser_8cpp_source.html">midi_mapping_json_parser.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   28</span>{</div>
+<div class="line"><span class="lineno">   29</span>    <span class="keywordflow">return</span> <a class="code hl_struct" href="structshrapnel_1_1midi_1_1GetRequest.html">GetRequest</a>();</div>
+<div class="line"><span class="lineno">   30</span>}</div>
+</div><!-- fragment -->
+</div>
+</div>
+<a id="aed2b96bd6d4afdcc8507cb7b5f0ef4bc" name="aed2b96bd6d4afdcc8507cb7b5f0ef4bc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aed2b96bd6d4afdcc8507cb7b5f0ef4bc">&#9670;&nbsp;</a></span>from_json() <span class="overload">[5/15]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">std::optional&lt; std::pair&lt; <a class="el" href="structshrapnel_1_1midi_1_1Mapping.html#a212fd4d87c151bab5982bc9138990a02">Mapping::id_t</a>, <a class="el" href="structshrapnel_1_1midi_1_1Mapping.html">Mapping</a> &gt; &gt; shrapnel::midi::from_json </td>
+          <td>(</td>
+          <td class="paramtype">const rapidjson::Value &amp;&#160;</td>
+          <td class="paramname"><em>json</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="midi__mapping__json__parser_8cpp_source.html#l00027">27</a> of file <a class="el" href="midi__mapping__json__parser_8cpp_source.html">midi_mapping_json_parser.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   28</span>{</div>
+<div class="line"><span class="lineno">   29</span>    <span class="keywordflow">return</span> <a class="code hl_struct" href="structshrapnel_1_1midi_1_1GetRequest.html">GetRequest</a>();</div>
+<div class="line"><span class="lineno">   30</span>}</div>
+</div><!-- fragment -->
+</div>
+</div>
+<a id="adb51f16466a3fee83efae0e8a334320b" name="adb51f16466a3fee83efae0e8a334320b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adb51f16466a3fee83efae0e8a334320b">&#9670;&nbsp;</a></span>from_json() <span class="overload">[6/15]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">std::optional&lt; <a class="el" href="structshrapnel_1_1midi_1_1CreateRequest.html">CreateRequest</a> &gt; shrapnel::midi::from_json </td>
+          <td>(</td>
+          <td class="paramtype">const rapidjson::Value &amp;&#160;</td>
+          <td class="paramname"><em>json</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="midi__mapping__json__parser_8cpp_source.html#l00027">27</a> of file <a class="el" href="midi__mapping__json__parser_8cpp_source.html">midi_mapping_json_parser.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   28</span>{</div>
+<div class="line"><span class="lineno">   29</span>    <span class="keywordflow">return</span> <a class="code hl_struct" href="structshrapnel_1_1midi_1_1GetRequest.html">GetRequest</a>();</div>
+<div class="line"><span class="lineno">   30</span>}</div>
+</div><!-- fragment -->
+</div>
+</div>
+<a id="aad12316a79e19947ba3d5700a466f933" name="aad12316a79e19947ba3d5700a466f933"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aad12316a79e19947ba3d5700a466f933">&#9670;&nbsp;</a></span>from_json() <span class="overload">[7/15]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">std::optional&lt; <a class="el" href="structshrapnel_1_1midi_1_1Update.html">Update</a> &gt; shrapnel::midi::from_json </td>
+          <td>(</td>
+          <td class="paramtype">const rapidjson::Value &amp;&#160;</td>
+          <td class="paramname"><em>json</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="midi__mapping__json__parser_8cpp_source.html#l00027">27</a> of file <a class="el" href="midi__mapping__json__parser_8cpp_source.html">midi_mapping_json_parser.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   28</span>{</div>
+<div class="line"><span class="lineno">   29</span>    <span class="keywordflow">return</span> <a class="code hl_struct" href="structshrapnel_1_1midi_1_1GetRequest.html">GetRequest</a>();</div>
+<div class="line"><span class="lineno">   30</span>}</div>
+</div><!-- fragment -->
+</div>
+</div>
+<a id="a2b9d2bc58c847f2f2289c90bf47979e6" name="a2b9d2bc58c847f2f2289c90bf47979e6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2b9d2bc58c847f2f2289c90bf47979e6">&#9670;&nbsp;</a></span>from_json() <span class="overload">[8/15]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">std::optional&lt; <a class="el" href="structshrapnel_1_1midi_1_1Remove.html">Remove</a> &gt; shrapnel::midi::from_json </td>
+          <td>(</td>
+          <td class="paramtype">const rapidjson::Value &amp;&#160;</td>
+          <td class="paramname"><em>json</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="midi__mapping__json__parser_8cpp_source.html#l00027">27</a> of file <a class="el" href="midi__mapping__json__parser_8cpp_source.html">midi_mapping_json_parser.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   28</span>{</div>
+<div class="line"><span class="lineno">   29</span>    <span class="keywordflow">return</span> <a class="code hl_struct" href="structshrapnel_1_1midi_1_1GetRequest.html">GetRequest</a>();</div>
+<div class="line"><span class="lineno">   30</span>}</div>
+</div><!-- fragment -->
+</div>
+</div>
+<a id="ae251dec5b5227e127fb60ecfe722deeb" name="ae251dec5b5227e127fb60ecfe722deeb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae251dec5b5227e127fb60ecfe722deeb">&#9670;&nbsp;</a></span>from_json() <span class="overload">[9/15]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">std::optional&lt; <a class="el" href="namespaceshrapnel_1_1midi.html#ad9ee9014110e441706a017a889103bd1">MappingApiMessage</a> &gt; shrapnel::midi::from_json </td>
+          <td>(</td>
+          <td class="paramtype">const rapidjson::Value &amp;&#160;</td>
+          <td class="paramname"><em>json</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Convert the message into a object representing it. </p>
+
+<p class="definition">Definition at line <a class="el" href="midi__mapping__json__parser_8cpp_source.html#l00027">27</a> of file <a class="el" href="midi__mapping__json__parser_8cpp_source.html">midi_mapping_json_parser.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   28</span>{</div>
+<div class="line"><span class="lineno">   29</span>    <span class="keywordflow">return</span> <a class="code hl_struct" href="structshrapnel_1_1midi_1_1GetRequest.html">GetRequest</a>();</div>
+<div class="line"><span class="lineno">   30</span>}</div>
+</div><!-- fragment -->
+<p class="reference">References <a class="el" href="midi__message__type_8h_source.html#l00043">get_message_type&lt; CreateRequest &gt;()</a>, <a class="el" href="midi__message__type_8h_source.html#l00031">get_message_type&lt; GetRequest &gt;()</a>, <a class="el" href="midi__message__type_8h_source.html#l00061">get_message_type&lt; Remove &gt;()</a>, <a class="el" href="midi__message__type_8h_source.html#l00055">get_message_type&lt; Update &gt;()</a>, and <a class="el" href="midi__mapping__json__parser_8cpp_source.html#l00183">parse_uuid()</a>.</p>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" frameborder="0" src="namespaceshrapnel_1_1midi_ae251dec5b5227e127fb60ecfe722deeb_cgraph.svg" width="444" height="248"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
+</div>
+
+</div>
+</div>
+<a id="ad51657a257c72e7075c02af7896316eb" name="ad51657a257c72e7075c02af7896316eb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad51657a257c72e7075c02af7896316eb">&#9670;&nbsp;</a></span>from_json() <span class="overload">[10/15]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">std::optional&lt; <a class="el" href="structshrapnel_1_1midi_1_1Mapping.html">Mapping</a> &gt; shrapnel::midi::from_json </td>
+          <td>(</td>
+          <td class="paramtype">const rapidjson::Value &amp;&#160;</td>
+          <td class="paramname"><em>json</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Convert the message into a object representing it. </p>
+
+<p class="definition">Definition at line <a class="el" href="midi__mapping__json__parser_8cpp_source.html#l00033">33</a> of file <a class="el" href="midi__mapping__json__parser_8cpp_source.html">midi_mapping_json_parser.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   34</span>{</div>
+<div class="line"><span class="lineno">   35</span>    <span class="keyword">constexpr</span> <span class="keywordtype">char</span> TAG[] = <span class="stringliteral">&quot;Mapping from_json&quot;</span>;</div>
+<div class="line"><span class="lineno">   36</span>    <span class="keyword">auto</span> midi_channel = json.FindMember(<span class="stringliteral">&quot;midi_channel&quot;</span>);</div>
+<div class="line"><span class="lineno">   37</span>    <span class="keywordflow">if</span>(midi_channel == json.MemberEnd()) {</div>
+<div class="line"><span class="lineno">   38</span>        ESP_LOGE(TAG, <span class="stringliteral">&quot;midi_channel is missing&quot;</span>);</div>
+<div class="line"><span class="lineno">   39</span>        <span class="keywordflow">return</span> std::nullopt;</div>
+<div class="line"><span class="lineno">   40</span>    }</div>
+<div class="line"><span class="lineno">   41</span> </div>
+<div class="line"><span class="lineno">   42</span>    <span class="keyword">auto</span> cc_number = json.FindMember(<span class="stringliteral">&quot;cc_number&quot;</span>);</div>
+<div class="line"><span class="lineno">   43</span>    <span class="keywordflow">if</span>(cc_number == json.MemberEnd()) {</div>
+<div class="line"><span class="lineno">   44</span>        ESP_LOGE(TAG, <span class="stringliteral">&quot;cc_number is missing&quot;</span>);</div>
+<div class="line"><span class="lineno">   45</span>        <span class="keywordflow">return</span> std::nullopt;</div>
+<div class="line"><span class="lineno">   46</span>    }</div>
+<div class="line"><span class="lineno">   47</span> </div>
+<div class="line"><span class="lineno">   48</span>    <span class="keyword">auto</span> parameter_id = json.FindMember(<span class="stringliteral">&quot;parameter_id&quot;</span>);</div>
+<div class="line"><span class="lineno">   49</span>    <span class="keywordflow">if</span>(parameter_id == json.MemberEnd()) {</div>
+<div class="line"><span class="lineno">   50</span>        ESP_LOGE(TAG, <span class="stringliteral">&quot;parameter_id is missing&quot;</span>);</div>
+<div class="line"><span class="lineno">   51</span>        <span class="keywordflow">return</span> std::nullopt;</div>
+<div class="line"><span class="lineno">   52</span>    }</div>
+<div class="line"><span class="lineno">   53</span> </div>
+<div class="line"><span class="lineno">   54</span>    <span class="comment">// TODO range check before narrowing conversion to uint8_t</span></div>
+<div class="line"><span class="lineno">   55</span>    <span class="keywordflow">return</span> Mapping{</div>
+<div class="line"><span class="lineno">   56</span>        <span class="keyword">static_cast&lt;</span>uint8_t<span class="keyword">&gt;</span>(midi_channel-&gt;value.GetInt()),</div>
+<div class="line"><span class="lineno">   57</span>        <span class="keyword">static_cast&lt;</span>uint8_t<span class="keyword">&gt;</span>(cc_number-&gt;value.GetInt()),</div>
+<div class="line"><span class="lineno">   58</span>        <a class="code hl_typedef" href="namespaceshrapnel_1_1parameters.html#a5506267ab65b64b98595a4269027196b">parameters::id_t</a>(parameter_id-&gt;value.GetString())</div>
+<div class="line"><span class="lineno">   59</span>    };</div>
+<div class="line"><span class="lineno">   60</span>}</div>
+<div class="ttc" id="anamespaceshrapnel_1_1parameters_html_a5506267ab65b64b98595a4269027196b"><div class="ttname"><a href="namespaceshrapnel_1_1parameters.html#a5506267ab65b64b98595a4269027196b">shrapnel::parameters::id_t</a></div><div class="ttdeci">etl::string&lt; 32 &gt; id_t</div><div class="ttdef"><b>Definition:</b> <a href="audio__param_8h_source.html#l00032">audio_param.h:32</a></div></div>
+</div><!-- fragment -->
+</div>
+</div>
+<a id="aed2b96bd6d4afdcc8507cb7b5f0ef4bc" name="aed2b96bd6d4afdcc8507cb7b5f0ef4bc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aed2b96bd6d4afdcc8507cb7b5f0ef4bc">&#9670;&nbsp;</a></span>from_json() <span class="overload">[11/15]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">std::optional&lt; std::pair&lt; <a class="el" href="structshrapnel_1_1midi_1_1Mapping.html#a212fd4d87c151bab5982bc9138990a02">Mapping::id_t</a>, <a class="el" href="structshrapnel_1_1midi_1_1Mapping.html">Mapping</a> &gt; &gt; shrapnel::midi::from_json </td>
+          <td>(</td>
+          <td class="paramtype">const rapidjson::Value &amp;&#160;</td>
+          <td class="paramname"><em>json</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Convert the message into a object representing it. </p>
+
+<p class="definition">Definition at line <a class="el" href="midi__mapping__json__parser_8cpp_source.html#l00063">63</a> of file <a class="el" href="midi__mapping__json__parser_8cpp_source.html">midi_mapping_json_parser.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   64</span>{</div>
+<div class="line"><span class="lineno">   65</span>    <span class="keyword">constexpr</span> <span class="keywordtype">char</span> TAG[] = <span class="stringliteral">&quot;pair&lt;mapping::id, mapping&gt; from_json&quot;</span>;</div>
+<div class="line"><span class="lineno">   66</span> </div>
+<div class="line"><span class="lineno">   67</span>    <span class="keywordflow">if</span>(!json.IsObject())</div>
+<div class="line"><span class="lineno">   68</span>    {</div>
+<div class="line"><span class="lineno">   69</span>        ESP_LOGE(TAG, <span class="stringliteral">&quot;mapping is not object&quot;</span>);</div>
+<div class="line"><span class="lineno">   70</span>        <span class="keywordflow">return</span> std::nullopt;</div>
+<div class="line"><span class="lineno">   71</span>    }</div>
+<div class="line"><span class="lineno">   72</span> </div>
+<div class="line"><span class="lineno">   73</span>    <span class="comment">// XXX There should be only one key, so we take the first one</span></div>
+<div class="line"><span class="lineno">   74</span>    <span class="comment">//     and ignore the rest</span></div>
+<div class="line"><span class="lineno">   75</span>    <span class="keyword">auto</span> mapping_entry_member = json.GetObject().begin();</div>
+<div class="line"><span class="lineno">   76</span> </div>
+<div class="line"><span class="lineno">   77</span>    <span class="keywordflow">if</span>(mapping_entry_member == json.GetObject().end())</div>
+<div class="line"><span class="lineno">   78</span>    {</div>
+<div class="line"><span class="lineno">   79</span>        ESP_LOGE(TAG, <span class="stringliteral">&quot;mapping is empty&quot;</span>);</div>
+<div class="line"><span class="lineno">   80</span>        <span class="keywordflow">return</span> std::nullopt;</div>
+<div class="line"><span class="lineno">   81</span>    }</div>
+<div class="line"><span class="lineno">   82</span> </div>
+<div class="line"><span class="lineno">   83</span>    <span class="keyword">auto</span> &amp;mapping_id = mapping_entry_member-&gt;name;</div>
+<div class="line"><span class="lineno">   84</span>    <span class="keyword">auto</span> &amp;mapping_entry = mapping_entry_member-&gt;value;</div>
+<div class="line"><span class="lineno">   85</span> </div>
+<div class="line"><span class="lineno">   86</span>    <span class="keyword">auto</span> mapping = from_json&lt;Mapping&gt;(mapping_entry);</div>
+<div class="line"><span class="lineno">   87</span> </div>
+<div class="line"><span class="lineno">   88</span>    <span class="keywordflow">if</span>(!mapping.has_value()) {</div>
+<div class="line"><span class="lineno">   89</span>        <span class="keywordflow">return</span> std::nullopt;</div>
+<div class="line"><span class="lineno">   90</span>    }</div>
+<div class="line"><span class="lineno">   91</span> </div>
+<div class="line"><span class="lineno">   92</span>    std::pair&lt;Mapping::id_t, Mapping&gt; out{ <a class="code hl_typedef" href="namespaceshrapnel_1_1parameters.html#a5506267ab65b64b98595a4269027196b">Mapping::id_t</a>{0}, *mapping };</div>
+<div class="line"><span class="lineno">   93</span>    <a class="code hl_function" href="namespaceshrapnel_1_1midi.html#a28b9d0dddfafc22560e2eaa14006045d">parse_uuid</a>(out.first, mapping_id.GetString());</div>
+<div class="line"><span class="lineno">   94</span>    <span class="keywordflow">return</span> out;</div>
+<div class="line"><span class="lineno">   95</span>}</div>
+<div class="ttc" id="anamespaceshrapnel_1_1midi_html_a28b9d0dddfafc22560e2eaa14006045d"><div class="ttname"><a href="namespaceshrapnel_1_1midi.html#a28b9d0dddfafc22560e2eaa14006045d">shrapnel::midi::parse_uuid</a></div><div class="ttdeci">int parse_uuid(Mapping::id_t &amp;uuid, const char *string)</div><div class="ttdoc">return non-zero on error</div><div class="ttdef"><b>Definition:</b> <a href="midi__mapping__json__parser_8cpp_source.html#l00183">midi_mapping_json_parser.cpp:183</a></div></div>
+</div><!-- fragment -->
+<p class="reference">References <a class="el" href="midi__mapping__json__parser_8cpp_source.html#l00183">parse_uuid()</a>.</p>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" frameborder="0" src="namespaceshrapnel_1_1midi_aed2b96bd6d4afdcc8507cb7b5f0ef4bc_cgraph.svg" width="394" height="38"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
+</div>
+
+</div>
+</div>
+<a id="adb51f16466a3fee83efae0e8a334320b" name="adb51f16466a3fee83efae0e8a334320b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adb51f16466a3fee83efae0e8a334320b">&#9670;&nbsp;</a></span>from_json() <span class="overload">[12/15]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">std::optional&lt; <a class="el" href="structshrapnel_1_1midi_1_1CreateRequest.html">CreateRequest</a> &gt; shrapnel::midi::from_json </td>
+          <td>(</td>
+          <td class="paramtype">const rapidjson::Value &amp;&#160;</td>
+          <td class="paramname"><em>json</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Convert the message into a object representing it. </p>
+
+<p class="definition">Definition at line <a class="el" href="midi__mapping__json__parser_8cpp_source.html#l00098">98</a> of file <a class="el" href="midi__mapping__json__parser_8cpp_source.html">midi_mapping_json_parser.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   99</span>{</div>
+<div class="line"><span class="lineno">  100</span>    <span class="keyword">constexpr</span> <span class="keywordtype">char</span> TAG[] = <span class="stringliteral">&quot;Update from_json&quot;</span>;</div>
+<div class="line"><span class="lineno">  101</span> </div>
+<div class="line"><span class="lineno">  102</span>    <span class="keyword">auto</span> mapping_member = json.FindMember(<span class="stringliteral">&quot;mapping&quot;</span>);</div>
+<div class="line"><span class="lineno">  103</span>    <span class="keywordflow">if</span>(mapping_member == json.MemberEnd()) {</div>
+<div class="line"><span class="lineno">  104</span>        ESP_LOGE(TAG, <span class="stringliteral">&quot;mapping is missing&quot;</span>);</div>
+<div class="line"><span class="lineno">  105</span>        <span class="keywordflow">return</span> std::nullopt;</div>
+<div class="line"><span class="lineno">  106</span>    }</div>
+<div class="line"><span class="lineno">  107</span> </div>
+<div class="line"><span class="lineno">  108</span>    <span class="keyword">auto</span> mapping = from_json&lt;std::pair&lt;Mapping::id_t, Mapping&gt;&gt;(mapping_member-&gt;value);</div>
+<div class="line"><span class="lineno">  109</span>    <span class="keywordflow">return</span> CreateRequest(*mapping);</div>
+<div class="line"><span class="lineno">  110</span>}</div>
+</div><!-- fragment -->
+</div>
+</div>
+<a id="aad12316a79e19947ba3d5700a466f933" name="aad12316a79e19947ba3d5700a466f933"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aad12316a79e19947ba3d5700a466f933">&#9670;&nbsp;</a></span>from_json() <span class="overload">[13/15]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">std::optional&lt; <a class="el" href="structshrapnel_1_1midi_1_1Update.html">Update</a> &gt; shrapnel::midi::from_json </td>
+          <td>(</td>
+          <td class="paramtype">const rapidjson::Value &amp;&#160;</td>
+          <td class="paramname"><em>json</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Convert the message into a object representing it. </p>
+
+<p class="definition">Definition at line <a class="el" href="midi__mapping__json__parser_8cpp_source.html#l00113">113</a> of file <a class="el" href="midi__mapping__json__parser_8cpp_source.html">midi_mapping_json_parser.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  114</span>{</div>
+<div class="line"><span class="lineno">  115</span>    <span class="keyword">constexpr</span> <span class="keywordtype">char</span> TAG[] = <span class="stringliteral">&quot;Update from_json&quot;</span>;</div>
+<div class="line"><span class="lineno">  116</span> </div>
+<div class="line"><span class="lineno">  117</span>    <span class="keyword">auto</span> mapping_member = json.FindMember(<span class="stringliteral">&quot;mapping&quot;</span>);</div>
+<div class="line"><span class="lineno">  118</span>    <span class="keywordflow">if</span>(mapping_member == json.MemberEnd()) {</div>
+<div class="line"><span class="lineno">  119</span>        ESP_LOGE(TAG, <span class="stringliteral">&quot;mapping is missing&quot;</span>);</div>
+<div class="line"><span class="lineno">  120</span>        <span class="keywordflow">return</span> std::nullopt;</div>
+<div class="line"><span class="lineno">  121</span>    }</div>
+<div class="line"><span class="lineno">  122</span> </div>
+<div class="line"><span class="lineno">  123</span>    <span class="keyword">auto</span> mapping = from_json&lt;std::pair&lt;Mapping::id_t, Mapping&gt;&gt;(mapping_member-&gt;value);</div>
+<div class="line"><span class="lineno">  124</span>    <span class="keywordflow">return</span> Update(*mapping);</div>
+<div class="line"><span class="lineno">  125</span>}</div>
+</div><!-- fragment -->
+</div>
+</div>
+<a id="a2b9d2bc58c847f2f2289c90bf47979e6" name="a2b9d2bc58c847f2f2289c90bf47979e6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2b9d2bc58c847f2f2289c90bf47979e6">&#9670;&nbsp;</a></span>from_json() <span class="overload">[14/15]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">std::optional&lt; <a class="el" href="structshrapnel_1_1midi_1_1Remove.html">Remove</a> &gt; shrapnel::midi::from_json </td>
+          <td>(</td>
+          <td class="paramtype">const rapidjson::Value &amp;&#160;</td>
+          <td class="paramname"><em>json</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Convert the message into a object representing it. </p>
+
+<p class="definition">Definition at line <a class="el" href="midi__mapping__json__parser_8cpp_source.html#l00128">128</a> of file <a class="el" href="midi__mapping__json__parser_8cpp_source.html">midi_mapping_json_parser.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  128</span>                                                          {</div>
+<div class="line"><span class="lineno">  129</span>    <span class="keyword">constexpr</span> <span class="keywordtype">char</span> TAG[] = <span class="stringliteral">&quot;Remove from_json&quot;</span>;</div>
+<div class="line"><span class="lineno">  130</span> </div>
+<div class="line"><span class="lineno">  131</span>    <span class="keyword">auto</span> id_member = json.FindMember(<span class="stringliteral">&quot;id&quot;</span>);</div>
+<div class="line"><span class="lineno">  132</span>    <span class="keywordflow">if</span>(id_member == json.MemberEnd()) {</div>
+<div class="line"><span class="lineno">  133</span>        ESP_LOGE(TAG, <span class="stringliteral">&quot;id is missing&quot;</span>);</div>
+<div class="line"><span class="lineno">  134</span>        <span class="keywordflow">return</span> std::nullopt;</div>
+<div class="line"><span class="lineno">  135</span>    }</div>
+<div class="line"><span class="lineno">  136</span> </div>
+<div class="line"><span class="lineno">  137</span>    <a class="code hl_typedef" href="namespaceshrapnel_1_1parameters.html#a5506267ab65b64b98595a4269027196b">Mapping::id_t</a> uuid{};</div>
+<div class="line"><span class="lineno">  138</span>    <span class="keywordtype">int</span> rc = <a class="code hl_function" href="namespaceshrapnel_1_1midi.html#a28b9d0dddfafc22560e2eaa14006045d">parse_uuid</a>(uuid, id_member-&gt;value.GetString());</div>
+<div class="line"><span class="lineno">  139</span>    <span class="keywordflow">if</span>(rc != 0)</div>
+<div class="line"><span class="lineno">  140</span>    {</div>
+<div class="line"><span class="lineno">  141</span>        ESP_LOGE(TAG, <span class="stringliteral">&quot;Failed to parse UUID&quot;</span>);</div>
+<div class="line"><span class="lineno">  142</span>        <span class="keywordflow">return</span> std::nullopt;</div>
+<div class="line"><span class="lineno">  143</span>    }</div>
+<div class="line"><span class="lineno">  144</span> </div>
+<div class="line"><span class="lineno">  145</span>    <span class="keywordflow">return</span> Remove(uuid);</div>
+<div class="line"><span class="lineno">  146</span>}</div>
+</div><!-- fragment -->
+<p class="reference">References <a class="el" href="midi__mapping__json__parser_8cpp_source.html#l00183">parse_uuid()</a>.</p>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" frameborder="0" src="namespaceshrapnel_1_1midi_a2b9d2bc58c847f2f2289c90bf47979e6_cgraph.svg" width="394" height="38"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
+</div>
+
+</div>
+</div>
+<a id="ae251dec5b5227e127fb60ecfe722deeb" name="ae251dec5b5227e127fb60ecfe722deeb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae251dec5b5227e127fb60ecfe722deeb">&#9670;&nbsp;</a></span>from_json() <span class="overload">[15/15]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">std::optional&lt; <a class="el" href="namespaceshrapnel_1_1midi.html#ad9ee9014110e441706a017a889103bd1">MappingApiMessage</a> &gt; shrapnel::midi::from_json </td>
+          <td>(</td>
+          <td class="paramtype">const rapidjson::Value &amp;&#160;</td>
+          <td class="paramname"><em>json</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Convert the message into a object representing it. </p>
+
+<p class="definition">Definition at line <a class="el" href="midi__mapping__json__parser_8cpp_source.html#l00149">149</a> of file <a class="el" href="midi__mapping__json__parser_8cpp_source.html">midi_mapping_json_parser.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  149</span>                                                                     {</div>
+<div class="line"><span class="lineno">  150</span>    <span class="keyword">constexpr</span> <span class="keywordtype">char</span> TAG[] = <span class="stringliteral">&quot;MidiApiMessage from_json&quot;</span>;</div>
+<div class="line"><span class="lineno">  151</span> </div>
+<div class="line"><span class="lineno">  152</span>    <span class="keyword">auto</span> message_type_member = json.FindMember(<span class="stringliteral">&quot;messageType&quot;</span>);</div>
+<div class="line"><span class="lineno">  153</span>    <span class="keywordflow">if</span>(message_type_member == json.MemberEnd()) {</div>
+<div class="line"><span class="lineno">  154</span>        ESP_LOGE(TAG, <span class="stringliteral">&quot;messageType is missing&quot;</span>);</div>
+<div class="line"><span class="lineno">  155</span>        <span class="keywordflow">goto</span> error;</div>
+<div class="line"><span class="lineno">  156</span>    }</div>
+<div class="line"><span class="lineno">  157</span> </div>
+<div class="line"><span class="lineno">  158</span>    <span class="keywordflow">if</span>(!message_type_member-&gt;value.IsString()) {</div>
+<div class="line"><span class="lineno">  159</span>        ESP_LOGE(TAG, <span class="stringliteral">&quot;messageType is not string&quot;</span>);</div>
+<div class="line"><span class="lineno">  160</span>        <span class="keywordflow">goto</span> error;</div>
+<div class="line"><span class="lineno">  161</span>    }</div>
+<div class="line"><span class="lineno">  162</span> </div>
+<div class="line"><span class="lineno">  163</span>    {</div>
+<div class="line"><span class="lineno">  164</span>        <span class="keyword">const</span> etl::map&lt;std::string, std::function&lt;std::optional&lt;MappingApiMessage&gt;()&gt;, 4&gt; lut{</div>
+<div class="line"><span class="lineno">  165</span>            { <a class="code hl_function" href="namespaceshrapnel_1_1midi.html#a06c1584d6468a990a968f1112b6ffdd3">get_message_type&lt;GetRequest&gt;</a>(), [&amp;]{<span class="keywordflow">return</span> from_json&lt;GetRequest&gt;(json);} },</div>
+<div class="line"><span class="lineno">  166</span>            { <a class="code hl_function" href="namespaceshrapnel_1_1midi.html#ab312cca91e576cb523ac926b9584c6ca">get_message_type&lt;CreateRequest&gt;</a>(), [&amp;]{<span class="keywordflow">return</span> from_json&lt;CreateRequest&gt;(json);} },</div>
+<div class="line"><span class="lineno">  167</span>            { <a class="code hl_function" href="namespaceshrapnel_1_1midi.html#af9d09aa6f84d609de12d075760f890f6">get_message_type&lt;Update&gt;</a>(), [&amp;]{<span class="keywordflow">return</span> from_json&lt;Update&gt;(json);} },</div>
+<div class="line"><span class="lineno">  168</span>            { <a class="code hl_function" href="namespaceshrapnel_1_1midi.html#a9e8ec3d7f4c54acbbe15790df0f404f3">get_message_type&lt;Remove&gt;</a>(), [&amp;]{<span class="keywordflow">return</span> from_json&lt;Remove&gt;(json);} },</div>
+<div class="line"><span class="lineno">  169</span>        };</div>
+<div class="line"><span class="lineno">  170</span> </div>
+<div class="line"><span class="lineno">  171</span>        <span class="keyword">const</span> <span class="keywordtype">char</span> *message_type = message_type_member-&gt;value.GetString();</div>
+<div class="line"><span class="lineno">  172</span>        <span class="keywordflow">if</span>(<span class="keyword">auto</span> f = lut.find(message_type); f != lut.end())</div>
+<div class="line"><span class="lineno">  173</span>        {</div>
+<div class="line"><span class="lineno">  174</span>            ESP_LOGI(TAG, <span class="stringliteral">&quot;found %s&quot;</span>, message_type);</div>
+<div class="line"><span class="lineno">  175</span>            <span class="keywordflow">return</span> f-&gt;second();</div>
+<div class="line"><span class="lineno">  176</span>        }</div>
+<div class="line"><span class="lineno">  177</span>    }</div>
+<div class="line"><span class="lineno">  178</span> </div>
+<div class="line"><span class="lineno">  179</span>error:</div>
+<div class="line"><span class="lineno">  180</span>    <span class="keywordflow">return</span> std::nullopt;</div>
+<div class="line"><span class="lineno">  181</span>}</div>
+<div class="ttc" id="anamespaceshrapnel_1_1midi_html_a06c1584d6468a990a968f1112b6ffdd3"><div class="ttname"><a href="namespaceshrapnel_1_1midi.html#a06c1584d6468a990a968f1112b6ffdd3">shrapnel::midi::get_message_type&lt; GetRequest &gt;</a></div><div class="ttdeci">constexpr const char * get_message_type&lt; GetRequest &gt;()</div><div class="ttdef"><b>Definition:</b> <a href="midi__message__type_8h_source.html#l00031">midi_message_type.h:31</a></div></div>
+<div class="ttc" id="anamespaceshrapnel_1_1midi_html_a9e8ec3d7f4c54acbbe15790df0f404f3"><div class="ttname"><a href="namespaceshrapnel_1_1midi.html#a9e8ec3d7f4c54acbbe15790df0f404f3">shrapnel::midi::get_message_type&lt; Remove &gt;</a></div><div class="ttdeci">constexpr const char * get_message_type&lt; Remove &gt;()</div><div class="ttdef"><b>Definition:</b> <a href="midi__message__type_8h_source.html#l00061">midi_message_type.h:61</a></div></div>
+<div class="ttc" id="anamespaceshrapnel_1_1midi_html_ab312cca91e576cb523ac926b9584c6ca"><div class="ttname"><a href="namespaceshrapnel_1_1midi.html#ab312cca91e576cb523ac926b9584c6ca">shrapnel::midi::get_message_type&lt; CreateRequest &gt;</a></div><div class="ttdeci">constexpr const char * get_message_type&lt; CreateRequest &gt;()</div><div class="ttdef"><b>Definition:</b> <a href="midi__message__type_8h_source.html#l00043">midi_message_type.h:43</a></div></div>
+<div class="ttc" id="anamespaceshrapnel_1_1midi_html_af9d09aa6f84d609de12d075760f890f6"><div class="ttname"><a href="namespaceshrapnel_1_1midi.html#af9d09aa6f84d609de12d075760f890f6">shrapnel::midi::get_message_type&lt; Update &gt;</a></div><div class="ttdeci">constexpr const char * get_message_type&lt; Update &gt;()</div><div class="ttdef"><b>Definition:</b> <a href="midi__message__type_8h_source.html#l00055">midi_message_type.h:55</a></div></div>
+</div><!-- fragment -->
+<p class="reference">References <a class="el" href="midi__message__type_8h_source.html#l00043">get_message_type&lt; CreateRequest &gt;()</a>, <a class="el" href="midi__message__type_8h_source.html#l00031">get_message_type&lt; GetRequest &gt;()</a>, <a class="el" href="midi__message__type_8h_source.html#l00061">get_message_type&lt; Remove &gt;()</a>, and <a class="el" href="midi__message__type_8h_source.html#l00055">get_message_type&lt; Update &gt;()</a>.</p>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" frameborder="0" src="namespaceshrapnel_1_1midi_ae251dec5b5227e127fb60ecfe722deeb_cgraph.svg" width="444" height="248"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
+</div>
+
+</div>
+</div>
+<a id="ab7aac5b3856b86dcdf7375ae7d4f5d14" name="ab7aac5b3856b86dcdf7375ae7d4f5d14"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab7aac5b3856b86dcdf7375ae7d4f5d14">&#9670;&nbsp;</a></span>get_message_type()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr const char * shrapnel::midi::get_message_type </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ab312cca91e576cb523ac926b9584c6ca" name="ab312cca91e576cb523ac926b9584c6ca"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab312cca91e576cb523ac926b9584c6ca">&#9670;&nbsp;</a></span>get_message_type&lt; CreateRequest &gt;()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr const char * <a class="el" href="namespaceshrapnel_1_1midi.html#ab7aac5b3856b86dcdf7375ae7d4f5d14">shrapnel::midi::get_message_type</a>&lt; <a class="el" href="structshrapnel_1_1midi_1_1CreateRequest.html">CreateRequest</a> &gt; </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="midi__message__type_8h_source.html#l00043">43</a> of file <a class="el" href="midi__message__type_8h_source.html">midi_message_type.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   44</span>{</div>
+<div class="line"><span class="lineno">   45</span>    <span class="keywordflow">return</span> <span class="stringliteral">&quot;MidiMap::create::request&quot;</span>;</div>
+<div class="line"><span class="lineno">   46</span>}</div>
+</div><!-- fragment -->
+<p class="reference">Referenced by <a class="el" href="midi__mapping__json__parser_8cpp_source.html#l00149">from_json()</a>.</p>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" frameborder="0" src="namespaceshrapnel_1_1midi_ab312cca91e576cb523ac926b9584c6ca_icgraph.svg" width="444" height="52"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
+</div>
+
+</div>
+</div>
+<a id="addb294cd29b015c04f0f64dff7cfb587" name="addb294cd29b015c04f0f64dff7cfb587"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#addb294cd29b015c04f0f64dff7cfb587">&#9670;&nbsp;</a></span>get_message_type&lt; CreateResponse &gt;()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr const char * <a class="el" href="namespaceshrapnel_1_1midi.html#ab7aac5b3856b86dcdf7375ae7d4f5d14">shrapnel::midi::get_message_type</a>&lt; <a class="el" href="structshrapnel_1_1midi_1_1CreateResponse.html">CreateResponse</a> &gt; </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="midi__message__type_8h_source.html#l00049">49</a> of file <a class="el" href="midi__message__type_8h_source.html">midi_message_type.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   50</span>{</div>
+<div class="line"><span class="lineno">   51</span>    <span class="keywordflow">return</span> <span class="stringliteral">&quot;MidiMap::create::response&quot;</span>;</div>
+<div class="line"><span class="lineno">   52</span>}</div>
+</div><!-- fragment -->
+</div>
+</div>
+<a id="a06c1584d6468a990a968f1112b6ffdd3" name="a06c1584d6468a990a968f1112b6ffdd3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a06c1584d6468a990a968f1112b6ffdd3">&#9670;&nbsp;</a></span>get_message_type&lt; GetRequest &gt;()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr const char * <a class="el" href="namespaceshrapnel_1_1midi.html#ab7aac5b3856b86dcdf7375ae7d4f5d14">shrapnel::midi::get_message_type</a>&lt; <a class="el" href="structshrapnel_1_1midi_1_1GetRequest.html">GetRequest</a> &gt; </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="midi__message__type_8h_source.html#l00031">31</a> of file <a class="el" href="midi__message__type_8h_source.html">midi_message_type.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   32</span>{</div>
+<div class="line"><span class="lineno">   33</span>    <span class="keywordflow">return</span> <span class="stringliteral">&quot;MidiMap::get::request&quot;</span>;</div>
+<div class="line"><span class="lineno">   34</span>}</div>
+</div><!-- fragment -->
+<p class="reference">Referenced by <a class="el" href="midi__mapping__json__parser_8cpp_source.html#l00149">from_json()</a>.</p>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" frameborder="0" src="namespaceshrapnel_1_1midi_a06c1584d6468a990a968f1112b6ffdd3_icgraph.svg" width="427" height="52"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
+</div>
+
+</div>
+</div>
+<a id="abb4f0316d6dc3f5960937523b7f19688" name="abb4f0316d6dc3f5960937523b7f19688"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abb4f0316d6dc3f5960937523b7f19688">&#9670;&nbsp;</a></span>get_message_type&lt; GetResponse &gt;()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr const char * <a class="el" href="namespaceshrapnel_1_1midi.html#ab7aac5b3856b86dcdf7375ae7d4f5d14">shrapnel::midi::get_message_type</a>&lt; <a class="el" href="structshrapnel_1_1midi_1_1GetResponse.html">GetResponse</a> &gt; </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="midi__message__type_8h_source.html#l00037">37</a> of file <a class="el" href="midi__message__type_8h_source.html">midi_message_type.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   38</span>{</div>
+<div class="line"><span class="lineno">   39</span>    <span class="keywordflow">return</span> <span class="stringliteral">&quot;MidiMap::get::response&quot;</span>;</div>
+<div class="line"><span class="lineno">   40</span>}</div>
+</div><!-- fragment -->
+</div>
+</div>
+<a id="a9e8ec3d7f4c54acbbe15790df0f404f3" name="a9e8ec3d7f4c54acbbe15790df0f404f3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9e8ec3d7f4c54acbbe15790df0f404f3">&#9670;&nbsp;</a></span>get_message_type&lt; Remove &gt;()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr const char * <a class="el" href="namespaceshrapnel_1_1midi.html#ab7aac5b3856b86dcdf7375ae7d4f5d14">shrapnel::midi::get_message_type</a>&lt; <a class="el" href="structshrapnel_1_1midi_1_1Remove.html">Remove</a> &gt; </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="midi__message__type_8h_source.html#l00061">61</a> of file <a class="el" href="midi__message__type_8h_source.html">midi_message_type.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   62</span>{</div>
+<div class="line"><span class="lineno">   63</span>    <span class="keywordflow">return</span> <span class="stringliteral">&quot;MidiMap::remove&quot;</span>;</div>
+<div class="line"><span class="lineno">   64</span>}</div>
+</div><!-- fragment -->
+<p class="reference">Referenced by <a class="el" href="midi__mapping__json__parser_8cpp_source.html#l00149">from_json()</a>.</p>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" frameborder="0" src="namespaceshrapnel_1_1midi_a9e8ec3d7f4c54acbbe15790df0f404f3_icgraph.svg" width="406" height="52"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
+</div>
+
+</div>
+</div>
+<a id="af9d09aa6f84d609de12d075760f890f6" name="af9d09aa6f84d609de12d075760f890f6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af9d09aa6f84d609de12d075760f890f6">&#9670;&nbsp;</a></span>get_message_type&lt; Update &gt;()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr const char * <a class="el" href="namespaceshrapnel_1_1midi.html#ab7aac5b3856b86dcdf7375ae7d4f5d14">shrapnel::midi::get_message_type</a>&lt; <a class="el" href="structshrapnel_1_1midi_1_1Update.html">Update</a> &gt; </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="midi__message__type_8h_source.html#l00055">55</a> of file <a class="el" href="midi__message__type_8h_source.html">midi_message_type.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   56</span>{</div>
+<div class="line"><span class="lineno">   57</span>    <span class="keywordflow">return</span> <span class="stringliteral">&quot;MidiMap::update&quot;</span>;</div>
+<div class="line"><span class="lineno">   58</span>}</div>
+</div><!-- fragment -->
+<p class="reference">Referenced by <a class="el" href="midi__mapping__json__parser_8cpp_source.html#l00149">from_json()</a>.</p>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" frameborder="0" src="namespaceshrapnel_1_1midi_af9d09aa6f84d609de12d075760f890f6_icgraph.svg" width="400" height="52"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
+</div>
+
+</div>
+</div>
+<a id="a194d563135c45c7b4569555334b0ca5f" name="a194d563135c45c7b4569555334b0ca5f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a194d563135c45c7b4569555334b0ca5f">&#9670;&nbsp;</a></span>operator&lt;&lt;() <span class="overload">[1/8]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">etl::string_stream &amp; shrapnel::midi::operator&lt;&lt; </td>
+          <td>(</td>
+          <td class="paramtype">etl::string_stream &amp;&#160;</td>
+          <td class="paramname"><em>out</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="structshrapnel_1_1midi_1_1CreateRequest.html">CreateRequest</a> &amp;&#160;</td>
+          <td class="paramname"><em>self</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="midi__mapping__api_8cpp_source.html#l00046">46</a> of file <a class="el" href="midi__mapping__api_8cpp_source.html">midi_mapping_api.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   46</span>                                                                                {</div>
+<div class="line"><span class="lineno">   47</span>    out &lt;&lt; <span class="stringliteral">&quot;{ &quot;</span> &lt;&lt; self.<a class="code hl_variable" href="structshrapnel_1_1midi_1_1CreateRequest.html#af75153f6cd51a9fe98fba12db0984b3f">mapping</a> &lt;&lt; <span class="stringliteral">&quot; }&quot;</span>;</div>
+<div class="line"><span class="lineno">   48</span>    <span class="keywordflow">return</span> out;</div>
+<div class="line"><span class="lineno">   49</span>}</div>
+<div class="ttc" id="astructshrapnel_1_1midi_1_1CreateRequest_html_af75153f6cd51a9fe98fba12db0984b3f"><div class="ttname"><a href="structshrapnel_1_1midi_1_1CreateRequest.html#af75153f6cd51a9fe98fba12db0984b3f">shrapnel::midi::CreateRequest::mapping</a></div><div class="ttdeci">std::pair&lt; Mapping::id_t, Mapping &gt; mapping</div><div class="ttdef"><b>Definition:</b> <a href="midi__mapping__api_8h_source.html#l00038">midi_mapping_api.h:38</a></div></div>
+</div><!-- fragment -->
+<p class="reference">References <a class="el" href="midi__mapping__api_8h_source.html#l00038">shrapnel::midi::CreateRequest::mapping</a>.</p>
+
+</div>
+</div>
+<a id="aa6b9b379b8567a30054f2619183bb792" name="aa6b9b379b8567a30054f2619183bb792"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa6b9b379b8567a30054f2619183bb792">&#9670;&nbsp;</a></span>operator&lt;&lt;() <span class="overload">[2/8]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">etl::string_stream &amp; shrapnel::midi::operator&lt;&lt; </td>
+          <td>(</td>
+          <td class="paramtype">etl::string_stream &amp;&#160;</td>
+          <td class="paramname"><em>out</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="structshrapnel_1_1midi_1_1CreateResponse.html">CreateResponse</a> &amp;&#160;</td>
+          <td class="paramname"><em>self</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="midi__mapping__api_8cpp_source.html#l00051">51</a> of file <a class="el" href="midi__mapping__api_8cpp_source.html">midi_mapping_api.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   52</span>{</div>
+<div class="line"><span class="lineno">   53</span>    <span class="keywordflow">return</span> out &lt;&lt; <span class="stringliteral">&quot;{ &quot;</span> &lt;&lt; self.<a class="code hl_variable" href="structshrapnel_1_1midi_1_1CreateResponse.html#a9e3f73aa5d09af4a127809bcf53a758c">mapping</a> &lt;&lt; <span class="stringliteral">&quot; }&quot;</span>;</div>
+<div class="line"><span class="lineno">   54</span>}</div>
+<div class="ttc" id="astructshrapnel_1_1midi_1_1CreateResponse_html_a9e3f73aa5d09af4a127809bcf53a758c"><div class="ttname"><a href="structshrapnel_1_1midi_1_1CreateResponse.html#a9e3f73aa5d09af4a127809bcf53a758c">shrapnel::midi::CreateResponse::mapping</a></div><div class="ttdeci">std::pair&lt; Mapping::id_t, Mapping &gt; mapping</div><div class="ttdef"><b>Definition:</b> <a href="midi__mapping__api_8h_source.html#l00043">midi_mapping_api.h:43</a></div></div>
+</div><!-- fragment -->
+<p class="reference">References <a class="el" href="midi__mapping__api_8h_source.html#l00043">shrapnel::midi::CreateResponse::mapping</a>.</p>
+
+</div>
+</div>
+<a id="a3dc01486d4db000642bb5215a53834d2" name="a3dc01486d4db000642bb5215a53834d2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3dc01486d4db000642bb5215a53834d2">&#9670;&nbsp;</a></span>operator&lt;&lt;() <span class="overload">[3/8]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">etl::string_stream &amp; shrapnel::midi::operator&lt;&lt; </td>
+          <td>(</td>
+          <td class="paramtype">etl::string_stream &amp;&#160;</td>
+          <td class="paramname"><em>out</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="structshrapnel_1_1midi_1_1GetRequest.html">GetRequest</a> &amp;&#160;</td>
+          <td class="paramname"><em>self</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="midi__mapping__api_8cpp_source.html#l00036">36</a> of file <a class="el" href="midi__mapping__api_8cpp_source.html">midi_mapping_api.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   36</span>                                                                        {</div>
+<div class="line"><span class="lineno">   37</span>    out &lt;&lt; <span class="stringliteral">&quot;{}&quot;</span>;</div>
+<div class="line"><span class="lineno">   38</span>    <span class="keywordflow">return</span> out;</div>
+<div class="line"><span class="lineno">   39</span>}</div>
+</div><!-- fragment -->
+</div>
+</div>
+<a id="ac3e251f40b5858c67d80374fb25b83ec" name="ac3e251f40b5858c67d80374fb25b83ec"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac3e251f40b5858c67d80374fb25b83ec">&#9670;&nbsp;</a></span>operator&lt;&lt;() <span class="overload">[4/8]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">etl::string_stream &amp; shrapnel::midi::operator&lt;&lt; </td>
+          <td>(</td>
+          <td class="paramtype">etl::string_stream &amp;&#160;</td>
+          <td class="paramname"><em>out</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="structshrapnel_1_1midi_1_1GetResponse.html">GetResponse</a> &amp;&#160;</td>
+          <td class="paramname"><em>self</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="midi__mapping__api_8cpp_source.html#l00041">41</a> of file <a class="el" href="midi__mapping__api_8cpp_source.html">midi_mapping_api.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   42</span>{</div>
+<div class="line"><span class="lineno">   43</span>    <span class="keywordflow">return</span> out &lt;&lt; <span class="stringliteral">&quot;{ TODO }&quot;</span>;</div>
+<div class="line"><span class="lineno">   44</span>}</div>
+</div><!-- fragment -->
+</div>
+</div>
+<a id="a4d7f2f5d6c81f92e63bcb0b8879551b3" name="a4d7f2f5d6c81f92e63bcb0b8879551b3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4d7f2f5d6c81f92e63bcb0b8879551b3">&#9670;&nbsp;</a></span>operator&lt;&lt;() <span class="overload">[5/8]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">etl::string_stream &amp; shrapnel::midi::operator&lt;&lt; </td>
+          <td>(</td>
+          <td class="paramtype">etl::string_stream &amp;&#160;</td>
+          <td class="paramname"><em>out</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="structshrapnel_1_1midi_1_1Mapping.html">Mapping</a> &amp;&#160;</td>
+          <td class="paramname"><em>self</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="midi__mapping__api_8cpp_source.html#l00027">27</a> of file <a class="el" href="midi__mapping__api_8cpp_source.html">midi_mapping_api.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   27</span>                                                                          {</div>
+<div class="line"><span class="lineno">   28</span>    out &lt;&lt; <span class="stringliteral">&quot;{&quot;</span>;</div>
+<div class="line"><span class="lineno">   29</span>    out &lt;&lt; <span class="stringliteral">&quot; channel &quot;</span> &lt;&lt; self.<a class="code hl_variable" href="structshrapnel_1_1midi_1_1Mapping.html#a46fa239f0d9c9c4db85812d0f38b0f29">midi_channel</a>;</div>
+<div class="line"><span class="lineno">   30</span>    out &lt;&lt; <span class="stringliteral">&quot; cc number &quot;</span> &lt;&lt; self.<a class="code hl_variable" href="structshrapnel_1_1midi_1_1Mapping.html#ae1bdd8e63717dbbf186158d915ab266d">cc_number</a>;</div>
+<div class="line"><span class="lineno">   31</span>    out &lt;&lt; <span class="stringliteral">&quot; name &quot;</span> &lt;&lt; self.<a class="code hl_variable" href="structshrapnel_1_1midi_1_1Mapping.html#ad1d90b2aa45178377665b16f88aa4433">parameter_name</a>;</div>
+<div class="line"><span class="lineno">   32</span>    out &lt;&lt; <span class="stringliteral">&quot; }&quot;</span>;</div>
+<div class="line"><span class="lineno">   33</span>    <span class="keywordflow">return</span> out;</div>
+<div class="line"><span class="lineno">   34</span>}</div>
+<div class="ttc" id="astructshrapnel_1_1midi_1_1Mapping_html_a46fa239f0d9c9c4db85812d0f38b0f29"><div class="ttname"><a href="structshrapnel_1_1midi_1_1Mapping.html#a46fa239f0d9c9c4db85812d0f38b0f29">shrapnel::midi::Mapping::midi_channel</a></div><div class="ttdeci">uint8_t midi_channel</div><div class="ttdef"><b>Definition:</b> <a href="midi__mapping_8h_source.html#l00184">midi_mapping.h:184</a></div></div>
+<div class="ttc" id="astructshrapnel_1_1midi_1_1Mapping_html_ad1d90b2aa45178377665b16f88aa4433"><div class="ttname"><a href="structshrapnel_1_1midi_1_1Mapping.html#ad1d90b2aa45178377665b16f88aa4433">shrapnel::midi::Mapping::parameter_name</a></div><div class="ttdeci">parameters::id_t parameter_name</div><div class="ttdef"><b>Definition:</b> <a href="midi__mapping_8h_source.html#l00186">midi_mapping.h:186</a></div></div>
+<div class="ttc" id="astructshrapnel_1_1midi_1_1Mapping_html_ae1bdd8e63717dbbf186158d915ab266d"><div class="ttname"><a href="structshrapnel_1_1midi_1_1Mapping.html#ae1bdd8e63717dbbf186158d915ab266d">shrapnel::midi::Mapping::cc_number</a></div><div class="ttdeci">uint8_t cc_number</div><div class="ttdef"><b>Definition:</b> <a href="midi__mapping_8h_source.html#l00185">midi_mapping.h:185</a></div></div>
+</div><!-- fragment -->
+<p class="reference">References <a class="el" href="midi__mapping_8h_source.html#l00185">shrapnel::midi::Mapping::cc_number</a>, <a class="el" href="midi__mapping_8h_source.html#l00184">shrapnel::midi::Mapping::midi_channel</a>, and <a class="el" href="midi__mapping_8h_source.html#l00186">shrapnel::midi::Mapping::parameter_name</a>.</p>
+
+</div>
+</div>
+<a id="a7bec202ccff14cb7091cfcec55164715" name="a7bec202ccff14cb7091cfcec55164715"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7bec202ccff14cb7091cfcec55164715">&#9670;&nbsp;</a></span>operator&lt;&lt;() <span class="overload">[6/8]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">etl::string_stream &amp; shrapnel::midi::operator&lt;&lt; </td>
+          <td>(</td>
+          <td class="paramtype">etl::string_stream &amp;&#160;</td>
+          <td class="paramname"><em>out</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="namespaceshrapnel_1_1midi.html#ad9ee9014110e441706a017a889103bd1">MappingApiMessage</a> &amp;&#160;</td>
+          <td class="paramname"><em>self</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="midi__mapping__api_8cpp_source.html#l00066">66</a> of file <a class="el" href="midi__mapping__api_8cpp_source.html">midi_mapping_api.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   67</span>{</div>
+<div class="line"><span class="lineno">   68</span><span class="preprocessor">#if 1</span></div>
+<div class="line"><span class="lineno">   69</span>    <span class="keyword">auto</span> print = [&amp;](<span class="keyword">const</span> <span class="keyword">auto</span> &amp;message) {</div>
+<div class="line"><span class="lineno">   70</span>        <span class="keyword">using </span>T = std::decay_t&lt;<span class="keyword">decltype</span>(message)&gt;;</div>
+<div class="line"><span class="lineno">   71</span> </div>
+<div class="line"><span class="lineno">   72</span>        <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (std::is_same_v&lt;T, GetRequest&gt;) {</div>
+<div class="line"><span class="lineno">   73</span>            out &lt;&lt; <span class="stringliteral">&quot;&lt;GetRequest&gt;&quot;</span> &lt;&lt; message;</div>
+<div class="line"><span class="lineno">   74</span>        } <span class="keywordflow">else</span> <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (std::is_same_v&lt;T, GetResponse&gt;) {</div>
+<div class="line"><span class="lineno">   75</span>            out &lt;&lt; <span class="stringliteral">&quot;&lt;GetResponse&gt;&quot;</span> &lt;&lt; message;</div>
+<div class="line"><span class="lineno">   76</span>        } <span class="keywordflow">else</span> <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (std::is_same_v&lt;T, CreateRequest&gt;) {</div>
+<div class="line"><span class="lineno">   77</span>            out &lt;&lt; <span class="stringliteral">&quot;&lt;CreateRequest&gt;&quot;</span> &lt;&lt; message;</div>
+<div class="line"><span class="lineno">   78</span>        } <span class="keywordflow">else</span> <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (std::is_same_v&lt;T, CreateResponse&gt;) {</div>
+<div class="line"><span class="lineno">   79</span>            out &lt;&lt; <span class="stringliteral">&quot;&lt;CreateResponse&gt;&quot;</span> &lt;&lt; message;</div>
+<div class="line"><span class="lineno">   80</span>        } <span class="keywordflow">else</span> <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (std::is_same_v&lt;T, Update&gt;) {</div>
+<div class="line"><span class="lineno">   81</span>            out &lt;&lt; <span class="stringliteral">&quot;&lt;Update&gt;&quot;</span> &lt;&lt; message;</div>
+<div class="line"><span class="lineno">   82</span>        } <span class="keywordflow">else</span> <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (std::is_same_v&lt;T, Remove&gt;) {</div>
+<div class="line"><span class="lineno">   83</span>            out &lt;&lt; <span class="stringliteral">&quot;&lt;Remove&gt;&quot;</span> &lt;&lt; message;</div>
+<div class="line"><span class="lineno">   84</span>        } <span class="keywordflow">else</span> {</div>
+<div class="line"><span class="lineno">   85</span>            out &lt;&lt; <span class="stringliteral">&quot;Unknown&quot;</span>;</div>
+<div class="line"><span class="lineno">   86</span>        }</div>
+<div class="line"><span class="lineno">   87</span>    };</div>
+<div class="line"><span class="lineno">   88</span> </div>
+<div class="line"><span class="lineno">   89</span>    std::visit(print, self);</div>
+<div class="line"><span class="lineno">   90</span> </div>
+<div class="line"><span class="lineno">   91</span><span class="preprocessor">#else</span></div>
+<div class="line"><span class="lineno">   92</span> </div>
+<div class="line"><span class="lineno">   93</span>    <span class="keywordflow">if</span> (<span class="keyword">auto</span> message = std::get_if&lt;GetRequest&gt;(&amp;self)) {</div>
+<div class="line"><span class="lineno">   94</span>        out &lt;&lt; <span class="stringliteral">&quot;&lt;GetRequest&gt;&quot;</span> &lt;&lt; *message;</div>
+<div class="line"><span class="lineno">   95</span>    } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (<span class="keyword">auto</span> message = std::get_if&lt;GetResponse&gt;(&amp;self)) {</div>
+<div class="line"><span class="lineno">   96</span>        out &lt;&lt; <span class="stringliteral">&quot;&lt;GetResponse&gt;&quot;</span> &lt;&lt; *message;</div>
+<div class="line"><span class="lineno">   97</span>    } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (<span class="keyword">auto</span> message = std::get_if&lt;CreateRequest&gt;(&amp;self)) {</div>
+<div class="line"><span class="lineno">   98</span>        out &lt;&lt; <span class="stringliteral">&quot;&lt;CreateRequest&gt;&quot;</span> &lt;&lt; *message;</div>
+<div class="line"><span class="lineno">   99</span>    } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (<span class="keyword">auto</span> message = std::get_if&lt;CreateResponse&gt;(&amp;self)) {</div>
+<div class="line"><span class="lineno">  100</span>        out &lt;&lt; <span class="stringliteral">&quot;&lt;CreateResponse&gt;&quot;</span> &lt;&lt; *message;</div>
+<div class="line"><span class="lineno">  101</span>    } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (<span class="keyword">auto</span> message = std::get_if&lt;Update&gt;(&amp;self)) {</div>
+<div class="line"><span class="lineno">  102</span>        out &lt;&lt; <span class="stringliteral">&quot;&lt;Update&gt;&quot;</span> &lt;&lt; *message;</div>
+<div class="line"><span class="lineno">  103</span>    } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (<span class="keyword">auto</span> message = std::get_if&lt;Remove&gt;(&amp;self)) {</div>
+<div class="line"><span class="lineno">  104</span>        out &lt;&lt; <span class="stringliteral">&quot;&lt;Remove&gt;&quot;</span> &lt;&lt; *message;</div>
+<div class="line"><span class="lineno">  105</span>    } <span class="keywordflow">else</span> {</div>
+<div class="line"><span class="lineno">  106</span>        out &lt;&lt; <span class="stringliteral">&quot;Unknown&quot;</span>;</div>
+<div class="line"><span class="lineno">  107</span>    }</div>
+<div class="line"><span class="lineno">  108</span> </div>
+<div class="line"><span class="lineno">  109</span><span class="preprocessor">#endif</span></div>
+<div class="line"><span class="lineno">  110</span> </div>
+<div class="line"><span class="lineno">  111</span>    <span class="keywordflow">return</span> out;</div>
+<div class="line"><span class="lineno">  112</span>}</div>
+</div><!-- fragment -->
+</div>
+</div>
+<a id="a17772b0c0c99eb789dc0c2f0791d243c" name="a17772b0c0c99eb789dc0c2f0791d243c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a17772b0c0c99eb789dc0c2f0791d243c">&#9670;&nbsp;</a></span>operator&lt;&lt;() <span class="overload">[7/8]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">etl::string_stream &amp; shrapnel::midi::operator&lt;&lt; </td>
+          <td>(</td>
+          <td class="paramtype">etl::string_stream &amp;&#160;</td>
+          <td class="paramname"><em>out</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="structshrapnel_1_1midi_1_1Remove.html">Remove</a> &amp;&#160;</td>
+          <td class="paramname"><em>self</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="midi__mapping__api_8cpp_source.html#l00061">61</a> of file <a class="el" href="midi__mapping__api_8cpp_source.html">midi_mapping_api.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   62</span>{</div>
+<div class="line"><span class="lineno">   63</span>    <span class="keywordflow">return</span> out &lt;&lt; <span class="stringliteral">&quot;{ &quot;</span> &lt;&lt; self.<a class="code hl_variable" href="structshrapnel_1_1midi_1_1Remove.html#a117170210912dd5e3910ea1345e5dabe">id</a> &lt;&lt; <span class="stringliteral">&quot; }&quot;</span>;</div>
+<div class="line"><span class="lineno">   64</span>}</div>
+<div class="ttc" id="astructshrapnel_1_1midi_1_1Remove_html_a117170210912dd5e3910ea1345e5dabe"><div class="ttname"><a href="structshrapnel_1_1midi_1_1Remove.html#a117170210912dd5e3910ea1345e5dabe">shrapnel::midi::Remove::id</a></div><div class="ttdeci">Mapping::id_t id</div><div class="ttdef"><b>Definition:</b> <a href="midi__mapping__api_8h_source.html#l00053">midi_mapping_api.h:53</a></div></div>
+</div><!-- fragment -->
+<p class="reference">References <a class="el" href="midi__mapping__api_8h_source.html#l00053">shrapnel::midi::Remove::id</a>.</p>
+
+</div>
+</div>
+<a id="af39e621c445db624200a08025cda8c74" name="af39e621c445db624200a08025cda8c74"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af39e621c445db624200a08025cda8c74">&#9670;&nbsp;</a></span>operator&lt;&lt;() <span class="overload">[8/8]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">etl::string_stream &amp; shrapnel::midi::operator&lt;&lt; </td>
+          <td>(</td>
+          <td class="paramtype">etl::string_stream &amp;&#160;</td>
+          <td class="paramname"><em>out</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="structshrapnel_1_1midi_1_1Update.html">Update</a> &amp;&#160;</td>
+          <td class="paramname"><em>self</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="midi__mapping__api_8cpp_source.html#l00056">56</a> of file <a class="el" href="midi__mapping__api_8cpp_source.html">midi_mapping_api.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   57</span>{</div>
+<div class="line"><span class="lineno">   58</span>    <span class="keywordflow">return</span> out &lt;&lt; <span class="stringliteral">&quot;{ &quot;</span> &lt;&lt; self.<a class="code hl_variable" href="structshrapnel_1_1midi_1_1Update.html#a9dceb99ae11c395d675becd97f4a2fa5">mapping</a> &lt;&lt; <span class="stringliteral">&quot; }&quot;</span>;</div>
+<div class="line"><span class="lineno">   59</span>}</div>
+<div class="ttc" id="astructshrapnel_1_1midi_1_1Update_html_a9dceb99ae11c395d675becd97f4a2fa5"><div class="ttname"><a href="structshrapnel_1_1midi_1_1Update.html#a9dceb99ae11c395d675becd97f4a2fa5">shrapnel::midi::Update::mapping</a></div><div class="ttdeci">std::pair&lt; Mapping::id_t, Mapping &gt; mapping</div><div class="ttdef"><b>Definition:</b> <a href="midi__mapping__api_8h_source.html#l00048">midi_mapping_api.h:48</a></div></div>
+</div><!-- fragment -->
+<p class="reference">References <a class="el" href="midi__mapping__api_8h_source.html#l00048">shrapnel::midi::Update::mapping</a>.</p>
+
+</div>
+</div>
+<a id="a28b9d0dddfafc22560e2eaa14006045d" name="a28b9d0dddfafc22560e2eaa14006045d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a28b9d0dddfafc22560e2eaa14006045d">&#9670;&nbsp;</a></span>parse_uuid()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int shrapnel::midi::parse_uuid </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structshrapnel_1_1midi_1_1Mapping.html#a212fd4d87c151bab5982bc9138990a02">Mapping::id_t</a> &amp;&#160;</td>
+          <td class="paramname"><em>uuid</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>string</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>return non-zero on error </p>
+
+<p class="definition">Definition at line <a class="el" href="midi__mapping__json__parser_8cpp_source.html#l00183">183</a> of file <a class="el" href="midi__mapping__json__parser_8cpp_source.html">midi_mapping_json_parser.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  184</span>{</div>
+<div class="line"><span class="lineno">  185</span>    <span class="keyword">constexpr</span> std::size_t UUID_LENGTH = 36;</div>
+<div class="line"><span class="lineno">  186</span>    <span class="keyword">constexpr</span> <span class="keywordtype">char</span> TAG[] = <span class="stringliteral">&quot;parse_uuid&quot;</span>;</div>
+<div class="line"><span class="lineno">  187</span> </div>
+<div class="line"><span class="lineno">  188</span>    <span class="keywordflow">if</span>(UUID_LENGTH != std::strlen(<span class="keywordtype">string</span>))</div>
+<div class="line"><span class="lineno">  189</span>    {</div>
+<div class="line"><span class="lineno">  190</span>        ESP_LOGE(TAG, <span class="stringliteral">&quot;Incorrect UUID string length&quot;</span>);</div>
+<div class="line"><span class="lineno">  191</span>        <span class="keywordflow">return</span> -1;</div>
+<div class="line"><span class="lineno">  192</span>    }</div>
+<div class="line"><span class="lineno">  193</span> </div>
+<div class="line"><span class="lineno">  194</span>    <span class="keywordtype">size_t</span> i = 0;</div>
+<div class="line"><span class="lineno">  195</span>    <span class="keywordtype">size_t</span> j = 0;</div>
+<div class="line"><span class="lineno">  196</span>    ESP_LOGD(TAG, <span class="stringliteral">&quot;i = %zu, j = %zu&quot;</span>, i , j);</div>
+<div class="line"><span class="lineno">  197</span>    <span class="keywordflow">while</span>(i &lt; UUID_LENGTH)</div>
+<div class="line"><span class="lineno">  198</span>    {</div>
+<div class="line"><span class="lineno">  199</span>        <span class="keywordtype">char</span> digit[2];</div>
+<div class="line"><span class="lineno">  200</span>        std::memcpy(digit, &amp;<span class="keywordtype">string</span>[i], 2);</div>
+<div class="line"><span class="lineno">  201</span> </div>
+<div class="line"><span class="lineno">  202</span>        ESP_LOGD(TAG, <span class="stringliteral">&quot;digit = %c%c&quot;</span>, digit[0] , digit[1]);</div>
+<div class="line"><span class="lineno">  203</span> </div>
+<div class="line"><span class="lineno">  204</span>        <span class="comment">// TODO error on invalid characters: z, symbols etc</span></div>
+<div class="line"><span class="lineno">  205</span>        <span class="comment">//      The only valid characters are 0 to 9 and a to f.</span></div>
+<div class="line"><span class="lineno">  206</span>        <span class="comment">//</span></div>
+<div class="line"><span class="lineno">  207</span>        <span class="comment">//      Handle uppercase as well. It is required when a string UUID</span></div>
+<div class="line"><span class="lineno">  208</span>        <span class="comment">//      is an input as per RFC 4122 Section 3</span></div>
+<div class="line"><span class="lineno">  209</span>        <span class="comment">//      https://tools.ietf.org/html/rfc4122#section-3</span></div>
+<div class="line"><span class="lineno">  210</span>        <span class="keyword">auto</span> get_value = [&amp;] (<span class="keywordtype">char</span> hex) -&gt; uint8_t {</div>
+<div class="line"><span class="lineno">  211</span>            <span class="keywordflow">if</span>(hex &gt;= <span class="charliteral">&#39;a&#39;</span>)</div>
+<div class="line"><span class="lineno">  212</span>            {</div>
+<div class="line"><span class="lineno">  213</span>                <span class="keywordflow">return</span> hex - <span class="charliteral">&#39;a&#39;</span> + 10;</div>
+<div class="line"><span class="lineno">  214</span>            }</div>
+<div class="line"><span class="lineno">  215</span>            <span class="keywordflow">else</span></div>
+<div class="line"><span class="lineno">  216</span>            {</div>
+<div class="line"><span class="lineno">  217</span>                <span class="keywordflow">return</span> hex - <span class="charliteral">&#39;0&#39;</span>;</div>
+<div class="line"><span class="lineno">  218</span>            }</div>
+<div class="line"><span class="lineno">  219</span>        };</div>
+<div class="line"><span class="lineno">  220</span> </div>
+<div class="line"><span class="lineno">  221</span>        uuid[j] = get_value(digit[0]) &lt;&lt; 4 | get_value(digit[1]);</div>
+<div class="line"><span class="lineno">  222</span> </div>
+<div class="line"><span class="lineno">  223</span>        j++;</div>
+<div class="line"><span class="lineno">  224</span> </div>
+<div class="line"><span class="lineno">  225</span>        i += 2;</div>
+<div class="line"><span class="lineno">  226</span>        <span class="keywordtype">bool</span> is_separator = (i == 8) || (i == 13) || (i == 18) || (i == 23);</div>
+<div class="line"><span class="lineno">  227</span>        <span class="keywordflow">if</span>(is_separator) i++;</div>
+<div class="line"><span class="lineno">  228</span>        ESP_LOGD(TAG, <span class="stringliteral">&quot;i = %zu, j = %zu&quot;</span>, i , j);</div>
+<div class="line"><span class="lineno">  229</span>    }</div>
+<div class="line"><span class="lineno">  230</span> </div>
+<div class="line"><span class="lineno">  231</span>    <span class="keywordflow">return</span> 0;</div>
+<div class="line"><span class="lineno">  232</span>}</div>
+</div><!-- fragment -->
+<p class="reference">Referenced by <a class="el" href="midi__mapping__json__parser_8cpp_source.html#l00063">from_json()</a>.</p>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" frameborder="0" src="namespaceshrapnel_1_1midi_a28b9d0dddfafc22560e2eaa14006045d_icgraph.svg" width="394" height="38"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
+</div>
+
+</div>
+</div>
+<a id="a5fb2df7e7a30d352a138b208fda681cd" name="a5fb2df7e7a30d352a138b208fda681cd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5fb2df7e7a30d352a138b208fda681cd">&#9670;&nbsp;</a></span>to_json() <span class="overload">[1/12]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">rapidjson::Value shrapnel::midi::to_json </td>
+          <td>(</td>
+          <td class="paramtype">rapidjson::Document &amp;&#160;</td>
+          <td class="paramname"><em>document</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="structshrapnel_1_1midi_1_1CreateResponse.html">CreateResponse</a> &amp;&#160;</td>
+          <td class="paramname"><em>object</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="midi__mapping__json__builder_8cpp_source.html#l00087">87</a> of file <a class="el" href="midi__mapping__json__builder_8cpp_source.html">midi_mapping_json_builder.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   88</span>{</div>
+<div class="line"><span class="lineno">   89</span>    rapidjson::Value json;</div>
+<div class="line"><span class="lineno">   90</span>    json.SetObject();</div>
+<div class="line"><span class="lineno">   91</span> </div>
+<div class="line"><span class="lineno">   92</span>    rapidjson::Value mapping = <a class="code hl_function" href="namespaceshrapnel_1_1midi.html#a6c42217c7b2669babb823c4ee665fb3b">to_json</a>(document, <span class="keywordtype">object</span>.mapping);</div>
+<div class="line"><span class="lineno">   93</span>    json.AddMember(<span class="stringliteral">&quot;mapping&quot;</span>, mapping, document.GetAllocator());</div>
+<div class="line"><span class="lineno">   94</span>    <span class="keywordflow">return</span> json;</div>
+<div class="line"><span class="lineno">   95</span>}</div>
+<div class="ttc" id="anamespaceshrapnel_1_1midi_html_a6c42217c7b2669babb823c4ee665fb3b"><div class="ttname"><a href="namespaceshrapnel_1_1midi.html#a6c42217c7b2669babb823c4ee665fb3b">shrapnel::midi::to_json</a></div><div class="ttdeci">rapidjson::Value to_json(rapidjson::Document &amp;document, const MappingApiMessage &amp;object)</div><div class="ttdef"><b>Definition:</b> <a href="midi__mapping__json__builder_8cpp_source.html#l00109">midi_mapping_json_builder.cpp:109</a></div></div>
+</div><!-- fragment -->
+<p class="reference">References <a class="el" href="namespaceshrapnel_1_1midi.html#a745f9f03858045cdfabbd014152fbc15">to_json()</a>.</p>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" frameborder="0" src="namespaceshrapnel_1_1midi_a5fb2df7e7a30d352a138b208fda681cd_cgraph.svg" width="358" height="38"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
+</div>
+
+</div>
+</div>
+<a id="a5fb2df7e7a30d352a138b208fda681cd" name="a5fb2df7e7a30d352a138b208fda681cd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5fb2df7e7a30d352a138b208fda681cd">&#9670;&nbsp;</a></span>to_json() <span class="overload">[2/12]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">rapidjson::Value shrapnel::midi::to_json </td>
+          <td>(</td>
+          <td class="paramtype">rapidjson::Document &amp;&#160;</td>
+          <td class="paramname"><em>document</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="structshrapnel_1_1midi_1_1CreateResponse.html">CreateResponse</a> &amp;&#160;</td>
+          <td class="paramname"><em>object</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="midi__mapping__json__builder_8cpp_source.html#l00087">87</a> of file <a class="el" href="midi__mapping__json__builder_8cpp_source.html">midi_mapping_json_builder.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   88</span>{</div>
+<div class="line"><span class="lineno">   89</span>    rapidjson::Value json;</div>
+<div class="line"><span class="lineno">   90</span>    json.SetObject();</div>
+<div class="line"><span class="lineno">   91</span> </div>
+<div class="line"><span class="lineno">   92</span>    rapidjson::Value mapping = <a class="code hl_function" href="namespaceshrapnel_1_1midi.html#a6c42217c7b2669babb823c4ee665fb3b">to_json</a>(document, <span class="keywordtype">object</span>.mapping);</div>
+<div class="line"><span class="lineno">   93</span>    json.AddMember(<span class="stringliteral">&quot;mapping&quot;</span>, mapping, document.GetAllocator());</div>
+<div class="line"><span class="lineno">   94</span>    <span class="keywordflow">return</span> json;</div>
+<div class="line"><span class="lineno">   95</span>}</div>
+</div><!-- fragment -->
+<p class="reference">References <a class="el" href="namespaceshrapnel_1_1midi.html#a745f9f03858045cdfabbd014152fbc15">to_json()</a>.</p>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" frameborder="0" src="namespaceshrapnel_1_1midi_a5fb2df7e7a30d352a138b208fda681cd_cgraph.svg" width="358" height="38"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
+</div>
+
+</div>
+</div>
+<a id="aaf88418567ba49ee236fe21f0136412a" name="aaf88418567ba49ee236fe21f0136412a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aaf88418567ba49ee236fe21f0136412a">&#9670;&nbsp;</a></span>to_json() <span class="overload">[3/12]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;std::size_t MAX_SIZE&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">rapidjson::Value shrapnel::midi::to_json </td>
+          <td>(</td>
+          <td class="paramtype">rapidjson::Document &amp;&#160;</td>
+          <td class="paramname"><em>document</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const etl::map&lt; <a class="el" href="structshrapnel_1_1midi_1_1Mapping.html#a212fd4d87c151bab5982bc9138990a02">Mapping::id_t</a>, <a class="el" href="structshrapnel_1_1midi_1_1Mapping.html">Mapping</a>, MAX_SIZE &gt; &amp;&#160;</td>
+          <td class="paramname"><em>object</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="midi__mapping__json__builder_8h_source.html#l00062">62</a> of file <a class="el" href="midi__mapping__json__builder_8h_source.html">midi_mapping_json_builder.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   63</span>{</div>
+<div class="line"><span class="lineno">   64</span>    rapidjson::Value json;</div>
+<div class="line"><span class="lineno">   65</span>    json.SetObject();</div>
+<div class="line"><span class="lineno">   66</span> </div>
+<div class="line"><span class="lineno">   67</span>    <span class="keywordflow">for</span>(<span class="keyword">const</span> <span class="keyword">auto</span> &amp;entry : <span class="keywordtype">object</span>)</div>
+<div class="line"><span class="lineno">   68</span>    {</div>
+<div class="line"><span class="lineno">   69</span>        <span class="keywordtype">char</span> uuid[37];</div>
+<div class="line"><span class="lineno">   70</span>        sprintf(uuid,</div>
+<div class="line"><span class="lineno">   71</span>                <span class="stringliteral">&quot;%02x%02x%02x%02x-%02x%02x-%02x%02x-%02x%02x-&quot;</span></div>
+<div class="line"><span class="lineno">   72</span>                <span class="stringliteral">&quot;%02x%02x%02x%02x%02x%02x&quot;</span>,</div>
+<div class="line"><span class="lineno">   73</span>                entry.first[0],</div>
+<div class="line"><span class="lineno">   74</span>                entry.first[1],</div>
+<div class="line"><span class="lineno">   75</span>                entry.first[2],</div>
+<div class="line"><span class="lineno">   76</span>                entry.first[3],</div>
+<div class="line"><span class="lineno">   77</span>                entry.first[4],</div>
+<div class="line"><span class="lineno">   78</span>                entry.first[5],</div>
+<div class="line"><span class="lineno">   79</span>                entry.first[6],</div>
+<div class="line"><span class="lineno">   80</span>                entry.first[7],</div>
+<div class="line"><span class="lineno">   81</span>                entry.first[8],</div>
+<div class="line"><span class="lineno">   82</span>                entry.first[9],</div>
+<div class="line"><span class="lineno">   83</span>                entry.first[10],</div>
+<div class="line"><span class="lineno">   84</span>                entry.first[11],</div>
+<div class="line"><span class="lineno">   85</span>                entry.first[12],</div>
+<div class="line"><span class="lineno">   86</span>                entry.first[13],</div>
+<div class="line"><span class="lineno">   87</span>                entry.first[14],</div>
+<div class="line"><span class="lineno">   88</span>                entry.first[15]);</div>
+<div class="line"><span class="lineno">   89</span> </div>
+<div class="line"><span class="lineno">   90</span> </div>
+<div class="line"><span class="lineno">   91</span>        rapidjson::Value mapping = <a class="code hl_function" href="namespaceshrapnel_1_1midi.html#aaf88418567ba49ee236fe21f0136412a">to_json</a>(document, entry.second);</div>
+<div class="line"><span class="lineno">   92</span>        rapidjson::Value uuid_json;</div>
+<div class="line"><span class="lineno">   93</span>        uuid_json.SetString(uuid, 36, document.GetAllocator());</div>
+<div class="line"><span class="lineno">   94</span>        json.AddMember(uuid_json, mapping, document.GetAllocator());</div>
+<div class="line"><span class="lineno">   95</span>    }</div>
+<div class="line"><span class="lineno">   96</span> </div>
+<div class="line"><span class="lineno">   97</span>    <span class="keywordflow">return</span> json;</div>
+<div class="line"><span class="lineno">   98</span>}</div>
+<div class="ttc" id="anamespaceshrapnel_1_1midi_html_aaf88418567ba49ee236fe21f0136412a"><div class="ttname"><a href="namespaceshrapnel_1_1midi.html#aaf88418567ba49ee236fe21f0136412a">shrapnel::midi::to_json</a></div><div class="ttdeci">rapidjson::Value to_json(rapidjson::Document &amp;document, const etl::map&lt; Mapping::id_t, Mapping, MAX_SIZE &gt; &amp;object)</div><div class="ttdef"><b>Definition:</b> <a href="midi__mapping__json__builder_8h_source.html#l00062">midi_mapping_json_builder.h:62</a></div></div>
+</div><!-- fragment -->
+<p class="reference">References <a class="el" href="namespaceshrapnel_1_1midi.html#a745f9f03858045cdfabbd014152fbc15">to_json()</a>.</p>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" frameborder="0" src="namespaceshrapnel_1_1midi_aaf88418567ba49ee236fe21f0136412a_cgraph.svg" width="358" height="38"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
+</div>
+
+</div>
+</div>
+<a id="ae36b87ea8f245d8e34b035eb1cbe1bbd" name="ae36b87ea8f245d8e34b035eb1cbe1bbd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae36b87ea8f245d8e34b035eb1cbe1bbd">&#9670;&nbsp;</a></span>to_json() <span class="overload">[4/12]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">rapidjson::Value shrapnel::midi::to_json </td>
+          <td>(</td>
+          <td class="paramtype">rapidjson::Document &amp;&#160;</td>
+          <td class="paramname"><em>document</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="structshrapnel_1_1midi_1_1GetResponse.html">GetResponse</a> &amp;&#160;</td>
+          <td class="paramname"><em>object</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="midi__mapping__json__builder_8cpp_source.html#l00098">98</a> of file <a class="el" href="midi__mapping__json__builder_8cpp_source.html">midi_mapping_json_builder.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   99</span>{</div>
+<div class="line"><span class="lineno">  100</span>    rapidjson::Value json;</div>
+<div class="line"><span class="lineno">  101</span>    json.SetObject();</div>
+<div class="line"><span class="lineno">  102</span> </div>
+<div class="line"><span class="lineno">  103</span>    rapidjson::Value mappings = <a class="code hl_function" href="namespaceshrapnel_1_1midi.html#a6c42217c7b2669babb823c4ee665fb3b">to_json</a>(document, <span class="keywordtype">object</span>.mappings);</div>
+<div class="line"><span class="lineno">  104</span>    json.AddMember(<span class="stringliteral">&quot;mappings&quot;</span>, mappings, document.GetAllocator());</div>
+<div class="line"><span class="lineno">  105</span>    <span class="keywordflow">return</span> json;</div>
+<div class="line"><span class="lineno">  106</span>}</div>
+</div><!-- fragment -->
+<p class="reference">References <a class="el" href="namespaceshrapnel_1_1midi.html#a745f9f03858045cdfabbd014152fbc15">to_json()</a>.</p>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" frameborder="0" src="namespaceshrapnel_1_1midi_ae36b87ea8f245d8e34b035eb1cbe1bbd_cgraph.svg" width="358" height="38"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
+</div>
+
+</div>
+</div>
+<a id="ae36b87ea8f245d8e34b035eb1cbe1bbd" name="ae36b87ea8f245d8e34b035eb1cbe1bbd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae36b87ea8f245d8e34b035eb1cbe1bbd">&#9670;&nbsp;</a></span>to_json() <span class="overload">[5/12]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">rapidjson::Value shrapnel::midi::to_json </td>
+          <td>(</td>
+          <td class="paramtype">rapidjson::Document &amp;&#160;</td>
+          <td class="paramname"><em>document</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="structshrapnel_1_1midi_1_1GetResponse.html">GetResponse</a> &amp;&#160;</td>
+          <td class="paramname"><em>object</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="midi__mapping__json__builder_8cpp_source.html#l00098">98</a> of file <a class="el" href="midi__mapping__json__builder_8cpp_source.html">midi_mapping_json_builder.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   99</span>{</div>
+<div class="line"><span class="lineno">  100</span>    rapidjson::Value json;</div>
+<div class="line"><span class="lineno">  101</span>    json.SetObject();</div>
+<div class="line"><span class="lineno">  102</span> </div>
+<div class="line"><span class="lineno">  103</span>    rapidjson::Value mappings = <a class="code hl_function" href="namespaceshrapnel_1_1midi.html#a6c42217c7b2669babb823c4ee665fb3b">to_json</a>(document, <span class="keywordtype">object</span>.mappings);</div>
+<div class="line"><span class="lineno">  104</span>    json.AddMember(<span class="stringliteral">&quot;mappings&quot;</span>, mappings, document.GetAllocator());</div>
+<div class="line"><span class="lineno">  105</span>    <span class="keywordflow">return</span> json;</div>
+<div class="line"><span class="lineno">  106</span>}</div>
+</div><!-- fragment -->
+<p class="reference">References <a class="el" href="namespaceshrapnel_1_1midi.html#a745f9f03858045cdfabbd014152fbc15">to_json()</a>.</p>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" frameborder="0" src="namespaceshrapnel_1_1midi_ae36b87ea8f245d8e34b035eb1cbe1bbd_cgraph.svg" width="358" height="38"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
+</div>
+
+</div>
+</div>
+<a id="a93f7983c3e2cbc6a0f28caf93abe1b32" name="a93f7983c3e2cbc6a0f28caf93abe1b32"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a93f7983c3e2cbc6a0f28caf93abe1b32">&#9670;&nbsp;</a></span>to_json() <span class="overload">[6/12]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">rapidjson::Value shrapnel::midi::to_json </td>
+          <td>(</td>
+          <td class="paramtype">rapidjson::Document &amp;&#160;</td>
+          <td class="paramname"><em>document</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="structshrapnel_1_1midi_1_1Mapping.html">Mapping</a> &amp;&#160;</td>
+          <td class="paramname"><em>object</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="midi__mapping__json__builder_8cpp_source.html#l00032">32</a> of file <a class="el" href="midi__mapping__json__builder_8cpp_source.html">midi_mapping_json_builder.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   33</span>{</div>
+<div class="line"><span class="lineno">   34</span>    rapidjson::Value json;</div>
+<div class="line"><span class="lineno">   35</span>    json.SetObject();</div>
+<div class="line"><span class="lineno">   36</span> </div>
+<div class="line"><span class="lineno">   37</span>    rapidjson::Value midi_channel;</div>
+<div class="line"><span class="lineno">   38</span>    midi_channel = <span class="keywordtype">object</span>.midi_channel;</div>
+<div class="line"><span class="lineno">   39</span>    json.AddMember(<span class="stringliteral">&quot;midi_channel&quot;</span>, midi_channel, document.GetAllocator());</div>
+<div class="line"><span class="lineno">   40</span> </div>
+<div class="line"><span class="lineno">   41</span>    rapidjson::Value cc_number;</div>
+<div class="line"><span class="lineno">   42</span>    cc_number = <span class="keywordtype">object</span>.cc_number;</div>
+<div class="line"><span class="lineno">   43</span>    json.AddMember(<span class="stringliteral">&quot;cc_number&quot;</span>, cc_number, document.GetAllocator());</div>
+<div class="line"><span class="lineno">   44</span> </div>
+<div class="line"><span class="lineno">   45</span>    rapidjson::Value parameter_id;</div>
+<div class="line"><span class="lineno">   46</span>    parameter_id.SetString(<span class="keywordtype">object</span>.parameter_name.data(), <span class="keywordtype">object</span>.parameter_name.size(), document.GetAllocator());</div>
+<div class="line"><span class="lineno">   47</span>    json.AddMember(<span class="stringliteral">&quot;parameter_id&quot;</span>, parameter_id, document.GetAllocator());</div>
+<div class="line"><span class="lineno">   48</span> </div>
+<div class="line"><span class="lineno">   49</span>    <span class="keywordflow">return</span> json;</div>
+<div class="line"><span class="lineno">   50</span>}</div>
+</div><!-- fragment -->
+</div>
+</div>
+<a id="a93f7983c3e2cbc6a0f28caf93abe1b32" name="a93f7983c3e2cbc6a0f28caf93abe1b32"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a93f7983c3e2cbc6a0f28caf93abe1b32">&#9670;&nbsp;</a></span>to_json() <span class="overload">[7/12]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">rapidjson::Value shrapnel::midi::to_json </td>
+          <td>(</td>
+          <td class="paramtype">rapidjson::Document &amp;&#160;</td>
+          <td class="paramname"><em>document</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="structshrapnel_1_1midi_1_1Mapping.html">Mapping</a> &amp;&#160;</td>
+          <td class="paramname"><em>object</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="midi__mapping__json__builder_8cpp_source.html#l00032">32</a> of file <a class="el" href="midi__mapping__json__builder_8cpp_source.html">midi_mapping_json_builder.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   33</span>{</div>
+<div class="line"><span class="lineno">   34</span>    rapidjson::Value json;</div>
+<div class="line"><span class="lineno">   35</span>    json.SetObject();</div>
+<div class="line"><span class="lineno">   36</span> </div>
+<div class="line"><span class="lineno">   37</span>    rapidjson::Value midi_channel;</div>
+<div class="line"><span class="lineno">   38</span>    midi_channel = <span class="keywordtype">object</span>.midi_channel;</div>
+<div class="line"><span class="lineno">   39</span>    json.AddMember(<span class="stringliteral">&quot;midi_channel&quot;</span>, midi_channel, document.GetAllocator());</div>
+<div class="line"><span class="lineno">   40</span> </div>
+<div class="line"><span class="lineno">   41</span>    rapidjson::Value cc_number;</div>
+<div class="line"><span class="lineno">   42</span>    cc_number = <span class="keywordtype">object</span>.cc_number;</div>
+<div class="line"><span class="lineno">   43</span>    json.AddMember(<span class="stringliteral">&quot;cc_number&quot;</span>, cc_number, document.GetAllocator());</div>
+<div class="line"><span class="lineno">   44</span> </div>
+<div class="line"><span class="lineno">   45</span>    rapidjson::Value parameter_id;</div>
+<div class="line"><span class="lineno">   46</span>    parameter_id.SetString(<span class="keywordtype">object</span>.parameter_name.data(), <span class="keywordtype">object</span>.parameter_name.size(), document.GetAllocator());</div>
+<div class="line"><span class="lineno">   47</span>    json.AddMember(<span class="stringliteral">&quot;parameter_id&quot;</span>, parameter_id, document.GetAllocator());</div>
+<div class="line"><span class="lineno">   48</span> </div>
+<div class="line"><span class="lineno">   49</span>    <span class="keywordflow">return</span> json;</div>
+<div class="line"><span class="lineno">   50</span>}</div>
+</div><!-- fragment -->
+</div>
+</div>
+<a id="a6c42217c7b2669babb823c4ee665fb3b" name="a6c42217c7b2669babb823c4ee665fb3b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6c42217c7b2669babb823c4ee665fb3b">&#9670;&nbsp;</a></span>to_json() <span class="overload">[8/12]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">rapidjson::Value shrapnel::midi::to_json </td>
+          <td>(</td>
+          <td class="paramtype">rapidjson::Document &amp;&#160;</td>
+          <td class="paramname"><em>document</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="namespaceshrapnel_1_1midi.html#ad9ee9014110e441706a017a889103bd1">MappingApiMessage</a> &amp;&#160;</td>
+          <td class="paramname"><em>object</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="midi__mapping__json__builder_8cpp_source.html#l00109">109</a> of file <a class="el" href="midi__mapping__json__builder_8cpp_source.html">midi_mapping_json_builder.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  110</span>{</div>
+<div class="line"><span class="lineno">  111</span>    rapidjson::Value json;</div>
+<div class="line"><span class="lineno">  112</span> </div>
+<div class="line"><span class="lineno">  113</span>    <span class="comment">// TODO any way to make this DRY? We need to call to_json with the correct</span></div>
+<div class="line"><span class="lineno">  114</span>    <span class="comment">// type, and add the messageType field with the correct value</span></div>
+<div class="line"><span class="lineno">  115</span>    <span class="keyword">auto</span> visitor = [&amp;](<span class="keyword">const</span> <span class="keyword">auto</span> &amp;message) {</div>
+<div class="line"><span class="lineno">  116</span>        <span class="keyword">using </span>T = std::decay_t&lt;<span class="keyword">decltype</span>(message)&gt;;</div>
+<div class="line"><span class="lineno">  117</span> </div>
+<div class="line"><span class="lineno">  118</span>        <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (std::is_same_v&lt;T, CreateResponse&gt; ||</div>
+<div class="line"><span class="lineno">  119</span>                      std::is_same_v&lt;T, GetResponse&gt;) {</div>
+<div class="line"><span class="lineno">  120</span>            json = <a class="code hl_function" href="namespaceshrapnel_1_1midi.html#a6c42217c7b2669babb823c4ee665fb3b">to_json</a>(document, message);</div>
+<div class="line"><span class="lineno">  121</span>        } <span class="keywordflow">else</span> {</div>
+<div class="line"><span class="lineno">  122</span>            ESP_LOGE(TAG, <span class="stringliteral">&quot;No handler registered for message&quot;</span>);</div>
+<div class="line"><span class="lineno">  123</span>        }</div>
+<div class="line"><span class="lineno">  124</span> </div>
+<div class="line"><span class="lineno">  125</span>        json.AddMember(<span class="stringliteral">&quot;messageType&quot;</span>, rapidjson::StringRef(get_message_type&lt;T&gt;()), document.GetAllocator());</div>
+<div class="line"><span class="lineno">  126</span>    };</div>
+<div class="line"><span class="lineno">  127</span> </div>
+<div class="line"><span class="lineno">  128</span>    std::visit(visitor, <span class="keywordtype">object</span>);</div>
+<div class="line"><span class="lineno">  129</span> </div>
+<div class="line"><span class="lineno">  130</span>    <span class="keywordflow">return</span> json;</div>
+<div class="line"><span class="lineno">  131</span>}</div>
+</div><!-- fragment -->
+<p class="reference">References <a class="el" href="namespaceshrapnel_1_1midi.html#a745f9f03858045cdfabbd014152fbc15">to_json()</a>.</p>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" frameborder="0" src="namespaceshrapnel_1_1midi_a6c42217c7b2669babb823c4ee665fb3b_cgraph.svg" width="358" height="38"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
+</div>
+
+</div>
+</div>
+<a id="a6c42217c7b2669babb823c4ee665fb3b" name="a6c42217c7b2669babb823c4ee665fb3b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6c42217c7b2669babb823c4ee665fb3b">&#9670;&nbsp;</a></span>to_json() <span class="overload">[9/12]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">rapidjson::Value shrapnel::midi::to_json </td>
+          <td>(</td>
+          <td class="paramtype">rapidjson::Document &amp;&#160;</td>
+          <td class="paramname"><em>document</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="namespaceshrapnel_1_1midi.html#ad9ee9014110e441706a017a889103bd1">MappingApiMessage</a> &amp;&#160;</td>
+          <td class="paramname"><em>object</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="midi__mapping__json__builder_8cpp_source.html#l00109">109</a> of file <a class="el" href="midi__mapping__json__builder_8cpp_source.html">midi_mapping_json_builder.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  110</span>{</div>
+<div class="line"><span class="lineno">  111</span>    rapidjson::Value json;</div>
+<div class="line"><span class="lineno">  112</span> </div>
+<div class="line"><span class="lineno">  113</span>    <span class="comment">// TODO any way to make this DRY? We need to call to_json with the correct</span></div>
+<div class="line"><span class="lineno">  114</span>    <span class="comment">// type, and add the messageType field with the correct value</span></div>
+<div class="line"><span class="lineno">  115</span>    <span class="keyword">auto</span> visitor = [&amp;](<span class="keyword">const</span> <span class="keyword">auto</span> &amp;message) {</div>
+<div class="line"><span class="lineno">  116</span>        <span class="keyword">using </span>T = std::decay_t&lt;<span class="keyword">decltype</span>(message)&gt;;</div>
+<div class="line"><span class="lineno">  117</span> </div>
+<div class="line"><span class="lineno">  118</span>        <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (std::is_same_v&lt;T, CreateResponse&gt; ||</div>
+<div class="line"><span class="lineno">  119</span>                      std::is_same_v&lt;T, GetResponse&gt;) {</div>
+<div class="line"><span class="lineno">  120</span>            json = <a class="code hl_function" href="namespaceshrapnel_1_1midi.html#a6c42217c7b2669babb823c4ee665fb3b">to_json</a>(document, message);</div>
+<div class="line"><span class="lineno">  121</span>        } <span class="keywordflow">else</span> {</div>
+<div class="line"><span class="lineno">  122</span>            ESP_LOGE(TAG, <span class="stringliteral">&quot;No handler registered for message&quot;</span>);</div>
+<div class="line"><span class="lineno">  123</span>        }</div>
+<div class="line"><span class="lineno">  124</span> </div>
+<div class="line"><span class="lineno">  125</span>        json.AddMember(<span class="stringliteral">&quot;messageType&quot;</span>, rapidjson::StringRef(get_message_type&lt;T&gt;()), document.GetAllocator());</div>
+<div class="line"><span class="lineno">  126</span>    };</div>
+<div class="line"><span class="lineno">  127</span> </div>
+<div class="line"><span class="lineno">  128</span>    std::visit(visitor, <span class="keywordtype">object</span>);</div>
+<div class="line"><span class="lineno">  129</span> </div>
+<div class="line"><span class="lineno">  130</span>    <span class="keywordflow">return</span> json;</div>
+<div class="line"><span class="lineno">  131</span>}</div>
+</div><!-- fragment -->
+<p class="reference">References <a class="el" href="namespaceshrapnel_1_1midi.html#a745f9f03858045cdfabbd014152fbc15">to_json()</a>.</p>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" frameborder="0" src="namespaceshrapnel_1_1midi_a6c42217c7b2669babb823c4ee665fb3b_cgraph.svg" width="358" height="38"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
+</div>
+
+</div>
+</div>
+<a id="af53ad718226d62828805d71d0daa0037" name="af53ad718226d62828805d71d0daa0037"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af53ad718226d62828805d71d0daa0037">&#9670;&nbsp;</a></span>to_json() <span class="overload">[10/12]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">rapidjson::Value shrapnel::midi::to_json </td>
+          <td>(</td>
+          <td class="paramtype">rapidjson::Document &amp;&#160;</td>
+          <td class="paramname"><em>document</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::pair&lt; <a class="el" href="structshrapnel_1_1midi_1_1Mapping.html#a212fd4d87c151bab5982bc9138990a02">Mapping::id_t</a>, <a class="el" href="structshrapnel_1_1midi_1_1Mapping.html">Mapping</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>object</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="midi__mapping__json__builder_8cpp_source.html#l00053">53</a> of file <a class="el" href="midi__mapping__json__builder_8cpp_source.html">midi_mapping_json_builder.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   54</span>{</div>
+<div class="line"><span class="lineno">   55</span>    rapidjson::Value json;</div>
+<div class="line"><span class="lineno">   56</span>    json.SetObject();</div>
+<div class="line"><span class="lineno">   57</span> </div>
+<div class="line"><span class="lineno">   58</span>    <span class="keywordtype">char</span> uuid[37];</div>
+<div class="line"><span class="lineno">   59</span>    sprintf(uuid,</div>
+<div class="line"><span class="lineno">   60</span>            <span class="stringliteral">&quot;%02x%02x%02x%02x-%02x%02x-%02x%02x-%02x%02x-&quot;</span></div>
+<div class="line"><span class="lineno">   61</span>            <span class="stringliteral">&quot;%02x%02x%02x%02x%02x%02x&quot;</span>,</div>
+<div class="line"><span class="lineno">   62</span>            <span class="keywordtype">object</span>.first[0],</div>
+<div class="line"><span class="lineno">   63</span>            <span class="keywordtype">object</span>.first[1],</div>
+<div class="line"><span class="lineno">   64</span>            <span class="keywordtype">object</span>.first[2],</div>
+<div class="line"><span class="lineno">   65</span>            <span class="keywordtype">object</span>.first[3],</div>
+<div class="line"><span class="lineno">   66</span>            <span class="keywordtype">object</span>.first[4],</div>
+<div class="line"><span class="lineno">   67</span>            <span class="keywordtype">object</span>.first[5],</div>
+<div class="line"><span class="lineno">   68</span>            <span class="keywordtype">object</span>.first[6],</div>
+<div class="line"><span class="lineno">   69</span>            <span class="keywordtype">object</span>.first[7],</div>
+<div class="line"><span class="lineno">   70</span>            <span class="keywordtype">object</span>.first[8],</div>
+<div class="line"><span class="lineno">   71</span>            <span class="keywordtype">object</span>.first[9],</div>
+<div class="line"><span class="lineno">   72</span>            <span class="keywordtype">object</span>.first[10],</div>
+<div class="line"><span class="lineno">   73</span>            <span class="keywordtype">object</span>.first[11],</div>
+<div class="line"><span class="lineno">   74</span>            <span class="keywordtype">object</span>.first[12],</div>
+<div class="line"><span class="lineno">   75</span>            <span class="keywordtype">object</span>.first[13],</div>
+<div class="line"><span class="lineno">   76</span>            <span class="keywordtype">object</span>.first[14],</div>
+<div class="line"><span class="lineno">   77</span>            <span class="keywordtype">object</span>.first[15]);</div>
+<div class="line"><span class="lineno">   78</span> </div>
+<div class="line"><span class="lineno">   79</span>    rapidjson::Value mapping = <a class="code hl_function" href="namespaceshrapnel_1_1midi.html#a6c42217c7b2669babb823c4ee665fb3b">to_json</a>(document, <span class="keywordtype">object</span>.second);</div>
+<div class="line"><span class="lineno">   80</span>    rapidjson::Value uuid_json;</div>
+<div class="line"><span class="lineno">   81</span>    uuid_json.SetString(uuid, 36, document.GetAllocator());</div>
+<div class="line"><span class="lineno">   82</span>    json.AddMember(uuid_json, mapping, document.GetAllocator());</div>
+<div class="line"><span class="lineno">   83</span>    <span class="keywordflow">return</span> json;</div>
+<div class="line"><span class="lineno">   84</span>}</div>
+</div><!-- fragment -->
+<p class="reference">References <a class="el" href="namespaceshrapnel_1_1midi.html#a745f9f03858045cdfabbd014152fbc15">to_json()</a>.</p>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" frameborder="0" src="namespaceshrapnel_1_1midi_af53ad718226d62828805d71d0daa0037_cgraph.svg" width="358" height="38"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
+</div>
+
+</div>
+</div>
+<a id="af53ad718226d62828805d71d0daa0037" name="af53ad718226d62828805d71d0daa0037"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af53ad718226d62828805d71d0daa0037">&#9670;&nbsp;</a></span>to_json() <span class="overload">[11/12]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">rapidjson::Value shrapnel::midi::to_json </td>
+          <td>(</td>
+          <td class="paramtype">rapidjson::Document &amp;&#160;</td>
+          <td class="paramname"><em>document</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::pair&lt; <a class="el" href="structshrapnel_1_1midi_1_1Mapping.html#a212fd4d87c151bab5982bc9138990a02">Mapping::id_t</a>, <a class="el" href="structshrapnel_1_1midi_1_1Mapping.html">Mapping</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>object</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="midi__mapping__json__builder_8cpp_source.html#l00053">53</a> of file <a class="el" href="midi__mapping__json__builder_8cpp_source.html">midi_mapping_json_builder.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   54</span>{</div>
+<div class="line"><span class="lineno">   55</span>    rapidjson::Value json;</div>
+<div class="line"><span class="lineno">   56</span>    json.SetObject();</div>
+<div class="line"><span class="lineno">   57</span> </div>
+<div class="line"><span class="lineno">   58</span>    <span class="keywordtype">char</span> uuid[37];</div>
+<div class="line"><span class="lineno">   59</span>    sprintf(uuid,</div>
+<div class="line"><span class="lineno">   60</span>            <span class="stringliteral">&quot;%02x%02x%02x%02x-%02x%02x-%02x%02x-%02x%02x-&quot;</span></div>
+<div class="line"><span class="lineno">   61</span>            <span class="stringliteral">&quot;%02x%02x%02x%02x%02x%02x&quot;</span>,</div>
+<div class="line"><span class="lineno">   62</span>            <span class="keywordtype">object</span>.first[0],</div>
+<div class="line"><span class="lineno">   63</span>            <span class="keywordtype">object</span>.first[1],</div>
+<div class="line"><span class="lineno">   64</span>            <span class="keywordtype">object</span>.first[2],</div>
+<div class="line"><span class="lineno">   65</span>            <span class="keywordtype">object</span>.first[3],</div>
+<div class="line"><span class="lineno">   66</span>            <span class="keywordtype">object</span>.first[4],</div>
+<div class="line"><span class="lineno">   67</span>            <span class="keywordtype">object</span>.first[5],</div>
+<div class="line"><span class="lineno">   68</span>            <span class="keywordtype">object</span>.first[6],</div>
+<div class="line"><span class="lineno">   69</span>            <span class="keywordtype">object</span>.first[7],</div>
+<div class="line"><span class="lineno">   70</span>            <span class="keywordtype">object</span>.first[8],</div>
+<div class="line"><span class="lineno">   71</span>            <span class="keywordtype">object</span>.first[9],</div>
+<div class="line"><span class="lineno">   72</span>            <span class="keywordtype">object</span>.first[10],</div>
+<div class="line"><span class="lineno">   73</span>            <span class="keywordtype">object</span>.first[11],</div>
+<div class="line"><span class="lineno">   74</span>            <span class="keywordtype">object</span>.first[12],</div>
+<div class="line"><span class="lineno">   75</span>            <span class="keywordtype">object</span>.first[13],</div>
+<div class="line"><span class="lineno">   76</span>            <span class="keywordtype">object</span>.first[14],</div>
+<div class="line"><span class="lineno">   77</span>            <span class="keywordtype">object</span>.first[15]);</div>
+<div class="line"><span class="lineno">   78</span> </div>
+<div class="line"><span class="lineno">   79</span>    rapidjson::Value mapping = <a class="code hl_function" href="namespaceshrapnel_1_1midi.html#a6c42217c7b2669babb823c4ee665fb3b">to_json</a>(document, <span class="keywordtype">object</span>.second);</div>
+<div class="line"><span class="lineno">   80</span>    rapidjson::Value uuid_json;</div>
+<div class="line"><span class="lineno">   81</span>    uuid_json.SetString(uuid, 36, document.GetAllocator());</div>
+<div class="line"><span class="lineno">   82</span>    json.AddMember(uuid_json, mapping, document.GetAllocator());</div>
+<div class="line"><span class="lineno">   83</span>    <span class="keywordflow">return</span> json;</div>
+<div class="line"><span class="lineno">   84</span>}</div>
+</div><!-- fragment -->
+<p class="reference">References <a class="el" href="namespaceshrapnel_1_1midi.html#a745f9f03858045cdfabbd014152fbc15">to_json()</a>.</p>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" frameborder="0" src="namespaceshrapnel_1_1midi_af53ad718226d62828805d71d0daa0037_cgraph.svg" width="358" height="38"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
+</div>
+
+</div>
+</div>
+<a id="a745f9f03858045cdfabbd014152fbc15" name="a745f9f03858045cdfabbd014152fbc15"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a745f9f03858045cdfabbd014152fbc15">&#9670;&nbsp;</a></span>to_json() <span class="overload">[12/12]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">rapidjson::Value shrapnel::midi::to_json </td>
+          <td>(</td>
+          <td class="paramtype">rapidjson::Document &amp;&#160;</td>
+          <td class="paramname"><em>document</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const T &amp;&#160;</td>
+          <td class="paramname"><em>object</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Convert <code>object</code> to a JSON value. </p>
+<dl class="section note"><dt>Note</dt><dd>The <code>document</code> must not by modified by this function. It is only passed in so that its allocator member can be accessed. </dd></dl>
+
+<p class="reference">Referenced by <a class="el" href="midi__mapping__json__builder_8h_source.html#l00062">to_json()</a>.</p>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" frameborder="0" src="namespaceshrapnel_1_1midi_a745f9f03858045cdfabbd014152fbc15_icgraph.svg" width="358" height="38"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
+</div>
+
+</div>
+</div>
+<h2 class="groupheader">Variable Documentation</h2>
+<a id="a8305176202c7655644708a6d70914ed2" name="a8305176202c7655644708a6d70914ed2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8305176202c7655644708a6d70914ed2">&#9670;&nbsp;</a></span>CC_VALUE_MAX</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int constexpr shrapnel::midi::CC_VALUE_MAX = 127</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="midi_8h_source.html#l00031">31</a> of file <a class="el" href="midi_8h_source.html">midi.h</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="midi__mapping_8h_source.html#l00239">shrapnel::midi::MappingManager&lt; AudioParametersT, N &gt;::process_message()</a>.</p>
+
+</div>
+</div>
 </div><!-- contents -->
+</div><!-- doc-content -->
 <!-- start footer part -->
-<hr class="footer"/><address class="footer"><small>
-Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.4
-</small></address>
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="namespaceshrapnel.html">shrapnel</a></li><li class="navelem"><a class="el" href="namespaceshrapnel_1_1midi.html">midi</a></li>
+    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.4 </li>
+  </ul>
+</div>
 </body>
 </html>

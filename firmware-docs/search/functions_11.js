@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['valvestate_0',['Valvestate',['../classshrapnel_1_1effect_1_1valvestate_1_1Valvestate.html#aebf55d7e4810fd3eab785699a5c2cfb9',1,'shrapnel::effect::valvestate::Valvestate']]]
+  ['ui_5fget_5fhandler_0',['ui_get_handler',['../namespaceshrapnel.html#a39fa0ecf6c29c9e280780ff1fe11517a',1,'shrapnel']]],
+  ['update_1',['update',['../classshrapnel_1_1parameters_1_1AudioParameterFloat.html#a4746a6da46d63038a0b4e8fe6e9c7e91',1,'shrapnel::parameters::AudioParameterFloat::update()'],['../classshrapnel_1_1parameters_1_1AudioParameters.html#a38e40ddb4bc6600390e861a0e4604bc4',1,'shrapnel::parameters::AudioParameters::update()'],['../classshrapnel_1_1midi_1_1MappingManager.html#a89bc094c0b992a72b4c79d18d3febe3b',1,'shrapnel::midi::MappingManager::update()']]]
 ];

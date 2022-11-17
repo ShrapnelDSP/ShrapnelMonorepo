@@ -9,6 +9,10 @@
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
@@ -20,6 +24,7 @@ MathJax.Hub.Config({
 </script>
 <script type="text/javascript" async="async" src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js"></script>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
+<link href="doxygen-awesome.css" rel="stylesheet" type="text/css"/>
 </head>
 <body>
 <div id="top"><!-- do not remove this div, it is closed by doxygen! -->
@@ -54,6 +59,23 @@ $(function() {
 /* @license-end */
 </script>
 <div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(document).ready(function(){initNavTree('noise__gate_8cpp.html',''); initResizable(); });
+/* @license-end */
+</script>
+<div id="doc-content">
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -68,11 +90,6 @@ $(function() {
 </iframe>
 </div>
 
-<div id="nav-path" class="navpath">
-  <ul>
-<li class="navelem"><a class="el" href="dir_63bb297c276a119495816091bcd678e9.html">effects</a></li><li class="navelem"><a class="el" href="dir_80f80626f467eb8ffc1b27633c311e0f.html">gate</a></li>  </ul>
-</div>
-</div><!-- top -->
 <div class="header">
   <div class="summary">
 <a href="#enum-members">Enumerations</a> &#124;
@@ -222,16 +239,8 @@ Variables</h2></td></tr>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><img src="noise__gate_8cpp_afb2354391bb81545d92334434552ab4b_icgraph.png" border="0" usemap="#anoise__gate_8cpp_afb2354391bb81545d92334434552ab4b_icgraph" alt=""/></div>
-<map name="anoise__gate_8cpp_afb2354391bb81545d92334434552ab4b_icgraph" id="anoise__gate_8cpp_afb2354391bb81545d92334434552ab4b_icgraph">
-<area shape="rect" title=" " alt="" coords="855,31,941,57"/>
-<area shape="rect" href="noise__gate_8cpp.html#a82e62ed410acc03c8179d8245de13e12" title="Set the threshold and hysteresis value in dBFS." alt="" coords="675,31,807,57"/>
-<area shape="rect" href="process_8cpp.html#ab530789c5aeb0c1c38d5917bfd7a111f" title=" " alt="" coords="519,5,611,32"/>
-<area shape="rect" href="process_8cpp.html#a450bec865b55b9890f4050f1ab0dba5c" title=" " alt="" coords="503,56,627,83"/>
-<area shape="rect" href="i2s_8cpp.html#a4e37f563a34c1a559515cc40782caf07" title=" " alt="" coords="313,31,455,57"/>
-<area shape="rect" href="i2s_8cpp.html#a78c8fe8089980bf7c440301d3171eac6" title=" " alt="" coords="187,31,265,57"/>
-<area shape="rect" href="namespaceshrapnel.html#a9f09f4ea750643310af9143a53735b7d" title=" " alt="" coords="5,31,139,57"/>
-</map>
+<div class="center"><iframe scrolling="no" frameborder="0" src="noise__gate_8cpp_afb2354391bb81545d92334434552ab4b_icgraph.svg" width="947" height="88"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
 </div>
 
 </div>
@@ -381,24 +390,14 @@ Here is the caller graph for this function:</div>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><img src="noise__gate_8cpp_a129b18f80393706faa5a453417153a51_cgraph.png" border="0" usemap="#anoise__gate_8cpp_a129b18f80393706faa5a453417153a51_cgraph" alt=""/></div>
-<map name="anoise__gate_8cpp_a129b18f80393706faa5a453417153a51_cgraph" id="anoise__gate_8cpp_a129b18f80393706faa5a453417153a51_cgraph">
-<area shape="rect" title="Analyse the audio." alt="" coords="5,13,104,39"/>
-<area shape="rect" href="classshrapnel_1_1dsp_1_1IirFilter.html#a53cb5a72d2a310cd4b35d4329af682f0" title=" " alt="" coords="152,5,296,47"/>
-<area shape="rect" href="iir__universal_8c.html#a738b77e8a79f0c754dba3af19fbd4e30" title=" " alt="" coords="344,13,429,39"/>
-</map>
+<div class="center"><iframe scrolling="no" frameborder="0" src="noise__gate_8cpp_a129b18f80393706faa5a453417153a51_cgraph.svg" width="435" height="52"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
 </div>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><img src="noise__gate_8cpp_a129b18f80393706faa5a453417153a51_icgraph.png" border="0" usemap="#anoise__gate_8cpp_a129b18f80393706faa5a453417153a51_icgraph" alt=""/></div>
-<map name="anoise__gate_8cpp_a129b18f80393706faa5a453417153a51_icgraph" id="anoise__gate_8cpp_a129b18f80393706faa5a453417153a51_icgraph">
-<area shape="rect" title="Analyse the audio." alt="" coords="675,5,773,32"/>
-<area shape="rect" href="process_8cpp.html#a450bec865b55b9890f4050f1ab0dba5c" title=" " alt="" coords="503,5,627,32"/>
-<area shape="rect" href="i2s_8cpp.html#a4e37f563a34c1a559515cc40782caf07" title=" " alt="" coords="313,5,455,32"/>
-<area shape="rect" href="i2s_8cpp.html#a78c8fe8089980bf7c440301d3171eac6" title=" " alt="" coords="187,5,265,32"/>
-<area shape="rect" href="namespaceshrapnel.html#a9f09f4ea750643310af9143a53735b7d" title=" " alt="" coords="5,5,139,32"/>
-</map>
+<div class="center"><iframe scrolling="no" frameborder="0" src="noise__gate_8cpp_a129b18f80393706faa5a453417153a51_icgraph.svg" width="779" height="38"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
 </div>
 
 </div>
@@ -443,23 +442,14 @@ Here is the caller graph for this function:</div>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><img src="noise__gate_8cpp_a949bfebe851dee44040d83bbd068dad1_cgraph.png" border="0" usemap="#anoise__gate_8cpp_a949bfebe851dee44040d83bbd068dad1_cgraph" alt=""/></div>
-<map name="anoise__gate_8cpp_a949bfebe851dee44040d83bbd068dad1_cgraph" id="anoise__gate_8cpp_a949bfebe851dee44040d83bbd068dad1_cgraph">
-<area shape="rect" title="Initialise the effect." alt="" coords="5,5,76,32"/>
-<area shape="rect" href="noise__gate_8cpp.html#a5d3ba76b4666ac1820b498aaf04ea22e" title="Reset the state." alt="" coords="124,5,207,32"/>
-</map>
+<div class="center"><iframe scrolling="no" frameborder="0" src="noise__gate_8cpp_a949bfebe851dee44040d83bbd068dad1_cgraph.svg" width="212" height="38"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
 </div>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><img src="noise__gate_8cpp_a949bfebe851dee44040d83bbd068dad1_icgraph.png" border="0" usemap="#anoise__gate_8cpp_a949bfebe851dee44040d83bbd068dad1_icgraph" alt=""/></div>
-<map name="anoise__gate_8cpp_a949bfebe851dee44040d83bbd068dad1_icgraph" id="anoise__gate_8cpp_a949bfebe851dee44040d83bbd068dad1_icgraph">
-<area shape="rect" title="Initialise the effect." alt="" coords="643,5,713,32"/>
-<area shape="rect" href="process_8cpp.html#ab530789c5aeb0c1c38d5917bfd7a111f" title=" " alt="" coords="503,5,595,32"/>
-<area shape="rect" href="i2s_8cpp.html#a4e37f563a34c1a559515cc40782caf07" title=" " alt="" coords="313,5,455,32"/>
-<area shape="rect" href="i2s_8cpp.html#a78c8fe8089980bf7c440301d3171eac6" title=" " alt="" coords="187,5,265,32"/>
-<area shape="rect" href="namespaceshrapnel.html#a9f09f4ea750643310af9143a53735b7d" title=" " alt="" coords="5,5,139,32"/>
-</map>
+<div class="center"><iframe scrolling="no" frameborder="0" src="noise__gate_8cpp_a949bfebe851dee44040d83bbd068dad1_icgraph.svg" width="719" height="38"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
 </div>
 
 </div>
@@ -506,23 +496,14 @@ Here is the caller graph for this function:</div>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><img src="noise__gate_8cpp_a3a59d391339a038f91650058680b00d6_cgraph.png" border="0" usemap="#anoise__gate_8cpp_a3a59d391339a038f91650058680b00d6_cgraph" alt=""/></div>
-<map name="anoise__gate_8cpp_a3a59d391339a038f91650058680b00d6_cgraph" id="anoise__gate_8cpp_a3a59d391339a038f91650058680b00d6_cgraph">
-<area shape="rect" title="Apply the precalculated gain to the audio." alt="" coords="5,5,105,32"/>
-<area shape="rect" href="abstract__dsp__esp32_8c.html#a52d208742d325a0cdb7225bd9fe0e902" title=" " alt="" coords="153,5,257,32"/>
-</map>
+<div class="center"><iframe scrolling="no" frameborder="0" src="noise__gate_8cpp_a3a59d391339a038f91650058680b00d6_cgraph.svg" width="263" height="38"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
 </div>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><img src="noise__gate_8cpp_a3a59d391339a038f91650058680b00d6_icgraph.png" border="0" usemap="#anoise__gate_8cpp_a3a59d391339a038f91650058680b00d6_icgraph" alt=""/></div>
-<map name="anoise__gate_8cpp_a3a59d391339a038f91650058680b00d6_icgraph" id="anoise__gate_8cpp_a3a59d391339a038f91650058680b00d6_icgraph">
-<area shape="rect" title="Apply the precalculated gain to the audio." alt="" coords="675,5,775,32"/>
-<area shape="rect" href="process_8cpp.html#a450bec865b55b9890f4050f1ab0dba5c" title=" " alt="" coords="503,5,627,32"/>
-<area shape="rect" href="i2s_8cpp.html#a4e37f563a34c1a559515cc40782caf07" title=" " alt="" coords="313,5,455,32"/>
-<area shape="rect" href="i2s_8cpp.html#a78c8fe8089980bf7c440301d3171eac6" title=" " alt="" coords="187,5,265,32"/>
-<area shape="rect" href="namespaceshrapnel.html#a9f09f4ea750643310af9143a53735b7d" title=" " alt="" coords="5,5,139,32"/>
-</map>
+<div class="center"><iframe scrolling="no" frameborder="0" src="noise__gate_8cpp_a3a59d391339a038f91650058680b00d6_icgraph.svg" width="780" height="38"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
 </div>
 
 </div>
@@ -566,15 +547,8 @@ Here is the caller graph for this function:</div>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><img src="noise__gate_8cpp_a5d3ba76b4666ac1820b498aaf04ea22e_icgraph.png" border="0" usemap="#anoise__gate_8cpp_a5d3ba76b4666ac1820b498aaf04ea22e_icgraph" alt=""/></div>
-<map name="anoise__gate_8cpp_a5d3ba76b4666ac1820b498aaf04ea22e_icgraph" id="anoise__gate_8cpp_a5d3ba76b4666ac1820b498aaf04ea22e_icgraph">
-<area shape="rect" title="Reset the state." alt="" coords="761,5,844,32"/>
-<area shape="rect" href="noise__gate_8cpp.html#a949bfebe851dee44040d83bbd068dad1" title="Initialise the effect." alt="" coords="643,5,713,32"/>
-<area shape="rect" href="process_8cpp.html#ab530789c5aeb0c1c38d5917bfd7a111f" title=" " alt="" coords="503,5,595,32"/>
-<area shape="rect" href="i2s_8cpp.html#a4e37f563a34c1a559515cc40782caf07" title=" " alt="" coords="313,5,455,32"/>
-<area shape="rect" href="i2s_8cpp.html#a78c8fe8089980bf7c440301d3171eac6" title=" " alt="" coords="187,5,265,32"/>
-<area shape="rect" href="namespaceshrapnel.html#a9f09f4ea750643310af9143a53735b7d" title=" " alt="" coords="5,5,139,32"/>
-</map>
+<div class="center"><iframe scrolling="no" frameborder="0" src="noise__gate_8cpp_a5d3ba76b4666ac1820b498aaf04ea22e_icgraph.svg" width="850" height="38"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
 </div>
 
 </div>
@@ -610,15 +584,8 @@ Here is the caller graph for this function:</div>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><img src="noise__gate_8cpp_a4868a6f017c846668c1b09d32b833099_icgraph.png" border="0" usemap="#anoise__gate_8cpp_a4868a6f017c846668c1b09d32b833099_icgraph" alt=""/></div>
-<map name="anoise__gate_8cpp_a4868a6f017c846668c1b09d32b833099_icgraph" id="anoise__gate_8cpp_a4868a6f017c846668c1b09d32b833099_icgraph">
-<area shape="rect" title="Set the attack time in milliseconds." alt="" coords="675,31,789,57"/>
-<area shape="rect" href="process_8cpp.html#ab530789c5aeb0c1c38d5917bfd7a111f" title=" " alt="" coords="519,5,611,32"/>
-<area shape="rect" href="process_8cpp.html#a450bec865b55b9890f4050f1ab0dba5c" title=" " alt="" coords="503,56,627,83"/>
-<area shape="rect" href="i2s_8cpp.html#a4e37f563a34c1a559515cc40782caf07" title=" " alt="" coords="313,31,455,57"/>
-<area shape="rect" href="i2s_8cpp.html#a78c8fe8089980bf7c440301d3171eac6" title=" " alt="" coords="187,31,265,57"/>
-<area shape="rect" href="namespaceshrapnel.html#a9f09f4ea750643310af9143a53735b7d" title=" " alt="" coords="5,31,139,57"/>
-</map>
+<div class="center"><iframe scrolling="no" frameborder="0" src="noise__gate_8cpp_a4868a6f017c846668c1b09d32b833099_icgraph.svg" width="795" height="88"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
 </div>
 
 </div>
@@ -676,14 +643,8 @@ Here is the caller graph for this function:</div>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><img src="noise__gate_8cpp_a184d915d5eb18d4743c6e3008bb47e62_icgraph.png" border="0" usemap="#anoise__gate_8cpp_a184d915d5eb18d4743c6e3008bb47e62_icgraph" alt=""/></div>
-<map name="anoise__gate_8cpp_a184d915d5eb18d4743c6e3008bb47e62_icgraph" id="anoise__gate_8cpp_a184d915d5eb18d4743c6e3008bb47e62_icgraph">
-<area shape="rect" title="Set the buffer size in number of samples." alt="" coords="643,5,784,32"/>
-<area shape="rect" href="process_8cpp.html#ab530789c5aeb0c1c38d5917bfd7a111f" title=" " alt="" coords="503,5,595,32"/>
-<area shape="rect" href="i2s_8cpp.html#a4e37f563a34c1a559515cc40782caf07" title=" " alt="" coords="313,5,455,32"/>
-<area shape="rect" href="i2s_8cpp.html#a78c8fe8089980bf7c440301d3171eac6" title=" " alt="" coords="187,5,265,32"/>
-<area shape="rect" href="namespaceshrapnel.html#a9f09f4ea750643310af9143a53735b7d" title=" " alt="" coords="5,5,139,32"/>
-</map>
+<div class="center"><iframe scrolling="no" frameborder="0" src="noise__gate_8cpp_a184d915d5eb18d4743c6e3008bb47e62_icgraph.svg" width="790" height="38"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
 </div>
 
 </div>
@@ -718,15 +679,8 @@ Here is the caller graph for this function:</div>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><img src="noise__gate_8cpp_a4fccad713cee272e388c9c45fc97037e_icgraph.png" border="0" usemap="#anoise__gate_8cpp_a4fccad713cee272e388c9c45fc97037e_icgraph" alt=""/></div>
-<map name="anoise__gate_8cpp_a4fccad713cee272e388c9c45fc97037e_icgraph" id="anoise__gate_8cpp_a4fccad713cee272e388c9c45fc97037e_icgraph">
-<area shape="rect" title="Set the hold time in milliseconds." alt="" coords="675,31,777,57"/>
-<area shape="rect" href="process_8cpp.html#ab530789c5aeb0c1c38d5917bfd7a111f" title=" " alt="" coords="519,5,611,32"/>
-<area shape="rect" href="process_8cpp.html#a450bec865b55b9890f4050f1ab0dba5c" title=" " alt="" coords="503,56,627,83"/>
-<area shape="rect" href="i2s_8cpp.html#a4e37f563a34c1a559515cc40782caf07" title=" " alt="" coords="313,31,455,57"/>
-<area shape="rect" href="i2s_8cpp.html#a78c8fe8089980bf7c440301d3171eac6" title=" " alt="" coords="187,31,265,57"/>
-<area shape="rect" href="namespaceshrapnel.html#a9f09f4ea750643310af9143a53735b7d" title=" " alt="" coords="5,31,139,57"/>
-</map>
+<div class="center"><iframe scrolling="no" frameborder="0" src="noise__gate_8cpp_a4fccad713cee272e388c9c45fc97037e_icgraph.svg" width="783" height="88"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
 </div>
 
 </div>
@@ -761,15 +715,8 @@ Here is the caller graph for this function:</div>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><img src="noise__gate_8cpp_abe525a07b8cb6f0557740cc4100428a9_icgraph.png" border="0" usemap="#anoise__gate_8cpp_abe525a07b8cb6f0557740cc4100428a9_icgraph" alt=""/></div>
-<map name="anoise__gate_8cpp_abe525a07b8cb6f0557740cc4100428a9_icgraph" id="anoise__gate_8cpp_abe525a07b8cb6f0557740cc4100428a9_icgraph">
-<area shape="rect" title="Set the release time in milliseconds." alt="" coords="675,31,796,57"/>
-<area shape="rect" href="process_8cpp.html#ab530789c5aeb0c1c38d5917bfd7a111f" title=" " alt="" coords="519,5,611,32"/>
-<area shape="rect" href="process_8cpp.html#a450bec865b55b9890f4050f1ab0dba5c" title=" " alt="" coords="503,56,627,83"/>
-<area shape="rect" href="i2s_8cpp.html#a4e37f563a34c1a559515cc40782caf07" title=" " alt="" coords="313,31,455,57"/>
-<area shape="rect" href="i2s_8cpp.html#a78c8fe8089980bf7c440301d3171eac6" title=" " alt="" coords="187,31,265,57"/>
-<area shape="rect" href="namespaceshrapnel.html#a9f09f4ea750643310af9143a53735b7d" title=" " alt="" coords="5,31,139,57"/>
-</map>
+<div class="center"><iframe scrolling="no" frameborder="0" src="noise__gate_8cpp_abe525a07b8cb6f0557740cc4100428a9_icgraph.svg" width="802" height="88"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
 </div>
 
 </div>
@@ -813,24 +760,14 @@ Here is the caller graph for this function:</div>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><img src="noise__gate_8cpp_a2691256497a1cec4e14434f48eccfb56_cgraph.png" border="0" usemap="#anoise__gate_8cpp_a2691256497a1cec4e14434f48eccfb56_cgraph" alt=""/></div>
-<map name="anoise__gate_8cpp_a2691256497a1cec4e14434f48eccfb56_cgraph" id="anoise__gate_8cpp_a2691256497a1cec4e14434f48eccfb56_cgraph">
-<area shape="rect" title="Set the sample rate in Hz." alt="" coords="5,46,156,73"/>
-<area shape="rect" href="abstract__dsp__esp32_8c.html#ab721c839889c1267077f4cb3304b655d" title=" " alt="" coords="205,5,347,47"/>
-<area shape="rect" href="classshrapnel_1_1dsp_1_1IirFilter.html#aa09e7c1ab99d85c0fdd1c98c80636550" title=" " alt="" coords="204,71,348,112"/>
-</map>
+<div class="center"><iframe scrolling="no" frameborder="0" src="noise__gate_8cpp_a2691256497a1cec4e14434f48eccfb56_cgraph.svg" width="354" height="118"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
 </div>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><img src="noise__gate_8cpp_a2691256497a1cec4e14434f48eccfb56_icgraph.png" border="0" usemap="#anoise__gate_8cpp_a2691256497a1cec4e14434f48eccfb56_icgraph" alt=""/></div>
-<map name="anoise__gate_8cpp_a2691256497a1cec4e14434f48eccfb56_icgraph" id="anoise__gate_8cpp_a2691256497a1cec4e14434f48eccfb56_icgraph">
-<area shape="rect" title="Set the sample rate in Hz." alt="" coords="643,5,793,32"/>
-<area shape="rect" href="process_8cpp.html#ab530789c5aeb0c1c38d5917bfd7a111f" title=" " alt="" coords="503,5,595,32"/>
-<area shape="rect" href="i2s_8cpp.html#a4e37f563a34c1a559515cc40782caf07" title=" " alt="" coords="313,5,455,32"/>
-<area shape="rect" href="i2s_8cpp.html#a78c8fe8089980bf7c440301d3171eac6" title=" " alt="" coords="187,5,265,32"/>
-<area shape="rect" href="namespaceshrapnel.html#a9f09f4ea750643310af9143a53735b7d" title=" " alt="" coords="5,5,139,32"/>
-</map>
+<div class="center"><iframe scrolling="no" frameborder="0" src="noise__gate_8cpp_a2691256497a1cec4e14434f48eccfb56_icgraph.svg" width="799" height="38"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
 </div>
 
 </div>
@@ -881,24 +818,14 @@ Here is the caller graph for this function:</div>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><img src="noise__gate_8cpp_a82e62ed410acc03c8179d8245de13e12_cgraph.png" border="0" usemap="#anoise__gate_8cpp_a82e62ed410acc03c8179d8245de13e12_cgraph" alt=""/></div>
-<map name="anoise__gate_8cpp_a82e62ed410acc03c8179d8245de13e12_cgraph" id="anoise__gate_8cpp_a82e62ed410acc03c8179d8245de13e12_cgraph">
-<area shape="rect" title="Set the threshold and hysteresis value in dBFS." alt="" coords="5,5,137,32"/>
-<area shape="rect" href="noise__gate_8cpp.html#afb2354391bb81545d92334434552ab4b" title=" " alt="" coords="185,5,272,32"/>
-</map>
+<div class="center"><iframe scrolling="no" frameborder="0" src="noise__gate_8cpp_a82e62ed410acc03c8179d8245de13e12_cgraph.svg" width="278" height="38"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
 </div>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><img src="noise__gate_8cpp_a82e62ed410acc03c8179d8245de13e12_icgraph.png" border="0" usemap="#anoise__gate_8cpp_a82e62ed410acc03c8179d8245de13e12_icgraph" alt=""/></div>
-<map name="anoise__gate_8cpp_a82e62ed410acc03c8179d8245de13e12_icgraph" id="anoise__gate_8cpp_a82e62ed410acc03c8179d8245de13e12_icgraph">
-<area shape="rect" title="Set the threshold and hysteresis value in dBFS." alt="" coords="675,31,807,57"/>
-<area shape="rect" href="process_8cpp.html#ab530789c5aeb0c1c38d5917bfd7a111f" title=" " alt="" coords="519,5,611,32"/>
-<area shape="rect" href="process_8cpp.html#a450bec865b55b9890f4050f1ab0dba5c" title=" " alt="" coords="503,56,627,83"/>
-<area shape="rect" href="i2s_8cpp.html#a4e37f563a34c1a559515cc40782caf07" title=" " alt="" coords="313,31,455,57"/>
-<area shape="rect" href="i2s_8cpp.html#a78c8fe8089980bf7c440301d3171eac6" title=" " alt="" coords="187,31,265,57"/>
-<area shape="rect" href="namespaceshrapnel.html#a9f09f4ea750643310af9143a53735b7d" title=" " alt="" coords="5,31,139,57"/>
-</map>
+<div class="center"><iframe scrolling="no" frameborder="0" src="noise__gate_8cpp_a82e62ed410acc03c8179d8245de13e12_icgraph.svg" width="812" height="88"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
 </div>
 
 </div>
@@ -1191,9 +1118,13 @@ Here is the caller graph for this function:</div>
 </div>
 </div>
 </div><!-- contents -->
+</div><!-- doc-content -->
 <!-- start footer part -->
-<hr class="footer"/><address class="footer"><small>
-Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.4
-</small></address>
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="dir_63bb297c276a119495816091bcd678e9.html">effects</a></li><li class="navelem"><a class="el" href="dir_80f80626f467eb8ffc1b27633c311e0f.html">gate</a></li><li class="navelem"><a class="el" href="noise__gate_8cpp.html">noise_gate.cpp</a></li>
+    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.4 </li>
+  </ul>
+</div>
 </body>
 </html>

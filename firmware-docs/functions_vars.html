@@ -9,6 +9,10 @@
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
@@ -20,6 +24,7 @@ MathJax.Hub.Config({
 </script>
 <script type="text/javascript" async="async" src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js"></script>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
+<link href="doxygen-awesome.css" rel="stylesheet" type="text/css"/>
 </head>
 <body>
 <div id="top"><!-- do not remove this div, it is closed by doxygen! -->
@@ -55,6 +60,22 @@ $(function() {
 </script>
 <div id="main-nav"></div>
 </div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(document).ready(function(){initNavTree('functions_vars.html',''); initResizable(); });
+/* @license-end */
+</script>
+<div id="doc-content">
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -71,24 +92,33 @@ $(function() {
 
 <div class="contents">
 &#160;<ul>
+<li>cc_number&#160;:&#160;<a class="el" href="structshrapnel_1_1midi_1_1Mapping.html#ae1bdd8e63717dbbf186158d915ab266d">shrapnel::midi::Mapping</a></li>
 <li>channel&#160;:&#160;<a class="el" href="structshrapnel_1_1midi_1_1Message.html#a29581869e25f31ea15d28e332262b160">shrapnel::midi::Message</a></li>
 <li>cmd&#160;:&#160;<a class="el" href="classshrapnel_1_1CommandHandlingTask.html#ae445f3c89a7954452c5b9d36ef6fe874">shrapnel::CommandHandlingTask&lt; AudioParametersT &gt;</a></li>
 <li>control&#160;:&#160;<a class="el" href="structshrapnel_1_1midi_1_1Message_1_1ControlChange.html#a63472623103c98ec18cc0f2ff0cd67e5">shrapnel::midi::Message::ControlChange</a></li>
 <li>delayline&#160;:&#160;<a class="el" href="structdspal__delayline.html#a24bf6d81b66023dee0d748199183a6f1">dspal_delayline</a></li>
 <li>fd&#160;:&#160;<a class="el" href="structshrapnel_1_1audio__event__message__t.html#aacbcaf362a253543d05a1aaf3d9b3d96">shrapnel::audio_event_message_t</a>, <a class="el" href="structshrapnel_1_1CommandHandling_1_1Message.html#aeea353fd70728338611f08c2969d55d6">shrapnel::CommandHandling&lt; AudioParametersT &gt;::Message</a></li>
-<li>json&#160;:&#160;<a class="el" href="structshrapnel_1_1CommandHandling_1_1Message.html#a72bcc4f912acfc553a232b176c3bfeef">shrapnel::CommandHandling&lt; AudioParametersT &gt;::Message</a></li>
+<li>id&#160;:&#160;<a class="el" href="structshrapnel_1_1midi_1_1Remove.html#a117170210912dd5e3910ea1345e5dabe">shrapnel::midi::Remove</a></li>
+<li>json&#160;:&#160;<a class="el" href="structshrapnel_1_1CommandHandling_1_1Message.html#ad07a8f10b679dfba373f2707303c613c">shrapnel::CommandHandling&lt; AudioParametersT &gt;::Message</a></li>
+<li>mapping&#160;:&#160;<a class="el" href="structshrapnel_1_1midi_1_1CreateRequest.html#af75153f6cd51a9fe98fba12db0984b3f">shrapnel::midi::CreateRequest</a>, <a class="el" href="structshrapnel_1_1midi_1_1CreateResponse.html#a9e3f73aa5d09af4a127809bcf53a758c">shrapnel::midi::CreateResponse</a>, <a class="el" href="structshrapnel_1_1midi_1_1Update.html#a9dceb99ae11c395d675becd97f4a2fa5">shrapnel::midi::Update</a></li>
+<li>mappings&#160;:&#160;<a class="el" href="structshrapnel_1_1midi_1_1GetResponse.html#a4842a8179e9b98407196c960b2c81c5d">shrapnel::midi::GetResponse</a></li>
 <li>message&#160;:&#160;<a class="el" href="structshrapnel_1_1audio__event__message__t.html#a9d92f3f1d777e46613479916053d17b7">shrapnel::audio_event_message_t</a></li>
-<li>name&#160;:&#160;<a class="el" href="classshrapnel_1_1AudioParameterFloat.html#a2c5f2cabc8604f956f0b65804870f066">shrapnel::AudioParameterFloat</a></li>
+<li>midi_channel&#160;:&#160;<a class="el" href="structshrapnel_1_1midi_1_1Mapping.html#a46fa239f0d9c9c4db85812d0f38b0f29">shrapnel::midi::Mapping</a></li>
+<li>name&#160;:&#160;<a class="el" href="classshrapnel_1_1parameters_1_1AudioParameterFloat.html#a920d0aab2ee7a9cade98fdee516d380b">shrapnel::parameters::AudioParameterFloat</a></li>
 <li>note&#160;:&#160;<a class="el" href="structshrapnel_1_1midi_1_1Message_1_1NoteOff.html#a956f0f53e35e1dfda0e40c53b3e4c346">shrapnel::midi::Message::NoteOff</a>, <a class="el" href="structshrapnel_1_1midi_1_1Message_1_1NoteOn.html#ae16150bffaedd0c9c1ce7dd767b463eb">shrapnel::midi::Message::NoteOn</a></li>
 <li>number&#160;:&#160;<a class="el" href="structshrapnel_1_1midi_1_1Message_1_1ProgramChange.html#aa410a2e8f7c2338ad6cc7545ad5d93c8">shrapnel::midi::Message::ProgramChange</a></li>
+<li>parameter_name&#160;:&#160;<a class="el" href="structshrapnel_1_1midi_1_1Mapping.html#ad1d90b2aa45178377665b16f88aa4433">shrapnel::midi::Mapping</a></li>
 <li>parameters&#160;:&#160;<a class="el" href="structshrapnel_1_1midi_1_1Message.html#aed40e3ab3220667ba38796866604cbb7">shrapnel::midi::Message</a></li>
 <li>value&#160;:&#160;<a class="el" href="structshrapnel_1_1midi_1_1Message_1_1ControlChange.html#a2615450c8f2f31fc8c4298f8363d076c">shrapnel::midi::Message::ControlChange</a></li>
 <li>velocity&#160;:&#160;<a class="el" href="structshrapnel_1_1midi_1_1Message_1_1NoteOff.html#a854bc5ff80d66e047c66678ca281df8d">shrapnel::midi::Message::NoteOff</a>, <a class="el" href="structshrapnel_1_1midi_1_1Message_1_1NoteOn.html#a3377e69df50e588b93683fd3c3aa8a43">shrapnel::midi::Message::NoteOn</a></li>
 </ul>
 </div><!-- contents -->
+</div><!-- doc-content -->
 <!-- start footer part -->
-<hr class="footer"/><address class="footer"><small>
-Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.4
-</small></address>
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.4 </li>
+  </ul>
+</div>
 </body>
 </html>

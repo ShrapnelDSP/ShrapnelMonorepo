@@ -71,13 +71,15 @@
   final parameters = Provider.of&lt;AmplifierModel&gt;(context).parameters;
 
   for (var i = 0; i &lt; parameters.length; i++) {
-    knobs.add(ChangeNotifierProvider.value(
-      value: parameters[i],
-      child: KnobWithLabel(
-        isEnabled: full,
-        knobSize: scaleFactor * 25,
+    knobs.add(
+      ChangeNotifierProvider.value(
+        value: parameters[i],
+        child: KnobWithLabel(
+          isEnabled: full,
+          knobSize: scaleFactor * 25,
+        ),
       ),
-    ));
+    );
     if (i &lt; parameters.length - 1) {
       knobs.add(SizedBox(width: scaleFactor * 10));
     }

@@ -108,8 +108,8 @@ and</li>
   <pre class="language-dart"><code class="language-dart">@override
 Widget build(BuildContext context) {
   final distanceToValue = 0.003 * (max - min);
-  final _normalisedValue = (value - min) &#47; (max - min);
-  final _angle = minAngle + _normalisedValue * sweepAngle;
+  final normalisedValue = (value - min) &#47; (max - min);
+  final angle = minAngle + normalisedValue * sweepAngle;
 
   return Transform.rotate(
     angle: m.pi &#47; 4,
@@ -128,7 +128,7 @@ Widget build(BuildContext context) {
             painter: _KnobArc(
               minAngle: minAngle,
               maxAngle: maxAngle,
-              currentAngle: _angle,
+              currentAngle: angle,
               arcWidth: size * 0.08,
               backgroundColor: Theme.of(context).colorScheme.background,
               primaryColor: Theme.of(context).colorScheme.primary,
