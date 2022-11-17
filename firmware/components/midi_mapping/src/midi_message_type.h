@@ -24,13 +24,6 @@
 namespace shrapnel {
 namespace midi {
 
-#if 0
-template<typename T>
-struct get_message_type {
-    static constexpr char *value;
-};
-#endif
-
 template<typename T>
 constexpr const char *get_message_type();
 
