@@ -40,7 +40,6 @@ jobs:
       uses: mattnotmitt/doxygen-action@v1.9.4
 
     - name: Doxygen warnings
-      if: always()
       run: cat docs/warnings.log
 
     - uses: actions/upload-artifact@v3
