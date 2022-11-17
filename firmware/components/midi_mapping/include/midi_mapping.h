@@ -185,14 +185,6 @@ struct Mapping {
     uint8_t cc_number;
     parameters::id_t parameter_name;
 
-    Mapping(
-            uint8_t a_midi_channel,
-            uint8_t a_cc_number,
-            parameters::id_t a_parameter_name
-    ) : midi_channel{a_midi_channel},
-        cc_number{a_cc_number},
-        parameter_name{a_parameter_name} {};
-
     std::strong_ordering operator<=>(const Mapping &other) const = default;
 };
 

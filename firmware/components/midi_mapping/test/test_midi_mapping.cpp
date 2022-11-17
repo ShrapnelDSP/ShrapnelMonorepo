@@ -134,7 +134,7 @@ TEST_F(MidiMapping, Remove)
 
 TEST(MidiMappingPod, ToString)
 {
-    auto mapping = Mapping(1, 2, parameters::id_t("test"));
+    Mapping mapping{1, 2, parameters::id_t("test")};
 
     etl::string<64> buffer;
     etl::string_stream stream{buffer};
