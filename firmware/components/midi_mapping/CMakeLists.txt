@@ -4,7 +4,7 @@ if(NOT DEFINED TESTING)
                                 src/midi_mapping_json_parser.cpp
                                 src/midi_mapping_json_builder.cpp
                            INCLUDE_DIRS include
-                           REQUIRES etl audio_param midi rapidjson
+                           REQUIRES etl audio_param midi_protocol rapidjson
                            PRIV_REQUIRES compiler_warning_flags)
 else()
     add_executable(midi_mapping_test

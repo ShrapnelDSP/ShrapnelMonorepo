@@ -129,10 +129,17 @@ class ParameterService extends ChangeNotifier {
 
     log.finer(event);
 
+    final eventJson = json.decode(event) as Map<String, dynamic>;
+    if(eventJson["messageType"] != "parameterUpdate")
+    {
+        return;
+    }
+
     final parameterToUpdate = AudioParameterDouble.fromJson(
-      json.decode(event) as Map<String, dynamic>,
+      eventJson,
     );
 
+    // TODO use a map for the parameters for O(1) lookup here
     for (final p in _parameters) {
       if (p.id == parameterToUpdate.id) {
         p.value = parameterToUpdate.value;

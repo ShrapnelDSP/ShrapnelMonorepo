@@ -173,7 +173,7 @@
 #include <esp_log.h>
 
 #include "audio_param.h"
-#include "midi.h"
+#include "midi_protocol.h"
 
 namespace shrapnel {
 namespace midi {
@@ -193,13 +193,13 @@ class MappingManager final {
     public:
     using MapType = etl::map<Mapping::id_t, Mapping, N>;
 
-    MappingManager(std::shared_ptr<AudioParametersT> a_parameters) : parameters{a_parameters} {};
+    MappingManager(std::shared_ptr<AudioParametersT> a_parameters) : parameters{a_parameters} {}
 
-    MapType get() {
+    [[nodiscard]] MapType get() {
         return mappings;
-    };
+    }
     /// \return non-zero on failure
-    int create(const std::pair<const Mapping::id_t, Mapping> &mapping) {
+    [[nodiscard]] int create(const std::pair<const Mapping::id_t, Mapping> &mapping) {
         if(mappings.full()) {
             ESP_LOGE(TAG, "Failed to create new midi mapping, map is full");
             return -1;
@@ -207,9 +207,9 @@ class MappingManager final {
 
         mappings.insert(mapping);
         return 0;
-    };
+    }
     /// \return non-zero on failure
-    int update(const std::pair<const Mapping::id_t, Mapping> &mapping) {
+    [[nodiscard]] int update(const std::pair<const Mapping::id_t, Mapping> &mapping) {
         if(!mappings.contains(mapping.first))
         {
             ESP_LOGE(TAG, "Does not contain key");
@@ -220,30 +220,36 @@ class MappingManager final {
         mappings.erase(mapping.first);
         mappings.insert(mapping);
         return 0;
-    };
+    }
     void remove(const Mapping::id_t &id) {
         mappings.erase(id);
-    };
+    }
 
     /** React to a MIDI message by updating an audio parameter if there is a
      * mapping registered
      */
     void process_message(Message message) {
         auto cc_params = get_if<Message::ControlChange>(&message.parameters);
+        ESP_LOGE("DEBUG", "cc_params=%x", cc_params);
         if(!cc_params) return;
 
         for(const auto &mapping : mappings)
         {
+            ESP_LOGE("DEBUG", "message channel=%d", message.channel);
+            ESP_LOGE("DEBUG", "mapping channel=%d", mapping.second.midi_channel);
             if(mapping.second.midi_channel != message.channel)
             {
                 continue;
             }
 
+            ESP_LOGE("DEBUG", "message cc=%d", cc_params->control);
+            ESP_LOGE("DEBUG", "mapping cc=%d", mapping.second.cc_number);
             if(mapping.second.cc_number != cc_params->control)
             {
                 continue;
             }
 
+            ESP_LOGE("DEBUG", "Updating");
             parameters->update(
                     mapping.second.parameter_name,
                     cc_params->value / float(CC_VALUE_MAX));

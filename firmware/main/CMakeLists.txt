@@ -9,7 +9,7 @@ idf_component_register( SRCS main.cpp
                             heap_tracing
                             i2s
                             mdns
-                            midi
+                            midi_protocol
                             midi_mapping
                             nvs_flash
                             pcm3060

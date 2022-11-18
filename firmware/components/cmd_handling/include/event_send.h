@@ -26,14 +26,20 @@ namespace shrapnel {
 
 class EventSendBase {
     public:
-    virtual void send(char *json, int fd) = 0;
+    virtual void send(const char *json, int fd) = 0;
+    virtual void send(const char *json) = 0;
 };
 
-class EventSend : public EventSendBase {
+class EventSend final : public EventSendBase {
     public:
-    void send(char *json, int fd) override
+    void send(const char *json, int fd) override
     {
         audio_event_send_callback(json, fd);
+    }
+
+    void send(const char *json) override
+    {
+        send(json, -1);
     }
 };
 

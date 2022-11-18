@@ -17,11 +17,17 @@
  * ShrapnelDSP. If not, see <https://www.gnu.org/licenses/>.
  */
 
+#include <mutex>
 #include <stdio.h>
 #include <math.h>
+#include <type_traits>
 
-#include "esp_log.h"
+#include "esp_heap_caps.h"
+#include "midi_mapping.h"
+#include "rapidjson/writer.h"
 #define LOG_LOCAL_LEVEL ESP_LOG_VERBOSE
+#include "esp_log.h"
+#include "freertos/projdefs.h"
 
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
@@ -48,8 +54,9 @@
 #include "esp_http_server.h"
 #include "hardware.h"
 #include "i2s.h"
-#include "midi.h"
+#include "midi_protocol.h"
 #include "midi_mapping_json_parser.h"
+#include "midi_mapping_json_builder.h"
 #include "midi_uart.h"
 #include "pcm3060.h"
 #include "profiling.h"
@@ -60,14 +67,20 @@
 #define QUEUE_LEN 4
 #define MAX_CLIENTS 3
 // TODO consider replacing this with sizeof(shrapnel::parameters::message::json)
-#define MAX_WEBSOCKET_PAYLOAD_SIZE 128
+#define MAX_WEBSOCKET_PAYLOAD_SIZE 256
 #define ARRAY_LENGTH(a) (sizeof(a)/sizeof(a[0]))
 
 namespace shrapnel {
 
+class ParameterUpdateNotifier {
+    public:
+    int update(const parameters::id_t &param, float value);
+};
+
 static Queue<CommandHandling<parameters::AudioParameters>::Message> *in_queue;
-static parameters::AudioParameters *audio_params;
+static std::shared_ptr<parameters::AudioParameters> audio_params;
 static CommandHandlingTask<parameters::AudioParameters> *cmd_handling_task;
+static midi::MappingManager<ParameterUpdateNotifier, 10> *midi_mapping_manager;
 static EventSend event_send{};
 
 static QueueHandle_t out_queue;
@@ -80,6 +93,8 @@ static QueueHandle_t out_queue;
  * reproduce the bug.
  */
 static SemaphoreHandle_t work_semaphore;
+
+static std::mutex midi_mutex;
 
 static httpd_handle_t _server = nullptr;
 
@@ -156,6 +171,49 @@ static esp_err_t websocket_get_handler(httpd_req_t *req)
             etl::string_stream stream{buffer};
             stream << *message;
             ESP_LOGI(TAG, "decoded %s", buffer.data());
+
+            {
+                // TODO the mutex scope could be smaller
+                std::scoped_lock lock{midi_mutex};
+                std::visit([&](const auto &message) -> void {
+                    using T = std::decay_t<decltype(message)>;
+
+                    std::optional<midi::MappingApiMessage> response;
+
+                    if constexpr (std::is_same_v<T, midi::GetRequest>) {
+                        auto mappings = midi_mapping_manager->get();
+                        response = midi::GetResponse{mappings};
+                    } else if constexpr (std::is_same_v<T, midi::CreateRequest>) {
+                        auto rc = midi_mapping_manager->create(message.mapping);
+                        if(rc == 0)
+                        {
+                            response = midi::CreateResponse{message.mapping};
+                        }
+                    } else if constexpr (std::is_same_v<T, midi::Update>) {
+                        // return code ignored, as there is no way to indicate
+                        // the error to the frontend
+                        (void)midi_mapping_manager->update(message.mapping);
+                    } else if constexpr (std::is_same_v<T, midi::Remove>) {
+                        midi_mapping_manager->remove(message.id);
+                    } else {
+                        ESP_LOGE(TAG, "Unhandled message type");
+                    }
+
+                    if(response.has_value())
+                    {
+                        rapidjson::Document document;
+                        auto json = to_json(document, *response);
+                        rapidjson::StringBuffer buffer;
+                        rapidjson::Writer writer{buffer};
+                        json.Swap(document);
+                        document.Accept(writer);
+
+                        ESP_LOGI(TAG, "sending response: %s", buffer.GetString());
+
+                        event_send.send(buffer.GetString());
+                    }
+                }, *message);
+            }
         }
     }
 
@@ -202,6 +260,7 @@ static httpd_handle_t start_webserver(void)
     httpd_config_t config = HTTPD_DEFAULT_CONFIG();
     config.server_port = 8080;
     config.ctrl_port = 8081;
+    config.stack_size = 2 * 4096;
     config.max_open_sockets = MAX_CLIENTS;
 
     // Start the httpd server
@@ -396,6 +455,14 @@ static void failed_alloc_callback(size_t size, uint32_t caps, const char *functi
     abort();
 }
 
+int ParameterUpdateNotifier::update(const parameters::id_t &param, float value)
+{
+    char json[128];
+    snprintf(json, sizeof json, R"({"messageType":"parameterUpdate","id":"%s","value":%f})", param.data(), value);
+    event_send.send(json);
+    return audio_params->update(param, value);
+}
+
 extern "C" void app_main(void)
 {
     ESP_ERROR_CHECK(heap_caps_register_failed_alloc_callback(failed_alloc_callback));
@@ -414,7 +481,7 @@ extern "C" void app_main(void)
     out_queue = xQueueCreate(QUEUE_LEN, sizeof(audio_event_message_t));
     assert(out_queue);
 
-    audio_params = new parameters::AudioParameters();
+    audio_params = std::make_shared<parameters::AudioParameters>();
 
     audio_params->create_and_add_parameter("ampGain", 0, 1, 0.5);
     audio_params->create_and_add_parameter("ampChannel", 0, 1, 0);
@@ -437,10 +504,23 @@ extern "C" void app_main(void)
     audio_params->create_and_add_parameter("chorusMix", 0, 1, 0.8);
     audio_params->create_and_add_parameter("chorusBypass", 0, 1, 0);
 
+    auto parameter_notifier = std::make_shared<ParameterUpdateNotifier>();
+    midi_mapping_manager = new midi::MappingManager<ParameterUpdateNotifier, 10>(parameter_notifier);
+    {
+        auto rc = midi_mapping_manager->create(
+                {
+                midi::Mapping::id_t{0},
+                midi::Mapping{.midi_channel=1, .cc_number=7, .parameter_name="tubeScreamerTone"}});
+        if(rc != 0)
+        {
+            ESP_LOGE(TAG, "Failed to create initial mapping");
+        }
+    }
+
     cmd_handling_task = new CommandHandlingTask<parameters::AudioParameters>(
             5,
             in_queue,
-            audio_params,
+            audio_params.get(),
             event_send);
 
     ESP_ERROR_CHECK(audio_event_init());
@@ -448,7 +528,7 @@ extern "C" void app_main(void)
     i2c_setup();
 
     profiling_mutex = xSemaphoreCreateMutex();
-    i2s_setup(PROFILING_GPIO, audio_params);
+    i2s_setup(PROFILING_GPIO, audio_params.get());
 
     //dac must be powered up after the i2s clocks have stabilised
     vTaskDelay(100 / portTICK_PERIOD_MS);
@@ -558,21 +638,30 @@ extern "C" void app_main(void)
 
     ESP_LOGI(TAG, "setup done");
     ESP_LOGI(TAG, "stack: %d", uxTaskGetStackHighWaterMark(NULL));
+    heap_caps_print_heap_info(MALLOC_CAP_DEFAULT);
+
+    vTaskDelay(pdMS_TO_TICKS(10'000));
 
     auto midi_uart = new midi::EspMidiUart(UART_NUM_MIDI, GPIO_NUM_MIDI);
 
-    auto log_midi_message = [] (midi::Message message) {
-            etl::string<40> buffer;
-            etl::string_stream stream{buffer};
-            stream << message;
-            ESP_LOGI(TAG, "%s", buffer.data());
+    auto on_midi_message = [] (midi::Message message) {
+        etl::string<40> buffer;
+        etl::string_stream stream{buffer};
+        stream << message;
+        ESP_LOGI(TAG, "%s", buffer.data());
+
+        {
+            std::scoped_lock lock{midi_mutex};
+            midi_mapping_manager->process_message(message);
+        }
     };
 
-    auto midi_decoder = new midi::Decoder(log_midi_message);
+    auto midi_decoder = new midi::Decoder(on_midi_message);
+
+    heap_caps_print_heap_info(MALLOC_CAP_DEFAULT);
 
     while(1)
     {
-
         uint8_t byte = midi_uart->get_byte();
         ESP_LOGI(TAG, "midi got byte 0x%02x", byte);
 
