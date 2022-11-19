@@ -65,7 +65,6 @@
 #include "esp_err.h"
 #include <memory>
 #include <string.h>
-#include "task.h"
 #include <iterator>
 #include <string_view>
 

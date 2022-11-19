@@ -32,6 +32,7 @@
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 #include "freertos/semphr.h"
+#include "freertos/FreeRTOSConfig.h"
 
 #include <assert.h>
 #include <esp_wifi.h>
@@ -50,7 +51,7 @@
 
 #include "audio_param.h"
 #include "audio_events.h"
-#include "cmd_handling_task.h"
+#include "cmd_handling.h"
 #include "esp_http_server.h"
 #include "hardware.h"
 #include "i2s.h"
@@ -79,7 +80,7 @@ class ParameterUpdateNotifier {
 
 static Queue<CommandHandling<parameters::AudioParameters>::Message> *in_queue;
 static std::shared_ptr<parameters::AudioParameters> audio_params;
-static CommandHandlingTask<parameters::AudioParameters> *cmd_handling_task;
+static CommandHandling<parameters::AudioParameters> *cmd_handling;
 static midi::MappingManager<ParameterUpdateNotifier, 10> *midi_mapping_manager;
 static EventSend event_send{};
 
@@ -517,9 +518,7 @@ extern "C" void app_main(void)
         }
     }
 
-    cmd_handling_task = new CommandHandlingTask<parameters::AudioParameters>(
-            5,
-            in_queue,
+    cmd_handling = new CommandHandling<parameters::AudioParameters>(
             audio_params.get(),
             event_send);
 
@@ -660,12 +659,38 @@ extern "C" void app_main(void)
 
     heap_caps_print_heap_info(MALLOC_CAP_DEFAULT);
 
+#if !configUSE_TRACE_FACILITY
+#error trace is off
+#endif
+
+#if !configUSE_STATS_FORMATTING_FUNCTIONS
+#error stats is off
+#endif
+
+#if configUSE_TRACE_FACILITY && configUSE_STATS_FORMATTING_FUNCTIONS
+    constexpr size_t characters_per_task = 40;
+    constexpr size_t approximate_task_count = 20;
+    char buffer[characters_per_task * approximate_task_count + 1] = {0};
+    vTaskList(buffer);
+    // crash if the buffer was overflowed
+    assert(buffer[sizeof(buffer) - 1] == '\0');
+    ESP_LOGI(TAG, "Task list:\n%s", buffer);
+#endif
+
     while(1)
     {
-        uint8_t byte = midi_uart->get_byte();
-        ESP_LOGI(TAG, "midi got byte 0x%02x", byte);
+        if(auto byte = midi_uart->get_byte(pdMS_TO_TICKS(10)); byte.has_value())
+        {
+            ESP_LOGI(TAG, "midi got byte 0x%02x", byte);
 
-        midi_decoder->decode(byte);
+            midi_decoder->decode(*byte);
+        }
+
+        if(std::decay_t<decltype(*cmd_handling)>::Message message;
+           pdPASS == in_queue->receive(&message, 0))
+        {
+            cmd_handling->dispatch(message);
+        }
     }
 }
 
