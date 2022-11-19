@@ -230,26 +230,20 @@ class MappingManager final {
      */
     void process_message(Message message) {
         auto cc_params = get_if<Message::ControlChange>(&message.parameters);
-        ESP_LOGE("DEBUG", "cc_params=%x", cc_params);
         if(!cc_params) return;
 
         for(const auto &mapping : mappings)
         {
-            ESP_LOGE("DEBUG", "message channel=%d", message.channel);
-            ESP_LOGE("DEBUG", "mapping channel=%d", mapping.second.midi_channel);
             if(mapping.second.midi_channel != message.channel)
             {
                 continue;
             }
 
-            ESP_LOGE("DEBUG", "message cc=%d", cc_params->control);
-            ESP_LOGE("DEBUG", "mapping cc=%d", mapping.second.cc_number);
             if(mapping.second.cc_number != cc_params->control)
             {
                 continue;
             }
 
-            ESP_LOGE("DEBUG", "Updating");
             parameters->update(
                     mapping.second.parameter_name,
                     cc_params->value / float(CC_VALUE_MAX));
