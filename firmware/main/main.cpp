@@ -687,9 +687,20 @@ extern "C" void app_main(void)
         }
 
         if(std::decay_t<decltype(*cmd_handling)>::Message message;
-           pdPASS == in_queue->receive(&message, 0))
+           in_queue->receive(&message, 0))
         {
             cmd_handling->dispatch(message);
+        }
+
+        {
+            // i2s produces an event on each buffer TX/RX. We process all the
+            // events in the current iteration, so that the queue doesn't fill
+            // up.
+            i2s_event_t event;
+            while(xQueueReceive(i2s_queue, &event, 0))
+            {
+                log_i2s_event(event);
+            }
         }
     }
 }

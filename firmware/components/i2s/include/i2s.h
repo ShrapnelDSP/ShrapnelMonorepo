@@ -19,17 +19,18 @@
 
 #pragma once
 
+#include "driver/gpio.h"
 #include "esp_err.h"
-#include "driver/gpio.h"
-#include "driver/gpio.h"
-#include "audio_param.h"
+#include "freertos/FreeRTOS.h"
+#include "freertos/queue.h"
+#include "driver/i2s.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+#include "audio_param.h"
 
 #define DMA_BUF_SIZE    (512)
 #define SAMPLE_RATE     (48000)
+
+extern QueueHandle_t i2s_queue;
 
 /**
  *
@@ -40,6 +41,4 @@ extern "C" {
  */
 esp_err_t i2s_setup(gpio_num_t profiling_gpio, shrapnel::parameters::AudioParameters *audio_params);
 
-#ifdef __cplusplus
-}
-#endif
+void log_i2s_event(const i2s_event_t &event);
