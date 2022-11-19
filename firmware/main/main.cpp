@@ -681,7 +681,7 @@ extern "C" void app_main(void)
     {
         if(auto byte = midi_uart->get_byte(pdMS_TO_TICKS(10)); byte.has_value())
         {
-            ESP_LOGI(TAG, "midi got byte 0x%02x", byte);
+            ESP_LOGI(TAG, "midi got byte 0x%02x", *byte);
 
             midi_decoder->decode(*byte);
         }
