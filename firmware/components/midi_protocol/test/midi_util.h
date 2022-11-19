@@ -20,7 +20,7 @@
 #pragma once
 
 #include <ostream>
-#include "midi.h"
+#include "midi_protocol.h"
 
 namespace shrapnel {
 namespace midi {

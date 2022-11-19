@@ -22,7 +22,7 @@
 #include <utility>
 #include "midi_util.h"
 
-#include "midi.h"
+#include "midi_protocol.h"
 
 using testing::Not;
 using testing::Eq;

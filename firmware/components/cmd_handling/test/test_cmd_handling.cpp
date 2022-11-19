@@ -69,7 +69,8 @@ class MockAudioParameters
 class MockEventSend : public shrapnel::EventSendBase
 {
     public:
-    MOCK_METHOD(void, send, (char *json, int fd), (override));
+    MOCK_METHOD(void, send, (const char *json, int fd), (override));
+    MOCK_METHOD(void, send, (const char *json), (override));
 };
 
 class MockAudioParameterFloat
@@ -98,84 +99,47 @@ class CmdHandling : public ::testing::Test
 
     using Message = shrapnel::CommandHandling<MockAudioParameters>::Message;
 
-    CmdHandling() : queue(1), cmd(&queue, &param, event) {}
+    CmdHandling() : cmd(&param, event) {}
 
-    MockQueue<Message> queue;
     MockAudioParameters param;
     MockEventSend event;
 
     shrapnel::CommandHandling<MockAudioParameters> cmd;
 };
 
-TEST_F(CmdHandling, QueueFail)
-{
-    EXPECT_CALL(queue, receive(_, portMAX_DELAY))
-        .Times(1)
-        .WillRepeatedly(Return(false));
-
-    EXPECT_CALL(param, update).Times(0);
-
-    cmd.work();
-}
-
 TEST_F(CmdHandling, InvalidMessage)
 {
-    Message output{
+    Message message{
         "This is not JSON",
         0
     };
 
-    EXPECT_CALL(queue, receive(_, portMAX_DELAY))
-        .Times(1)
-        .WillRepeatedly(
-                testing::DoAll(
-                    testing::SetArgPointee<0>(output),
-                    Return(true)
-                ));
-
     EXPECT_CALL(param, update).Times(0);
-
-    cmd.work();
+    cmd.dispatch(message);
 }
 
 TEST_F(CmdHandling, ValidMessage)
 {
-    Message output{
+    Message message{
         "{\"id\": \"tight\", \"value\": 1, \"messageType\": \"parameterUpdate\"}",
         42
     };
-
-    EXPECT_CALL(queue, receive(_, portMAX_DELAY))
-        .Times(1)
-        .WillRepeatedly(
-                testing::DoAll(
-                    testing::SetArgPointee<0>(output),
-                    Return(true)
-                ));
 
     EXPECT_CALL(param, update(id_t("tight"), 1.0f))
         .Times(1)
         .WillRepeatedly(Return(0));
 
-    EXPECT_CALL(event, send(StrEq(output.json), 42)).Times(1);
+    EXPECT_CALL(event, send(StrEq(message.json), 42)).Times(1);
 
-    cmd.work();
+    cmd.dispatch(message);
 }
 
 TEST_F(CmdHandling, InitialiseParameters)
 {
-    Message output{
+    Message message{
         "{\"messageType\": \"initialiseParameters\"}",
         0
     };
-
-    EXPECT_CALL(queue, receive(_, portMAX_DELAY))
-        .Times(1)
-        .WillRepeatedly(
-                testing::DoAll(
-                    testing::SetArgPointee<0>(output),
-                    Return(true)
-                ));
 
     auto parameter0 = std::make_unique<MockAudioParameterFloat>("test", 0);
     EXPECT_CALL(*parameter0.get(), get()).WillRepeatedly(Return(0));
@@ -184,12 +148,12 @@ TEST_F(CmdHandling, InitialiseParameters)
     param.parameters["test0"] = std::move(parameter0);
     param.parameters["test1"] = std::move(parameter1);
 
-    const char *message = "{\"id\":\"test0\",\"value\":0}";
-    EXPECT_CALL(event, send(StrEq(message), -1)).Times(1);
-    message = "{\"id\":\"test1\",\"value\":1}";
-    EXPECT_CALL(event, send(StrEq(message), -1)).Times(1);
+    const char *expected = "{\"id\":\"test0\",\"value\":0}";
+    EXPECT_CALL(event, send(StrEq(expected), -1)).Times(1);
+    expected = "{\"id\":\"test1\",\"value\":1}";
+    EXPECT_CALL(event, send(StrEq(expected), -1)).Times(1);
 
-    cmd.work();
+    cmd.dispatch(message);
 }
 
 }

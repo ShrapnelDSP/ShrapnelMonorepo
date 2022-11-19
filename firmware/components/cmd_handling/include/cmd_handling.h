@@ -56,7 +56,6 @@
 
 #pragma once
 
-#include "queue.h"
 #include "audio_param.h"
 #include "etl/list.h"
 #include "event_send.h"
@@ -67,7 +66,6 @@
 #include <memory>
 #include <string.h>
 #include "task.h"
-#include "queue.h"
 #include <iterator>
 #include <string_view>
 
@@ -85,32 +83,22 @@ class CommandHandling final
 
     /** \brief
      *
-     * \param[in] a_queue Used to receive JSON messages containing parameter updates.
-     * \param[in] a_param Data received through \p a_queue are
+     * \param[in] a_param Data received through \ref dispatch() is
      * translated to binary and sent to this object.
      */
     CommandHandling(
-            QueueBase<Message> *a_queue,
             AudioParametersT *a_param,
             EventSendBase &a_event) :
-        queue(a_queue),
         param(a_param),
         event(a_event),
-        json(nullptr),
-        message({}) {}
+        json(nullptr)
+        {}
 
-    void work(void)
+    void dispatch(const Message &message)
     {
         /* TODO should not leave these uninitialised */
         char *message_type;
         cJSON *type;
-
-        int ret = queue->receive(&message, portMAX_DELAY);
-        if(ret != pdTRUE)
-        {
-            ESP_LOGE(TAG, "Queue failed to receive");
-            return;
-        }
 
 #if !defined(TESTING)
         ESP_LOGI(TAG, "%s stack %d", __FUNCTION__, uxTaskGetStackHighWaterMark(NULL));
@@ -147,7 +135,7 @@ class CommandHandling final
         }
         else if(0 == strcmp(message_type, "parameterUpdate"))
         {
-            parameter_update();
+            parameter_update(message);
         }
         else
         {
@@ -159,7 +147,7 @@ done:
     }
 
     private:
-    void parameter_update(void)
+    void parameter_update(const Message &message)
     {
         assert(json);
 
@@ -215,12 +203,11 @@ done:
         }
     }
 
-    QueueBase<Message> *queue;
     AudioParametersT *param;
     EventSendBase &event;
 
+    // TODO refactor so that JSON is not visible to this class
     cJSON *json;
-    Message message;
 
     static inline const char *TAG = "cmd_handling";
 };
