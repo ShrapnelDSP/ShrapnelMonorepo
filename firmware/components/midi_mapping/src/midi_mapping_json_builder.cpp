@@ -100,7 +100,7 @@ rapidjson::Value to_json(rapidjson::Document &document, const GetResponse &objec
     rapidjson::Value json;
     json.SetObject();
 
-    rapidjson::Value mappings = to_json(document, object.mappings);
+    rapidjson::Value mappings = to_json(document, *object.mappings);
     json.AddMember("mappings", mappings, document.GetAllocator());
     return json;
 }
@@ -110,8 +110,6 @@ rapidjson::Value to_json(rapidjson::Document &document, const MappingApiMessage 
 {
     rapidjson::Value json;
 
-    // TODO any way to make this DRY? We need to call to_json with the correct
-    // type, and add the messageType field with the correct value
     auto visitor = [&](const auto &message) {
         using T = std::decay_t<decltype(message)>;
 
@@ -126,6 +124,45 @@ rapidjson::Value to_json(rapidjson::Document &document, const MappingApiMessage 
     };
 
     std::visit(visitor, object);
+
+    return json;
+}
+
+template<>
+rapidjson::Value to_json(rapidjson::Document &document, const etl::imap<Mapping::id_t, Mapping> &object)
+{
+    rapidjson::Value json;
+    json.SetObject();
+
+    for(const auto &entry : object)
+    {
+        char uuid[37];
+        sprintf(uuid,
+                "%02x%02x%02x%02x-%02x%02x-%02x%02x-%02x%02x-"
+                "%02x%02x%02x%02x%02x%02x",
+                entry.first[0],
+                entry.first[1],
+                entry.first[2],
+                entry.first[3],
+                entry.first[4],
+                entry.first[5],
+                entry.first[6],
+                entry.first[7],
+                entry.first[8],
+                entry.first[9],
+                entry.first[10],
+                entry.first[11],
+                entry.first[12],
+                entry.first[13],
+                entry.first[14],
+                entry.first[15]);
+
+
+        rapidjson::Value mapping = to_json(document, entry.second);
+        rapidjson::Value uuid_json;
+        uuid_json.SetString(uuid, 36, document.GetAllocator());
+        json.AddMember(uuid_json, mapping, document.GetAllocator());
+    }
 
     return json;
 }

@@ -30,7 +30,7 @@ namespace midi {
 struct GetRequest {};
 
 struct GetResponse {
-    etl::map<Mapping::id_t, Mapping, 10> mappings;
+    const etl::imap<Mapping::id_t, Mapping> *mappings;
     std::strong_ordering operator<=>(const GetResponse &other) const = default;
 };
 

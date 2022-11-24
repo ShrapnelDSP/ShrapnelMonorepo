@@ -174,7 +174,6 @@ static esp_err_t websocket_get_handler(httpd_req_t *req)
             ESP_LOGI(TAG, "decoded %s", buffer.data());
 
             {
-                // TODO the mutex scope could be smaller
                 std::scoped_lock lock{midi_mutex};
                 std::visit([&](const auto &message) -> void {
                     using T = std::decay_t<decltype(message)>;

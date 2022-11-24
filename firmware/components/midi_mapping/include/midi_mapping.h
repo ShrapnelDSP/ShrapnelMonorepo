@@ -195,8 +195,8 @@ class MappingManager final {
 
     MappingManager(std::shared_ptr<AudioParametersT> a_parameters) : parameters{a_parameters} {}
 
-    [[nodiscard]] MapType get() {
-        return mappings;
+    [[nodiscard]] const etl::imap<Mapping::id_t, Mapping> *get() {
+        return &mappings;
     }
     /// \return non-zero on failure
     [[nodiscard]] int create(const std::pair<const Mapping::id_t, Mapping> &mapping) {

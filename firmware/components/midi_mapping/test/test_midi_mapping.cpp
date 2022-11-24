@@ -50,11 +50,11 @@ class MidiMapping : public ::testing::Test
 
 TEST_F(MidiMapping, Create)
 {
-    EXPECT_THAT(sut.get().size(), 0);
+    EXPECT_THAT(sut.get()->size(), 0);
     EXPECT_THAT(sut.create({{1}, {1, 2, "gain"}}), 0);
-    EXPECT_THAT(sut.get().size(), 1);
+    EXPECT_THAT(sut.get()->size(), 1);
     EXPECT_THAT(sut.create({{2}, {3, 4, "volume"}}), 0);
-    EXPECT_THAT(sut.get().size(), 2);
+    EXPECT_THAT(sut.get()->size(), 2);
     EXPECT_THAT(sut.create({{2}, {5, 6, "tone"}}), Not(0));
 }
 
@@ -100,13 +100,13 @@ TEST_F(MidiMapping, Update)
 
     // update non-existent should fail
     EXPECT_THAT(sut.update({{3}, {7, 8, "contour"}}), -1);
-    EXPECT_THAT(sut.get().size(), 1);
+    EXPECT_THAT(sut.get()->size(), 1);
 
     sut.create({{2}, {3, 4, "volume"}});
-    EXPECT_THAT(sut.get().size(), 2);
+    EXPECT_THAT(sut.get()->size(), 2);
 
     EXPECT_THAT(sut.update({{1}, {5, 6, "tone"}}), 0);
-    EXPECT_THAT(sut.get().size(), 2);
+    EXPECT_THAT(sut.get()->size(), 2);
 
     EXPECT_CALL(*parameters_mock, update).Times(0);
     sut.process_message({
@@ -129,7 +129,7 @@ TEST_F(MidiMapping, Remove)
 {
     sut.create({{1}, {1, 2, "gain"}});
     sut.remove({1});
-    EXPECT_THAT(sut.get().size(), 0);
+    EXPECT_THAT(sut.get()->size(), 0);
 }
 
 TEST(MidiMappingPod, ToString)

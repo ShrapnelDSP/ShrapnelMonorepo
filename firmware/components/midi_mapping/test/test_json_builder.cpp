@@ -21,6 +21,8 @@
 #include "gmock/gmock.h"
 #include <variant>
 
+#include "audio_param.h"
+#include "midi_mapping.h"
 #include "midi_mapping_api.h"
 #include "midi_mapping_json_builder.h"
 #include "midi_mapping_json_parser.h"
@@ -118,17 +120,19 @@ TEST(MappingJsonBuilder, VariantCreateResponse)
 
 TEST(MappingJsonBuilder, VariantGetResponse)
 {
+    etl::map<Mapping::id_t, Mapping, 2> mapping{
+        {
+            Mapping::id_t{0},
+            Mapping{1, 2, "foo"}
+        },
+        {
+            Mapping::id_t{1},
+            Mapping{3, 4, "bar"}
+        }
+    };
+
     MappingApiMessage input{
-        GetResponse{{
-            {
-                Mapping::id_t{0},
-                Mapping{1, 2, "foo"}
-            },
-            {
-                Mapping::id_t{1},
-                Mapping{3, 4, "bar"}
-            }
-        }}
+        GetResponse{&mapping}
     };
 
     auto reference = normalise_json(R"({
