@@ -97,14 +97,14 @@ class CmdHandling : public ::testing::Test
 {
     protected:
 
-    using Message = shrapnel::CommandHandling<MockAudioParameters>::Message;
+    using Message = shrapnel::parameters::CommandHandling<MockAudioParameters>::Message;
 
     CmdHandling() : cmd(&param, event) {}
 
     MockAudioParameters param;
     MockEventSend event;
 
-    shrapnel::CommandHandling<MockAudioParameters> cmd;
+    shrapnel::parameters::CommandHandling<MockAudioParameters> cmd;
 };
 
 TEST_F(CmdHandling, InvalidMessage)

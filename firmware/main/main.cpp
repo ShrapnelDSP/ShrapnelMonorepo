@@ -78,9 +78,9 @@ class ParameterUpdateNotifier {
     int update(const parameters::id_t &param, float value);
 };
 
-static Queue<CommandHandling<parameters::AudioParameters>::Message> *in_queue;
+static Queue<parameters::CommandHandling<parameters::AudioParameters>::Message> *in_queue;
 static std::shared_ptr<parameters::AudioParameters> audio_params;
-static CommandHandling<parameters::AudioParameters> *cmd_handling;
+static parameters::CommandHandling<parameters::AudioParameters> *cmd_handling;
 static midi::MappingManager<ParameterUpdateNotifier, 10> *midi_mapping_manager;
 static EventSend event_send{};
 
@@ -117,7 +117,7 @@ static void i2c_setup(void);
 
 static esp_err_t websocket_get_handler(httpd_req_t *req)
 {
-    CommandHandling<parameters::AudioParameters>::Message message{};
+    parameters::CommandHandling<parameters::AudioParameters>::Message message{};
 
     httpd_ws_frame_t pkt = {
         .final = false,
@@ -475,7 +475,7 @@ extern "C" void app_main(void)
     assert(work_semaphore);
     xSemaphoreGive(work_semaphore);
 
-    in_queue = new Queue<CommandHandling<parameters::AudioParameters>::Message>(QUEUE_LEN);
+    in_queue = new Queue<parameters::CommandHandling<parameters::AudioParameters>::Message>(QUEUE_LEN);
     assert(in_queue);
 
     out_queue = xQueueCreate(QUEUE_LEN, sizeof(audio_event_message_t));
@@ -517,7 +517,7 @@ extern "C" void app_main(void)
         }
     }
 
-    cmd_handling = new CommandHandling<parameters::AudioParameters>(
+    cmd_handling = new parameters::CommandHandling<parameters::AudioParameters>(
             audio_params.get(),
             event_send);
 
