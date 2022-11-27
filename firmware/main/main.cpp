@@ -22,6 +22,7 @@
 #include <math.h>
 #include <type_traits>
 
+#include "cmd_handling_api.h"
 #include "esp_heap_caps.h"
 #include "midi_mapping.h"
 #include "rapidjson/writer.h"
@@ -67,8 +68,6 @@
 #define TAG "main"
 #define QUEUE_LEN 4
 #define MAX_CLIENTS 3
-// TODO consider replacing this with sizeof(shrapnel::parameters::message::json)
-#define MAX_WEBSOCKET_PAYLOAD_SIZE 256
 #define ARRAY_LENGTH(a) (sizeof(a)/sizeof(a[0]))
 
 namespace shrapnel {
@@ -78,13 +77,20 @@ class ParameterUpdateNotifier {
     int update(const parameters::id_t &param, float value);
 };
 
-static Queue<parameters::CommandHandling<parameters::AudioParameters>::Message> *in_queue;
+class EventSend final {
+};
+
+using ApiMessage = std::variant<parameters::ApiMessage, midi::MappingApiMessage>;
+using FileDescriptor = std::optional<int>;
+using AppMessage = std::pair<ApiMessage, const FileDescriptor>;
+
+static Queue<AppMessage> *in_queue;
 static std::shared_ptr<parameters::AudioParameters> audio_params;
-static parameters::CommandHandling<parameters::AudioParameters> *cmd_handling;
+static parameters::CommandHandling<parameters::AudioParameters, EventSend> *cmd_handling;
 static midi::MappingManager<ParameterUpdateNotifier, 10> *midi_mapping_manager;
 static EventSend event_send{};
 
-static QueueHandle_t out_queue;
+static Queue<AppMessage> *out_queue;
 
 /*
  * TODO espressif's http server drops some calls to the work function when
@@ -117,13 +123,14 @@ static void i2c_setup(void);
 
 static esp_err_t websocket_get_handler(httpd_req_t *req)
 {
-    parameters::CommandHandling<parameters::AudioParameters>::Message message{};
+    /* TODO how many characters to represent the largest incoming message ? */
+    char json[256] = {0};
 
     httpd_ws_frame_t pkt = {
         .final = false,
         .fragmented = false,
         .type = HTTPD_WS_TYPE_TEXT,
-        .payload = reinterpret_cast<uint8_t*>(message.json),
+        .payload = reinterpret_cast<uint8_t*>(json),
         .len = 0,
     };
 
@@ -133,7 +140,7 @@ static esp_err_t websocket_get_handler(httpd_req_t *req)
         return ESP_OK;
     }
 
-    esp_err_t rc = httpd_ws_recv_frame(req, &pkt, sizeof(message.json));
+    esp_err_t rc = httpd_ws_recv_frame(req, &pkt, sizeof(json));
     if(rc != ESP_OK)
     {
         ESP_LOGE(TAG, "websocket parse failed");
@@ -148,22 +155,34 @@ static esp_err_t websocket_get_handler(httpd_req_t *req)
     assert(pkt.type != HTTPD_WS_TYPE_PONG);
     assert(pkt.final);
     assert(!pkt.fragmented);
-    assert(pkt.len <= sizeof(message.json));
+    assert(pkt.len <= sizeof(json));
 
     ESP_LOGD(TAG, "%s len = %zd", __FUNCTION__, pkt.len);
-    ESP_LOG_BUFFER_HEXDUMP(TAG, message.json, sizeof(message.json), ESP_LOG_VERBOSE);
+    ESP_LOG_BUFFER_HEXDUMP(TAG, json, sizeof(json), ESP_LOG_VERBOSE);
 
-    message.fd = httpd_req_to_sockfd(req);
-
-    rc = in_queue->send(&message, 100 / portTICK_PERIOD_MS);
-    if(rc != pdTRUE)
-    {
-        ESP_LOGE(TAG, "%s failed to send to queue", __FUNCTION__);
-    }
+    int fd = httpd_req_to_sockfd(req);
 
     rapidjson::Document document;
-    document.Parse(message.json);
-    if(!document.HasParseError())
+    document.Parse(json);
+    if(document.HasParseError())
+    {
+        ESP_LOGE(TAG, "Failed to parse incoming JSON");
+        return ESP_FAIL;
+    }
+
+    {
+        auto message = midi::from_json<parameters::ApiMessage>(document.GetObject());
+        if(message.has_value())
+        {
+            ESP_LOGI(TAG, "decoded parameter message");
+#if 0
+            auto out = AppMessage{message, fd};
+            in_queue.send(&(*message), pdMS_TO_TICKS(100));
+#endif
+            goto out;
+        }
+    }
+
     {
         auto message = midi::from_json<midi::MappingApiMessage>(document.GetObject());
         if(message.has_value())
@@ -174,6 +193,10 @@ static esp_err_t websocket_get_handler(httpd_req_t *req)
             ESP_LOGI(TAG, "decoded %s", buffer.data());
 
             {
+                // TODO run this in the main thread to avoid locking
+                // TODO does reducing the scope of visitor improve the code size?
+                // Sending the response to the queue could be moved outside, if the
+                // lambda returned the std::optional<midi::MappingApiMessage>
                 std::scoped_lock lock{midi_mutex};
                 std::visit([&](const auto &message) -> void {
                     using T = std::decay_t<decltype(message)>;
@@ -201,24 +224,16 @@ static esp_err_t websocket_get_handler(httpd_req_t *req)
 
                     if(response.has_value())
                     {
-                        rapidjson::Document document;
-                        auto json = to_json(document, *response);
-                        rapidjson::StringBuffer buffer;
-                        rapidjson::Writer writer{buffer};
-                        json.Swap(document);
-                        document.Accept(writer);
-
-                        ESP_LOGI(TAG, "sending response: %s", buffer.GetString());
-
-                        event_send.send(buffer.GetString());
+                        AppMessage out{response, std::nullopt};
+                        out_queue->send(&out, pdMS_TO_TICKS(100));
                     }
                 }, *message);
             }
         }
     }
 
+out:
     ESP_LOGI(TAG, "%s stack %d", __FUNCTION__, uxTaskGetStackHighWaterMark(NULL));
-
     return ESP_OK;
 }
 
@@ -329,18 +344,12 @@ static void wifi_start_handler(void *arg, esp_event_base_t event_base,
     }
 }
 
-typedef struct {
-    char message[MAX_WEBSOCKET_PAYLOAD_SIZE];
-    int fd;
-} audio_event_message_t;
-
 static void websocket_send(void *arg)
 {
     httpd_handle_t server = arg;
 
-    audio_event_message_t event_message;
-
-    int rc = xQueueReceive(out_queue, &event_message, 0);
+    std::decay_t<decltype(out_queue)>::value_type message;
+    int rc = out_queue->receive(&message, 0);
     if(!rc)
     {
         ESP_LOGE(TAG, "%s failed to receive from queue", __FUNCTION__);
@@ -349,19 +358,35 @@ static void websocket_send(void *arg)
 
     ESP_LOGD(TAG, "%s %d messages waiting", __FUNCTION__, uxQueueMessagesWaiting(out_queue));
 
-    ESP_LOGD(TAG, "%s source fd = %d", __FUNCTION__, event_message.fd);
+    if(!message.second.has_value()) {
+        ESP_LOGD(TAG, "%s source fd is null", __FUNCTION__);
+    } else {
+        ESP_LOGD(TAG, "%s source fd = %d", __FUNCTION__, *message.second);
+    }
 
-    ESP_LOGD(TAG, "%s len = %zd", __FUNCTION__, strlen(event_message.message));
-    ESP_LOG_BUFFER_HEXDUMP(TAG, event_message.message, sizeof(event_message.message), ESP_LOG_VERBOSE);
+    rapidjson::Document document;
 
-    assert(strlen(event_message.message) < sizeof(event_message.message));
+    auto json = std::visit([&](const auto &message) -> rapidjson::Value {
+        to_json(document, *response)
+    }, message.first);
+
+    rapidjson::StringBuffer buffer;
+    rapidjson::Writer writer{buffer};
+    json.Swap(document);
+    document.Accept(writer);
+
+    char *payload = buffer.GetString();
+    char *payload_len = strlen(payload);
+
+    ESP_LOGD(TAG, "%s len = %zd", __FUNCTION__, payload_len);
+    ESP_LOG_BUFFER_HEXDUMP(TAG, payload, payload_len, ESP_LOG_VERBOSE);
 
     httpd_ws_frame_t pkt = {
         .final = false,
         .fragmented = false,
         .type = HTTPD_WS_TYPE_TEXT,
-        .payload = reinterpret_cast<uint8_t *>(event_message.message),
-        .len = strlen(event_message.message),
+        .payload = reinterpret_cast<uint8_t *>(payload),
+        .len = payload_len,
     };
 
     int client_fds[MAX_CLIENTS];
@@ -384,7 +409,7 @@ static void websocket_send(void *arg)
             continue;
         }
 
-        if(fd == event_message.fd)
+        if(message.second.has_value() && fd == *message.second)
         {
             continue;
         }
@@ -475,10 +500,10 @@ extern "C" void app_main(void)
     assert(work_semaphore);
     xSemaphoreGive(work_semaphore);
 
-    in_queue = new Queue<parameters::CommandHandling<parameters::AudioParameters>::Message>(QUEUE_LEN);
+    in_queue = new Queue<AppMessage>(QUEUE_LEN);
     assert(in_queue);
 
-    out_queue = xQueueCreate(QUEUE_LEN, sizeof(audio_event_message_t));
+    out_queue = new Queue<AppMessage>(QUEUE_LEN);
     assert(out_queue);
 
     audio_params = std::make_shared<parameters::AudioParameters>();
@@ -685,10 +710,24 @@ extern "C" void app_main(void)
             midi_decoder->decode(*byte);
         }
 
-        if(std::decay_t<decltype(*cmd_handling)>::Message message;
+        if(std::decay_t<decltype(in_queue)>::value_type message;
            in_queue->receive(&message, 0))
         {
-            cmd_handling->dispatch(message);
+            auto fd = message.second;
+
+            std::visit([&](const auto &message){
+                using T = std::decay_t<decltype(message)>;
+
+                if constexpr(std::is_same_v(T, parameters::ApiMessage))
+                {
+                    if(!fd.has_value())
+                    {
+                        ESP_LOGE(TAG, "Must always have fd");
+                    }
+
+                    cmd_handling->dispatch(message, *fd);
+                }
+            }, message.first)
         }
 
         {

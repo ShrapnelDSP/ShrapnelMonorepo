@@ -22,13 +22,28 @@
 #include "freertos/FreeRTOS.h"
 #include "freertos/queue.h"
 #include <cassert>
+#include <type_traits>
 
 namespace shrapnel {
 
 template <typename T>
+concept TriviallyCopyable = std::is_trivially_copyable_v<T>;
+
+// TODO tuple is not trivially copyable. std::pair with one of the values const
+// is. I think we can make the FD const
+//
+// Maybe we need to redesign and only pass unique ptrs allocated from a memory
+// pool? Then it wouldn't matter if the event classes are trivially copyable or
+// not.
+//
+// How does std::queue work around this? Maybe we can just copy construct in
+// place, into the queues memory, then again into the receiver memory?
+template <typename T> requires TriviallyCopyable<T>
 class QueueBase
 {
     public:
+    using value_type = T;
+
     QueueBase(int number_of_elements)
     {
         (void) number_of_elements;
@@ -39,7 +54,7 @@ class QueueBase
 };
 
 template <typename T>
-class Queue: public QueueBase<T>
+class Queue final: public QueueBase<T>
 {
     public:
     Queue(int number_of_elements) : QueueBase<T>(number_of_elements)

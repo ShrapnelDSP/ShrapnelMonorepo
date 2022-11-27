@@ -61,6 +61,8 @@
 #include "cmd_handling_json.h"
 #include "etl/list.h"
 #include "esp_log.h"
+#include "freertos/FreeRTOS.h"
+#include "freertos/task.h"
 #include <climits>
 #include "esp_err.h"
 #include "cmd_handling_json_builder.h"
@@ -91,8 +93,6 @@ class CommandHandling final
 
     void dispatch(const ApiMessage &message, int fd)
     {
-        // TODO refactor so that this parsing is done in the server thread.
-        // This function should take an ApiMessage
 #if !defined(TESTING)
         ESP_LOGI(TAG, "%s stack %d", __FUNCTION__, uxTaskGetStackHighWaterMark(NULL));
 #endif
