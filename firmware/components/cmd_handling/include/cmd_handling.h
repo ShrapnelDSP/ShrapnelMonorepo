@@ -60,7 +60,6 @@
 #include "cmd_handling_api.h"
 #include "cmd_handling_json.h"
 #include "etl/list.h"
-#include "event_send.h"
 #include "esp_log.h"
 #include <climits>
 #include "esp_err.h"

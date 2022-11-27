@@ -23,11 +23,6 @@
 #include "audio_param.h"
 #include "cmd_handling.h"
 
-#include "audio_events.h"
-
-#include "task.h"
-#include "queue.h"
-
 namespace {
 
 using testing::_;
