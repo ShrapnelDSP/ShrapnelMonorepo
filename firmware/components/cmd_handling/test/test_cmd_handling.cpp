@@ -36,15 +36,6 @@ using testing::StrEq;
 
 using id_t = shrapnel::parameters::id_t;
 
-template <typename T>
-class MockQueue : public shrapnel::QueueBase<T>
-{
-    public:
-    MockQueue(int n) : shrapnel::QueueBase<T>(n) {};
-    MOCK_METHOD(BaseType_t, receive, (T *out, TickType_t time_to_wait), (override));
-    MOCK_METHOD(BaseType_t, send, (T *out, TickType_t time_to_wait), (override));
-};
-
 class MockAudioParameterFloat;
 
 class MockAudioParameters
@@ -104,19 +95,19 @@ class CmdHandling : public ::testing::Test
     MockAudioParameters param;
     MockEventSend event;
 
+    void parseAndDispatch(Message message) {
+        rapidjson::Document document;
+        document.Parse(message.json);
+        ASSERT_FALSE(document.HasParseError()) << "Must use valid JSON for testing.";
+
+        auto parsed_message = shrapnel::parameters::from_json<shrapnel::parameters::ApiMessage>(document.GetObject());
+        ASSERT_TRUE(parsed_message.has_value()) << "Must use valid JSON for testing.";
+
+        cmd.dispatch(*parsed_message, message.fd);
+    }
+
     shrapnel::parameters::CommandHandling<MockAudioParameters> cmd;
 };
-
-TEST_F(CmdHandling, InvalidMessage)
-{
-    Message message{
-        "This is not JSON",
-        0
-    };
-
-    EXPECT_CALL(param, update).Times(0);
-    cmd.dispatch(message);
-}
 
 TEST_F(CmdHandling, ValidMessage)
 {
@@ -131,7 +122,7 @@ TEST_F(CmdHandling, ValidMessage)
 
     EXPECT_CALL(event, send(StrEq(message.json), 42)).Times(1);
 
-    cmd.dispatch(message);
+    parseAndDispatch(message);
 }
 
 TEST_F(CmdHandling, InitialiseParameters)
@@ -153,7 +144,7 @@ TEST_F(CmdHandling, InitialiseParameters)
     expected = R"({"id":"test1","value":1.0,"messageType":"parameterUpdate"})";
     EXPECT_CALL(event, send(StrEq(expected), -1)).Times(1);
 
-    cmd.dispatch(message);
+    parseAndDispatch(message);
 }
 
 }

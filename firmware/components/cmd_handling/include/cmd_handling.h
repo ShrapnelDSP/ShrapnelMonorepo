@@ -96,35 +96,13 @@ class CommandHandling final
         event(a_event)
         {}
 
-    void dispatch(const Message &message)
+    void dispatch(const ApiMessage &message, int fd)
     {
         // TODO refactor so that this parsing is done in the server thread.
         // This function should take an ApiMessage
-        rapidjson::Document document;
-        document.Parse(message.json);
-        if(document.HasParseError())
-        {
-            ESP_LOGE(TAG, "parse error");
-            return;
-        }
-
-        auto parsed_message = from_json<ApiMessage>(document.GetObject());
-        if(!parsed_message.has_value())
-        {
-            return;
-        }
-
 #if !defined(TESTING)
         ESP_LOGI(TAG, "%s stack %d", __FUNCTION__, uxTaskGetStackHighWaterMark(NULL));
 #endif
-        size_t message_size = sizeof(message.json);
-        assert(message_size <= INT_MAX);
-        (void)message_size;
-        int fd = message.fd;
-
-        ESP_LOGI(TAG, "received websocket message: %.*s",
-                static_cast<int>(sizeof(message.json)),
-                message.json);
 
         std::visit([&](const auto &message) -> void {
             using T = std::decay_t<decltype(message)>;
@@ -136,7 +114,7 @@ class CommandHandling final
             } else {
                 ESP_LOGE(TAG, "Unhandled message type");
             }
-        }, *parsed_message);
+        }, message);
     }
 
     private:
