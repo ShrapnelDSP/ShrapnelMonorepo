@@ -121,7 +121,7 @@ TEST_F(CmdHandling, InvalidMessage)
 TEST_F(CmdHandling, ValidMessage)
 {
     Message message{
-        "{\"id\": \"tight\", \"value\": 1, \"messageType\": \"parameterUpdate\"}",
+        R"({"id":"tight","value":1.0,"messageType":"parameterUpdate"})",
         42
     };
 
@@ -137,7 +137,7 @@ TEST_F(CmdHandling, ValidMessage)
 TEST_F(CmdHandling, InitialiseParameters)
 {
     Message message{
-        "{\"messageType\": \"initialiseParameters\"}",
+        R"({"messageType": "initialiseParameters"})",
         0
     };
 
@@ -148,9 +148,9 @@ TEST_F(CmdHandling, InitialiseParameters)
     param.parameters["test0"] = std::move(parameter0);
     param.parameters["test1"] = std::move(parameter1);
 
-    const char *expected = "{\"id\":\"test0\",\"value\":0}";
+    const char *expected = R"({"id":"test0","value":0.0,"messageType":"parameterUpdate"})";
     EXPECT_CALL(event, send(StrEq(expected), -1)).Times(1);
-    expected = "{\"id\":\"test1\",\"value\":1}";
+    expected = R"({"id":"test1","value":1.0,"messageType":"parameterUpdate"})";
     EXPECT_CALL(event, send(StrEq(expected), -1)).Times(1);
 
     cmd.dispatch(message);

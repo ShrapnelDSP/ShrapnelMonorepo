@@ -64,10 +64,13 @@
 #include "esp_log.h"
 #include <climits>
 #include "esp_err.h"
+#include "cmd_handling_json_builder.h"
 #include <memory>
 #include <string.h>
 #include <iterator>
 #include <string_view>
+#include <rapidjson/stringbuffer.h>
+#include <rapidjson/writer.h>
 
 namespace shrapnel::parameters {
 
@@ -147,11 +150,17 @@ class CommandHandling final
             ESP_LOGE(TAG, "Failed to update parameter (%s) with value %f", message.id.data(), message.value);
         }
 
-        // TODO need JSON builder for Update message
+        // TODO this should be done outside this function
+        rapidjson::Document document;
+        auto json = to_json(document, ApiMessage{message});
+        document.Swap(json);
+
+        rapidjson::StringBuffer buffer;
+        rapidjson::Writer writer{buffer};
+        document.Accept(writer);
         snprintf(output.json, sizeof(output.json),
-                R"({"id": "%s", "value": %g, "messageType": "parameterUpdate"})",
-                message.id.data(),
-                message.value);
+                 "%s",
+                 buffer.GetString());
 
         event.send(output.json, fd);
     }
@@ -162,12 +171,22 @@ class CommandHandling final
 
         for(const auto& [key, value] : *param)
         {
-            float tmp_f = value->get();
+            Update message = {
+                    .id{id_t{key}},
+                    .value{value->get()},
+            };
 
+            // TODO this should be done outside this function
+            rapidjson::Document document;
+            auto json = to_json(document, ApiMessage{message});
+            document.Swap(json);
+
+            rapidjson::StringBuffer buffer;
+            rapidjson::Writer writer{buffer};
+            document.Accept(writer);
             snprintf(output.json, sizeof(output.json),
-                    R"({"id":"%s","value":%g})",
-                    key.c_str(),
-                    tmp_f);
+                     "%s",
+                     buffer.GetString());
 
             event.send(output.json, -1);
         }
