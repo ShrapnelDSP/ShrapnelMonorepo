@@ -149,14 +149,14 @@ class CommandHandling final
 
         // TODO need JSON builder for Update message
         snprintf(output.json, sizeof(output.json),
-                "{\"id\": \"%s\", \"value\": %g, \"messageType\": \"parameterUpdate\"}",
+                R"({"id": "%s", "value": %g, "messageType": "parameterUpdate"})",
                 message.id.data(),
                 message.value);
 
         event.send(output.json, fd);
     }
 
-    void initialise_parameters(void)
+    void initialise_parameters()
     {
         Message output;
 
@@ -165,7 +165,7 @@ class CommandHandling final
             float tmp_f = value->get();
 
             snprintf(output.json, sizeof(output.json),
-                    "{\"id\":\"%s\",\"value\":%g}",
+                    R"({"id":"%s","value":%g})",
                     key.c_str(),
                     tmp_f);
 
