@@ -113,24 +113,21 @@ class MockAudioParameterFloat
 class CmdHandling : public ::testing::Test
 {
     protected:
-
-    using Message = shrapnel::parameters::CommandHandling<MockAudioParameters, EventSendAdapter>::Message;
-
     CmdHandling() : cmd(&param, event_adapter) {}
 
     MockAudioParameters param;
     MockEventSend event;
     EventSendAdapter event_adapter{event};
 
-    void parseAndDispatch(Message message) {
+    void parseAndDispatch(const char *json, int fd) {
         rapidjson::Document document;
-        document.Parse(message.json);
+        document.Parse(json);
         ASSERT_FALSE(document.HasParseError()) << "Must use valid JSON for testing.";
 
         auto parsed_message = shrapnel::parameters::from_json<shrapnel::parameters::ApiMessage>(document.GetObject());
         ASSERT_TRUE(parsed_message.has_value()) << "Must use valid JSON for testing.";
 
-        cmd.dispatch(*parsed_message, message.fd);
+        cmd.dispatch(*parsed_message, fd);
     }
 
     shrapnel::parameters::CommandHandling<MockAudioParameters, EventSendAdapter> cmd;
@@ -138,27 +135,18 @@ class CmdHandling : public ::testing::Test
 
 TEST_F(CmdHandling, ValidMessage)
 {
-    Message message{
-        R"({"id":"tight","value":1.0,"messageType":"parameterUpdate"})",
-        42
-    };
-
     EXPECT_CALL(param, update(id_t("tight"), 1.0f))
         .Times(1)
         .WillRepeatedly(Return(0));
 
-    EXPECT_CALL(event, send(StrEq(message.json), 42)).Times(1);
+    const char *json = R"({"id":"tight","value":1.0,"messageType":"parameterUpdate"})";
+    EXPECT_CALL(event, send(StrEq(json), 42)).Times(1);
 
-    parseAndDispatch(message);
+    parseAndDispatch(json, 42);
 }
 
 TEST_F(CmdHandling, InitialiseParameters)
 {
-    Message message{
-        R"({"messageType": "initialiseParameters"})",
-        0
-    };
-
     auto parameter0 = std::make_unique<MockAudioParameterFloat>("test", 0);
     EXPECT_CALL(*parameter0.get(), get()).WillRepeatedly(Return(0));
     auto parameter1 = std::make_unique<MockAudioParameterFloat>("test", 0);
@@ -171,7 +159,7 @@ TEST_F(CmdHandling, InitialiseParameters)
     expected = R"({"id":"test1","value":1.0,"messageType":"parameterUpdate"})";
     EXPECT_CALL(event, send(StrEq(expected), -1)).Times(1);
 
-    parseAndDispatch(message);
+    parseAndDispatch(R"({"messageType": "initialiseParameters"})", 0);
 }
 
 }

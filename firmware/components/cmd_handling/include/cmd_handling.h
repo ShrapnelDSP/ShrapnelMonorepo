@@ -78,14 +78,6 @@ template<typename AudioParametersT, typename EventSendT>
 class CommandHandling final
 {
     public:
-#if 1
-    struct Message
-    {
-        char json[256];
-        int fd;
-    };
-#endif
-
     /** \brief
      *
      * \param[in] a_param Data received through \ref dispatch() is
