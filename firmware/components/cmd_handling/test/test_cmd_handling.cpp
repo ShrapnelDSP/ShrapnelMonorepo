@@ -57,11 +57,37 @@ class MockAudioParameters
     MapType parameters;
 };
 
-class MockEventSend : public shrapnel::EventSendBase
+class MockEventSend
 {
     public:
-    MOCK_METHOD(void, send, (const char *json, int fd), (override));
-    MOCK_METHOD(void, send, (const char *json), (override));
+    MOCK_METHOD(void, send, (const char *json, int fd));
+    MOCK_METHOD(void, send, (const char *json));
+};
+
+class EventSendAdapter final {
+    public:
+    explicit EventSendAdapter(MockEventSend &event) : event(event) {}
+
+    void send(const shrapnel::parameters::ApiMessage &message, int fd)
+    {
+        rapidjson::Document document;
+        auto json = to_json(document, message);
+        document.Swap(json);
+
+        rapidjson::StringBuffer buffer;
+        rapidjson::Writer writer{buffer};
+        document.Accept(writer);
+
+        event.send(buffer.GetString(), fd);
+    }
+
+    void send(const shrapnel::parameters::ApiMessage &message)
+    {
+        send(message, -1);
+    }
+
+    private:
+    MockEventSend &event;
 };
 
 class MockAudioParameterFloat
@@ -88,12 +114,13 @@ class CmdHandling : public ::testing::Test
 {
     protected:
 
-    using Message = shrapnel::parameters::CommandHandling<MockAudioParameters>::Message;
+    using Message = shrapnel::parameters::CommandHandling<MockAudioParameters, EventSendAdapter>::Message;
 
-    CmdHandling() : cmd(&param, event) {}
+    CmdHandling() : cmd(&param, event_adapter) {}
 
     MockAudioParameters param;
     MockEventSend event;
+    EventSendAdapter event_adapter{event};
 
     void parseAndDispatch(Message message) {
         rapidjson::Document document;
@@ -106,7 +133,7 @@ class CmdHandling : public ::testing::Test
         cmd.dispatch(*parsed_message, message.fd);
     }
 
-    shrapnel::parameters::CommandHandling<MockAudioParameters> cmd;
+    shrapnel::parameters::CommandHandling<MockAudioParameters, EventSendAdapter> cmd;
 };
 
 TEST_F(CmdHandling, ValidMessage)

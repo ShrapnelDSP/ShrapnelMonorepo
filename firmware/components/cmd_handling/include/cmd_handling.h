@@ -74,15 +74,17 @@
 
 namespace shrapnel::parameters {
 
-template<typename AudioParametersT>
+template<typename AudioParametersT, typename EventSendT>
 class CommandHandling final
 {
     public:
+#if 1
     struct Message
     {
         char json[256];
         int fd;
     };
+#endif
 
     /** \brief
      *
@@ -91,7 +93,7 @@ class CommandHandling final
      */
     CommandHandling(
             AudioParametersT *a_param,
-            EventSendBase &a_event) :
+            EventSendT &a_event) :
         param(a_param),
         event(a_event)
         {}
@@ -120,33 +122,17 @@ class CommandHandling final
     private:
     void parameter_update(const Update &message, int fd)
     {
-        Message output;
-
         int rc = param->update(message.id, message.value);
         if(rc != 0)
         {
             ESP_LOGE(TAG, "Failed to update parameter (%s) with value %f", message.id.data(), message.value);
         }
 
-        // TODO this should be done outside this function
-        rapidjson::Document document;
-        auto json = to_json(document, ApiMessage{message});
-        document.Swap(json);
-
-        rapidjson::StringBuffer buffer;
-        rapidjson::Writer writer{buffer};
-        document.Accept(writer);
-        snprintf(output.json, sizeof(output.json),
-                 "%s",
-                 buffer.GetString());
-
-        event.send(output.json, fd);
+        event.send(message, fd);
     }
 
     void initialise_parameters()
     {
-        Message output;
-
         for(const auto& [key, value] : *param)
         {
             Update message = {
@@ -154,24 +140,12 @@ class CommandHandling final
                     .value{value->get()},
             };
 
-            // TODO this should be done outside this function
-            rapidjson::Document document;
-            auto json = to_json(document, ApiMessage{message});
-            document.Swap(json);
-
-            rapidjson::StringBuffer buffer;
-            rapidjson::Writer writer{buffer};
-            document.Accept(writer);
-            snprintf(output.json, sizeof(output.json),
-                     "%s",
-                     buffer.GetString());
-
-            event.send(output.json, -1);
+            event.send(message, -1);
         }
     }
 
     AudioParametersT *param;
-    EventSendBase &event;
+    EventSendT &event;
 
     static inline const char *TAG = "cmd_handling";
 };
