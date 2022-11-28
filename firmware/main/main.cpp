@@ -182,20 +182,15 @@ static esp_err_t websocket_get_handler(httpd_req_t *req)
         return ESP_FAIL;
     }
 
-#if 0
     {
-        auto message = midi::from_json<parameters::ApiMessage>(document.GetObject());
+        auto message = parameters::from_json<parameters::ApiMessage>(document.GetObject());
         if(message.has_value())
         {
-            ESP_LOGI(TAG, "decoded parameter message");
-#if 0
-            auto out = AppMessage{message, fd};
-            in_queue.send(&(*message), pdMS_TO_TICKS(100));
-#endif
+            auto out = AppMessage{*message, fd};
+            in_queue->send(&out, pdMS_TO_TICKS(100));
             goto out;
         }
     }
-#endif
 
     {
         auto message = midi::from_json<midi::MappingApiMessage>(document.GetObject());
@@ -238,15 +233,14 @@ static esp_err_t websocket_get_handler(httpd_req_t *req)
 
                     if(response.has_value())
                     {
-                        AppMessage out{*response, std::nullopt};
-                        audio_event_send_callback(out);
+                        audio_event_send_callback({*response, std::nullopt});
                     }
                 }, *message);
             }
         }
     }
 
-//out:
+out:
     ESP_LOGI(TAG, "%s stack %d", __FUNCTION__, uxTaskGetStackHighWaterMark(NULL));
     return ESP_OK;
 }
