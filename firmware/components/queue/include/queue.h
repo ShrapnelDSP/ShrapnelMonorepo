@@ -19,10 +19,15 @@
 
 #pragma once
 
+#include "FreeRTOSConfig.h"
 #include "freertos/FreeRTOS.h"
 #include "freertos/queue.h"
 #include <cassert>
+#include <chrono>
+#include <cstdint>
+#include <semaphore>
 #include <type_traits>
+#include <queue>
 
 namespace shrapnel {
 
@@ -38,7 +43,8 @@ concept TriviallyCopyable = std::is_trivially_copyable_v<T>;
 //
 // How does std::queue work around this? Maybe we can just copy construct in
 // place, into the queues memory, then again into the receiver memory?
-template <typename T> requires TriviallyCopyable<T>
+
+template <typename T>
 class QueueBase
 {
     public:
@@ -50,31 +56,59 @@ class QueueBase
     };
 
     virtual BaseType_t receive(T *out, TickType_t time_to_wait) = 0;
-    virtual BaseType_t send(T *out, TickType_t time_to_wait) = 0;
+    virtual BaseType_t send(const T *in, TickType_t time_to_wait) = 0;
 };
 
 template <typename T>
 class Queue final: public QueueBase<T>
 {
+    using ticks = std::chrono::duration<TickType_t>;
+
     public:
-    Queue(int number_of_elements) : QueueBase<T>(number_of_elements)
+    Queue(int number_of_elements) : QueueBase<T>(number_of_elements), used_semaphore{0}, free_semaphore{number_of_elements}
     {
-        handle = xQueueCreate(number_of_elements, sizeof(T));
-        assert(handle);
+        // TODO initialise the sempahores with the correct value
     }
 
     BaseType_t receive(T *out, TickType_t time_to_wait) override
     {
-        return xQueueReceive(handle, out, time_to_wait);
+        // block until an item is available
+        bool success = used_semaphore.try_acquire_for(ticks(time_to_wait));
+        if(!success) return errQUEUE_EMPTY;
+
+        // Receive the item
+        {
+            std::scoped_lock lock{mutex};
+            *out = queue.front();
+            queue.pop();
+        }
+        free_semaphore.release();
+        return pdPASS;
     }
 
-    BaseType_t send(T *out, TickType_t time_to_wait) override
+    // TODO use storage without any dynamic allocation etl::deque or etl::list
+    // should work
+    BaseType_t send(const T *in, TickType_t time_to_wait) override
     {
-        return xQueueSendToBack(handle, out, time_to_wait);
+        // block until a space is available
+        bool success = free_semaphore.try_acquire_for(ticks(time_to_wait));
+        if(!success) return errQUEUE_FULL;
+
+        // Add item to queue, and notify receivers
+        {
+            std::scoped_lock lock{mutex};
+            queue.push(*in);
+        }
+        used_semaphore.release();
+        return pdPASS;
     }
 
     private:
-    QueueHandle_t handle;
+    int number_of_elements;
+    std::counting_semaphore<UINT8_MAX> used_semaphore;
+    std::counting_semaphore<UINT8_MAX> free_semaphore;
+    std::queue<T> queue;
+    std::mutex mutex;
 };
 
 }

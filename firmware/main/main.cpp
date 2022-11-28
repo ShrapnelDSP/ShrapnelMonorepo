@@ -64,11 +64,18 @@
 #include "profiling.h"
 #include "wifi_provisioning.h"
 #include "midi_mapping_api.h"
+#include "queue.h"
 
 #define TAG "main"
 #define QUEUE_LEN 4
 #define MAX_CLIENTS 3
 #define ARRAY_LENGTH(a) (sizeof(a)/sizeof(a[0]))
+
+using ApiMessage = std::variant<shrapnel::parameters::ApiMessage, shrapnel::midi::MappingApiMessage>;
+using FileDescriptor = std::optional<int>;
+using AppMessage = std::pair<ApiMessage, FileDescriptor>;
+
+extern "C" void audio_event_send_callback(const AppMessage &message);
 
 namespace shrapnel {
 
@@ -78,11 +85,16 @@ class ParameterUpdateNotifier {
 };
 
 class EventSend final {
+    public:
+    void send(parameters::ApiMessage message, int fd)
+    {
+        if(fd >= 0) {
+            audio_event_send_callback({message, fd});
+        } else {
+            audio_event_send_callback({message, std::nullopt});
+        }
+    }
 };
-
-using ApiMessage = std::variant<parameters::ApiMessage, midi::MappingApiMessage>;
-using FileDescriptor = std::optional<int>;
-using AppMessage = std::pair<ApiMessage, const FileDescriptor>;
 
 static Queue<AppMessage> *in_queue;
 static std::shared_ptr<parameters::AudioParameters> audio_params;
@@ -170,6 +182,7 @@ static esp_err_t websocket_get_handler(httpd_req_t *req)
         return ESP_FAIL;
     }
 
+#if 0
     {
         auto message = midi::from_json<parameters::ApiMessage>(document.GetObject());
         if(message.has_value())
@@ -182,6 +195,7 @@ static esp_err_t websocket_get_handler(httpd_req_t *req)
             goto out;
         }
     }
+#endif
 
     {
         auto message = midi::from_json<midi::MappingApiMessage>(document.GetObject());
@@ -224,15 +238,15 @@ static esp_err_t websocket_get_handler(httpd_req_t *req)
 
                     if(response.has_value())
                     {
-                        AppMessage out{response, std::nullopt};
-                        out_queue->send(&out, pdMS_TO_TICKS(100));
+                        AppMessage out{*response, std::nullopt};
+                        audio_event_send_callback(out);
                     }
                 }, *message);
             }
         }
     }
 
-out:
+//out:
     ESP_LOGI(TAG, "%s stack %d", __FUNCTION__, uxTaskGetStackHighWaterMark(NULL));
     return ESP_OK;
 }
@@ -348,15 +362,13 @@ static void websocket_send(void *arg)
 {
     httpd_handle_t server = arg;
 
-    std::decay_t<decltype(out_queue)>::value_type message;
+    AppMessage message;
     int rc = out_queue->receive(&message, 0);
     if(!rc)
     {
         ESP_LOGE(TAG, "%s failed to receive from queue", __FUNCTION__);
         return;
     }
-
-    ESP_LOGD(TAG, "%s %d messages waiting", __FUNCTION__, uxQueueMessagesWaiting(out_queue));
 
     if(!message.second.has_value()) {
         ESP_LOGD(TAG, "%s source fd is null", __FUNCTION__);
@@ -367,7 +379,7 @@ static void websocket_send(void *arg)
     rapidjson::Document document;
 
     auto json = std::visit([&](const auto &message) -> rapidjson::Value {
-        to_json(document, *response)
+        return to_json(document, message);
     }, message.first);
 
     rapidjson::StringBuffer buffer;
@@ -375,8 +387,8 @@ static void websocket_send(void *arg)
     json.Swap(document);
     document.Accept(writer);
 
-    char *payload = buffer.GetString();
-    char *payload_len = strlen(payload);
+    const char *payload = buffer.GetString();
+    std::size_t payload_len = strlen(payload);
 
     ESP_LOGD(TAG, "%s len = %zd", __FUNCTION__, payload_len);
     ESP_LOG_BUFFER_HEXDUMP(TAG, payload, payload_len, ESP_LOG_VERBOSE);
@@ -385,7 +397,8 @@ static void websocket_send(void *arg)
         .final = false,
         .fragmented = false,
         .type = HTTPD_WS_TYPE_TEXT,
-        .payload = reinterpret_cast<uint8_t *>(payload),
+         // XXX: casting away const, but esp-idf does not modify the buffer
+        .payload = reinterpret_cast<uint8_t *>(const_cast<char *>(payload)),
         .len = payload_len,
     };
 
@@ -482,9 +495,14 @@ static void failed_alloc_callback(size_t size, uint32_t caps, const char *functi
 
 int ParameterUpdateNotifier::update(const parameters::id_t &param, float value)
 {
-    char json[128];
-    snprintf(json, sizeof json, R"({"messageType":"parameterUpdate","id":"%s","value":%f})", param.data(), value);
-    event_send.send(json);
+    auto message = AppMessage{
+        parameters::Update{
+            param,
+            value,
+        },
+        std::nullopt,
+    };
+    audio_event_send_callback(message);
     return audio_params->update(param, value);
 }
 
@@ -542,7 +560,7 @@ extern "C" void app_main(void)
         }
     }
 
-    cmd_handling = new parameters::CommandHandling<parameters::AudioParameters>(
+    cmd_handling = new parameters::CommandHandling<parameters::AudioParameters, EventSend>(
             audio_params.get(),
             event_send);
 
@@ -710,15 +728,14 @@ extern "C" void app_main(void)
             midi_decoder->decode(*byte);
         }
 
-        if(std::decay_t<decltype(in_queue)>::value_type message;
-           in_queue->receive(&message, 0))
+        if(AppMessage message; in_queue->receive(&message, 0))
         {
             auto fd = message.second;
 
             std::visit([&](const auto &message){
                 using T = std::decay_t<decltype(message)>;
 
-                if constexpr(std::is_same_v(T, parameters::ApiMessage))
+                if constexpr(std::is_same_v<T, parameters::ApiMessage>)
                 {
                     if(!fd.has_value())
                     {
@@ -727,7 +744,7 @@ extern "C" void app_main(void)
 
                     cmd_handling->dispatch(message, *fd);
                 }
-            }, message.first)
+            }, message.first);
         }
 
         {
@@ -745,22 +762,12 @@ extern "C" void app_main(void)
 
 }
 
-extern "C" void audio_event_send_callback(const char *message, int fd)
+extern "C" void audio_event_send_callback(const AppMessage &message)
 {
-    shrapnel::audio_event_message_t event_message = {
-        .message = {0},
-        .fd = fd,
-    };
-
-    snprintf(event_message.message, sizeof(event_message.message), "%s", message);
-
-    ESP_LOGD(TAG, "%s %s", __FUNCTION__, event_message.message);
     ESP_LOGD(TAG, "%s %s", __FUNCTION__, pcTaskGetName(NULL));
 
     if(errQUEUE_FULL ==
-            xQueueSendToBack(shrapnel::out_queue,
-                             &event_message,
-                             100 / portTICK_PERIOD_MS))
+            shrapnel::out_queue->send(&message, pdMS_TO_TICKS(100)))
     {
         ESP_LOGE(TAG, "Failed to send message to websocket");
         return;
@@ -779,6 +786,5 @@ extern "C" void audio_event_send_callback(const char *message, int fd)
     if(ESP_OK != rc)
     {
         ESP_LOGE(TAG, "failed to queue work for server");
-        xQueueReset(shrapnel::out_queue);
     }
 }
