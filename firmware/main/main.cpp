@@ -698,24 +698,19 @@ extern "C" void app_main(void)
 
                     cmd_handling->dispatch(message, *fd);
                 } else if constexpr(std::is_same_v<T, midi::MappingApiMessage>) {
-                    // TODO does reducing the scope of visitor improve the code size?
-                    // Sending the response to the queue could be moved outside, if the
-                    // lambda returned the std::optional<midi::MappingApiMessage>
                     std::scoped_lock lock{midi_mutex};
 
-                    std::visit([&](const auto &message) -> void {
+                    auto response = std::visit([&](const auto &message) -> std::optional<midi::MappingApiMessage> {
                         using T = std::decay_t<decltype(message)>;
-
-                        std::optional<midi::MappingApiMessage> response;
 
                         if constexpr (std::is_same_v<T, midi::GetRequest>) {
                             auto mappings = midi_mapping_manager->get();
-                            response = midi::GetResponse{mappings};
+                            return midi::GetResponse{mappings};
                         } else if constexpr (std::is_same_v<T, midi::CreateRequest>) {
                             auto rc = midi_mapping_manager->create(message.mapping);
                             if(rc == 0)
                             {
-                                response = midi::CreateResponse{message.mapping};
+                                return midi::CreateResponse{message.mapping};
                             }
                         } else if constexpr (std::is_same_v<T, midi::Update>) {
                             // return code ignored, as there is no way to indicate
@@ -727,11 +722,13 @@ extern "C" void app_main(void)
                             ESP_LOGE(TAG, "Unhandled message type");
                         }
 
-                        if(response.has_value())
-                        {
-                            audio_event_send_callback({*response, std::nullopt});
-                        }
+                        return std::nullopt;
                     }, message);
+
+                    if(response.has_value())
+                    {
+                        audio_event_send_callback({*response, std::nullopt});
+                    }
                 }
             }, message.first);
         }
