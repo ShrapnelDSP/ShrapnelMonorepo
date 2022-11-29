@@ -96,13 +96,13 @@ class EventSend final {
     }
 };
 
-static Queue<AppMessage> *in_queue;
+static Queue<AppMessage, QUEUE_LEN> *in_queue;
 static std::shared_ptr<parameters::AudioParameters> audio_params;
 static parameters::CommandHandling<parameters::AudioParameters, EventSend> *cmd_handling;
 static midi::MappingManager<ParameterUpdateNotifier, 10> *midi_mapping_manager;
 static EventSend event_send{};
 
-static Queue<AppMessage> *out_queue;
+static Queue<AppMessage, QUEUE_LEN> *out_queue;
 
 /*
  * TODO espressif's http server drops some calls to the work function when
@@ -481,10 +481,10 @@ extern "C" void app_main(void)
     assert(work_semaphore);
     xSemaphoreGive(work_semaphore);
 
-    in_queue = new Queue<AppMessage>(QUEUE_LEN);
+    in_queue = new Queue<AppMessage, QUEUE_LEN>();
     assert(in_queue);
 
-    out_queue = new Queue<AppMessage>(QUEUE_LEN);
+    out_queue = new Queue<AppMessage, QUEUE_LEN>();
     assert(out_queue);
 
     audio_params = std::make_shared<parameters::AudioParameters>();

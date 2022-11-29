@@ -51,7 +51,7 @@ private:
 
     static constexpr char TAG[5] = "wifi";
 
-    Queue<Event> queue;
+    Queue<Event, 1> queue;
 
 static void provisioning_event_handler(void* arg, esp_event_base_t event_base,
                                        int32_t event_id, void* event_data)
@@ -59,7 +59,7 @@ static void provisioning_event_handler(void* arg, esp_event_base_t event_base,
     assert(arg != nullptr);
     assert(event_base == WIFI_PROV_EVENT);
 
-    auto queue = static_cast<Queue<Event> *>(arg);
+    auto queue = static_cast<Queue<Event, 1> *>(arg);
 
     if (event_base == WIFI_PROV_EVENT) {
         switch (event_id) {
@@ -159,7 +159,7 @@ static void get_device_service_name(char *service_name, size_t max)
 }
 
 public:
-WiFiProvisioning(void) : queue(1)
+WiFiProvisioning(void) : queue()
 {
     // XXX: Make sure to deregister the handlers in the destructor
     ESP_ERROR_CHECK(esp_event_handler_register(

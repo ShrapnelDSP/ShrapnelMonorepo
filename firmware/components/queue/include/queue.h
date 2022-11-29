@@ -25,14 +25,12 @@
 #include <cassert>
 #include <chrono>
 #include <cstdint>
+#include "etl/deque.h"
 #include <semaphore>
 #include <type_traits>
 #include <queue>
 
 namespace shrapnel {
-
-template <typename T>
-concept TriviallyCopyable = std::is_trivially_copyable_v<T>;
 
 template <typename T>
 class QueueBase
@@ -49,13 +47,13 @@ class QueueBase
     virtual BaseType_t send(const T *in, TickType_t time_to_wait) = 0;
 };
 
-template <typename T>
+template <typename T, std::size_t MAX_SIZE> requires (MAX_SIZE > 0)
 class Queue final: public QueueBase<T>
 {
     using ticks = std::chrono::duration<TickType_t>;
 
     public:
-    Queue(int number_of_elements) : QueueBase<T>(number_of_elements), used_semaphore{0}, free_semaphore{number_of_elements} {}
+    Queue() : QueueBase<T>(MAX_SIZE), used_semaphore{0}, free_semaphore{MAX_SIZE} {}
 
     BaseType_t receive(T *out, TickType_t time_to_wait) override
     {
@@ -73,8 +71,6 @@ class Queue final: public QueueBase<T>
         return pdPASS;
     }
 
-    // TODO use storage without any dynamic allocation etl::deque or etl::list
-    // should work
     BaseType_t send(const T *in, TickType_t time_to_wait) override
     {
         // block until a space is available
@@ -91,10 +87,10 @@ class Queue final: public QueueBase<T>
     }
 
     private:
-    int number_of_elements;
-    std::counting_semaphore<UINT8_MAX> used_semaphore;
-    std::counting_semaphore<UINT8_MAX> free_semaphore;
-    std::queue<T> queue;
+    std::counting_semaphore<MAX_SIZE> used_semaphore;
+    std::counting_semaphore<MAX_SIZE> free_semaphore;
+    etl::deque<T, MAX_SIZE> queue_storage;
+    std::queue<T, etl::deque<T, MAX_SIZE>> queue;
     std::mutex mutex;
 };
 
