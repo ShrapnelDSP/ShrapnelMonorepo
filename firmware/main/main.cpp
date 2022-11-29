@@ -196,47 +196,16 @@ static esp_err_t websocket_get_handler(httpd_req_t *req)
         auto message = midi::from_json<midi::MappingApiMessage>(document.GetObject());
         if(message.has_value())
         {
+            auto out = AppMessage{*message, fd};
+            in_queue->send(&out, pdMS_TO_TICKS(100));
+
             etl::string<256> buffer;
             etl::string_stream stream{buffer};
             stream << *message;
             ESP_LOGI(TAG, "decoded %s", buffer.data());
 
-            {
-                // TODO run this in the main thread to avoid locking
-                // TODO does reducing the scope of visitor improve the code size?
-                // Sending the response to the queue could be moved outside, if the
-                // lambda returned the std::optional<midi::MappingApiMessage>
-                std::scoped_lock lock{midi_mutex};
-                std::visit([&](const auto &message) -> void {
-                    using T = std::decay_t<decltype(message)>;
+            goto out;
 
-                    std::optional<midi::MappingApiMessage> response;
-
-                    if constexpr (std::is_same_v<T, midi::GetRequest>) {
-                        auto mappings = midi_mapping_manager->get();
-                        response = midi::GetResponse{mappings};
-                    } else if constexpr (std::is_same_v<T, midi::CreateRequest>) {
-                        auto rc = midi_mapping_manager->create(message.mapping);
-                        if(rc == 0)
-                        {
-                            response = midi::CreateResponse{message.mapping};
-                        }
-                    } else if constexpr (std::is_same_v<T, midi::Update>) {
-                        // return code ignored, as there is no way to indicate
-                        // the error to the frontend
-                        (void)midi_mapping_manager->update(message.mapping);
-                    } else if constexpr (std::is_same_v<T, midi::Remove>) {
-                        midi_mapping_manager->remove(message.id);
-                    } else {
-                        ESP_LOGE(TAG, "Unhandled message type");
-                    }
-
-                    if(response.has_value())
-                    {
-                        audio_event_send_callback({*response, std::nullopt});
-                    }
-                }, *message);
-            }
         }
     }
 
@@ -721,14 +690,48 @@ extern "C" void app_main(void)
             std::visit([&](const auto &message){
                 using T = std::decay_t<decltype(message)>;
 
-                if constexpr(std::is_same_v<T, parameters::ApiMessage>)
-                {
+                if constexpr(std::is_same_v<T, parameters::ApiMessage>) {
                     if(!fd.has_value())
                     {
                         ESP_LOGE(TAG, "Must always have fd");
                     }
 
                     cmd_handling->dispatch(message, *fd);
+                } else if constexpr(std::is_same_v<T, midi::MappingApiMessage>) {
+                    // TODO does reducing the scope of visitor improve the code size?
+                    // Sending the response to the queue could be moved outside, if the
+                    // lambda returned the std::optional<midi::MappingApiMessage>
+                    std::scoped_lock lock{midi_mutex};
+
+                    std::visit([&](const auto &message) -> void {
+                        using T = std::decay_t<decltype(message)>;
+
+                        std::optional<midi::MappingApiMessage> response;
+
+                        if constexpr (std::is_same_v<T, midi::GetRequest>) {
+                            auto mappings = midi_mapping_manager->get();
+                            response = midi::GetResponse{mappings};
+                        } else if constexpr (std::is_same_v<T, midi::CreateRequest>) {
+                            auto rc = midi_mapping_manager->create(message.mapping);
+                            if(rc == 0)
+                            {
+                                response = midi::CreateResponse{message.mapping};
+                            }
+                        } else if constexpr (std::is_same_v<T, midi::Update>) {
+                            // return code ignored, as there is no way to indicate
+                            // the error to the frontend
+                            (void)midi_mapping_manager->update(message.mapping);
+                        } else if constexpr (std::is_same_v<T, midi::Remove>) {
+                            midi_mapping_manager->remove(message.id);
+                        } else {
+                            ESP_LOGE(TAG, "Unhandled message type");
+                        }
+
+                        if(response.has_value())
+                        {
+                            audio_event_send_callback({*response, std::nullopt});
+                        }
+                    }, message);
                 }
             }, message.first);
         }
