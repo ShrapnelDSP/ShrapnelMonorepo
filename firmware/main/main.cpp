@@ -695,14 +695,6 @@ extern "C" void app_main(void)
 
     heap_caps_print_heap_info(MALLOC_CAP_DEFAULT);
 
-#if !configUSE_TRACE_FACILITY
-#error trace is off
-#endif
-
-#if !configUSE_STATS_FORMATTING_FUNCTIONS
-#error stats is off
-#endif
-
 #if configUSE_TRACE_FACILITY && configUSE_STATS_FORMATTING_FUNCTIONS
     constexpr size_t characters_per_task = 40;
     constexpr size_t approximate_task_count = 20;
