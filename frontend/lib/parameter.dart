@@ -136,12 +136,12 @@ class ParameterService extends ChangeNotifier {
      *       We will accept messages that do not conatin a messageType as long
      *       as they have an id and value field
      */
-    if (eventJson.containsKey("messageType")) {
-      if (eventJson["messageType"] != "parameterUpdate") {
+    if (eventJson.containsKey('messageType')) {
+      if (eventJson['messageType'] != 'parameterUpdate') {
         return;
       }
     } else {
-      if (!eventJson.containsKey("id") || !eventJson.containsKey("value")) {
+      if (!eventJson.containsKey('id') || !eventJson.containsKey('value')) {
         return;
       }
     }
