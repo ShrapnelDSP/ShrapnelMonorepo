@@ -31,10 +31,6 @@ namespace midi {
 
 class MidiUartBase {
     public:
-    /** Try to receive a byte. This function does not block.
-     *
-     * \return True if a byte was received
-     */
     virtual std::optional<uint8_t> get_byte(TickType_t timeout) = 0;
 };
 
