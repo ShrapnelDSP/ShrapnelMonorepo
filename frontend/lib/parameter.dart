@@ -130,20 +130,9 @@ class ParameterService extends ChangeNotifier {
     log.finer(event);
 
     final eventJson = json.decode(event) as Map<String, dynamic>;
-    /*
-     * TODO: firmware is not adding the messageType field to responses to
-     *       initilaiseParameters, and our parser doesn't expect them either.
-     *       We will accept messages that do not conatin a messageType as long
-     *       as they have an id and value field
-     */
-    if (eventJson.containsKey('messageType')) {
-      if (eventJson['messageType'] != 'parameterUpdate') {
-        return;
-      }
-    } else {
-      if (!eventJson.containsKey('id') || !eventJson.containsKey('value')) {
-        return;
-      }
+
+    if (eventJson['messageType'] != 'parameterUpdate') {
+      return;
     }
 
     final parameterToUpdate = AudioParameterDouble.fromJson(
