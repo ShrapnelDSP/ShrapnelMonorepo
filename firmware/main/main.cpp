@@ -252,7 +252,6 @@ static httpd_handle_t start_webserver(void)
     httpd_config_t config = HTTPD_DEFAULT_CONFIG();
     config.server_port = 8080;
     config.ctrl_port = 8081;
-    config.stack_size = 2 * 4096;
     config.max_open_sockets = MAX_CLIENTS;
 
     // Start the httpd server
