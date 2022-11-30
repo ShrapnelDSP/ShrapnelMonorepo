@@ -643,8 +643,6 @@ extern "C" void app_main(void)
     ESP_LOGI(TAG, "stack: %d", uxTaskGetStackHighWaterMark(NULL));
     heap_caps_print_heap_info(MALLOC_CAP_DEFAULT);
 
-    vTaskDelay(pdMS_TO_TICKS(10'000));
-
     auto midi_uart = new midi::EspMidiUart(UART_NUM_MIDI, GPIO_NUM_MIDI);
 
     auto on_midi_message = [] (midi::Message message) {
@@ -660,8 +658,6 @@ extern "C" void app_main(void)
     };
 
     auto midi_decoder = new midi::Decoder(on_midi_message);
-
-    heap_caps_print_heap_info(MALLOC_CAP_DEFAULT);
 
 #if configUSE_TRACE_FACILITY && configUSE_STATS_FORMATTING_FUNCTIONS
     constexpr size_t characters_per_task = 40;
