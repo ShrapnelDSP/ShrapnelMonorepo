@@ -135,7 +135,7 @@ static void i2c_setup(void);
 
 static esp_err_t websocket_get_handler(httpd_req_t *req)
 {
-    /* TODO how many characters to represent the largest incoming message ? */
+    /* Largest incoming message is a MidiMap::create::response which has a maximum size about 200 bytes */
     char json[256] = {0};
 
     httpd_ws_frame_t pkt = {
@@ -345,7 +345,7 @@ static void websocket_send(void *arg)
         return to_json(document, message);
     }, message.first);
 
-    rapidjson::StringBuffer buffer;
+    rapidjson::GenericStringBuffer<rapidjson::UTF8<>, rapidjson::MemoryPoolAllocator<>> buffer;
     rapidjson::Writer writer{buffer};
     json.Swap(document);
     document.Accept(writer);
