@@ -60,6 +60,7 @@
 #include "midi_mapping_json_parser.h"
 #include "midi_mapping_json_builder.h"
 #include "midi_uart.h"
+#include "esp_persistence.h"
 #include "pcm3060.h"
 #include "profiling.h"
 #include "wifi_provisioning.h"
@@ -475,6 +476,25 @@ extern "C" void app_main(void)
     ESP_ERROR_CHECK(nvs_flash_init());
     ESP_ERROR_CHECK(esp_netif_init());
     ESP_ERROR_CHECK(esp_event_loop_create_default());
+
+    {
+        auto persistence = persistence::EspStorage{};
+#if 1
+        etl::string_view s{"abcde"};
+        ESP_LOGI(TAG, "%zu", s.size());
+        persistence.save("test1", s);
+#endif
+
+        etl::string<3> too_small_string;
+        persistence.load("test1", too_small_string);
+        ESP_LOGI(TAG, "too small string: %s", too_small_string.data());
+
+        etl::string<16> ok_string;
+        persistence.load("test1", ok_string);
+        ESP_LOGI(TAG, "ok string: %s", ok_string.data());
+
+        persistence.load("test2", ok_string); // bad key
+    }
 
     work_semaphore = xSemaphoreCreateBinary();
     assert(work_semaphore);

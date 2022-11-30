@@ -142,30 +142,5 @@ class Decoder {
     constexpr static const char *TAG = "midi";
 };
 
-/** Implements persistent configuration for MIDI functionality
- *
- * This is used to store the basic channel number and other configuration that
- * should be persistent after power down.
- *
- * \tparam T An implementation of \ref PersistentStorage
- */
-template<typename T>
-class Configuration {
-    public:
-    int getBasicChannel();
-    void setBasicChannel(int channel);
-};
-
-/** Interface for storing persistent data
- *
- * The data sent to \ref save should be reloaded by \ref load even after power
- * down.
- */
-class PersistentStorage {
-    public:
-    virtual void save(const char *key, const void *data, std::size_t data_size) = 0;
-    virtual int load(const char *key, void *data, std::size_t data_size) = 0;
-};
-
 }
 }
