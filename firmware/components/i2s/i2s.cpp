@@ -76,7 +76,7 @@ void log_i2s_event(const i2s_event_t &e)
 static void i2s_processing_task(void *param)
 {
     (void) param;
-    auto audio_param = reinterpret_cast<shrapnel::parameters::AudioParameters *>(param);
+    auto audio_param = reinterpret_cast<shrapnel::parameters::AudioParametersBase *>(param);
 
     size_t tx_rx_size;
 
@@ -197,7 +197,7 @@ static void i2s_processing_task(void *param)
     }
 }
 
-esp_err_t i2s_setup(gpio_num_t profiling_gpio, shrapnel::parameters::AudioParameters *audio_param)
+esp_err_t i2s_setup(gpio_num_t profiling_gpio, shrapnel::parameters::AudioParametersBase *audio_param)
 {
     esp_err_t err;
 

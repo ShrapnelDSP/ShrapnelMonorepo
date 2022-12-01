@@ -20,7 +20,6 @@
 #include "audio_param.h"
 #include "esp_log.h"
 
-#define TAG "audio_param"
 
 namespace shrapnel {
 namespace parameters {
@@ -60,77 +59,6 @@ float AudioParameterFloat::get(void)
 std::atomic<float> *AudioParameterFloat::get_raw_parameter(void)
 {
     return &value;
-}
-
-AudioParameters::AudioParameters() {}
-
-int AudioParameters::create_and_add_parameter(
-        const id_t &name,
-        float minimum,
-        float maximum,
-        float default_value)
-{
-    if(parameters.full())
-    {
-        return -1;
-    }
-
-    parameters[name] = std::make_unique<AudioParameterFloat>(name, minimum, maximum, default_value);
-
-    return 0;
-}
-
-int AudioParameters::update(const id_t &param, float value)
-{
-    (void) param;
-    (void) value;
-
-    auto element = parameters.find(param);
-
-    if(element == parameters.end())
-    {
-        return -1;
-    }
-
-    parameters[param]->update(value);
-
-    ESP_LOGI(TAG, "Updated %.*s to %f", param.length(), param.data(), value);
-
-    return 0;
-}
-
-float AudioParameters::get(const id_t &param)
-{
-    auto element = parameters.find(param);
-
-    if(element == parameters.end())
-    {
-        return 0;
-    }
-
-    return parameters[param]->get();
-}
-
-std::atomic<float> *AudioParameters::get_raw_parameter(const id_t &param)
-{
-    auto element = parameters.find(param);
-
-    if(element == parameters.end())
-    {
-        return nullptr;
-    }
-
-    return parameters[param]->get_raw_parameter();
-}
-
-AudioParameters::MapType::iterator AudioParameters::begin()
-{
-    return parameters.begin();
-}
-
-AudioParameters::MapType::iterator AudioParameters::end()
-{
-    return parameters.end();
 }
 
 }
