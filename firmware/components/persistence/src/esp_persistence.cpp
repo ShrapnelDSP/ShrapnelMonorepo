@@ -12,7 +12,6 @@ int EspStorage::save(const char *key, etl::string_view data) {
     esp_err_t err;
     int rc = -1;
 
-
     ESP_ERROR_CHECK_WITHOUT_ABORT(err = nvs_open(STORAGE_NAMESPACE, NVS_READWRITE, &nvs_handle));
     if (err != ESP_OK) goto out;
 

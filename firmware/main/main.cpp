@@ -80,6 +80,20 @@ extern "C" void audio_event_send_callback(const AppMessage &message);
 
 namespace shrapnel {
 
+// TODO move all the json parser function into a json namespace
+namespace midi {
+    using midi::from_json;
+
+    template<> std::optional<float> from_json(const rapidjson::Value &value)
+    {
+        if(!value.IsFloat()) {
+            ESP_LOGE(TAG, "not float");
+            return std::nullopt;
+        }
+        return value.GetFloat();
+    }
+}
+
 class ParameterUpdateNotifier {
     public:
     int update(const parameters::id_t &param, float value);
@@ -477,24 +491,7 @@ extern "C" void app_main(void)
     ESP_ERROR_CHECK(esp_netif_init());
     ESP_ERROR_CHECK(esp_event_loop_create_default());
 
-    {
-        auto persistence = persistence::EspStorage{};
-#if 1
-        etl::string_view s{"abcde"};
-        ESP_LOGI(TAG, "%zu", s.size());
-        persistence.save("test1", s);
-#endif
-
-        etl::string<3> too_small_string;
-        persistence.load("test1", too_small_string);
-        ESP_LOGI(TAG, "too small string: %s", too_small_string.data());
-
-        etl::string<16> ok_string;
-        persistence.load("test1", ok_string);
-        ESP_LOGI(TAG, "ok string: %s", ok_string.data());
-
-        persistence.load("test2", ok_string); // bad key
-    }
+    auto persistence = persistence::EspStorage{};
 
     work_semaphore = xSemaphoreCreateBinary();
     assert(work_semaphore);
@@ -508,7 +505,23 @@ extern "C" void app_main(void)
 
     audio_params = std::make_shared<parameters::AudioParameters>();
 
-    audio_params->create_and_add_parameter("ampGain", 0, 1, 0.5);
+    // TODO: Persist the parameters
+    //       When booting up, load the default value from NVS
+    //       At runtime, periodically save the updated parameter values
+    std::optional<float> gainDefault;
+    etl::string<128> json_string{"0.1"};
+    //persistence.load("ampGain", json_string);
+
+    rapidjson::Document document;
+    document.Parse(json_string.data());
+
+    if(!document.HasParseError()) {
+        gainDefault = midi::from_json<float>(document);
+    } else {
+        ESP_LOGI(TAG, "document failed to parse");
+    }
+
+    audio_params->create_and_add_parameter("ampGain", 0, 1, gainDefault.value_or(0.5));
     audio_params->create_and_add_parameter("ampChannel", 0, 1, 0);
     audio_params->create_and_add_parameter("bass", 0, 1, 0.5);
     audio_params->create_and_add_parameter("middle", 0, 1, 0.5);
