@@ -564,41 +564,54 @@ extern "C" void app_main(void)
 
     audio_params = std::make_shared<AudioParameters>();
 
-    std::optional<float> gainDefault;
-#if 0
-    etl::string<128> json_string{"0.1"};
-    //persistence.load("ampGain", json_string);
+    auto create_and_load_parameter = [&](
+            const parameters::id_t &name,
+            float minimum,
+            float maximum,
+            float default_value){
+        std::optional<float> loaded_value;
+        etl::string<128> json_string{};
+        int rc = persistence.load(name.data(), json_string);
+        if(rc != 0)
+        {
+            goto out;
+        }
 
-    rapidjson::Document document;
-    document.Parse(json_string.data());
+        {
+            rapidjson::Document document;
+            document.Parse(json_string.data());
 
-    if(!document.HasParseError()) {
-        gainDefault = midi::from_json<float>(document);
-    } else {
-        ESP_LOGI(TAG, "document failed to parse");
-    }
-#endif
+            if(!document.HasParseError()) {
+                loaded_value = midi::from_json<float>(document);
+            } else {
+                ESP_LOGE(TAG, "document failed to parse '%s'", json_string.data());
+            }
+        }
 
-    audio_params->create_and_add_parameter("ampGain", 0, 1, gainDefault.value_or(0.5));
-    audio_params->create_and_add_parameter("ampChannel", 0, 1, 0);
-    audio_params->create_and_add_parameter("bass", 0, 1, 0.5);
-    audio_params->create_and_add_parameter("middle", 0, 1, 0.5);
-    audio_params->create_and_add_parameter("treble", 0, 1, 0.5);
+out:
+        audio_params->create_and_add_parameter(name, minimum, maximum, loaded_value.value_or(default_value));
+    };
+
+    create_and_load_parameter("ampGain", 0, 1, 0.5);
+    create_and_load_parameter("ampChannel", 0, 1, 0);
+    create_and_load_parameter("bass", 0, 1, 0.5);
+    create_and_load_parameter("middle", 0, 1, 0.5);
+    create_and_load_parameter("treble", 0, 1, 0.5);
     //contour gets unstable when set to 0
-    audio_params->create_and_add_parameter("contour", 0.01, 1, 0.5);
-    audio_params->create_and_add_parameter("volume", -30, 0, -15);
+    create_and_load_parameter("contour", 0.01, 1, 0.5);
+    create_and_load_parameter("volume", -30, 0, -15);
 
-    audio_params->create_and_add_parameter("noiseGateThreshold", -80, 0, -60);
-    audio_params->create_and_add_parameter("noiseGateHysteresis", 0, 5, 0);
-    audio_params->create_and_add_parameter("noiseGateAttack", 1, 50, 10);
-    audio_params->create_and_add_parameter("noiseGateHold", 1, 250, 50);
-    audio_params->create_and_add_parameter("noiseGateRelease", 1, 250, 50);
-    audio_params->create_and_add_parameter("noiseGateBypass", 0, 1, 0);
+    create_and_load_parameter("noiseGateThreshold", -80, 0, -60);
+    create_and_load_parameter("noiseGateHysteresis", 0, 5, 0);
+    create_and_load_parameter("noiseGateAttack", 1, 50, 10);
+    create_and_load_parameter("noiseGateHold", 1, 250, 50);
+    create_and_load_parameter("noiseGateRelease", 1, 250, 50);
+    create_and_load_parameter("noiseGateBypass", 0, 1, 0);
 
-    audio_params->create_and_add_parameter("chorusRate", 0.1, 4, 0.95);
-    audio_params->create_and_add_parameter("chorusDepth", 0, 1, 0.3);
-    audio_params->create_and_add_parameter("chorusMix", 0, 1, 0.8);
-    audio_params->create_and_add_parameter("chorusBypass", 0, 1, 0);
+    create_and_load_parameter("chorusRate", 0.1, 4, 0.95);
+    create_and_load_parameter("chorusDepth", 0, 1, 0.3);
+    create_and_load_parameter("chorusMix", 0, 1, 0.8);
+    create_and_load_parameter("chorusBypass", 0, 1, 0);
 
     ESP_LOGI(TAG, "observer size: %zu", sizeof(ParameterObserver<MAX_PARAMETERS>));
     ESP_LOGI(TAG, "param size: %zu", sizeof(AudioParameters));
@@ -842,7 +855,7 @@ extern "C" void app_main(void)
 void nvs_debug_print()
 {
     nvs_iterator_t it = NULL;
-    esp_err_t res = nvs_entry_find(nullptr, "persistence", NVS_TYPE_ANY, &it);
+    esp_err_t res = nvs_entry_find("nvs", "persistence", NVS_TYPE_ANY, &it);
     while(res == ESP_OK) {
         nvs_entry_info_t info;
         nvs_entry_info(it, &info); // Can omit error check if parameters are guaranteed to be non-NULL
