@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.4"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>ShrapnelDSP: shrapnel::Queue&lt; T &gt; Class Template Reference</title>
+<title>ShrapnelDSP: shrapnel::Queue&lt; T, MAX_SIZE &gt; Class Template Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -93,61 +93,67 @@ $(document).ready(function(){initNavTree('classshrapnel_1_1Queue.html',''); init
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a>  </div>
-  <div class="headertitle"><div class="title">shrapnel::Queue&lt; T &gt; Class Template Reference</div></div>
+  <div class="headertitle"><div class="title">shrapnel::Queue&lt; T, MAX_SIZE &gt; Class Template Reference<span class="mlabels"><span class="mlabel">final</span></span></div></div>
 </div><!--header-->
 <div class="contents">
 
 <p><code>#include &lt;<a class="el" href="queue_8h_source.html">queue.h</a>&gt;</code></p>
 <div class="dynheader">
-Inheritance diagram for shrapnel::Queue&lt; T &gt;:</div>
+Inheritance diagram for shrapnel::Queue&lt; T, MAX_SIZE &gt;:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="classshrapnel_1_1Queue__inherit__graph.svg" width="186" height="112"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+<div class="center"><iframe scrolling="no" frameborder="0" src="classshrapnel_1_1Queue__inherit__graph.svg" width="186" height="127"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
 </div>
 <center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
 <div class="dynheader">
-Collaboration diagram for shrapnel::Queue&lt; T &gt;:</div>
+Collaboration diagram for shrapnel::Queue&lt; T, MAX_SIZE &gt;:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="classshrapnel_1_1Queue__coll__graph.svg" width="186" height="112"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+<div class="center"><iframe scrolling="no" frameborder="0" src="classshrapnel_1_1Queue__coll__graph.svg" width="186" height="127"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
 </div>
 <center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a5af783cb3348b6611eb4a8305d4163b2"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classshrapnel_1_1Queue.html#a5af783cb3348b6611eb4a8305d4163b2">Queue</a> (int number_of_elements)</td></tr>
-<tr class="separator:a5af783cb3348b6611eb4a8305d4163b2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a951eca6ac1f13273f49d6629d29a3609"><td class="memItemLeft" align="right" valign="top">BaseType_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classshrapnel_1_1Queue.html#a951eca6ac1f13273f49d6629d29a3609">receive</a> (T *out, TickType_t time_to_wait) override</td></tr>
-<tr class="separator:a951eca6ac1f13273f49d6629d29a3609"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac5886b231b043aab70a460bc9820b82d"><td class="memItemLeft" align="right" valign="top">BaseType_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classshrapnel_1_1Queue.html#ac5886b231b043aab70a460bc9820b82d">send</a> (T *out, TickType_t time_to_wait) override</td></tr>
-<tr class="separator:ac5886b231b043aab70a460bc9820b82d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9e3da4bcf8b33c8899eb3f54aac22857"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classshrapnel_1_1Queue.html#a9e3da4bcf8b33c8899eb3f54aac22857">Queue</a> ()</td></tr>
+<tr class="separator:a9e3da4bcf8b33c8899eb3f54aac22857"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aea7063f7ef99b8b46f6ba1250012332c"><td class="memItemLeft" align="right" valign="top">BaseType_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classshrapnel_1_1Queue.html#aea7063f7ef99b8b46f6ba1250012332c">receive</a> (T *out, TickType_t time_to_wait) override</td></tr>
+<tr class="separator:aea7063f7ef99b8b46f6ba1250012332c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a641b36d0a32ef881c94ab1395cd63818"><td class="memItemLeft" align="right" valign="top">BaseType_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classshrapnel_1_1Queue.html#a641b36d0a32ef881c94ab1395cd63818">send</a> (const T *in, TickType_t time_to_wait) override</td></tr>
+<tr class="separator:a641b36d0a32ef881c94ab1395cd63818"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classshrapnel_1_1QueueBase"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classshrapnel_1_1QueueBase')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classshrapnel_1_1QueueBase.html">shrapnel::QueueBase&lt; T &gt;</a></td></tr>
 <tr class="memitem:aac74fe3c0e9dfb65e20d00798ab14c7d inherit pub_methods_classshrapnel_1_1QueueBase"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classshrapnel_1_1QueueBase.html#aac74fe3c0e9dfb65e20d00798ab14c7d">QueueBase</a> (int number_of_elements)</td></tr>
 <tr class="separator:aac74fe3c0e9dfb65e20d00798ab14c7d inherit pub_methods_classshrapnel_1_1QueueBase"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab91cc1fb473ac9499f7843218842a946 inherit pub_methods_classshrapnel_1_1QueueBase"><td class="memItemLeft" align="right" valign="top">virtual BaseType_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classshrapnel_1_1QueueBase.html#ab91cc1fb473ac9499f7843218842a946">receive</a> (T *out, TickType_t time_to_wait)=0</td></tr>
 <tr class="separator:ab91cc1fb473ac9499f7843218842a946 inherit pub_methods_classshrapnel_1_1QueueBase"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab04cd6b029505d664bb6e13e245d9b14 inherit pub_methods_classshrapnel_1_1QueueBase"><td class="memItemLeft" align="right" valign="top">virtual BaseType_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classshrapnel_1_1QueueBase.html#ab04cd6b029505d664bb6e13e245d9b14">send</a> (T *out, TickType_t time_to_wait)=0</td></tr>
-<tr class="separator:ab04cd6b029505d664bb6e13e245d9b14 inherit pub_methods_classshrapnel_1_1QueueBase"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7b76fee63afcc760644ab19e19f96ad2 inherit pub_methods_classshrapnel_1_1QueueBase"><td class="memItemLeft" align="right" valign="top">virtual BaseType_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classshrapnel_1_1QueueBase.html#a7b76fee63afcc760644ab19e19f96ad2">send</a> (const T *in, TickType_t time_to_wait)=0</td></tr>
+<tr class="separator:a7b76fee63afcc760644ab19e19f96ad2 inherit pub_methods_classshrapnel_1_1QueueBase"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="inherited" name="inherited"></a>
+Additional Inherited Members</h2></td></tr>
+<tr class="inherit_header pub_types_classshrapnel_1_1QueueBase"><td colspan="2" onclick="javascript:toggleInherit('pub_types_classshrapnel_1_1QueueBase')"><img src="closed.png" alt="-"/>&#160;Public Types inherited from <a class="el" href="classshrapnel_1_1QueueBase.html">shrapnel::QueueBase&lt; T &gt;</a></td></tr>
+<tr class="memitem:afa21cb52927682003ac47f842c5e8d68 inherit pub_types_classshrapnel_1_1QueueBase"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classshrapnel_1_1QueueBase.html#afa21cb52927682003ac47f842c5e8d68">value_type</a> = T</td></tr>
+<tr class="separator:afa21cb52927682003ac47f842c5e8d68 inherit pub_types_classshrapnel_1_1QueueBase"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><div class="compoundTemplParams">template&lt;typename T&gt;<br />
-class shrapnel::Queue&lt; T &gt;</div>
-<p class="definition">Definition at line <a class="el" href="queue_8h_source.html#l00042">42</a> of file <a class="el" href="queue_8h_source.html">queue.h</a>.</p>
+<div class="textblock"><div class="compoundTemplParams">template&lt;typename T, std::size_t MAX_SIZE&gt;<br />
+requires (MAX_SIZE &gt; 0)<br />
+class shrapnel::Queue&lt; T, MAX_SIZE &gt;</div>
+<p class="definition">Definition at line <a class="el" href="queue_8h_source.html#l00051">51</a> of file <a class="el" href="queue_8h_source.html">queue.h</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="a5af783cb3348b6611eb4a8305d4163b2" name="a5af783cb3348b6611eb4a8305d4163b2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5af783cb3348b6611eb4a8305d4163b2">&#9670;&nbsp;</a></span>Queue()</h2>
+<a id="a9e3da4bcf8b33c8899eb3f54aac22857" name="a9e3da4bcf8b33c8899eb3f54aac22857"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9e3da4bcf8b33c8899eb3f54aac22857">&#9670;&nbsp;</a></span>Queue()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename T &gt; </div>
+template&lt;typename T , std::size_t MAX_SIZE&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classshrapnel_1_1Queue.html">shrapnel::Queue</a>&lt; T &gt;::Queue </td>
+          <td class="memname"><a class="el" href="classshrapnel_1_1Queue.html">shrapnel::Queue</a>&lt; T, MAX_SIZE &gt;::Queue </td>
           <td>(</td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>number_of_elements</em></td><td>)</td>
+          <td class="paramname"></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -158,29 +164,25 @@ template&lt;typename T &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="queue_8h_source.html#l00045">45</a> of file <a class="el" href="queue_8h_source.html">queue.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   45</span>                                  : QueueBase&lt;T&gt;(number_of_elements)</div>
-<div class="line"><span class="lineno">   46</span>    {</div>
-<div class="line"><span class="lineno">   47</span>        handle = xQueueCreate(number_of_elements, <span class="keyword">sizeof</span>(T));</div>
-<div class="line"><span class="lineno">   48</span>        assert(handle);</div>
-<div class="line"><span class="lineno">   49</span>    }</div>
+<p class="definition">Definition at line <a class="el" href="queue_8h_source.html#l00056">56</a> of file <a class="el" href="queue_8h_source.html">queue.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   56</span>: QueueBase&lt;T&gt;(MAX_SIZE), used_semaphore{0}, free_semaphore{MAX_SIZE} {}</div>
 </div><!-- fragment -->
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="a951eca6ac1f13273f49d6629d29a3609" name="a951eca6ac1f13273f49d6629d29a3609"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a951eca6ac1f13273f49d6629d29a3609">&#9670;&nbsp;</a></span>receive()</h2>
+<a id="aea7063f7ef99b8b46f6ba1250012332c" name="aea7063f7ef99b8b46f6ba1250012332c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aea7063f7ef99b8b46f6ba1250012332c">&#9670;&nbsp;</a></span>receive()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename T &gt; </div>
+template&lt;typename T , std::size_t MAX_SIZE&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">BaseType_t <a class="el" href="classshrapnel_1_1Queue.html">shrapnel::Queue</a>&lt; T &gt;::receive </td>
+          <td class="memname">BaseType_t <a class="el" href="classshrapnel_1_1Queue.html">shrapnel::Queue</a>&lt; T, MAX_SIZE &gt;::receive </td>
           <td>(</td>
           <td class="paramtype">T *&#160;</td>
           <td class="paramname"><em>out</em>, </td>
@@ -206,37 +208,48 @@ template&lt;typename T &gt; </div>
 
 <p>Implements <a class="el" href="classshrapnel_1_1QueueBase.html#ab91cc1fb473ac9499f7843218842a946">shrapnel::QueueBase&lt; T &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="queue_8h_source.html#l00051">51</a> of file <a class="el" href="queue_8h_source.html">queue.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   52</span>    {</div>
-<div class="line"><span class="lineno">   53</span>        <span class="keywordflow">return</span> xQueueReceive(handle, out, time_to_wait);</div>
-<div class="line"><span class="lineno">   54</span>    }</div>
+<p class="definition">Definition at line <a class="el" href="queue_8h_source.html#l00058">58</a> of file <a class="el" href="queue_8h_source.html">queue.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   59</span>    {</div>
+<div class="line"><span class="lineno">   60</span>        <span class="comment">// block until an item is available</span></div>
+<div class="line"><span class="lineno">   61</span>        <span class="keywordtype">bool</span> success = used_semaphore.try_acquire_for(ticks(time_to_wait));</div>
+<div class="line"><span class="lineno">   62</span>        <span class="keywordflow">if</span>(!success) <span class="keywordflow">return</span> errQUEUE_EMPTY;</div>
+<div class="line"><span class="lineno">   63</span> </div>
+<div class="line"><span class="lineno">   64</span>        <span class="comment">// Receive the item</span></div>
+<div class="line"><span class="lineno">   65</span>        {</div>
+<div class="line"><span class="lineno">   66</span>            std::scoped_lock lock{mutex};</div>
+<div class="line"><span class="lineno">   67</span>            *out = queue.front();</div>
+<div class="line"><span class="lineno">   68</span>            queue.pop();</div>
+<div class="line"><span class="lineno">   69</span>        }</div>
+<div class="line"><span class="lineno">   70</span>        free_semaphore.release();</div>
+<div class="line"><span class="lineno">   71</span>        <span class="keywordflow">return</span> pdPASS;</div>
+<div class="line"><span class="lineno">   72</span>    }</div>
 </div><!-- fragment -->
 <p class="reference">Referenced by <a class="el" href="wifi__provisioning_8h_source.html#l00213">shrapnel::wifi_provisioning::WiFiProvisioning::wait_for_provisioning()</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="classshrapnel_1_1Queue_a951eca6ac1f13273f49d6629d29a3609_icgraph.svg" width="394" height="67"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+<div class="center"><iframe scrolling="no" frameborder="0" src="classshrapnel_1_1Queue_aea7063f7ef99b8b46f6ba1250012332c_icgraph.svg" width="394" height="67"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
 </div>
 </div>
 
 </div>
 </div>
-<a id="ac5886b231b043aab70a460bc9820b82d" name="ac5886b231b043aab70a460bc9820b82d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac5886b231b043aab70a460bc9820b82d">&#9670;&nbsp;</a></span>send()</h2>
+<a id="a641b36d0a32ef881c94ab1395cd63818" name="a641b36d0a32ef881c94ab1395cd63818"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a641b36d0a32ef881c94ab1395cd63818">&#9670;&nbsp;</a></span>send()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename T &gt; </div>
+template&lt;typename T , std::size_t MAX_SIZE&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">BaseType_t <a class="el" href="classshrapnel_1_1Queue.html">shrapnel::Queue</a>&lt; T &gt;::send </td>
+          <td class="memname">BaseType_t <a class="el" href="classshrapnel_1_1Queue.html">shrapnel::Queue</a>&lt; T, MAX_SIZE &gt;::send </td>
           <td>(</td>
-          <td class="paramtype">T *&#160;</td>
-          <td class="paramname"><em>out</em>, </td>
+          <td class="paramtype">const T *&#160;</td>
+          <td class="paramname"><em>in</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -257,12 +270,22 @@ template&lt;typename T &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Implements <a class="el" href="classshrapnel_1_1QueueBase.html#ab04cd6b029505d664bb6e13e245d9b14">shrapnel::QueueBase&lt; T &gt;</a>.</p>
+<p>Implements <a class="el" href="classshrapnel_1_1QueueBase.html#a7b76fee63afcc760644ab19e19f96ad2">shrapnel::QueueBase&lt; T &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="queue_8h_source.html#l00056">56</a> of file <a class="el" href="queue_8h_source.html">queue.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   57</span>    {</div>
-<div class="line"><span class="lineno">   58</span>        <span class="keywordflow">return</span> xQueueSendToBack(handle, out, time_to_wait);</div>
-<div class="line"><span class="lineno">   59</span>    }</div>
+<p class="definition">Definition at line <a class="el" href="queue_8h_source.html#l00074">74</a> of file <a class="el" href="queue_8h_source.html">queue.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   75</span>    {</div>
+<div class="line"><span class="lineno">   76</span>        <span class="comment">// block until a space is available</span></div>
+<div class="line"><span class="lineno">   77</span>        <span class="keywordtype">bool</span> success = free_semaphore.try_acquire_for(ticks(time_to_wait));</div>
+<div class="line"><span class="lineno">   78</span>        <span class="keywordflow">if</span>(!success) <span class="keywordflow">return</span> errQUEUE_FULL;</div>
+<div class="line"><span class="lineno">   79</span> </div>
+<div class="line"><span class="lineno">   80</span>        <span class="comment">// Add item to queue, and notify receivers</span></div>
+<div class="line"><span class="lineno">   81</span>        {</div>
+<div class="line"><span class="lineno">   82</span>            std::scoped_lock lock{mutex};</div>
+<div class="line"><span class="lineno">   83</span>            queue.push(*in);</div>
+<div class="line"><span class="lineno">   84</span>        }</div>
+<div class="line"><span class="lineno">   85</span>        used_semaphore.release();</div>
+<div class="line"><span class="lineno">   86</span>        <span class="keywordflow">return</span> pdPASS;</div>
+<div class="line"><span class="lineno">   87</span>    }</div>
 </div><!-- fragment -->
 </div>
 </div>

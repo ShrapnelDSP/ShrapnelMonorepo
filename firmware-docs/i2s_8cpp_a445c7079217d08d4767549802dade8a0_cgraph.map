@@ -1,29 +1,27 @@
 <map id="i2s_setup" name="i2s_setup">
-<area shape="rect" id="node1" title=" " alt="" coords="5,454,84,481"/>
-<area shape="rect" id="node2" href="$i2s_8cpp.html#a0826d7a742c16e16a62704cc59fd4ba2" title=" " alt="" coords="159,429,246,455"/>
-<area shape="rect" id="node3" href="$i2s_8cpp.html#a4e37f563a34c1a559515cc40782caf07" title=" " alt="" coords="132,479,273,506"/>
-<area shape="rect" id="node4" href="$float__convert_8h.html#ae9b18f6b920e3401ec41278b57e6817b" title=" " alt="" coords="520,479,619,506"/>
-<area shape="rect" id="node5" href="$process_8cpp.html#a159f752dbd8aa42d765e604910814129" title=" " alt="" coords="337,277,429,303"/>
-<area shape="rect" id="node18" href="$process_8cpp.html#a450bec865b55b9890f4050f1ab0dba5c" title=" " alt="" coords="321,530,445,557"/>
-<area shape="rect" id="node6" href="$noise__gate_8cpp.html#a949bfebe851dee44040d83bbd068dad1" title="Initialise the effect." alt="" coords="534,175,605,202"/>
-<area shape="rect" id="node8" href="$noise__gate_8cpp.html#a4868a6f017c846668c1b09d32b833099" title="Set the attack time in milliseconds." alt="" coords="512,429,627,455"/>
-<area shape="rect" id="node9" href="$noise__gate_8cpp.html#a184d915d5eb18d4743c6e3008bb47e62" title="Set the buffer size in number of samples." alt="" coords="499,226,640,253"/>
-<area shape="rect" id="node10" href="$noise__gate_8cpp.html#a4fccad713cee272e388c9c45fc97037e" title="Set the hold time in milliseconds." alt="" coords="518,277,621,303"/>
-<area shape="rect" id="node11" href="$noise__gate_8cpp.html#abe525a07b8cb6f0557740cc4100428a9" title="Set the release time in milliseconds." alt="" coords="509,327,630,354"/>
-<area shape="rect" id="node12" href="$noise__gate_8cpp.html#a2691256497a1cec4e14434f48eccfb56" title="Set the sample rate in Hz." alt="" coords="494,45,645,71"/>
-<area shape="rect" id="node15" href="$noise__gate_8cpp.html#a82e62ed410acc03c8179d8245de13e12" title="Set the threshold and hysteresis value in dBFS." alt="" coords="503,378,635,405"/>
-<area shape="rect" id="node17" href="$classshrapnel_1_1parameters_1_1AudioParameters.html#a6350b5ab5bf4fe890bdab1e8a103d100" title="Get denormalised value of parameter." alt="" coords="493,95,645,151"/>
-<area shape="rect" id="node7" href="$noise__gate_8cpp.html#a5d3ba76b4666ac1820b498aaf04ea22e" title="Reset the state." alt="" coords="724,175,807,202"/>
-<area shape="rect" id="node13" href="$abstract__dsp__esp32_8c.html#ab721c839889c1267077f4cb3304b655d" title=" " alt="" coords="694,5,837,47"/>
-<area shape="rect" id="node14" href="$classshrapnel_1_1dsp_1_1IirFilter.html#aa09e7c1ab99d85c0fdd1c98c80636550" title=" " alt="" coords="693,71,837,112"/>
-<area shape="rect" id="node16" href="$noise__gate_8cpp.html#afb2354391bb81545d92334434552ab4b" title=" " alt="" coords="722,378,809,405"/>
-<area shape="rect" id="node19" href="$process_8cpp.html#a9785ac35cd7c86538882d5311fd66bf1" title=" " alt="" coords="513,682,626,709"/>
-<area shape="rect" id="node20" href="$noise__gate_8cpp.html#a129b18f80393706faa5a453417153a51" title="Analyse the audio." alt="" coords="520,733,619,759"/>
-<area shape="rect" id="node23" href="$noise__gate_8cpp.html#a3a59d391339a038f91650058680b00d6" title="Apply the precalculated gain to the audio." alt="" coords="519,785,619,811"/>
-<area shape="rect" id="node25" href="$profiling_8cpp.html#a3171d2be3fbf00e49982243e9869735a" title=" " alt="" coords="499,530,640,557"/>
-<area shape="rect" id="node26" href="$profiling_8cpp.html#ac05fdc10ded37340f2ab202bbc184d20" title=" " alt="" coords="520,581,619,607"/>
-<area shape="rect" id="node27" href="$profiling_8cpp.html#a9f4516d77db32a65ee99933c6c9d3802" title=" " alt="" coords="520,631,619,658"/>
-<area shape="rect" id="node21" href="$classshrapnel_1_1dsp_1_1IirFilter.html#a53cb5a72d2a310cd4b35d4329af682f0" title=" " alt="" coords="693,723,837,764"/>
-<area shape="rect" id="node22" href="$iir__universal_8c.html#a738b77e8a79f0c754dba3af19fbd4e30" title=" " alt="" coords="885,730,971,757"/>
-<area shape="rect" id="node24" href="$abstract__dsp__esp32_8c.html#a52d208742d325a0cdb7225bd9fe0e902" title=" " alt="" coords="713,789,817,815"/>
+<area shape="rect" id="node1" title=" " alt="" coords="5,208,84,235"/>
+<area shape="rect" id="node2" href="$i2s_8cpp.html#a4e37f563a34c1a559515cc40782caf07" title=" " alt="" coords="132,208,273,235"/>
+<area shape="rect" id="node3" href="$float__convert_8h.html#ae9b18f6b920e3401ec41278b57e6817b" title=" " alt="" coords="519,5,618,32"/>
+<area shape="rect" id="node4" href="$process_8cpp.html#a159f752dbd8aa42d765e604910814129" title=" " alt="" coords="337,208,429,235"/>
+<area shape="rect" id="node16" href="$process_8cpp.html#a450bec865b55b9890f4050f1ab0dba5c" title=" " alt="" coords="321,385,445,412"/>
+<area shape="rect" id="node5" href="$noise__gate_8cpp.html#a949bfebe851dee44040d83bbd068dad1" title="Initialise the effect." alt="" coords="533,56,604,83"/>
+<area shape="rect" id="node7" href="$noise__gate_8cpp.html#a4868a6f017c846668c1b09d32b833099" title="Set the attack time in milliseconds." alt="" coords="511,208,626,235"/>
+<area shape="rect" id="node8" href="$noise__gate_8cpp.html#a184d915d5eb18d4743c6e3008bb47e62" title="Set the buffer size in number of samples." alt="" coords="498,107,639,133"/>
+<area shape="rect" id="node9" href="$noise__gate_8cpp.html#a4fccad713cee272e388c9c45fc97037e" title="Set the hold time in milliseconds." alt="" coords="517,259,620,285"/>
+<area shape="rect" id="node10" href="$noise__gate_8cpp.html#abe525a07b8cb6f0557740cc4100428a9" title="Set the release time in milliseconds." alt="" coords="508,309,629,336"/>
+<area shape="rect" id="node11" href="$noise__gate_8cpp.html#a2691256497a1cec4e14434f48eccfb56" title="Set the sample rate in Hz." alt="" coords="493,157,644,184"/>
+<area shape="rect" id="node14" href="$noise__gate_8cpp.html#a82e62ed410acc03c8179d8245de13e12" title="Set the threshold and hysteresis value in dBFS." alt="" coords="503,360,635,387"/>
+<area shape="rect" id="node6" href="$noise__gate_8cpp.html#a5d3ba76b4666ac1820b498aaf04ea22e" title="Reset the state." alt="" coords="723,56,805,83"/>
+<area shape="rect" id="node12" href="$abstract__dsp__esp32_8c.html#ab721c839889c1267077f4cb3304b655d" title=" " alt="" coords="693,194,835,235"/>
+<area shape="rect" id="node13" href="$classshrapnel_1_1dsp_1_1IirFilter.html#aa09e7c1ab99d85c0fdd1c98c80636550" title=" " alt="" coords="692,129,836,170"/>
+<area shape="rect" id="node15" href="$noise__gate_8cpp.html#afb2354391bb81545d92334434552ab4b" title=" " alt="" coords="721,360,807,387"/>
+<area shape="rect" id="node17" href="$process_8cpp.html#a9785ac35cd7c86538882d5311fd66bf1" title=" " alt="" coords="512,411,625,437"/>
+<area shape="rect" id="node18" href="$noise__gate_8cpp.html#a129b18f80393706faa5a453417153a51" title="Analyse the audio." alt="" coords="519,461,618,488"/>
+<area shape="rect" id="node21" href="$noise__gate_8cpp.html#a3a59d391339a038f91650058680b00d6" title="Apply the precalculated gain to the audio." alt="" coords="519,512,619,539"/>
+<area shape="rect" id="node23" href="$profiling_8cpp.html#a3171d2be3fbf00e49982243e9869735a" title=" " alt="" coords="498,563,639,589"/>
+<area shape="rect" id="node24" href="$profiling_8cpp.html#ac05fdc10ded37340f2ab202bbc184d20" title=" " alt="" coords="519,613,618,640"/>
+<area shape="rect" id="node25" href="$profiling_8cpp.html#a9f4516d77db32a65ee99933c6c9d3802" title=" " alt="" coords="519,664,618,691"/>
+<area shape="rect" id="node19" href="$classshrapnel_1_1dsp_1_1IirFilter.html#a53cb5a72d2a310cd4b35d4329af682f0" title=" " alt="" coords="692,450,836,491"/>
+<area shape="rect" id="node20" href="$iir__universal_8c.html#a738b77e8a79f0c754dba3af19fbd4e30" title=" " alt="" coords="884,457,969,484"/>
+<area shape="rect" id="node22" href="$abstract__dsp__esp32_8c.html#a52d208742d325a0cdb7225bd9fe0e902" title=" " alt="" coords="712,516,816,543"/>
 </map>

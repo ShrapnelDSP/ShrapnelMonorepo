@@ -1,6 +1,5 @@
 var searchData=
 [
-  ['parameter_5fname_0',['parameter_name',['../structshrapnel_1_1midi_1_1Mapping.html#ad1d90b2aa45178377665b16f88aa4433',1,'shrapnel::midi::Mapping']]],
-  ['parameters_1',['parameters',['../structshrapnel_1_1midi_1_1Message.html#aed40e3ab3220667ba38796866604cbb7',1,'shrapnel::midi::Message']]],
-  ['profiling_5fmutex_2',['profiling_mutex',['../profiling_8h.html#a3b34b520123016210f0a0bb409286805',1,'profiling_mutex():&#160;profiling.cpp'],['../profiling_8cpp.html#a3b34b520123016210f0a0bb409286805',1,'profiling_mutex():&#160;profiling.cpp']]]
+  ['release_5fsamples_0',['release_samples',['../noise__gate_8cpp.html#ad7dabea111d7fb382e5fdc3dca9c152c',1,'noise_gate.cpp']]],
+  ['rx_5fbuf_1',['rx_buf',['../i2s_8cpp.html#a4025221c11b823336cd64a55623f8a1e',1,'i2s.cpp']]]
 ];

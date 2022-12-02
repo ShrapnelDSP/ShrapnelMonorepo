@@ -36,16 +36,16 @@ var annotated_dup =
       ] ],
       [ "parameters", "namespaceshrapnel_1_1parameters.html", [
         [ "AudioParameterFloat", "classshrapnel_1_1parameters_1_1AudioParameterFloat.html", "classshrapnel_1_1parameters_1_1AudioParameterFloat" ],
-        [ "AudioParameters", "classshrapnel_1_1parameters_1_1AudioParameters.html", "classshrapnel_1_1parameters_1_1AudioParameters" ]
+        [ "AudioParameters", "classshrapnel_1_1parameters_1_1AudioParameters.html", "classshrapnel_1_1parameters_1_1AudioParameters" ],
+        [ "CommandHandling", "classshrapnel_1_1parameters_1_1CommandHandling.html", "classshrapnel_1_1parameters_1_1CommandHandling" ],
+        [ "Initialise", "structshrapnel_1_1parameters_1_1Initialise.html", null ],
+        [ "Update", "structshrapnel_1_1parameters_1_1Update.html", "structshrapnel_1_1parameters_1_1Update" ]
       ] ],
       [ "wifi_provisioning", "namespaceshrapnel_1_1wifi__provisioning.html", [
         [ "WiFiProvisioning", "classshrapnel_1_1wifi__provisioning_1_1WiFiProvisioning.html", "classshrapnel_1_1wifi__provisioning_1_1WiFiProvisioning" ]
       ] ],
-      [ "audio_event_message_t", "structshrapnel_1_1audio__event__message__t.html", "structshrapnel_1_1audio__event__message__t" ],
-      [ "CommandHandling", "classshrapnel_1_1CommandHandling.html", "classshrapnel_1_1CommandHandling" ],
-      [ "CommandHandlingTask", "classshrapnel_1_1CommandHandlingTask.html", "classshrapnel_1_1CommandHandlingTask" ],
       [ "EventSend", "classshrapnel_1_1EventSend.html", "classshrapnel_1_1EventSend" ],
-      [ "EventSendBase", "classshrapnel_1_1EventSendBase.html", "classshrapnel_1_1EventSendBase" ],
+      [ "ParameterUpdateNotifier", "classshrapnel_1_1ParameterUpdateNotifier.html", "classshrapnel_1_1ParameterUpdateNotifier" ],
       [ "Queue", "classshrapnel_1_1Queue.html", "classshrapnel_1_1Queue" ],
       [ "QueueBase", "classshrapnel_1_1QueueBase.html", "classshrapnel_1_1QueueBase" ],
       [ "TaskBase", "classshrapnel_1_1TaskBase.html", "classshrapnel_1_1TaskBase" ]

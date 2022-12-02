@@ -115,27 +115,28 @@ $(document).ready(function(){initNavTree('i2s_8h_source.html',''); initResizable
 <div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span> </div>
 <div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="preprocessor">#pragma once</span></div>
 <div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span> </div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="preprocessor">#include &quot;esp_err.h&quot;</span></div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="preprocessor">#include &quot;driver/gpio.h&quot;</span></div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="preprocessor">#include &quot;driver/gpio.h&quot;</span></div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="preprocessor">#include &quot;<a class="code" href="audio__param_8h.html">audio_param.h</a>&quot;</span></div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span> </div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><span class="preprocessor">#ifdef __cplusplus</span></div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><span class="keyword">extern</span> <span class="stringliteral">&quot;C&quot;</span> {</div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span><span class="preprocessor">#endif</span></div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span> </div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span><span class="preprocessor">#define DMA_BUF_SIZE    (512)</span></div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span><span class="preprocessor">#define SAMPLE_RATE     (48000)</span></div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span> </div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>esp_err_t <a class="code hl_function" href="i2s_8h.html#ad5afe3a23bdc5507b4e6a5c61456611d">i2s_setup</a>(gpio_num_t profiling_gpio, <a class="code hl_class" href="classshrapnel_1_1parameters_1_1AudioParameters.html">shrapnel::parameters::AudioParameters</a> *<a class="code hl_variable" href="namespaceshrapnel.html#ab730eff37b9fd09b53baf222b86d8c4f">audio_params</a>);</div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span> </div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span><span class="preprocessor">#ifdef __cplusplus</span></div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>}</div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="preprocessor">#include &quot;driver/gpio.h&quot;</span></div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="preprocessor">#include &quot;esp_err.h&quot;</span></div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="preprocessor">#include &quot;freertos/FreeRTOS.h&quot;</span></div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="preprocessor">#include &quot;freertos/queue.h&quot;</span></div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="preprocessor">#include &quot;driver/i2s.h&quot;</span></div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span> </div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><span class="preprocessor">#include &quot;<a class="code" href="audio__param_8h.html">audio_param.h</a>&quot;</span></div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span> </div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span><span class="preprocessor">#define DMA_BUF_SIZE    (512)</span></div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span><span class="preprocessor">#define SAMPLE_RATE     (48000)</span></div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span> </div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span><span class="keyword">extern</span> QueueHandle_t <a class="code hl_variable" href="i2s_8h.html#a9b83a13d267928932fc9d01c7ee09df2">i2s_queue</a>;</div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span> </div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>esp_err_t <a class="code hl_function" href="i2s_8h.html#ad5afe3a23bdc5507b4e6a5c61456611d">i2s_setup</a>(gpio_num_t profiling_gpio, <a class="code hl_class" href="classshrapnel_1_1parameters_1_1AudioParameters.html">shrapnel::parameters::AudioParameters</a> *<a class="code hl_variable" href="namespaceshrapnel.html#aeaf166bfe1a2d47ff9208f62ac0a78e4">audio_params</a>);</div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span> </div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span><span class="keywordtype">void</span> <a class="code hl_function" href="i2s_8h.html#acc055f4cf77ac542d694e9e96f38e006">log_i2s_event</a>(<span class="keyword">const</span> i2s_event_t &amp;event);</div>
 <div class="ttc" id="aaudio__param_8h_html"><div class="ttname"><a href="audio__param_8h.html">audio_param.h</a></div></div>
 <div class="ttc" id="aclassshrapnel_1_1parameters_1_1AudioParameters_html"><div class="ttname"><a href="classshrapnel_1_1parameters_1_1AudioParameters.html">shrapnel::parameters::AudioParameters</a></div><div class="ttdef"><b>Definition:</b> <a href="audio__param_8h_source.html#l00059">audio_param.h:59</a></div></div>
-<div class="ttc" id="ai2s_8h_html_ad5afe3a23bdc5507b4e6a5c61456611d"><div class="ttname"><a href="i2s_8h.html#ad5afe3a23bdc5507b4e6a5c61456611d">i2s_setup</a></div><div class="ttdeci">esp_err_t i2s_setup(gpio_num_t profiling_gpio, shrapnel::parameters::AudioParameters *audio_params)</div><div class="ttdef"><b>Definition:</b> <a href="i2s_8cpp_source.html#l00205">i2s.cpp:205</a></div></div>
-<div class="ttc" id="anamespaceshrapnel_html_ab730eff37b9fd09b53baf222b86d8c4f"><div class="ttname"><a href="namespaceshrapnel.html#ab730eff37b9fd09b53baf222b86d8c4f">shrapnel::audio_params</a></div><div class="ttdeci">static parameters::AudioParameters * audio_params</div><div class="ttdef"><b>Definition:</b> <a href="main_8cpp_source.html#l00069">main.cpp:69</a></div></div>
+<div class="ttc" id="ai2s_8h_html_a9b83a13d267928932fc9d01c7ee09df2"><div class="ttname"><a href="i2s_8h.html#a9b83a13d267928932fc9d01c7ee09df2">i2s_queue</a></div><div class="ttdeci">QueueHandle_t i2s_queue</div><div class="ttdef"><b>Definition:</b> <a href="i2s_8cpp_source.html#l00045">i2s.cpp:45</a></div></div>
+<div class="ttc" id="ai2s_8h_html_acc055f4cf77ac542d694e9e96f38e006"><div class="ttname"><a href="i2s_8h.html#acc055f4cf77ac542d694e9e96f38e006">log_i2s_event</a></div><div class="ttdeci">void log_i2s_event(const i2s_event_t &amp;event)</div><div class="ttdef"><b>Definition:</b> <a href="i2s_8cpp_source.html#l00053">i2s.cpp:53</a></div></div>
+<div class="ttc" id="ai2s_8h_html_ad5afe3a23bdc5507b4e6a5c61456611d"><div class="ttname"><a href="i2s_8h.html#ad5afe3a23bdc5507b4e6a5c61456611d">i2s_setup</a></div><div class="ttdeci">esp_err_t i2s_setup(gpio_num_t profiling_gpio, shrapnel::parameters::AudioParameters *audio_params)</div><div class="ttdef"><b>Definition:</b> <a href="i2s_8cpp_source.html#l00200">i2s.cpp:200</a></div></div>
+<div class="ttc" id="anamespaceshrapnel_html_aeaf166bfe1a2d47ff9208f62ac0a78e4"><div class="ttname"><a href="namespaceshrapnel.html#aeaf166bfe1a2d47ff9208f62ac0a78e4">shrapnel::audio_params</a></div><div class="ttdeci">static std::shared_ptr&lt; parameters::AudioParameters &gt; audio_params</div><div class="ttdef"><b>Definition:</b> <a href="main_8cpp_source.html#l00100">main.cpp:100</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

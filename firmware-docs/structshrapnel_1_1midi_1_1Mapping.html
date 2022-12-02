@@ -108,8 +108,6 @@ Public Types</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a6050952f5b5e3bb7cdc04e2dd5cf5706"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structshrapnel_1_1midi_1_1Mapping.html#a6050952f5b5e3bb7cdc04e2dd5cf5706">Mapping</a> (uint8_t a_midi_channel, uint8_t a_cc_number, <a class="el" href="namespaceshrapnel_1_1parameters.html#a5506267ab65b64b98595a4269027196b">parameters::id_t</a> a_parameter_name)</td></tr>
-<tr class="separator:a6050952f5b5e3bb7cdc04e2dd5cf5706"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afede2ee83c22388cba726431f823953f"><td class="memItemLeft" align="right" valign="top">std::strong_ordering&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structshrapnel_1_1midi_1_1Mapping.html#afede2ee83c22388cba726431f823953f">operator&lt;=&gt;</a> (const <a class="el" href="structshrapnel_1_1midi_1_1Mapping.html">Mapping</a> &amp;other) const =default</td></tr>
 <tr class="separator:afede2ee83c22388cba726431f823953f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
@@ -140,57 +138,6 @@ Data Fields</h2></td></tr>
 
 <p class="definition">Definition at line <a class="el" href="midi__mapping_8h_source.html#l00182">182</a> of file <a class="el" href="midi__mapping_8h_source.html">midi_mapping.h</a>.</p>
 
-</div>
-</div>
-<h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="a6050952f5b5e3bb7cdc04e2dd5cf5706" name="a6050952f5b5e3bb7cdc04e2dd5cf5706"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6050952f5b5e3bb7cdc04e2dd5cf5706">&#9670;&nbsp;</a></span>Mapping()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">shrapnel::midi::Mapping::Mapping </td>
-          <td>(</td>
-          <td class="paramtype">uint8_t&#160;</td>
-          <td class="paramname"><em>a_midi_channel</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">uint8_t&#160;</td>
-          <td class="paramname"><em>a_cc_number</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="namespaceshrapnel_1_1parameters.html#a5506267ab65b64b98595a4269027196b">parameters::id_t</a>&#160;</td>
-          <td class="paramname"><em>a_parameter_name</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="midi__mapping_8h_source.html#l00188">188</a> of file <a class="el" href="midi__mapping_8h_source.html">midi_mapping.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  192</span>      : <a class="code hl_variable" href="structshrapnel_1_1midi_1_1Mapping.html#a46fa239f0d9c9c4db85812d0f38b0f29">midi_channel</a>{a_midi_channel},</div>
-<div class="line"><span class="lineno">  193</span>        <a class="code hl_variable" href="structshrapnel_1_1midi_1_1Mapping.html#ae1bdd8e63717dbbf186158d915ab266d">cc_number</a>{a_cc_number},</div>
-<div class="line"><span class="lineno">  194</span>        <a class="code hl_variable" href="structshrapnel_1_1midi_1_1Mapping.html#ad1d90b2aa45178377665b16f88aa4433">parameter_name</a>{a_parameter_name} {};</div>
-<div class="ttc" id="astructshrapnel_1_1midi_1_1Mapping_html_a46fa239f0d9c9c4db85812d0f38b0f29"><div class="ttname"><a href="structshrapnel_1_1midi_1_1Mapping.html#a46fa239f0d9c9c4db85812d0f38b0f29">shrapnel::midi::Mapping::midi_channel</a></div><div class="ttdeci">uint8_t midi_channel</div><div class="ttdef"><b>Definition:</b> <a href="midi__mapping_8h_source.html#l00184">midi_mapping.h:184</a></div></div>
-<div class="ttc" id="astructshrapnel_1_1midi_1_1Mapping_html_ad1d90b2aa45178377665b16f88aa4433"><div class="ttname"><a href="structshrapnel_1_1midi_1_1Mapping.html#ad1d90b2aa45178377665b16f88aa4433">shrapnel::midi::Mapping::parameter_name</a></div><div class="ttdeci">parameters::id_t parameter_name</div><div class="ttdef"><b>Definition:</b> <a href="midi__mapping_8h_source.html#l00186">midi_mapping.h:186</a></div></div>
-<div class="ttc" id="astructshrapnel_1_1midi_1_1Mapping_html_ae1bdd8e63717dbbf186158d915ab266d"><div class="ttname"><a href="structshrapnel_1_1midi_1_1Mapping.html#ae1bdd8e63717dbbf186158d915ab266d">shrapnel::midi::Mapping::cc_number</a></div><div class="ttdeci">uint8_t cc_number</div><div class="ttdef"><b>Definition:</b> <a href="midi__mapping_8h_source.html#l00185">midi_mapping.h:185</a></div></div>
-</div><!-- fragment -->
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
@@ -253,7 +200,7 @@ Data Fields</h2></td></tr>
 
 <p class="definition">Definition at line <a class="el" href="midi__mapping_8h_source.html#l00184">184</a> of file <a class="el" href="midi__mapping_8h_source.html">midi_mapping.h</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="midi__mapping__api_8cpp_source.html#l00027">shrapnel::midi::operator&lt;&lt;()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="main_8cpp_source.html#l00471">shrapnel::app_main()</a>, and <a class="el" href="midi__mapping__api_8cpp_source.html#l00027">shrapnel::midi::operator&lt;&lt;()</a>.</p>
 
 </div>
 </div>

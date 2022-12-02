@@ -94,6 +94,7 @@ $(document).ready(function(){initNavTree('main_8cpp.html',''); initResizable(); 
   <div class="summary">
 <a href="#nested-classes">Data Structures</a> &#124;
 <a href="#namespaces">Namespaces</a> &#124;
+<a href="#typedef-members">Typedefs</a> &#124;
 <a href="#func-members">Functions</a> &#124;
 <a href="#var-members">Variables</a>  </div>
   <div class="headertitle"><div class="title">main.cpp File Reference</div></div>
@@ -104,7 +105,9 @@ $(document).ready(function(){initNavTree('main_8cpp.html',''); initResizable(); 
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Data Structures</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structshrapnel_1_1audio__event__message__t.html">shrapnel::audio_event_message_t</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classshrapnel_1_1ParameterUpdateNotifier.html">shrapnel::ParameterUpdateNotifier</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classshrapnel_1_1EventSend.html">shrapnel::EventSend</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="namespaces" name="namespaces"></a>
@@ -112,8 +115,19 @@ Namespaces</h2></td></tr>
 <tr class="memitem:namespaceshrapnel"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceshrapnel.html">shrapnel</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="typedef-members" name="typedef-members"></a>
+Typedefs</h2></td></tr>
+<tr class="memitem:aa174ce204d91f02c4f4b1f0162ba4875"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="main_8cpp.html#aa174ce204d91f02c4f4b1f0162ba4875">ApiMessage</a> = std::variant&lt; <a class="el" href="namespaceshrapnel_1_1parameters.html#a7d71cb4080803181d147fe9987baa52f">shrapnel::parameters::ApiMessage</a>, <a class="el" href="namespaceshrapnel_1_1midi.html#ad9ee9014110e441706a017a889103bd1">shrapnel::midi::MappingApiMessage</a> &gt;</td></tr>
+<tr class="separator:aa174ce204d91f02c4f4b1f0162ba4875"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a79edd3397c6cf28f6938fd733697bc61"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="main_8cpp.html#a79edd3397c6cf28f6938fd733697bc61">FileDescriptor</a> = std::optional&lt; int &gt;</td></tr>
+<tr class="separator:a79edd3397c6cf28f6938fd733697bc61"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4a2a8445978c00038c4b9a0d35ca7a69"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="main_8cpp.html#a4a2a8445978c00038c4b9a0d35ca7a69">AppMessage</a> = std::pair&lt; <a class="el" href="main_8cpp.html#aa174ce204d91f02c4f4b1f0162ba4875">ApiMessage</a>, <a class="el" href="main_8cpp.html#a79edd3397c6cf28f6938fd733697bc61">FileDescriptor</a> &gt;</td></tr>
+<tr class="separator:a4a2a8445978c00038c4b9a0d35ca7a69"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
+<tr class="memitem:a1a66099a9e1054494d0704363a5c8666"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="main_8cpp.html#a1a66099a9e1054494d0704363a5c8666">audio_event_send_callback</a> (const <a class="el" href="main_8cpp.html#a4a2a8445978c00038c4b9a0d35ca7a69">AppMessage</a> &amp;message)</td></tr>
+<tr class="separator:a1a66099a9e1054494d0704363a5c8666"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9df539517dd9158cb2b42a9d9e948a73"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceshrapnel.html#a9df539517dd9158cb2b42a9d9e948a73">shrapnel::websocket_send</a> (void *arg)</td></tr>
 <tr class="separator:a9df539517dd9158cb2b42a9d9e948a73"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac411c31b2f0dc2242fd12980da5b843d"><td class="memItemLeft" align="right" valign="top">static esp_err_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceshrapnel.html#ac411c31b2f0dc2242fd12980da5b843d">shrapnel::websocket_get_handler</a> (httpd_req_t *req)</td></tr>
@@ -138,24 +152,25 @@ Functions</h2></td></tr>
 <tr class="separator:a9f01b77156c5fc53346d256b9735e6f8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9f09f4ea750643310af9143a53735b7d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceshrapnel.html#a9f09f4ea750643310af9143a53735b7d">shrapnel::app_main</a> (void)</td></tr>
 <tr class="separator:a9f09f4ea750643310af9143a53735b7d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a956bb48f7ee4a35a535c8858a66596d5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="main_8cpp.html#a956bb48f7ee4a35a535c8858a66596d5">audio_event_send_callback</a> (const char *message, int fd)</td></tr>
-<tr class="memdesc:a956bb48f7ee4a35a535c8858a66596d5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called when an event is triggered.  <a href="main_8cpp.html#a956bb48f7ee4a35a535c8858a66596d5">More...</a><br /></td></tr>
-<tr class="separator:a956bb48f7ee4a35a535c8858a66596d5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
 Variables</h2></td></tr>
-<tr class="memitem:a0a1f181e084436dcd88a9d722d763048"><td class="memItemLeft" align="right" valign="top">static Queue&lt; CommandHandling&lt; parameters::AudioParameters &gt;::Message &gt; *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceshrapnel.html#a0a1f181e084436dcd88a9d722d763048">shrapnel::in_queue</a></td></tr>
-<tr class="separator:a0a1f181e084436dcd88a9d722d763048"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab730eff37b9fd09b53baf222b86d8c4f"><td class="memItemLeft" align="right" valign="top">static parameters::AudioParameters *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceshrapnel.html#ab730eff37b9fd09b53baf222b86d8c4f">shrapnel::audio_params</a></td></tr>
-<tr class="separator:ab730eff37b9fd09b53baf222b86d8c4f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a34bece8606142f53ff7b3802d7f70c38"><td class="memItemLeft" align="right" valign="top">static CommandHandlingTask&lt; parameters::AudioParameters &gt; *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceshrapnel.html#a34bece8606142f53ff7b3802d7f70c38">shrapnel::cmd_handling_task</a></td></tr>
-<tr class="separator:a34bece8606142f53ff7b3802d7f70c38"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af4939089585b30c735a3fd8eeb5c4439"><td class="memItemLeft" align="right" valign="top">static Queue&lt; <a class="el" href="main_8cpp.html#a4a2a8445978c00038c4b9a0d35ca7a69">AppMessage</a>, QUEUE_LEN &gt; *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceshrapnel.html#af4939089585b30c735a3fd8eeb5c4439">shrapnel::in_queue</a></td></tr>
+<tr class="separator:af4939089585b30c735a3fd8eeb5c4439"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aeaf166bfe1a2d47ff9208f62ac0a78e4"><td class="memItemLeft" align="right" valign="top">static std::shared_ptr&lt; parameters::AudioParameters &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceshrapnel.html#aeaf166bfe1a2d47ff9208f62ac0a78e4">shrapnel::audio_params</a></td></tr>
+<tr class="separator:aeaf166bfe1a2d47ff9208f62ac0a78e4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afb881192ab670bee44d68a1f2541a6c5"><td class="memItemLeft" align="right" valign="top">static parameters::CommandHandling&lt; parameters::AudioParameters, EventSend &gt; *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceshrapnel.html#afb881192ab670bee44d68a1f2541a6c5">shrapnel::cmd_handling</a></td></tr>
+<tr class="separator:afb881192ab670bee44d68a1f2541a6c5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa5a4f62c185e125f76299ed08776c123"><td class="memItemLeft" align="right" valign="top">static midi::MappingManager&lt; ParameterUpdateNotifier, 10 &gt; *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceshrapnel.html#aa5a4f62c185e125f76299ed08776c123">shrapnel::midi_mapping_manager</a></td></tr>
+<tr class="separator:aa5a4f62c185e125f76299ed08776c123"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab0359eebd8a91c4c12b08d9465f8d8c3"><td class="memItemLeft" align="right" valign="top">static EventSend&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceshrapnel.html#ab0359eebd8a91c4c12b08d9465f8d8c3">shrapnel::event_send</a> {}</td></tr>
 <tr class="separator:ab0359eebd8a91c4c12b08d9465f8d8c3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a402cf2cc4ab226e99766f72f8b21ea06"><td class="memItemLeft" align="right" valign="top">static QueueHandle_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceshrapnel.html#a402cf2cc4ab226e99766f72f8b21ea06">shrapnel::out_queue</a></td></tr>
-<tr class="separator:a402cf2cc4ab226e99766f72f8b21ea06"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1350c41ca8ecad036a45252d2c93998a"><td class="memItemLeft" align="right" valign="top">static Queue&lt; <a class="el" href="main_8cpp.html#a4a2a8445978c00038c4b9a0d35ca7a69">AppMessage</a>, QUEUE_LEN &gt; *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceshrapnel.html#a1350c41ca8ecad036a45252d2c93998a">shrapnel::out_queue</a></td></tr>
+<tr class="separator:a1350c41ca8ecad036a45252d2c93998a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab9671c2bf7feea52d1ba947c71395a73"><td class="memItemLeft" align="right" valign="top">static SemaphoreHandle_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceshrapnel.html#ab9671c2bf7feea52d1ba947c71395a73">shrapnel::work_semaphore</a></td></tr>
 <tr class="separator:ab9671c2bf7feea52d1ba947c71395a73"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aace3a2116876caa6e4e139d75e6d4eec"><td class="memItemLeft" align="right" valign="top">static std::mutex&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceshrapnel.html#aace3a2116876caa6e4e139d75e6d4eec">shrapnel::midi_mutex</a></td></tr>
+<tr class="separator:aace3a2116876caa6e4e139d75e6d4eec"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a14fc4d7d4bcc6e89ccd89f7f9e07fb97"><td class="memItemLeft" align="right" valign="top">static httpd_handle_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceshrapnel.html#a14fc4d7d4bcc6e89ccd89f7f9e07fb97">shrapnel::_server</a> = nullptr</td></tr>
 <tr class="separator:a14fc4d7d4bcc6e89ccd89f7f9e07fb97"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0b7d44945a5a79cfff45cbd9f59a6d93"><td class="memItemLeft" align="right" valign="top">static const httpd_uri_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceshrapnel.html#a0b7d44945a5a79cfff45cbd9f59a6d93">shrapnel::websocket</a></td></tr>
@@ -163,9 +178,58 @@ Variables</h2></td></tr>
 <tr class="memitem:a7e01d080294d5dae6e2840562e397fb7"><td class="memItemLeft" align="right" valign="top">static const httpd_uri_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceshrapnel.html#a7e01d080294d5dae6e2840562e397fb7">shrapnel::ui</a></td></tr>
 <tr class="separator:a7e01d080294d5dae6e2840562e397fb7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<h2 class="groupheader">Typedef Documentation</h2>
+<a id="aa174ce204d91f02c4f4b1f0162ba4875" name="aa174ce204d91f02c4f4b1f0162ba4875"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa174ce204d91f02c4f4b1f0162ba4875">&#9670;&nbsp;</a></span>ApiMessage</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="main_8cpp.html#aa174ce204d91f02c4f4b1f0162ba4875">ApiMessage</a> =  std::variant&lt;<a class="el" href="namespaceshrapnel_1_1parameters.html#a7d71cb4080803181d147fe9987baa52f">shrapnel::parameters::ApiMessage</a>, <a class="el" href="namespaceshrapnel_1_1midi.html#ad9ee9014110e441706a017a889103bd1">shrapnel::midi::MappingApiMessage</a>&gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="main_8cpp_source.html#l00074">74</a> of file <a class="el" href="main_8cpp_source.html">main.cpp</a>.</p>
+
+</div>
+</div>
+<a id="a4a2a8445978c00038c4b9a0d35ca7a69" name="a4a2a8445978c00038c4b9a0d35ca7a69"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4a2a8445978c00038c4b9a0d35ca7a69">&#9670;&nbsp;</a></span>AppMessage</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="main_8cpp.html#a4a2a8445978c00038c4b9a0d35ca7a69">AppMessage</a> =  std::pair&lt;<a class="el" href="main_8cpp.html#aa174ce204d91f02c4f4b1f0162ba4875">ApiMessage</a>, <a class="el" href="main_8cpp.html#a79edd3397c6cf28f6938fd733697bc61">FileDescriptor</a>&gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="main_8cpp_source.html#l00076">76</a> of file <a class="el" href="main_8cpp_source.html">main.cpp</a>.</p>
+
+</div>
+</div>
+<a id="a79edd3397c6cf28f6938fd733697bc61" name="a79edd3397c6cf28f6938fd733697bc61"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a79edd3397c6cf28f6938fd733697bc61">&#9670;&nbsp;</a></span>FileDescriptor</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="main_8cpp.html#a79edd3397c6cf28f6938fd733697bc61">FileDescriptor</a> =  std::optional&lt;int&gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="main_8cpp_source.html#l00075">75</a> of file <a class="el" href="main_8cpp_source.html">main.cpp</a>.</p>
+
+</div>
+</div>
 <h2 class="groupheader">Function Documentation</h2>
-<a id="a956bb48f7ee4a35a535c8858a66596d5" name="a956bb48f7ee4a35a535c8858a66596d5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a956bb48f7ee4a35a535c8858a66596d5">&#9670;&nbsp;</a></span>audio_event_send_callback()</h2>
+<a id="a1a66099a9e1054494d0704363a5c8666" name="a1a66099a9e1054494d0704363a5c8666"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1a66099a9e1054494d0704363a5c8666">&#9670;&nbsp;</a></span>audio_event_send_callback()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -173,90 +237,57 @@ Variables</h2></td></tr>
         <tr>
           <td class="memname">void audio_event_send_callback </td>
           <td>(</td>
-          <td class="paramtype">const char *&#160;</td>
-          <td class="paramname"><em>message</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
+          <td class="paramtype">const <a class="el" href="main_8cpp.html#a4a2a8445978c00038c4b9a0d35ca7a69">AppMessage</a> &amp;&#160;</td>
+          <td class="paramname"><em>message</em></td><td>)</td>
           <td></td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>fd</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Called when an event is triggered. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">message</td><td>JSON representation of the audio event </td></tr>
-    <tr><td class="paramname">fd</td><td>The socket file descriptor for the client initiating this event</td></tr>
-  </table>
-  </dd>
-</dl>
-<p><code>fd</code> is used to prevent a client from receiving a message that was triggered by it. The implementation of this callback must ensure that the message is transmitted only to clients where their descriptor is different from <code>fd</code>. </p>
-
-<p class="definition">Definition at line <a class="el" href="main_8cpp_source.html#l00585">585</a> of file <a class="el" href="main_8cpp_source.html">main.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  586</span>{</div>
-<div class="line"><span class="lineno">  587</span>    <a class="code hl_struct" href="structshrapnel_1_1audio__event__message__t.html">shrapnel::audio_event_message_t</a> event_message = {</div>
-<div class="line"><span class="lineno">  588</span>        .<a class="code hl_variable" href="structshrapnel_1_1audio__event__message__t.html#a9d92f3f1d777e46613479916053d17b7">message</a> = {0},</div>
-<div class="line"><span class="lineno">  589</span>        .fd = fd,</div>
-<div class="line"><span class="lineno">  590</span>    };</div>
-<div class="line"><span class="lineno">  591</span> </div>
-<div class="line"><span class="lineno">  592</span>    snprintf(event_message.<a class="code hl_variable" href="structshrapnel_1_1audio__event__message__t.html#a9d92f3f1d777e46613479916053d17b7">message</a>, <span class="keyword">sizeof</span>(event_message.<a class="code hl_variable" href="structshrapnel_1_1audio__event__message__t.html#a9d92f3f1d777e46613479916053d17b7">message</a>), <span class="stringliteral">&quot;%s&quot;</span>, message);</div>
-<div class="line"><span class="lineno">  593</span> </div>
-<div class="line"><span class="lineno">  594</span>    ESP_LOGD(TAG, <span class="stringliteral">&quot;%s %s&quot;</span>, __FUNCTION__, event_message.<a class="code hl_variable" href="structshrapnel_1_1audio__event__message__t.html#a9d92f3f1d777e46613479916053d17b7">message</a>);</div>
-<div class="line"><span class="lineno">  595</span>    ESP_LOGD(TAG, <span class="stringliteral">&quot;%s %s&quot;</span>, __FUNCTION__, pcTaskGetName(NULL));</div>
-<div class="line"><span class="lineno">  596</span> </div>
-<div class="line"><span class="lineno">  597</span>    <span class="keywordflow">if</span>(errQUEUE_FULL ==</div>
-<div class="line"><span class="lineno">  598</span>            xQueueSendToBack(<a class="code hl_variable" href="namespaceshrapnel.html#a402cf2cc4ab226e99766f72f8b21ea06">shrapnel::out_queue</a>,</div>
-<div class="line"><span class="lineno">  599</span>                             &amp;event_message,</div>
-<div class="line"><span class="lineno">  600</span>                             100 / portTICK_PERIOD_MS))</div>
-<div class="line"><span class="lineno">  601</span>    {</div>
-<div class="line"><span class="lineno">  602</span>        ESP_LOGE(TAG, <span class="stringliteral">&quot;Failed to send message to websocket&quot;</span>);</div>
-<div class="line"><span class="lineno">  603</span>        <span class="keywordflow">return</span>;</div>
-<div class="line"><span class="lineno">  604</span>    }</div>
-<div class="line"><span class="lineno">  605</span> </div>
-<div class="line"><span class="lineno">  606</span>    <span class="keywordflow">if</span>(!xSemaphoreTake(<a class="code hl_variable" href="namespaceshrapnel.html#ab9671c2bf7feea52d1ba947c71395a73">shrapnel::work_semaphore</a>, 1000 / portTICK_PERIOD_MS))</div>
-<div class="line"><span class="lineno">  607</span>    {</div>
-<div class="line"><span class="lineno">  608</span>        ESP_LOGE(TAG, <span class="stringliteral">&quot;work semaphore timed out&quot;</span>);</div>
-<div class="line"><span class="lineno">  609</span>        <span class="keywordflow">return</span>;</div>
-<div class="line"><span class="lineno">  610</span>    }</div>
-<div class="line"><span class="lineno">  611</span> </div>
-<div class="line"><span class="lineno">  612</span>    esp_err_t rc = httpd_queue_work(</div>
-<div class="line"><span class="lineno">  613</span>            <a class="code hl_variable" href="namespaceshrapnel.html#a14fc4d7d4bcc6e89ccd89f7f9e07fb97">shrapnel::_server</a>,</div>
-<div class="line"><span class="lineno">  614</span>            <a class="code hl_function" href="namespaceshrapnel.html#a9df539517dd9158cb2b42a9d9e948a73">shrapnel::websocket_send</a>,</div>
-<div class="line"><span class="lineno">  615</span>            <a class="code hl_variable" href="namespaceshrapnel.html#a14fc4d7d4bcc6e89ccd89f7f9e07fb97">shrapnel::_server</a>);</div>
-<div class="line"><span class="lineno">  616</span>    <span class="keywordflow">if</span>(ESP_OK != rc)</div>
-<div class="line"><span class="lineno">  617</span>    {</div>
-<div class="line"><span class="lineno">  618</span>        ESP_LOGE(TAG, <span class="stringliteral">&quot;failed to queue work for server&quot;</span>);</div>
-<div class="line"><span class="lineno">  619</span>        xQueueReset(<a class="code hl_variable" href="namespaceshrapnel.html#a402cf2cc4ab226e99766f72f8b21ea06">shrapnel::out_queue</a>);</div>
-<div class="line"><span class="lineno">  620</span>    }</div>
-<div class="line"><span class="lineno">  621</span>}</div>
-<div class="ttc" id="anamespaceshrapnel_html_a14fc4d7d4bcc6e89ccd89f7f9e07fb97"><div class="ttname"><a href="namespaceshrapnel.html#a14fc4d7d4bcc6e89ccd89f7f9e07fb97">shrapnel::_server</a></div><div class="ttdeci">static httpd_handle_t _server</div><div class="ttdef"><b>Definition:</b> <a href="main_8cpp_source.html#l00084">main.cpp:84</a></div></div>
-<div class="ttc" id="anamespaceshrapnel_html_a402cf2cc4ab226e99766f72f8b21ea06"><div class="ttname"><a href="namespaceshrapnel.html#a402cf2cc4ab226e99766f72f8b21ea06">shrapnel::out_queue</a></div><div class="ttdeci">static QueueHandle_t out_queue</div><div class="ttdef"><b>Definition:</b> <a href="main_8cpp_source.html#l00073">main.cpp:73</a></div></div>
-<div class="ttc" id="anamespaceshrapnel_html_a9df539517dd9158cb2b42a9d9e948a73"><div class="ttname"><a href="namespaceshrapnel.html#a9df539517dd9158cb2b42a9d9e948a73">shrapnel::websocket_send</a></div><div class="ttdeci">static void websocket_send(void *arg)</div><div class="ttdef"><b>Definition:</b> <a href="main_8cpp_source.html#l00278">main.cpp:278</a></div></div>
-<div class="ttc" id="anamespaceshrapnel_html_ab9671c2bf7feea52d1ba947c71395a73"><div class="ttname"><a href="namespaceshrapnel.html#ab9671c2bf7feea52d1ba947c71395a73">shrapnel::work_semaphore</a></div><div class="ttdeci">static SemaphoreHandle_t work_semaphore</div><div class="ttdef"><b>Definition:</b> <a href="main_8cpp_source.html#l00082">main.cpp:82</a></div></div>
-<div class="ttc" id="astructshrapnel_1_1audio__event__message__t_html"><div class="ttname"><a href="structshrapnel_1_1audio__event__message__t.html">shrapnel::audio_event_message_t</a></div><div class="ttdef"><b>Definition:</b> <a href="main_8cpp_source.html#l00273">main.cpp:273</a></div></div>
-<div class="ttc" id="astructshrapnel_1_1audio__event__message__t_html_a9d92f3f1d777e46613479916053d17b7"><div class="ttname"><a href="structshrapnel_1_1audio__event__message__t.html#a9d92f3f1d777e46613479916053d17b7">shrapnel::audio_event_message_t::message</a></div><div class="ttdeci">char message[MAX_WEBSOCKET_PAYLOAD_SIZE]</div><div class="ttdef"><b>Definition:</b> <a href="main_8cpp_source.html#l00274">main.cpp:274</a></div></div>
+<p class="definition">Definition at line <a class="el" href="main_8cpp_source.html#l00746">746</a> of file <a class="el" href="main_8cpp_source.html">main.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  747</span>{</div>
+<div class="line"><span class="lineno">  748</span>    ESP_LOGD(TAG, <span class="stringliteral">&quot;%s %s&quot;</span>, __FUNCTION__, pcTaskGetName(NULL));</div>
+<div class="line"><span class="lineno">  749</span> </div>
+<div class="line"><span class="lineno">  750</span>    <span class="keywordflow">if</span>(errQUEUE_FULL ==</div>
+<div class="line"><span class="lineno">  751</span>            <a class="code hl_variable" href="namespaceshrapnel.html#a1350c41ca8ecad036a45252d2c93998a">shrapnel::out_queue</a>-&gt;send(&amp;message, pdMS_TO_TICKS(100)))</div>
+<div class="line"><span class="lineno">  752</span>    {</div>
+<div class="line"><span class="lineno">  753</span>        ESP_LOGE(TAG, <span class="stringliteral">&quot;Failed to send message to websocket&quot;</span>);</div>
+<div class="line"><span class="lineno">  754</span>        <span class="keywordflow">return</span>;</div>
+<div class="line"><span class="lineno">  755</span>    }</div>
+<div class="line"><span class="lineno">  756</span> </div>
+<div class="line"><span class="lineno">  757</span>    <span class="keywordflow">if</span>(!xSemaphoreTake(<a class="code hl_variable" href="namespaceshrapnel.html#ab9671c2bf7feea52d1ba947c71395a73">shrapnel::work_semaphore</a>, 1000 / portTICK_PERIOD_MS))</div>
+<div class="line"><span class="lineno">  758</span>    {</div>
+<div class="line"><span class="lineno">  759</span>        ESP_LOGE(TAG, <span class="stringliteral">&quot;work semaphore timed out&quot;</span>);</div>
+<div class="line"><span class="lineno">  760</span>        <span class="keywordflow">return</span>;</div>
+<div class="line"><span class="lineno">  761</span>    }</div>
+<div class="line"><span class="lineno">  762</span> </div>
+<div class="line"><span class="lineno">  763</span>    esp_err_t rc = httpd_queue_work(</div>
+<div class="line"><span class="lineno">  764</span>            <a class="code hl_variable" href="namespaceshrapnel.html#a14fc4d7d4bcc6e89ccd89f7f9e07fb97">shrapnel::_server</a>,</div>
+<div class="line"><span class="lineno">  765</span>            <a class="code hl_function" href="namespaceshrapnel.html#a9df539517dd9158cb2b42a9d9e948a73">shrapnel::websocket_send</a>,</div>
+<div class="line"><span class="lineno">  766</span>            <a class="code hl_variable" href="namespaceshrapnel.html#a14fc4d7d4bcc6e89ccd89f7f9e07fb97">shrapnel::_server</a>);</div>
+<div class="line"><span class="lineno">  767</span>    <span class="keywordflow">if</span>(ESP_OK != rc)</div>
+<div class="line"><span class="lineno">  768</span>    {</div>
+<div class="line"><span class="lineno">  769</span>        ESP_LOGE(TAG, <span class="stringliteral">&quot;failed to queue work for server&quot;</span>);</div>
+<div class="line"><span class="lineno">  770</span>    }</div>
+<div class="line"><span class="lineno">  771</span>}</div>
+<div class="ttc" id="anamespaceshrapnel_html_a1350c41ca8ecad036a45252d2c93998a"><div class="ttname"><a href="namespaceshrapnel.html#a1350c41ca8ecad036a45252d2c93998a">shrapnel::out_queue</a></div><div class="ttdeci">static Queue&lt; AppMessage, QUEUE_LEN &gt; * out_queue</div><div class="ttdef"><b>Definition:</b> <a href="main_8cpp_source.html#l00105">main.cpp:105</a></div></div>
+<div class="ttc" id="anamespaceshrapnel_html_a14fc4d7d4bcc6e89ccd89f7f9e07fb97"><div class="ttname"><a href="namespaceshrapnel.html#a14fc4d7d4bcc6e89ccd89f7f9e07fb97">shrapnel::_server</a></div><div class="ttdeci">static httpd_handle_t _server</div><div class="ttdef"><b>Definition:</b> <a href="main_8cpp_source.html#l00118">main.cpp:118</a></div></div>
+<div class="ttc" id="anamespaceshrapnel_html_a9df539517dd9158cb2b42a9d9e948a73"><div class="ttname"><a href="namespaceshrapnel.html#a9df539517dd9158cb2b42a9d9e948a73">shrapnel::websocket_send</a></div><div class="ttdeci">static void websocket_send(void *arg)</div><div class="ttdef"><b>Definition:</b> <a href="main_8cpp_source.html#l00323">main.cpp:323</a></div></div>
+<div class="ttc" id="anamespaceshrapnel_html_ab9671c2bf7feea52d1ba947c71395a73"><div class="ttname"><a href="namespaceshrapnel.html#ab9671c2bf7feea52d1ba947c71395a73">shrapnel::work_semaphore</a></div><div class="ttdeci">static SemaphoreHandle_t work_semaphore</div><div class="ttdef"><b>Definition:</b> <a href="main_8cpp_source.html#l00114">main.cpp:114</a></div></div>
 </div><!-- fragment -->
-<p class="reference">References <a class="el" href="main_8cpp_source.html#l00084">shrapnel::_server</a>, <a class="el" href="main_8cpp_source.html#l00274">shrapnel::audio_event_message_t::message</a>, <a class="el" href="main_8cpp_source.html#l00073">shrapnel::out_queue</a>, <a class="el" href="main_8cpp_source.html#l00278">shrapnel::websocket_send()</a>, and <a class="el" href="main_8cpp_source.html#l00082">shrapnel::work_semaphore</a>.</p>
+<p class="reference">References <a class="el" href="main_8cpp_source.html#l00118">shrapnel::_server</a>, <a class="el" href="main_8cpp_source.html#l00105">shrapnel::out_queue</a>, <a class="el" href="main_8cpp_source.html#l00323">shrapnel::websocket_send()</a>, and <a class="el" href="main_8cpp_source.html#l00114">shrapnel::work_semaphore</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="audio__events_8c_source.html#l00033">audio_event_task()</a>, and <a class="el" href="event__send_8h_source.html#l00034">shrapnel::EventSend::send()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="main_8cpp_source.html#l00471">shrapnel::app_main()</a>, <a class="el" href="main_8cpp_source.html#l00089">shrapnel::EventSend::send()</a>, and <a class="el" href="main_8cpp_source.html#l00458">shrapnel::ParameterUpdateNotifier::update()</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="main_8cpp_a956bb48f7ee4a35a535c8858a66596d5_cgraph.svg" width="416" height="38"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+<div class="center"><iframe scrolling="no" frameborder="0" src="main_8cpp_a1a66099a9e1054494d0704363a5c8666_cgraph.svg" width="607" height="52"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
 </div>
 </div>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="main_8cpp_a956bb48f7ee4a35a535c8858a66596d5_icgraph.svg" width="727" height="104"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+<div class="center"><iframe scrolling="no" frameborder="0" src="main_8cpp_a1a66099a9e1054494d0704363a5c8666_icgraph.svg" width="420" height="170"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
 </div>
 </div>
 

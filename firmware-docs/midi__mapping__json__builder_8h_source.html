@@ -149,47 +149,11 @@ $(document).ready(function(){initNavTree('midi__mapping__json__builder_8h_source
 <div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span><span class="keyword">template</span>&lt;&gt;</div>
 <div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>rapidjson::Value <a class="code hl_function" href="namespaceshrapnel_1_1midi.html#a745f9f03858045cdfabbd014152fbc15">to_json</a>(rapidjson::Document &amp;document, <span class="keyword">const</span> <a class="code hl_typedef" href="namespaceshrapnel_1_1midi.html#ad9ee9014110e441706a017a889103bd1">MappingApiMessage</a> &amp;<span class="keywordtype">object</span>);</div>
 <div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span> </div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span><span class="keyword">template</span>&lt;std::<span class="keywordtype">size_t</span> MAX_SIZE&gt;</div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno"><a class="line" href="namespaceshrapnel_1_1midi.html#aaf88418567ba49ee236fe21f0136412a">   62</a></span>rapidjson::Value <a class="code hl_function" href="namespaceshrapnel_1_1midi.html#a745f9f03858045cdfabbd014152fbc15">to_json</a>(rapidjson::Document &amp;document, <span class="keyword">const</span> etl::map&lt;Mapping::id_t, Mapping, MAX_SIZE&gt; &amp;<span class="keywordtype">object</span>)</div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>{</div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>    rapidjson::Value json;</div>
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>    json.SetObject();</div>
-<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span> </div>
-<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>    <span class="keywordflow">for</span>(<span class="keyword">const</span> <span class="keyword">auto</span> &amp;entry : <span class="keywordtype">object</span>)</div>
-<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>    {</div>
-<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>        <span class="keywordtype">char</span> uuid[37];</div>
-<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>        sprintf(uuid,</div>
-<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>                <span class="stringliteral">&quot;%02x%02x%02x%02x-%02x%02x-%02x%02x-%02x%02x-&quot;</span></div>
-<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>                <span class="stringliteral">&quot;%02x%02x%02x%02x%02x%02x&quot;</span>,</div>
-<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>                entry.first[0],</div>
-<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>                entry.first[1],</div>
-<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>                entry.first[2],</div>
-<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>                entry.first[3],</div>
-<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>                entry.first[4],</div>
-<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>                entry.first[5],</div>
-<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>                entry.first[6],</div>
-<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>                entry.first[7],</div>
-<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>                entry.first[8],</div>
-<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>                entry.first[9],</div>
-<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>                entry.first[10],</div>
-<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>                entry.first[11],</div>
-<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>                entry.first[12],</div>
-<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>                entry.first[13],</div>
-<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>                entry.first[14],</div>
-<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>                entry.first[15]);</div>
-<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span> </div>
-<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span> </div>
-<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>        rapidjson::Value mapping = <a class="code hl_function" href="namespaceshrapnel_1_1midi.html#a745f9f03858045cdfabbd014152fbc15">to_json</a>(document, entry.second);</div>
-<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>        rapidjson::Value uuid_json;</div>
-<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>        uuid_json.SetString(uuid, 36, document.GetAllocator());</div>
-<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>        json.AddMember(uuid_json, mapping, document.GetAllocator());</div>
-<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>    }</div>
-<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span> </div>
-<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>    <span class="keywordflow">return</span> json;</div>
-<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>}</div>
-<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span> </div>
-<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>}</div>
-<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>}</div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span><span class="keyword">template</span>&lt;&gt;</div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>rapidjson::Value <a class="code hl_function" href="namespaceshrapnel_1_1midi.html#a745f9f03858045cdfabbd014152fbc15">to_json</a>(rapidjson::Document &amp;document, <span class="keyword">const</span> etl::imap&lt;Mapping::id_t, Mapping&gt; &amp;<span class="keywordtype">object</span>);</div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span> </div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>}</div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>}</div>
 <div class="ttc" id="amidi__mapping__api_8h_html"><div class="ttname"><a href="midi__mapping__api_8h.html">midi_mapping_api.h</a></div></div>
 <div class="ttc" id="anamespaceshrapnel_1_1midi_html_a745f9f03858045cdfabbd014152fbc15"><div class="ttname"><a href="namespaceshrapnel_1_1midi.html#a745f9f03858045cdfabbd014152fbc15">shrapnel::midi::to_json</a></div><div class="ttdeci">rapidjson::Value to_json(rapidjson::Document &amp;document, const T &amp;object)</div><div class="ttdoc">Convert object to a JSON value.</div></div>
 <div class="ttc" id="anamespaceshrapnel_1_1midi_html_ad9ee9014110e441706a017a889103bd1"><div class="ttname"><a href="namespaceshrapnel_1_1midi.html#ad9ee9014110e441706a017a889103bd1">shrapnel::midi::MappingApiMessage</a></div><div class="ttdeci">std::variant&lt; GetRequest, GetResponse, CreateRequest, CreateResponse, Update, Remove &gt; MappingApiMessage</div><div class="ttdef"><b>Definition:</b> <a href="midi__mapping__api_8h_source.html#l00057">midi_mapping_api.h:57</a></div></div>

@@ -93,37 +93,21 @@ $(document).ready(function(){initNavTree('classshrapnel_1_1EventSend.html',''); 
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a>  </div>
-  <div class="headertitle"><div class="title">shrapnel::EventSend Class Reference</div></div>
+  <div class="headertitle"><div class="title">shrapnel::EventSend Class Reference<span class="mlabels"><span class="mlabel">final</span></span></div></div>
 </div><!--header-->
 <div class="contents">
-
-<p><code>#include &lt;<a class="el" href="event__send_8h_source.html">event_send.h</a>&gt;</code></p>
-<div class="dynheader">
-Inheritance diagram for shrapnel::EventSend:</div>
-<div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="classshrapnel_1_1EventSend__inherit__graph.svg" width="182" height="112"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
-</div>
-<center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
-<div class="dynheader">
-Collaboration diagram for shrapnel::EventSend:</div>
-<div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="classshrapnel_1_1EventSend__coll__graph.svg" width="182" height="112"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
-</div>
-<center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a24668f434ef9ca992c9933f72078a555"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classshrapnel_1_1EventSend.html#a24668f434ef9ca992c9933f72078a555">send</a> (char *json, int fd) override</td></tr>
-<tr class="separator:a24668f434ef9ca992c9933f72078a555"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1055ffb1abc474d8c08cfc4d1bb4e123"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classshrapnel_1_1EventSendBase.html#a1055ffb1abc474d8c08cfc4d1bb4e123">send</a> (char *json, int fd)=0</td></tr>
-<tr class="separator:a1055ffb1abc474d8c08cfc4d1bb4e123"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a217c3cc44e378465c057d93695c03f05"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classshrapnel_1_1EventSend.html#a217c3cc44e378465c057d93695c03f05">send</a> (<a class="el" href="namespaceshrapnel_1_1parameters.html#a7d71cb4080803181d147fe9987baa52f">parameters::ApiMessage</a> message, int fd)</td></tr>
+<tr class="separator:a217c3cc44e378465c057d93695c03f05"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock">
-<p class="definition">Definition at line <a class="el" href="event__send_8h_source.html#l00032">32</a> of file <a class="el" href="event__send_8h_source.html">event_send.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="main_8cpp_source.html#l00087">87</a> of file <a class="el" href="main_8cpp_source.html">main.cpp</a>.</p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
-<a id="a24668f434ef9ca992c9933f72078a555" name="a24668f434ef9ca992c9933f72078a555"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a24668f434ef9ca992c9933f72078a555">&#9670;&nbsp;</a></span>send()</h2>
+<a id="a217c3cc44e378465c057d93695c03f05" name="a217c3cc44e378465c057d93695c03f05"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a217c3cc44e378465c057d93695c03f05">&#9670;&nbsp;</a></span>send()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -134,8 +118,8 @@ Public Member Functions</h2></td></tr>
         <tr>
           <td class="memname">void shrapnel::EventSend::send </td>
           <td>(</td>
-          <td class="paramtype">char *&#160;</td>
-          <td class="paramname"><em>json</em>, </td>
+          <td class="paramtype"><a class="el" href="namespaceshrapnel_1_1parameters.html#a7d71cb4080803181d147fe9987baa52f">parameters::ApiMessage</a>&#160;</td>
+          <td class="paramname"><em>message</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -151,31 +135,33 @@ Public Member Functions</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implements <a class="el" href="classshrapnel_1_1EventSendBase.html#a1055ffb1abc474d8c08cfc4d1bb4e123">shrapnel::EventSendBase</a>.</p>
-
-<p class="definition">Definition at line <a class="el" href="event__send_8h_source.html#l00034">34</a> of file <a class="el" href="event__send_8h_source.html">event_send.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   35</span>    {</div>
-<div class="line"><span class="lineno">   36</span>        <a class="code hl_function" href="audio__events_8h.html#a956bb48f7ee4a35a535c8858a66596d5">audio_event_send_callback</a>(json, fd);</div>
-<div class="line"><span class="lineno">   37</span>    }</div>
-<div class="ttc" id="aaudio__events_8h_html_a956bb48f7ee4a35a535c8858a66596d5"><div class="ttname"><a href="audio__events_8h.html#a956bb48f7ee4a35a535c8858a66596d5">audio_event_send_callback</a></div><div class="ttdeci">void audio_event_send_callback(const char *message, int fd)</div><div class="ttdoc">Called when an event is triggered.</div><div class="ttdef"><b>Definition:</b> <a href="main_8cpp_source.html#l00585">main.cpp:585</a></div></div>
+<p class="definition">Definition at line <a class="el" href="main_8cpp_source.html#l00089">89</a> of file <a class="el" href="main_8cpp_source.html">main.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   90</span>    {</div>
+<div class="line"><span class="lineno">   91</span>        <span class="keywordflow">if</span>(fd &gt;= 0) {</div>
+<div class="line"><span class="lineno">   92</span>            <a class="code hl_function" href="main_8cpp.html#a1a66099a9e1054494d0704363a5c8666">audio_event_send_callback</a>({message, fd});</div>
+<div class="line"><span class="lineno">   93</span>        } <span class="keywordflow">else</span> {</div>
+<div class="line"><span class="lineno">   94</span>            <a class="code hl_function" href="main_8cpp.html#a1a66099a9e1054494d0704363a5c8666">audio_event_send_callback</a>({message, std::nullopt});</div>
+<div class="line"><span class="lineno">   95</span>        }</div>
+<div class="line"><span class="lineno">   96</span>    }</div>
+<div class="ttc" id="amain_8cpp_html_a1a66099a9e1054494d0704363a5c8666"><div class="ttname"><a href="main_8cpp.html#a1a66099a9e1054494d0704363a5c8666">audio_event_send_callback</a></div><div class="ttdeci">void audio_event_send_callback(const AppMessage &amp;message)</div><div class="ttdef"><b>Definition:</b> <a href="main_8cpp_source.html#l00746">main.cpp:746</a></div></div>
 </div><!-- fragment -->
-<p class="reference">References <a class="el" href="main_8cpp_source.html#l00585">audio_event_send_callback()</a>.</p>
+<p class="reference">References <a class="el" href="main_8cpp_source.html#l00746">audio_event_send_callback()</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="classshrapnel_1_1EventSend_a24668f434ef9ca992c9933f72078a555_cgraph.svg" width="604" height="52"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+<div class="center"><iframe scrolling="no" frameborder="0" src="classshrapnel_1_1EventSend_a217c3cc44e378465c057d93695c03f05_cgraph.svg" width="795" height="52"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
 </div>
 </div>
 
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following file:<ul>
-<li>firmware/components/cmd_handling/include/<a class="el" href="event__send_8h_source.html">event_send.h</a></li>
+<li>firmware/main/<a class="el" href="main_8cpp_source.html">main.cpp</a></li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->

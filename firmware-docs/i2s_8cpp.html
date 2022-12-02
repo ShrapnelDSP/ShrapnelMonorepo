@@ -102,8 +102,8 @@ $(document).ready(function(){initNavTree('i2s_8cpp.html',''); initResizable(); }
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a0826d7a742c16e16a62704cc59fd4ba2"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="i2s_8cpp.html#a0826d7a742c16e16a62704cc59fd4ba2">event_task</a> (void *param)</td></tr>
-<tr class="separator:a0826d7a742c16e16a62704cc59fd4ba2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7bd2643748a0d4058522967eecfb1dc1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="i2s_8cpp.html#a7bd2643748a0d4058522967eecfb1dc1">log_i2s_event</a> (const i2s_event_t &amp;e)</td></tr>
+<tr class="separator:a7bd2643748a0d4058522967eecfb1dc1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4e37f563a34c1a559515cc40782caf07"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="i2s_8cpp.html#a4e37f563a34c1a559515cc40782caf07">i2s_processing_task</a> (void *param)</td></tr>
 <tr class="separator:a4e37f563a34c1a559515cc40782caf07"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a445c7079217d08d4767549802dade8a0"><td class="memItemLeft" align="right" valign="top">esp_err_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="i2s_8cpp.html#a445c7079217d08d4767549802dade8a0">i2s_setup</a> (gpio_num_t profiling_gpio, <a class="el" href="classshrapnel_1_1parameters_1_1AudioParameters.html">shrapnel::parameters::AudioParameters</a> *audio_param)</td></tr>
@@ -111,7 +111,7 @@ Functions</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
 Variables</h2></td></tr>
-<tr class="memitem:a9b83a13d267928932fc9d01c7ee09df2"><td class="memItemLeft" align="right" valign="top">static QueueHandle_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="i2s_8cpp.html#a9b83a13d267928932fc9d01c7ee09df2">i2s_queue</a></td></tr>
+<tr class="memitem:a9b83a13d267928932fc9d01c7ee09df2"><td class="memItemLeft" align="right" valign="top">QueueHandle_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="i2s_8cpp.html#a9b83a13d267928932fc9d01c7ee09df2">i2s_queue</a></td></tr>
 <tr class="separator:a9b83a13d267928932fc9d01c7ee09df2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4025221c11b823336cd64a55623f8a1e"><td class="memItemLeft" align="right" valign="top">static int32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="i2s_8cpp.html#a4025221c11b823336cd64a55623f8a1e">rx_buf</a> [2 *DMA_BUF_SIZE]</td></tr>
 <tr class="separator:a4025221c11b823336cd64a55623f8a1e"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -119,69 +119,6 @@ Variables</h2></td></tr>
 <tr class="separator:aa5ff31a870fe9e98978a1013e6735d45"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Function Documentation</h2>
-<a id="a0826d7a742c16e16a62704cc59fd4ba2" name="a0826d7a742c16e16a62704cc59fd4ba2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0826d7a742c16e16a62704cc59fd4ba2">&#9670;&nbsp;</a></span>event_task()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">static void event_task </td>
-          <td>(</td>
-          <td class="paramtype">void *&#160;</td>
-          <td class="paramname"><em>param</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="i2s_8cpp_source.html#l00055">55</a> of file <a class="el" href="i2s_8cpp_source.html">i2s.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   56</span>{</div>
-<div class="line"><span class="lineno">   57</span>    (void) param;</div>
-<div class="line"><span class="lineno">   58</span> </div>
-<div class="line"><span class="lineno">   59</span>    i2s_event_t e;</div>
-<div class="line"><span class="lineno">   60</span>    <span class="keywordflow">while</span>(1)</div>
-<div class="line"><span class="lineno">   61</span>    {</div>
-<div class="line"><span class="lineno">   62</span>        xQueueReceive(<a class="code hl_variable" href="i2s_8cpp.html#a9b83a13d267928932fc9d01c7ee09df2">i2s_queue</a>, &amp;e, portMAX_DELAY);</div>
-<div class="line"><span class="lineno">   63</span>        <span class="keywordflow">switch</span>(e.type)</div>
-<div class="line"><span class="lineno">   64</span>        {</div>
-<div class="line"><span class="lineno">   65</span>            <span class="keywordflow">case</span> I2S_EVENT_DMA_ERROR:</div>
-<div class="line"><span class="lineno">   66</span>                ESP_LOGE(TAG, <span class="stringliteral">&quot;Something went wrong with DMA&quot;</span>);</div>
-<div class="line"><span class="lineno">   67</span>                <span class="keywordflow">break</span>;</div>
-<div class="line"><span class="lineno">   68</span>            <span class="keywordflow">case</span> I2S_EVENT_TX_DONE:</div>
-<div class="line"><span class="lineno">   69</span>            <span class="keywordflow">case</span> I2S_EVENT_RX_DONE:</div>
-<div class="line"><span class="lineno">   70</span>                <span class="comment">//do nothing</span></div>
-<div class="line"><span class="lineno">   71</span>                <span class="keywordflow">break</span>;</div>
-<div class="line"><span class="lineno">   72</span>            <span class="keywordflow">case</span> I2S_EVENT_TX_Q_OVF:</div>
-<div class="line"><span class="lineno">   73</span>            <span class="keywordflow">case</span> I2S_EVENT_RX_Q_OVF:</div>
-<div class="line"><span class="lineno">   74</span>            <span class="keywordflow">default</span>:</div>
-<div class="line"><span class="lineno">   75</span>                ESP_LOGE(TAG, <span class="stringliteral">&quot;Unhandled type: %d&quot;</span>, e.type);</div>
-<div class="line"><span class="lineno">   76</span>                <span class="keywordflow">break</span>;</div>
-<div class="line"><span class="lineno">   77</span>        }</div>
-<div class="line"><span class="lineno">   78</span>    }</div>
-<div class="line"><span class="lineno">   79</span>}</div>
-<div class="ttc" id="ai2s_8cpp_html_a9b83a13d267928932fc9d01c7ee09df2"><div class="ttname"><a href="i2s_8cpp.html#a9b83a13d267928932fc9d01c7ee09df2">i2s_queue</a></div><div class="ttdeci">static QueueHandle_t i2s_queue</div><div class="ttdef"><b>Definition:</b> <a href="i2s_8cpp_source.html#l00047">i2s.cpp:47</a></div></div>
-</div><!-- fragment -->
-<p class="reference">References <a class="el" href="i2s_8cpp_source.html#l00047">i2s_queue</a>.</p>
-
-<p class="reference">Referenced by <a class="el" href="i2s_8cpp_source.html#l00205">i2s_setup()</a>.</p>
-<div class="dynheader">
-Here is the caller graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="i2s_8cpp_a0826d7a742c16e16a62704cc59fd4ba2_icgraph.svg" width="406" height="38"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
-</div>
-</div>
-
-</div>
-</div>
 <a id="a4e37f563a34c1a559515cc40782caf07" name="a4e37f563a34c1a559515cc40782caf07"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a4e37f563a34c1a559515cc40782caf07">&#9670;&nbsp;</a></span>i2s_processing_task()</h2>
 
@@ -206,143 +143,144 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="i2s_8cpp_source.html#l00081">81</a> of file <a class="el" href="i2s_8cpp_source.html">i2s.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   82</span>{</div>
-<div class="line"><span class="lineno">   83</span>    (void) param;</div>
-<div class="line"><span class="lineno">   84</span>    <span class="keyword">auto</span> audio_param = <span class="keyword">reinterpret_cast&lt;</span><a class="code hl_class" href="classshrapnel_1_1parameters_1_1AudioParameters.html">shrapnel::parameters::AudioParameters</a> *<span class="keyword">&gt;</span>(param);</div>
-<div class="line"><span class="lineno">   85</span> </div>
-<div class="line"><span class="lineno">   86</span>    <span class="keywordtype">size_t</span> tx_rx_size;</div>
-<div class="line"><span class="lineno">   87</span> </div>
-<div class="line"><span class="lineno">   88</span>    i2s_config_t i2s_config = {</div>
-<div class="line"><span class="lineno">   89</span>        .mode = <span class="keyword">static_cast&lt;</span>i2s_mode_t<span class="keyword">&gt;</span>(I2S_MODE_MASTER | I2S_MODE_TX | I2S_MODE_RX),</div>
-<div class="line"><span class="lineno">   90</span>        .<a class="code hl_variable" href="noise__gate_8cpp.html#a63433fe701b4e06f2cfdd50509e660db">sample_rate</a> = SAMPLE_RATE,</div>
-<div class="line"><span class="lineno">   91</span>        .bits_per_sample = I2S_BITS_PER_SAMPLE_24BIT,</div>
-<div class="line"><span class="lineno">   92</span>        .channel_format = I2S_CHANNEL_FMT_RIGHT_LEFT,</div>
-<div class="line"><span class="lineno">   93</span>        .communication_format = I2S_COMM_FORMAT_STAND_I2S,</div>
-<div class="line"><span class="lineno">   94</span>        .intr_alloc_flags = ESP_INTR_FLAG_LEVEL1,</div>
-<div class="line"><span class="lineno">   95</span>        .dma_buf_count = DMA_BUF_COUNT,</div>
-<div class="line"><span class="lineno">   96</span>        .dma_buf_len = DMA_BUF_SIZE,</div>
-<div class="line"><span class="lineno">   97</span>        .use_apll = <span class="keyword">true</span>,</div>
-<div class="line"><span class="lineno">   98</span>        .tx_desc_auto_clear = <span class="keyword">true</span>, <span class="comment">//this will clear the tx buffer when we overrun</span></div>
-<div class="line"><span class="lineno">   99</span>        .fixed_mclk = 0, <span class="comment">// Use mclk_multiple</span></div>
-<div class="line"><span class="lineno">  100</span>        .mclk_multiple = I2S_MCLK_MULTIPLE_384,</div>
-<div class="line"><span class="lineno">  101</span>        .bits_per_chan = I2S_BITS_PER_CHAN_DEFAULT,</div>
-<div class="line"><span class="lineno">  102</span>    };</div>
-<div class="line"><span class="lineno">  103</span> </div>
-<div class="line"><span class="lineno">  104</span>    i2s_pin_config_t pin_config = {</div>
-<div class="line"><span class="lineno">  105</span>        .mck_io_num = I2S_MCK_IO,</div>
-<div class="line"><span class="lineno">  106</span>        .bck_io_num = I2S_BCK_IO,</div>
-<div class="line"><span class="lineno">  107</span>        .ws_io_num = I2S_WS_IO,</div>
-<div class="line"><span class="lineno">  108</span>        .data_out_num = I2S_DO_IO,</div>
-<div class="line"><span class="lineno">  109</span>        .data_in_num = I2S_DI_IO</div>
-<div class="line"><span class="lineno">  110</span>    };</div>
-<div class="line"><span class="lineno">  111</span> </div>
-<div class="line"><span class="lineno">  112</span>    esp_err_t err = i2s_driver_install(<span class="keyword">static_cast&lt;</span>i2s_port_t<span class="keyword">&gt;</span>(I2S_NUM), &amp;i2s_config, I2S_QUEUE_SIZE, &amp;<a class="code hl_variable" href="i2s_8cpp.html#a9b83a13d267928932fc9d01c7ee09df2">i2s_queue</a>);</div>
-<div class="line"><span class="lineno">  113</span>    <span class="keywordflow">if</span>(err != ESP_OK)</div>
-<div class="line"><span class="lineno">  114</span>    {</div>
-<div class="line"><span class="lineno">  115</span>        ESP_LOGE(TAG, <span class="stringliteral">&quot;i2s_driver_install failed %d, %s&quot;</span>, err, esp_err_to_name(err));</div>
-<div class="line"><span class="lineno">  116</span>        <span class="keywordflow">return</span>;</div>
-<div class="line"><span class="lineno">  117</span>    }</div>
-<div class="line"><span class="lineno">  118</span>    ESP_LOGD(TAG, <span class="stringliteral">&quot;queue address: %p&quot;</span>, (<span class="keywordtype">void</span>*)<a class="code hl_variable" href="i2s_8cpp.html#a9b83a13d267928932fc9d01c7ee09df2">i2s_queue</a>);</div>
-<div class="line"><span class="lineno">  119</span> </div>
-<div class="line"><span class="lineno">  120</span>    err = i2s_set_pin(<span class="keyword">static_cast&lt;</span>i2s_port_t<span class="keyword">&gt;</span>(I2S_NUM), &amp;pin_config);</div>
-<div class="line"><span class="lineno">  121</span>    <span class="keywordflow">if</span>(err != ESP_OK)</div>
-<div class="line"><span class="lineno">  122</span>    {</div>
-<div class="line"><span class="lineno">  123</span>        ESP_LOGE(TAG, <span class="stringliteral">&quot;i2s_set_pin failed %d, %s&quot;</span>, err, esp_err_to_name(err));</div>
-<div class="line"><span class="lineno">  124</span>        <span class="keywordflow">return</span>;</div>
-<div class="line"><span class="lineno">  125</span>    }</div>
-<div class="line"><span class="lineno">  126</span> </div>
-<div class="line"><span class="lineno">  127</span> </div>
-<div class="line"><span class="lineno">  128</span>    err = <a class="code hl_function" href="process_8cpp.html#a159f752dbd8aa42d765e604910814129">process_init</a>(audio_param);</div>
-<div class="line"><span class="lineno">  129</span>    <span class="keywordflow">if</span>(err != ESP_OK)</div>
-<div class="line"><span class="lineno">  130</span>    {</div>
-<div class="line"><span class="lineno">  131</span>        ESP_LOGE(TAG, <span class="stringliteral">&quot;process_init failed %d, %s&quot;</span>, err, esp_err_to_name(err));</div>
-<div class="line"><span class="lineno">  132</span>        <span class="keywordflow">return</span>;</div>
-<div class="line"><span class="lineno">  133</span>    }</div>
-<div class="line"><span class="lineno">  134</span> </div>
-<div class="line"><span class="lineno">  135</span>    <span class="comment">/* Get the DMA buffers into their initial states</span></div>
-<div class="line"><span class="lineno">  136</span><span class="comment">     *</span></div>
-<div class="line"><span class="lineno">  137</span><span class="comment">     * The RX buffers should be all empty, and the TX buffers should all be</span></div>
-<div class="line"><span class="lineno">  138</span><span class="comment">     * full.</span></div>
-<div class="line"><span class="lineno">  139</span><span class="comment">     */</span></div>
-<div class="line"><span class="lineno">  140</span>    err = i2s_stop(<span class="keyword">static_cast&lt;</span>i2s_port_t<span class="keyword">&gt;</span>(I2S_NUM));</div>
-<div class="line"><span class="lineno">  141</span>    <span class="keywordflow">if</span>(err != ESP_OK)</div>
-<div class="line"><span class="lineno">  142</span>    {</div>
-<div class="line"><span class="lineno">  143</span>        ESP_LOGE(TAG, <span class="stringliteral">&quot;i2s_stop failed %d, %s&quot;</span>, err, esp_err_to_name(err));</div>
-<div class="line"><span class="lineno">  144</span>        <span class="keywordflow">return</span>;</div>
-<div class="line"><span class="lineno">  145</span>    }</div>
-<div class="line"><span class="lineno">  146</span> </div>
-<div class="line"><span class="lineno">  147</span>    <span class="keywordtype">size_t</span> read_count;</div>
-<div class="line"><span class="lineno">  148</span>    <span class="keywordflow">do</span> {</div>
-<div class="line"><span class="lineno">  149</span>        err = i2s_read(<span class="keyword">static_cast&lt;</span>i2s_port_t<span class="keyword">&gt;</span>(I2S_NUM), <a class="code hl_variable" href="i2s_8cpp.html#a4025221c11b823336cd64a55623f8a1e">rx_buf</a>, DMA_BUF_SIZE, &amp;read_count, 100);</div>
-<div class="line"><span class="lineno">  150</span>        <span class="keywordflow">if</span>(err != ESP_OK)</div>
-<div class="line"><span class="lineno">  151</span>        {</div>
-<div class="line"><span class="lineno">  152</span>            ESP_LOGE(TAG, <span class="stringliteral">&quot;i2s_read failed %d, %s&quot;</span>, err, esp_err_to_name(err));</div>
-<div class="line"><span class="lineno">  153</span>            <span class="keywordflow">return</span>;</div>
-<div class="line"><span class="lineno">  154</span>        }</div>
-<div class="line"><span class="lineno">  155</span>        ESP_LOGI(TAG, <span class="stringliteral">&quot;discarded %zu samples from RX buffer&quot;</span>, read_count);</div>
-<div class="line"><span class="lineno">  156</span>    }</div>
-<div class="line"><span class="lineno">  157</span>    <span class="keywordflow">while</span>(read_count != 0);</div>
-<div class="line"><span class="lineno">  158</span> </div>
-<div class="line"><span class="lineno">  159</span>    err = i2s_zero_dma_buffer(<span class="keyword">static_cast&lt;</span>i2s_port_t<span class="keyword">&gt;</span>(I2S_NUM));</div>
-<div class="line"><span class="lineno">  160</span>    <span class="keywordflow">if</span>(err != ESP_OK)</div>
-<div class="line"><span class="lineno">  161</span>    {</div>
-<div class="line"><span class="lineno">  162</span>        ESP_LOGE(TAG, <span class="stringliteral">&quot;i2s_zero_dma_buffer failed %d, %s&quot;</span>, err, esp_err_to_name(err));</div>
-<div class="line"><span class="lineno">  163</span>        <span class="keywordflow">return</span>;</div>
-<div class="line"><span class="lineno">  164</span>    }</div>
-<div class="line"><span class="lineno">  165</span> </div>
-<div class="line"><span class="lineno">  166</span>    err = i2s_start(<span class="keyword">static_cast&lt;</span>i2s_port_t<span class="keyword">&gt;</span>(I2S_NUM));</div>
-<div class="line"><span class="lineno">  167</span>    <span class="keywordflow">if</span>(err != ESP_OK)</div>
-<div class="line"><span class="lineno">  168</span>    {</div>
-<div class="line"><span class="lineno">  169</span>        ESP_LOGE(TAG, <span class="stringliteral">&quot;i2s_start failed %d, %s&quot;</span>, err, esp_err_to_name(err));</div>
-<div class="line"><span class="lineno">  170</span>        <span class="keywordflow">return</span>;</div>
-<div class="line"><span class="lineno">  171</span>    }</div>
-<div class="line"><span class="lineno">  172</span> </div>
-<div class="line"><span class="lineno">  173</span>    <span class="keywordflow">while</span>(1)</div>
-<div class="line"><span class="lineno">  174</span>    {</div>
-<div class="line"><span class="lineno">  175</span><span class="preprocessor">#if !defined(GENERATE_SINE_WAVE) &amp;&amp; !defined(GENERATE_RAMP)</span></div>
-<div class="line"><span class="lineno">  176</span>        i2s_read(<span class="keyword">static_cast&lt;</span>i2s_port_t<span class="keyword">&gt;</span>(I2S_NUM), <a class="code hl_variable" href="i2s_8cpp.html#a4025221c11b823336cd64a55623f8a1e">rx_buf</a>, <span class="keyword">sizeof</span>(<a class="code hl_variable" href="i2s_8cpp.html#a4025221c11b823336cd64a55623f8a1e">rx_buf</a>), &amp;tx_rx_size, 100/portTICK_PERIOD_MS);</div>
-<div class="line"><span class="lineno">  177</span>        <span class="keywordflow">if</span>(tx_rx_size != <span class="keyword">sizeof</span>(<a class="code hl_variable" href="i2s_8cpp.html#a4025221c11b823336cd64a55623f8a1e">rx_buf</a>))</div>
-<div class="line"><span class="lineno">  178</span>        {</div>
-<div class="line"><span class="lineno">  179</span>            ESP_LOGE(TAG, <span class="stringliteral">&quot;Got the wrong number of bytes %zu/%zu&quot;</span>, tx_rx_size, <span class="keyword">sizeof</span>(<a class="code hl_variable" href="i2s_8cpp.html#a4025221c11b823336cd64a55623f8a1e">rx_buf</a>));</div>
-<div class="line"><span class="lineno">  180</span>        }</div>
-<div class="line"><span class="lineno">  181</span><span class="preprocessor">#elif defined(GENERATE_SINE_WAVE)</span></div>
-<div class="line"><span class="lineno">  182</span>        <span class="keywordtype">int</span> len = <span class="keyword">sizeof</span>(<a class="code hl_variable" href="i2s_8cpp.html#a4025221c11b823336cd64a55623f8a1e">rx_buf</a>) / <span class="keyword">sizeof</span>(<a class="code hl_variable" href="i2s_8cpp.html#a4025221c11b823336cd64a55623f8a1e">rx_buf</a>[0]);</div>
-<div class="line"><span class="lineno">  183</span>        <span class="keywordflow">for</span>(<span class="keywordtype">int</span> i = 0; i &lt; len; i++)</div>
-<div class="line"><span class="lineno">  184</span>        {</div>
-<div class="line"><span class="lineno">  185</span>            <a class="code hl_variable" href="i2s_8cpp.html#a4025221c11b823336cd64a55623f8a1e">rx_buf</a>[i] = <a class="code hl_function" href="float__convert_8h.html#ae9b18f6b920e3401ec41278b57e6817b">float_to_int32</a>(sinf(2 * ((<span class="keywordtype">float</span>)M_PI) * i/(<span class="keywordtype">float</span>)len));</div>
-<div class="line"><span class="lineno">  186</span>        }</div>
-<div class="line"><span class="lineno">  187</span><span class="preprocessor">#elif defined(GENERATE_RAMP)</span></div>
-<div class="line"><span class="lineno">  188</span>        <span class="keywordtype">int</span> len = <span class="keyword">sizeof</span>(<a class="code hl_variable" href="i2s_8cpp.html#a4025221c11b823336cd64a55623f8a1e">rx_buf</a>) / <span class="keyword">sizeof</span>(<a class="code hl_variable" href="i2s_8cpp.html#a4025221c11b823336cd64a55623f8a1e">rx_buf</a>[0]);</div>
-<div class="line"><span class="lineno">  189</span>        <span class="keywordflow">for</span>(<span class="keywordtype">int</span> i = 0; i &lt; len; i++)</div>
-<div class="line"><span class="lineno">  190</span>        {</div>
-<div class="line"><span class="lineno">  191</span>            <a class="code hl_variable" href="i2s_8cpp.html#a4025221c11b823336cd64a55623f8a1e">rx_buf</a>[i] = (i - len/2) * (INT32_MAX / (len/2));</div>
-<div class="line"><span class="lineno">  192</span>        }</div>
-<div class="line"><span class="lineno">  193</span><span class="preprocessor">#endif</span></div>
-<div class="line"><span class="lineno">  194</span> </div>
-<div class="line"><span class="lineno">  195</span>        <a class="code hl_function" href="process_8cpp.html#a450bec865b55b9890f4050f1ab0dba5c">process_samples</a>(<a class="code hl_variable" href="i2s_8cpp.html#a4025221c11b823336cd64a55623f8a1e">rx_buf</a>, <span class="keyword">sizeof</span>(<a class="code hl_variable" href="i2s_8cpp.html#a4025221c11b823336cd64a55623f8a1e">rx_buf</a>) / <span class="keyword">sizeof</span>(<a class="code hl_variable" href="i2s_8cpp.html#a4025221c11b823336cd64a55623f8a1e">rx_buf</a>[0]));</div>
-<div class="line"><span class="lineno">  196</span> </div>
-<div class="line"><span class="lineno">  197</span>        i2s_write(<span class="keyword">static_cast&lt;</span>i2s_port_t<span class="keyword">&gt;</span>(I2S_NUM), <a class="code hl_variable" href="i2s_8cpp.html#a4025221c11b823336cd64a55623f8a1e">rx_buf</a>, <span class="keyword">sizeof</span>(<a class="code hl_variable" href="i2s_8cpp.html#a4025221c11b823336cd64a55623f8a1e">rx_buf</a>), &amp;tx_rx_size, 100/portTICK_PERIOD_MS);</div>
-<div class="line"><span class="lineno">  198</span>        <span class="keywordflow">if</span>(tx_rx_size != <span class="keyword">sizeof</span>(<a class="code hl_variable" href="i2s_8cpp.html#a4025221c11b823336cd64a55623f8a1e">rx_buf</a>))</div>
-<div class="line"><span class="lineno">  199</span>        {</div>
-<div class="line"><span class="lineno">  200</span>            ESP_LOGE(TAG, <span class="stringliteral">&quot;Sent the wrong number of bytes %zu/%zu&quot;</span>, tx_rx_size, <span class="keyword">sizeof</span>(<a class="code hl_variable" href="i2s_8cpp.html#a4025221c11b823336cd64a55623f8a1e">rx_buf</a>));</div>
-<div class="line"><span class="lineno">  201</span>        }</div>
-<div class="line"><span class="lineno">  202</span>    }</div>
-<div class="line"><span class="lineno">  203</span>}</div>
+<p class="definition">Definition at line <a class="el" href="i2s_8cpp_source.html#l00076">76</a> of file <a class="el" href="i2s_8cpp_source.html">i2s.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   77</span>{</div>
+<div class="line"><span class="lineno">   78</span>    (void) param;</div>
+<div class="line"><span class="lineno">   79</span>    <span class="keyword">auto</span> audio_param = <span class="keyword">reinterpret_cast&lt;</span><a class="code hl_class" href="classshrapnel_1_1parameters_1_1AudioParameters.html">shrapnel::parameters::AudioParameters</a> *<span class="keyword">&gt;</span>(param);</div>
+<div class="line"><span class="lineno">   80</span> </div>
+<div class="line"><span class="lineno">   81</span>    <span class="keywordtype">size_t</span> tx_rx_size;</div>
+<div class="line"><span class="lineno">   82</span> </div>
+<div class="line"><span class="lineno">   83</span>    i2s_config_t i2s_config = {</div>
+<div class="line"><span class="lineno">   84</span>        .mode = <span class="keyword">static_cast&lt;</span>i2s_mode_t<span class="keyword">&gt;</span>(I2S_MODE_MASTER | I2S_MODE_TX | I2S_MODE_RX),</div>
+<div class="line"><span class="lineno">   85</span>        .<a class="code hl_variable" href="noise__gate_8cpp.html#a63433fe701b4e06f2cfdd50509e660db">sample_rate</a> = SAMPLE_RATE,</div>
+<div class="line"><span class="lineno">   86</span>        .bits_per_sample = I2S_BITS_PER_SAMPLE_24BIT,</div>
+<div class="line"><span class="lineno">   87</span>        .channel_format = I2S_CHANNEL_FMT_RIGHT_LEFT,</div>
+<div class="line"><span class="lineno">   88</span>        .communication_format = I2S_COMM_FORMAT_STAND_I2S,</div>
+<div class="line"><span class="lineno">   89</span>        .intr_alloc_flags = ESP_INTR_FLAG_LEVEL1,</div>
+<div class="line"><span class="lineno">   90</span>        .dma_buf_count = DMA_BUF_COUNT,</div>
+<div class="line"><span class="lineno">   91</span>        .dma_buf_len = DMA_BUF_SIZE,</div>
+<div class="line"><span class="lineno">   92</span>        .use_apll = <span class="keyword">true</span>,</div>
+<div class="line"><span class="lineno">   93</span>        .tx_desc_auto_clear = <span class="keyword">true</span>, <span class="comment">//this will clear the tx buffer when we overrun</span></div>
+<div class="line"><span class="lineno">   94</span>        .fixed_mclk = 0, <span class="comment">// Use mclk_multiple</span></div>
+<div class="line"><span class="lineno">   95</span>        .mclk_multiple = I2S_MCLK_MULTIPLE_384,</div>
+<div class="line"><span class="lineno">   96</span>        .bits_per_chan = I2S_BITS_PER_CHAN_DEFAULT,</div>
+<div class="line"><span class="lineno">   97</span>    };</div>
+<div class="line"><span class="lineno">   98</span> </div>
+<div class="line"><span class="lineno">   99</span>    i2s_pin_config_t pin_config = {</div>
+<div class="line"><span class="lineno">  100</span>        .mck_io_num = I2S_MCK_IO,</div>
+<div class="line"><span class="lineno">  101</span>        .bck_io_num = I2S_BCK_IO,</div>
+<div class="line"><span class="lineno">  102</span>        .ws_io_num = I2S_WS_IO,</div>
+<div class="line"><span class="lineno">  103</span>        .data_out_num = I2S_DO_IO,</div>
+<div class="line"><span class="lineno">  104</span>        .data_in_num = I2S_DI_IO</div>
+<div class="line"><span class="lineno">  105</span>    };</div>
+<div class="line"><span class="lineno">  106</span> </div>
+<div class="line"><span class="lineno">  107</span>    esp_err_t err = i2s_driver_install(<span class="keyword">static_cast&lt;</span>i2s_port_t<span class="keyword">&gt;</span>(I2S_NUM), &amp;i2s_config, I2S_QUEUE_SIZE, &amp;<a class="code hl_variable" href="i2s_8cpp.html#a9b83a13d267928932fc9d01c7ee09df2">i2s_queue</a>);</div>
+<div class="line"><span class="lineno">  108</span>    <span class="keywordflow">if</span>(err != ESP_OK)</div>
+<div class="line"><span class="lineno">  109</span>    {</div>
+<div class="line"><span class="lineno">  110</span>        ESP_LOGE(TAG, <span class="stringliteral">&quot;i2s_driver_install failed %d, %s&quot;</span>, err, esp_err_to_name(err));</div>
+<div class="line"><span class="lineno">  111</span>        <span class="keywordflow">return</span>;</div>
+<div class="line"><span class="lineno">  112</span>    }</div>
+<div class="line"><span class="lineno">  113</span>    ESP_LOGD(TAG, <span class="stringliteral">&quot;queue address: %p&quot;</span>, (<span class="keywordtype">void</span>*)<a class="code hl_variable" href="i2s_8cpp.html#a9b83a13d267928932fc9d01c7ee09df2">i2s_queue</a>);</div>
+<div class="line"><span class="lineno">  114</span> </div>
+<div class="line"><span class="lineno">  115</span>    err = i2s_set_pin(<span class="keyword">static_cast&lt;</span>i2s_port_t<span class="keyword">&gt;</span>(I2S_NUM), &amp;pin_config);</div>
+<div class="line"><span class="lineno">  116</span>    <span class="keywordflow">if</span>(err != ESP_OK)</div>
+<div class="line"><span class="lineno">  117</span>    {</div>
+<div class="line"><span class="lineno">  118</span>        ESP_LOGE(TAG, <span class="stringliteral">&quot;i2s_set_pin failed %d, %s&quot;</span>, err, esp_err_to_name(err));</div>
+<div class="line"><span class="lineno">  119</span>        <span class="keywordflow">return</span>;</div>
+<div class="line"><span class="lineno">  120</span>    }</div>
+<div class="line"><span class="lineno">  121</span> </div>
+<div class="line"><span class="lineno">  122</span> </div>
+<div class="line"><span class="lineno">  123</span>    err = <a class="code hl_function" href="process_8cpp.html#a159f752dbd8aa42d765e604910814129">process_init</a>(audio_param);</div>
+<div class="line"><span class="lineno">  124</span>    <span class="keywordflow">if</span>(err != ESP_OK)</div>
+<div class="line"><span class="lineno">  125</span>    {</div>
+<div class="line"><span class="lineno">  126</span>        ESP_LOGE(TAG, <span class="stringliteral">&quot;process_init failed %d, %s&quot;</span>, err, esp_err_to_name(err));</div>
+<div class="line"><span class="lineno">  127</span>        <span class="keywordflow">return</span>;</div>
+<div class="line"><span class="lineno">  128</span>    }</div>
+<div class="line"><span class="lineno">  129</span> </div>
+<div class="line"><span class="lineno">  130</span>    <span class="comment">/* Get the DMA buffers into their initial states</span></div>
+<div class="line"><span class="lineno">  131</span><span class="comment">     *</span></div>
+<div class="line"><span class="lineno">  132</span><span class="comment">     * The RX buffers should be all empty, and the TX buffers should all be</span></div>
+<div class="line"><span class="lineno">  133</span><span class="comment">     * full.</span></div>
+<div class="line"><span class="lineno">  134</span><span class="comment">     */</span></div>
+<div class="line"><span class="lineno">  135</span>    err = i2s_stop(<span class="keyword">static_cast&lt;</span>i2s_port_t<span class="keyword">&gt;</span>(I2S_NUM));</div>
+<div class="line"><span class="lineno">  136</span>    <span class="keywordflow">if</span>(err != ESP_OK)</div>
+<div class="line"><span class="lineno">  137</span>    {</div>
+<div class="line"><span class="lineno">  138</span>        ESP_LOGE(TAG, <span class="stringliteral">&quot;i2s_stop failed %d, %s&quot;</span>, err, esp_err_to_name(err));</div>
+<div class="line"><span class="lineno">  139</span>        <span class="keywordflow">return</span>;</div>
+<div class="line"><span class="lineno">  140</span>    }</div>
+<div class="line"><span class="lineno">  141</span> </div>
+<div class="line"><span class="lineno">  142</span>    <span class="keywordtype">size_t</span> read_count;</div>
+<div class="line"><span class="lineno">  143</span>    <span class="keywordflow">do</span> {</div>
+<div class="line"><span class="lineno">  144</span>        err = i2s_read(<span class="keyword">static_cast&lt;</span>i2s_port_t<span class="keyword">&gt;</span>(I2S_NUM), <a class="code hl_variable" href="i2s_8cpp.html#a4025221c11b823336cd64a55623f8a1e">rx_buf</a>, DMA_BUF_SIZE, &amp;read_count, 100);</div>
+<div class="line"><span class="lineno">  145</span>        <span class="keywordflow">if</span>(err != ESP_OK)</div>
+<div class="line"><span class="lineno">  146</span>        {</div>
+<div class="line"><span class="lineno">  147</span>            ESP_LOGE(TAG, <span class="stringliteral">&quot;i2s_read failed %d, %s&quot;</span>, err, esp_err_to_name(err));</div>
+<div class="line"><span class="lineno">  148</span>            <span class="keywordflow">return</span>;</div>
+<div class="line"><span class="lineno">  149</span>        }</div>
+<div class="line"><span class="lineno">  150</span>        ESP_LOGI(TAG, <span class="stringliteral">&quot;discarded %zu samples from RX buffer&quot;</span>, read_count);</div>
+<div class="line"><span class="lineno">  151</span>    }</div>
+<div class="line"><span class="lineno">  152</span>    <span class="keywordflow">while</span>(read_count != 0);</div>
+<div class="line"><span class="lineno">  153</span> </div>
+<div class="line"><span class="lineno">  154</span>    err = i2s_zero_dma_buffer(<span class="keyword">static_cast&lt;</span>i2s_port_t<span class="keyword">&gt;</span>(I2S_NUM));</div>
+<div class="line"><span class="lineno">  155</span>    <span class="keywordflow">if</span>(err != ESP_OK)</div>
+<div class="line"><span class="lineno">  156</span>    {</div>
+<div class="line"><span class="lineno">  157</span>        ESP_LOGE(TAG, <span class="stringliteral">&quot;i2s_zero_dma_buffer failed %d, %s&quot;</span>, err, esp_err_to_name(err));</div>
+<div class="line"><span class="lineno">  158</span>        <span class="keywordflow">return</span>;</div>
+<div class="line"><span class="lineno">  159</span>    }</div>
+<div class="line"><span class="lineno">  160</span> </div>
+<div class="line"><span class="lineno">  161</span>    err = i2s_start(<span class="keyword">static_cast&lt;</span>i2s_port_t<span class="keyword">&gt;</span>(I2S_NUM));</div>
+<div class="line"><span class="lineno">  162</span>    <span class="keywordflow">if</span>(err != ESP_OK)</div>
+<div class="line"><span class="lineno">  163</span>    {</div>
+<div class="line"><span class="lineno">  164</span>        ESP_LOGE(TAG, <span class="stringliteral">&quot;i2s_start failed %d, %s&quot;</span>, err, esp_err_to_name(err));</div>
+<div class="line"><span class="lineno">  165</span>        <span class="keywordflow">return</span>;</div>
+<div class="line"><span class="lineno">  166</span>    }</div>
+<div class="line"><span class="lineno">  167</span> </div>
+<div class="line"><span class="lineno">  168</span>    <span class="keywordflow">while</span>(1)</div>
+<div class="line"><span class="lineno">  169</span>    {</div>
+<div class="line"><span class="lineno">  170</span><span class="preprocessor">#if !defined(GENERATE_SINE_WAVE) &amp;&amp; !defined(GENERATE_RAMP)</span></div>
+<div class="line"><span class="lineno">  171</span>        i2s_read(<span class="keyword">static_cast&lt;</span>i2s_port_t<span class="keyword">&gt;</span>(I2S_NUM), <a class="code hl_variable" href="i2s_8cpp.html#a4025221c11b823336cd64a55623f8a1e">rx_buf</a>, <span class="keyword">sizeof</span>(<a class="code hl_variable" href="i2s_8cpp.html#a4025221c11b823336cd64a55623f8a1e">rx_buf</a>), &amp;tx_rx_size, 100/portTICK_PERIOD_MS);</div>
+<div class="line"><span class="lineno">  172</span>        <span class="keywordflow">if</span>(tx_rx_size != <span class="keyword">sizeof</span>(<a class="code hl_variable" href="i2s_8cpp.html#a4025221c11b823336cd64a55623f8a1e">rx_buf</a>))</div>
+<div class="line"><span class="lineno">  173</span>        {</div>
+<div class="line"><span class="lineno">  174</span>            ESP_LOGE(TAG, <span class="stringliteral">&quot;Got the wrong number of bytes %zu/%zu&quot;</span>, tx_rx_size, <span class="keyword">sizeof</span>(<a class="code hl_variable" href="i2s_8cpp.html#a4025221c11b823336cd64a55623f8a1e">rx_buf</a>));</div>
+<div class="line"><span class="lineno">  175</span>        }</div>
+<div class="line"><span class="lineno">  176</span><span class="preprocessor">#elif defined(GENERATE_SINE_WAVE)</span></div>
+<div class="line"><span class="lineno">  177</span>        <span class="keywordtype">int</span> len = <span class="keyword">sizeof</span>(<a class="code hl_variable" href="i2s_8cpp.html#a4025221c11b823336cd64a55623f8a1e">rx_buf</a>) / <span class="keyword">sizeof</span>(<a class="code hl_variable" href="i2s_8cpp.html#a4025221c11b823336cd64a55623f8a1e">rx_buf</a>[0]);</div>
+<div class="line"><span class="lineno">  178</span>        <span class="keywordflow">for</span>(<span class="keywordtype">int</span> i = 0; i &lt; len; i++)</div>
+<div class="line"><span class="lineno">  179</span>        {</div>
+<div class="line"><span class="lineno">  180</span>            <a class="code hl_variable" href="i2s_8cpp.html#a4025221c11b823336cd64a55623f8a1e">rx_buf</a>[i] = <a class="code hl_function" href="float__convert_8h.html#ae9b18f6b920e3401ec41278b57e6817b">float_to_int32</a>(sinf(2 * ((<span class="keywordtype">float</span>)M_PI) * i/(<span class="keywordtype">float</span>)len));</div>
+<div class="line"><span class="lineno">  181</span>        }</div>
+<div class="line"><span class="lineno">  182</span><span class="preprocessor">#elif defined(GENERATE_RAMP)</span></div>
+<div class="line"><span class="lineno">  183</span>        <span class="keywordtype">int</span> len = <span class="keyword">sizeof</span>(<a class="code hl_variable" href="i2s_8cpp.html#a4025221c11b823336cd64a55623f8a1e">rx_buf</a>) / <span class="keyword">sizeof</span>(<a class="code hl_variable" href="i2s_8cpp.html#a4025221c11b823336cd64a55623f8a1e">rx_buf</a>[0]);</div>
+<div class="line"><span class="lineno">  184</span>        <span class="keywordflow">for</span>(<span class="keywordtype">int</span> i = 0; i &lt; len; i++)</div>
+<div class="line"><span class="lineno">  185</span>        {</div>
+<div class="line"><span class="lineno">  186</span>            <a class="code hl_variable" href="i2s_8cpp.html#a4025221c11b823336cd64a55623f8a1e">rx_buf</a>[i] = (i - len/2) * (INT32_MAX / (len/2));</div>
+<div class="line"><span class="lineno">  187</span>        }</div>
+<div class="line"><span class="lineno">  188</span><span class="preprocessor">#endif</span></div>
+<div class="line"><span class="lineno">  189</span> </div>
+<div class="line"><span class="lineno">  190</span>        <a class="code hl_function" href="process_8cpp.html#a450bec865b55b9890f4050f1ab0dba5c">process_samples</a>(<a class="code hl_variable" href="i2s_8cpp.html#a4025221c11b823336cd64a55623f8a1e">rx_buf</a>, <span class="keyword">sizeof</span>(<a class="code hl_variable" href="i2s_8cpp.html#a4025221c11b823336cd64a55623f8a1e">rx_buf</a>) / <span class="keyword">sizeof</span>(<a class="code hl_variable" href="i2s_8cpp.html#a4025221c11b823336cd64a55623f8a1e">rx_buf</a>[0]));</div>
+<div class="line"><span class="lineno">  191</span> </div>
+<div class="line"><span class="lineno">  192</span>        i2s_write(<span class="keyword">static_cast&lt;</span>i2s_port_t<span class="keyword">&gt;</span>(I2S_NUM), <a class="code hl_variable" href="i2s_8cpp.html#a4025221c11b823336cd64a55623f8a1e">rx_buf</a>, <span class="keyword">sizeof</span>(<a class="code hl_variable" href="i2s_8cpp.html#a4025221c11b823336cd64a55623f8a1e">rx_buf</a>), &amp;tx_rx_size, 100/portTICK_PERIOD_MS);</div>
+<div class="line"><span class="lineno">  193</span>        <span class="keywordflow">if</span>(tx_rx_size != <span class="keyword">sizeof</span>(<a class="code hl_variable" href="i2s_8cpp.html#a4025221c11b823336cd64a55623f8a1e">rx_buf</a>))</div>
+<div class="line"><span class="lineno">  194</span>        {</div>
+<div class="line"><span class="lineno">  195</span>            ESP_LOGE(TAG, <span class="stringliteral">&quot;Sent the wrong number of bytes %zu/%zu&quot;</span>, tx_rx_size, <span class="keyword">sizeof</span>(<a class="code hl_variable" href="i2s_8cpp.html#a4025221c11b823336cd64a55623f8a1e">rx_buf</a>));</div>
+<div class="line"><span class="lineno">  196</span>        }</div>
+<div class="line"><span class="lineno">  197</span>    }</div>
+<div class="line"><span class="lineno">  198</span>}</div>
 <div class="ttc" id="aclassshrapnel_1_1parameters_1_1AudioParameters_html"><div class="ttname"><a href="classshrapnel_1_1parameters_1_1AudioParameters.html">shrapnel::parameters::AudioParameters</a></div><div class="ttdef"><b>Definition:</b> <a href="audio__param_8h_source.html#l00059">audio_param.h:59</a></div></div>
 <div class="ttc" id="afloat__convert_8h_html_ae9b18f6b920e3401ec41278b57e6817b"><div class="ttname"><a href="float__convert_8h.html#ae9b18f6b920e3401ec41278b57e6817b">float_to_int32</a></div><div class="ttdeci">static int32_t float_to_int32(float f)</div><div class="ttdef"><b>Definition:</b> <a href="float__convert_8h_source.html#l00031">float_convert.h:31</a></div></div>
-<div class="ttc" id="ai2s_8cpp_html_a4025221c11b823336cd64a55623f8a1e"><div class="ttname"><a href="i2s_8cpp.html#a4025221c11b823336cd64a55623f8a1e">rx_buf</a></div><div class="ttdeci">static int32_t rx_buf[2 *DMA_BUF_SIZE]</div><div class="ttdef"><b>Definition:</b> <a href="i2s_8cpp_source.html#l00051">i2s.cpp:51</a></div></div>
+<div class="ttc" id="ai2s_8cpp_html_a4025221c11b823336cd64a55623f8a1e"><div class="ttname"><a href="i2s_8cpp.html#a4025221c11b823336cd64a55623f8a1e">rx_buf</a></div><div class="ttdeci">static int32_t rx_buf[2 *DMA_BUF_SIZE]</div><div class="ttdef"><b>Definition:</b> <a href="i2s_8cpp_source.html#l00049">i2s.cpp:49</a></div></div>
+<div class="ttc" id="ai2s_8cpp_html_a9b83a13d267928932fc9d01c7ee09df2"><div class="ttname"><a href="i2s_8cpp.html#a9b83a13d267928932fc9d01c7ee09df2">i2s_queue</a></div><div class="ttdeci">QueueHandle_t i2s_queue</div><div class="ttdef"><b>Definition:</b> <a href="i2s_8cpp_source.html#l00045">i2s.cpp:45</a></div></div>
 <div class="ttc" id="anoise__gate_8cpp_html_a63433fe701b4e06f2cfdd50509e660db"><div class="ttname"><a href="noise__gate_8cpp.html#a63433fe701b4e06f2cfdd50509e660db">sample_rate</a></div><div class="ttdeci">static float sample_rate</div><div class="ttdef"><b>Definition:</b> <a href="noise__gate_8cpp_source.html#l00046">noise_gate.cpp:46</a></div></div>
 <div class="ttc" id="aprocess_8cpp_html_a159f752dbd8aa42d765e604910814129"><div class="ttname"><a href="process_8cpp.html#a159f752dbd8aa42d765e604910814129">process_init</a></div><div class="ttdeci">esp_err_t process_init(shrapnel::parameters::AudioParameters *audio_params)</div><div class="ttdef"><b>Definition:</b> <a href="process_8cpp_source.html#l00163">process.cpp:163</a></div></div>
 <div class="ttc" id="aprocess_8cpp_html_a450bec865b55b9890f4050f1ab0dba5c"><div class="ttname"><a href="process_8cpp.html#a450bec865b55b9890f4050f1ab0dba5c">process_samples</a></div><div class="ttdeci">void process_samples(int32_t *buf, size_t buf_len)</div><div class="ttdef"><b>Definition:</b> <a href="process_8cpp_source.html#l00086">process.cpp:86</a></div></div>
 </div><!-- fragment -->
-<p class="reference">References <a class="el" href="float__convert_8h_source.html#l00031">float_to_int32()</a>, <a class="el" href="i2s_8cpp_source.html#l00047">i2s_queue</a>, <a class="el" href="process_8cpp_source.html#l00163">process_init()</a>, <a class="el" href="process_8cpp_source.html#l00086">process_samples()</a>, <a class="el" href="i2s_8cpp_source.html#l00051">rx_buf</a>, and <a class="el" href="noise__gate_8cpp_source.html#l00046">sample_rate</a>.</p>
+<p class="reference">References <a class="el" href="float__convert_8h_source.html#l00031">float_to_int32()</a>, <a class="el" href="i2s_8cpp_source.html#l00045">i2s_queue</a>, <a class="el" href="process_8cpp_source.html#l00163">process_init()</a>, <a class="el" href="process_8cpp_source.html#l00086">process_samples()</a>, <a class="el" href="i2s_8cpp_source.html#l00049">rx_buf</a>, and <a class="el" href="noise__gate_8cpp_source.html#l00046">sample_rate</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="i2s_8cpp_source.html#l00205">i2s_setup()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="i2s_8cpp_source.html#l00200">i2s_setup()</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="i2s_8cpp_a4e37f563a34c1a559515cc40782caf07_cgraph.svg" width="850" height="822"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+<div class="center"><iframe scrolling="no" frameborder="0" src="i2s_8cpp_a4e37f563a34c1a559515cc40782caf07_cgraph.svg" width="848" height="696"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
 </div>
 </div>
 <div class="dynheader">
@@ -386,64 +324,106 @@ Here is the caller graph for this function:</div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="i2s_8cpp_source.html#l00205">205</a> of file <a class="el" href="i2s_8cpp_source.html">i2s.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  206</span>{</div>
-<div class="line"><span class="lineno">  207</span>    esp_err_t err;</div>
-<div class="line"><span class="lineno">  208</span> </div>
-<div class="line"><span class="lineno">  209</span>    <a class="code hl_variable" href="i2s_8cpp.html#aa5ff31a870fe9e98978a1013e6735d45">g_profiling_gpio</a> = profiling_gpio;</div>
-<div class="line"><span class="lineno">  210</span>    gpio_config_t io_conf = {</div>
-<div class="line"><span class="lineno">  211</span>        .pin_bit_mask = 1ULL &lt;&lt; profiling_gpio,</div>
-<div class="line"><span class="lineno">  212</span>        .mode = GPIO_MODE_OUTPUT,</div>
-<div class="line"><span class="lineno">  213</span>        .pull_up_en = GPIO_PULLUP_DISABLE,</div>
-<div class="line"><span class="lineno">  214</span>        .pull_down_en = GPIO_PULLDOWN_DISABLE,</div>
-<div class="line"><span class="lineno">  215</span>        .intr_type = GPIO_INTR_DISABLE,</div>
-<div class="line"><span class="lineno">  216</span>    };</div>
-<div class="line"><span class="lineno">  217</span> </div>
-<div class="line"><span class="lineno">  218</span>    err = gpio_config(&amp;io_conf);</div>
-<div class="line"><span class="lineno">  219</span>    <span class="keywordflow">if</span>(err != ESP_OK)</div>
-<div class="line"><span class="lineno">  220</span>    {</div>
-<div class="line"><span class="lineno">  221</span>        ESP_LOGE(TAG, <span class="stringliteral">&quot;gpio_config failed %d, %s&quot;</span>, err, esp_err_to_name(err));</div>
-<div class="line"><span class="lineno">  222</span>        <span class="keywordflow">return</span> err;</div>
-<div class="line"><span class="lineno">  223</span>    }</div>
-<div class="line"><span class="lineno">  224</span>    err = gpio_set_level(profiling_gpio, 0);</div>
-<div class="line"><span class="lineno">  225</span>    <span class="keywordflow">if</span>(err != ESP_OK)</div>
-<div class="line"><span class="lineno">  226</span>    {</div>
-<div class="line"><span class="lineno">  227</span>        ESP_LOGE(TAG, <span class="stringliteral">&quot;gpio_set_level failed %d, %s&quot;</span>, err, esp_err_to_name(err));</div>
-<div class="line"><span class="lineno">  228</span>        <span class="keywordflow">return</span> err;</div>
-<div class="line"><span class="lineno">  229</span>    }</div>
-<div class="line"><span class="lineno">  230</span> </div>
-<div class="line"><span class="lineno">  231</span>    <span class="comment">// This task must be pinned as CPU cycle count is used for profiling</span></div>
-<div class="line"><span class="lineno">  232</span>    <span class="keywordtype">int</span> ret = xTaskCreatePinnedToCore(<a class="code hl_function" href="i2s_8cpp.html#a4e37f563a34c1a559515cc40782caf07">i2s_processing_task</a>, <span class="stringliteral">&quot;i2s proc&quot;</span>, TASK_STACK, audio_param, TASK_PRIO, NULL, 1);</div>
-<div class="line"><span class="lineno">  233</span>    <span class="keywordflow">if</span>(ret != pdPASS)</div>
-<div class="line"><span class="lineno">  234</span>    {</div>
-<div class="line"><span class="lineno">  235</span>        ESP_LOGE(TAG, <span class="stringliteral">&quot;Processing task create failed %d&quot;</span>, ret);</div>
-<div class="line"><span class="lineno">  236</span>    }</div>
-<div class="line"><span class="lineno">  237</span> </div>
-<div class="line"><span class="lineno">  238</span>    ret = xTaskCreate(<a class="code hl_function" href="i2s_8cpp.html#a0826d7a742c16e16a62704cc59fd4ba2">event_task</a>, <span class="stringliteral">&quot;i2s event&quot;</span>, 3000, NULL, TASK_PRIO - 1, NULL);</div>
-<div class="line"><span class="lineno">  239</span>    <span class="keywordflow">if</span>(ret != pdPASS)</div>
-<div class="line"><span class="lineno">  240</span>    {</div>
-<div class="line"><span class="lineno">  241</span>        ESP_LOGE(TAG, <span class="stringliteral">&quot;Event task create failed %d&quot;</span>, ret);</div>
-<div class="line"><span class="lineno">  242</span>    }</div>
-<div class="line"><span class="lineno">  243</span> </div>
-<div class="line"><span class="lineno">  244</span>    <span class="keywordflow">return</span> ESP_OK;</div>
-<div class="line"><span class="lineno">  245</span>}</div>
-<div class="ttc" id="ai2s_8cpp_html_a0826d7a742c16e16a62704cc59fd4ba2"><div class="ttname"><a href="i2s_8cpp.html#a0826d7a742c16e16a62704cc59fd4ba2">event_task</a></div><div class="ttdeci">static void event_task(void *param)</div><div class="ttdef"><b>Definition:</b> <a href="i2s_8cpp_source.html#l00055">i2s.cpp:55</a></div></div>
-<div class="ttc" id="ai2s_8cpp_html_a4e37f563a34c1a559515cc40782caf07"><div class="ttname"><a href="i2s_8cpp.html#a4e37f563a34c1a559515cc40782caf07">i2s_processing_task</a></div><div class="ttdeci">static void i2s_processing_task(void *param)</div><div class="ttdef"><b>Definition:</b> <a href="i2s_8cpp_source.html#l00081">i2s.cpp:81</a></div></div>
-<div class="ttc" id="ai2s_8cpp_html_aa5ff31a870fe9e98978a1013e6735d45"><div class="ttname"><a href="i2s_8cpp.html#aa5ff31a870fe9e98978a1013e6735d45">g_profiling_gpio</a></div><div class="ttdeci">gpio_num_t g_profiling_gpio</div><div class="ttdef"><b>Definition:</b> <a href="i2s_8cpp_source.html#l00053">i2s.cpp:53</a></div></div>
+<p class="definition">Definition at line <a class="el" href="i2s_8cpp_source.html#l00200">200</a> of file <a class="el" href="i2s_8cpp_source.html">i2s.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  201</span>{</div>
+<div class="line"><span class="lineno">  202</span>    esp_err_t err;</div>
+<div class="line"><span class="lineno">  203</span> </div>
+<div class="line"><span class="lineno">  204</span>    <a class="code hl_variable" href="i2s_8cpp.html#aa5ff31a870fe9e98978a1013e6735d45">g_profiling_gpio</a> = profiling_gpio;</div>
+<div class="line"><span class="lineno">  205</span>    gpio_config_t io_conf = {</div>
+<div class="line"><span class="lineno">  206</span>        .pin_bit_mask = 1ULL &lt;&lt; profiling_gpio,</div>
+<div class="line"><span class="lineno">  207</span>        .mode = GPIO_MODE_OUTPUT,</div>
+<div class="line"><span class="lineno">  208</span>        .pull_up_en = GPIO_PULLUP_DISABLE,</div>
+<div class="line"><span class="lineno">  209</span>        .pull_down_en = GPIO_PULLDOWN_DISABLE,</div>
+<div class="line"><span class="lineno">  210</span>        .intr_type = GPIO_INTR_DISABLE,</div>
+<div class="line"><span class="lineno">  211</span>    };</div>
+<div class="line"><span class="lineno">  212</span> </div>
+<div class="line"><span class="lineno">  213</span>    err = gpio_config(&amp;io_conf);</div>
+<div class="line"><span class="lineno">  214</span>    <span class="keywordflow">if</span>(err != ESP_OK)</div>
+<div class="line"><span class="lineno">  215</span>    {</div>
+<div class="line"><span class="lineno">  216</span>        ESP_LOGE(TAG, <span class="stringliteral">&quot;gpio_config failed %d, %s&quot;</span>, err, esp_err_to_name(err));</div>
+<div class="line"><span class="lineno">  217</span>        <span class="keywordflow">return</span> err;</div>
+<div class="line"><span class="lineno">  218</span>    }</div>
+<div class="line"><span class="lineno">  219</span>    err = gpio_set_level(profiling_gpio, 0);</div>
+<div class="line"><span class="lineno">  220</span>    <span class="keywordflow">if</span>(err != ESP_OK)</div>
+<div class="line"><span class="lineno">  221</span>    {</div>
+<div class="line"><span class="lineno">  222</span>        ESP_LOGE(TAG, <span class="stringliteral">&quot;gpio_set_level failed %d, %s&quot;</span>, err, esp_err_to_name(err));</div>
+<div class="line"><span class="lineno">  223</span>        <span class="keywordflow">return</span> err;</div>
+<div class="line"><span class="lineno">  224</span>    }</div>
+<div class="line"><span class="lineno">  225</span> </div>
+<div class="line"><span class="lineno">  226</span>    <span class="comment">// This task must be pinned as CPU cycle count is used for profiling</span></div>
+<div class="line"><span class="lineno">  227</span>    <span class="keywordtype">int</span> ret = xTaskCreatePinnedToCore(<a class="code hl_function" href="i2s_8cpp.html#a4e37f563a34c1a559515cc40782caf07">i2s_processing_task</a>, <span class="stringliteral">&quot;i2s proc&quot;</span>, TASK_STACK, audio_param, TASK_PRIO, NULL, 1);</div>
+<div class="line"><span class="lineno">  228</span>    <span class="keywordflow">if</span>(ret != pdPASS)</div>
+<div class="line"><span class="lineno">  229</span>    {</div>
+<div class="line"><span class="lineno">  230</span>        ESP_LOGE(TAG, <span class="stringliteral">&quot;Processing task create failed %d&quot;</span>, ret);</div>
+<div class="line"><span class="lineno">  231</span>    }</div>
+<div class="line"><span class="lineno">  232</span> </div>
+<div class="line"><span class="lineno">  233</span>    <span class="keywordflow">return</span> ESP_OK;</div>
+<div class="line"><span class="lineno">  234</span>}</div>
+<div class="ttc" id="ai2s_8cpp_html_a4e37f563a34c1a559515cc40782caf07"><div class="ttname"><a href="i2s_8cpp.html#a4e37f563a34c1a559515cc40782caf07">i2s_processing_task</a></div><div class="ttdeci">static void i2s_processing_task(void *param)</div><div class="ttdef"><b>Definition:</b> <a href="i2s_8cpp_source.html#l00076">i2s.cpp:76</a></div></div>
+<div class="ttc" id="ai2s_8cpp_html_aa5ff31a870fe9e98978a1013e6735d45"><div class="ttname"><a href="i2s_8cpp.html#aa5ff31a870fe9e98978a1013e6735d45">g_profiling_gpio</a></div><div class="ttdeci">gpio_num_t g_profiling_gpio</div><div class="ttdef"><b>Definition:</b> <a href="i2s_8cpp_source.html#l00051">i2s.cpp:51</a></div></div>
 </div><!-- fragment -->
-<p class="reference">References <a class="el" href="i2s_8cpp_source.html#l00055">event_task()</a>, <a class="el" href="i2s_8cpp_source.html#l00053">g_profiling_gpio</a>, and <a class="el" href="i2s_8cpp_source.html#l00081">i2s_processing_task()</a>.</p>
+<p class="reference">References <a class="el" href="i2s_8cpp_source.html#l00051">g_profiling_gpio</a>, and <a class="el" href="i2s_8cpp_source.html#l00076">i2s_processing_task()</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="main_8cpp_source.html#l00399">shrapnel::app_main()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="main_8cpp_source.html#l00471">shrapnel::app_main()</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="i2s_8cpp_a445c7079217d08d4767549802dade8a0_cgraph.svg" width="976" height="822"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+<div class="center"><iframe scrolling="no" frameborder="0" src="i2s_8cpp_a445c7079217d08d4767549802dade8a0_cgraph.svg" width="975" height="696"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
 </div>
 </div>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><iframe scrolling="no" frameborder="0" src="i2s_8cpp_a445c7079217d08d4767549802dade8a0_icgraph.svg" width="271" height="38"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
+</div>
+
+</div>
+</div>
+<a id="a7bd2643748a0d4058522967eecfb1dc1" name="a7bd2643748a0d4058522967eecfb1dc1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7bd2643748a0d4058522967eecfb1dc1">&#9670;&nbsp;</a></span>log_i2s_event()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void log_i2s_event </td>
+          <td>(</td>
+          <td class="paramtype">const i2s_event_t &amp;&#160;</td>
+          <td class="paramname"><em>e</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="i2s_8cpp_source.html#l00053">53</a> of file <a class="el" href="i2s_8cpp_source.html">i2s.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   54</span>{</div>
+<div class="line"><span class="lineno">   55</span>    <span class="keywordflow">switch</span>(e.type)</div>
+<div class="line"><span class="lineno">   56</span>    {</div>
+<div class="line"><span class="lineno">   57</span>    <span class="keywordflow">case</span> I2S_EVENT_DMA_ERROR:</div>
+<div class="line"><span class="lineno">   58</span>        ESP_LOGE(TAG, <span class="stringliteral">&quot;Something went wrong with DMA&quot;</span>);</div>
+<div class="line"><span class="lineno">   59</span>        <span class="keywordflow">break</span>;</div>
+<div class="line"><span class="lineno">   60</span>    <span class="keywordflow">case</span> I2S_EVENT_TX_DONE:</div>
+<div class="line"><span class="lineno">   61</span>    <span class="keywordflow">case</span> I2S_EVENT_RX_DONE:</div>
+<div class="line"><span class="lineno">   62</span>        <span class="comment">//do nothing</span></div>
+<div class="line"><span class="lineno">   63</span>        <span class="keywordflow">break</span>;</div>
+<div class="line"><span class="lineno">   64</span>    <span class="keywordflow">case</span> I2S_EVENT_TX_Q_OVF:</div>
+<div class="line"><span class="lineno">   65</span>        ESP_LOGE(TAG, <span class="stringliteral">&quot;TX queue overflowed&quot;</span>);</div>
+<div class="line"><span class="lineno">   66</span>        <span class="keywordflow">break</span>;</div>
+<div class="line"><span class="lineno">   67</span>    <span class="keywordflow">case</span> I2S_EVENT_RX_Q_OVF:</div>
+<div class="line"><span class="lineno">   68</span>        ESP_LOGE(TAG, <span class="stringliteral">&quot;RX queue overflowed&quot;</span>);</div>
+<div class="line"><span class="lineno">   69</span>        <span class="keywordflow">break</span>;</div>
+<div class="line"><span class="lineno">   70</span>    <span class="keywordflow">default</span>:</div>
+<div class="line"><span class="lineno">   71</span>        ESP_LOGE(TAG, <span class="stringliteral">&quot;Unhandled type: %d&quot;</span>, e.type);</div>
+<div class="line"><span class="lineno">   72</span>        <span class="keywordflow">break</span>;</div>
+<div class="line"><span class="lineno">   73</span>    }</div>
+<div class="line"><span class="lineno">   74</span>}</div>
+</div><!-- fragment -->
+<p class="reference">Referenced by <a class="el" href="main_8cpp_source.html#l00471">shrapnel::app_main()</a>.</p>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" frameborder="0" src="i2s_8cpp_a7bd2643748a0d4058522967eecfb1dc1_icgraph.svg" width="295" height="38"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
 </div>
 </div>
 
@@ -462,9 +442,9 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="i2s_8cpp_source.html#l00053">53</a> of file <a class="el" href="i2s_8cpp_source.html">i2s.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="i2s_8cpp_source.html#l00051">51</a> of file <a class="el" href="i2s_8cpp_source.html">i2s.cpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="i2s_8cpp_source.html#l00205">i2s_setup()</a>, and <a class="el" href="process_8cpp_source.html#l00086">process_samples()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="i2s_8cpp_source.html#l00200">i2s_setup()</a>, and <a class="el" href="process_8cpp_source.html#l00086">process_samples()</a>.</p>
 
 </div>
 </div>
@@ -473,24 +453,16 @@ Here is the caller graph for this function:</div>
 
 <div class="memitem">
 <div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">QueueHandle_t i2s_queue</td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="i2s_8cpp_source.html#l00047">47</a> of file <a class="el" href="i2s_8cpp_source.html">i2s.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="i2s_8cpp_source.html#l00045">45</a> of file <a class="el" href="i2s_8cpp_source.html">i2s.cpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="i2s_8cpp_source.html#l00055">event_task()</a>, and <a class="el" href="i2s_8cpp_source.html#l00081">i2s_processing_task()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="main_8cpp_source.html#l00471">shrapnel::app_main()</a>, and <a class="el" href="i2s_8cpp_source.html#l00076">i2s_processing_task()</a>.</p>
 
 </div>
 </div>
@@ -514,9 +486,9 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="i2s_8cpp_source.html#l00051">51</a> of file <a class="el" href="i2s_8cpp_source.html">i2s.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="i2s_8cpp_source.html#l00049">49</a> of file <a class="el" href="i2s_8cpp_source.html">i2s.cpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="i2s_8cpp_source.html#l00081">i2s_processing_task()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="i2s_8cpp_source.html#l00076">i2s_processing_task()</a>.</p>
 
 </div>
 </div>

@@ -1,8 +1,15 @@
 var searchData=
 [
-  ['value_0',['value',['../structshrapnel_1_1midi_1_1Message_1_1ControlChange.html#a2615450c8f2f31fc8c4298f8363d076c',1,'shrapnel::midi::Message::ControlChange']]],
-  ['valvestate_1',['Valvestate',['../classshrapnel_1_1effect_1_1valvestate_1_1Valvestate.html',1,'shrapnel::effect::valvestate::Valvestate'],['../classshrapnel_1_1effect_1_1valvestate_1_1Valvestate.html#aebf55d7e4810fd3eab785699a5c2cfb9',1,'shrapnel::effect::valvestate::Valvestate::Valvestate()']]],
-  ['valvestate_2ecpp_2',['valvestate.cpp',['../valvestate_8cpp.html',1,'']]],
-  ['valvestate_2eh_3',['valvestate.h',['../valvestate_8h.html',1,'']]],
-  ['velocity_4',['velocity',['../structshrapnel_1_1midi_1_1Message_1_1NoteOn.html#a3377e69df50e588b93683fd3c3aa8a43',1,'shrapnel::midi::Message::NoteOn::velocity()'],['../structshrapnel_1_1midi_1_1Message_1_1NoteOff.html#a854bc5ff80d66e047c66678ca281df8d',1,'shrapnel::midi::Message::NoteOff::velocity()']]]
+  ['wait_5ffor_5fprovisioning_0',['wait_for_provisioning',['../classshrapnel_1_1wifi__provisioning_1_1WiFiProvisioning.html#a12a5209c4e49a2a135d5e5de02e3282e',1,'shrapnel::wifi_provisioning::WiFiProvisioning']]],
+  ['wave_5fshape_2ecpp_1',['wave_shape.cpp',['../wave__shape_8cpp.html',1,'']]],
+  ['wave_5fshape_2eh_2',['wave_shape.h',['../wave__shape_8h.html',1,'']]],
+  ['waveshape_3',['waveshape',['../wave__shape_8h.html#a737ee48b7321d3c9c5fb0c49bc6f14af',1,'waveshape(float input):&#160;wave_shape.cpp'],['../wave__shape_8cpp.html#a737ee48b7321d3c9c5fb0c49bc6f14af',1,'waveshape(float input):&#160;wave_shape.cpp']]],
+  ['websocket_4',['websocket',['../namespaceshrapnel.html#a0b7d44945a5a79cfff45cbd9f59a6d93',1,'shrapnel']]],
+  ['websocket_5fget_5fhandler_5',['websocket_get_handler',['../namespaceshrapnel.html#ac411c31b2f0dc2242fd12980da5b843d',1,'shrapnel']]],
+  ['websocket_5fsend_6',['websocket_send',['../namespaceshrapnel.html#a9df539517dd9158cb2b42a9d9e948a73',1,'shrapnel']]],
+  ['websockets_20json_20api_7',['websockets JSON API',['../ws_api.html',1,'']]],
+  ['wifi_5fprovisioning_2eh_8',['wifi_provisioning.h',['../wifi__provisioning_8h.html',1,'']]],
+  ['wifi_5fstart_5fhandler_9',['wifi_start_handler',['../namespaceshrapnel.html#ad3636f58faa95196bef6352b331ed3da',1,'shrapnel']]],
+  ['wifiprovisioning_10',['WiFiProvisioning',['../classshrapnel_1_1wifi__provisioning_1_1WiFiProvisioning.html',1,'shrapnel::wifi_provisioning::WiFiProvisioning'],['../classshrapnel_1_1wifi__provisioning_1_1WiFiProvisioning.html#a7ca28157a38f676bed04d3b4ef11cdc8',1,'shrapnel::wifi_provisioning::WiFiProvisioning::WiFiProvisioning()']]],
+  ['work_5fsemaphore_11',['work_semaphore',['../namespaceshrapnel.html#ab9671c2bf7feea52d1ba947c71395a73',1,'shrapnel']]]
 ];

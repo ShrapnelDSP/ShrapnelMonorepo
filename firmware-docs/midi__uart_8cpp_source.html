@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.4"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>ShrapnelDSP: firmware/components/midi/src/midi_uart.cpp Source File</title>
+<title>ShrapnelDSP: firmware/components/midi_protocol/src/midi_uart.cpp Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -142,17 +142,23 @@ $(document).ready(function(){initNavTree('midi__uart_8cpp_source.html',''); init
 <div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>                0));</div>
 <div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>}</div>
 <div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span> </div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno"><a class="line" href="classshrapnel_1_1midi_1_1EspMidiUart.html#aef922b29068099027bd600adac7f2bc1">   49</a></span>uint8_t <a class="code hl_function" href="classshrapnel_1_1midi_1_1EspMidiUart.html#aef922b29068099027bd600adac7f2bc1">EspMidiUart::get_byte</a>(<span class="keywordtype">void</span>) {</div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>    uint8_t out = 0;</div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>    <span class="keywordtype">int</span> rc = uart_read_bytes(uart, &amp;out, 1, portMAX_DELAY);</div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>    assert(rc == 1);</div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>    <span class="keywordflow">return</span> out;</div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>}</div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span> </div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>}</div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>}</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno"><a class="line" href="classshrapnel_1_1midi_1_1EspMidiUart.html#a7bdbde35c68368f6e2d2156e7aebfde6">   49</a></span>std::optional&lt;uint8_t&gt; <a class="code hl_function" href="classshrapnel_1_1midi_1_1EspMidiUart.html#a7bdbde35c68368f6e2d2156e7aebfde6">EspMidiUart::get_byte</a>(TickType_t timeout) {</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>    uint8_t out;</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>    <span class="keywordtype">int</span> rc = uart_read_bytes(uart, &amp;out, 1, timeout);</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>    assert((rc == 0) || (rc == 1));</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span> </div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>    <span class="keywordflow">if</span>(rc == 0)</div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>    {</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>        <span class="keywordflow">return</span> std::nullopt;</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>    }</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span> </div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>    <span class="keywordflow">return</span> out;</div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>}</div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span> </div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>}</div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>}</div>
+<div class="ttc" id="aclassshrapnel_1_1midi_1_1EspMidiUart_html_a7bdbde35c68368f6e2d2156e7aebfde6"><div class="ttname"><a href="classshrapnel_1_1midi_1_1EspMidiUart.html#a7bdbde35c68368f6e2d2156e7aebfde6">shrapnel::midi::EspMidiUart::get_byte</a></div><div class="ttdeci">std::optional&lt; uint8_t &gt; get_byte(TickType_t timeout) override</div><div class="ttdef"><b>Definition:</b> <a href="midi__uart_8cpp_source.html#l00049">midi_uart.cpp:49</a></div></div>
 <div class="ttc" id="aclassshrapnel_1_1midi_1_1EspMidiUart_html_a9ac817a771cd1e8bd29b8ffa84bd9e39"><div class="ttname"><a href="classshrapnel_1_1midi_1_1EspMidiUart.html#a9ac817a771cd1e8bd29b8ffa84bd9e39">shrapnel::midi::EspMidiUart::EspMidiUart</a></div><div class="ttdeci">EspMidiUart(uart_port_t uart, gpio_num_t rx_io)</div><div class="ttdef"><b>Definition:</b> <a href="midi__uart_8cpp_source.html#l00026">midi_uart.cpp:26</a></div></div>
-<div class="ttc" id="aclassshrapnel_1_1midi_1_1EspMidiUart_html_aef922b29068099027bd600adac7f2bc1"><div class="ttname"><a href="classshrapnel_1_1midi_1_1EspMidiUart.html#aef922b29068099027bd600adac7f2bc1">shrapnel::midi::EspMidiUart::get_byte</a></div><div class="ttdeci">uint8_t get_byte(void) override</div><div class="ttdoc">Block until a byte is received.</div><div class="ttdef"><b>Definition:</b> <a href="midi__uart_8cpp_source.html#l00049">midi_uart.cpp:49</a></div></div>
 <div class="ttc" id="amidi__uart_8h_html"><div class="ttname"><a href="midi__uart_8h.html">midi_uart.h</a></div></div>
 <div class="ttc" id="anamespaceshrapnel_html"><div class="ttname"><a href="namespaceshrapnel.html">shrapnel</a></div><div class="ttdef"><b>Definition:</b> <a href="audio__param_8h_source.html#l00029">audio_param.h:29</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
@@ -160,7 +166,7 @@ $(document).ready(function(){initNavTree('midi__uart_8cpp_source.html',''); init
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_d9edf6c004b4a7ff14fe9ae7a92214ee.html">firmware</a></li><li class="navelem"><a class="el" href="dir_a7f1045ea2c2de513e4829d3edd7d5b7.html">components</a></li><li class="navelem"><a class="el" href="dir_350361b2511918fb18e561b5245a03c5.html">midi</a></li><li class="navelem"><a class="el" href="dir_2d26e91aaa8f0b8404b10c47c7887d74.html">src</a></li><li class="navelem"><a class="el" href="midi__uart_8cpp.html">midi_uart.cpp</a></li>
+    <li class="navelem"><a class="el" href="dir_d9edf6c004b4a7ff14fe9ae7a92214ee.html">firmware</a></li><li class="navelem"><a class="el" href="dir_a7f1045ea2c2de513e4829d3edd7d5b7.html">components</a></li><li class="navelem"><a class="el" href="dir_6bb30634ea0a017998ca767619e0130b.html">midi_protocol</a></li><li class="navelem"><a class="el" href="dir_c0bdbb6bcfe3cce94da6665fd6d45bca.html">src</a></li><li class="navelem"><a class="el" href="midi__uart_8cpp.html">midi_uart.cpp</a></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.4 </li>
   </ul>
 </div>

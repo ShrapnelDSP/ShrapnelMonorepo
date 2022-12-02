@@ -115,58 +115,91 @@ $(document).ready(function(){initNavTree('queue_8h_source.html',''); initResizab
 <div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span> </div>
 <div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="preprocessor">#pragma once</span></div>
 <div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span> </div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="preprocessor">#include &quot;freertos/FreeRTOS.h&quot;</span></div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="preprocessor">#include &quot;freertos/queue.h&quot;</span></div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="preprocessor">#include &lt;cassert&gt;</span></div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span> </div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespaceshrapnel.html">shrapnel</a> {</div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span> </div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno"><a class="line" href="classshrapnel_1_1QueueBase.html">   29</a></span><span class="keyword">class </span><a class="code hl_class" href="classshrapnel_1_1QueueBase.html">QueueBase</a></div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>{</div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>    <span class="keyword">public</span>:</div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno"><a class="line" href="classshrapnel_1_1QueueBase.html#aac74fe3c0e9dfb65e20d00798ab14c7d">   32</a></span>    <a class="code hl_function" href="classshrapnel_1_1QueueBase.html#aac74fe3c0e9dfb65e20d00798ab14c7d">QueueBase</a>(<span class="keywordtype">int</span> number_of_elements)</div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>    {</div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>        (void) number_of_elements;</div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>    };</div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span> </div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno"><a class="line" href="classshrapnel_1_1QueueBase.html#ab91cc1fb473ac9499f7843218842a946">   37</a></span>    <span class="keyword">virtual</span> BaseType_t <a class="code hl_function" href="classshrapnel_1_1QueueBase.html#ab91cc1fb473ac9499f7843218842a946">receive</a>(T *out, TickType_t time_to_wait) = 0;</div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno"><a class="line" href="classshrapnel_1_1QueueBase.html#ab04cd6b029505d664bb6e13e245d9b14">   38</a></span>    <span class="keyword">virtual</span> BaseType_t <a class="code hl_function" href="classshrapnel_1_1QueueBase.html#ab04cd6b029505d664bb6e13e245d9b14">send</a>(T *out, TickType_t time_to_wait) = 0;</div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>};</div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="preprocessor">#include &quot;FreeRTOSConfig.h&quot;</span></div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="preprocessor">#include &quot;freertos/FreeRTOS.h&quot;</span></div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="preprocessor">#include &quot;freertos/queue.h&quot;</span></div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="preprocessor">#include &lt;cassert&gt;</span></div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="preprocessor">#include &lt;chrono&gt;</span></div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><span class="preprocessor">#include &lt;cstdint&gt;</span></div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><span class="preprocessor">#include &quot;etl/deque.h&quot;</span></div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span><span class="preprocessor">#include &lt;semaphore&gt;</span></div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span><span class="preprocessor">#include &lt;type_traits&gt;</span></div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span><span class="preprocessor">#include &lt;queue&gt;</span></div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span> </div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespaceshrapnel.html">shrapnel</a> {</div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span> </div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno"><a class="line" href="classshrapnel_1_1QueueBase.html">   36</a></span><span class="keyword">class </span><a class="code hl_class" href="classshrapnel_1_1QueueBase.html">QueueBase</a></div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>{</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>    <span class="keyword">public</span>:</div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno"><a class="line" href="classshrapnel_1_1QueueBase.html#afa21cb52927682003ac47f842c5e8d68">   39</a></span>    <span class="keyword">using </span><a class="code hl_typedef" href="classshrapnel_1_1QueueBase.html#afa21cb52927682003ac47f842c5e8d68">value_type</a> = T;</div>
 <div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span> </div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno"><a class="line" href="classshrapnel_1_1Queue.html">   42</a></span><span class="keyword">class </span><a class="code hl_class" href="classshrapnel_1_1Queue.html">Queue</a>: <span class="keyword">public</span> <a class="code hl_class" href="classshrapnel_1_1QueueBase.html">QueueBase</a>&lt;T&gt;</div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>{</div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>    <span class="keyword">public</span>:</div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno"><a class="line" href="classshrapnel_1_1Queue.html#a5af783cb3348b6611eb4a8305d4163b2">   45</a></span>    <a class="code hl_function" href="classshrapnel_1_1Queue.html#a5af783cb3348b6611eb4a8305d4163b2">Queue</a>(<span class="keywordtype">int</span> number_of_elements) : <a class="code hl_class" href="classshrapnel_1_1QueueBase.html">QueueBase</a>&lt;T&gt;(number_of_elements)</div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>    {</div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>        handle = xQueueCreate(number_of_elements, <span class="keyword">sizeof</span>(T));</div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>        assert(handle);</div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>    }</div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span> </div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno"><a class="line" href="classshrapnel_1_1Queue.html#a951eca6ac1f13273f49d6629d29a3609">   51</a></span>    BaseType_t <a class="code hl_function" href="classshrapnel_1_1Queue.html#a951eca6ac1f13273f49d6629d29a3609">receive</a>(T *out, TickType_t time_to_wait)<span class="keyword"> override</span></div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span><span class="keyword">    </span>{</div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>        <span class="keywordflow">return</span> xQueueReceive(handle, out, time_to_wait);</div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>    }</div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span> </div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno"><a class="line" href="classshrapnel_1_1Queue.html#ac5886b231b043aab70a460bc9820b82d">   56</a></span>    BaseType_t <a class="code hl_function" href="classshrapnel_1_1Queue.html#ac5886b231b043aab70a460bc9820b82d">send</a>(T *out, TickType_t time_to_wait)<span class="keyword"> override</span></div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span><span class="keyword">    </span>{</div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>        <span class="keywordflow">return</span> xQueueSendToBack(handle, out, time_to_wait);</div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>    }</div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span> </div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>    <span class="keyword">private</span>:</div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>    QueueHandle_t handle;</div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>};</div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span> </div>
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>}</div>
-<div class="ttc" id="aclassshrapnel_1_1QueueBase_html"><div class="ttname"><a href="classshrapnel_1_1QueueBase.html">shrapnel::QueueBase</a></div><div class="ttdef"><b>Definition:</b> <a href="queue_8h_source.html#l00029">queue.h:30</a></div></div>
-<div class="ttc" id="aclassshrapnel_1_1QueueBase_html_aac74fe3c0e9dfb65e20d00798ab14c7d"><div class="ttname"><a href="classshrapnel_1_1QueueBase.html#aac74fe3c0e9dfb65e20d00798ab14c7d">shrapnel::QueueBase::QueueBase</a></div><div class="ttdeci">QueueBase(int number_of_elements)</div><div class="ttdef"><b>Definition:</b> <a href="queue_8h_source.html#l00032">queue.h:32</a></div></div>
-<div class="ttc" id="aclassshrapnel_1_1QueueBase_html_ab04cd6b029505d664bb6e13e245d9b14"><div class="ttname"><a href="classshrapnel_1_1QueueBase.html#ab04cd6b029505d664bb6e13e245d9b14">shrapnel::QueueBase::send</a></div><div class="ttdeci">virtual BaseType_t send(T *out, TickType_t time_to_wait)=0</div></div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno"><a class="line" href="classshrapnel_1_1QueueBase.html#aac74fe3c0e9dfb65e20d00798ab14c7d">   41</a></span>    <a class="code hl_function" href="classshrapnel_1_1QueueBase.html#aac74fe3c0e9dfb65e20d00798ab14c7d">QueueBase</a>(<span class="keywordtype">int</span> number_of_elements)</div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>    {</div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>        (void) number_of_elements;</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>    };</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span> </div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno"><a class="line" href="classshrapnel_1_1QueueBase.html#ab91cc1fb473ac9499f7843218842a946">   46</a></span>    <span class="keyword">virtual</span> BaseType_t <a class="code hl_function" href="classshrapnel_1_1QueueBase.html#ab91cc1fb473ac9499f7843218842a946">receive</a>(T *out, TickType_t time_to_wait) = 0;</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno"><a class="line" href="classshrapnel_1_1QueueBase.html#a7b76fee63afcc760644ab19e19f96ad2">   47</a></span>    <span class="keyword">virtual</span> BaseType_t <a class="code hl_function" href="classshrapnel_1_1QueueBase.html#a7b76fee63afcc760644ab19e19f96ad2">send</a>(<span class="keyword">const</span> T *in, TickType_t time_to_wait) = 0;</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>};</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span> </div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T, std::<span class="keywordtype">size_t</span> MAX_SIZE&gt; <span class="keyword">requires</span> (MAX_SIZE &gt; 0)</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno"><a class="line" href="classshrapnel_1_1Queue.html">   51</a></span><span class="keyword">class</span> <a class="code hl_class" href="classshrapnel_1_1Queue.html">Queue</a> <span class="keyword">final</span>: <span class="keyword">public</span> <a class="code hl_class" href="classshrapnel_1_1QueueBase.html">QueueBase&lt;T&gt;</a></div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>{</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>    <span class="keyword">using </span>ticks = std::chrono::duration&lt;TickType_t&gt;;</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span> </div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>    <span class="keyword">public</span>:</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno"><a class="line" href="classshrapnel_1_1Queue.html#a9e3da4bcf8b33c8899eb3f54aac22857">   56</a></span>    <a class="code hl_function" href="classshrapnel_1_1Queue.html#a9e3da4bcf8b33c8899eb3f54aac22857">Queue</a>() : <a class="code hl_class" href="classshrapnel_1_1QueueBase.html">QueueBase</a>&lt;T&gt;(MAX_SIZE), used_semaphore{0}, free_semaphore{MAX_SIZE} {}</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span> </div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno"><a class="line" href="classshrapnel_1_1Queue.html#aea7063f7ef99b8b46f6ba1250012332c">   58</a></span>    BaseType_t <a class="code hl_function" href="classshrapnel_1_1Queue.html#aea7063f7ef99b8b46f6ba1250012332c">receive</a>(T *out, TickType_t time_to_wait)<span class="keyword"> override</span></div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span><span class="keyword">    </span>{</div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>        <span class="comment">// block until an item is available</span></div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>        <span class="keywordtype">bool</span> success = used_semaphore.try_acquire_for(ticks(time_to_wait));</div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>        <span class="keywordflow">if</span>(!success) <span class="keywordflow">return</span> errQUEUE_EMPTY;</div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span> </div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>        <span class="comment">// Receive the item</span></div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>        {</div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>            std::scoped_lock lock{mutex};</div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>            *out = queue.front();</div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>            queue.pop();</div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>        }</div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>        free_semaphore.release();</div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>        <span class="keywordflow">return</span> pdPASS;</div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>    }</div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span> </div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno"><a class="line" href="classshrapnel_1_1Queue.html#a641b36d0a32ef881c94ab1395cd63818">   74</a></span>    BaseType_t <a class="code hl_function" href="classshrapnel_1_1Queue.html#a641b36d0a32ef881c94ab1395cd63818">send</a>(<span class="keyword">const</span> T *in, TickType_t time_to_wait)<span class="keyword"> override</span></div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span><span class="keyword">    </span>{</div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>        <span class="comment">// block until a space is available</span></div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>        <span class="keywordtype">bool</span> success = free_semaphore.try_acquire_for(ticks(time_to_wait));</div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>        <span class="keywordflow">if</span>(!success) <span class="keywordflow">return</span> errQUEUE_FULL;</div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span> </div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>        <span class="comment">// Add item to queue, and notify receivers</span></div>
+<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>        {</div>
+<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>            std::scoped_lock lock{mutex};</div>
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>            queue.push(*in);</div>
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>        }</div>
+<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>        used_semaphore.release();</div>
+<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>        <span class="keywordflow">return</span> pdPASS;</div>
+<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>    }</div>
+<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span> </div>
+<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>    <span class="keyword">private</span>:</div>
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>    std::counting_semaphore&lt;MAX_SIZE&gt; used_semaphore;</div>
+<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>    std::counting_semaphore&lt;MAX_SIZE&gt; free_semaphore;</div>
+<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>    etl::deque&lt;T, MAX_SIZE&gt; queue_storage;</div>
+<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>    std::queue&lt;T, etl::deque&lt;T, MAX_SIZE&gt;&gt; queue;</div>
+<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>    std::mutex mutex;</div>
+<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>};</div>
+<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span> </div>
+<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>}</div>
+<div class="ttc" id="aclassshrapnel_1_1QueueBase_html"><div class="ttname"><a href="classshrapnel_1_1QueueBase.html">shrapnel::QueueBase</a></div><div class="ttdef"><b>Definition:</b> <a href="queue_8h_source.html#l00036">queue.h:37</a></div></div>
+<div class="ttc" id="aclassshrapnel_1_1QueueBase_html_a7b76fee63afcc760644ab19e19f96ad2"><div class="ttname"><a href="classshrapnel_1_1QueueBase.html#a7b76fee63afcc760644ab19e19f96ad2">shrapnel::QueueBase::send</a></div><div class="ttdeci">virtual BaseType_t send(const T *in, TickType_t time_to_wait)=0</div></div>
+<div class="ttc" id="aclassshrapnel_1_1QueueBase_html_aac74fe3c0e9dfb65e20d00798ab14c7d"><div class="ttname"><a href="classshrapnel_1_1QueueBase.html#aac74fe3c0e9dfb65e20d00798ab14c7d">shrapnel::QueueBase::QueueBase</a></div><div class="ttdeci">QueueBase(int number_of_elements)</div><div class="ttdef"><b>Definition:</b> <a href="queue_8h_source.html#l00041">queue.h:41</a></div></div>
 <div class="ttc" id="aclassshrapnel_1_1QueueBase_html_ab91cc1fb473ac9499f7843218842a946"><div class="ttname"><a href="classshrapnel_1_1QueueBase.html#ab91cc1fb473ac9499f7843218842a946">shrapnel::QueueBase::receive</a></div><div class="ttdeci">virtual BaseType_t receive(T *out, TickType_t time_to_wait)=0</div></div>
-<div class="ttc" id="aclassshrapnel_1_1Queue_html"><div class="ttname"><a href="classshrapnel_1_1Queue.html">shrapnel::Queue</a></div><div class="ttdef"><b>Definition:</b> <a href="queue_8h_source.html#l00042">queue.h:43</a></div></div>
-<div class="ttc" id="aclassshrapnel_1_1Queue_html_a5af783cb3348b6611eb4a8305d4163b2"><div class="ttname"><a href="classshrapnel_1_1Queue.html#a5af783cb3348b6611eb4a8305d4163b2">shrapnel::Queue::Queue</a></div><div class="ttdeci">Queue(int number_of_elements)</div><div class="ttdef"><b>Definition:</b> <a href="queue_8h_source.html#l00045">queue.h:45</a></div></div>
-<div class="ttc" id="aclassshrapnel_1_1Queue_html_a951eca6ac1f13273f49d6629d29a3609"><div class="ttname"><a href="classshrapnel_1_1Queue.html#a951eca6ac1f13273f49d6629d29a3609">shrapnel::Queue::receive</a></div><div class="ttdeci">BaseType_t receive(T *out, TickType_t time_to_wait) override</div><div class="ttdef"><b>Definition:</b> <a href="queue_8h_source.html#l00051">queue.h:51</a></div></div>
-<div class="ttc" id="aclassshrapnel_1_1Queue_html_ac5886b231b043aab70a460bc9820b82d"><div class="ttname"><a href="classshrapnel_1_1Queue.html#ac5886b231b043aab70a460bc9820b82d">shrapnel::Queue::send</a></div><div class="ttdeci">BaseType_t send(T *out, TickType_t time_to_wait) override</div><div class="ttdef"><b>Definition:</b> <a href="queue_8h_source.html#l00056">queue.h:56</a></div></div>
+<div class="ttc" id="aclassshrapnel_1_1QueueBase_html_afa21cb52927682003ac47f842c5e8d68"><div class="ttname"><a href="classshrapnel_1_1QueueBase.html#afa21cb52927682003ac47f842c5e8d68">shrapnel::QueueBase::value_type</a></div><div class="ttdeci">T value_type</div><div class="ttdef"><b>Definition:</b> <a href="queue_8h_source.html#l00039">queue.h:39</a></div></div>
+<div class="ttc" id="aclassshrapnel_1_1Queue_html"><div class="ttname"><a href="classshrapnel_1_1Queue.html">shrapnel::Queue</a></div><div class="ttdef"><b>Definition:</b> <a href="queue_8h_source.html#l00051">queue.h:52</a></div></div>
+<div class="ttc" id="aclassshrapnel_1_1Queue_html_a641b36d0a32ef881c94ab1395cd63818"><div class="ttname"><a href="classshrapnel_1_1Queue.html#a641b36d0a32ef881c94ab1395cd63818">shrapnel::Queue::send</a></div><div class="ttdeci">BaseType_t send(const T *in, TickType_t time_to_wait) override</div><div class="ttdef"><b>Definition:</b> <a href="queue_8h_source.html#l00074">queue.h:74</a></div></div>
+<div class="ttc" id="aclassshrapnel_1_1Queue_html_a9e3da4bcf8b33c8899eb3f54aac22857"><div class="ttname"><a href="classshrapnel_1_1Queue.html#a9e3da4bcf8b33c8899eb3f54aac22857">shrapnel::Queue::Queue</a></div><div class="ttdeci">Queue()</div><div class="ttdef"><b>Definition:</b> <a href="queue_8h_source.html#l00056">queue.h:56</a></div></div>
+<div class="ttc" id="aclassshrapnel_1_1Queue_html_aea7063f7ef99b8b46f6ba1250012332c"><div class="ttname"><a href="classshrapnel_1_1Queue.html#aea7063f7ef99b8b46f6ba1250012332c">shrapnel::Queue::receive</a></div><div class="ttdeci">BaseType_t receive(T *out, TickType_t time_to_wait) override</div><div class="ttdef"><b>Definition:</b> <a href="queue_8h_source.html#l00058">queue.h:58</a></div></div>
 <div class="ttc" id="anamespaceshrapnel_html"><div class="ttname"><a href="namespaceshrapnel.html">shrapnel</a></div><div class="ttdef"><b>Definition:</b> <a href="audio__param_8h_source.html#l00029">audio_param.h:29</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->

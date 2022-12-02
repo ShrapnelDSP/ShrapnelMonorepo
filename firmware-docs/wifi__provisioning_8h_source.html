@@ -147,7 +147,7 @@ $(document).ready(function(){initNavTree('wifi__provisioning_8h_source.html','')
 <div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span> </div>
 <div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>    <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keywordtype">char</span> TAG[5] = <span class="stringliteral">&quot;wifi&quot;</span>;</div>
 <div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span> </div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>    <a class="code hl_class" href="classshrapnel_1_1Queue.html">Queue&lt;Event&gt;</a> queue;</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>    <a class="code hl_class" href="classshrapnel_1_1Queue.html">Queue&lt;Event, 1&gt;</a> queue;</div>
 <div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span> </div>
 <div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span><span class="keyword">static</span> <span class="keywordtype">void</span> provisioning_event_handler(<span class="keywordtype">void</span>* arg, esp_event_base_t event_base,</div>
 <div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>                                       int32_t event_id, <span class="keywordtype">void</span>* event_data)</div>
@@ -155,7 +155,7 @@ $(document).ready(function(){initNavTree('wifi__provisioning_8h_source.html','')
 <div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>    assert(arg != <span class="keyword">nullptr</span>);</div>
 <div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>    assert(event_base == WIFI_PROV_EVENT);</div>
 <div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span> </div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>    <span class="keyword">auto</span> queue = <span class="keyword">static_cast&lt;</span><a class="code hl_class" href="classshrapnel_1_1Queue.html">Queue&lt;Event&gt;</a> *<span class="keyword">&gt;</span>(arg);</div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>    <span class="keyword">auto</span> queue = <span class="keyword">static_cast&lt;</span><a class="code hl_class" href="classshrapnel_1_1Queue.html">Queue&lt;Event, 1&gt;</a> *<span class="keyword">&gt;</span>(arg);</div>
 <div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span> </div>
 <div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>    <span class="keywordflow">if</span> (event_base == WIFI_PROV_EVENT) {</div>
 <div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>        <span class="keywordflow">switch</span> (event_id) {</div>
@@ -188,7 +188,7 @@ $(document).ready(function(){initNavTree('wifi__provisioning_8h_source.html','')
 <div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>                         <span class="stringliteral">&quot;Wi-Fi station authentication failed&quot;</span> : <span class="stringliteral">&quot;Wi-Fi access-point not found&quot;</span>);</div>
 <div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span> </div>
 <div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>                Event <span class="keyword">event</span>{.type = EVENT_PROVISIONING_FAILED};</div>
-<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>                <span class="keywordtype">int</span> rc = queue-&gt;<a class="code hl_function" href="classshrapnel_1_1Queue.html#ac5886b231b043aab70a460bc9820b82d">send</a>(&amp;event, 100 / portTICK_PERIOD_MS);</div>
+<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>                <span class="keywordtype">int</span> rc = queue-&gt;<a class="code hl_function" href="classshrapnel_1_1Queue.html#a641b36d0a32ef881c94ab1395cd63818">send</a>(&amp;event, 100 / portTICK_PERIOD_MS);</div>
 <div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>                <span class="keywordflow">if</span>(rc != <span class="keyword">true</span>)</div>
 <div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>                {</div>
 <div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>                    ESP_LOGE(TAG, <span class="stringliteral">&quot;failed to send to queue&quot;</span>);</div>
@@ -199,7 +199,7 @@ $(document).ready(function(){initNavTree('wifi__provisioning_8h_source.html','')
 <div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>                ESP_LOGI(TAG, <span class="stringliteral">&quot;Provisioning successful&quot;</span>);</div>
 <div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span> </div>
 <div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>                Event <span class="keyword">event</span>{.type = EVENT_PROVISIONING_SUCCESSFUL};</div>
-<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>                <span class="keywordtype">int</span> rc = queue-&gt;<a class="code hl_function" href="classshrapnel_1_1Queue.html#ac5886b231b043aab70a460bc9820b82d">send</a>(&amp;event, 100 / portTICK_PERIOD_MS);</div>
+<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>                <span class="keywordtype">int</span> rc = queue-&gt;<a class="code hl_function" href="classshrapnel_1_1Queue.html#a641b36d0a32ef881c94ab1395cd63818">send</a>(&amp;event, 100 / portTICK_PERIOD_MS);</div>
 <div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>                <span class="keywordflow">if</span>(rc != <span class="keyword">true</span>)</div>
 <div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>                {</div>
 <div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>                    ESP_LOGE(TAG, <span class="stringliteral">&quot;failed to send to queue&quot;</span>);</div>
@@ -255,7 +255,7 @@ $(document).ready(function(){initNavTree('wifi__provisioning_8h_source.html','')
 <div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span>}</div>
 <div class="line"><a id="l00160" name="l00160"></a><span class="lineno">  160</span> </div>
 <div class="line"><a id="l00161" name="l00161"></a><span class="lineno">  161</span><span class="keyword">public</span>:</div>
-<div class="line"><a id="l00162" name="l00162"></a><span class="lineno"><a class="line" href="classshrapnel_1_1wifi__provisioning_1_1WiFiProvisioning.html#a7ca28157a38f676bed04d3b4ef11cdc8">  162</a></span><a class="code hl_function" href="classshrapnel_1_1wifi__provisioning_1_1WiFiProvisioning.html#a7ca28157a38f676bed04d3b4ef11cdc8">WiFiProvisioning</a>(<span class="keywordtype">void</span>) : queue(1)</div>
+<div class="line"><a id="l00162" name="l00162"></a><span class="lineno"><a class="line" href="classshrapnel_1_1wifi__provisioning_1_1WiFiProvisioning.html#a7ca28157a38f676bed04d3b4ef11cdc8">  162</a></span><a class="code hl_function" href="classshrapnel_1_1wifi__provisioning_1_1WiFiProvisioning.html#a7ca28157a38f676bed04d3b4ef11cdc8">WiFiProvisioning</a>(<span class="keywordtype">void</span>) : queue()</div>
 <div class="line"><a id="l00163" name="l00163"></a><span class="lineno">  163</span>{</div>
 <div class="line"><a id="l00164" name="l00164"></a><span class="lineno">  164</span>    <span class="comment">// XXX: Make sure to deregister the handlers in the destructor</span></div>
 <div class="line"><a id="l00165" name="l00165"></a><span class="lineno">  165</span>    ESP_ERROR_CHECK(esp_event_handler_register(</div>
@@ -313,7 +313,7 @@ $(document).ready(function(){initNavTree('wifi__provisioning_8h_source.html','')
 <div class="line"><a id="l00217" name="l00217"></a><span class="lineno">  217</span>    <span class="keywordflow">while</span>(1)</div>
 <div class="line"><a id="l00218" name="l00218"></a><span class="lineno">  218</span>    {</div>
 <div class="line"><a id="l00219" name="l00219"></a><span class="lineno">  219</span>        Event event;</div>
-<div class="line"><a id="l00220" name="l00220"></a><span class="lineno">  220</span>        <span class="keywordtype">int</span> rc = queue.<a class="code hl_function" href="classshrapnel_1_1Queue.html#a951eca6ac1f13273f49d6629d29a3609">receive</a>(&amp;event, portMAX_DELAY);</div>
+<div class="line"><a id="l00220" name="l00220"></a><span class="lineno">  220</span>        <span class="keywordtype">int</span> rc = queue.<a class="code hl_function" href="classshrapnel_1_1Queue.html#aea7063f7ef99b8b46f6ba1250012332c">receive</a>(&amp;event, portMAX_DELAY);</div>
 <div class="line"><a id="l00221" name="l00221"></a><span class="lineno">  221</span>        assert(rc == <span class="keyword">true</span>);</div>
 <div class="line"><a id="l00222" name="l00222"></a><span class="lineno">  222</span> </div>
 <div class="line"><a id="l00223" name="l00223"></a><span class="lineno">  223</span>        <span class="keywordflow">if</span>(event.type == EVENT_PROVISIONING_SUCCESSFUL)</div>
@@ -356,9 +356,9 @@ $(document).ready(function(){initNavTree('wifi__provisioning_8h_source.html','')
 <div class="line"><a id="l00260" name="l00260"></a><span class="lineno">  260</span> </div>
 <div class="line"><a id="l00261" name="l00261"></a><span class="lineno">  261</span>}</div>
 <div class="line"><a id="l00262" name="l00262"></a><span class="lineno">  262</span>}</div>
-<div class="ttc" id="aclassshrapnel_1_1Queue_html"><div class="ttname"><a href="classshrapnel_1_1Queue.html">shrapnel::Queue&lt; Event &gt;</a></div></div>
-<div class="ttc" id="aclassshrapnel_1_1Queue_html_a951eca6ac1f13273f49d6629d29a3609"><div class="ttname"><a href="classshrapnel_1_1Queue.html#a951eca6ac1f13273f49d6629d29a3609">shrapnel::Queue::receive</a></div><div class="ttdeci">BaseType_t receive(T *out, TickType_t time_to_wait) override</div><div class="ttdef"><b>Definition:</b> <a href="queue_8h_source.html#l00051">queue.h:51</a></div></div>
-<div class="ttc" id="aclassshrapnel_1_1Queue_html_ac5886b231b043aab70a460bc9820b82d"><div class="ttname"><a href="classshrapnel_1_1Queue.html#ac5886b231b043aab70a460bc9820b82d">shrapnel::Queue::send</a></div><div class="ttdeci">BaseType_t send(T *out, TickType_t time_to_wait) override</div><div class="ttdef"><b>Definition:</b> <a href="queue_8h_source.html#l00056">queue.h:56</a></div></div>
+<div class="ttc" id="aclassshrapnel_1_1Queue_html"><div class="ttname"><a href="classshrapnel_1_1Queue.html">shrapnel::Queue&lt; Event, 1 &gt;</a></div></div>
+<div class="ttc" id="aclassshrapnel_1_1Queue_html_a641b36d0a32ef881c94ab1395cd63818"><div class="ttname"><a href="classshrapnel_1_1Queue.html#a641b36d0a32ef881c94ab1395cd63818">shrapnel::Queue::send</a></div><div class="ttdeci">BaseType_t send(const T *in, TickType_t time_to_wait) override</div><div class="ttdef"><b>Definition:</b> <a href="queue_8h_source.html#l00074">queue.h:74</a></div></div>
+<div class="ttc" id="aclassshrapnel_1_1Queue_html_aea7063f7ef99b8b46f6ba1250012332c"><div class="ttname"><a href="classshrapnel_1_1Queue.html#aea7063f7ef99b8b46f6ba1250012332c">shrapnel::Queue::receive</a></div><div class="ttdeci">BaseType_t receive(T *out, TickType_t time_to_wait) override</div><div class="ttdef"><b>Definition:</b> <a href="queue_8h_source.html#l00058">queue.h:58</a></div></div>
 <div class="ttc" id="aclassshrapnel_1_1wifi__provisioning_1_1WiFiProvisioning_html"><div class="ttname"><a href="classshrapnel_1_1wifi__provisioning_1_1WiFiProvisioning.html">shrapnel::wifi_provisioning::WiFiProvisioning</a></div><div class="ttdef"><b>Definition:</b> <a href="wifi__provisioning_8h_source.html#l00041">wifi_provisioning.h:41</a></div></div>
 <div class="ttc" id="aclassshrapnel_1_1wifi__provisioning_1_1WiFiProvisioning_html_a12a5209c4e49a2a135d5e5de02e3282e"><div class="ttname"><a href="classshrapnel_1_1wifi__provisioning_1_1WiFiProvisioning.html#a12a5209c4e49a2a135d5e5de02e3282e">shrapnel::wifi_provisioning::WiFiProvisioning::wait_for_provisioning</a></div><div class="ttdeci">void wait_for_provisioning(void)</div><div class="ttdef"><b>Definition:</b> <a href="wifi__provisioning_8h_source.html#l00213">wifi_provisioning.h:213</a></div></div>
 <div class="ttc" id="aclassshrapnel_1_1wifi__provisioning_1_1WiFiProvisioning_html_a52ad94d584e862d50c9c045b9332e6ab"><div class="ttname"><a href="classshrapnel_1_1wifi__provisioning_1_1WiFiProvisioning.html#a52ad94d584e862d50c9c045b9332e6ab">shrapnel::wifi_provisioning::WiFiProvisioning::start</a></div><div class="ttdeci">static void start(void)</div><div class="ttdef"><b>Definition:</b> <a href="wifi__provisioning_8h_source.html#l00195">wifi_provisioning.h:195</a></div></div>

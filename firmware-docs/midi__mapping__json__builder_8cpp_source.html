@@ -196,7 +196,7 @@ $(document).ready(function(){initNavTree('midi__mapping__json__builder_8cpp_sour
 <div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>    rapidjson::Value json;</div>
 <div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>    json.SetObject();</div>
 <div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span> </div>
-<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>    rapidjson::Value mappings = <a class="code hl_function" href="namespaceshrapnel_1_1midi.html#a745f9f03858045cdfabbd014152fbc15">to_json</a>(document, <span class="keywordtype">object</span>.mappings);</div>
+<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>    rapidjson::Value mappings = <a class="code hl_function" href="namespaceshrapnel_1_1midi.html#a745f9f03858045cdfabbd014152fbc15">to_json</a>(document, *<span class="keywordtype">object</span>.mappings);</div>
 <div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>    json.AddMember(<span class="stringliteral">&quot;mappings&quot;</span>, mappings, document.GetAllocator());</div>
 <div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>    <span class="keywordflow">return</span> json;</div>
 <div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>}</div>
@@ -206,28 +206,65 @@ $(document).ready(function(){initNavTree('midi__mapping__json__builder_8cpp_sour
 <div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>{</div>
 <div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>    rapidjson::Value json;</div>
 <div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span> </div>
-<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>    <span class="comment">// TODO any way to make this DRY? We need to call to_json with the correct</span></div>
-<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>    <span class="comment">// type, and add the messageType field with the correct value</span></div>
-<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>    <span class="keyword">auto</span> visitor = [&amp;](<span class="keyword">const</span> <span class="keyword">auto</span> &amp;message) {</div>
-<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>        <span class="keyword">using </span>T = std::decay_t&lt;<span class="keyword">decltype</span>(message)&gt;;</div>
-<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span> </div>
-<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>        <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (std::is_same_v&lt;T, CreateResponse&gt; ||</div>
-<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span>                      std::is_same_v&lt;T, GetResponse&gt;) {</div>
-<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>            json = <a class="code hl_function" href="namespaceshrapnel_1_1midi.html#a745f9f03858045cdfabbd014152fbc15">to_json</a>(document, message);</div>
-<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>        } <span class="keywordflow">else</span> {</div>
-<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>            ESP_LOGE(TAG, <span class="stringliteral">&quot;No handler registered for message&quot;</span>);</div>
-<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>        }</div>
-<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span> </div>
-<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>        json.AddMember(<span class="stringliteral">&quot;messageType&quot;</span>, rapidjson::StringRef(get_message_type&lt;T&gt;()), document.GetAllocator());</div>
-<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span>    };</div>
+<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>    <span class="keyword">auto</span> visitor = [&amp;](<span class="keyword">const</span> <span class="keyword">auto</span> &amp;message) {</div>
+<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>        <span class="keyword">using </span>T = std::decay_t&lt;<span class="keyword">decltype</span>(message)&gt;;</div>
+<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span> </div>
+<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>        <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (std::is_same_v&lt;T, CreateResponse&gt; ||</div>
+<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>                      std::is_same_v&lt;T, GetResponse&gt;) {</div>
+<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>            json = <a class="code hl_function" href="namespaceshrapnel_1_1midi.html#a745f9f03858045cdfabbd014152fbc15">to_json</a>(document, message);</div>
+<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span>        } <span class="keywordflow">else</span> {</div>
+<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>            ESP_LOGE(TAG, <span class="stringliteral">&quot;No handler registered for message&quot;</span>);</div>
+<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>        }</div>
+<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span> </div>
+<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>        json.AddMember(<span class="stringliteral">&quot;messageType&quot;</span>, rapidjson::StringRef(get_message_type&lt;T&gt;()), document.GetAllocator());</div>
+<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>    };</div>
+<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span> </div>
+<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span>    std::visit(visitor, <span class="keywordtype">object</span>);</div>
 <div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span> </div>
-<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span>    std::visit(visitor, <span class="keywordtype">object</span>);</div>
-<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span> </div>
-<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span>    <span class="keywordflow">return</span> json;</div>
-<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span>}</div>
-<div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span> </div>
-<div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span>}</div>
-<div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span>}</div>
+<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span>    <span class="keywordflow">return</span> json;</div>
+<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>}</div>
+<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span> </div>
+<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span><span class="keyword">template</span>&lt;&gt;</div>
+<div class="line"><a id="l00132" name="l00132"></a><span class="lineno"><a class="line" href="namespaceshrapnel_1_1midi.html#a3b7f5d6d4b4490ca4b3dff87d5040398">  132</a></span>rapidjson::Value <a class="code hl_function" href="namespaceshrapnel_1_1midi.html#a745f9f03858045cdfabbd014152fbc15">to_json</a>(rapidjson::Document &amp;document, <span class="keyword">const</span> etl::imap&lt;Mapping::id_t, Mapping&gt; &amp;<span class="keywordtype">object</span>)</div>
+<div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span>{</div>
+<div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span>    rapidjson::Value json;</div>
+<div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span>    json.SetObject();</div>
+<div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span> </div>
+<div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span>    <span class="keywordflow">for</span>(<span class="keyword">const</span> <span class="keyword">auto</span> &amp;entry : <span class="keywordtype">object</span>)</div>
+<div class="line"><a id="l00138" name="l00138"></a><span class="lineno">  138</span>    {</div>
+<div class="line"><a id="l00139" name="l00139"></a><span class="lineno">  139</span>        <span class="keywordtype">char</span> uuid[37];</div>
+<div class="line"><a id="l00140" name="l00140"></a><span class="lineno">  140</span>        sprintf(uuid,</div>
+<div class="line"><a id="l00141" name="l00141"></a><span class="lineno">  141</span>                <span class="stringliteral">&quot;%02x%02x%02x%02x-%02x%02x-%02x%02x-%02x%02x-&quot;</span></div>
+<div class="line"><a id="l00142" name="l00142"></a><span class="lineno">  142</span>                <span class="stringliteral">&quot;%02x%02x%02x%02x%02x%02x&quot;</span>,</div>
+<div class="line"><a id="l00143" name="l00143"></a><span class="lineno">  143</span>                entry.first[0],</div>
+<div class="line"><a id="l00144" name="l00144"></a><span class="lineno">  144</span>                entry.first[1],</div>
+<div class="line"><a id="l00145" name="l00145"></a><span class="lineno">  145</span>                entry.first[2],</div>
+<div class="line"><a id="l00146" name="l00146"></a><span class="lineno">  146</span>                entry.first[3],</div>
+<div class="line"><a id="l00147" name="l00147"></a><span class="lineno">  147</span>                entry.first[4],</div>
+<div class="line"><a id="l00148" name="l00148"></a><span class="lineno">  148</span>                entry.first[5],</div>
+<div class="line"><a id="l00149" name="l00149"></a><span class="lineno">  149</span>                entry.first[6],</div>
+<div class="line"><a id="l00150" name="l00150"></a><span class="lineno">  150</span>                entry.first[7],</div>
+<div class="line"><a id="l00151" name="l00151"></a><span class="lineno">  151</span>                entry.first[8],</div>
+<div class="line"><a id="l00152" name="l00152"></a><span class="lineno">  152</span>                entry.first[9],</div>
+<div class="line"><a id="l00153" name="l00153"></a><span class="lineno">  153</span>                entry.first[10],</div>
+<div class="line"><a id="l00154" name="l00154"></a><span class="lineno">  154</span>                entry.first[11],</div>
+<div class="line"><a id="l00155" name="l00155"></a><span class="lineno">  155</span>                entry.first[12],</div>
+<div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span>                entry.first[13],</div>
+<div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span>                entry.first[14],</div>
+<div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span>                entry.first[15]);</div>
+<div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span> </div>
+<div class="line"><a id="l00160" name="l00160"></a><span class="lineno">  160</span> </div>
+<div class="line"><a id="l00161" name="l00161"></a><span class="lineno">  161</span>        rapidjson::Value mapping = <a class="code hl_function" href="namespaceshrapnel_1_1midi.html#a745f9f03858045cdfabbd014152fbc15">to_json</a>(document, entry.second);</div>
+<div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span>        rapidjson::Value uuid_json;</div>
+<div class="line"><a id="l00163" name="l00163"></a><span class="lineno">  163</span>        uuid_json.SetString(uuid, 36, document.GetAllocator());</div>
+<div class="line"><a id="l00164" name="l00164"></a><span class="lineno">  164</span>        json.AddMember(uuid_json, mapping, document.GetAllocator());</div>
+<div class="line"><a id="l00165" name="l00165"></a><span class="lineno">  165</span>    }</div>
+<div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span> </div>
+<div class="line"><a id="l00167" name="l00167"></a><span class="lineno">  167</span>    <span class="keywordflow">return</span> json;</div>
+<div class="line"><a id="l00168" name="l00168"></a><span class="lineno">  168</span>}</div>
+<div class="line"><a id="l00169" name="l00169"></a><span class="lineno">  169</span> </div>
+<div class="line"><a id="l00170" name="l00170"></a><span class="lineno">  170</span>}</div>
+<div class="line"><a id="l00171" name="l00171"></a><span class="lineno">  171</span>}</div>
 <div class="ttc" id="amidi__mapping__api_8h_html"><div class="ttname"><a href="midi__mapping__api_8h.html">midi_mapping_api.h</a></div></div>
 <div class="ttc" id="amidi__mapping__json__builder_8h_html"><div class="ttname"><a href="midi__mapping__json__builder_8h.html">midi_mapping_json_builder.h</a></div></div>
 <div class="ttc" id="amidi__message__type_8h_html"><div class="ttname"><a href="midi__message__type_8h.html">midi_message_type.h</a></div></div>

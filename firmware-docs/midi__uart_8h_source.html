@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.4"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>ShrapnelDSP: firmware/components/midi/include/midi_uart.h Source File</title>
+<title>ShrapnelDSP: firmware/components/midi_protocol/include/midi_uart.h Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -118,40 +118,42 @@ $(document).ready(function(){initNavTree('midi__uart_8h_source.html',''); initRe
 <div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="preprocessor">#include &lt;cstdint&gt;</span></div>
 <div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="preprocessor">#include &lt;driver/uart.h&gt;</span></div>
 <div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="preprocessor">#include &lt;driver/gpio.h&gt;</span></div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="preprocessor">#include &lt;memory&gt;</span></div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span> </div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespaceshrapnel.html">shrapnel</a> {</div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><span class="keyword">namespace </span>midi {</div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span> </div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno"><a class="line" href="classshrapnel_1_1midi_1_1MidiUartBase.html">   30</a></span><span class="keyword">class </span><a class="code hl_class" href="classshrapnel_1_1midi_1_1MidiUartBase.html">MidiUartBase</a> {</div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>    <span class="keyword">public</span>:</div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno"><a class="line" href="classshrapnel_1_1midi_1_1MidiUartBase.html#a301b968bd7040c54844b22d8ac232e9b">   33</a></span>    <span class="keyword">virtual</span> uint8_t <a class="code hl_function" href="classshrapnel_1_1midi_1_1MidiUartBase.html#a301b968bd7040c54844b22d8ac232e9b">get_byte</a>(<span class="keywordtype">void</span>) = 0;</div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>};</div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span> </div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno"><a class="line" href="classshrapnel_1_1midi_1_1EspMidiUart.html">   36</a></span><span class="keyword">class </span><a class="code hl_class" href="classshrapnel_1_1midi_1_1EspMidiUart.html">EspMidiUart</a> final : <span class="keyword">public</span> <a class="code hl_class" href="classshrapnel_1_1midi_1_1MidiUartBase.html">MidiUartBase</a> {</div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>    <span class="keyword">public</span>:</div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>    <a class="code hl_function" href="classshrapnel_1_1midi_1_1EspMidiUart.html#a9ac817a771cd1e8bd29b8ffa84bd9e39">EspMidiUart</a>(uart_port_t uart, gpio_num_t rx_io);</div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span> </div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>    uint8_t <a class="code hl_function" href="classshrapnel_1_1midi_1_1EspMidiUart.html#aef922b29068099027bd600adac7f2bc1">get_byte</a>(<span class="keywordtype">void</span>) <span class="keyword">override</span>;</div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span> </div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>    <span class="keyword">private</span>:</div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>    uart_port_t uart;</div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>};</div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span> </div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>}</div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="preprocessor">#include &quot;freertos/FreeRTOS.h&quot;</span></div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="preprocessor">#include &lt;memory&gt;</span></div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><span class="preprocessor">#include &lt;optional&gt;</span></div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span> </div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespaceshrapnel.html">shrapnel</a> {</div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span><span class="keyword">namespace </span>midi {</div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span> </div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno"><a class="line" href="classshrapnel_1_1midi_1_1MidiUartBase.html">   32</a></span><span class="keyword">class </span><a class="code hl_class" href="classshrapnel_1_1midi_1_1MidiUartBase.html">MidiUartBase</a> {</div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>    <span class="keyword">public</span>:</div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno"><a class="line" href="classshrapnel_1_1midi_1_1MidiUartBase.html#a62f4c08b5af0b4e486d8e6f4109f6bd1">   34</a></span>    <span class="keyword">virtual</span> std::optional&lt;uint8_t&gt; <a class="code hl_function" href="classshrapnel_1_1midi_1_1MidiUartBase.html#a62f4c08b5af0b4e486d8e6f4109f6bd1">get_byte</a>(TickType_t timeout) = 0;</div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>};</div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span> </div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno"><a class="line" href="classshrapnel_1_1midi_1_1EspMidiUart.html">   37</a></span><span class="keyword">class </span><a class="code hl_class" href="classshrapnel_1_1midi_1_1EspMidiUart.html">EspMidiUart</a> final : <span class="keyword">public</span> <a class="code hl_class" href="classshrapnel_1_1midi_1_1MidiUartBase.html">MidiUartBase</a> {</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>    <span class="keyword">public</span>:</div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>    <a class="code hl_function" href="classshrapnel_1_1midi_1_1EspMidiUart.html#a9ac817a771cd1e8bd29b8ffa84bd9e39">EspMidiUart</a>(uart_port_t uart, gpio_num_t rx_io);</div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span> </div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>    std::optional&lt;uint8_t&gt; <a class="code hl_function" href="classshrapnel_1_1midi_1_1EspMidiUart.html#a7bdbde35c68368f6e2d2156e7aebfde6">get_byte</a>(TickType_t timeout) <span class="keyword">override</span>;</div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span> </div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>    <span class="keyword">private</span>:</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>    uart_port_t uart;</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>};</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span> </div>
 <div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>}</div>
-<div class="ttc" id="aclassshrapnel_1_1midi_1_1EspMidiUart_html"><div class="ttname"><a href="classshrapnel_1_1midi_1_1EspMidiUart.html">shrapnel::midi::EspMidiUart</a></div><div class="ttdef"><b>Definition:</b> <a href="midi__uart_8h_source.html#l00036">midi_uart.h:36</a></div></div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>}</div>
+<div class="ttc" id="aclassshrapnel_1_1midi_1_1EspMidiUart_html"><div class="ttname"><a href="classshrapnel_1_1midi_1_1EspMidiUart.html">shrapnel::midi::EspMidiUart</a></div><div class="ttdef"><b>Definition:</b> <a href="midi__uart_8h_source.html#l00037">midi_uart.h:37</a></div></div>
+<div class="ttc" id="aclassshrapnel_1_1midi_1_1EspMidiUart_html_a7bdbde35c68368f6e2d2156e7aebfde6"><div class="ttname"><a href="classshrapnel_1_1midi_1_1EspMidiUart.html#a7bdbde35c68368f6e2d2156e7aebfde6">shrapnel::midi::EspMidiUart::get_byte</a></div><div class="ttdeci">std::optional&lt; uint8_t &gt; get_byte(TickType_t timeout) override</div><div class="ttdef"><b>Definition:</b> <a href="midi__uart_8cpp_source.html#l00049">midi_uart.cpp:49</a></div></div>
 <div class="ttc" id="aclassshrapnel_1_1midi_1_1EspMidiUart_html_a9ac817a771cd1e8bd29b8ffa84bd9e39"><div class="ttname"><a href="classshrapnel_1_1midi_1_1EspMidiUart.html#a9ac817a771cd1e8bd29b8ffa84bd9e39">shrapnel::midi::EspMidiUart::EspMidiUart</a></div><div class="ttdeci">EspMidiUart(uart_port_t uart, gpio_num_t rx_io)</div><div class="ttdef"><b>Definition:</b> <a href="midi__uart_8cpp_source.html#l00026">midi_uart.cpp:26</a></div></div>
-<div class="ttc" id="aclassshrapnel_1_1midi_1_1EspMidiUart_html_aef922b29068099027bd600adac7f2bc1"><div class="ttname"><a href="classshrapnel_1_1midi_1_1EspMidiUart.html#aef922b29068099027bd600adac7f2bc1">shrapnel::midi::EspMidiUart::get_byte</a></div><div class="ttdeci">uint8_t get_byte(void) override</div><div class="ttdoc">Block until a byte is received.</div><div class="ttdef"><b>Definition:</b> <a href="midi__uart_8cpp_source.html#l00049">midi_uart.cpp:49</a></div></div>
-<div class="ttc" id="aclassshrapnel_1_1midi_1_1MidiUartBase_html"><div class="ttname"><a href="classshrapnel_1_1midi_1_1MidiUartBase.html">shrapnel::midi::MidiUartBase</a></div><div class="ttdef"><b>Definition:</b> <a href="midi__uart_8h_source.html#l00030">midi_uart.h:30</a></div></div>
-<div class="ttc" id="aclassshrapnel_1_1midi_1_1MidiUartBase_html_a301b968bd7040c54844b22d8ac232e9b"><div class="ttname"><a href="classshrapnel_1_1midi_1_1MidiUartBase.html#a301b968bd7040c54844b22d8ac232e9b">shrapnel::midi::MidiUartBase::get_byte</a></div><div class="ttdeci">virtual uint8_t get_byte(void)=0</div><div class="ttdoc">Block until a byte is received.</div></div>
+<div class="ttc" id="aclassshrapnel_1_1midi_1_1MidiUartBase_html"><div class="ttname"><a href="classshrapnel_1_1midi_1_1MidiUartBase.html">shrapnel::midi::MidiUartBase</a></div><div class="ttdef"><b>Definition:</b> <a href="midi__uart_8h_source.html#l00032">midi_uart.h:32</a></div></div>
+<div class="ttc" id="aclassshrapnel_1_1midi_1_1MidiUartBase_html_a62f4c08b5af0b4e486d8e6f4109f6bd1"><div class="ttname"><a href="classshrapnel_1_1midi_1_1MidiUartBase.html#a62f4c08b5af0b4e486d8e6f4109f6bd1">shrapnel::midi::MidiUartBase::get_byte</a></div><div class="ttdeci">virtual std::optional&lt; uint8_t &gt; get_byte(TickType_t timeout)=0</div></div>
 <div class="ttc" id="anamespaceshrapnel_html"><div class="ttname"><a href="namespaceshrapnel.html">shrapnel</a></div><div class="ttdef"><b>Definition:</b> <a href="audio__param_8h_source.html#l00029">audio_param.h:29</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_d9edf6c004b4a7ff14fe9ae7a92214ee.html">firmware</a></li><li class="navelem"><a class="el" href="dir_a7f1045ea2c2de513e4829d3edd7d5b7.html">components</a></li><li class="navelem"><a class="el" href="dir_350361b2511918fb18e561b5245a03c5.html">midi</a></li><li class="navelem"><a class="el" href="dir_1dd14a051976c3368e07750055264231.html">include</a></li><li class="navelem"><a class="el" href="midi__uart_8h.html">midi_uart.h</a></li>
+    <li class="navelem"><a class="el" href="dir_d9edf6c004b4a7ff14fe9ae7a92214ee.html">firmware</a></li><li class="navelem"><a class="el" href="dir_a7f1045ea2c2de513e4829d3edd7d5b7.html">components</a></li><li class="navelem"><a class="el" href="dir_6bb30634ea0a017998ca767619e0130b.html">midi_protocol</a></li><li class="navelem"><a class="el" href="dir_44e01198ed12eda2479dbcb719668d0d.html">include</a></li><li class="navelem"><a class="el" href="midi__uart_8h.html">midi_uart.h</a></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.4 </li>
   </ul>
 </div>

@@ -115,16 +115,14 @@ Collaboration diagram for shrapnel::midi::EspMidiUart:</div>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a9ac817a771cd1e8bd29b8ffa84bd9e39"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classshrapnel_1_1midi_1_1EspMidiUart.html#a9ac817a771cd1e8bd29b8ffa84bd9e39">EspMidiUart</a> (uart_port_t uart, gpio_num_t rx_io)</td></tr>
 <tr class="separator:a9ac817a771cd1e8bd29b8ffa84bd9e39"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aef922b29068099027bd600adac7f2bc1"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classshrapnel_1_1midi_1_1EspMidiUart.html#aef922b29068099027bd600adac7f2bc1">get_byte</a> (void) override</td></tr>
-<tr class="memdesc:aef922b29068099027bd600adac7f2bc1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Block until a byte is received.  <a href="classshrapnel_1_1midi_1_1EspMidiUart.html#aef922b29068099027bd600adac7f2bc1">More...</a><br /></td></tr>
-<tr class="separator:aef922b29068099027bd600adac7f2bc1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a301b968bd7040c54844b22d8ac232e9b"><td class="memItemLeft" align="right" valign="top">virtual uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classshrapnel_1_1midi_1_1MidiUartBase.html#a301b968bd7040c54844b22d8ac232e9b">get_byte</a> (void)=0</td></tr>
-<tr class="memdesc:a301b968bd7040c54844b22d8ac232e9b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Block until a byte is received.  <a href="classshrapnel_1_1midi_1_1MidiUartBase.html#a301b968bd7040c54844b22d8ac232e9b">More...</a><br /></td></tr>
-<tr class="separator:a301b968bd7040c54844b22d8ac232e9b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7bdbde35c68368f6e2d2156e7aebfde6"><td class="memItemLeft" align="right" valign="top">std::optional&lt; uint8_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classshrapnel_1_1midi_1_1EspMidiUart.html#a7bdbde35c68368f6e2d2156e7aebfde6">get_byte</a> (TickType_t timeout) override</td></tr>
+<tr class="separator:a7bdbde35c68368f6e2d2156e7aebfde6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a62f4c08b5af0b4e486d8e6f4109f6bd1"><td class="memItemLeft" align="right" valign="top">virtual std::optional&lt; uint8_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classshrapnel_1_1midi_1_1MidiUartBase.html#a62f4c08b5af0b4e486d8e6f4109f6bd1">get_byte</a> (TickType_t timeout)=0</td></tr>
+<tr class="separator:a62f4c08b5af0b4e486d8e6f4109f6bd1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock">
-<p class="definition">Definition at line <a class="el" href="midi__uart_8h_source.html#l00036">36</a> of file <a class="el" href="midi__uart_8h_source.html">midi_uart.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="midi__uart_8h_source.html#l00037">37</a> of file <a class="el" href="midi__uart_8h_source.html">midi_uart.h</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a9ac817a771cd1e8bd29b8ffa84bd9e39" name="a9ac817a771cd1e8bd29b8ffa84bd9e39"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a9ac817a771cd1e8bd29b8ffa84bd9e39">&#9670;&nbsp;</a></span>EspMidiUart()</h2>
@@ -179,8 +177,8 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="aef922b29068099027bd600adac7f2bc1" name="aef922b29068099027bd600adac7f2bc1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aef922b29068099027bd600adac7f2bc1">&#9670;&nbsp;</a></span>get_byte()</h2>
+<a id="a7bdbde35c68368f6e2d2156e7aebfde6" name="a7bdbde35c68368f6e2d2156e7aebfde6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7bdbde35c68368f6e2d2156e7aebfde6">&#9670;&nbsp;</a></span>get_byte()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -189,10 +187,10 @@ Public Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">uint8_t shrapnel::midi::EspMidiUart::get_byte </td>
+          <td class="memname">std::optional&lt; uint8_t &gt; shrapnel::midi::EspMidiUart::get_byte </td>
           <td>(</td>
-          <td class="paramtype">void&#160;</td>
-          <td class="paramname"></td><td>)</td>
+          <td class="paramtype">TickType_t&#160;</td>
+          <td class="paramname"><em>timeout</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -203,23 +201,27 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Block until a byte is received. </p>
-
-<p>Implements <a class="el" href="classshrapnel_1_1midi_1_1MidiUartBase.html#a301b968bd7040c54844b22d8ac232e9b">shrapnel::midi::MidiUartBase</a>.</p>
+<p>Implements <a class="el" href="classshrapnel_1_1midi_1_1MidiUartBase.html#a62f4c08b5af0b4e486d8e6f4109f6bd1">shrapnel::midi::MidiUartBase</a>.</p>
 
 <p class="definition">Definition at line <a class="el" href="midi__uart_8cpp_source.html#l00049">49</a> of file <a class="el" href="midi__uart_8cpp_source.html">midi_uart.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   49</span>                                  {</div>
-<div class="line"><span class="lineno">   50</span>    uint8_t out = 0;</div>
-<div class="line"><span class="lineno">   51</span>    <span class="keywordtype">int</span> rc = uart_read_bytes(uart, &amp;out, 1, portMAX_DELAY);</div>
-<div class="line"><span class="lineno">   52</span>    assert(rc == 1);</div>
-<div class="line"><span class="lineno">   53</span>    <span class="keywordflow">return</span> out;</div>
-<div class="line"><span class="lineno">   54</span>}</div>
+<div class="fragment"><div class="line"><span class="lineno">   49</span>                                                             {</div>
+<div class="line"><span class="lineno">   50</span>    uint8_t out;</div>
+<div class="line"><span class="lineno">   51</span>    <span class="keywordtype">int</span> rc = uart_read_bytes(uart, &amp;out, 1, timeout);</div>
+<div class="line"><span class="lineno">   52</span>    assert((rc == 0) || (rc == 1));</div>
+<div class="line"><span class="lineno">   53</span> </div>
+<div class="line"><span class="lineno">   54</span>    <span class="keywordflow">if</span>(rc == 0)</div>
+<div class="line"><span class="lineno">   55</span>    {</div>
+<div class="line"><span class="lineno">   56</span>        <span class="keywordflow">return</span> std::nullopt;</div>
+<div class="line"><span class="lineno">   57</span>    }</div>
+<div class="line"><span class="lineno">   58</span> </div>
+<div class="line"><span class="lineno">   59</span>    <span class="keywordflow">return</span> out;</div>
+<div class="line"><span class="lineno">   60</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following files:<ul>
-<li>firmware/components/midi/include/<a class="el" href="midi__uart_8h_source.html">midi_uart.h</a></li>
-<li>firmware/components/midi/src/<a class="el" href="midi__uart_8cpp_source.html">midi_uart.cpp</a></li>
+<li>firmware/components/midi_protocol/include/<a class="el" href="midi__uart_8h_source.html">midi_uart.h</a></li>
+<li>firmware/components/midi_protocol/src/<a class="el" href="midi__uart_8cpp_source.html">midi_uart.cpp</a></li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->

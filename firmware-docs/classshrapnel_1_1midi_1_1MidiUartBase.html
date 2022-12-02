@@ -107,16 +107,15 @@ Inheritance diagram for shrapnel::midi::MidiUartBase:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a301b968bd7040c54844b22d8ac232e9b"><td class="memItemLeft" align="right" valign="top">virtual uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classshrapnel_1_1midi_1_1MidiUartBase.html#a301b968bd7040c54844b22d8ac232e9b">get_byte</a> (void)=0</td></tr>
-<tr class="memdesc:a301b968bd7040c54844b22d8ac232e9b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Block until a byte is received.  <a href="classshrapnel_1_1midi_1_1MidiUartBase.html#a301b968bd7040c54844b22d8ac232e9b">More...</a><br /></td></tr>
-<tr class="separator:a301b968bd7040c54844b22d8ac232e9b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a62f4c08b5af0b4e486d8e6f4109f6bd1"><td class="memItemLeft" align="right" valign="top">virtual std::optional&lt; uint8_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classshrapnel_1_1midi_1_1MidiUartBase.html#a62f4c08b5af0b4e486d8e6f4109f6bd1">get_byte</a> (TickType_t timeout)=0</td></tr>
+<tr class="separator:a62f4c08b5af0b4e486d8e6f4109f6bd1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock">
-<p class="definition">Definition at line <a class="el" href="midi__uart_8h_source.html#l00030">30</a> of file <a class="el" href="midi__uart_8h_source.html">midi_uart.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="midi__uart_8h_source.html#l00032">32</a> of file <a class="el" href="midi__uart_8h_source.html">midi_uart.h</a>.</p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
-<a id="a301b968bd7040c54844b22d8ac232e9b" name="a301b968bd7040c54844b22d8ac232e9b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a301b968bd7040c54844b22d8ac232e9b">&#9670;&nbsp;</a></span>get_byte()</h2>
+<a id="a62f4c08b5af0b4e486d8e6f4109f6bd1" name="a62f4c08b5af0b4e486d8e6f4109f6bd1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a62f4c08b5af0b4e486d8e6f4109f6bd1">&#9670;&nbsp;</a></span>get_byte()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -125,10 +124,10 @@ Public Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual uint8_t shrapnel::midi::MidiUartBase::get_byte </td>
+          <td class="memname">virtual std::optional&lt; uint8_t &gt; shrapnel::midi::MidiUartBase::get_byte </td>
           <td>(</td>
-          <td class="paramtype">void&#160;</td>
-          <td class="paramname"></td><td>)</td>
+          <td class="paramtype">TickType_t&#160;</td>
+          <td class="paramname"><em>timeout</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -139,14 +138,12 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Block until a byte is received. </p>
-
-<p>Implemented in <a class="el" href="classshrapnel_1_1midi_1_1EspMidiUart.html#aef922b29068099027bd600adac7f2bc1">shrapnel::midi::EspMidiUart</a>.</p>
+<p>Implemented in <a class="el" href="classshrapnel_1_1midi_1_1EspMidiUart.html#a7bdbde35c68368f6e2d2156e7aebfde6">shrapnel::midi::EspMidiUart</a>.</p>
 
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following file:<ul>
-<li>firmware/components/midi/include/<a class="el" href="midi__uart_8h_source.html">midi_uart.h</a></li>
+<li>firmware/components/midi_protocol/include/<a class="el" href="midi__uart_8h_source.html">midi_uart.h</a></li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->
