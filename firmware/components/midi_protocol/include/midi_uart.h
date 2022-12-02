@@ -22,22 +22,23 @@
 #include <cstdint>
 #include <driver/uart.h>
 #include <driver/gpio.h>
+#include "freertos/FreeRTOS.h"
 #include <memory>
+#include <optional>
 
 namespace shrapnel {
 namespace midi {
 
 class MidiUartBase {
     public:
-    /** Block until a byte is received */
-    virtual uint8_t get_byte(void) = 0;
+    virtual std::optional<uint8_t> get_byte(TickType_t timeout) = 0;
 };
 
 class EspMidiUart final : public MidiUartBase {
     public:
     EspMidiUart(uart_port_t uart, gpio_num_t rx_io);
 
-    uint8_t get_byte(void) override;
+    std::optional<uint8_t> get_byte(TickType_t timeout) override;
 
     private:
     uart_port_t uart;

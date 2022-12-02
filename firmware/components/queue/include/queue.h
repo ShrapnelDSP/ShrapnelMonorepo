@@ -19,9 +19,16 @@
 
 #pragma once
 
+#include "FreeRTOSConfig.h"
 #include "freertos/FreeRTOS.h"
 #include "freertos/queue.h"
 #include <cassert>
+#include <chrono>
+#include <cstdint>
+#include "etl/deque.h"
+#include <semaphore>
+#include <type_traits>
+#include <queue>
 
 namespace shrapnel {
 
@@ -29,37 +36,62 @@ template <typename T>
 class QueueBase
 {
     public:
+    using value_type = T;
+
     QueueBase(int number_of_elements)
     {
         (void) number_of_elements;
     };
 
     virtual BaseType_t receive(T *out, TickType_t time_to_wait) = 0;
-    virtual BaseType_t send(T *out, TickType_t time_to_wait) = 0;
+    virtual BaseType_t send(const T *in, TickType_t time_to_wait) = 0;
 };
 
-template <typename T>
-class Queue: public QueueBase<T>
+template <typename T, std::size_t MAX_SIZE> requires (MAX_SIZE > 0)
+class Queue final: public QueueBase<T>
 {
+    using ticks = std::chrono::duration<TickType_t>;
+
     public:
-    Queue(int number_of_elements) : QueueBase<T>(number_of_elements)
-    {
-        handle = xQueueCreate(number_of_elements, sizeof(T));
-        assert(handle);
-    }
+    Queue() : QueueBase<T>(MAX_SIZE), used_semaphore{0}, free_semaphore{MAX_SIZE} {}
 
     BaseType_t receive(T *out, TickType_t time_to_wait) override
     {
-        return xQueueReceive(handle, out, time_to_wait);
+        // block until an item is available
+        bool success = used_semaphore.try_acquire_for(ticks(time_to_wait));
+        if(!success) return errQUEUE_EMPTY;
+
+        // Receive the item
+        {
+            std::scoped_lock lock{mutex};
+            *out = queue.front();
+            queue.pop();
+        }
+        free_semaphore.release();
+        return pdPASS;
     }
 
-    BaseType_t send(T *out, TickType_t time_to_wait) override
+    BaseType_t send(const T *in, TickType_t time_to_wait) override
     {
-        return xQueueSendToBack(handle, out, time_to_wait);
+        // block until a space is available
+        bool success = free_semaphore.try_acquire_for(ticks(time_to_wait));
+        if(!success) return errQUEUE_FULL;
+
+        // Add item to queue, and notify receivers
+        {
+            std::scoped_lock lock{mutex};
+            queue.push(*in);
+        }
+        used_semaphore.release();
+        return pdPASS;
     }
 
     private:
-    QueueHandle_t handle;
+    std::counting_semaphore<MAX_SIZE> used_semaphore;
+    std::counting_semaphore<MAX_SIZE> free_semaphore;
+    etl::deque<T, MAX_SIZE> queue_storage;
+    std::queue<T, etl::deque<T, MAX_SIZE>> queue;
+    std::mutex mutex;
 };
 
 }

@@ -23,11 +23,6 @@
 #include "audio_param.h"
 #include "cmd_handling.h"
 
-#include "audio_events.h"
-
-#include "task.h"
-#include "queue.h"
-
 namespace {
 
 using testing::_;
@@ -35,15 +30,6 @@ using testing::Return;
 using testing::StrEq;
 
 using id_t = shrapnel::parameters::id_t;
-
-template <typename T>
-class MockQueue : public shrapnel::QueueBase<T>
-{
-    public:
-    MockQueue(int n) : shrapnel::QueueBase<T>(n) {};
-    MOCK_METHOD(BaseType_t, receive, (T *out, TickType_t time_to_wait), (override));
-    MOCK_METHOD(BaseType_t, send, (T *out, TickType_t time_to_wait), (override));
-};
 
 class MockAudioParameterFloat;
 
@@ -66,10 +52,37 @@ class MockAudioParameters
     MapType parameters;
 };
 
-class MockEventSend : public shrapnel::EventSendBase
+class MockEventSend
 {
     public:
-    MOCK_METHOD(void, send, (char *json, int fd), (override));
+    MOCK_METHOD(void, send, (const char *json, int fd));
+    MOCK_METHOD(void, send, (const char *json));
+};
+
+class EventSendAdapter final {
+    public:
+    explicit EventSendAdapter(MockEventSend &event) : event(event) {}
+
+    void send(const shrapnel::parameters::ApiMessage &message, int fd)
+    {
+        rapidjson::Document document;
+        auto json = to_json(document, message);
+        document.Swap(json);
+
+        rapidjson::StringBuffer buffer;
+        rapidjson::Writer writer{buffer};
+        document.Accept(writer);
+
+        event.send(buffer.GetString(), fd);
+    }
+
+    void send(const shrapnel::parameters::ApiMessage &message)
+    {
+        send(message, -1);
+    }
+
+    private:
+    MockEventSend &event;
 };
 
 class MockAudioParameterFloat
@@ -95,88 +108,40 @@ class MockAudioParameterFloat
 class CmdHandling : public ::testing::Test
 {
     protected:
+    CmdHandling() : cmd(&param, event_adapter) {}
 
-    using Message = shrapnel::CommandHandling<MockAudioParameters>::Message;
-
-    CmdHandling() : queue(1), cmd(&queue, &param, event) {}
-
-    MockQueue<Message> queue;
     MockAudioParameters param;
     MockEventSend event;
+    EventSendAdapter event_adapter{event};
 
-    shrapnel::CommandHandling<MockAudioParameters> cmd;
+    void parseAndDispatch(const char *json, int fd) {
+        rapidjson::Document document;
+        document.Parse(json);
+        ASSERT_FALSE(document.HasParseError()) << "Must use valid JSON for testing.";
+
+        auto parsed_message = shrapnel::parameters::from_json<shrapnel::parameters::ApiMessage>(document.GetObject());
+        ASSERT_TRUE(parsed_message.has_value()) << "Must use valid JSON for testing.";
+
+        cmd.dispatch(*parsed_message, fd);
+    }
+
+    shrapnel::parameters::CommandHandling<MockAudioParameters, EventSendAdapter> cmd;
 };
-
-TEST_F(CmdHandling, QueueFail)
-{
-    EXPECT_CALL(queue, receive(_, portMAX_DELAY))
-        .Times(1)
-        .WillRepeatedly(Return(false));
-
-    EXPECT_CALL(param, update).Times(0);
-
-    cmd.work();
-}
-
-TEST_F(CmdHandling, InvalidMessage)
-{
-    Message output{
-        "This is not JSON",
-        0
-    };
-
-    EXPECT_CALL(queue, receive(_, portMAX_DELAY))
-        .Times(1)
-        .WillRepeatedly(
-                testing::DoAll(
-                    testing::SetArgPointee<0>(output),
-                    Return(true)
-                ));
-
-    EXPECT_CALL(param, update).Times(0);
-
-    cmd.work();
-}
 
 TEST_F(CmdHandling, ValidMessage)
 {
-    Message output{
-        "{\"id\": \"tight\", \"value\": 1, \"messageType\": \"parameterUpdate\"}",
-        42
-    };
-
-    EXPECT_CALL(queue, receive(_, portMAX_DELAY))
-        .Times(1)
-        .WillRepeatedly(
-                testing::DoAll(
-                    testing::SetArgPointee<0>(output),
-                    Return(true)
-                ));
-
     EXPECT_CALL(param, update(id_t("tight"), 1.0f))
         .Times(1)
         .WillRepeatedly(Return(0));
 
-    EXPECT_CALL(event, send(StrEq(output.json), 42)).Times(1);
+    const char *json = R"({"id":"tight","value":1.0,"messageType":"parameterUpdate"})";
+    EXPECT_CALL(event, send(StrEq(json), 42)).Times(1);
 
-    cmd.work();
+    parseAndDispatch(json, 42);
 }
 
 TEST_F(CmdHandling, InitialiseParameters)
 {
-    Message output{
-        "{\"messageType\": \"initialiseParameters\"}",
-        0
-    };
-
-    EXPECT_CALL(queue, receive(_, portMAX_DELAY))
-        .Times(1)
-        .WillRepeatedly(
-                testing::DoAll(
-                    testing::SetArgPointee<0>(output),
-                    Return(true)
-                ));
-
     auto parameter0 = std::make_unique<MockAudioParameterFloat>("test", 0);
     EXPECT_CALL(*parameter0.get(), get()).WillRepeatedly(Return(0));
     auto parameter1 = std::make_unique<MockAudioParameterFloat>("test", 0);
@@ -184,12 +149,12 @@ TEST_F(CmdHandling, InitialiseParameters)
     param.parameters["test0"] = std::move(parameter0);
     param.parameters["test1"] = std::move(parameter1);
 
-    const char *message = "{\"id\":\"test0\",\"value\":0}";
-    EXPECT_CALL(event, send(StrEq(message), -1)).Times(1);
-    message = "{\"id\":\"test1\",\"value\":1}";
-    EXPECT_CALL(event, send(StrEq(message), -1)).Times(1);
+    const char *expected = R"({"id":"test0","value":0.0,"messageType":"parameterUpdate"})";
+    EXPECT_CALL(event, send(StrEq(expected), -1)).Times(1);
+    expected = R"({"id":"test1","value":1.0,"messageType":"parameterUpdate"})";
+    EXPECT_CALL(event, send(StrEq(expected), -1)).Times(1);
 
-    cmd.work();
+    parseAndDispatch(R"({"messageType": "initialiseParameters"})", 0);
 }
 
 }

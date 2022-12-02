@@ -19,32 +19,20 @@
 
 #pragma once
 
-#include "cmd_handling.h"
-#include "task.h"
+#include "audio_param.h"
+#include <variant>
 
-namespace shrapnel {
+namespace shrapnel::parameters {
 
-template<typename AudioParametersT>
-class CommandHandlingTask : public TaskBase
-{
-    public:
-    CommandHandlingTask(int a_priority,
-                        QueueBase<typename CommandHandling<AudioParametersT>::Message> *queue,
-                        AudioParametersT *param,
-                        EventSendBase &event) :
-        TaskBase("command handling", 4000, a_priority),
-        cmd(queue, param, event)
-    {
-        start();
-    }
+struct Update final {
+    id_t id;
+    float value;
 
-    CommandHandling<AudioParametersT> cmd;
-
-    private:
-    void loop(void) override
-    {
-        cmd.work();
-    }
+    std::strong_ordering operator<=>(const Update &other) const = default;
 };
+
+struct Initialise final {};
+
+using ApiMessage = std::variant<Update, Initialise>;
 
 }

@@ -17,7 +17,7 @@
  * ShrapnelDSP. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include "midi.h"
+#include "midi_protocol.h"
 #include "esp_log.h"
 #include <etl/delegate.h>
 

@@ -46,10 +46,16 @@ EspMidiUart::EspMidiUart(uart_port_t a_uart, gpio_num_t rx_io) : uart(a_uart) {
                 0));
 }
 
-uint8_t EspMidiUart::get_byte(void) {
-    uint8_t out = 0;
-    int rc = uart_read_bytes(uart, &out, 1, portMAX_DELAY);
-    assert(rc == 1);
+std::optional<uint8_t> EspMidiUart::get_byte(TickType_t timeout) {
+    uint8_t out;
+    int rc = uart_read_bytes(uart, &out, 1, timeout);
+    assert((rc == 0) || (rc == 1));
+
+    if(rc == 0)
+    {
+        return std::nullopt;
+    }
+
     return out;
 }
 

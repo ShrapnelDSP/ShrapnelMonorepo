@@ -126,12 +126,12 @@ TEST_F(MappingApiMessageTest, CreateRequest)
     EXPECT_THAT(std::holds_alternative<CreateRequest>(*result), true);
 
     if (auto message = std::get_if<CreateRequest>(&(*result))) {
-        auto expected = CreateRequest({
+        CreateRequest expected{{
             Mapping::id_t{
                 0, 1,  2,  3,  4,  5,  6,  7,
                 8, 9, 10, 11, 12, 13, 14, 15
             },
-            Mapping{1, 2, parameters::id_t("gain")}});
+            Mapping{1, 2, parameters::id_t("gain")}}};
 
         EXPECT_THAT(*message, expected);
     } else {
@@ -157,12 +157,12 @@ TEST_F(MappingApiMessageTest, Update)
     EXPECT_THAT(std::holds_alternative<Update>(*result), true);
 
     if (auto message = std::get_if<Update>(&(*result))) {
-        auto expected = Update({
+        Update expected{{
             Mapping::id_t{
                 0, 1,  2,  3,  4,  5,  6,  7,
                 8, 9, 10, 11, 12, 13, 14, 15
             },
-            Mapping{1, 2, parameters::id_t("gain")}});
+            Mapping{1, 2, parameters::id_t("gain")}}};
 
         EXPECT_THAT(*message, expected);
     } else {
@@ -182,10 +182,10 @@ TEST_F(MappingApiMessageTest, Remove)
     EXPECT_THAT(std::holds_alternative<Remove>(*result), true);
 
     if (auto message = std::get_if<Remove>(&(*result))) {
-        auto expected = Remove(Mapping::id_t{
+        Remove expected = {Mapping::id_t{
                 0, 1,  2,  3,  4,  5,  6,  7,
                 8, 9, 10, 11, 12, 13, 14, 15
-            });
+            }};
 
         EXPECT_THAT(*message, expected);
     } else {

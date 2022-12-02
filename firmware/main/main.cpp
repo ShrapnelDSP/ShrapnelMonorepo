@@ -17,15 +17,23 @@
  * ShrapnelDSP. If not, see <https://www.gnu.org/licenses/>.
  */
 
+#include <mutex>
 #include <stdio.h>
 #include <math.h>
+#include <type_traits>
 
-#include "esp_log.h"
+#include "cmd_handling_api.h"
+#include "esp_heap_caps.h"
+#include "midi_mapping.h"
+#include "rapidjson/writer.h"
 #define LOG_LOCAL_LEVEL ESP_LOG_VERBOSE
+#include "esp_log.h"
+#include "freertos/projdefs.h"
 
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 #include "freertos/semphr.h"
+#include "freertos/FreeRTOSConfig.h"
 
 #include <assert.h>
 #include <esp_wifi.h>
@@ -44,33 +52,57 @@
 
 #include "audio_param.h"
 #include "audio_events.h"
-#include "cmd_handling_task.h"
+#include "cmd_handling.h"
 #include "esp_http_server.h"
 #include "hardware.h"
 #include "i2s.h"
-#include "midi.h"
+#include "midi_protocol.h"
 #include "midi_mapping_json_parser.h"
+#include "midi_mapping_json_builder.h"
 #include "midi_uart.h"
 #include "pcm3060.h"
 #include "profiling.h"
 #include "wifi_provisioning.h"
 #include "midi_mapping_api.h"
+#include "queue.h"
 
 #define TAG "main"
 #define QUEUE_LEN 4
 #define MAX_CLIENTS 3
-// TODO consider replacing this with sizeof(shrapnel::parameters::message::json)
-#define MAX_WEBSOCKET_PAYLOAD_SIZE 128
 #define ARRAY_LENGTH(a) (sizeof(a)/sizeof(a[0]))
+
+using ApiMessage = std::variant<shrapnel::parameters::ApiMessage, shrapnel::midi::MappingApiMessage>;
+using FileDescriptor = std::optional<int>;
+using AppMessage = std::pair<ApiMessage, FileDescriptor>;
+
+extern "C" void audio_event_send_callback(const AppMessage &message);
 
 namespace shrapnel {
 
-static Queue<CommandHandling<parameters::AudioParameters>::Message> *in_queue;
-static parameters::AudioParameters *audio_params;
-static CommandHandlingTask<parameters::AudioParameters> *cmd_handling_task;
+class ParameterUpdateNotifier {
+    public:
+    int update(const parameters::id_t &param, float value);
+};
+
+class EventSend final {
+    public:
+    void send(parameters::ApiMessage message, int fd)
+    {
+        if(fd >= 0) {
+            audio_event_send_callback({message, fd});
+        } else {
+            audio_event_send_callback({message, std::nullopt});
+        }
+    }
+};
+
+static Queue<AppMessage, QUEUE_LEN> *in_queue;
+static std::shared_ptr<parameters::AudioParameters> audio_params;
+static parameters::CommandHandling<parameters::AudioParameters, EventSend> *cmd_handling;
+static midi::MappingManager<ParameterUpdateNotifier, 10> *midi_mapping_manager;
 static EventSend event_send{};
 
-static QueueHandle_t out_queue;
+static Queue<AppMessage, QUEUE_LEN> *out_queue;
 
 /*
  * TODO espressif's http server drops some calls to the work function when
@@ -80,6 +112,8 @@ static QueueHandle_t out_queue;
  * reproduce the bug.
  */
 static SemaphoreHandle_t work_semaphore;
+
+static std::mutex midi_mutex;
 
 static httpd_handle_t _server = nullptr;
 
@@ -101,13 +135,14 @@ static void i2c_setup(void);
 
 static esp_err_t websocket_get_handler(httpd_req_t *req)
 {
-    CommandHandling<parameters::AudioParameters>::Message message{};
+    /* Largest incoming message is a MidiMap::create::response which has a maximum size about 200 bytes */
+    char json[256] = {0};
 
     httpd_ws_frame_t pkt = {
         .final = false,
         .fragmented = false,
         .type = HTTPD_WS_TYPE_TEXT,
-        .payload = reinterpret_cast<uint8_t*>(message.json),
+        .payload = reinterpret_cast<uint8_t*>(json),
         .len = 0,
     };
 
@@ -117,7 +152,7 @@ static esp_err_t websocket_get_handler(httpd_req_t *req)
         return ESP_OK;
     }
 
-    esp_err_t rc = httpd_ws_recv_frame(req, &pkt, sizeof(message.json));
+    esp_err_t rc = httpd_ws_recv_frame(req, &pkt, sizeof(json));
     if(rc != ESP_OK)
     {
         ESP_LOGE(TAG, "websocket parse failed");
@@ -132,35 +167,50 @@ static esp_err_t websocket_get_handler(httpd_req_t *req)
     assert(pkt.type != HTTPD_WS_TYPE_PONG);
     assert(pkt.final);
     assert(!pkt.fragmented);
-    assert(pkt.len <= sizeof(message.json));
+    assert(pkt.len <= sizeof(json));
 
     ESP_LOGD(TAG, "%s len = %zd", __FUNCTION__, pkt.len);
-    ESP_LOG_BUFFER_HEXDUMP(TAG, message.json, sizeof(message.json), ESP_LOG_VERBOSE);
+    ESP_LOG_BUFFER_HEXDUMP(TAG, json, sizeof(json), ESP_LOG_VERBOSE);
 
-    message.fd = httpd_req_to_sockfd(req);
-
-    rc = in_queue->send(&message, 100 / portTICK_PERIOD_MS);
-    if(rc != pdTRUE)
-    {
-        ESP_LOGE(TAG, "%s failed to send to queue", __FUNCTION__);
-    }
+    int fd = httpd_req_to_sockfd(req);
 
     rapidjson::Document document;
-    document.Parse(message.json);
-    if(!document.HasParseError())
+    document.Parse(json);
+    if(document.HasParseError())
+    {
+        ESP_LOGE(TAG, "Failed to parse incoming JSON");
+        return ESP_FAIL;
+    }
+
+    {
+        auto message = parameters::from_json<parameters::ApiMessage>(document.GetObject());
+        if(message.has_value())
+        {
+            auto out = AppMessage{*message, fd};
+            in_queue->send(&out, pdMS_TO_TICKS(100));
+            goto out;
+        }
+    }
+
     {
         auto message = midi::from_json<midi::MappingApiMessage>(document.GetObject());
         if(message.has_value())
         {
+            auto out = AppMessage{*message, fd};
+            in_queue->send(&out, pdMS_TO_TICKS(100));
+
             etl::string<256> buffer;
             etl::string_stream stream{buffer};
             stream << *message;
             ESP_LOGI(TAG, "decoded %s", buffer.data());
+
+            goto out;
+
         }
     }
 
+out:
     ESP_LOGI(TAG, "%s stack %d", __FUNCTION__, uxTaskGetStackHighWaterMark(NULL));
-
     return ESP_OK;
 }
 
@@ -270,39 +320,48 @@ static void wifi_start_handler(void *arg, esp_event_base_t event_base,
     }
 }
 
-typedef struct {
-    char message[MAX_WEBSOCKET_PAYLOAD_SIZE];
-    int fd;
-} audio_event_message_t;
-
 static void websocket_send(void *arg)
 {
     httpd_handle_t server = arg;
 
-    audio_event_message_t event_message;
-
-    int rc = xQueueReceive(out_queue, &event_message, 0);
+    AppMessage message;
+    int rc = out_queue->receive(&message, 0);
     if(!rc)
     {
         ESP_LOGE(TAG, "%s failed to receive from queue", __FUNCTION__);
         return;
     }
 
-    ESP_LOGD(TAG, "%s %d messages waiting", __FUNCTION__, uxQueueMessagesWaiting(out_queue));
+    if(!message.second.has_value()) {
+        ESP_LOGD(TAG, "%s source fd is null", __FUNCTION__);
+    } else {
+        ESP_LOGD(TAG, "%s source fd = %d", __FUNCTION__, *message.second);
+    }
 
-    ESP_LOGD(TAG, "%s source fd = %d", __FUNCTION__, event_message.fd);
+    rapidjson::Document document;
 
-    ESP_LOGD(TAG, "%s len = %zd", __FUNCTION__, strlen(event_message.message));
-    ESP_LOG_BUFFER_HEXDUMP(TAG, event_message.message, sizeof(event_message.message), ESP_LOG_VERBOSE);
+    auto json = std::visit([&](const auto &message) -> rapidjson::Value {
+        return to_json(document, message);
+    }, message.first);
 
-    assert(strlen(event_message.message) < sizeof(event_message.message));
+    rapidjson::GenericStringBuffer<rapidjson::UTF8<>, rapidjson::MemoryPoolAllocator<>> buffer;
+    rapidjson::Writer writer{buffer};
+    json.Swap(document);
+    document.Accept(writer);
+
+    const char *payload = buffer.GetString();
+    std::size_t payload_len = strlen(payload);
+
+    ESP_LOGD(TAG, "%s len = %zd", __FUNCTION__, payload_len);
+    ESP_LOG_BUFFER_HEXDUMP(TAG, payload, payload_len, ESP_LOG_VERBOSE);
 
     httpd_ws_frame_t pkt = {
         .final = false,
         .fragmented = false,
         .type = HTTPD_WS_TYPE_TEXT,
-        .payload = reinterpret_cast<uint8_t *>(event_message.message),
-        .len = strlen(event_message.message),
+         // XXX: casting away const, but esp-idf does not modify the buffer
+        .payload = reinterpret_cast<uint8_t *>(const_cast<char *>(payload)),
+        .len = payload_len,
     };
 
     int client_fds[MAX_CLIENTS];
@@ -325,7 +384,7 @@ static void websocket_send(void *arg)
             continue;
         }
 
-        if(fd == event_message.fd)
+        if(message.second.has_value() && fd == *message.second)
         {
             continue;
         }
@@ -396,6 +455,19 @@ static void failed_alloc_callback(size_t size, uint32_t caps, const char *functi
     abort();
 }
 
+int ParameterUpdateNotifier::update(const parameters::id_t &param, float value)
+{
+    auto message = AppMessage{
+        parameters::Update{
+            param,
+            value,
+        },
+        std::nullopt,
+    };
+    audio_event_send_callback(message);
+    return audio_params->update(param, value);
+}
+
 extern "C" void app_main(void)
 {
     ESP_ERROR_CHECK(heap_caps_register_failed_alloc_callback(failed_alloc_callback));
@@ -408,13 +480,13 @@ extern "C" void app_main(void)
     assert(work_semaphore);
     xSemaphoreGive(work_semaphore);
 
-    in_queue = new Queue<CommandHandling<parameters::AudioParameters>::Message>(QUEUE_LEN);
+    in_queue = new Queue<AppMessage, QUEUE_LEN>();
     assert(in_queue);
 
-    out_queue = xQueueCreate(QUEUE_LEN, sizeof(audio_event_message_t));
+    out_queue = new Queue<AppMessage, QUEUE_LEN>();
     assert(out_queue);
 
-    audio_params = new parameters::AudioParameters();
+    audio_params = std::make_shared<parameters::AudioParameters>();
 
     audio_params->create_and_add_parameter("ampGain", 0, 1, 0.5);
     audio_params->create_and_add_parameter("ampChannel", 0, 1, 0);
@@ -437,10 +509,21 @@ extern "C" void app_main(void)
     audio_params->create_and_add_parameter("chorusMix", 0, 1, 0.8);
     audio_params->create_and_add_parameter("chorusBypass", 0, 1, 0);
 
-    cmd_handling_task = new CommandHandlingTask<parameters::AudioParameters>(
-            5,
-            in_queue,
-            audio_params,
+    auto parameter_notifier = std::make_shared<ParameterUpdateNotifier>();
+    midi_mapping_manager = new midi::MappingManager<ParameterUpdateNotifier, 10>(parameter_notifier);
+    {
+        auto rc = midi_mapping_manager->create(
+                {
+                midi::Mapping::id_t{0},
+                midi::Mapping{.midi_channel=1, .cc_number=7, .parameter_name="tubeScreamerTone"}});
+        if(rc != 0)
+        {
+            ESP_LOGE(TAG, "Failed to create initial mapping");
+        }
+    }
+
+    cmd_handling = new parameters::CommandHandling<parameters::AudioParameters, EventSend>(
+            audio_params.get(),
             event_send);
 
     ESP_ERROR_CHECK(audio_event_init());
@@ -448,7 +531,7 @@ extern "C" void app_main(void)
     i2c_setup();
 
     profiling_mutex = xSemaphoreCreateMutex();
-    i2s_setup(PROFILING_GPIO, audio_params);
+    i2s_setup(PROFILING_GPIO, audio_params.get());
 
     //dac must be powered up after the i2s clocks have stabilised
     vTaskDelay(100 / portTICK_PERIOD_MS);
@@ -558,46 +641,114 @@ extern "C" void app_main(void)
 
     ESP_LOGI(TAG, "setup done");
     ESP_LOGI(TAG, "stack: %d", uxTaskGetStackHighWaterMark(NULL));
+    heap_caps_print_heap_info(MALLOC_CAP_DEFAULT);
 
     auto midi_uart = new midi::EspMidiUart(UART_NUM_MIDI, GPIO_NUM_MIDI);
 
-    auto log_midi_message = [] (midi::Message message) {
-            etl::string<40> buffer;
-            etl::string_stream stream{buffer};
-            stream << message;
-            ESP_LOGI(TAG, "%s", buffer.data());
+    auto on_midi_message = [] (midi::Message message) {
+        etl::string<40> buffer;
+        etl::string_stream stream{buffer};
+        stream << message;
+        ESP_LOGI(TAG, "%s", buffer.data());
+
+        {
+            std::scoped_lock lock{midi_mutex};
+            midi_mapping_manager->process_message(message);
+        }
     };
 
-    auto midi_decoder = new midi::Decoder(log_midi_message);
+    auto midi_decoder = new midi::Decoder(on_midi_message);
+
+#if configUSE_TRACE_FACILITY && configUSE_STATS_FORMATTING_FUNCTIONS
+    constexpr size_t characters_per_task = 40;
+    constexpr size_t approximate_task_count = 20;
+    char buffer[characters_per_task * approximate_task_count + 1] = {0};
+    vTaskList(buffer);
+    // crash if the buffer was overflowed
+    assert(buffer[sizeof(buffer) - 1] == '\0');
+    ESP_LOGI(TAG, "Task list:\n%s", buffer);
+#endif
 
     while(1)
     {
+        if(auto byte = midi_uart->get_byte(pdMS_TO_TICKS(10)); byte.has_value())
+        {
+            ESP_LOGI(TAG, "midi got byte 0x%02x", *byte);
 
-        uint8_t byte = midi_uart->get_byte();
-        ESP_LOGI(TAG, "midi got byte 0x%02x", byte);
+            midi_decoder->decode(*byte);
+        }
 
-        midi_decoder->decode(byte);
+        if(AppMessage message; in_queue->receive(&message, 0))
+        {
+            auto fd = message.second;
+
+            std::visit([&](const auto &message){
+                using T = std::decay_t<decltype(message)>;
+
+                if constexpr(std::is_same_v<T, parameters::ApiMessage>) {
+                    if(!fd.has_value())
+                    {
+                        ESP_LOGE(TAG, "Must always have fd");
+                    }
+
+                    cmd_handling->dispatch(message, *fd);
+                } else if constexpr(std::is_same_v<T, midi::MappingApiMessage>) {
+                    std::scoped_lock lock{midi_mutex};
+
+                    auto response = std::visit([&](const auto &message) -> std::optional<midi::MappingApiMessage> {
+                        using T = std::decay_t<decltype(message)>;
+
+                        if constexpr (std::is_same_v<T, midi::GetRequest>) {
+                            auto mappings = midi_mapping_manager->get();
+                            return midi::GetResponse{mappings};
+                        } else if constexpr (std::is_same_v<T, midi::CreateRequest>) {
+                            auto rc = midi_mapping_manager->create(message.mapping);
+                            if(rc == 0)
+                            {
+                                return midi::CreateResponse{message.mapping};
+                            }
+                        } else if constexpr (std::is_same_v<T, midi::Update>) {
+                            // return code ignored, as there is no way to indicate
+                            // the error to the frontend
+                            (void)midi_mapping_manager->update(message.mapping);
+                        } else if constexpr (std::is_same_v<T, midi::Remove>) {
+                            midi_mapping_manager->remove(message.id);
+                        } else {
+                            ESP_LOGE(TAG, "Unhandled message type");
+                        }
+
+                        return std::nullopt;
+                    }, message);
+
+                    if(response.has_value())
+                    {
+                        audio_event_send_callback({*response, std::nullopt});
+                    }
+                }
+            }, message.first);
+        }
+
+        {
+            // i2s produces an event on each buffer TX/RX. We process all the
+            // events in the current iteration, so that the queue doesn't fill
+            // up.
+            i2s_event_t event;
+            while(xQueueReceive(i2s_queue, &event, 0))
+            {
+                log_i2s_event(event);
+            }
+        }
     }
 }
 
 }
 
-extern "C" void audio_event_send_callback(const char *message, int fd)
+extern "C" void audio_event_send_callback(const AppMessage &message)
 {
-    shrapnel::audio_event_message_t event_message = {
-        .message = {0},
-        .fd = fd,
-    };
-
-    snprintf(event_message.message, sizeof(event_message.message), "%s", message);
-
-    ESP_LOGD(TAG, "%s %s", __FUNCTION__, event_message.message);
     ESP_LOGD(TAG, "%s %s", __FUNCTION__, pcTaskGetName(NULL));
 
     if(errQUEUE_FULL ==
-            xQueueSendToBack(shrapnel::out_queue,
-                             &event_message,
-                             100 / portTICK_PERIOD_MS))
+            shrapnel::out_queue->send(&message, pdMS_TO_TICKS(100)))
     {
         ESP_LOGE(TAG, "Failed to send message to websocket");
         return;
@@ -616,6 +767,5 @@ extern "C" void audio_event_send_callback(const char *message, int fd)
     if(ESP_OK != rc)
     {
         ESP_LOGE(TAG, "failed to queue work for server");
-        xQueueReset(shrapnel::out_queue);
     }
 }

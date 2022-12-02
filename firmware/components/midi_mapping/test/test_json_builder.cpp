@@ -21,6 +21,8 @@
 #include "gmock/gmock.h"
 #include <variant>
 
+#include "audio_param.h"
+#include "midi_mapping.h"
 #include "midi_mapping_api.h"
 #include "midi_mapping_json_builder.h"
 #include "midi_mapping_json_parser.h"
@@ -76,7 +78,7 @@ TEST(MappingJsonBuilder, CreateResponse)
             0,  1,  2,  3,  4,  5,  6,  7,
             8,  9, 10, 11, 12, 13, 14, 15,
         },
-        Mapping(1, 2, "test")
+        Mapping{1, 2, "test"}
     }};
 
     auto reference = normalise_json(R"({
@@ -94,13 +96,13 @@ TEST(MappingJsonBuilder, CreateResponse)
 
 TEST(MappingJsonBuilder, VariantCreateResponse)
 {
-    MappingApiMessage input{CreateResponse({
+    MappingApiMessage input{CreateResponse{{
         Mapping::id_t{
             0,  1,  2,  3,  4,  5,  6,  7,
             8,  9, 10, 11, 12, 13, 14, 15,
         },
-        Mapping(1, 2, "test")
-    })};
+        Mapping{1, 2, "test"}
+    }}};
 
     auto reference = normalise_json(R"({
           "mapping": {
@@ -118,17 +120,19 @@ TEST(MappingJsonBuilder, VariantCreateResponse)
 
 TEST(MappingJsonBuilder, VariantGetResponse)
 {
+    etl::map<Mapping::id_t, Mapping, 2> mapping{
+        {
+            Mapping::id_t{0},
+            Mapping{1, 2, "foo"}
+        },
+        {
+            Mapping::id_t{1},
+            Mapping{3, 4, "bar"}
+        }
+    };
+
     MappingApiMessage input{
-        GetResponse({
-            {
-                Mapping::id_t{0},
-                Mapping(1, 2, "foo")
-            },
-            {
-                Mapping::id_t{1},
-                Mapping(3, 4, "bar")
-            }
-        })
+        GetResponse{&mapping}
     };
 
     auto reference = normalise_json(R"({

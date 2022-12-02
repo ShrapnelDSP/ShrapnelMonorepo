@@ -106,7 +106,7 @@ std::optional<CreateRequest> from_json(const rapidjson::Value &json)
     }
 
     auto mapping = from_json<std::pair<Mapping::id_t, Mapping>>(mapping_member->value);
-    return CreateRequest(*mapping);
+    return CreateRequest{*mapping};
 }
 
 template<>
@@ -121,7 +121,7 @@ std::optional<Update> from_json(const rapidjson::Value &json)
     }
 
     auto mapping = from_json<std::pair<Mapping::id_t, Mapping>>(mapping_member->value);
-    return Update(*mapping);
+    return Update{*mapping};
 }
 
 template<>
@@ -142,7 +142,7 @@ std::optional<Remove> from_json(const rapidjson::Value &json) {
         return std::nullopt;
     }
 
-    return Remove(uuid);
+    return Remove{uuid};
 }
 
 template<>
@@ -171,7 +171,6 @@ std::optional<MappingApiMessage> from_json(const rapidjson::Value &json) {
         const char *message_type = message_type_member->value.GetString();
         if(auto f = lut.find(message_type); f != lut.end())
         {
-            ESP_LOGI(TAG, "found %s", message_type);
             return f->second();
         }
     }

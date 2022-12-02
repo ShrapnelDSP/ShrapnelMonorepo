@@ -29,8 +29,6 @@
 #include <stdio.h>
 #include <math.h>//for roundf
 
-#include "freertos/FreeRTOS.h"
-#include "freertos/queue.h"
 #include "freertos/task.h"
 
 #define DMA_BUF_COUNT   (3)
@@ -44,7 +42,7 @@
 #define TASK_PRIO       (19)
 
 #define I2S_QUEUE_SIZE (4*DMA_BUF_COUNT)
-static QueueHandle_t i2s_queue;
+QueueHandle_t i2s_queue;
 
 #define TAG "codec_i2s"
 
@@ -52,29 +50,26 @@ static int32_t rx_buf[2*DMA_BUF_SIZE];
 
 gpio_num_t g_profiling_gpio = static_cast<gpio_num_t>(-1);
 
-static void event_task(void *param)
+void log_i2s_event(const i2s_event_t &e)
 {
-    (void) param;
-
-    i2s_event_t e;
-    while(1)
+    switch(e.type)
     {
-        xQueueReceive(i2s_queue, &e, portMAX_DELAY);
-        switch(e.type)
-        {
-            case I2S_EVENT_DMA_ERROR:
-                ESP_LOGE(TAG, "Something went wrong with DMA");
-                break;
-            case I2S_EVENT_TX_DONE:
-            case I2S_EVENT_RX_DONE:
-                //do nothing
-                break;
-            case I2S_EVENT_TX_Q_OVF:
-            case I2S_EVENT_RX_Q_OVF:
-            default:
-                ESP_LOGE(TAG, "Unhandled type: %d", e.type);
-                break;
-        }
+    case I2S_EVENT_DMA_ERROR:
+        ESP_LOGE(TAG, "Something went wrong with DMA");
+        break;
+    case I2S_EVENT_TX_DONE:
+    case I2S_EVENT_RX_DONE:
+        //do nothing
+        break;
+    case I2S_EVENT_TX_Q_OVF:
+        ESP_LOGE(TAG, "TX queue overflowed");
+        break;
+    case I2S_EVENT_RX_Q_OVF:
+        ESP_LOGE(TAG, "RX queue overflowed");
+        break;
+    default:
+        ESP_LOGE(TAG, "Unhandled type: %d", e.type);
+        break;
     }
 }
 
@@ -233,12 +228,6 @@ esp_err_t i2s_setup(gpio_num_t profiling_gpio, shrapnel::parameters::AudioParame
     if(ret != pdPASS)
     {
         ESP_LOGE(TAG, "Processing task create failed %d", ret);
-    }
-
-    ret = xTaskCreate(event_task, "i2s event", 3000, NULL, TASK_PRIO - 1, NULL);
-    if(ret != pdPASS)
-    {
-        ESP_LOGE(TAG, "Event task create failed %d", ret);
     }
 
     return ESP_OK;

@@ -15,26 +15,19 @@
  *
  * You should have received a copy of the GNU General Public License along with
  * ShrapnelDSP. If not, see <https://www.gnu.org/licenses/>.
- *
  */
 
 #pragma once
 
-#include "audio_events.h"
+#include "cmd_handling_api.h"
+#include "rapidjson/document.h"
 
-namespace shrapnel {
+namespace shrapnel::parameters {
 
-class EventSendBase {
-    public:
-    virtual void send(char *json, int fd) = 0;
-};
+template<typename T>
+rapidjson::Value to_json(rapidjson::Document &document, const T &object);
 
-class EventSend : public EventSendBase {
-    public:
-    void send(char *json, int fd) override
-    {
-        audio_event_send_callback(json, fd);
-    }
-};
+template<>
+rapidjson::Value to_json(rapidjson::Document &document, const Update &object);
 
 }

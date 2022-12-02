@@ -56,171 +56,87 @@
 
 #pragma once
 
-#include "queue.h"
 #include "audio_param.h"
+#include "cmd_handling_api.h"
+#include "cmd_handling_json.h"
 #include "etl/list.h"
-#include "event_send.h"
-#include "cJSON.h"
 #include "esp_log.h"
+#include "freertos/FreeRTOS.h"
+#include "freertos/task.h"
 #include <climits>
 #include "esp_err.h"
+#include "cmd_handling_json_builder.h"
 #include <memory>
 #include <string.h>
-#include "task.h"
-#include "queue.h"
 #include <iterator>
 #include <string_view>
+#include <rapidjson/stringbuffer.h>
+#include <rapidjson/writer.h>
 
-namespace shrapnel {
+namespace shrapnel::parameters {
 
-template<typename AudioParametersT>
+template<typename AudioParametersT, typename EventSendT>
 class CommandHandling final
 {
     public:
-    struct Message
-    {
-        char json[256];
-        int fd;
-    };
-
     /** \brief
      *
-     * \param[in] a_queue Used to receive JSON messages containing parameter updates.
-     * \param[in] a_param Data received through \p a_queue are
+     * \param[in] a_param Data received through \ref dispatch() is
      * translated to binary and sent to this object.
      */
     CommandHandling(
-            QueueBase<Message> *a_queue,
             AudioParametersT *a_param,
-            EventSendBase &a_event) :
-        queue(a_queue),
+            EventSendT &a_event) :
         param(a_param),
-        event(a_event),
-        json(nullptr),
-        message({}) {}
+        event(a_event)
+        {}
 
-    void work(void)
+    void dispatch(const ApiMessage &message, int fd)
     {
-        /* TODO should not leave these uninitialised */
-        char *message_type;
-        cJSON *type;
-
-        int ret = queue->receive(&message, portMAX_DELAY);
-        if(ret != pdTRUE)
-        {
-            ESP_LOGE(TAG, "Queue failed to receive");
-            return;
-        }
-
 #if !defined(TESTING)
         ESP_LOGI(TAG, "%s stack %d", __FUNCTION__, uxTaskGetStackHighWaterMark(NULL));
 #endif
-        size_t message_size = sizeof(message.json);
-        assert(message_size <= INT_MAX);
-        (void)message_size;
 
-        ESP_LOGI(TAG, "received websocket message: %.*s",
-                static_cast<int>(sizeof(message.json)),
-                message.json);
+        std::visit([&](const auto &message) -> void {
+            using T = std::decay_t<decltype(message)>;
 
-        json = cJSON_ParseWithLength(message.json, sizeof(message.json));
-        if(json == NULL)
-        {
-            ESP_LOGE(TAG, "json parsing failed");
-            goto done;
-        }
-
-        type = cJSON_GetObjectItemCaseSensitive(json, "messageType");
-        if(cJSON_IsString(type) && (type->valuestring != NULL))
-        {
-            message_type = type->valuestring;
-        }
-        else
-        {
-            ESP_LOGE(TAG, "error parsing messageType from json");
-            goto done;
-        }
-
-        if(0 == strcmp(message_type, "initialiseParameters"))
-        {
-            initialise_parameters();
-        }
-        else if(0 == strcmp(message_type, "parameterUpdate"))
-        {
-            parameter_update();
-        }
-        else
-        {
-            ESP_LOGE(TAG, "unknown message type (%s)", message_type);
-        }
-
-done:
-        cJSON_Delete(json);
+            if constexpr (std::is_same_v<T, Update>) {
+                parameter_update(message, fd);
+            } else if constexpr (std::is_same_v<T, Initialise>) {
+                initialise_parameters();
+            } else {
+                ESP_LOGE(TAG, "Unhandled message type");
+            }
+        }, message);
     }
 
     private:
-    void parameter_update(void)
+    void parameter_update(const Update &message, int fd)
     {
-        assert(json);
-
-        char *parsed_id;
-        cJSON *id = cJSON_GetObjectItemCaseSensitive(json, "id");
-        if(cJSON_IsString(id) && (id->valuestring != NULL))
-        {
-            parsed_id = id->valuestring;
-        }
-        else
-        {
-            ESP_LOGE(TAG, "error parsing id from json");
-            return;
-        }
-
-        float parsed_value;
-        cJSON *value = cJSON_GetObjectItemCaseSensitive(json, "value");
-        if(cJSON_IsNumber(value))
-        {
-            parsed_value = value->valuedouble;
-        }
-        else
-        {
-            ESP_LOGE(TAG, "error parsing value from json");
-            return;
-        }
-
-        int rc = param->update(parsed_id, parsed_value);
+        int rc = param->update(message.id, message.value);
         if(rc != 0)
         {
-            ESP_LOGE(TAG, "Failed to update parameter (%s) with value %f", parsed_id, parsed_value);
+            ESP_LOGE(TAG, "Failed to update parameter (%s) with value %f", message.id.data(), message.value);
         }
 
-        event.send(message.json, message.fd);
+        event.send(message, fd);
     }
 
-    void initialise_parameters(void)
+    void initialise_parameters()
     {
-        assert(json);
-
-        Message output;
-
         for(const auto& [key, value] : *param)
         {
-            float tmp_f = value->get();
+            Update message = {
+                    .id{id_t{key}},
+                    .value{value->get()},
+            };
 
-            snprintf(output.json, sizeof(output.json),
-                    "{\"id\":\"%s\",\"value\":%g}",
-                    key.c_str(),
-                    tmp_f);
-
-            event.send(output.json, -1);
+            event.send(message, -1);
         }
     }
 
-    QueueBase<Message> *queue;
     AudioParametersT *param;
-    EventSendBase &event;
-
-    cJSON *json;
-    Message message;
+    EventSendT &event;
 
     static inline const char *TAG = "cmd_handling";
 };

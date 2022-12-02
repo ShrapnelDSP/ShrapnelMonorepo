@@ -21,7 +21,7 @@
 #include "gmock/gmock.h"
 #include "midi_util.h"
 
-#include "midi.h"
+#include "midi_protocol.h"
 
 using testing::InSequence;
 using testing::_;

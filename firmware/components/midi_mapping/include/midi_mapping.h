@@ -173,7 +173,7 @@
 #include <esp_log.h>
 
 #include "audio_param.h"
-#include "midi.h"
+#include "midi_protocol.h"
 
 namespace shrapnel {
 namespace midi {
@@ -185,14 +185,6 @@ struct Mapping {
     uint8_t cc_number;
     parameters::id_t parameter_name;
 
-    Mapping(
-            uint8_t a_midi_channel,
-            uint8_t a_cc_number,
-            parameters::id_t a_parameter_name
-    ) : midi_channel{a_midi_channel},
-        cc_number{a_cc_number},
-        parameter_name{a_parameter_name} {};
-
     std::strong_ordering operator<=>(const Mapping &other) const = default;
 };
 
@@ -201,13 +193,13 @@ class MappingManager final {
     public:
     using MapType = etl::map<Mapping::id_t, Mapping, N>;
 
-    MappingManager(std::shared_ptr<AudioParametersT> a_parameters) : parameters{a_parameters} {};
+    MappingManager(std::shared_ptr<AudioParametersT> a_parameters) : parameters{a_parameters} {}
 
-    MapType get() {
-        return mappings;
-    };
+    [[nodiscard]] const etl::imap<Mapping::id_t, Mapping> *get() {
+        return &mappings;
+    }
     /// \return non-zero on failure
-    int create(const std::pair<const Mapping::id_t, Mapping> &mapping) {
+    [[nodiscard]] int create(const std::pair<const Mapping::id_t, Mapping> &mapping) {
         if(mappings.full()) {
             ESP_LOGE(TAG, "Failed to create new midi mapping, map is full");
             return -1;
@@ -215,9 +207,9 @@ class MappingManager final {
 
         mappings.insert(mapping);
         return 0;
-    };
+    }
     /// \return non-zero on failure
-    int update(const std::pair<const Mapping::id_t, Mapping> &mapping) {
+    [[nodiscard]] int update(const std::pair<const Mapping::id_t, Mapping> &mapping) {
         if(!mappings.contains(mapping.first))
         {
             ESP_LOGE(TAG, "Does not contain key");
@@ -228,10 +220,10 @@ class MappingManager final {
         mappings.erase(mapping.first);
         mappings.insert(mapping);
         return 0;
-    };
+    }
     void remove(const Mapping::id_t &id) {
         mappings.erase(id);
-    };
+    }
 
     /** React to a MIDI message by updating an audio parameter if there is a
      * mapping registered

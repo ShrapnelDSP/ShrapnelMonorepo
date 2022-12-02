@@ -18,6 +18,9 @@
  */
 
 #include "audio_param.h"
+#include "esp_log.h"
+
+#define TAG "audio_param"
 
 namespace shrapnel {
 namespace parameters {
@@ -90,6 +93,8 @@ int AudioParameters::update(const id_t &param, float value)
     }
 
     parameters[param]->update(value);
+
+    ESP_LOGI(TAG, "Updated %.*s to %f", param.length(), param.data(), value);
 
     return 0;
 }

@@ -17,4 +17,15 @@
  * ShrapnelDSP. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include "cmd_handling_task.h"
+#pragma once
+
+#include <ostream>
+#include "midi_protocol.h"
+
+namespace shrapnel {
+namespace midi {
+
+std::ostream& operator <<(std::ostream& out, const Message& message);
+
+}
+}
