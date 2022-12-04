@@ -646,20 +646,35 @@ out:
 
     auto parameter_notifier = std::make_shared<ParameterUpdateNotifier>();
 
-    etl::string<256> mapping_json;
-    persistence.load("midi_mappings", mapping_json);
-    ESP_LOGI(TAG, "saved mappings: %s", mapping_json.c_str());
-
-    midi_mapping_manager =
-        new midi::MappingManager<ParameterUpdateNotifier, 10, 1>(
-            parameter_notifier);
     {
+        /* TODO How to reduce the memory usage?
+         * - We could store each entry in the table at a different key
+         * - Use the streaming API so that the entire message does not have to
+         *   be parsed at once?
+         * - Replace etl::map with more efficient implementation
+         */
+        etl::string<1500> mapping_json;
+        persistence.load("midi_mappings", mapping_json);
+        ESP_LOGI(TAG, "saved mappings: %s", mapping_json.c_str());
+
+        rapidjson::Document document;
+        document.Parse(mapping_json.c_str());
+        auto saved_mappings = midi::from_json<etl::map<midi::Mapping::id_t,
+midi::Mapping, 10>>(document);
+
+        midi_mapping_manager =
+            saved_mappings.has_value()
+                ? new midi::MappingManager<ParameterUpdateNotifier, 10, 1>(
+                      parameter_notifier, *saved_mappings)
+                : new midi::MappingManager<ParameterUpdateNotifier, 10, 1>(
+                      parameter_notifier);
+
         auto rc = midi_mapping_manager->create(
-                {
-                midi::Mapping::id_t{0},
-                midi::Mapping{.midi_channel=1, .cc_number=7, .parameter_name="tubeScreamerTone"}});
-        if(rc != 0)
-        {
+            {midi::Mapping::id_t{0},
+             midi::Mapping{.midi_channel = 1,
+                           .cc_number = 7,
+                           .parameter_name = "tubeScreamerTone"}});
+        if (rc != 0) {
             ESP_LOGE(TAG, "Failed to create initial mapping");
         }
     }

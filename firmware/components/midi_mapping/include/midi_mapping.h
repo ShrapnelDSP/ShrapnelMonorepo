@@ -196,6 +196,7 @@ class MappingManager final : public etl::observable<MappingObserver, MAX_OBSERVE
     using MapType = etl::map<Mapping::id_t, Mapping, MAX_MAPPINGS>;
 
     explicit MappingManager(std::shared_ptr<AudioParametersT> a_parameters) : parameters{a_parameters} {}
+    MappingManager(std::shared_ptr<AudioParametersT> a_parameters, MapType initial_mappings) : parameters{a_parameters}, mappings{initial_mappings} {}
 
     [[nodiscard]] const etl::imap<Mapping::id_t, Mapping> *get() const {
         return &mappings;
