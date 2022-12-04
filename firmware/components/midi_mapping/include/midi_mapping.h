@@ -197,7 +197,7 @@ class MappingManager final : public etl::observable<MappingObserver, MAX_OBSERVE
 
     explicit MappingManager(std::shared_ptr<AudioParametersT> a_parameters) : parameters{a_parameters} {}
 
-    [[nodiscard]] const etl::imap<Mapping::id_t, Mapping> *get() {
+    [[nodiscard]] const etl::imap<Mapping::id_t, Mapping> *get() const {
         return &mappings;
     }
     /// \return non-zero on failure
@@ -233,7 +233,7 @@ class MappingManager final : public etl::observable<MappingObserver, MAX_OBSERVE
     /** React to a MIDI message by updating an audio parameter if there is a
      * mapping registered
      */
-    void process_message(Message message) {
+    void process_message(Message message) const {
         auto cc_params = get_if<Message::ControlChange>(&message.parameters);
         if(!cc_params) return;
 
