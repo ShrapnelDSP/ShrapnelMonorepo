@@ -615,10 +615,9 @@ out:
 
     ESP_LOGI(TAG, "observer size: %zu", sizeof(ParameterObserver<MAX_PARAMETERS>));
     ESP_LOGI(TAG, "param size: %zu", sizeof(AudioParameters));
-#if 1
+
     ParameterObserver<MAX_PARAMETERS> parameter_observer{persistence};
     audio_params->add_observer(parameter_observer);
-#endif
 
     auto parameter_notifier = std::make_shared<ParameterUpdateNotifier>();
     midi_mapping_manager = new midi::MappingManager<ParameterUpdateNotifier, 10>(parameter_notifier);

@@ -68,18 +68,7 @@ public:
 };
 
 template<const std::size_t MAX_PARAMETERS, const std::size_t MAX_OBSERVERS>
-class AudioParameters final : public etl::observable<ParameterObserver, 1>, public AudioParametersBase {
-    /* TODO how to avoid having to increase size manually when more effects are
-     * added?
-     *
-     * We don't want to use heap allocation when the parameters are registered.
-     * Maybe some constexpr functions could be used to register the parameters?
-     *
-     * ETL provides template dedcution guide and make template for etl::map.
-     * These deduce the size from the initialiser. Passing an already
-     * initialised etl::map using one of these methods to the constructor
-     * should work.
-     */
+class AudioParameters final : public etl::observable<ParameterObserver, MAX_OBSERVERS>, public AudioParametersBase {
     public:
     using MapType = etl::map<id_t, std::unique_ptr<AudioParameterFloat>, MAX_PARAMETERS>;
 
@@ -92,9 +81,6 @@ class AudioParameters final : public etl::observable<ParameterObserver, 1>, publ
      */
     int update(const id_t &param, float value)
     {
-        (void) param;
-        (void) value;
-
         auto element = parameters.find(param);
 
         if(element == parameters.end())
