@@ -45,7 +45,7 @@ class MidiMapping : public ::testing::Test
     MidiMapping() : sut(parameters_mock) {}
 
     std::shared_ptr<MockAudioParameters> parameters_mock = std::make_shared<MockAudioParameters>();
-    MappingManager<MockAudioParameters, 2> sut;
+    MappingManager<MockAudioParameters, 2, 1> sut;
 };
 
 TEST_F(MidiMapping, Create)
@@ -130,6 +130,32 @@ TEST_F(MidiMapping, Remove)
     sut.create({{1}, {1, 2, "gain"}});
     sut.remove({1});
     EXPECT_THAT(sut.get()->size(), 0);
+}
+
+TEST_F(MidiMapping, Notifications)
+{
+    class Observer final : public midi::MappingObserver {
+    public:
+        void notification(const Mapping::id_t &) override {
+            notification_count++;
+        }
+
+        int notification_count = 0;
+    };
+
+
+    Observer observer;
+    sut.add_observer(observer);
+    EXPECT_EQ(0, observer.notification_count);
+
+    sut.create({{1}, {1, 2, "gain"}});
+    EXPECT_EQ(1, observer.notification_count);
+
+    sut.update({{1}, {3, 4, "gain"}});
+    EXPECT_EQ(2, observer.notification_count);
+
+    sut.remove({1});
+    EXPECT_EQ(3, observer.notification_count);
 }
 
 TEST(MidiMappingPod, ToString)
