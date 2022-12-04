@@ -1,9 +1,4 @@
 <map id="shrapnel::parameters::to_json" name="shrapnel::parameters::to_json">
-<area shape="rect" id="node1" title=" " alt="" coords="685,35,828,76"/>
-<area shape="rect" id="node2" href="$namespaceshrapnel_1_1parameters.html#a8afd4a4cfafb24cdb27c2c2703cccfce" title=" " alt="" coords="479,5,621,47"/>
-<area shape="rect" id="node3" href="$namespaceshrapnel.html#a9df539517dd9158cb2b42a9d9e948a73" title=" " alt="" coords="463,71,637,98"/>
-<area shape="rect" id="node4" href="$main_8cpp.html#a1a66099a9e1054494d0704363a5c8666" title=" " alt="" coords="232,71,415,98"/>
-<area shape="rect" id="node5" href="$namespaceshrapnel.html#a9f09f4ea750643310af9143a53735b7d" title=" " alt="" coords="28,13,161,39"/>
-<area shape="rect" id="node6" href="$classshrapnel_1_1EventSend.html#a217c3cc44e378465c057d93695c03f05" title=" " alt="" coords="25,64,165,105"/>
-<area shape="rect" id="node7" href="$classshrapnel_1_1ParameterUpdateNotifier.html#a967cc4697c8d692d1c91d8295d8c1012" title=" " alt="" coords="5,129,184,171"/>
+<area shape="rect" id="node1" title=" " alt="" coords="196,5,339,47"/>
+<area shape="rect" id="node2" href="$namespaceshrapnel_1_1parameters.html#a8afd4a4cfafb24cdb27c2c2703cccfce" title=" " alt="" coords="5,5,148,47"/>
 </map>

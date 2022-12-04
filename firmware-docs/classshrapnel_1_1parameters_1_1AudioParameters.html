@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.4"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>ShrapnelDSP: shrapnel::parameters::AudioParameters Class Reference</title>
+<title>ShrapnelDSP: shrapnel::parameters::AudioParameters&lt; MAX_PARAMETERS, MAX_OBSERVERS &gt; Class Template Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -94,109 +94,118 @@ $(document).ready(function(){initNavTree('classshrapnel_1_1parameters_1_1AudioPa
   <div class="summary">
 <a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a>  </div>
-  <div class="headertitle"><div class="title">shrapnel::parameters::AudioParameters Class Reference<span class="mlabels"><span class="mlabel">final</span></span></div></div>
+  <div class="headertitle"><div class="title">shrapnel::parameters::AudioParameters&lt; MAX_PARAMETERS, MAX_OBSERVERS &gt; Class Template Reference<span class="mlabels"><span class="mlabel">final</span></span></div></div>
 </div><!--header-->
 <div class="contents">
 
 <p><code>#include &lt;<a class="el" href="audio__param_8h_source.html">audio_param.h</a>&gt;</code></p>
+<div class="dynheader">
+Inheritance diagram for shrapnel::parameters::AudioParameters&lt; MAX_PARAMETERS, MAX_OBSERVERS &gt;:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" frameborder="0" src="classshrapnel_1_1parameters_1_1AudioParameters__inherit__graph.svg" width="520" height="118"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
+<center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
+<div class="dynheader">
+Collaboration diagram for shrapnel::parameters::AudioParameters&lt; MAX_PARAMETERS, MAX_OBSERVERS &gt;:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" frameborder="0" src="classshrapnel_1_1parameters_1_1AudioParameters__coll__graph.svg" width="520" height="118"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
+<center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-types" name="pub-types"></a>
 Public Types</h2></td></tr>
-<tr class="memitem:a35a29120484ebf0e5047da83a1d617c1"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classshrapnel_1_1parameters_1_1AudioParameters.html#a35a29120484ebf0e5047da83a1d617c1">MapType</a> = etl::map&lt; <a class="el" href="namespaceshrapnel_1_1parameters.html#a5506267ab65b64b98595a4269027196b">id_t</a>, std::unique_ptr&lt; <a class="el" href="classshrapnel_1_1parameters_1_1AudioParameterFloat.html">AudioParameterFloat</a> &gt;, 100 &gt;</td></tr>
-<tr class="separator:a35a29120484ebf0e5047da83a1d617c1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2d82e5b585c1c74bd36f557369081ff2"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classshrapnel_1_1parameters_1_1AudioParameters.html#a2d82e5b585c1c74bd36f557369081ff2">MapType</a> = etl::map&lt; <a class="el" href="namespaceshrapnel_1_1parameters.html#a5506267ab65b64b98595a4269027196b">id_t</a>, std::unique_ptr&lt; <a class="el" href="classshrapnel_1_1parameters_1_1AudioParameterFloat.html">AudioParameterFloat</a> &gt;, <a class="el" href="namespaceshrapnel.html#ac2574f72fe2ddfb3366666bc097b29f2">MAX_PARAMETERS</a> &gt;</td></tr>
+<tr class="separator:a2d82e5b585c1c74bd36f557369081ff2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:af3aebb031546145ba520ecf820810d90"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classshrapnel_1_1parameters_1_1AudioParameters.html#af3aebb031546145ba520ecf820810d90">AudioParameters</a> ()</td></tr>
-<tr class="separator:af3aebb031546145ba520ecf820810d90"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a38e40ddb4bc6600390e861a0e4604bc4"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classshrapnel_1_1parameters_1_1AudioParameters.html#a38e40ddb4bc6600390e861a0e4604bc4">update</a> (const <a class="el" href="namespaceshrapnel_1_1parameters.html#a5506267ab65b64b98595a4269027196b">id_t</a> &amp;param, float value)</td></tr>
-<tr class="memdesc:a38e40ddb4bc6600390e861a0e4604bc4"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="structshrapnel_1_1parameters_1_1Update.html">Update</a> a parameter.  <a href="classshrapnel_1_1parameters_1_1AudioParameters.html#a38e40ddb4bc6600390e861a0e4604bc4">More...</a><br /></td></tr>
-<tr class="separator:a38e40ddb4bc6600390e861a0e4604bc4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5768e32026fbd91cb0ce79dde66b207e"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classshrapnel_1_1parameters_1_1AudioParameters.html#a5768e32026fbd91cb0ce79dde66b207e">get</a> (const <a class="el" href="namespaceshrapnel_1_1parameters.html#a5506267ab65b64b98595a4269027196b">id_t</a> &amp;param)</td></tr>
-<tr class="memdesc:a5768e32026fbd91cb0ce79dde66b207e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the normalised value of a parameter.  <a href="classshrapnel_1_1parameters_1_1AudioParameters.html#a5768e32026fbd91cb0ce79dde66b207e">More...</a><br /></td></tr>
-<tr class="separator:a5768e32026fbd91cb0ce79dde66b207e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6350b5ab5bf4fe890bdab1e8a103d100"><td class="memItemLeft" align="right" valign="top">std::atomic&lt; float &gt; *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classshrapnel_1_1parameters_1_1AudioParameters.html#a6350b5ab5bf4fe890bdab1e8a103d100">get_raw_parameter</a> (const <a class="el" href="namespaceshrapnel_1_1parameters.html#a5506267ab65b64b98595a4269027196b">id_t</a> &amp;param)</td></tr>
-<tr class="memdesc:a6350b5ab5bf4fe890bdab1e8a103d100"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get denormalised value of parameter.  <a href="classshrapnel_1_1parameters_1_1AudioParameters.html#a6350b5ab5bf4fe890bdab1e8a103d100">More...</a><br /></td></tr>
-<tr class="separator:a6350b5ab5bf4fe890bdab1e8a103d100"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1e342efdc1f73f922880c296fa9cd241"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classshrapnel_1_1parameters_1_1AudioParameters.html#a1e342efdc1f73f922880c296fa9cd241">create_and_add_parameter</a> (const <a class="el" href="namespaceshrapnel_1_1parameters.html#a5506267ab65b64b98595a4269027196b">id_t</a> &amp;name, float minimum, float maximum, float default_value)</td></tr>
-<tr class="separator:a1e342efdc1f73f922880c296fa9cd241"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9a285022c312b44ce205e229d34b6545"><td class="memItemLeft" align="right" valign="top">MapType::iterator&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classshrapnel_1_1parameters_1_1AudioParameters.html#a9a285022c312b44ce205e229d34b6545">begin</a> ()</td></tr>
-<tr class="separator:a9a285022c312b44ce205e229d34b6545"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af0f1588cfb103c4fa17fa2f4b4ebc1ad"><td class="memItemLeft" align="right" valign="top">MapType::iterator&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classshrapnel_1_1parameters_1_1AudioParameters.html#af0f1588cfb103c4fa17fa2f4b4ebc1ad">end</a> ()</td></tr>
-<tr class="separator:af0f1588cfb103c4fa17fa2f4b4ebc1ad"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af100ef22bb8bbd682f1c73e3b3dd45b0"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classshrapnel_1_1parameters_1_1AudioParameters.html#af100ef22bb8bbd682f1c73e3b3dd45b0">update</a> (const <a class="el" href="namespaceshrapnel_1_1parameters.html#a5506267ab65b64b98595a4269027196b">id_t</a> &amp;param, float value)</td></tr>
+<tr class="memdesc:af100ef22bb8bbd682f1c73e3b3dd45b0"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="structshrapnel_1_1parameters_1_1Update.html">Update</a> a parameter.  <a href="classshrapnel_1_1parameters_1_1AudioParameters.html#af100ef22bb8bbd682f1c73e3b3dd45b0">More...</a><br /></td></tr>
+<tr class="separator:af100ef22bb8bbd682f1c73e3b3dd45b0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7d8d81ac3ae967963395379b050de8bc"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classshrapnel_1_1parameters_1_1AudioParameters.html#a7d8d81ac3ae967963395379b050de8bc">get</a> (const <a class="el" href="namespaceshrapnel_1_1parameters.html#a5506267ab65b64b98595a4269027196b">id_t</a> &amp;param)</td></tr>
+<tr class="memdesc:a7d8d81ac3ae967963395379b050de8bc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the normalised value of a parameter.  <a href="classshrapnel_1_1parameters_1_1AudioParameters.html#a7d8d81ac3ae967963395379b050de8bc">More...</a><br /></td></tr>
+<tr class="separator:a7d8d81ac3ae967963395379b050de8bc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af74ab846cc4ddaea480e109ce132a8ea"><td class="memItemLeft" align="right" valign="top">std::atomic&lt; float &gt; *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classshrapnel_1_1parameters_1_1AudioParameters.html#af74ab846cc4ddaea480e109ce132a8ea">get_raw_parameter</a> (const <a class="el" href="namespaceshrapnel_1_1parameters.html#a5506267ab65b64b98595a4269027196b">id_t</a> &amp;param) override</td></tr>
+<tr class="memdesc:af74ab846cc4ddaea480e109ce132a8ea"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get denormalised value of parameter.  <a href="classshrapnel_1_1parameters_1_1AudioParameters.html#af74ab846cc4ddaea480e109ce132a8ea">More...</a><br /></td></tr>
+<tr class="separator:af74ab846cc4ddaea480e109ce132a8ea"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac983377c192b50fc50fffe0c34cfcfca"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classshrapnel_1_1parameters_1_1AudioParameters.html#ac983377c192b50fc50fffe0c34cfcfca">create_and_add_parameter</a> (const <a class="el" href="namespaceshrapnel_1_1parameters.html#a5506267ab65b64b98595a4269027196b">id_t</a> &amp;name, float minimum, float maximum, float default_value)</td></tr>
+<tr class="separator:ac983377c192b50fc50fffe0c34cfcfca"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a55015bf69b2a15e795757de80b26ce58"><td class="memItemLeft" align="right" valign="top">MapType::iterator&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classshrapnel_1_1parameters_1_1AudioParameters.html#a55015bf69b2a15e795757de80b26ce58">begin</a> ()</td></tr>
+<tr class="separator:a55015bf69b2a15e795757de80b26ce58"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2549b1be6902bddab6426205ef503abd"><td class="memItemLeft" align="right" valign="top">MapType::iterator&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classshrapnel_1_1parameters_1_1AudioParameters.html#a2549b1be6902bddab6426205ef503abd">end</a> ()</td></tr>
+<tr class="separator:a2549b1be6902bddab6426205ef503abd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a64be66aabe04db4524a64df0ba03f7fd"><td class="memItemLeft" align="right" valign="top">virtual std::atomic&lt; float &gt; *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classshrapnel_1_1parameters_1_1AudioParametersBase.html#a64be66aabe04db4524a64df0ba03f7fd">get_raw_parameter</a> (const <a class="el" href="namespaceshrapnel_1_1parameters.html#a5506267ab65b64b98595a4269027196b">id_t</a> &amp;param)=0</td></tr>
+<tr class="separator:a64be66aabe04db4524a64df0ba03f7fd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock">
-<p class="definition">Definition at line <a class="el" href="audio__param_8h_source.html#l00059">59</a> of file <a class="el" href="audio__param_8h_source.html">audio_param.h</a>.</p>
+<div class="textblock"><div class="compoundTemplParams">template&lt;const std::size_t MAX_PARAMETERS, const std::size_t MAX_OBSERVERS&gt;<br />
+class shrapnel::parameters::AudioParameters&lt; MAX_PARAMETERS, MAX_OBSERVERS &gt;</div>
+<p class="definition">Definition at line <a class="el" href="audio__param_8h_source.html#l00071">71</a> of file <a class="el" href="audio__param_8h_source.html">audio_param.h</a>.</p>
 </div><h2 class="groupheader">Member Typedef Documentation</h2>
-<a id="a35a29120484ebf0e5047da83a1d617c1" name="a35a29120484ebf0e5047da83a1d617c1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a35a29120484ebf0e5047da83a1d617c1">&#9670;&nbsp;</a></span>MapType</h2>
+<a id="a2d82e5b585c1c74bd36f557369081ff2" name="a2d82e5b585c1c74bd36f557369081ff2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2d82e5b585c1c74bd36f557369081ff2">&#9670;&nbsp;</a></span>MapType</h2>
 
 <div class="memitem">
 <div class="memproto">
+<div class="memtemplate">
+template&lt;const std::size_t MAX_PARAMETERS, const std::size_t MAX_OBSERVERS&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">using <a class="el" href="classshrapnel_1_1parameters_1_1AudioParameters.html#a35a29120484ebf0e5047da83a1d617c1">shrapnel::parameters::AudioParameters::MapType</a> =  etl::map&lt;<a class="el" href="namespaceshrapnel_1_1parameters.html#a5506267ab65b64b98595a4269027196b">id_t</a>, std::unique_ptr&lt;<a class="el" href="classshrapnel_1_1parameters_1_1AudioParameterFloat.html">AudioParameterFloat</a>&gt;, 100&gt;</td>
+          <td class="memname">using <a class="el" href="classshrapnel_1_1parameters_1_1AudioParameters.html">shrapnel::parameters::AudioParameters</a>&lt; <a class="el" href="namespaceshrapnel.html#ac2574f72fe2ddfb3366666bc097b29f2">MAX_PARAMETERS</a>, MAX_OBSERVERS &gt;::MapType =  etl::map&lt;<a class="el" href="namespaceshrapnel_1_1parameters.html#a5506267ab65b64b98595a4269027196b">id_t</a>, std::unique_ptr&lt;<a class="el" href="classshrapnel_1_1parameters_1_1AudioParameterFloat.html">AudioParameterFloat</a>&gt;, <a class="el" href="namespaceshrapnel.html#ac2574f72fe2ddfb3366666bc097b29f2">MAX_PARAMETERS</a>&gt;</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="audio__param_8h_source.html#l00072">72</a> of file <a class="el" href="audio__param_8h_source.html">audio_param.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="audio__param_8h_source.html#l00073">73</a> of file <a class="el" href="audio__param_8h_source.html">audio_param.h</a>.</p>
 
-</div>
-</div>
-<h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="af3aebb031546145ba520ecf820810d90" name="af3aebb031546145ba520ecf820810d90"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af3aebb031546145ba520ecf820810d90">&#9670;&nbsp;</a></span>AudioParameters()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">shrapnel::parameters::AudioParameters::AudioParameters </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="audio__param_8cpp_source.html#l00065">65</a> of file <a class="el" href="audio__param_8cpp_source.html">audio_param.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   65</span>{}</div>
-</div><!-- fragment -->
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="a9a285022c312b44ce205e229d34b6545" name="a9a285022c312b44ce205e229d34b6545"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9a285022c312b44ce205e229d34b6545">&#9670;&nbsp;</a></span>begin()</h2>
+<a id="a55015bf69b2a15e795757de80b26ce58" name="a55015bf69b2a15e795757de80b26ce58"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a55015bf69b2a15e795757de80b26ce58">&#9670;&nbsp;</a></span>begin()</h2>
 
 <div class="memitem">
 <div class="memproto">
+<div class="memtemplate">
+template&lt;const std::size_t MAX_PARAMETERS, const std::size_t MAX_OBSERVERS&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">AudioParameters::MapType::iterator shrapnel::parameters::AudioParameters::begin </td>
+          <td class="memname">MapType::iterator <a class="el" href="classshrapnel_1_1parameters_1_1AudioParameters.html">shrapnel::parameters::AudioParameters</a>&lt; <a class="el" href="namespaceshrapnel.html#ac2574f72fe2ddfb3366666bc097b29f2">MAX_PARAMETERS</a>, MAX_OBSERVERS &gt;::begin </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="audio__param_8cpp_source.html#l00126">126</a> of file <a class="el" href="audio__param_8cpp_source.html">audio_param.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  127</span>{</div>
-<div class="line"><span class="lineno">  128</span>    <span class="keywordflow">return</span> parameters.begin();</div>
-<div class="line"><span class="lineno">  129</span>}</div>
+<p class="definition">Definition at line <a class="el" href="audio__param_8h_source.html#l00145">145</a> of file <a class="el" href="audio__param_8h_source.html">audio_param.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  146</span>    {</div>
+<div class="line"><span class="lineno">  147</span>        <span class="keywordflow">return</span> parameters.begin();</div>
+<div class="line"><span class="lineno">  148</span>    }</div>
 </div><!-- fragment -->
 </div>
 </div>
-<a id="a1e342efdc1f73f922880c296fa9cd241" name="a1e342efdc1f73f922880c296fa9cd241"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1e342efdc1f73f922880c296fa9cd241">&#9670;&nbsp;</a></span>create_and_add_parameter()</h2>
+<a id="ac983377c192b50fc50fffe0c34cfcfca" name="ac983377c192b50fc50fffe0c34cfcfca"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac983377c192b50fc50fffe0c34cfcfca">&#9670;&nbsp;</a></span>create_and_add_parameter()</h2>
 
 <div class="memitem">
 <div class="memproto">
+<div class="memtemplate">
+template&lt;const std::size_t MAX_PARAMETERS, const std::size_t MAX_OBSERVERS&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">int shrapnel::parameters::AudioParameters::create_and_add_parameter </td>
+          <td class="memname">int <a class="el" href="classshrapnel_1_1parameters_1_1AudioParameters.html">shrapnel::parameters::AudioParameters</a>&lt; <a class="el" href="namespaceshrapnel.html#ac2574f72fe2ddfb3366666bc097b29f2">MAX_PARAMETERS</a>, MAX_OBSERVERS &gt;::create_and_add_parameter </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="namespaceshrapnel_1_1parameters.html#a5506267ab65b64b98595a4269027196b">id_t</a> &amp;&#160;</td>
           <td class="paramname"><em>name</em>, </td>
@@ -225,90 +234,129 @@ Public Member Functions</h2></td></tr>
           <td></td><td></td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="audio__param_8cpp_source.html#l00067">67</a> of file <a class="el" href="audio__param_8cpp_source.html">audio_param.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   72</span>{</div>
-<div class="line"><span class="lineno">   73</span>    <span class="keywordflow">if</span>(parameters.full())</div>
-<div class="line"><span class="lineno">   74</span>    {</div>
-<div class="line"><span class="lineno">   75</span>        <span class="keywordflow">return</span> -1;</div>
-<div class="line"><span class="lineno">   76</span>    }</div>
-<div class="line"><span class="lineno">   77</span> </div>
-<div class="line"><span class="lineno">   78</span>    parameters[name] = std::make_unique&lt;AudioParameterFloat&gt;(name, minimum, maximum, default_value);</div>
-<div class="line"><span class="lineno">   79</span> </div>
-<div class="line"><span class="lineno">   80</span>    <span class="keywordflow">return</span> 0;</div>
-<div class="line"><span class="lineno">   81</span>}</div>
+<p class="definition">Definition at line <a class="el" href="audio__param_8h_source.html#l00128">128</a> of file <a class="el" href="audio__param_8h_source.html">audio_param.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  133</span>    {</div>
+<div class="line"><span class="lineno">  134</span>        <span class="keywordflow">if</span>(parameters.full())</div>
+<div class="line"><span class="lineno">  135</span>        {</div>
+<div class="line"><span class="lineno">  136</span>            <span class="keywordflow">return</span> -1;</div>
+<div class="line"><span class="lineno">  137</span>        }</div>
+<div class="line"><span class="lineno">  138</span> </div>
+<div class="line"><span class="lineno">  139</span>        parameters[name] = std::make_unique&lt;AudioParameterFloat&gt;(name, minimum, maximum, default_value);</div>
+<div class="line"><span class="lineno">  140</span> </div>
+<div class="line"><span class="lineno">  141</span>        ESP_LOGI(<a class="code hl_variable" href="namespaceshrapnel_1_1parameters.html#a0cbbede6af96973c56e635f9a90599cd">TAG</a>, <span class="stringliteral">&quot;%d parameters are registered&quot;</span>, parameters.size());</div>
+<div class="line"><span class="lineno">  142</span>        <span class="keywordflow">return</span> 0;</div>
+<div class="line"><span class="lineno">  143</span>    }</div>
+<div class="ttc" id="anamespaceshrapnel_1_1parameters_html_a0cbbede6af96973c56e635f9a90599cd"><div class="ttname"><a href="namespaceshrapnel_1_1parameters.html#a0cbbede6af96973c56e635f9a90599cd">shrapnel::parameters::TAG</a></div><div class="ttdeci">constexpr const char * TAG</div><div class="ttdef"><b>Definition:</b> <a href="audio__param_8h_source.html#l00034">audio_param.h:34</a></div></div>
 </div><!-- fragment -->
+<p class="reference">References <a class="el" href="audio__param_8h_source.html#l00034">shrapnel::parameters::TAG</a>.</p>
+
 </div>
 </div>
-<a id="af0f1588cfb103c4fa17fa2f4b4ebc1ad" name="af0f1588cfb103c4fa17fa2f4b4ebc1ad"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af0f1588cfb103c4fa17fa2f4b4ebc1ad">&#9670;&nbsp;</a></span>end()</h2>
+<a id="a2549b1be6902bddab6426205ef503abd" name="a2549b1be6902bddab6426205ef503abd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2549b1be6902bddab6426205ef503abd">&#9670;&nbsp;</a></span>end()</h2>
 
 <div class="memitem">
 <div class="memproto">
+<div class="memtemplate">
+template&lt;const std::size_t MAX_PARAMETERS, const std::size_t MAX_OBSERVERS&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">AudioParameters::MapType::iterator shrapnel::parameters::AudioParameters::end </td>
+          <td class="memname">MapType::iterator <a class="el" href="classshrapnel_1_1parameters_1_1AudioParameters.html">shrapnel::parameters::AudioParameters</a>&lt; <a class="el" href="namespaceshrapnel.html#ac2574f72fe2ddfb3366666bc097b29f2">MAX_PARAMETERS</a>, MAX_OBSERVERS &gt;::end </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="audio__param_8cpp_source.html#l00131">131</a> of file <a class="el" href="audio__param_8cpp_source.html">audio_param.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  132</span>{</div>
-<div class="line"><span class="lineno">  133</span>    <span class="keywordflow">return</span> parameters.end();</div>
-<div class="line"><span class="lineno">  134</span>}</div>
+<p class="definition">Definition at line <a class="el" href="audio__param_8h_source.html#l00150">150</a> of file <a class="el" href="audio__param_8h_source.html">audio_param.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  151</span>    {</div>
+<div class="line"><span class="lineno">  152</span>        <span class="keywordflow">return</span> parameters.end();</div>
+<div class="line"><span class="lineno">  153</span>    }</div>
 </div><!-- fragment -->
 </div>
 </div>
-<a id="a5768e32026fbd91cb0ce79dde66b207e" name="a5768e32026fbd91cb0ce79dde66b207e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5768e32026fbd91cb0ce79dde66b207e">&#9670;&nbsp;</a></span>get()</h2>
+<a id="a7d8d81ac3ae967963395379b050de8bc" name="a7d8d81ac3ae967963395379b050de8bc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7d8d81ac3ae967963395379b050de8bc">&#9670;&nbsp;</a></span>get()</h2>
 
 <div class="memitem">
 <div class="memproto">
+<div class="memtemplate">
+template&lt;const std::size_t MAX_PARAMETERS, const std::size_t MAX_OBSERVERS&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">float shrapnel::parameters::AudioParameters::get </td>
+          <td class="memname">float <a class="el" href="classshrapnel_1_1parameters_1_1AudioParameters.html">shrapnel::parameters::AudioParameters</a>&lt; <a class="el" href="namespaceshrapnel.html#ac2574f72fe2ddfb3366666bc097b29f2">MAX_PARAMETERS</a>, MAX_OBSERVERS &gt;::get </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="namespaceshrapnel_1_1parameters.html#a5506267ab65b64b98595a4269027196b">id_t</a> &amp;&#160;</td>
           <td class="paramname"><em>param</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
 <p>Get the normalised value of a parameter. </p>
 
-<p class="definition">Definition at line <a class="el" href="audio__param_8cpp_source.html#l00102">102</a> of file <a class="el" href="audio__param_8cpp_source.html">audio_param.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  103</span>{</div>
-<div class="line"><span class="lineno">  104</span>    <span class="keyword">auto</span> element = parameters.find(param);</div>
-<div class="line"><span class="lineno">  105</span> </div>
-<div class="line"><span class="lineno">  106</span>    <span class="keywordflow">if</span>(element == parameters.end())</div>
-<div class="line"><span class="lineno">  107</span>    {</div>
-<div class="line"><span class="lineno">  108</span>        <span class="keywordflow">return</span> 0;</div>
-<div class="line"><span class="lineno">  109</span>    }</div>
-<div class="line"><span class="lineno">  110</span> </div>
-<div class="line"><span class="lineno">  111</span>    <span class="keywordflow">return</span> parameters[param]-&gt;get();</div>
-<div class="line"><span class="lineno">  112</span>}</div>
+<p class="definition">Definition at line <a class="el" href="audio__param_8h_source.html#l00100">100</a> of file <a class="el" href="audio__param_8h_source.html">audio_param.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  101</span>    {</div>
+<div class="line"><span class="lineno">  102</span>        <span class="keyword">auto</span> element = parameters.find(param);</div>
+<div class="line"><span class="lineno">  103</span> </div>
+<div class="line"><span class="lineno">  104</span>        <span class="keywordflow">if</span>(element == parameters.end())</div>
+<div class="line"><span class="lineno">  105</span>        {</div>
+<div class="line"><span class="lineno">  106</span>            <span class="keywordflow">return</span> 0;</div>
+<div class="line"><span class="lineno">  107</span>        }</div>
+<div class="line"><span class="lineno">  108</span> </div>
+<div class="line"><span class="lineno">  109</span>        <span class="keywordflow">return</span> parameters[param]-&gt;get();</div>
+<div class="line"><span class="lineno">  110</span>    }</div>
 </div><!-- fragment -->
 </div>
 </div>
-<a id="a6350b5ab5bf4fe890bdab1e8a103d100" name="a6350b5ab5bf4fe890bdab1e8a103d100"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6350b5ab5bf4fe890bdab1e8a103d100">&#9670;&nbsp;</a></span>get_raw_parameter()</h2>
+<a id="af74ab846cc4ddaea480e109ce132a8ea" name="af74ab846cc4ddaea480e109ce132a8ea"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af74ab846cc4ddaea480e109ce132a8ea">&#9670;&nbsp;</a></span>get_raw_parameter()</h2>
 
 <div class="memitem">
 <div class="memproto">
+<div class="memtemplate">
+template&lt;const std::size_t MAX_PARAMETERS, const std::size_t MAX_OBSERVERS&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">std::atomic&lt; float &gt; * shrapnel::parameters::AudioParameters::get_raw_parameter </td>
+          <td class="memname">std::atomic&lt; float &gt; * <a class="el" href="classshrapnel_1_1parameters_1_1AudioParameters.html">shrapnel::parameters::AudioParameters</a>&lt; <a class="el" href="namespaceshrapnel.html#ac2574f72fe2ddfb3366666bc097b29f2">MAX_PARAMETERS</a>, MAX_OBSERVERS &gt;::get_raw_parameter </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="namespaceshrapnel_1_1parameters.html#a5506267ab65b64b98595a4269027196b">id_t</a> &amp;&#160;</td>
           <td class="paramname"><em>param</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
 <p>Get denormalised value of parameter. </p>
@@ -319,28 +367,35 @@ Public Member Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="audio__param_8cpp_source.html#l00114">114</a> of file <a class="el" href="audio__param_8cpp_source.html">audio_param.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  115</span>{</div>
-<div class="line"><span class="lineno">  116</span>    <span class="keyword">auto</span> element = parameters.find(param);</div>
-<div class="line"><span class="lineno">  117</span> </div>
-<div class="line"><span class="lineno">  118</span>    <span class="keywordflow">if</span>(element == parameters.end())</div>
-<div class="line"><span class="lineno">  119</span>    {</div>
-<div class="line"><span class="lineno">  120</span>        <span class="keywordflow">return</span> <span class="keyword">nullptr</span>;</div>
-<div class="line"><span class="lineno">  121</span>    }</div>
-<div class="line"><span class="lineno">  122</span> </div>
-<div class="line"><span class="lineno">  123</span>    <span class="keywordflow">return</span> parameters[param]-&gt;get_raw_parameter();</div>
-<div class="line"><span class="lineno">  124</span>}</div>
+<p>Implements <a class="el" href="classshrapnel_1_1parameters_1_1AudioParametersBase.html#a64be66aabe04db4524a64df0ba03f7fd">shrapnel::parameters::AudioParametersBase</a>.</p>
+
+<p class="definition">Definition at line <a class="el" href="audio__param_8h_source.html#l00116">116</a> of file <a class="el" href="audio__param_8h_source.html">audio_param.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  117</span>    {</div>
+<div class="line"><span class="lineno">  118</span>        <span class="keyword">auto</span> element = parameters.find(param);</div>
+<div class="line"><span class="lineno">  119</span> </div>
+<div class="line"><span class="lineno">  120</span>        <span class="keywordflow">if</span>(element == parameters.end())</div>
+<div class="line"><span class="lineno">  121</span>        {</div>
+<div class="line"><span class="lineno">  122</span>            <span class="keywordflow">return</span> <span class="keyword">nullptr</span>;</div>
+<div class="line"><span class="lineno">  123</span>        }</div>
+<div class="line"><span class="lineno">  124</span> </div>
+<div class="line"><span class="lineno">  125</span>        <span class="keywordflow">return</span> parameters[param]-&gt;get_raw_parameter();</div>
+<div class="line"><span class="lineno">  126</span>    }</div>
 </div><!-- fragment -->
 </div>
 </div>
-<a id="a38e40ddb4bc6600390e861a0e4604bc4" name="a38e40ddb4bc6600390e861a0e4604bc4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a38e40ddb4bc6600390e861a0e4604bc4">&#9670;&nbsp;</a></span>update()</h2>
+<a id="af100ef22bb8bbd682f1c73e3b3dd45b0" name="af100ef22bb8bbd682f1c73e3b3dd45b0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af100ef22bb8bbd682f1c73e3b3dd45b0">&#9670;&nbsp;</a></span>update()</h2>
 
 <div class="memitem">
 <div class="memproto">
+<div class="memtemplate">
+template&lt;const std::size_t MAX_PARAMETERS, const std::size_t MAX_OBSERVERS&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">int shrapnel::parameters::AudioParameters::update </td>
+          <td class="memname">int <a class="el" href="classshrapnel_1_1parameters_1_1AudioParameters.html">shrapnel::parameters::AudioParameters</a>&lt; <a class="el" href="namespaceshrapnel.html#ac2574f72fe2ddfb3366666bc097b29f2">MAX_PARAMETERS</a>, MAX_OBSERVERS &gt;::update </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="namespaceshrapnel_1_1parameters.html#a5506267ab65b64b98595a4269027196b">id_t</a> &amp;&#160;</td>
           <td class="paramname"><em>param</em>, </td>
@@ -357,6 +412,11 @@ Public Member Functions</h2></td></tr>
           <td></td><td></td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
 <p><a class="el" href="structshrapnel_1_1parameters_1_1Update.html">Update</a> a parameter. </p>
@@ -369,30 +429,29 @@ Public Member Functions</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>0 on success </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="audio__param_8cpp_source.html#l00083">83</a> of file <a class="el" href="audio__param_8cpp_source.html">audio_param.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   84</span>{</div>
-<div class="line"><span class="lineno">   85</span>    (void) param;</div>
-<div class="line"><span class="lineno">   86</span>    (void) value;</div>
-<div class="line"><span class="lineno">   87</span> </div>
-<div class="line"><span class="lineno">   88</span>    <span class="keyword">auto</span> element = parameters.find(param);</div>
-<div class="line"><span class="lineno">   89</span> </div>
-<div class="line"><span class="lineno">   90</span>    <span class="keywordflow">if</span>(element == parameters.end())</div>
-<div class="line"><span class="lineno">   91</span>    {</div>
-<div class="line"><span class="lineno">   92</span>        <span class="keywordflow">return</span> -1;</div>
-<div class="line"><span class="lineno">   93</span>    }</div>
-<div class="line"><span class="lineno">   94</span> </div>
-<div class="line"><span class="lineno">   95</span>    parameters[param]-&gt;update(value);</div>
-<div class="line"><span class="lineno">   96</span> </div>
-<div class="line"><span class="lineno">   97</span>    ESP_LOGI(TAG, <span class="stringliteral">&quot;Updated %.*s to %f&quot;</span>, param.length(), param.data(), value);</div>
-<div class="line"><span class="lineno">   98</span> </div>
-<div class="line"><span class="lineno">   99</span>    <span class="keywordflow">return</span> 0;</div>
-<div class="line"><span class="lineno">  100</span>}</div>
+<p class="definition">Definition at line <a class="el" href="audio__param_8h_source.html#l00082">82</a> of file <a class="el" href="audio__param_8h_source.html">audio_param.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   83</span>    {</div>
+<div class="line"><span class="lineno">   84</span>        <span class="keyword">auto</span> element = parameters.find(param);</div>
+<div class="line"><span class="lineno">   85</span> </div>
+<div class="line"><span class="lineno">   86</span>        <span class="keywordflow">if</span>(element == parameters.end())</div>
+<div class="line"><span class="lineno">   87</span>        {</div>
+<div class="line"><span class="lineno">   88</span>            <span class="keywordflow">return</span> -1;</div>
+<div class="line"><span class="lineno">   89</span>        }</div>
+<div class="line"><span class="lineno">   90</span> </div>
+<div class="line"><span class="lineno">   91</span>        parameters[param]-&gt;update(value);</div>
+<div class="line"><span class="lineno">   92</span>        this-&gt;notify_observers(std::move(std::pair{param, value}));</div>
+<div class="line"><span class="lineno">   93</span> </div>
+<div class="line"><span class="lineno">   94</span>        ESP_LOGI(<a class="code hl_variable" href="namespaceshrapnel_1_1parameters.html#a0cbbede6af96973c56e635f9a90599cd">TAG</a>, <span class="stringliteral">&quot;Updated %.*s to %f&quot;</span>, param.length(), param.data(), value);</div>
+<div class="line"><span class="lineno">   95</span> </div>
+<div class="line"><span class="lineno">   96</span>        <span class="keywordflow">return</span> 0;</div>
+<div class="line"><span class="lineno">   97</span>    }</div>
 </div><!-- fragment -->
+<p class="reference">References <a class="el" href="audio__param_8h_source.html#l00034">shrapnel::parameters::TAG</a>.</p>
+
 </div>
 </div>
-<hr/>The documentation for this class was generated from the following files:<ul>
+<hr/>The documentation for this class was generated from the following file:<ul>
 <li>firmware/components/audio_param/include/<a class="el" href="audio__param_8h_source.html">audio_param.h</a></li>
-<li>firmware/components/audio_param/src/<a class="el" href="audio__param_8cpp_source.html">audio_param.cpp</a></li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->

@@ -6,8 +6,6 @@ var midi__protocol_8h =
     [ "shrapnel::midi::Message::ControlChange", "structshrapnel_1_1midi_1_1Message_1_1ControlChange.html", "structshrapnel_1_1midi_1_1Message_1_1ControlChange" ],
     [ "shrapnel::midi::Message::ProgramChange", "structshrapnel_1_1midi_1_1Message_1_1ProgramChange.html", "structshrapnel_1_1midi_1_1Message_1_1ProgramChange" ],
     [ "shrapnel::midi::Decoder", "classshrapnel_1_1midi_1_1Decoder.html", "classshrapnel_1_1midi_1_1Decoder" ],
-    [ "shrapnel::midi::Configuration< T >", "classshrapnel_1_1midi_1_1Configuration.html", "classshrapnel_1_1midi_1_1Configuration" ],
-    [ "shrapnel::midi::PersistentStorage", "classshrapnel_1_1midi_1_1PersistentStorage.html", "classshrapnel_1_1midi_1_1PersistentStorage" ],
     [ "MessageType", "midi__protocol_8h.html#ad87a6a7595532b38466aa350b3d4e7ae", [
       [ "NOTE_OFF", "midi__protocol_8h.html#ad87a6a7595532b38466aa350b3d4e7aea630488f27611a5bef4c441142fb65143", null ],
       [ "NOTE_ON", "midi__protocol_8h.html#ad87a6a7595532b38466aa350b3d4e7aeae3fb9dbaf6a8edc1be6286ae5b2e3bcf", null ],

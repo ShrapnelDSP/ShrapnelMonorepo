@@ -19,7 +19,6 @@ var annotated_dup =
         [ "Chorus", "classshrapnel_1_1effect_1_1Chorus.html", "classshrapnel_1_1effect_1_1Chorus" ]
       ] ],
       [ "midi", "namespaceshrapnel_1_1midi.html", [
-        [ "Configuration", "classshrapnel_1_1midi_1_1Configuration.html", "classshrapnel_1_1midi_1_1Configuration" ],
         [ "CreateRequest", "structshrapnel_1_1midi_1_1CreateRequest.html", "structshrapnel_1_1midi_1_1CreateRequest" ],
         [ "CreateResponse", "structshrapnel_1_1midi_1_1CreateResponse.html", "structshrapnel_1_1midi_1_1CreateResponse" ],
         [ "Decoder", "classshrapnel_1_1midi_1_1Decoder.html", "classshrapnel_1_1midi_1_1Decoder" ],
@@ -30,21 +29,26 @@ var annotated_dup =
         [ "MappingManager", "classshrapnel_1_1midi_1_1MappingManager.html", "classshrapnel_1_1midi_1_1MappingManager" ],
         [ "Message", "structshrapnel_1_1midi_1_1Message.html", "structshrapnel_1_1midi_1_1Message" ],
         [ "MidiUartBase", "classshrapnel_1_1midi_1_1MidiUartBase.html", "classshrapnel_1_1midi_1_1MidiUartBase" ],
-        [ "PersistentStorage", "classshrapnel_1_1midi_1_1PersistentStorage.html", "classshrapnel_1_1midi_1_1PersistentStorage" ],
         [ "Remove", "structshrapnel_1_1midi_1_1Remove.html", "structshrapnel_1_1midi_1_1Remove" ],
         [ "Update", "structshrapnel_1_1midi_1_1Update.html", "structshrapnel_1_1midi_1_1Update" ]
       ] ],
       [ "parameters", "namespaceshrapnel_1_1parameters.html", [
         [ "AudioParameterFloat", "classshrapnel_1_1parameters_1_1AudioParameterFloat.html", "classshrapnel_1_1parameters_1_1AudioParameterFloat" ],
         [ "AudioParameters", "classshrapnel_1_1parameters_1_1AudioParameters.html", "classshrapnel_1_1parameters_1_1AudioParameters" ],
+        [ "AudioParametersBase", "classshrapnel_1_1parameters_1_1AudioParametersBase.html", "classshrapnel_1_1parameters_1_1AudioParametersBase" ],
         [ "CommandHandling", "classshrapnel_1_1parameters_1_1CommandHandling.html", "classshrapnel_1_1parameters_1_1CommandHandling" ],
         [ "Initialise", "structshrapnel_1_1parameters_1_1Initialise.html", null ],
         [ "Update", "structshrapnel_1_1parameters_1_1Update.html", "structshrapnel_1_1parameters_1_1Update" ]
+      ] ],
+      [ "persistence", "namespaceshrapnel_1_1persistence.html", [
+        [ "EspStorage", "classshrapnel_1_1persistence_1_1EspStorage.html", "classshrapnel_1_1persistence_1_1EspStorage" ],
+        [ "Storage", "classshrapnel_1_1persistence_1_1Storage.html", "classshrapnel_1_1persistence_1_1Storage" ]
       ] ],
       [ "wifi_provisioning", "namespaceshrapnel_1_1wifi__provisioning.html", [
         [ "WiFiProvisioning", "classshrapnel_1_1wifi__provisioning_1_1WiFiProvisioning.html", "classshrapnel_1_1wifi__provisioning_1_1WiFiProvisioning" ]
       ] ],
       [ "EventSend", "classshrapnel_1_1EventSend.html", "classshrapnel_1_1EventSend" ],
+      [ "ParameterObserver", "classshrapnel_1_1ParameterObserver.html", "classshrapnel_1_1ParameterObserver" ],
       [ "ParameterUpdateNotifier", "classshrapnel_1_1ParameterUpdateNotifier.html", "classshrapnel_1_1ParameterUpdateNotifier" ],
       [ "Queue", "classshrapnel_1_1Queue.html", "classshrapnel_1_1Queue" ],
       [ "QueueBase", "classshrapnel_1_1QueueBase.html", "classshrapnel_1_1QueueBase" ],

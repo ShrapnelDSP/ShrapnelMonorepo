@@ -1,8 +1,8 @@
 <map id="gate_set_release" name="gate_set_release">
 <area shape="rect" id="node1" title="Set the release time in milliseconds." alt="" coords="675,31,796,57"/>
-<area shape="rect" id="node2" href="$process_8cpp.html#a159f752dbd8aa42d765e604910814129" title=" " alt="" coords="519,5,611,32"/>
+<area shape="rect" id="node2" href="$process_8cpp.html#a98369bdde76db63c92e6173d29c6dc78" title=" " alt="" coords="519,5,611,32"/>
 <area shape="rect" id="node6" href="$process_8cpp.html#a450bec865b55b9890f4050f1ab0dba5c" title=" " alt="" coords="503,56,627,83"/>
 <area shape="rect" id="node3" href="$i2s_8cpp.html#a4e37f563a34c1a559515cc40782caf07" title=" " alt="" coords="313,31,455,57"/>
-<area shape="rect" id="node4" href="$i2s_8cpp.html#a445c7079217d08d4767549802dade8a0" title=" " alt="" coords="187,31,265,57"/>
+<area shape="rect" id="node4" href="$i2s_8cpp.html#ab949ae727fd1608d465238ba29ab2dab" title=" " alt="" coords="187,31,265,57"/>
 <area shape="rect" id="node5" href="$namespaceshrapnel.html#a9f09f4ea750643310af9143a53735b7d" title=" " alt="" coords="5,31,139,57"/>
 </map>

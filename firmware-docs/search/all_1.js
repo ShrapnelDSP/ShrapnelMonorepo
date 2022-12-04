@@ -17,7 +17,8 @@ var searchData=
   ['audio_5fevents_2eh_14',['audio_events.h',['../audio__events_8h.html',1,'']]],
   ['audio_5fparam_2ecpp_15',['audio_param.cpp',['../audio__param_8cpp.html',1,'']]],
   ['audio_5fparam_2eh_16',['audio_param.h',['../audio__param_8h.html',1,'']]],
-  ['audio_5fparams_17',['audio_params',['../namespaceshrapnel.html#aeaf166bfe1a2d47ff9208f62ac0a78e4',1,'shrapnel']]],
+  ['audio_5fparams_17',['audio_params',['../namespaceshrapnel.html#a686cfb16562461b078165d746966c2bf',1,'shrapnel']]],
   ['audioparameterfloat_18',['AudioParameterFloat',['../classshrapnel_1_1parameters_1_1AudioParameterFloat.html#a775aaf00d21addce79cc647ce644467b',1,'shrapnel::parameters::AudioParameterFloat::AudioParameterFloat()'],['../classshrapnel_1_1parameters_1_1AudioParameterFloat.html',1,'shrapnel::parameters::AudioParameterFloat']]],
-  ['audioparameters_19',['AudioParameters',['../classshrapnel_1_1parameters_1_1AudioParameters.html#af3aebb031546145ba520ecf820810d90',1,'shrapnel::parameters::AudioParameters::AudioParameters()'],['../classshrapnel_1_1parameters_1_1AudioParameters.html',1,'shrapnel::parameters::AudioParameters']]]
+  ['audioparameters_19',['AudioParameters',['../namespaceshrapnel.html#aa010626969fadec55bb5ce236c9ecf20',1,'shrapnel::AudioParameters()'],['../classshrapnel_1_1parameters_1_1AudioParameters.html',1,'shrapnel::parameters::AudioParameters&lt; MAX_PARAMETERS, MAX_OBSERVERS &gt;']]],
+  ['audioparametersbase_20',['AudioParametersBase',['../classshrapnel_1_1parameters_1_1AudioParametersBase.html',1,'shrapnel::parameters']]]
 ];

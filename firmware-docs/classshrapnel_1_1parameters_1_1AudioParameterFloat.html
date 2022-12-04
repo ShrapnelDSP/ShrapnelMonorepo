@@ -121,7 +121,7 @@ Data Fields</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock">
-<p class="definition">Definition at line <a class="el" href="audio__param_8h_source.html#l00034">34</a> of file <a class="el" href="audio__param_8h_source.html">audio_param.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="audio__param_8h_source.html#l00038">38</a> of file <a class="el" href="audio__param_8h_source.html">audio_param.h</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a775aaf00d21addce79cc647ce644467b" name="a775aaf00d21addce79cc647ce644467b"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a775aaf00d21addce79cc647ce644467b">&#9670;&nbsp;</a></span>AudioParameterFloat()</h2>
@@ -161,13 +161,13 @@ Data Fields</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="audio__param_8cpp_source.html#l00028">28</a> of file <a class="el" href="audio__param_8cpp_source.html">audio_param.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   32</span>                             :</div>
-<div class="line"><span class="lineno">   33</span>    <a class="code hl_variable" href="classshrapnel_1_1parameters_1_1AudioParameterFloat.html#a920d0aab2ee7a9cade98fdee516d380b">name</a>(a_name),</div>
-<div class="line"><span class="lineno">   34</span>    value(default_value),</div>
-<div class="line"><span class="lineno">   35</span>    minimum(a_minimum),</div>
-<div class="line"><span class="lineno">   36</span>    maximum(a_maximum) {}</div>
-<div class="ttc" id="aclassshrapnel_1_1parameters_1_1AudioParameterFloat_html_a920d0aab2ee7a9cade98fdee516d380b"><div class="ttname"><a href="classshrapnel_1_1parameters_1_1AudioParameterFloat.html#a920d0aab2ee7a9cade98fdee516d380b">shrapnel::parameters::AudioParameterFloat::name</a></div><div class="ttdeci">id_t name</div><div class="ttdef"><b>Definition:</b> <a href="audio__param_8h_source.html#l00051">audio_param.h:51</a></div></div>
+<p class="definition">Definition at line <a class="el" href="audio__param_8cpp_source.html#l00027">27</a> of file <a class="el" href="audio__param_8cpp_source.html">audio_param.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   31</span>                             :</div>
+<div class="line"><span class="lineno">   32</span>    <a class="code hl_variable" href="classshrapnel_1_1parameters_1_1AudioParameterFloat.html#a920d0aab2ee7a9cade98fdee516d380b">name</a>(a_name),</div>
+<div class="line"><span class="lineno">   33</span>    value(default_value),</div>
+<div class="line"><span class="lineno">   34</span>    minimum(a_minimum),</div>
+<div class="line"><span class="lineno">   35</span>    maximum(a_maximum) {}</div>
+<div class="ttc" id="aclassshrapnel_1_1parameters_1_1AudioParameterFloat_html_a920d0aab2ee7a9cade98fdee516d380b"><div class="ttname"><a href="classshrapnel_1_1parameters_1_1AudioParameterFloat.html#a920d0aab2ee7a9cade98fdee516d380b">shrapnel::parameters::AudioParameterFloat::name</a></div><div class="ttdeci">id_t name</div><div class="ttdef"><b>Definition:</b> <a href="audio__param_8h_source.html#l00055">audio_param.h:55</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -190,11 +190,11 @@ Data Fields</h2></td></tr>
 
 <p>Get the normalised value of a parameter. </p>
 
-<p class="definition">Definition at line <a class="el" href="audio__param_8cpp_source.html#l00054">54</a> of file <a class="el" href="audio__param_8cpp_source.html">audio_param.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   55</span>{</div>
-<div class="line"><span class="lineno">   56</span>    <span class="keyword">auto</span> range = maximum - minimum;</div>
-<div class="line"><span class="lineno">   57</span>    <span class="keywordflow">return</span> (value - minimum) / range;</div>
-<div class="line"><span class="lineno">   58</span>}</div>
+<p class="definition">Definition at line <a class="el" href="audio__param_8cpp_source.html#l00053">53</a> of file <a class="el" href="audio__param_8cpp_source.html">audio_param.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   54</span>{</div>
+<div class="line"><span class="lineno">   55</span>    <span class="keyword">auto</span> range = maximum - minimum;</div>
+<div class="line"><span class="lineno">   56</span>    <span class="keywordflow">return</span> (value - minimum) / range;</div>
+<div class="line"><span class="lineno">   57</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -216,10 +216,10 @@ Data Fields</h2></td></tr>
 
 <p>Get denormalised value of parameter. </p>
 
-<p class="definition">Definition at line <a class="el" href="audio__param_8cpp_source.html#l00060">60</a> of file <a class="el" href="audio__param_8cpp_source.html">audio_param.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   61</span>{</div>
-<div class="line"><span class="lineno">   62</span>    <span class="keywordflow">return</span> &amp;value;</div>
-<div class="line"><span class="lineno">   63</span>}</div>
+<p class="definition">Definition at line <a class="el" href="audio__param_8cpp_source.html#l00059">59</a> of file <a class="el" href="audio__param_8cpp_source.html">audio_param.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   60</span>{</div>
+<div class="line"><span class="lineno">   61</span>    <span class="keywordflow">return</span> &amp;value;</div>
+<div class="line"><span class="lineno">   62</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -247,21 +247,21 @@ Data Fields</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="audio__param_8cpp_source.html#l00038">38</a> of file <a class="el" href="audio__param_8cpp_source.html">audio_param.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   39</span>{</div>
-<div class="line"><span class="lineno">   40</span>    <span class="keywordflow">if</span>(a_value &gt; 1)</div>
-<div class="line"><span class="lineno">   41</span>    {</div>
-<div class="line"><span class="lineno">   42</span>        <span class="keywordflow">return</span>;</div>
-<div class="line"><span class="lineno">   43</span>    }</div>
-<div class="line"><span class="lineno">   44</span> </div>
-<div class="line"><span class="lineno">   45</span>    <span class="keywordflow">if</span>(a_value &lt; 0)</div>
-<div class="line"><span class="lineno">   46</span>    {</div>
-<div class="line"><span class="lineno">   47</span>        <span class="keywordflow">return</span>;</div>
-<div class="line"><span class="lineno">   48</span>    }</div>
-<div class="line"><span class="lineno">   49</span> </div>
-<div class="line"><span class="lineno">   50</span>    <span class="keyword">auto</span> range = maximum - minimum;</div>
-<div class="line"><span class="lineno">   51</span>    value = minimum + a_value * range;</div>
-<div class="line"><span class="lineno">   52</span>}</div>
+<p class="definition">Definition at line <a class="el" href="audio__param_8cpp_source.html#l00037">37</a> of file <a class="el" href="audio__param_8cpp_source.html">audio_param.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   38</span>{</div>
+<div class="line"><span class="lineno">   39</span>    <span class="keywordflow">if</span>(a_value &gt; 1)</div>
+<div class="line"><span class="lineno">   40</span>    {</div>
+<div class="line"><span class="lineno">   41</span>        <span class="keywordflow">return</span>;</div>
+<div class="line"><span class="lineno">   42</span>    }</div>
+<div class="line"><span class="lineno">   43</span> </div>
+<div class="line"><span class="lineno">   44</span>    <span class="keywordflow">if</span>(a_value &lt; 0)</div>
+<div class="line"><span class="lineno">   45</span>    {</div>
+<div class="line"><span class="lineno">   46</span>        <span class="keywordflow">return</span>;</div>
+<div class="line"><span class="lineno">   47</span>    }</div>
+<div class="line"><span class="lineno">   48</span> </div>
+<div class="line"><span class="lineno">   49</span>    <span class="keyword">auto</span> range = maximum - minimum;</div>
+<div class="line"><span class="lineno">   50</span>    value = minimum + a_value * range;</div>
+<div class="line"><span class="lineno">   51</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -278,7 +278,7 @@ Data Fields</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="audio__param_8h_source.html#l00051">51</a> of file <a class="el" href="audio__param_8h_source.html">audio_param.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="audio__param_8h_source.html#l00055">55</a> of file <a class="el" href="audio__param_8h_source.html">audio_param.h</a>.</p>
 
 </div>
 </div>

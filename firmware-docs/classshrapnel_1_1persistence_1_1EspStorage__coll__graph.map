@@ -1,0 +1,4 @@
+<map id="shrapnel::persistence::EspStorage" name="shrapnel::persistence::EspStorage">
+<area shape="rect" id="node1" title="Persistent storage implemented using ESP32 nvs component." alt="" coords="5,95,149,136"/>
+<area shape="rect" id="node2" href="$classshrapnel_1_1persistence_1_1Storage.html" title="Interface for storing persistent data." alt="" coords="5,5,149,47"/>
+</map>

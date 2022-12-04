@@ -1,6 +1,5 @@
 var namespaceshrapnel_1_1midi =
 [
-    [ "Configuration", "classshrapnel_1_1midi_1_1Configuration.html", "classshrapnel_1_1midi_1_1Configuration" ],
     [ "CreateRequest", "structshrapnel_1_1midi_1_1CreateRequest.html", "structshrapnel_1_1midi_1_1CreateRequest" ],
     [ "CreateResponse", "structshrapnel_1_1midi_1_1CreateResponse.html", "structshrapnel_1_1midi_1_1CreateResponse" ],
     [ "Decoder", "classshrapnel_1_1midi_1_1Decoder.html", "classshrapnel_1_1midi_1_1Decoder" ],
@@ -11,7 +10,6 @@ var namespaceshrapnel_1_1midi =
     [ "MappingManager", "classshrapnel_1_1midi_1_1MappingManager.html", "classshrapnel_1_1midi_1_1MappingManager" ],
     [ "Message", "structshrapnel_1_1midi_1_1Message.html", "structshrapnel_1_1midi_1_1Message" ],
     [ "MidiUartBase", "classshrapnel_1_1midi_1_1MidiUartBase.html", "classshrapnel_1_1midi_1_1MidiUartBase" ],
-    [ "PersistentStorage", "classshrapnel_1_1midi_1_1PersistentStorage.html", "classshrapnel_1_1midi_1_1PersistentStorage" ],
     [ "Remove", "structshrapnel_1_1midi_1_1Remove.html", "structshrapnel_1_1midi_1_1Remove" ],
     [ "Update", "structshrapnel_1_1midi_1_1Update.html", "structshrapnel_1_1midi_1_1Update" ],
     [ "MappingApiMessage", "namespaceshrapnel_1_1midi.html#ad9ee9014110e441706a017a889103bd1", null ],
@@ -36,6 +34,7 @@ var namespaceshrapnel_1_1midi =
     [ "from_json", "namespaceshrapnel_1_1midi.html#aad12316a79e19947ba3d5700a466f933", null ],
     [ "from_json", "namespaceshrapnel_1_1midi.html#a2b9d2bc58c847f2f2289c90bf47979e6", null ],
     [ "from_json", "namespaceshrapnel_1_1midi.html#ae251dec5b5227e127fb60ecfe722deeb", null ],
+    [ "from_json", "namespaceshrapnel_1_1midi.html#aeca60d148722432ef0ab3afe06890514", null ],
     [ "get_message_type", "namespaceshrapnel_1_1midi.html#ab7aac5b3856b86dcdf7375ae7d4f5d14", null ],
     [ "get_message_type< CreateRequest >", "namespaceshrapnel_1_1midi.html#ab312cca91e576cb523ac926b9584c6ca", null ],
     [ "get_message_type< CreateResponse >", "namespaceshrapnel_1_1midi.html#addb294cd29b015c04f0f64dff7cfb587", null ],
@@ -56,6 +55,7 @@ var namespaceshrapnel_1_1midi =
     [ "to_json", "namespaceshrapnel_1_1midi.html#a5fb2df7e7a30d352a138b208fda681cd", null ],
     [ "to_json", "namespaceshrapnel_1_1midi.html#a3b7f5d6d4b4490ca4b3dff87d5040398", null ],
     [ "to_json", "namespaceshrapnel_1_1midi.html#a3b7f5d6d4b4490ca4b3dff87d5040398", null ],
+    [ "to_json", "namespaceshrapnel_1_1midi.html#a3ce92c675faa537c28f3f68743f0bf16", null ],
     [ "to_json", "namespaceshrapnel_1_1midi.html#ae36b87ea8f245d8e34b035eb1cbe1bbd", null ],
     [ "to_json", "namespaceshrapnel_1_1midi.html#ae36b87ea8f245d8e34b035eb1cbe1bbd", null ],
     [ "to_json", "namespaceshrapnel_1_1midi.html#a93f7983c3e2cbc6a0f28caf93abe1b32", null ],
