@@ -41,9 +41,7 @@ namespace midi {
 int parse_uuid(Mapping::id_t &uuid, const char *string);
 
 template<typename T>
-std::optional<T> from_json(const rapidjson::Value &) {
-    //static_assert(false, "This function must be specialised");
-}
+std::optional<T> from_json(const rapidjson::Value &);
 
 template<>
 std::optional<GetRequest> from_json(const rapidjson::Value &json);
@@ -71,7 +69,8 @@ std::optional<MappingApiMessage> from_json(const rapidjson::Value &json);
 //template<size_t MAX_ELEMENTS>
 //template<>
 // TODO this doesn't get used as a specialisation of from_json, either with or without the MAX_ELEMENTS template parameter
-inline std::optional<etl::map<Mapping::id_t, Mapping, 1>> from_json_todo(const rapidjson::Value &json)
+template<>
+inline std::optional<etl::map<Mapping::id_t, Mapping, 1>> from_json(const rapidjson::Value &json)
 {
     constexpr const size_t MAX_ELEMENTS = 1;
     constexpr char TAG[] = "etl::map<Mapping::id_t, Mapping> from_json";

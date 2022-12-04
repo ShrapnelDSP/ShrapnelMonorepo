@@ -207,8 +207,7 @@ TEST_F(MappingApiMessageTest, EtlMapOfIdToMapping)
     document.Parse(json);
     EXPECT_FALSE(document.HasParseError());
 
-    //auto result = from_json<etl::map<Mapping::id_t, Mapping, 1>>(document);
-    auto result = from_json_todo(document);
+    auto result = from_json<etl::map<Mapping::id_t, Mapping, 1>>(document);
     EXPECT_TRUE(result.has_value());
 
     etl::map<Mapping::id_t, Mapping, 1> expected{{
@@ -240,8 +239,7 @@ TEST_F(MappingApiMessageTest, EtlMapOfIdToMappingTooSmall)
     document.Parse(json);
     EXPECT_FALSE(document.HasParseError());
 
-    //auto result = from_json<etl::map<Mapping::id_t, Mapping, 1>>(document);
-    auto result = from_json_todo(document);
+    auto result = from_json<etl::map<Mapping::id_t, Mapping, 1>>(document);
     EXPECT_FALSE(result.has_value());
 }
 
