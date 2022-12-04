@@ -37,9 +37,6 @@
 namespace shrapnel {
 namespace midi {
 
-/// return non-zero on error
-int parse_uuid(Mapping::id_t &uuid, const char *string);
-
 template<typename T>
 std::optional<T> from_json(const rapidjson::Value &);
 
@@ -60,6 +57,10 @@ std::optional<Update> from_json(const rapidjson::Value &json);
 
 template<>
 std::optional<Remove> from_json(const rapidjson::Value &json);
+
+template<>
+std::optional<Mapping::id_t> from_json(const rapidjson::Value &json);
+
 
 /** Convert the message into a object representing it.
  */
@@ -93,15 +94,14 @@ std::optional<MapType> from_json(const rapidjson::Value &json) {
             return std::nullopt;
         }
 
-        Mapping::id_t id;
-        int rc = parse_uuid(id, entry.name.GetString());
-        if(rc != 0)
+        auto id = from_json<Mapping::id_t>(entry.name);
+        if(!id.has_value())
         {
             ESP_LOGE(TAG, "failed to get uuid");
             return std::nullopt;
         }
 
-        out[id] = *mapping;
+        out[*id] = *mapping;
     }
 
     return out;
