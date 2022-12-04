@@ -66,15 +66,11 @@ std::optional<Remove> from_json(const rapidjson::Value &json);
 template<>
 std::optional<MappingApiMessage> from_json(const rapidjson::Value &json);
 
-//template<size_t MAX_ELEMENTS>
-//template<>
-// TODO this doesn't get used as a specialisation of from_json, either with or without the MAX_ELEMENTS template parameter
-template<>
-inline std::optional<etl::map<Mapping::id_t, Mapping, 1>> from_json(const rapidjson::Value &json)
-{
-    constexpr const size_t MAX_ELEMENTS = 1;
+template <typename MapType>
+    requires std::derived_from<MapType, etl::imap<Mapping::id_t, Mapping>>
+std::optional<MapType> from_json(const rapidjson::Value &json) {
     constexpr char TAG[] = "etl::map<Mapping::id_t, Mapping> from_json";
-    etl::map<Mapping::id_t, Mapping, MAX_ELEMENTS> out;
+    MapType out;
 
     if(!json.IsObject())
     {
@@ -82,7 +78,7 @@ inline std::optional<etl::map<Mapping::id_t, Mapping, 1>> from_json(const rapidj
         return std::nullopt;
     }
 
-    if(json.MemberCount() > MAX_ELEMENTS)
+    if(json.MemberCount() > MapType::MAX_SIZE)
     {
         ESP_LOGE(TAG, "too many elements in json");
         return std::nullopt;
