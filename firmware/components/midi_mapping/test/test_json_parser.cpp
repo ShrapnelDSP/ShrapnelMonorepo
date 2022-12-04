@@ -193,6 +193,58 @@ TEST_F(MappingApiMessageTest, Remove)
     }
 }
 
+TEST_F(MappingApiMessageTest, EtlMapOfIdToMapping)
+{
+    auto json = R"({
+      "00010203-0405-0607-0809-0a0b0c0d0e0f": {
+        "midi_channel": 1,
+        "cc_number": 2,
+        "parameter_id": "gain"
+      }
+    })";
+
+    rapidjson::Document document;
+    document.Parse(json);
+    EXPECT_FALSE(document.HasParseError());
+
+    //auto result = from_json<etl::map<Mapping::id_t, Mapping, 1>>(document);
+    auto result = from_json_todo(document);
+    EXPECT_TRUE(result.has_value());
+
+    etl::map<Mapping::id_t, Mapping, 1> expected{{
+                               Mapping::id_t{
+                                   0, 1,  2,  3,  4,  5,  6,  7,
+                                   8, 9, 10, 11, 12, 13, 14, 15
+                               },
+                               Mapping{1, 2, parameters::id_t("gain")}}};
+
+    EXPECT_THAT(*result, expected);
+}
+
+TEST_F(MappingApiMessageTest, EtlMapOfIdToMappingTooSmall)
+{
+    auto json = R"({
+      "00010203-0405-0607-0809-0a0b0c0d0e0f": {
+        "midi_channel": 1,
+        "cc_number": 2,
+        "parameter_id": "gain"
+      },
+      "01010203-0405-0607-0809-0a0b0c0d0e0f": {
+        "midi_channel": 1,
+        "cc_number": 2,
+        "parameter_id": "gain"
+      }
+    })";
+
+    rapidjson::Document document;
+    document.Parse(json);
+    EXPECT_FALSE(document.HasParseError());
+
+    //auto result = from_json<etl::map<Mapping::id_t, Mapping, 1>>(document);
+    auto result = from_json_todo(document);
+    EXPECT_FALSE(result.has_value());
+}
+
 // TODO a lot of the edge cases are not tested here. We need to test every
 // field in every message under these conditions:
 //

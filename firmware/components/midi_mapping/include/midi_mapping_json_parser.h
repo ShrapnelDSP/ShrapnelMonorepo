@@ -41,7 +41,9 @@ namespace midi {
 int parse_uuid(Mapping::id_t &uuid, const char *string);
 
 template<typename T>
-std::optional<T> from_json(const rapidjson::Value &json);
+std::optional<T> from_json(const rapidjson::Value &) {
+    //static_assert(false, "This function must be specialised");
+}
 
 template<>
 std::optional<GetRequest> from_json(const rapidjson::Value &json);
@@ -65,6 +67,50 @@ std::optional<Remove> from_json(const rapidjson::Value &json);
  */
 template<>
 std::optional<MappingApiMessage> from_json(const rapidjson::Value &json);
+
+//template<size_t MAX_ELEMENTS>
+//template<>
+// TODO this doesn't get used as a specialisation of from_json, either with or without the MAX_ELEMENTS template parameter
+inline std::optional<etl::map<Mapping::id_t, Mapping, 1>> from_json_todo(const rapidjson::Value &json)
+{
+    constexpr const size_t MAX_ELEMENTS = 1;
+    constexpr char TAG[] = "etl::map<Mapping::id_t, Mapping> from_json";
+    etl::map<Mapping::id_t, Mapping, MAX_ELEMENTS> out;
+
+    if(!json.IsObject())
+    {
+        ESP_LOGE(TAG, "map is not object");
+        return std::nullopt;
+    }
+
+    if(json.MemberCount() > MAX_ELEMENTS)
+    {
+        ESP_LOGE(TAG, "too many elements in json");
+        return std::nullopt;
+    }
+
+    for (const auto &entry : json.GetObject())
+    {
+        auto mapping = from_json<Mapping>(entry.value);
+        if(!mapping.has_value())
+        {
+            ESP_LOGE(TAG, "failed to get mapping");
+            return std::nullopt;
+        }
+
+        Mapping::id_t id;
+        int rc = parse_uuid(id, entry.name.GetString());
+        if(rc != 0)
+        {
+            ESP_LOGE(TAG, "failed to get uuid");
+            return std::nullopt;
+        }
+
+        out[id] = *mapping;
+    }
+
+    return out;
+}
 
 }
 }
