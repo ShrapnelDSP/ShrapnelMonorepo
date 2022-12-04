@@ -19,18 +19,18 @@
 
 #pragma once
 
-#include <stdint.h>
-#include <stddef.h>
-#include "esp_err.h"
-#include "audio_param.h"
+#include "persistence.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+namespace shrapnel::persistence {
 
-void process_samples(int32_t *buf, size_t buf_len);
-esp_err_t process_init(shrapnel::parameters::AudioParametersBase *audio_params);
+/** Persistent storage implemented using ESP32 nvs component
+ *
+ * \note Key will be truncated to 15 characters due to limitation of NVS
+ */
+class EspStorage final : public Storage {
+public:
+    int save(const char *key, etl::string_view data) override;
+    int load(const char *key, etl::istring &data) override;
+};
 
-#ifdef __cplusplus
 }
-#endif

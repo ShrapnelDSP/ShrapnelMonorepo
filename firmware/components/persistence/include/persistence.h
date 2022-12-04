@@ -19,18 +19,22 @@
 
 #pragma once
 
-#include <stdint.h>
-#include <stddef.h>
-#include "esp_err.h"
-#include "audio_param.h"
+#include "etl/string.h"
+#include "etl/string_view.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+namespace shrapnel::persistence {
 
-void process_samples(int32_t *buf, size_t buf_len);
-esp_err_t process_init(shrapnel::parameters::AudioParametersBase *audio_params);
+/** Interface for storing persistent data
+ *
+ * The data sent to \ref save should be reloaded by \ref load even after power
+ * down.
+ */
+class Storage {
+public:
+    /// \return  non-zero on error
+    virtual int save(const char *key, etl::string_view data) = 0;
+    /// \return  non-zero on error
+    virtual int load(const char *key, etl::istring &data) = 0;
+};
 
-#ifdef __cplusplus
 }
-#endif

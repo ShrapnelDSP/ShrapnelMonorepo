@@ -29,7 +29,7 @@ class AudioParams : public ::testing::Test
 {
     protected:
 
-    using AudioParameters = parameters::AudioParameters;
+    using AudioParameters = parameters::AudioParameters<3, 1>;
 
     AudioParams()
     {

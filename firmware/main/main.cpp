@@ -60,6 +60,7 @@
 #include "midi_mapping_json_parser.h"
 #include "midi_mapping_json_builder.h"
 #include "midi_uart.h"
+#include "esp_persistence.h"
 #include "pcm3060.h"
 #include "profiling.h"
 #include "wifi_provisioning.h"
@@ -79,6 +80,28 @@ extern "C" void audio_event_send_callback(const AppMessage &message);
 
 namespace shrapnel {
 
+// TODO move all the json parser function into a json namespace
+namespace midi {
+    using midi::from_json;
+
+    template<> std::optional<float> from_json(const rapidjson::Value &value)
+    {
+        if(!value.IsFloat()) {
+            ESP_LOGE(TAG, "not float");
+            return std::nullopt;
+        }
+        return value.GetFloat();
+    }
+
+    template<>
+    rapidjson::Value to_json(rapidjson::Document &document, const float &object)
+    {
+        rapidjson::Value out{};
+        out.SetFloat(object);
+        return out;
+    }
+}
+
 class ParameterUpdateNotifier {
     public:
     int update(const parameters::id_t &param, float value);
@@ -96,9 +119,57 @@ class EventSend final {
     }
 };
 
+template<std::size_t MAX_PARAMETERS>
+class ParameterObserver final : public parameters::ParameterObserver {
+public:
+    explicit ParameterObserver(persistence::Storage &persistence) : persistence{persistence} {}
+
+    void notification(std::pair<const parameters::id_t &, float> parameter) override
+    {
+        ESP_LOGI(TAG, "notified about parameter change %s %f", parameter.first.data(), parameter.second);
+        if (!updated_parameters.available())
+        {
+            ESP_LOGE(TAG, "no space available");
+            return;
+        }
+
+        updated_parameters[parameter.first] = parameter.second;
+
+        // TODO throttle this so that parameters are saved every minute or so
+        persist_parameters();
+    }
+
+private:
+    void persist_parameters() {
+        for (const auto &param : updated_parameters)
+        {
+            rapidjson::Document document;
+
+            auto parameter_data = midi::to_json(document, param.second);
+            document.Swap(parameter_data);
+
+            rapidjson::StringBuffer buffer;
+            rapidjson::Writer writer{buffer};
+            document.Accept(writer);
+
+            persistence.save(param.first.data(), buffer.GetString());
+        }
+
+        updated_parameters.clear();
+    };
+
+
+
+    persistence::Storage &persistence;
+    etl::map<parameters::id_t, float, MAX_PARAMETERS> updated_parameters;
+};
+
+constexpr const size_t MAX_PARAMETERS = 17;
+using AudioParameters = parameters::AudioParameters<MAX_PARAMETERS, 1>;
+
 static Queue<AppMessage, QUEUE_LEN> *in_queue;
-static std::shared_ptr<parameters::AudioParameters> audio_params;
-static parameters::CommandHandling<parameters::AudioParameters, EventSend> *cmd_handling;
+static std::shared_ptr<AudioParameters> audio_params;
+static parameters::CommandHandling<AudioParameters, EventSend> *cmd_handling;
 static midi::MappingManager<ParameterUpdateNotifier, 10> *midi_mapping_manager;
 static EventSend event_send{};
 
@@ -468,13 +539,18 @@ int ParameterUpdateNotifier::update(const parameters::id_t &param, float value)
     return audio_params->update(param, value);
 }
 
+void nvs_debug_print();
+
 extern "C" void app_main(void)
 {
     ESP_ERROR_CHECK(heap_caps_register_failed_alloc_callback(failed_alloc_callback));
 
     ESP_ERROR_CHECK(nvs_flash_init());
+    nvs_debug_print();
     ESP_ERROR_CHECK(esp_netif_init());
     ESP_ERROR_CHECK(esp_event_loop_create_default());
+
+    auto persistence = persistence::EspStorage{};
 
     work_semaphore = xSemaphoreCreateBinary();
     assert(work_semaphore);
@@ -486,28 +562,62 @@ extern "C" void app_main(void)
     out_queue = new Queue<AppMessage, QUEUE_LEN>();
     assert(out_queue);
 
-    audio_params = std::make_shared<parameters::AudioParameters>();
+    audio_params = std::make_shared<AudioParameters>();
 
-    audio_params->create_and_add_parameter("ampGain", 0, 1, 0.5);
-    audio_params->create_and_add_parameter("ampChannel", 0, 1, 0);
-    audio_params->create_and_add_parameter("bass", 0, 1, 0.5);
-    audio_params->create_and_add_parameter("middle", 0, 1, 0.5);
-    audio_params->create_and_add_parameter("treble", 0, 1, 0.5);
+    auto create_and_load_parameter = [&](
+            const parameters::id_t &name,
+            float minimum,
+            float maximum,
+            float default_value){
+        std::optional<float> loaded_value;
+        etl::string<128> json_string{};
+        int rc = persistence.load(name.data(), json_string);
+        if(rc != 0)
+        {
+            goto out;
+        }
+
+        {
+            rapidjson::Document document;
+            document.Parse(json_string.data());
+
+            if(!document.HasParseError()) {
+                loaded_value = midi::from_json<float>(document);
+            } else {
+                ESP_LOGE(TAG, "document failed to parse '%s'", json_string.data());
+            }
+        }
+
+out:
+        audio_params->create_and_add_parameter(name, minimum, maximum, loaded_value.value_or(default_value));
+    };
+
+    create_and_load_parameter("ampGain", 0, 1, 0.5);
+    create_and_load_parameter("ampChannel", 0, 1, 0);
+    create_and_load_parameter("bass", 0, 1, 0.5);
+    create_and_load_parameter("middle", 0, 1, 0.5);
+    create_and_load_parameter("treble", 0, 1, 0.5);
     //contour gets unstable when set to 0
-    audio_params->create_and_add_parameter("contour", 0.01, 1, 0.5);
-    audio_params->create_and_add_parameter("volume", -30, 0, -15);
+    create_and_load_parameter("contour", 0.01, 1, 0.5);
+    create_and_load_parameter("volume", -30, 0, -15);
 
-    audio_params->create_and_add_parameter("noiseGateThreshold", -80, 0, -60);
-    audio_params->create_and_add_parameter("noiseGateHysteresis", 0, 5, 0);
-    audio_params->create_and_add_parameter("noiseGateAttack", 1, 50, 10);
-    audio_params->create_and_add_parameter("noiseGateHold", 1, 250, 50);
-    audio_params->create_and_add_parameter("noiseGateRelease", 1, 250, 50);
-    audio_params->create_and_add_parameter("noiseGateBypass", 0, 1, 0);
+    create_and_load_parameter("noiseGateThreshold", -80, 0, -60);
+    create_and_load_parameter("noiseGateHysteresis", 0, 5, 0);
+    create_and_load_parameter("noiseGateAttack", 1, 50, 10);
+    create_and_load_parameter("noiseGateHold", 1, 250, 50);
+    create_and_load_parameter("noiseGateRelease", 1, 250, 50);
+    create_and_load_parameter("noiseGateBypass", 0, 1, 0);
 
-    audio_params->create_and_add_parameter("chorusRate", 0.1, 4, 0.95);
-    audio_params->create_and_add_parameter("chorusDepth", 0, 1, 0.3);
-    audio_params->create_and_add_parameter("chorusMix", 0, 1, 0.8);
-    audio_params->create_and_add_parameter("chorusBypass", 0, 1, 0);
+    create_and_load_parameter("chorusRate", 0.1, 4, 0.95);
+    create_and_load_parameter("chorusDepth", 0, 1, 0.3);
+    create_and_load_parameter("chorusMix", 0, 1, 0.8);
+    create_and_load_parameter("chorusBypass", 0, 1, 0);
+
+    ESP_LOGI(TAG, "observer size: %zu", sizeof(ParameterObserver<MAX_PARAMETERS>));
+    ESP_LOGI(TAG, "param size: %zu", sizeof(AudioParameters));
+
+    ParameterObserver<MAX_PARAMETERS> parameter_observer{persistence};
+    audio_params->add_observer(parameter_observer);
 
     auto parameter_notifier = std::make_shared<ParameterUpdateNotifier>();
     midi_mapping_manager = new midi::MappingManager<ParameterUpdateNotifier, 10>(parameter_notifier);
@@ -522,7 +632,7 @@ extern "C" void app_main(void)
         }
     }
 
-    cmd_handling = new parameters::CommandHandling<parameters::AudioParameters, EventSend>(
+    cmd_handling = new parameters::CommandHandling<AudioParameters, EventSend>(
             audio_params.get(),
             event_send);
 
@@ -739,6 +849,19 @@ extern "C" void app_main(void)
             }
         }
     }
+}
+
+void nvs_debug_print()
+{
+    nvs_iterator_t it = NULL;
+    esp_err_t res = nvs_entry_find("nvs", "persistence", NVS_TYPE_ANY, &it);
+    while(res == ESP_OK) {
+        nvs_entry_info_t info;
+        nvs_entry_info(it, &info); // Can omit error check if parameters are guaranteed to be non-NULL
+        ESP_LOGI(TAG, "key '%s', type '%d'", info.key, info.type);
+        res = nvs_entry_next(&it);
+    }
+    nvs_release_iterator(it);
 }
 
 }

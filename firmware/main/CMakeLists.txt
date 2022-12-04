@@ -12,6 +12,7 @@ idf_component_register( SRCS main.cpp
                             midi_protocol
                             midi_mapping
                             nvs_flash
+                            persistence
                             pcm3060
                             queue
                             wifi
