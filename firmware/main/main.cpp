@@ -646,7 +646,7 @@ out:
 
     auto parameter_notifier = std::make_shared<ParameterUpdateNotifier>();
 
-    {
+    [&] {
         /* TODO How to reduce the memory usage?
          * - We could store each entry in the table at a different key
          * - Use the streaming API so that the entire message does not have to
@@ -677,7 +677,7 @@ midi::Mapping, 10>>(document);
         if (rc != 0) {
             ESP_LOGE(TAG, "Failed to create initial mapping");
         }
-    }
+    }();
 
     MidiMappingObserver mapping_observer{persistence, *midi_mapping_manager};
     midi_mapping_manager->add_observer(mapping_observer);
