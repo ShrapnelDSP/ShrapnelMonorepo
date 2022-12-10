@@ -49,37 +49,32 @@ rapidjson::Value to_json(rapidjson::Document &document, const Mapping &object)
     return json;
 }
 
+template <>
+rapidjson::Value to_json(rapidjson::Document &document,
+                         const Mapping::id_t &object) {
+    char uuid[37];
+    sprintf(uuid,
+            "%02x%02x%02x%02x-%02x%02x-%02x%02x-%02x%02x-"
+            "%02x%02x%02x%02x%02x%02x",
+            object[0], object[1], object[2], object[3], object[4], object[5],
+            object[6], object[7], object[8], object[9], object[10], object[11],
+            object[12], object[13], object[14], object[15]);
+
+    rapidjson::Value out;
+    out.SetString(uuid, 36, document.GetAllocator());
+
+    return out;
+}
+
 template<>
 rapidjson::Value to_json(rapidjson::Document &document, const std::pair<Mapping::id_t, Mapping> &object)
 {
     rapidjson::Value json;
     json.SetObject();
 
-    char uuid[37];
-    sprintf(uuid,
-            "%02x%02x%02x%02x-%02x%02x-%02x%02x-%02x%02x-"
-            "%02x%02x%02x%02x%02x%02x",
-            object.first[0],
-            object.first[1],
-            object.first[2],
-            object.first[3],
-            object.first[4],
-            object.first[5],
-            object.first[6],
-            object.first[7],
-            object.first[8],
-            object.first[9],
-            object.first[10],
-            object.first[11],
-            object.first[12],
-            object.first[13],
-            object.first[14],
-            object.first[15]);
-
     rapidjson::Value mapping = to_json(document, object.second);
-    rapidjson::Value uuid_json;
-    uuid_json.SetString(uuid, 36, document.GetAllocator());
-    json.AddMember(uuid_json, mapping, document.GetAllocator());
+    auto id = to_json(document, object.first);
+    json.AddMember(id, mapping, document.GetAllocator());
     return json;
 }
 
@@ -136,32 +131,9 @@ rapidjson::Value to_json(rapidjson::Document &document, const etl::imap<Mapping:
 
     for(const auto &entry : object)
     {
-        char uuid[37];
-        sprintf(uuid,
-                "%02x%02x%02x%02x-%02x%02x-%02x%02x-%02x%02x-"
-                "%02x%02x%02x%02x%02x%02x",
-                entry.first[0],
-                entry.first[1],
-                entry.first[2],
-                entry.first[3],
-                entry.first[4],
-                entry.first[5],
-                entry.first[6],
-                entry.first[7],
-                entry.first[8],
-                entry.first[9],
-                entry.first[10],
-                entry.first[11],
-                entry.first[12],
-                entry.first[13],
-                entry.first[14],
-                entry.first[15]);
-
-
         rapidjson::Value mapping = to_json(document, entry.second);
-        rapidjson::Value uuid_json;
-        uuid_json.SetString(uuid, 36, document.GetAllocator());
-        json.AddMember(uuid_json, mapping, document.GetAllocator());
+        auto id = to_json(document, entry.first);
+        json.AddMember(id, mapping, document.GetAllocator());
     }
 
     return json;

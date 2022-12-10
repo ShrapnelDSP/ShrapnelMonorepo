@@ -37,11 +37,8 @@
 namespace shrapnel {
 namespace midi {
 
-/// return non-zero on error
-int parse_uuid(Mapping::id_t &uuid, const char *string);
-
 template<typename T>
-std::optional<T> from_json(const rapidjson::Value &json);
+std::optional<T> from_json(const rapidjson::Value &);
 
 template<>
 std::optional<GetRequest> from_json(const rapidjson::Value &json);
@@ -61,10 +58,54 @@ std::optional<Update> from_json(const rapidjson::Value &json);
 template<>
 std::optional<Remove> from_json(const rapidjson::Value &json);
 
+template<>
+std::optional<Mapping::id_t> from_json(const rapidjson::Value &json);
+
+
 /** Convert the message into a object representing it.
  */
 template<>
 std::optional<MappingApiMessage> from_json(const rapidjson::Value &json);
+
+template <typename MapType>
+    requires std::derived_from<MapType, etl::imap<Mapping::id_t, Mapping>>
+std::optional<MapType> from_json(const rapidjson::Value &json) {
+    constexpr char TAG[] = "etl::map<Mapping::id_t, Mapping> from_json";
+    MapType out;
+
+    if(!json.IsObject())
+    {
+        ESP_LOGE(TAG, "map is not object");
+        return std::nullopt;
+    }
+
+    if(json.MemberCount() > MapType::MAX_SIZE)
+    {
+        ESP_LOGE(TAG, "too many elements in json");
+        return std::nullopt;
+    }
+
+    for (const auto &entry : json.GetObject())
+    {
+        auto mapping = from_json<Mapping>(entry.value);
+        if(!mapping.has_value())
+        {
+            ESP_LOGE(TAG, "failed to get mapping");
+            return std::nullopt;
+        }
+
+        auto id = from_json<Mapping::id_t>(entry.name);
+        if(!id.has_value())
+        {
+            ESP_LOGE(TAG, "failed to get uuid");
+            return std::nullopt;
+        }
+
+        out[*id] = *mapping;
+    }
+
+    return out;
+}
 
 }
 }

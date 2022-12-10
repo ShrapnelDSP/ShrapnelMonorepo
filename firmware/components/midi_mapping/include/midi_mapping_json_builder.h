@@ -47,6 +47,9 @@ template<>
 rapidjson::Value to_json(rapidjson::Document &document, const Mapping &object);
 
 template<>
+rapidjson::Value to_json(rapidjson::Document &document, const Mapping::id_t &object);
+
+template<>
 rapidjson::Value to_json(rapidjson::Document &document, const std::pair<Mapping::id_t, Mapping> &object);
 
 template<>

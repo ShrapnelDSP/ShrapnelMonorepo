@@ -188,14 +188,17 @@ struct Mapping {
     std::strong_ordering operator<=>(const Mapping &other) const = default;
 };
 
-template<typename AudioParametersT, std::size_t N>
-class MappingManager final {
+using MappingObserver = etl::observer<const Mapping::id_t&>;
+
+template<typename AudioParametersT, std::size_t MAX_MAPPINGS, std::size_t MAX_OBSERVERS>
+class MappingManager final : public etl::observable<MappingObserver, MAX_OBSERVERS> {
     public:
-    using MapType = etl::map<Mapping::id_t, Mapping, N>;
+    using MapType = etl::map<Mapping::id_t, Mapping, MAX_MAPPINGS>;
 
-    MappingManager(std::shared_ptr<AudioParametersT> a_parameters) : parameters{a_parameters} {}
+    explicit MappingManager(std::shared_ptr<AudioParametersT> a_parameters) : parameters{a_parameters} {}
+    MappingManager(std::shared_ptr<AudioParametersT> a_parameters, MapType initial_mappings) : parameters{a_parameters}, mappings{initial_mappings} {}
 
-    [[nodiscard]] const etl::imap<Mapping::id_t, Mapping> *get() {
+    [[nodiscard]] const etl::imap<Mapping::id_t, Mapping> *get() const {
         return &mappings;
     }
     /// \return non-zero on failure
@@ -206,6 +209,7 @@ class MappingManager final {
         }
 
         mappings.insert(mapping);
+        this->notify_observers(mapping.first);
         return 0;
     }
     /// \return non-zero on failure
@@ -219,16 +223,18 @@ class MappingManager final {
 
         mappings.erase(mapping.first);
         mappings.insert(mapping);
+        this->notify_observers(mapping.first);
         return 0;
     }
     void remove(const Mapping::id_t &id) {
         mappings.erase(id);
+        this->notify_observers(id);
     }
 
     /** React to a MIDI message by updating an audio parameter if there is a
      * mapping registered
      */
-    void process_message(Message message) {
+    void process_message(Message message) const {
         auto cc_params = get_if<Message::ControlChange>(&message.parameters);
         if(!cc_params) return;
 

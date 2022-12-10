@@ -158,10 +158,38 @@ private:
         updated_parameters.clear();
     };
 
-
-
     persistence::Storage &persistence;
     etl::map<parameters::id_t, float, MAX_PARAMETERS> updated_parameters;
+};
+
+template <typename MappingManagerT>
+class MidiMappingObserver final : public midi::MappingObserver {
+public:
+    explicit MidiMappingObserver(persistence::Storage &persistence,
+                                 const MappingManagerT &mapping_manager)
+        : persistence{persistence}, mapping_manager{mapping_manager} {}
+
+    void notification(const midi::Mapping::id_t &) override {
+        ESP_LOGI(TAG, "Midi mapping has changed");
+        persist();
+    }
+
+private:
+    void persist() {
+        rapidjson::Document document;
+
+        auto mapping_data = midi::to_json(document, *mapping_manager.get());
+        document.Swap(mapping_data);
+
+        rapidjson::StringBuffer buffer;
+        rapidjson::Writer writer{buffer};
+        document.Accept(writer);
+
+        persistence.save("midi_mappings", buffer.GetString());
+    };
+
+    persistence::Storage &persistence;
+    const MappingManagerT &mapping_manager;
 };
 
 constexpr const size_t MAX_PARAMETERS = 17;
@@ -170,7 +198,8 @@ using AudioParameters = parameters::AudioParameters<MAX_PARAMETERS, 1>;
 static Queue<AppMessage, QUEUE_LEN> *in_queue;
 static std::shared_ptr<AudioParameters> audio_params;
 static parameters::CommandHandling<AudioParameters, EventSend> *cmd_handling;
-static midi::MappingManager<ParameterUpdateNotifier, 10> *midi_mapping_manager;
+static midi::MappingManager<ParameterUpdateNotifier, 10, 1>
+    *midi_mapping_manager;
 static EventSend event_send{};
 
 static Queue<AppMessage, QUEUE_LEN> *out_queue;
@@ -201,7 +230,6 @@ static void connect_handler(void* arg, esp_event_base_t event_base,
                             int32_t event_id, void* event_data);
 static void start_mdns(void);
 static void i2c_setup(void);
-
 }
 
 static esp_err_t websocket_get_handler(httpd_req_t *req)
@@ -613,24 +641,46 @@ out:
     create_and_load_parameter("chorusMix", 0, 1, 0.8);
     create_and_load_parameter("chorusBypass", 0, 1, 0);
 
-    ESP_LOGI(TAG, "observer size: %zu", sizeof(ParameterObserver<MAX_PARAMETERS>));
-    ESP_LOGI(TAG, "param size: %zu", sizeof(AudioParameters));
-
     ParameterObserver<MAX_PARAMETERS> parameter_observer{persistence};
     audio_params->add_observer(parameter_observer);
 
     auto parameter_notifier = std::make_shared<ParameterUpdateNotifier>();
-    midi_mapping_manager = new midi::MappingManager<ParameterUpdateNotifier, 10>(parameter_notifier);
-    {
+
+    [&] {
+        /* TODO How to reduce the memory usage?
+         * - We could store each entry in the table at a different key
+         * - Use the streaming API so that the entire message does not have to
+         *   be parsed at once?
+         * - Replace etl::map with more efficient implementation
+         */
+        etl::string<1500> mapping_json;
+        persistence.load("midi_mappings", mapping_json);
+        ESP_LOGI(TAG, "saved mappings: %s", mapping_json.c_str());
+
+        rapidjson::Document document;
+        document.Parse(mapping_json.c_str());
+        auto saved_mappings = midi::from_json<etl::map<midi::Mapping::id_t,
+midi::Mapping, 10>>(document);
+
+        midi_mapping_manager =
+            saved_mappings.has_value()
+                ? new midi::MappingManager<ParameterUpdateNotifier, 10, 1>(
+                      parameter_notifier, *saved_mappings)
+                : new midi::MappingManager<ParameterUpdateNotifier, 10, 1>(
+                      parameter_notifier);
+
         auto rc = midi_mapping_manager->create(
-                {
-                midi::Mapping::id_t{0},
-                midi::Mapping{.midi_channel=1, .cc_number=7, .parameter_name="tubeScreamerTone"}});
-        if(rc != 0)
-        {
+            {midi::Mapping::id_t{0},
+             midi::Mapping{.midi_channel = 1,
+                           .cc_number = 7,
+                           .parameter_name = "tubeScreamerTone"}});
+        if (rc != 0) {
             ESP_LOGE(TAG, "Failed to create initial mapping");
         }
-    }
+    }();
+
+    MidiMappingObserver mapping_observer{persistence, *midi_mapping_manager};
+    midi_mapping_manager->add_observer(mapping_observer);
 
     cmd_handling = new parameters::CommandHandling<AudioParameters, EventSend>(
             audio_params.get(),

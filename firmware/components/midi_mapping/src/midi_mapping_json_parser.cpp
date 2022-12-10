@@ -23,6 +23,8 @@
 namespace shrapnel {
 namespace midi {
 
+static int parse_uuid(Mapping::id_t &uuid, const char *string);
+
 template<>
 std::optional<GetRequest> from_json(const rapidjson::Value &)
 {
@@ -84,14 +86,18 @@ std::optional<std::pair<Mapping::id_t, Mapping>> from_json(const rapidjson::Valu
     auto &mapping_entry = mapping_entry_member->value;
 
     auto mapping = from_json<Mapping>(mapping_entry);
-
     if(!mapping.has_value()) {
+        ESP_LOGE(TAG, "failed to get mapping");
         return std::nullopt;
     }
 
-    std::pair<Mapping::id_t, Mapping> out{ Mapping::id_t{0}, *mapping };
-    parse_uuid(out.first, mapping_id.GetString());
-    return out;
+    auto id = from_json<Mapping::id_t>(mapping_id);
+    if(!id.has_value()) {
+        ESP_LOGE(TAG, "failed to get id");
+        return std::nullopt;
+    }
+
+    return {{ *id, *mapping }};
 }
 
 template<>
@@ -134,15 +140,14 @@ std::optional<Remove> from_json(const rapidjson::Value &json) {
         return std::nullopt;
     }
 
-    Mapping::id_t uuid{};
-    int rc = parse_uuid(uuid, id_member->value.GetString());
-    if(rc != 0)
+    auto uuid = from_json<Mapping::id_t>(id_member->value);
+    if(!uuid.has_value())
     {
         ESP_LOGE(TAG, "Failed to parse UUID");
         return std::nullopt;
     }
 
-    return Remove{uuid};
+    return {{*uuid}};
 }
 
 template<>
@@ -179,7 +184,26 @@ error:
     return std::nullopt;
 }
 
-int parse_uuid(Mapping::id_t &uuid, const char *string)
+template<>
+std::optional<Mapping::id_t> from_json(const rapidjson::Value &json) {
+    constexpr const char *TAG = "Mapping::id_t from_json";
+
+    if (!json.IsString()) {
+        ESP_LOGE(TAG, "id is not string");
+        return std::nullopt;
+    }
+
+    Mapping::id_t out;
+    int rc = parse_uuid(out, json.GetString());
+    if(rc != 0) {
+       ESP_LOGE(TAG, "failed to get uuid");
+        return std::nullopt;
+    }
+
+    return out;
+}
+
+static int parse_uuid(Mapping::id_t &uuid, const char *string)
 {
     constexpr std::size_t UUID_LENGTH = 36;
     constexpr char TAG[] = "parse_uuid";
