@@ -70,8 +70,12 @@ void main() {
       await uut.getMapping();
       verify(fakeWebsocket.send(requestJson));
       expect(uut.mappings, {
-        '123':
-            const MidiMapping(midiChannel: 1, ccNumber: 2, parameterId: 'gain'),
+        '123': const MidiMapping(
+          midiChannel: 1,
+          ccNumber: 2,
+          mode: MidiMappingMode.parameter,
+          parameterId: 'gain',
+        ),
       });
 
       await pumpEventQueue();
@@ -123,7 +127,12 @@ void main() {
         {
           "messageType": "MidiMap::create::response",
           "mapping" : {
-            "123": { "midi_channel": 1, "cc_number": 2, "parameter_id": "gain" }
+            "123": {
+              "midi_channel": 1,
+              "cc_number": 2,
+              "mode": "parameter",
+              "parameter_id": "gain"
+            }
           }
         }
         ''',
@@ -134,7 +143,12 @@ void main() {
         {
           "messageType": "MidiMap::create::request",
           "mapping" : {
-            "123": { "midi_channel": 1, "cc_number": 2, "parameter_id": "gain" }
+            "123": {
+              "midi_channel": 1,
+              "cc_number": 2,
+              "mode": "parameter",
+              "parameter_id": "gain"
+            }
           }
         }
         ''',
@@ -153,6 +167,7 @@ void main() {
           mapping: MidiMapping(
             midiChannel: 1,
             ccNumber: 2,
+            mode: MidiMappingMode.parameter,
             parameterId: 'gain',
           ),
         ),
@@ -187,6 +202,7 @@ void main() {
           mapping: MidiMapping(
             midiChannel: 1,
             ccNumber: 2,
+            mode: MidiMappingMode.parameter,
             parameterId: 'gain',
           ),
         ),

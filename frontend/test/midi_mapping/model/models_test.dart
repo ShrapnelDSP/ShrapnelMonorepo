@@ -28,8 +28,18 @@ void main() {
     {
       "messageType": "MidiMap::get::response",
       "mappings": {
-        "1": { "midi_channel": 1, "cc_number": 2, "parameter_id": "gain" },
-        "2": { "midi_channel": 3, "cc_number": 4, "parameter_id": "tone" }
+        "1": {
+          "midi_channel": 1,
+          "cc_number": 2,
+          "mode": "parameter",
+          "parameter_id": "gain"
+        },
+        "2": {
+          "midi_channel": 3,
+          "cc_number": 4,
+          "mode": "toggle",
+          "parameter_id": "tone"
+        }
       }
     }''';
 
@@ -38,11 +48,13 @@ void main() {
         '1': MidiMapping(
           midiChannel: 1,
           ccNumber: 2,
+          mode: MidiMappingMode.parameter,
           parameterId: 'gain',
         ),
         '2': MidiMapping(
           midiChannel: 3,
           ccNumber: 4,
+          mode: MidiMappingMode.toggle,
           parameterId: 'tone',
         ),
       },
@@ -58,8 +70,18 @@ void main() {
     {
       "messageType": "MidiMap::get::response",
       "mappings": {
-        "1": { "midi_channel": 1, "cc_number": 2, "parameter_id": "gain" },
-        "2": { "midi_channel": 3, "cc_number": 4, "parameter_id": "tone" }
+        "1": {
+          "midi_channel": 1,
+          "cc_number": 2,
+          "mode": "parameter",
+          "parameter_id": "gain"
+        },
+        "2": {
+          "midi_channel": 3,
+          "cc_number": 4,
+          "mode": "toggle",
+          "parameter_id": "tone"
+        }
       }
     }''';
 
@@ -68,11 +90,13 @@ void main() {
         '1': MidiMapping(
           midiChannel: 1,
           ccNumber: 2,
+          mode: MidiMappingMode.parameter,
           parameterId: 'gain',
         ),
         '2': MidiMapping(
           midiChannel: 3,
           ccNumber: 4,
+          mode: MidiMappingMode.toggle,
           parameterId: 'tone',
         ),
       },
@@ -127,6 +151,7 @@ void main() {
         "123": {
           "midi_channel": 1,
           "cc_number": 2,
+          "mode": "parameter",
           "parameter_id": "gain"
         }
       }
@@ -138,6 +163,7 @@ void main() {
         mapping: MidiMapping(
           midiChannel: 1,
           ccNumber: 2,
+          mode: MidiMappingMode.parameter,
           parameterId: 'gain',
         ),
       ),
@@ -152,13 +178,6 @@ void main() {
     );
   });
 
-  test('freezed as map value sanity test', () {
-    final map = <String, MidiMapping>{};
-    map['test'] =
-        const MidiMapping(midiChannel: 5, ccNumber: 5, parameterId: 'test');
-    expect(map.length, 1);
-  });
-
   group('MappingEntry: ', () {
     test('encode and decode', () {
       const entryJson = '''
@@ -166,6 +185,7 @@ void main() {
           "123": {
             "midi_channel": 1,
             "cc_number": 2,
+            "mode": "parameter",
             "parameter_id": "gain"
           }
         }''';
@@ -175,6 +195,7 @@ void main() {
         mapping: MidiMapping(
           midiChannel: 1,
           ccNumber: 2,
+          mode: MidiMappingMode.parameter,
           parameterId: 'gain',
         ),
       );
@@ -188,7 +209,7 @@ void main() {
       );
     });
 
-    test('throws if input is invalid', () {
+    test('throws if input has multiple keys', () {
       const entryJson = '''
         {
           "123": {
@@ -210,5 +231,28 @@ void main() {
         throwsA(isFormatException),
       );
     });
+  });
+
+  test('decode legacy message without mode field', () {
+    const message = '''
+        {
+          "midi_channel": 1,
+          "cc_number": 2,
+          "parameter_id": "gain"
+        }''';
+
+    const expected = MidiMapping(
+      midiChannel: 1,
+      ccNumber: 2,
+      mode: MidiMappingMode.parameter, // missing mode is replaced by default
+      parameterId: 'gain',
+    );
+
+    expect(
+      MidiMapping.fromJson(
+        json.decode(message) as Map<String, dynamic>,
+      ),
+      expected,
+    );
   });
 }
