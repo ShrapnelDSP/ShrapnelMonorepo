@@ -4,6 +4,6 @@ var searchData=
   ['mappings_1',['mappings',['../structshrapnel_1_1midi_1_1GetResponse.html#a4c0e88196ec19b241dfc6bd8a5ee52f6',1,'shrapnel::midi::GetResponse']]],
   ['max_5fparameters_2',['MAX_PARAMETERS',['../namespaceshrapnel.html#ac2574f72fe2ddfb3366666bc097b29f2',1,'shrapnel']]],
   ['midi_5fchannel_3',['midi_channel',['../structshrapnel_1_1midi_1_1Mapping.html#a46fa239f0d9c9c4db85812d0f38b0f29',1,'shrapnel::midi::Mapping']]],
-  ['midi_5fmapping_5fmanager_4',['midi_mapping_manager',['../namespaceshrapnel.html#aa5a4f62c185e125f76299ed08776c123',1,'shrapnel']]],
+  ['midi_5fmapping_5fmanager_4',['midi_mapping_manager',['../namespaceshrapnel.html#a1c279551793c1879841f4d0bb89bd420',1,'shrapnel']]],
   ['midi_5fmutex_5',['midi_mutex',['../namespaceshrapnel.html#aace3a2116876caa6e4e139d75e6d4eec',1,'shrapnel']]]
 ];

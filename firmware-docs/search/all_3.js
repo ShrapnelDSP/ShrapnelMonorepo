@@ -29,7 +29,7 @@ var searchData=
   ['control_5fchange_26',['CONTROL_CHANGE',['../namespaceshrapnel_1_1midi.html#ad87a6a7595532b38466aa350b3d4e7aea8b135d1d39b56e9d993d8d62c5ac8743',1,'shrapnel::midi']]],
   ['controlchange_27',['ControlChange',['../structshrapnel_1_1midi_1_1Message_1_1ControlChange.html',1,'shrapnel::midi::Message']]],
   ['cpu_5ffreq_5fmhz_28',['cpu_freq_mhz',['../profiling_8cpp.html#a12d55287a43c286880f5a53b5433fce1',1,'profiling.cpp']]],
-  ['create_29',['create',['../classshrapnel_1_1midi_1_1MappingManager.html#a0e30a9737d5aef0851266bc3fdf1c51f',1,'shrapnel::midi::MappingManager']]],
+  ['create_29',['create',['../classshrapnel_1_1midi_1_1MappingManager.html#a8879cdea1876e9d2227aed10bf7daae2',1,'shrapnel::midi::MappingManager']]],
   ['create_5fand_5fadd_5fparameter_30',['create_and_add_parameter',['../classshrapnel_1_1parameters_1_1AudioParameters.html#ac983377c192b50fc50fffe0c34cfcfca',1,'shrapnel::parameters::AudioParameters']]],
   ['createrequest_31',['CreateRequest',['../structshrapnel_1_1midi_1_1CreateRequest.html',1,'shrapnel::midi']]],
   ['createresponse_32',['CreateResponse',['../structshrapnel_1_1midi_1_1CreateResponse.html',1,'shrapnel::midi']]],

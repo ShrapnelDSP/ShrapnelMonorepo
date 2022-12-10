@@ -7,5 +7,6 @@ var midi__mapping__json__parser_8cpp =
     [ "from_json", "midi__mapping__json__parser_8cpp.html#aad12316a79e19947ba3d5700a466f933", null ],
     [ "from_json", "midi__mapping__json__parser_8cpp.html#a2b9d2bc58c847f2f2289c90bf47979e6", null ],
     [ "from_json", "midi__mapping__json__parser_8cpp.html#ae251dec5b5227e127fb60ecfe722deeb", null ],
-    [ "parse_uuid", "midi__mapping__json__parser_8cpp.html#a28b9d0dddfafc22560e2eaa14006045d", null ]
+    [ "from_json", "midi__mapping__json__parser_8cpp.html#afb604f5fa6a08aa90b1429d0ee975ea8", null ],
+    [ "parse_uuid", "midi__mapping__json__parser_8cpp.html#ab7031964c1f6c63ca97376295c2e6f49", null ]
 ];

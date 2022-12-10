@@ -29,7 +29,9 @@ var hierarchy =
     [ "shrapnel::parameters::Initialise", "structshrapnel_1_1parameters_1_1Initialise.html", null ],
     [ "shrapnel::effect::valvestate::InputFilter", "classshrapnel_1_1effect_1_1valvestate_1_1InputFilter.html", null ],
     [ "shrapnel::midi::Mapping", "structshrapnel_1_1midi_1_1Mapping.html", null ],
-    [ "shrapnel::midi::MappingManager< AudioParametersT, N >", "classshrapnel_1_1midi_1_1MappingManager.html", null ],
+    [ "midi::MappingObserver", null, [
+      [ "shrapnel::MidiMappingObserver< MappingManagerT >", "classshrapnel_1_1MidiMappingObserver.html", null ]
+    ] ],
     [ "shrapnel::midi::Message", "structshrapnel_1_1midi_1_1Message.html", null ],
     [ "shrapnel::midi::MidiUartBase", "classshrapnel_1_1midi_1_1MidiUartBase.html", [
       [ "shrapnel::midi::EspMidiUart", "classshrapnel_1_1midi_1_1EspMidiUart.html", null ]
@@ -37,6 +39,7 @@ var hierarchy =
     [ "shrapnel::midi::Message::NoteOff", "structshrapnel_1_1midi_1_1Message_1_1NoteOff.html", null ],
     [ "shrapnel::midi::Message::NoteOn", "structshrapnel_1_1midi_1_1Message_1_1NoteOn.html", null ],
     [ "etl::observable", null, [
+      [ "shrapnel::midi::MappingManager< AudioParametersT, MAX_MAPPINGS, MAX_OBSERVERS >", "classshrapnel_1_1midi_1_1MappingManager.html", null ],
       [ "shrapnel::parameters::AudioParameters< MAX_PARAMETERS, MAX_OBSERVERS >", "classshrapnel_1_1parameters_1_1AudioParameters.html", null ]
     ] ],
     [ "parameters::ParameterObserver", null, [

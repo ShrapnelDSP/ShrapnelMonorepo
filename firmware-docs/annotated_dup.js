@@ -48,6 +48,7 @@ var annotated_dup =
         [ "WiFiProvisioning", "classshrapnel_1_1wifi__provisioning_1_1WiFiProvisioning.html", "classshrapnel_1_1wifi__provisioning_1_1WiFiProvisioning" ]
       ] ],
       [ "EventSend", "classshrapnel_1_1EventSend.html", "classshrapnel_1_1EventSend" ],
+      [ "MidiMappingObserver", "classshrapnel_1_1MidiMappingObserver.html", "classshrapnel_1_1MidiMappingObserver" ],
       [ "ParameterObserver", "classshrapnel_1_1ParameterObserver.html", "classshrapnel_1_1ParameterObserver" ],
       [ "ParameterUpdateNotifier", "classshrapnel_1_1ParameterUpdateNotifier.html", "classshrapnel_1_1ParameterUpdateNotifier" ],
       [ "Queue", "classshrapnel_1_1Queue.html", "classshrapnel_1_1Queue" ],

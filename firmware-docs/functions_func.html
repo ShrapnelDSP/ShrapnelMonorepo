@@ -108,7 +108,7 @@ $(document).ready(function(){initNavTree('functions_func.html',''); initResizabl
 <li>CommandHandling()&#160;:&#160;<a class="el" href="classshrapnel_1_1parameters_1_1CommandHandling.html#a3832b0519c2cb468ad3d655fb62dfddf">shrapnel::parameters::CommandHandling&lt; AudioParametersT, EventSendT &gt;</a></li>
 <li>complex_multiply()&#160;:&#160;<a class="el" href="classshrapnel_1_1dsp_1_1FastConvolution.html#af1edb28634e2a86d0223e4bf56234650">shrapnel::dsp::FastConvolution&lt; N, K &gt;</a></li>
 <li>ContourFilter()&#160;:&#160;<a class="el" href="classContourFilter.html#af4486d2fb4e9beb086f2b11b5f48d111">ContourFilter</a></li>
-<li>create()&#160;:&#160;<a class="el" href="classshrapnel_1_1midi_1_1MappingManager.html#a0e30a9737d5aef0851266bc3fdf1c51f">shrapnel::midi::MappingManager&lt; AudioParametersT, N &gt;</a></li>
+<li>create()&#160;:&#160;<a class="el" href="classshrapnel_1_1midi_1_1MappingManager.html#a8879cdea1876e9d2227aed10bf7daae2">shrapnel::midi::MappingManager&lt; AudioParametersT, MAX_MAPPINGS, MAX_OBSERVERS &gt;</a></li>
 <li>create_and_add_parameter()&#160;:&#160;<a class="el" href="classshrapnel_1_1parameters_1_1AudioParameters.html#ac983377c192b50fc50fffe0c34cfcfca">shrapnel::parameters::AudioParameters&lt; MAX_PARAMETERS, MAX_OBSERVERS &gt;</a></li>
 </ul>
 
@@ -134,7 +134,7 @@ $(document).ready(function(){initNavTree('functions_func.html',''); initResizabl
 
 
 <h3><a id="index_g" name="index_g"></a>- g -</h3><ul>
-<li>get()&#160;:&#160;<a class="el" href="classshrapnel_1_1midi_1_1MappingManager.html#a109a0828ec49ef7666948ae9d1b1a08a">shrapnel::midi::MappingManager&lt; AudioParametersT, N &gt;</a>, <a class="el" href="classshrapnel_1_1parameters_1_1AudioParameterFloat.html#a221045938d57c9112ef7dcc2c90c2662">shrapnel::parameters::AudioParameterFloat</a>, <a class="el" href="classshrapnel_1_1parameters_1_1AudioParameters.html#a7d8d81ac3ae967963395379b050de8bc">shrapnel::parameters::AudioParameters&lt; MAX_PARAMETERS, MAX_OBSERVERS &gt;</a></li>
+<li>get()&#160;:&#160;<a class="el" href="classshrapnel_1_1midi_1_1MappingManager.html#a7087692921b992e7a13da2d7499865a9">shrapnel::midi::MappingManager&lt; AudioParametersT, MAX_MAPPINGS, MAX_OBSERVERS &gt;</a>, <a class="el" href="classshrapnel_1_1parameters_1_1AudioParameterFloat.html#a221045938d57c9112ef7dcc2c90c2662">shrapnel::parameters::AudioParameterFloat</a>, <a class="el" href="classshrapnel_1_1parameters_1_1AudioParameters.html#a7d8d81ac3ae967963395379b050de8bc">shrapnel::parameters::AudioParameters&lt; MAX_PARAMETERS, MAX_OBSERVERS &gt;</a></li>
 <li>get_byte()&#160;:&#160;<a class="el" href="classshrapnel_1_1midi_1_1EspMidiUart.html#a7bdbde35c68368f6e2d2156e7aebfde6">shrapnel::midi::EspMidiUart</a>, <a class="el" href="classshrapnel_1_1midi_1_1MidiUartBase.html#a62f4c08b5af0b4e486d8e6f4109f6bd1">shrapnel::midi::MidiUartBase</a></li>
 <li>get_raw_parameter()&#160;:&#160;<a class="el" href="classshrapnel_1_1parameters_1_1AudioParameterFloat.html#ae12554d40347008e135dbd2d041fc0c6">shrapnel::parameters::AudioParameterFloat</a>, <a class="el" href="classshrapnel_1_1parameters_1_1AudioParameters.html#af74ab846cc4ddaea480e109ce132a8ea">shrapnel::parameters::AudioParameters&lt; MAX_PARAMETERS, MAX_OBSERVERS &gt;</a>, <a class="el" href="classshrapnel_1_1parameters_1_1AudioParametersBase.html#a64be66aabe04db4524a64df0ba03f7fd">shrapnel::parameters::AudioParametersBase</a></li>
 </ul>
@@ -154,12 +154,13 @@ $(document).ready(function(){initNavTree('functions_func.html',''); initResizabl
 
 
 <h3><a id="index_m" name="index_m"></a>- m -</h3><ul>
-<li>MappingManager()&#160;:&#160;<a class="el" href="classshrapnel_1_1midi_1_1MappingManager.html#a7233a28e7d459ea626aa2d91595a3ae7">shrapnel::midi::MappingManager&lt; AudioParametersT, N &gt;</a></li>
+<li>MappingManager()&#160;:&#160;<a class="el" href="classshrapnel_1_1midi_1_1MappingManager.html#a533672d97031598ca7788856f0d679fd">shrapnel::midi::MappingManager&lt; AudioParametersT, MAX_MAPPINGS, MAX_OBSERVERS &gt;</a></li>
+<li>MidiMappingObserver()&#160;:&#160;<a class="el" href="classshrapnel_1_1MidiMappingObserver.html#aebd40621db4a0905667bf63bbd3719c4">shrapnel::MidiMappingObserver&lt; MappingManagerT &gt;</a></li>
 </ul>
 
 
 <h3><a id="index_n" name="index_n"></a>- n -</h3><ul>
-<li>notification()&#160;:&#160;<a class="el" href="classshrapnel_1_1ParameterObserver.html#ae4271bba0d4f15608ac2cb048044251f">shrapnel::ParameterObserver&lt; MAX_PARAMETERS &gt;</a></li>
+<li>notification()&#160;:&#160;<a class="el" href="classshrapnel_1_1MidiMappingObserver.html#a6823a376e4f7f01e3d79b3d22ccf57c6">shrapnel::MidiMappingObserver&lt; MappingManagerT &gt;</a>, <a class="el" href="classshrapnel_1_1ParameterObserver.html#ae4271bba0d4f15608ac2cb048044251f">shrapnel::ParameterObserver&lt; MAX_PARAMETERS &gt;</a></li>
 </ul>
 
 
@@ -173,7 +174,7 @@ $(document).ready(function(){initNavTree('functions_func.html',''); initResizabl
 <li>pop_sample()&#160;:&#160;<a class="el" href="classshrapnel_1_1dsp_1_1DelayLine.html#a38d159691f182d38a31fbcaeb6ea48a6">shrapnel::dsp::DelayLine</a></li>
 <li>prepare()&#160;:&#160;<a class="el" href="classContourFilter.html#a934f8c64010e0434fb88f96a01865738">ContourFilter</a>, <a class="el" href="classshrapnel_1_1effect_1_1valvestate_1_1FMVFilter.html#a1a63e9981469f1ae6eca95d4cf76bcbb">shrapnel::effect::valvestate::FMVFilter</a>, <a class="el" href="classshrapnel_1_1effect_1_1valvestate_1_1GainControl.html#ac5c7d32b1b4a40768d1bc20130dad75f">shrapnel::effect::valvestate::GainControl</a>, <a class="el" href="classshrapnel_1_1effect_1_1valvestate_1_1InputFilter.html#ad5d84e0e19e8a3f4ec3058b217d69c6e">shrapnel::effect::valvestate::InputFilter</a>, <a class="el" href="classshrapnel_1_1effect_1_1valvestate_1_1Valvestate.html#a42f2f6749648daf577cb40bf85564494">shrapnel::effect::valvestate::Valvestate</a></li>
 <li>process()&#160;:&#160;<a class="el" href="classContourFilter.html#a2baf26150cbf88c8261ba2b42ae83703">ContourFilter</a>, <a class="el" href="classshrapnel_1_1dsp_1_1FastConvolution.html#a6493ff01fa4ad9d2d0be60122a70ecd9">shrapnel::dsp::FastConvolution&lt; N, K &gt;</a>, <a class="el" href="classshrapnel_1_1dsp_1_1FastFir.html#aea9dcd6520d894549f0c928f575b16f0">shrapnel::dsp::FastFir&lt; N, M, Convolution &gt;</a>, <a class="el" href="classshrapnel_1_1dsp_1_1IirFilter.html#a53cb5a72d2a310cd4b35d4329af682f0">shrapnel::dsp::IirFilter</a>, <a class="el" href="classshrapnel_1_1dsp_1_1IirFilterBase.html#a4f97a0cc9a0995483c0775bf80026884">shrapnel::dsp::IirFilterBase</a>, <a class="el" href="classshrapnel_1_1effect_1_1Chorus.html#aa8c2d5c2e577530b614fd8d2630f32a3">shrapnel::effect::Chorus</a>, <a class="el" href="classshrapnel_1_1effect_1_1valvestate_1_1Clipping.html#ac3012b2a5521ab0f7aefd9fb52f926b8">shrapnel::effect::valvestate::Clipping</a>, <a class="el" href="classshrapnel_1_1effect_1_1valvestate_1_1FMVFilter.html#a1054a330bdb72fa1d10e8fcc6bc51edb">shrapnel::effect::valvestate::FMVFilter</a>, <a class="el" href="classshrapnel_1_1effect_1_1valvestate_1_1GainControl.html#a8f5ff9dee05742cd426f78eab0e42edb">shrapnel::effect::valvestate::GainControl</a>, <a class="el" href="classshrapnel_1_1effect_1_1valvestate_1_1InputFilter.html#a1452168fb958f39f748f76bae75b907f">shrapnel::effect::valvestate::InputFilter</a>, <a class="el" href="classshrapnel_1_1effect_1_1valvestate_1_1Valvestate.html#a9636b34accae16b0e8681d701816eca5">shrapnel::effect::valvestate::Valvestate</a></li>
-<li>process_message()&#160;:&#160;<a class="el" href="classshrapnel_1_1midi_1_1MappingManager.html#a047f181f70c4e732754c08aab432ba0c">shrapnel::midi::MappingManager&lt; AudioParametersT, N &gt;</a></li>
+<li>process_message()&#160;:&#160;<a class="el" href="classshrapnel_1_1midi_1_1MappingManager.html#ac6f275b3280f5f57d8612d40e7d86141">shrapnel::midi::MappingManager&lt; AudioParametersT, MAX_MAPPINGS, MAX_OBSERVERS &gt;</a></li>
 <li>push_sample()&#160;:&#160;<a class="el" href="classshrapnel_1_1dsp_1_1DelayLine.html#a705f083f7c8adf7bc7e32c0ed449a506">shrapnel::dsp::DelayLine</a></li>
 </ul>
 
@@ -186,7 +187,7 @@ $(document).ready(function(){initNavTree('functions_func.html',''); initResizabl
 
 <h3><a id="index_r" name="index_r"></a>- r -</h3><ul>
 <li>receive()&#160;:&#160;<a class="el" href="classshrapnel_1_1Queue.html#aea7063f7ef99b8b46f6ba1250012332c">shrapnel::Queue&lt; T, MAX_SIZE &gt;</a>, <a class="el" href="classshrapnel_1_1QueueBase.html#ab91cc1fb473ac9499f7843218842a946">shrapnel::QueueBase&lt; T &gt;</a></li>
-<li>remove()&#160;:&#160;<a class="el" href="classshrapnel_1_1midi_1_1MappingManager.html#a3069d412963dc543e487c6f92cf3a731">shrapnel::midi::MappingManager&lt; AudioParametersT, N &gt;</a></li>
+<li>remove()&#160;:&#160;<a class="el" href="classshrapnel_1_1midi_1_1MappingManager.html#aa1026b08a8010e60a9d5b3d417d381a2">shrapnel::midi::MappingManager&lt; AudioParametersT, MAX_MAPPINGS, MAX_OBSERVERS &gt;</a></li>
 <li>reset()&#160;:&#160;<a class="el" href="classContourFilter.html#ac12574e070f454adde05a20b80407d16">ContourFilter</a>, <a class="el" href="classshrapnel_1_1dsp_1_1FastFir.html#a47ccf11741ed15504ef5f61fe23d3a5d">shrapnel::dsp::FastFir&lt; N, M, Convolution &gt;</a>, <a class="el" href="classshrapnel_1_1dsp_1_1IirFilter.html#a0849f4c727beedd3b29f6b8ff50f6b02">shrapnel::dsp::IirFilter</a>, <a class="el" href="classshrapnel_1_1dsp_1_1IirFilterBase.html#a5b367e32dfecc0d815937938299e8295">shrapnel::dsp::IirFilterBase</a>, <a class="el" href="classshrapnel_1_1effect_1_1valvestate_1_1FMVFilter.html#a825b1d349a4bcb1e4250174b4de9a7a4">shrapnel::effect::valvestate::FMVFilter</a>, <a class="el" href="classshrapnel_1_1effect_1_1valvestate_1_1GainControl.html#aeff6e479058004d15d749a5c5a504461">shrapnel::effect::valvestate::GainControl</a>, <a class="el" href="classshrapnel_1_1effect_1_1valvestate_1_1InputFilter.html#a2b8b63ac88d63972aac7d67121e9f97c">shrapnel::effect::valvestate::InputFilter</a>, <a class="el" href="classshrapnel_1_1effect_1_1valvestate_1_1Valvestate.html#a97e42d4d01d1120464aceb8c3c2dcb86">shrapnel::effect::valvestate::Valvestate</a></li>
 </ul>
 
@@ -219,7 +220,7 @@ $(document).ready(function(){initNavTree('functions_func.html',''); initResizabl
 
 
 <h3><a id="index_u" name="index_u"></a>- u -</h3><ul>
-<li>update()&#160;:&#160;<a class="el" href="classshrapnel_1_1midi_1_1MappingManager.html#a89bc094c0b992a72b4c79d18d3febe3b">shrapnel::midi::MappingManager&lt; AudioParametersT, N &gt;</a>, <a class="el" href="classshrapnel_1_1parameters_1_1AudioParameterFloat.html#a4746a6da46d63038a0b4e8fe6e9c7e91">shrapnel::parameters::AudioParameterFloat</a>, <a class="el" href="classshrapnel_1_1parameters_1_1AudioParameters.html#af100ef22bb8bbd682f1c73e3b3dd45b0">shrapnel::parameters::AudioParameters&lt; MAX_PARAMETERS, MAX_OBSERVERS &gt;</a>, <a class="el" href="classshrapnel_1_1ParameterUpdateNotifier.html#a967cc4697c8d692d1c91d8295d8c1012">shrapnel::ParameterUpdateNotifier</a></li>
+<li>update()&#160;:&#160;<a class="el" href="classshrapnel_1_1midi_1_1MappingManager.html#a8faaecc25616ec5ded042a51160d8f50">shrapnel::midi::MappingManager&lt; AudioParametersT, MAX_MAPPINGS, MAX_OBSERVERS &gt;</a>, <a class="el" href="classshrapnel_1_1parameters_1_1AudioParameterFloat.html#a4746a6da46d63038a0b4e8fe6e9c7e91">shrapnel::parameters::AudioParameterFloat</a>, <a class="el" href="classshrapnel_1_1parameters_1_1AudioParameters.html#af100ef22bb8bbd682f1c73e3b3dd45b0">shrapnel::parameters::AudioParameters&lt; MAX_PARAMETERS, MAX_OBSERVERS &gt;</a>, <a class="el" href="classshrapnel_1_1ParameterUpdateNotifier.html#a967cc4697c8d692d1c91d8295d8c1012">shrapnel::ParameterUpdateNotifier</a></li>
 </ul>
 
 

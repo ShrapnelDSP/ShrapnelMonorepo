@@ -20,7 +20,7 @@
 <!-- Node2 -->
 <g id="node2" class="node">
 <title>Node2</title>
-<g id="a_node2"><a xlink:href="namespaceshrapnel_1_1midi.html#a28b9d0dddfafc22560e2eaa14006045d" target="_top" xlink:title="return non&#45;zero on error">
+<g id="a_node2"><a xlink:href="namespaceshrapnel_1_1midi.html#ab7031964c1f6c63ca97376295c2e6f49" target="_top" xlink:title=" ">
 <polygon fill="none" stroke="black" points="159,-0.5 159,-19.5 287,-19.5 287,-0.5 159,-0.5"/>
 <text text-anchor="middle" x="223" y="-7.5" font-family="Helvetica,sans-Serif" font-size="10.00">shrapnel::midi::parse_uuid</text>
 </a>
