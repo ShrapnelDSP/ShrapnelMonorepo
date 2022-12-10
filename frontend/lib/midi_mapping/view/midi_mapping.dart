@@ -44,6 +44,7 @@ class MidiMappingPage extends StatelessWidget {
             columns: const [
               DataColumn(label: Text('MIDI channel')),
               DataColumn(label: Text('CC number')),
+              DataColumn(label: Text('Mode')),
               DataColumn(label: Text('Parameter')),
               DataColumn(label: Text('Delete')),
             ],
@@ -72,6 +73,16 @@ class MidiMappingPage extends StatelessWidget {
                         onChanged: (value) => midiMappingService.updateMapping(
                           mapping.copyWith.mapping(ccNumber: value!),
                         ),
+                      ),
+                    ),
+                    DataCell(
+                      ModeDropdown(
+                        key: Key('${mapping.id}-mode-dropdown'),
+                        value:
+                            mapping.mapping.mode,
+                        onChanged: (value) => midiMappingService.updateMapping(
+                              mapping.copyWith.mapping(mode: value!),
+                            ),
                       ),
                     ),
                     DataCell(
@@ -124,6 +135,7 @@ class CreateMappingDialogState extends State<CreateMappingDialog> {
   final _formKey = GlobalKey<FormState>();
   int? channel;
   int? ccNumber;
+  MidiMappingMode? mode;
   String? parameter;
 
   @override
@@ -173,6 +185,20 @@ class CreateMappingDialogState extends State<CreateMappingDialog> {
                 onChanged: (value) => setState(() => ccNumber = value),
                 validator: validateIsNotNull,
               ),
+              DropdownButtonFormField<MidiMappingMode>(
+                decoration: const InputDecoration(
+                  label: Text('Mode'),
+                ),
+                items: List<DropdownMenuItem<MidiMappingMode>>.generate(
+                  MidiMappingMode.values.length,
+                  (i) => DropdownMenuItem(
+                      value: MidiMappingMode.values[i],
+                      child: Text(MidiMappingMode.values[i].uiName),),
+                ),
+                value: mode,
+                onChanged: (value) => setState(() => mode = value),
+                validator: validateIsNotNull,
+              ),
               DropdownButtonFormField<String>(
                 decoration: const InputDecoration(
                   label: Text('Parameter'),
@@ -200,6 +226,7 @@ class CreateMappingDialogState extends State<CreateMappingDialog> {
                           midiChannel: channel!,
                           ccNumber: ccNumber!,
                           parameterId: parameter!,
+                          mode: mode!,
                         ),
                       ),
                     );
@@ -269,6 +296,33 @@ class MidiCCDropdown extends StatelessWidget {
   }
 }
 
+class ModeDropdown extends StatelessWidget {
+  const ModeDropdown({
+    required this.value,
+    required this.onChanged,
+    super.key,
+  });
+
+  final MidiMappingMode value;
+  final void Function(MidiMappingMode?) onChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    return DropdownButton<MidiMappingMode>(
+      items: [
+        ...MidiMappingMode.values.map(
+          (mode) => DropdownMenuItem(
+            value: mode,
+            child: Text(mode.uiName),
+          ),
+        )
+      ],
+      onChanged: onChanged,
+      value: value,
+    );
+  }
+}
+
 class ParametersDropdown extends StatelessWidget {
   const ParametersDropdown({
     required this.value,
@@ -285,7 +339,6 @@ class ParametersDropdown extends StatelessWidget {
 
     return DropdownButton<String>(
       items: [
-        const DropdownMenuItem(child: Text('None')),
         ...parameters.keys.map(
           (id) => DropdownMenuItem(
             value: id,
