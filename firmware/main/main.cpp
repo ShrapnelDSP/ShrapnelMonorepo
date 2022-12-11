@@ -107,6 +107,7 @@ namespace midi {
 class ParameterUpdateNotifier {
     public:
     int update(const parameters::id_t &param, float value);
+    float get(const parameters::id_t &param);
 };
 
 class EventSend final {
@@ -570,6 +571,10 @@ int ParameterUpdateNotifier::update(const parameters::id_t &param, float value)
     return audio_params->update(param, value);
 }
 
+float ParameterUpdateNotifier::get(const parameters::id_t &param) {
+  return audio_params->get(param);
+}
+
 void nvs_debug_print();
 
 extern "C" void app_main(void)
@@ -676,6 +681,7 @@ midi::Mapping, 10>>(document);
             {midi::Mapping::id_t{0},
              midi::Mapping{.midi_channel = 1,
                            .cc_number = 7,
+                           .mode = midi::Mapping::Mode::PARAMETER,
                            .parameter_name = "tubeScreamerTone"}});
         if (rc != 0) {
             ESP_LOGE(TAG, "Failed to create initial mapping");

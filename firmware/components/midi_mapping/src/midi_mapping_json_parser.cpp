@@ -47,30 +47,32 @@ std::optional<Mapping> from_json(const rapidjson::Value &json)
         return std::nullopt;
     }
 
+    Mapping::Mode mode = Mapping::Mode::PARAMETER;
     auto mode_json = json.FindMember("mode");
     if(mode_json == json.MemberEnd())
     {
-        ESP_LOGE(TAG, "mode is missing");
-        return std::nullopt;
+        ESP_LOGW(TAG, "mode is missing, setting it to PARAMETER");
     }
-
-    if(!mode_json->value.IsString())
+    else
     {
-        ESP_LOGE(TAG, "mode is not string");
-        return std::nullopt;
-    }
+        if(!mode_json->value.IsString())
+        {
+            ESP_LOGE(TAG, "mode is not string");
+            return std::nullopt;
+        }
 
-    static const etl::map<etl::string_view, Mapping::Mode, 2> lut{
-        {"parameter", Mapping::Mode::PARAMETER},
-        {"toggle", Mapping::Mode::TOGGLE},
-    };
+        static const etl::map<etl::string_view, Mapping::Mode, 2> lut{
+            {"parameter", Mapping::Mode::PARAMETER},
+            {"toggle", Mapping::Mode::TOGGLE},
+        };
 
-    if(!lut.contains(mode_json->value.GetString()))
-    {
-        ESP_LOGE(TAG, "unknown mode %s", mode_json->value.GetString());
-        return std::nullopt;
+        if(!lut.contains(mode_json->value.GetString()))
+        {
+            ESP_LOGE(TAG, "unknown mode %s", mode_json->value.GetString());
+            return std::nullopt;
+        }
+        mode = lut.at(mode_json->value.GetString());
     }
-    auto mode = lut.at(mode_json->value.GetString());
 
     auto parameter_id = json.FindMember("parameter_id");
     if(parameter_id == json.MemberEnd()) {
