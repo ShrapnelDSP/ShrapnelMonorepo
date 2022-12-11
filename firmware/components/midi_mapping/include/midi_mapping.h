@@ -61,7 +61,8 @@
  * {
  *   "midi_channel": integer,
  *   "cc_number": integer,
- *   "parameter_id": "string"
+ *   "mode": "parameter" or "toggle",
+ *   "parameter_id": "string",
  * }
  * ~~~
  *
@@ -93,8 +94,18 @@
  *   {
  *     "messageType": "MidiMap::get::response",
  *     "mappings": {
- *       "...": { "midi_channel": 1, "cc_number": 2, "parameter_id": "gain" },
- *       "...": { "midi_channel": 3, "cc_number": 4, "parameter_id": "tone" }
+ *       "...": {
+ *         "midi_channel": 1,
+ *         "cc_number": 2,
+ *         "mode": "parameter",
+ *         "parameter_id": "gain"
+ *       },
+ *       "...": {
+ *         "midi_channel": 3,
+ *         "cc_number": 4,
+ *         "mode": "toggle",
+ *         "parameter_id": "tone"
+ *       }
  *     }
  *   }
  *   ~~~
@@ -111,6 +122,7 @@
  *       "...": {
  *         "midi_channel": 1,
  *         "cc_number": 1,
+ *         "mode": "parameter",
  *         "parameter_id": "gain"
  *       }
  *     }
@@ -129,6 +141,7 @@
  *       "...": {
  *         "midi_channel": 1,
  *         "cc_number": 1,
+ *         "mode": "parameter",
  *         "parameter_id": "gain"
  *       }
  *     }
@@ -147,6 +160,7 @@
  *       "...": {
  *         "midi_channel": 1,
  *         "cc_number": 1,
+ *         "mode": "parameter",
  *         "parameter_id": "gain"
  *       }
  *     }
