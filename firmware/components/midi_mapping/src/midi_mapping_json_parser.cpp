@@ -47,6 +47,31 @@ std::optional<Mapping> from_json(const rapidjson::Value &json)
         return std::nullopt;
     }
 
+    auto mode_json = json.FindMember("mode");
+    if(mode_json == json.MemberEnd())
+    {
+        ESP_LOGE(TAG, "mode is missing");
+        return std::nullopt;
+    }
+
+    if(!mode_json->value.IsString())
+    {
+        ESP_LOGE(TAG, "mode is not string");
+        return std::nullopt;
+    }
+
+    static const etl::map<etl::string_view, Mapping::Mode, 2> lut{
+        {"parameter", Mapping::Mode::PARAMETER},
+        {"toggle", Mapping::Mode::TOGGLE},
+    };
+
+    if(!lut.contains(mode_json->value.GetString()))
+    {
+        ESP_LOGE(TAG, "unknown mode %s", mode_json->value.GetString());
+        return std::nullopt;
+    }
+    auto mode = lut.at(mode_json->value.GetString());
+
     auto parameter_id = json.FindMember("parameter_id");
     if(parameter_id == json.MemberEnd()) {
         ESP_LOGE(TAG, "parameter_id is missing");
@@ -57,6 +82,7 @@ std::optional<Mapping> from_json(const rapidjson::Value &json)
     return Mapping{
         static_cast<uint8_t>(midi_channel->value.GetInt()),
         static_cast<uint8_t>(cc_number->value.GetInt()),
+        mode,
         parameters::id_t(parameter_id->value.GetString())
     };
 }

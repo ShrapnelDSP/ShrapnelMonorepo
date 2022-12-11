@@ -116,6 +116,7 @@ TEST_F(MappingApiMessageTest, CreateRequest)
         "00010203-0405-0607-0809-0a0b0c0d0e0f": {
           "midi_channel": 1,
           "cc_number": 2,
+          "mode": "parameter",
           "parameter_id": "gain"
         }
       }
@@ -131,7 +132,7 @@ TEST_F(MappingApiMessageTest, CreateRequest)
                 0, 1,  2,  3,  4,  5,  6,  7,
                 8, 9, 10, 11, 12, 13, 14, 15
             },
-            Mapping{1, 2, parameters::id_t("gain")}}};
+            Mapping{1, 2, Mapping::Mode::PARAMETER, parameters::id_t("gain")}}};
 
         EXPECT_THAT(*message, expected);
     } else {
@@ -147,6 +148,7 @@ TEST_F(MappingApiMessageTest, Update)
         "00010203-0405-0607-0809-0a0b0c0d0e0f": {
           "midi_channel": 1,
           "cc_number": 2,
+          "mode": "parameter",
           "parameter_id": "gain"
         }
       }
@@ -162,7 +164,7 @@ TEST_F(MappingApiMessageTest, Update)
                 0, 1,  2,  3,  4,  5,  6,  7,
                 8, 9, 10, 11, 12, 13, 14, 15
             },
-            Mapping{1, 2, parameters::id_t("gain")}}};
+            Mapping{1, 2, Mapping::Mode::PARAMETER, parameters::id_t("gain")}}};
 
         EXPECT_THAT(*message, expected);
     } else {
@@ -199,6 +201,7 @@ TEST_F(MappingApiMessageTest, EtlMapOfIdToMapping)
       "00010203-0405-0607-0809-0a0b0c0d0e0f": {
         "midi_channel": 1,
         "cc_number": 2,
+        "mode": "parameter",
         "parameter_id": "gain"
       }
     })";
@@ -215,7 +218,7 @@ TEST_F(MappingApiMessageTest, EtlMapOfIdToMapping)
                                    0, 1,  2,  3,  4,  5,  6,  7,
                                    8, 9, 10, 11, 12, 13, 14, 15
                                },
-                               Mapping{1, 2, parameters::id_t("gain")}}};
+                               Mapping{1, 2, Mapping::Mode::PARAMETER, parameters::id_t("gain")}}};
 
     EXPECT_THAT(*result, expected);
 }

@@ -30,12 +30,15 @@ using namespace shrapnel;
 using namespace shrapnel::midi;
 
 using id_t = shrapnel::parameters::id_t;
+using ::testing::FloatEq;
 using ::testing::Not;
+using ::testing::Return;
 
 class MockAudioParameters
 {
     public:
     MOCK_METHOD(int, update, (id_t param, float value), ());
+    MOCK_METHOD(float, get, (const id_t &param), ());
 };
 
 class MidiMapping : public ::testing::Test
@@ -51,16 +54,16 @@ class MidiMapping : public ::testing::Test
 TEST_F(MidiMapping, Create)
 {
     EXPECT_THAT(sut.get()->size(), 0);
-    EXPECT_THAT(sut.create({{1}, {1, 2, "gain"}}), 0);
+    EXPECT_THAT(sut.create({{1}, {1, 2, Mapping::Mode::PARAMETER, "gain"}}), 0);
     EXPECT_THAT(sut.get()->size(), 1);
-    EXPECT_THAT(sut.create({{2}, {3, 4, "volume"}}), 0);
+    EXPECT_THAT(sut.create({{2}, {3, 4, Mapping::Mode::PARAMETER, "volume"}}), 0);
     EXPECT_THAT(sut.get()->size(), 2);
-    EXPECT_THAT(sut.create({{2}, {5, 6, "tone"}}), Not(0));
+    EXPECT_THAT(sut.create({{2}, {5, 6, Mapping::Mode::PARAMETER, "tone"}}), Not(0));
 }
 
-TEST_F(MidiMapping, Process)
+TEST_F(MidiMapping, ProcessParameter)
 {
-    sut.create({{1}, {1, 2, "gain"}});
+    EXPECT_EQ(0, sut.create({{1}, {1, 2, Mapping::Mode::PARAMETER, "gain"}}));
 
     EXPECT_CALL(*parameters_mock, update(id_t("gain"), 0.f));
     sut.process_message({
@@ -94,18 +97,60 @@ TEST_F(MidiMapping, Process)
     });
 }
 
+TEST_F(MidiMapping, ProcessToggle)
+{
+  auto process_message_with_value = [&] (uint8_t value) {
+    sut.process_message({
+                            .channel{1},
+                            .parameters{
+                                Message::ControlChange{.control = 2, .value = value}
+                            },
+                        });
+  };
+
+  EXPECT_EQ(0, sut.create({{1}, {1, 2, Mapping::Mode::TOGGLE, "bypass"}}));
+
+  EXPECT_CALL(*parameters_mock, get(id_t{"bypass"})).WillRepeatedly(Return(0.f));
+  {
+      ::testing::InSequence seq;
+
+      // update is called for every event with non-zero value
+      // mock always returns 0, so call should be with 1 always
+      EXPECT_CALL(*parameters_mock, update(id_t("bypass"), FloatEq(1.f))).Times(2);
+      EXPECT_CALL(*parameters_mock, update).Times(0);
+  }
+
+  process_message_with_value(0);
+  process_message_with_value(1);
+  process_message_with_value(2);
+
+  sut.process_message({
+                          .channel{99},
+                          .parameters{
+                              Message::ControlChange{.control = 2, .value = 1}
+                          },
+                      });
+
+  sut.process_message({
+                          .channel{1},
+                          .parameters{
+                              Message::ControlChange{.control = 99, .value = 1}
+                          },
+                      });
+}
+
 TEST_F(MidiMapping, Update)
 {
-    sut.create({{1}, {1, 2, "gain"}});
+    EXPECT_EQ(0, sut.create({{1}, {1, 2, Mapping::Mode::PARAMETER, "gain"}}));
 
     // update non-existent should fail
-    EXPECT_THAT(sut.update({{3}, {7, 8, "contour"}}), -1);
+    EXPECT_THAT(sut.update({{3}, {7, 8, Mapping::Mode::PARAMETER, "contour"}}), -1);
     EXPECT_THAT(sut.get()->size(), 1);
 
-    sut.create({{2}, {3, 4, "volume"}});
+    EXPECT_EQ(0, sut.create({{2}, {3, 4, Mapping::Mode::PARAMETER, "volume"}}));
     EXPECT_THAT(sut.get()->size(), 2);
 
-    EXPECT_THAT(sut.update({{1}, {5, 6, "tone"}}), 0);
+    EXPECT_THAT(sut.update({{1}, {5, 6, Mapping::Mode::PARAMETER, "tone"}}), 0);
     EXPECT_THAT(sut.get()->size(), 2);
 
     EXPECT_CALL(*parameters_mock, update).Times(0);
@@ -127,7 +172,7 @@ TEST_F(MidiMapping, Update)
 
 TEST_F(MidiMapping, Remove)
 {
-    sut.create({{1}, {1, 2, "gain"}});
+    EXPECT_EQ(0, sut.create({{1}, {1, 2, Mapping::Mode::PARAMETER, "gain"}}));
     sut.remove({1});
     EXPECT_THAT(sut.get()->size(), 0);
 }
@@ -148,10 +193,10 @@ TEST_F(MidiMapping, Notifications)
     sut.add_observer(observer);
     EXPECT_EQ(0, observer.notification_count);
 
-    sut.create({{1}, {1, 2, "gain"}});
+    EXPECT_EQ(0, sut.create({{1}, {1, 2, Mapping::Mode::PARAMETER, "gain"}}));
     EXPECT_EQ(1, observer.notification_count);
 
-    sut.update({{1}, {3, 4, "gain"}});
+    EXPECT_EQ(0, sut.update({{1}, {3, 4, Mapping::Mode::PARAMETER, "gain"}}));
     EXPECT_EQ(2, observer.notification_count);
 
     sut.remove({1});
@@ -160,13 +205,13 @@ TEST_F(MidiMapping, Notifications)
 
 TEST(MidiMappingPod, ToString)
 {
-    Mapping mapping{1, 2, parameters::id_t("test")};
+    Mapping mapping{1, 2, Mapping::Mode::PARAMETER, parameters::id_t("test")};
 
     etl::string<64> buffer;
     etl::string_stream stream{buffer};
     stream << mapping;
 
-    EXPECT_THAT(std::string(buffer.data()), "{ channel 1 cc number 2 name test }");
+    EXPECT_THAT(std::string(buffer.data()), "{ channel 1 cc number 2 mode parameter name test }");
 }
 
 }
