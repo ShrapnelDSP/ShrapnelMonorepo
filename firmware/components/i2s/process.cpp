@@ -142,7 +142,8 @@ void process_samples(int32_t *buf, size_t buf_len)
     {
         if(fbuf[i/2] > 1.f || fbuf[i/2] < -1.f)
         {
-            xEventGroupSetBits(g_audio_event_group, AUDIO_EVENT_OUTPUT_CLIPPED);
+            shrapnel::events::output_clipped.clear();
+            shrapnel::events::output_clipped.notify_all();
         }
 
         if(fbuf[i/2] != fbuf[i/2])
