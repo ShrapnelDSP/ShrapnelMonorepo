@@ -97,7 +97,7 @@ class ParameterService extends ChangeNotifier {
         )
         .listen(websocket.sendMessage);
 
-    websocket.onData = _handleIncomingEvent;
+    websocket.stream.listen(_handleIncomingEvent);
 
     if (websocket.isAlive) {
       _requestParameterInitialisation();

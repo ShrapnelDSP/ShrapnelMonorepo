@@ -48,7 +48,6 @@ class RobustWebsocket extends ChangeNotifier {
 
   Uri uri;
   bool isAlive = false;
-  void Function(dynamic)? onData;
   void Function()? onConnect;
 
   WebSocket? _ws;
@@ -97,10 +96,7 @@ class RobustWebsocket extends ChangeNotifier {
     _ws = WebSocket.fromUpgradedSocket(socket, serverSide: false);
 
     _ws!.listen(
-      (dynamic data) {
-        onData?.call(data);
-        _streamController.add(data);
-      },
+      _streamController.add,
       onError: (Object e) {
         log.warning('websocket error: $e');
       },
