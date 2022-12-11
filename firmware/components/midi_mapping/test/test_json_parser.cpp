@@ -108,6 +108,25 @@ TEST_F(MappingApiMessageTest, MissingMessageType)
     EXPECT_THAT(result.has_value(), false);
 }
 
+TEST_F(MappingApiMessageTest, MappingBackwardCompatibilityMissingMode)
+{
+    auto json = R"({
+        "midi_channel": 1,
+        "cc_number": 2,
+        "parameter_id": "gain"
+      })";
+
+    rapidjson::Document document;
+    document.Parse(json);
+    EXPECT_FALSE(document.HasParseError());
+    auto result = from_json<Mapping>(document);
+    EXPECT_THAT(result.has_value(), true);
+
+    Mapping expected{1, 2, Mapping::Mode::PARAMETER, parameters::id_t("gain")};
+
+    EXPECT_THAT(*result, expected);
+}
+
 TEST_F(MappingApiMessageTest, CreateRequest)
 {
     auto json = R"({
