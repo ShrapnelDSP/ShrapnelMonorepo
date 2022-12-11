@@ -71,7 +71,7 @@ var NAVTREEINDEX =
 "abstract__dsp_8h.html",
 "classshrapnel_1_1midi_1_1MappingManager.html",
 "i2s_8h.html#ae875c3bf6a1d0af3fa756049e8b3ba0b",
-"namespaceshrapnel_1_1parameters.html#ab96be9d75768bd5a4b594f779dd11196"
+"namespaceshrapnel_1_1parameters.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

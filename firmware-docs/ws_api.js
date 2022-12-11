@@ -1,5 +1,6 @@
 var ws_api =
 [
     [ "Audio parameter JSON messages", "ws_api_parameters.html", null ],
-    [ "MIDI mapping JSON messages", "ws_api_midi.html", null ]
+    [ "MIDI mapping JSON messages", "ws_api_midi.html", null ],
+    [ "Audio event JSON messages", "ws_api_events.html", null ]
 ];

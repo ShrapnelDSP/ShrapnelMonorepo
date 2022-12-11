@@ -23,9 +23,11 @@ var searchData=
   ['in_5fqueue_20',['in_queue',['../namespaceshrapnel.html#af4939089585b30c735a3fd8eeb5c4439',1,'shrapnel']]],
   ['init_21',['INIT',['../noise__gate_8cpp.html#aa0aafed44fec19806d8f9ad834be1248a0cb1b2c6a7db1f1084886c98909a3f36',1,'noise_gate.cpp']]],
   ['initialise_22',['Initialise',['../structshrapnel_1_1parameters_1_1Initialise.html',1,'shrapnel::parameters']]],
-  ['input_5ffilter_2ecpp_23',['input_filter.cpp',['../input__filter_8cpp.html',1,'']]],
-  ['input_5ffilter_2eh_24',['input_filter.h',['../input__filter_8h.html',1,'']]],
-  ['inputfilter_25',['InputFilter',['../classshrapnel_1_1effect_1_1valvestate_1_1InputFilter.html',1,'shrapnel::effect::valvestate']]],
-  ['instance_26',['instance',['../classEspHeapTracing.html#af49dc8f718e254d2aa165b56a0cf640e',1,'EspHeapTracing']]],
-  ['is_5fprovisioned_27',['is_provisioned',['../classshrapnel_1_1wifi__provisioning_1_1WiFiProvisioning.html#aa49a508e1049ccf733794e8d920a865a',1,'shrapnel::wifi_provisioning::WiFiProvisioning']]]
+  ['input_5fclipped_23',['input_clipped',['../namespaceshrapnel_1_1events.html#a63fd47484f0f2560469429a7b28b7a0e',1,'shrapnel::events']]],
+  ['input_5ffilter_2ecpp_24',['input_filter.cpp',['../input__filter_8cpp.html',1,'']]],
+  ['input_5ffilter_2eh_25',['input_filter.h',['../input__filter_8h.html',1,'']]],
+  ['inputclipped_26',['InputClipped',['../structshrapnel_1_1events_1_1InputClipped.html',1,'shrapnel::events']]],
+  ['inputfilter_27',['InputFilter',['../classshrapnel_1_1effect_1_1valvestate_1_1InputFilter.html',1,'shrapnel::effect::valvestate']]],
+  ['instance_28',['instance',['../classEspHeapTracing.html#af49dc8f718e254d2aa165b56a0cf640e',1,'EspHeapTracing']]],
+  ['is_5fprovisioned_29',['is_provisioned',['../classshrapnel_1_1wifi__provisioning_1_1WiFiProvisioning.html#aa49a508e1049ccf733794e8d920a865a',1,'shrapnel::wifi_provisioning::WiFiProvisioning']]]
 ];

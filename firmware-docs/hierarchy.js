@@ -27,6 +27,7 @@ var hierarchy =
       [ "shrapnel::dsp::IirFilter", "classshrapnel_1_1dsp_1_1IirFilter.html", null ]
     ] ],
     [ "shrapnel::parameters::Initialise", "structshrapnel_1_1parameters_1_1Initialise.html", null ],
+    [ "shrapnel::events::InputClipped", "structshrapnel_1_1events_1_1InputClipped.html", null ],
     [ "shrapnel::effect::valvestate::InputFilter", "classshrapnel_1_1effect_1_1valvestate_1_1InputFilter.html", null ],
     [ "shrapnel::midi::Mapping", "structshrapnel_1_1midi_1_1Mapping.html", null ],
     [ "midi::MappingObserver", null, [
@@ -42,6 +43,7 @@ var hierarchy =
       [ "shrapnel::midi::MappingManager< AudioParametersT, MAX_MAPPINGS, MAX_OBSERVERS >", "classshrapnel_1_1midi_1_1MappingManager.html", null ],
       [ "shrapnel::parameters::AudioParameters< MAX_PARAMETERS, MAX_OBSERVERS >", "classshrapnel_1_1parameters_1_1AudioParameters.html", null ]
     ] ],
+    [ "shrapnel::events::OutputClipped", "structshrapnel_1_1events_1_1OutputClipped.html", null ],
     [ "parameters::ParameterObserver", null, [
       [ "shrapnel::ParameterObserver< MAX_PARAMETERS >", "classshrapnel_1_1ParameterObserver.html", null ]
     ] ],
