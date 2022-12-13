@@ -906,8 +906,6 @@ midi::Mapping, 10>>(document);
                     {
                         audio_event_send_callback({*response, std::nullopt});
                     }
-                } else if constexpr(std::is_same_v<T, events::ApiMessage>) {
-                    audio_event_send_callback({message, std::nullopt});
                 }
             }, message.first);
         }
