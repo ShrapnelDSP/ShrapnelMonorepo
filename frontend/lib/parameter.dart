@@ -29,7 +29,7 @@ import 'robust_websocket.dart';
 
 part 'parameter.g.dart';
 
-final log = Logger('parameter');
+final log = Logger('shrapnel.parameter');
 
 // TODO do some testing on this, should fail to create when either field is
 // missing, wrong data type etc.
@@ -127,7 +127,7 @@ class ParameterService extends ChangeNotifier {
       return;
     }
 
-    log.finer(event);
+    log.fine(event);
 
     final eventJson = json.decode(event) as Map<String, dynamic>;
 

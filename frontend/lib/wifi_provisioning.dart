@@ -49,7 +49,7 @@ class _Strings {
   static const wifiPasswordSubmitButtonText = 'Join';
 }
 
-final _log = Logger('wifi_provisioning');
+final _log = Logger('shrapnel.wifi_provisioning');
 
 class _WifiPasswordDialog extends StatefulWidget {
   @override

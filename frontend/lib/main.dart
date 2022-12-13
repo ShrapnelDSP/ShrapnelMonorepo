@@ -34,7 +34,7 @@ import 'util/uuid.dart';
 import 'websocket_status.dart';
 import 'wifi_provisioning.dart';
 
-final log = Logger('main');
+final log = Logger('shrapnel.main');
 
 String formatDateTime(DateTime t) {
   final builder = StringBuffer()
@@ -50,7 +50,7 @@ String formatDateTime(DateTime t) {
 }
 
 void main() {
-  Logger.root.level = Level.ALL;
+  Logger.root.level = Level.FINE;
   Logger.root.onRecord.listen((record) {
     debugPrint(
       '${record.level.name.padLeft("WARNING".length)} '

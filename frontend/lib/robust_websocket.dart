@@ -26,7 +26,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:logging/logging.dart';
 
-final log = Logger('robust_websocket');
+final log = Logger('shrapnel.robust_websocket');
 
 /// Auto-reconnecting websocket client
 class RobustWebsocket extends ChangeNotifier {
