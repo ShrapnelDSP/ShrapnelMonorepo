@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['remove_0',['Remove',['../structshrapnel_1_1midi_1_1Remove.html',1,'shrapnel::midi']]]
+  ['scopedheaptracing_0',['ScopedHeapTracing',['../classScopedHeapTracing.html',1,'']]],
+  ['storage_1',['Storage',['../classshrapnel_1_1persistence_1_1Storage.html',1,'shrapnel::persistence']]]
 ];

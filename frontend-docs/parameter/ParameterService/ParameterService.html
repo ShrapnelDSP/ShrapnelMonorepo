@@ -70,7 +70,7 @@
       )
       .listen(websocket.sendMessage);
 
-  websocket.stream.listen(_handleIncomingEvent);
+  websocket.onData = _handleIncomingEvent;
 
   if (websocket.isAlive) {
     _requestParameterInitialisation();

@@ -2,7 +2,6 @@ var namespaceshrapnel =
 [
     [ "dsp", "namespaceshrapnel_1_1dsp.html", "namespaceshrapnel_1_1dsp" ],
     [ "effect", "namespaceshrapnel_1_1effect.html", "namespaceshrapnel_1_1effect" ],
-    [ "events", "namespaceshrapnel_1_1events.html", "namespaceshrapnel_1_1events" ],
     [ "midi", "namespaceshrapnel_1_1midi.html", "namespaceshrapnel_1_1midi" ],
     [ "parameters", "namespaceshrapnel_1_1parameters.html", "namespaceshrapnel_1_1parameters" ],
     [ "persistence", "namespaceshrapnel_1_1persistence.html", "namespaceshrapnel_1_1persistence" ],
@@ -18,7 +17,6 @@ var namespaceshrapnel =
     [ "app_main", "namespaceshrapnel.html#a9f09f4ea750643310af9143a53735b7d", null ],
     [ "connect_handler", "namespaceshrapnel.html#a4bf0b1d7c4fef2839a56059a237d1da6", null ],
     [ "disconnect_handler", "namespaceshrapnel.html#ae3cbca1e45f686a5790d51825e2754a2", null ],
-    [ "do_nothing", "namespaceshrapnel.html#abcae6f4d21df0182843da1ec10660604", null ],
     [ "failed_alloc_callback", "namespaceshrapnel.html#a9f01b77156c5fc53346d256b9735e6f8", null ],
     [ "i2c_setup", "namespaceshrapnel.html#a2b47dde02734c93bbdabfd97cb23dd2a", null ],
     [ "nvs_debug_print", "namespaceshrapnel.html#a9c85fa6a77cfb97394c46cf0ebe10298", null ],

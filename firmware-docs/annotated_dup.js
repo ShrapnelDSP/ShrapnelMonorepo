@@ -18,10 +18,6 @@ var annotated_dup =
         ] ],
         [ "Chorus", "classshrapnel_1_1effect_1_1Chorus.html", "classshrapnel_1_1effect_1_1Chorus" ]
       ] ],
-      [ "events", "namespaceshrapnel_1_1events.html", [
-        [ "InputClipped", "structshrapnel_1_1events_1_1InputClipped.html", null ],
-        [ "OutputClipped", "structshrapnel_1_1events_1_1OutputClipped.html", null ]
-      ] ],
       [ "midi", "namespaceshrapnel_1_1midi.html", [
         [ "CreateRequest", "structshrapnel_1_1midi_1_1CreateRequest.html", "structshrapnel_1_1midi_1_1CreateRequest" ],
         [ "CreateResponse", "structshrapnel_1_1midi_1_1CreateResponse.html", "structshrapnel_1_1midi_1_1CreateResponse" ],

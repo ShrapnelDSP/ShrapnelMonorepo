@@ -77,7 +77,6 @@
 
   final websocket =
       RobustWebsocket(uri: Uri.parse(&#39;http:&#47;&#47;guitar-dsp.local:8080&#47;websocket&#39;));
-  final json_websocket = JsonWebsocket(websocket: websocket);
   final uuid = Uuid();
   runApp(
     MultiProvider(
@@ -99,12 +98,10 @@
         ),
         ChangeNotifierProvider(
           create: (_) =&gt; MidiMappingService(
-            websocket: json_websocket,
+            websocket: JsonWebsocket(websocket: websocket),
           ),
         ),
         ChangeNotifierProvider.value(value: uuid),
-        ChangeNotifierProvider(
-            create: (_) =&gt; AudioClippingService(websocket: json_websocket))
       ],
       child: const MyApp(),
     ),

@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['update_0',['Update',['../structshrapnel_1_1midi_1_1Update.html',1,'shrapnel::midi::Update'],['../structshrapnel_1_1parameters_1_1Update.html',1,'shrapnel::parameters::Update']]]
+  ['valvestate_0',['Valvestate',['../classshrapnel_1_1effect_1_1valvestate_1_1Valvestate.html',1,'shrapnel::effect::valvestate']]]
 ];
