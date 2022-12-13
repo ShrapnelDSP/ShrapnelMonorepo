@@ -28,3 +28,4 @@ BreakBeforeBraces: Custom
 IndentExternBlock: NoIndent
 IndentWidth: 4
 UseTab: Never
+SpaceBeforeParens: Never
