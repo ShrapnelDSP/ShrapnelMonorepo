@@ -64,7 +64,7 @@ void main() {
 
   final websocket =
       RobustWebsocket(uri: Uri.parse('http://guitar-dsp.local:8080/websocket'));
-  final json_websocket = JsonWebsocket(websocket: websocket);
+  final jsonWebsocket = JsonWebsocket(websocket: websocket);
   final uuid = Uuid();
   runApp(
     MultiProvider(
@@ -86,12 +86,13 @@ void main() {
         ),
         ChangeNotifierProvider(
           create: (_) => MidiMappingService(
-            websocket: json_websocket,
+            websocket: jsonWebsocket,
           ),
         ),
         ChangeNotifierProvider.value(value: uuid),
         ChangeNotifierProvider(
-            create: (_) => AudioClippingService(websocket: json_websocket))
+          create: (_) => AudioClippingService(websocket: jsonWebsocket),
+        )
       ],
       child: const MyApp(),
     ),
@@ -189,7 +190,8 @@ class MyHomePage extends StatelessWidget {
               const SizedBox(width: 8),
               Tooltip(
                 message: 'Output clipping',
-                child: Icon(Icons.output,
+                child: Icon(
+                  Icons.output,
                   color: context.watch<AudioClippingService>().outputIsClipped
                       ? Colors.red
                       : null,
