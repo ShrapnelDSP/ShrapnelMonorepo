@@ -95,6 +95,11 @@ void process_samples(int32_t *buf, size_t buf_len)
      * XXX not sure why the right channel is not at index 0 */
     for(size_t i = 1; i < buf_len; i+=2)
     {
+        if(buf[i] == INT32_MIN || buf[i] == INT32_MAX)
+        {
+          shrapnel::events::input_clipped.clear();
+          shrapnel::events::input_clipped.notify_all();
+        }
         fbuf[i/2] = buf[i]/(float)INT32_MAX;
     }
 
