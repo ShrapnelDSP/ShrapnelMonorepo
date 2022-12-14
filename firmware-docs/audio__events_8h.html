@@ -92,7 +92,9 @@ $(document).ready(function(){initNavTree('audio__events_8h.html',''); initResiza
 
 <div class="header">
   <div class="summary">
-<a href="#enum-members">Enumerations</a> &#124;
+<a href="#nested-classes">Data Structures</a> &#124;
+<a href="#namespaces">Namespaces</a> &#124;
+<a href="#typedef-members">Typedefs</a> &#124;
 <a href="#func-members">Functions</a> &#124;
 <a href="#var-members">Variables</a>  </div>
   <div class="headertitle"><div class="title">audio_events.h File Reference</div></div>
@@ -101,118 +103,41 @@ $(document).ready(function(){initNavTree('audio__events_8h.html',''); initResiza
 
 <p><a href="audio__events_8h_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="enum-members" name="enum-members"></a>
-Enumerations</h2></td></tr>
-<tr class="memitem:a7ab3776c80be18e8324d9fe68ef9bee3"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="audio__events_8h.html#a7ab3776c80be18e8324d9fe68ef9bee3">audio_event_t</a> { <a class="el" href="audio__events_8h.html#a7ab3776c80be18e8324d9fe68ef9bee3a4c20f35967e16f9cb680b3708aa6aa3c">AUDIO_EVENT_OUTPUT_CLIPPED</a> = (1 &lt;&lt; 0)
- }</td></tr>
-<tr class="separator:a7ab3776c80be18e8324d9fe68ef9bee3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
+Data Structures</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structshrapnel_1_1events_1_1InputClipped.html">shrapnel::events::InputClipped</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structshrapnel_1_1events_1_1OutputClipped.html">shrapnel::events::OutputClipped</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="namespaces" name="namespaces"></a>
+Namespaces</h2></td></tr>
+<tr class="memitem:namespaceshrapnel"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceshrapnel.html">shrapnel</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:namespaceshrapnel_1_1events"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceshrapnel_1_1events.html">shrapnel::events</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="typedef-members" name="typedef-members"></a>
+Typedefs</h2></td></tr>
+<tr class="memitem:a8dd3c21ae53adc98fc773a8c06ce300a"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceshrapnel_1_1events.html#a8dd3c21ae53adc98fc773a8c06ce300a">shrapnel::events::ApiMessage</a> = std::variant&lt; InputClipped, OutputClipped &gt;</td></tr>
+<tr class="separator:a8dd3c21ae53adc98fc773a8c06ce300a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a3bc13f0f225db0bb8a8b61358e6a4461"><td class="memItemLeft" align="right" valign="top">esp_err_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="audio__events_8h.html#a3bc13f0f225db0bb8a8b61358e6a4461">audio_event_init</a> (void)</td></tr>
-<tr class="separator:a3bc13f0f225db0bb8a8b61358e6a4461"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1571fbb6cd61595e6c9ba447f3b04dec"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:a1571fbb6cd61595e6c9ba447f3b04dec"><td class="memTemplItemLeft" align="right" valign="top">rapidjson::Value&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceshrapnel_1_1events.html#a1571fbb6cd61595e6c9ba447f3b04dec">shrapnel::events::to_json</a> (rapidjson::Document &amp;document, const T &amp;object)</td></tr>
+<tr class="separator:a1571fbb6cd61595e6c9ba447f3b04dec"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a46d2b649bc546f06556c79536c9d13ea"><td class="memItemLeft" align="right" valign="top">template&lt;&gt; </td></tr>
+<tr class="memitem:a46d2b649bc546f06556c79536c9d13ea"><td class="memTemplItemLeft" align="right" valign="top">rapidjson::Value&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceshrapnel_1_1events.html#a46d2b649bc546f06556c79536c9d13ea">shrapnel::events::to_json</a> (rapidjson::Document &amp;document, const <a class="el" href="main_8cpp.html#a7d634e4e90beba8bb35bd8b959ec5757">ApiMessage</a> &amp;object)</td></tr>
+<tr class="separator:a46d2b649bc546f06556c79536c9d13ea"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
 Variables</h2></td></tr>
-<tr class="memitem:a39b73a8afcca273153d03615ef92b6ec"><td class="memItemLeft" align="right" valign="top">EventGroupHandle_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="audio__events_8h.html#a39b73a8afcca273153d03615ef92b6ec">g_audio_event_group</a></td></tr>
-<tr class="separator:a39b73a8afcca273153d03615ef92b6ec"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a63fd47484f0f2560469429a7b28b7a0e"><td class="memItemLeft" align="right" valign="top">std::atomic_flag&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceshrapnel_1_1events.html#a63fd47484f0f2560469429a7b28b7a0e">shrapnel::events::input_clipped</a></td></tr>
+<tr class="separator:a63fd47484f0f2560469429a7b28b7a0e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad28eee14b7b281e8580c0ca9f14adda2"><td class="memItemLeft" align="right" valign="top">std::atomic_flag&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceshrapnel_1_1events.html#ad28eee14b7b281e8580c0ca9f14adda2">shrapnel::events::output_clipped</a></td></tr>
+<tr class="separator:ad28eee14b7b281e8580c0ca9f14adda2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Enumeration Type Documentation</h2>
-<a id="a7ab3776c80be18e8324d9fe68ef9bee3" name="a7ab3776c80be18e8324d9fe68ef9bee3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7ab3776c80be18e8324d9fe68ef9bee3">&#9670;&nbsp;</a></span>audio_event_t</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">enum <a class="el" href="audio__events_8h.html#a7ab3776c80be18e8324d9fe68ef9bee3">audio_event_t</a></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<table class="fieldtable">
-<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a7ab3776c80be18e8324d9fe68ef9bee3a4c20f35967e16f9cb680b3708aa6aa3c" name="a7ab3776c80be18e8324d9fe68ef9bee3a4c20f35967e16f9cb680b3708aa6aa3c"></a>AUDIO_EVENT_OUTPUT_CLIPPED&#160;</td><td class="fielddoc"></td></tr>
-</table>
-
-<p class="definition">Definition at line <a class="el" href="audio__events_8h_source.html#l00030">30</a> of file <a class="el" href="audio__events_8h_source.html">audio_events.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   31</span>{</div>
-<div class="line"><span class="lineno">   32</span>    <a class="code hl_enumvalue" href="audio__events_8h.html#a7ab3776c80be18e8324d9fe68ef9bee3a4c20f35967e16f9cb680b3708aa6aa3c">AUDIO_EVENT_OUTPUT_CLIPPED</a> = (1 &lt;&lt; 0),</div>
-<div class="line"><span class="lineno">   33</span>} <a class="code hl_enumeration" href="audio__events_8h.html#a7ab3776c80be18e8324d9fe68ef9bee3">audio_event_t</a>;</div>
-<div class="ttc" id="aaudio__events_8h_html_a7ab3776c80be18e8324d9fe68ef9bee3"><div class="ttname"><a href="audio__events_8h.html#a7ab3776c80be18e8324d9fe68ef9bee3">audio_event_t</a></div><div class="ttdeci">audio_event_t</div><div class="ttdef"><b>Definition:</b> <a href="audio__events_8h_source.html#l00030">audio_events.h:31</a></div></div>
-<div class="ttc" id="aaudio__events_8h_html_a7ab3776c80be18e8324d9fe68ef9bee3a4c20f35967e16f9cb680b3708aa6aa3c"><div class="ttname"><a href="audio__events_8h.html#a7ab3776c80be18e8324d9fe68ef9bee3a4c20f35967e16f9cb680b3708aa6aa3c">AUDIO_EVENT_OUTPUT_CLIPPED</a></div><div class="ttdeci">@ AUDIO_EVENT_OUTPUT_CLIPPED</div><div class="ttdef"><b>Definition:</b> <a href="audio__events_8h_source.html#l00032">audio_events.h:32</a></div></div>
-</div><!-- fragment -->
-</div>
-</div>
-<h2 class="groupheader">Function Documentation</h2>
-<a id="a3bc13f0f225db0bb8a8b61358e6a4461" name="a3bc13f0f225db0bb8a8b61358e6a4461"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3bc13f0f225db0bb8a8b61358e6a4461">&#9670;&nbsp;</a></span>audio_event_init()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">esp_err_t audio_event_init </td>
-          <td>(</td>
-          <td class="paramtype">void&#160;</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="audio__events_8c_source.html#l00027">27</a> of file <a class="el" href="audio__events_8c_source.html">audio_events.c</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   28</span>{</div>
-<div class="line"><span class="lineno">   29</span>    <a class="code hl_variable" href="audio__events_8c.html#a39b73a8afcca273153d03615ef92b6ec">g_audio_event_group</a> = xEventGroupCreate();</div>
-<div class="line"><span class="lineno">   30</span> </div>
-<div class="line"><span class="lineno">   31</span>    <span class="keywordflow">if</span>(<a class="code hl_variable" href="audio__events_8c.html#a39b73a8afcca273153d03615ef92b6ec">g_audio_event_group</a> == NULL)</div>
-<div class="line"><span class="lineno">   32</span>    {</div>
-<div class="line"><span class="lineno">   33</span>        ESP_LOGE(<a class="code hl_variable" href="namespaceshrapnel_1_1parameters.html#a0cbbede6af96973c56e635f9a90599cd">TAG</a>, <span class="stringliteral">&quot;Failed to create event group&quot;</span>);</div>
-<div class="line"><span class="lineno">   34</span>        <span class="keywordflow">return</span> ESP_FAIL;</div>
-<div class="line"><span class="lineno">   35</span>    }</div>
-<div class="line"><span class="lineno">   36</span> </div>
-<div class="line"><span class="lineno">   37</span>    <span class="keywordflow">return</span> ESP_OK;</div>
-<div class="line"><span class="lineno">   38</span>}</div>
-<div class="ttc" id="aaudio__events_8c_html_a39b73a8afcca273153d03615ef92b6ec"><div class="ttname"><a href="audio__events_8c.html#a39b73a8afcca273153d03615ef92b6ec">g_audio_event_group</a></div><div class="ttdeci">EventGroupHandle_t g_audio_event_group</div><div class="ttdef"><b>Definition:</b> <a href="audio__events_8c_source.html#l00025">audio_events.c:25</a></div></div>
-<div class="ttc" id="anamespaceshrapnel_1_1parameters_html_a0cbbede6af96973c56e635f9a90599cd"><div class="ttname"><a href="namespaceshrapnel_1_1parameters.html#a0cbbede6af96973c56e635f9a90599cd">shrapnel::parameters::TAG</a></div><div class="ttdeci">constexpr const char * TAG</div><div class="ttdef"><b>Definition:</b> <a href="audio__param_8h_source.html#l00034">audio_param.h:34</a></div></div>
-</div><!-- fragment -->
-<p class="reference">References <a class="el" href="audio__events_8c_source.html#l00025">g_audio_event_group</a>, and <a class="el" href="audio__param_8h_source.html#l00034">shrapnel::parameters::TAG</a>.</p>
-
-<p class="reference">Referenced by <a class="el" href="main_8cpp_source.html#l00572">shrapnel::app_main()</a>.</p>
-<div class="dynheader">
-Here is the caller graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="audio__events_8h_a3bc13f0f225db0bb8a8b61358e6a4461_icgraph.svg" width="308" height="38"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
-</div>
-</div>
-
-</div>
-</div>
-<h2 class="groupheader">Variable Documentation</h2>
-<a id="a39b73a8afcca273153d03615ef92b6ec" name="a39b73a8afcca273153d03615ef92b6ec"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a39b73a8afcca273153d03615ef92b6ec">&#9670;&nbsp;</a></span>g_audio_event_group</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">EventGroupHandle_t g_audio_event_group</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">extern</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="audio__events_8c_source.html#l00025">25</a> of file <a class="el" href="audio__events_8c_source.html">audio_events.c</a>.</p>
-
-<p class="reference">Referenced by <a class="el" href="audio__events_8c_source.html#l00027">audio_event_init()</a>, and <a class="el" href="process_8cpp_source.html#l00087">process_samples()</a>.</p>
-
-</div>
-</div>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

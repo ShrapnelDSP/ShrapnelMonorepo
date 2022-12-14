@@ -139,12 +139,41 @@ Widget build(BuildContext context) {
           },
         ),
         Container(width: 10),
-        const WebSocketStatus(size: kToolbarHeight - 20),
-        Container(width: 10),
       ],
     ),
     body: const Center(
       child: Pedalboard(),
+    ),
+    bottomNavigationBar: BottomAppBar(
+      child: Padding(
+        padding: const EdgeInsets.all(4),
+        child: Row(
+          children: [
+            Tooltip(
+              message: &#39;Input clipping&#39;,
+              child: Icon(
+                Icons.input,
+                color: context.watch&lt;AudioClippingService&gt;().inputIsClipped
+                    ? Colors.red
+                    : null,
+              ),
+            ),
+            const SizedBox(width: 8),
+            Tooltip(
+              message: &#39;Output clipping&#39;,
+              child: Icon(
+                Icons.output,
+                color: context.watch&lt;AudioClippingService&gt;().outputIsClipped
+                    ? Colors.red
+                    : null,
+              ),
+            ),
+            const Spacer(),
+            &#47;&#47; Same size as icons
+            WebSocketStatus(size: IconTheme.of(context).size ?? 24.0),
+          ],
+        ),
+      ),
     ),
   );
 }</code></pre>
