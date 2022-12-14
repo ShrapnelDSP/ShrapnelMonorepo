@@ -47,7 +47,8 @@ Map<String, dynamic> _createFakeWifi({
       'auth': auth,
     };
 
-@GenerateNiceMocks([MockSpec<RobustWebsocket>(), MockSpec<AudioClippingService>()])
+@GenerateNiceMocks(
+    [MockSpec<RobustWebsocket>(), MockSpec<AudioClippingService>()])
 @GenerateMocks([Provisioning])
 void main() {
   late Widget sut;

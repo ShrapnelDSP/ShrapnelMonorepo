@@ -134,7 +134,8 @@ class MidiMappingCreatePageObject {
 }
 
 @GenerateMocks([JsonWebsocket, Uuid])
-@GenerateNiceMocks([MockSpec<RobustWebsocket>(), MockSpec<AudioClippingService>()])
+@GenerateNiceMocks(
+    [MockSpec<RobustWebsocket>(), MockSpec<AudioClippingService>()])
 void main() {
   testWidgets('Midi mapping can be created', (tester) async {
     final apiController = StreamController<Map<String, dynamic>>.broadcast();
