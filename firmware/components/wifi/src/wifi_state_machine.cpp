@@ -38,7 +38,7 @@ constexpr WifiStateMachine::transition WifiStateMachine::transition_table[]{
 constexpr WifiStateMachine::state WifiStateMachine::state_table[]{
     state(State::INIT, &WifiStateMachine::check_if_provisioned, nullptr),
     state(State::STARTING, &WifiStateMachine::start, nullptr),
-    state(State::CONNECTING, &WifiStateMachine::connect_with_timeout, &WifiStateMachine::cleanup_timer),
+    state(State::CONNECTING, &WifiStateMachine::connect_with_timeout, nullptr),
     state(State::CONNECTED, &WifiStateMachine::on_connected, &WifiStateMachine::on_disconnected),
     state( State::PROVISIONING, &WifiStateMachine::provisioning_start, &WifiStateMachine::provisioning_done),
 };
@@ -61,14 +61,8 @@ void WifiStateMachine::start()
 
 void WifiStateMachine::connect_with_timeout()
 {
-    ESP_LOGE("DEBUG", "connect with timeout");
     connect_start_tick_count = xTaskGetTickCount();
     connect_to_ap();
-}
-
-void WifiStateMachine::cleanup_timer()
-{
-    ESP_LOGE("DEBUG", "cleanup");
 }
 
 void WifiStateMachine::connect_to_ap()
