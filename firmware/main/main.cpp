@@ -83,6 +83,7 @@ using ApiMessage = std::variant<shrapnel::parameters::ApiMessage,
                                 shrapnel::events::ApiMessage>;
 using FileDescriptor = std::optional<int>;
 using AppMessage = std::pair<ApiMessage, FileDescriptor>;
+using WifiQueue = shrapnel::Queue<shrapnel::wifi::InternalEvent, 3>;
 
 extern "C" void audio_event_send_callback(const AppMessage &message);
 
@@ -394,7 +395,7 @@ static void disconnect_handler(void* arg, esp_event_base_t event_base,
     (void)event_data;
 
     ESP_LOGI(TAG, "WiFi disconnected");
-    auto queue{reinterpret_cast<Queue<wifi::InternalEvent>*>(arg)};
+    auto queue{reinterpret_cast<WifiQueue *>(arg)};
     wifi::InternalEvent event{wifi::InternalEvent::DISCONNECT};
     int rc{queue->send(&event, 0)};
     if(rc != pdPASS)
@@ -411,7 +412,7 @@ static void connect_handler(void* arg, esp_event_base_t event_base,
     (void)event_data;
 
     ESP_LOGI(TAG, "WiFi connected");
-    auto queue{reinterpret_cast<Queue<wifi::InternalEvent>*>(arg)};
+    auto queue{reinterpret_cast<WifiQueue *>(arg)};
     wifi::InternalEvent event{wifi::InternalEvent::CONNECT_SUCCESS};
     int rc{queue->send(&event, 0)};
     if(rc != pdPASS)
@@ -427,7 +428,7 @@ static void wifi_start_handler(void *arg, esp_event_base_t event_base,
     assert(event_base == WIFI_EVENT);
     assert(event_id == WIFI_EVENT_STA_START);
 
-    auto queue{reinterpret_cast<Queue<wifi::InternalEvent>*>(arg)};
+    auto queue{reinterpret_cast<WifiQueue *>(arg)};
     wifi::InternalEvent event{wifi::InternalEvent::STARTED};
     int rc{queue->send(&event, 0)};
     if(rc != pdPASS)
@@ -444,7 +445,7 @@ static void wifi_provisioning_done_handler(void *arg, esp_event_base_t event_bas
     (void)event_data;
 
     ESP_LOGI(TAG, "Provisioning done");
-    auto queue{reinterpret_cast<Queue<wifi::InternalEvent>*>(arg)};
+    auto queue{reinterpret_cast<WifiQueue *>(arg)};
     wifi::InternalEvent event{wifi::InternalEvent::PROVISIONING_DONE};
     int rc{queue->send(&event, 0)};
     if(rc != pdPASS)
@@ -793,7 +794,7 @@ midi::Mapping, 10>>(document);
     /* Start the mdns service */
     start_mdns();
 
-    auto wifi_queue = Queue<wifi::InternalEvent>(3);
+    auto wifi_queue = WifiQueue();
 
     auto wifi_send_event = [&] (wifi::InternalEvent event) {
         auto rc = wifi_queue.send(&event, 0);

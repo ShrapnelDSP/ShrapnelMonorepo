@@ -29,6 +29,7 @@
 #include <semaphore>
 #include <type_traits>
 #include <queue>
+#include <mutex>
 
 namespace shrapnel {
 
@@ -55,7 +56,7 @@ class Queue final: public QueueBase<T>
     public:
     Queue() : QueueBase<T>(MAX_SIZE), used_semaphore{0}, free_semaphore{MAX_SIZE} {}
 
-    BaseType_t [[nodiscard]] receive(T *out, TickType_t time_to_wait) override
+    [[nodiscard]] BaseType_t receive(T *out, TickType_t time_to_wait) override
     {
         // block until an item is available
         bool success = used_semaphore.try_acquire_for(ticks(time_to_wait));
@@ -71,7 +72,7 @@ class Queue final: public QueueBase<T>
         return pdPASS;
     }
 
-    BaseType_t [[nodiscard]] send(const T *in, TickType_t time_to_wait) override
+    [[nodiscard]] BaseType_t send(const T *in, TickType_t time_to_wait) override
     {
         // block until a space is available
         bool success = free_semaphore.try_acquire_for(ticks(time_to_wait));
