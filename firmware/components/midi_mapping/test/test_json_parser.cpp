@@ -146,12 +146,11 @@ TEST_F(MappingApiMessageTest, CreateRequest)
     EXPECT_THAT(std::holds_alternative<CreateRequest>(*result), true);
 
     if (auto message = std::get_if<CreateRequest>(&(*result))) {
-        CreateRequest expected{{
-            Mapping::id_t{
-                0, 1,  2,  3,  4,  5,  6,  7,
-                8, 9, 10, 11, 12, 13, 14, 15
-            },
-            Mapping{1, 2, Mapping::Mode::PARAMETER, parameters::id_t("gain")}}};
+        CreateRequest expected{
+            {Mapping::id_t{
+                 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15},
+             Mapping{
+                 1, 2, Mapping::Mode::PARAMETER, parameters::id_t("gain")}}};
 
         EXPECT_THAT(*message, expected);
     } else {
@@ -178,12 +177,11 @@ TEST_F(MappingApiMessageTest, Update)
     EXPECT_THAT(std::holds_alternative<Update>(*result), true);
 
     if (auto message = std::get_if<Update>(&(*result))) {
-        Update expected{{
-            Mapping::id_t{
-                0, 1,  2,  3,  4,  5,  6,  7,
-                8, 9, 10, 11, 12, 13, 14, 15
-            },
-            Mapping{1, 2, Mapping::Mode::PARAMETER, parameters::id_t("gain")}}};
+        Update expected{
+            {Mapping::id_t{
+                 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15},
+             Mapping{
+                 1, 2, Mapping::Mode::PARAMETER, parameters::id_t("gain")}}};
 
         EXPECT_THAT(*message, expected);
     } else {
@@ -232,12 +230,9 @@ TEST_F(MappingApiMessageTest, EtlMapOfIdToMapping)
     auto result = from_json<etl::map<Mapping::id_t, Mapping, 1>>(document);
     EXPECT_TRUE(result.has_value());
 
-    etl::map<Mapping::id_t, Mapping, 1> expected{{
-                               Mapping::id_t{
-                                   0, 1,  2,  3,  4,  5,  6,  7,
-                                   8, 9, 10, 11, 12, 13, 14, 15
-                               },
-                               Mapping{1, 2, Mapping::Mode::PARAMETER, parameters::id_t("gain")}}};
+    etl::map<Mapping::id_t, Mapping, 1> expected{
+        {Mapping::id_t{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15},
+         Mapping{1, 2, Mapping::Mode::PARAMETER, parameters::id_t("gain")}}};
 
     EXPECT_THAT(*result, expected);
 }

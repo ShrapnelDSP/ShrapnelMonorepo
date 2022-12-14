@@ -73,13 +73,25 @@ TEST(MappingJsonBuilder, Mapping)
 
 TEST(MappingJsonBuilder, CreateResponse)
 {
-    CreateResponse input{{
-        Mapping::id_t{
-            0,  1,  2,  3,  4,  5,  6,  7,
-            8,  9, 10, 11, 12, 13, 14, 15,
-        },
-        Mapping{1, 2, Mapping::Mode::PARAMETER, "test"}
-    }};
+    CreateResponse input{{Mapping::id_t{
+                              0,
+                              1,
+                              2,
+                              3,
+                              4,
+                              5,
+                              6,
+                              7,
+                              8,
+                              9,
+                              10,
+                              11,
+                              12,
+                              13,
+                              14,
+                              15,
+                          },
+                          Mapping{1, 2, Mapping::Mode::PARAMETER, "test"}}};
 
     auto reference = normalise_json(R"({
           "mapping": {
@@ -97,13 +109,26 @@ TEST(MappingJsonBuilder, CreateResponse)
 
 TEST(MappingJsonBuilder, VariantCreateResponse)
 {
-    MappingApiMessage input{CreateResponse{{
-        Mapping::id_t{
-            0,  1,  2,  3,  4,  5,  6,  7,
-            8,  9, 10, 11, 12, 13, 14, 15,
-        },
-        Mapping{1, 2, Mapping::Mode::PARAMETER, "test"}
-    }}};
+    MappingApiMessage input{
+        CreateResponse{{Mapping::id_t{
+                            0,
+                            1,
+                            2,
+                            3,
+                            4,
+                            5,
+                            6,
+                            7,
+                            8,
+                            9,
+                            10,
+                            11,
+                            12,
+                            13,
+                            14,
+                            15,
+                        },
+                        Mapping{1, 2, Mapping::Mode::PARAMETER, "test"}}}};
 
     auto reference = normalise_json(R"({
           "mapping": {
@@ -123,15 +148,8 @@ TEST(MappingJsonBuilder, VariantCreateResponse)
 TEST(MappingJsonBuilder, VariantGetResponse)
 {
     etl::map<Mapping::id_t, Mapping, 2> mapping{
-        {
-            Mapping::id_t{0},
-            Mapping{1, 2, Mapping::Mode::PARAMETER, "foo"}
-        },
-        {
-            Mapping::id_t{1},
-            Mapping{3, 4, Mapping::Mode::TOGGLE, "bar"}
-        }
-    };
+        {Mapping::id_t{0}, Mapping{1, 2, Mapping::Mode::PARAMETER, "foo"}},
+        {Mapping::id_t{1}, Mapping{3, 4, Mapping::Mode::TOGGLE, "bar"}}};
 
     MappingApiMessage input{
         GetResponse{&mapping}

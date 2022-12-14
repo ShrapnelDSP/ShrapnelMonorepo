@@ -571,8 +571,9 @@ int ParameterUpdateNotifier::update(const parameters::id_t &param, float value)
     return audio_params->update(param, value);
 }
 
-float ParameterUpdateNotifier::get(const parameters::id_t &param) {
-  return audio_params->get(param);
+float ParameterUpdateNotifier::get(const parameters::id_t &param)
+{
+    return audio_params->get(param);
 }
 
 void nvs_debug_print();

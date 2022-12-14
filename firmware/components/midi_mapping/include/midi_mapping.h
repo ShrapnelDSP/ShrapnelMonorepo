@@ -196,9 +196,10 @@ namespace midi {
 struct Mapping {
     using id_t = std::array<uint8_t, 16>;
 
-    enum class Mode {
-      PARAMETER,
-      TOGGLE,
+    enum class Mode
+    {
+        PARAMETER,
+        TOGGLE,
     };
 
     uint8_t midi_channel;
@@ -259,7 +260,7 @@ class MappingManager final : public etl::observable<MappingObserver, MAX_OBSERVE
         auto cc_params = get_if<Message::ControlChange>(&message.parameters);
         if(!cc_params) return;
 
-        for(const auto &[_, mapping]: mappings)
+        for(const auto &[_, mapping] : mappings)
         {
             if(mapping.midi_channel != message.channel)
             {
@@ -274,22 +275,20 @@ class MappingManager final : public etl::observable<MappingObserver, MAX_OBSERVE
             switch(mapping.mode)
             {
             case Mapping::Mode::PARAMETER:
-              parameters->update(
-                  mapping.parameter_name,
-                  cc_params->value / float(CC_VALUE_MAX));
-              break;
+                parameters->update(mapping.parameter_name,
+                                   cc_params->value / float(CC_VALUE_MAX));
+                break;
             case Mapping::Mode::TOGGLE:
-              if(cc_params->value == 0)
-              {
-                  continue;
-              }
+                if(cc_params->value == 0)
+                {
+                    continue;
+                }
 
-              auto old_value = parameters->get(mapping.parameter_name);
+                auto old_value = parameters->get(mapping.parameter_name);
 
-              parameters->update(
-                  mapping.parameter_name,
-                  old_value < 0.5f ? 1.f : 0.f);
-              break;
+                parameters->update(mapping.parameter_name,
+                                   old_value < 0.5f ? 1.f : 0.f);
+                break;
             }
         }
     };

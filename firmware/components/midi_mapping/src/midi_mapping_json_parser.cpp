@@ -81,12 +81,10 @@ std::optional<Mapping> from_json(const rapidjson::Value &json)
     }
 
     // TODO range check before narrowing conversion to uint8_t
-    return Mapping{
-        static_cast<uint8_t>(midi_channel->value.GetInt()),
-        static_cast<uint8_t>(cc_number->value.GetInt()),
-        mode,
-        parameters::id_t(parameter_id->value.GetString())
-    };
+    return Mapping{static_cast<uint8_t>(midi_channel->value.GetInt()),
+                   static_cast<uint8_t>(cc_number->value.GetInt()),
+                   mode,
+                   parameters::id_t(parameter_id->value.GetString())};
 }
 
 template<>
