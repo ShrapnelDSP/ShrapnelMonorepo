@@ -57,42 +57,46 @@
 
 namespace {
 
-template<typename T>
+template <typename T>
 constexpr const char *get_message_type();
 
-template<>
+template <>
 constexpr const char *get_message_type<shrapnel::events::InputClipped>()
 {
-  return "Event::input_clipped";
+    return "Event::input_clipped";
 }
 
-template<>
+template <>
 constexpr const char *get_message_type<shrapnel::events::OutputClipped>()
 {
-  return "Event::output_clipped";
+    return "Event::output_clipped";
 }
 
-}
+} // namespace
 
 namespace shrapnel::events {
 
 std::atomic_flag input_clipped;
 std::atomic_flag output_clipped;
 
-template<>
-rapidjson::Value to_json(rapidjson::Document &document, const ApiMessage &object)
+template <>
+rapidjson::Value to_json(rapidjson::Document &document,
+                         const ApiMessage &object)
 {
-  rapidjson::Value json;
-  json.SetObject();
+    rapidjson::Value json;
+    json.SetObject();
 
-  auto visitor = [&](const auto &message) {
-    using T = std::decay_t<decltype(message)>;
-    json.AddMember("messageType", rapidjson::StringRef(get_message_type<T>()), document.GetAllocator());
-  };
+    auto visitor = [&](const auto &message)
+    {
+        using T = std::decay_t<decltype(message)>;
+        json.AddMember("messageType",
+                       rapidjson::StringRef(get_message_type<T>()),
+                       document.GetAllocator());
+    };
 
-  std::visit(visitor, object);
+    std::visit(visitor, object);
 
-  return json;
+    return json;
 }
 
-}
+} // namespace shrapnel::events

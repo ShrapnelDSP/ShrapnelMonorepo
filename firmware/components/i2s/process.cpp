@@ -97,8 +97,8 @@ void process_samples(int32_t *buf, size_t buf_len)
     {
         if(buf[i] == INT32_MIN || buf[i] == INT32_MAX)
         {
-          shrapnel::events::input_clipped.clear();
-          shrapnel::events::input_clipped.notify_all();
+            shrapnel::events::input_clipped.clear();
+            shrapnel::events::input_clipped.notify_all();
         }
         fbuf[i/2] = buf[i]/(float)INT32_MAX;
     }

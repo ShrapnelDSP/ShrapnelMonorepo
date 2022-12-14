@@ -19,24 +19,29 @@
 
 #pragma once
 
+#include "rapidjson/document.h"
 #include <atomic>
 #include <variant>
-#include "rapidjson/document.h"
 
 namespace shrapnel::events {
 
-template<typename T>
+template <typename T>
 rapidjson::Value to_json(rapidjson::Document &document, const T &object);
 
-struct InputClipped {};
-struct OutputClipped {};
+struct InputClipped
+{
+};
+struct OutputClipped
+{
+};
 
 using ApiMessage = std::variant<InputClipped, OutputClipped>;
 
 extern std::atomic_flag input_clipped;
 extern std::atomic_flag output_clipped;
 
-template<>
-rapidjson::Value to_json(rapidjson::Document &document, const ApiMessage &object);
+template <>
+rapidjson::Value to_json(rapidjson::Document &document,
+                         const ApiMessage &object);
 
-}
+} // namespace shrapnel::events
