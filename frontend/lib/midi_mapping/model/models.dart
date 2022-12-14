@@ -80,11 +80,11 @@ class MidiMapping with _$MidiMapping {
   }
 
   Map<String, dynamic> toJson() => <String, dynamic>{
-    'midi_channel': midiChannel,
-    'cc_number': ccNumber,
-    'parameter_id': parameterId,
-    'mode': mode.apiName,
-  };
+        'midi_channel': midiChannel,
+        'cc_number': ccNumber,
+        'parameter_id': parameterId,
+        'mode': mode.apiName,
+      };
 }
 
 @freezed
@@ -118,11 +118,11 @@ class MidiMappingEntry with _$MidiMappingEntry {
 }
 
 enum MidiMappingMode {
- toggle(apiName: 'toggle', uiName: 'Toggle'),
- parameter(apiName: 'parameter', uiName: 'Knob');
+  toggle(apiName: 'toggle', uiName: 'Toggle'),
+  parameter(apiName: 'parameter', uiName: 'Knob');
 
- const MidiMappingMode({required this.apiName, required this.uiName});
+  const MidiMappingMode({required this.apiName, required this.uiName});
 
- final String apiName;
- final String uiName;
+  final String apiName;
+  final String uiName;
 }

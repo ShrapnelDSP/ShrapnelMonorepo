@@ -78,11 +78,10 @@ class MidiMappingPage extends StatelessWidget {
                     DataCell(
                       ModeDropdown(
                         key: Key('${mapping.id}-mode-dropdown'),
-                        value:
-                            mapping.mapping.mode,
+                        value: mapping.mapping.mode,
                         onChanged: (value) => midiMappingService.updateMapping(
-                              mapping.copyWith.mapping(mode: value!),
-                            ),
+                          mapping.copyWith.mapping(mode: value!),
+                        ),
                       ),
                     ),
                     DataCell(
@@ -192,8 +191,9 @@ class CreateMappingDialogState extends State<CreateMappingDialog> {
                 items: List<DropdownMenuItem<MidiMappingMode>>.generate(
                   MidiMappingMode.values.length,
                   (i) => DropdownMenuItem(
-                      value: MidiMappingMode.values[i],
-                      child: Text(MidiMappingMode.values[i].uiName),),
+                    value: MidiMappingMode.values[i],
+                    child: Text(MidiMappingMode.values[i].uiName),
+                  ),
                 ),
                 value: mode,
                 onChanged: (value) => setState(() => mode = value),
