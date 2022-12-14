@@ -26,7 +26,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:logging/logging.dart';
 
-final log = Logger('robust_websocket');
+final log = Logger('shrapnel.robust_websocket');
 
 /// Auto-reconnecting websocket client
 class RobustWebsocket extends ChangeNotifier {
@@ -48,7 +48,6 @@ class RobustWebsocket extends ChangeNotifier {
 
   Uri uri;
   bool isAlive = false;
-  void Function(dynamic)? onData;
   void Function()? onConnect;
 
   WebSocket? _ws;
@@ -97,10 +96,7 @@ class RobustWebsocket extends ChangeNotifier {
     _ws = WebSocket.fromUpgradedSocket(socket, serverSide: false);
 
     _ws!.listen(
-      (dynamic data) {
-        onData?.call(data);
-        _streamController.add(data);
-      },
+      _streamController.add,
       onError: (Object e) {
         log.warning('websocket error: $e');
       },

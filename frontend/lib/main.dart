@@ -23,6 +23,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:logging/logging.dart';
 import 'package:provider/provider.dart';
 
+import 'audio_events.dart';
 import 'json_websocket.dart';
 import 'midi_mapping/model/service.dart';
 import 'midi_mapping/view/midi_mapping.dart';
@@ -33,7 +34,7 @@ import 'util/uuid.dart';
 import 'websocket_status.dart';
 import 'wifi_provisioning.dart';
 
-final log = Logger('main');
+final log = Logger('shrapnel.main');
 
 String formatDateTime(DateTime t) {
   final builder = StringBuffer()
@@ -49,7 +50,7 @@ String formatDateTime(DateTime t) {
 }
 
 void main() {
-  Logger.root.level = Level.ALL;
+  Logger.root.level = Level.FINE;
   Logger.root.onRecord.listen((record) {
     debugPrint(
       '${record.level.name.padLeft("WARNING".length)} '
@@ -63,6 +64,7 @@ void main() {
 
   final websocket =
       RobustWebsocket(uri: Uri.parse('http://guitar-dsp.local:8080/websocket'));
+  final jsonWebsocket = JsonWebsocket(websocket: websocket);
   final uuid = Uuid();
   runApp(
     MultiProvider(
@@ -84,10 +86,13 @@ void main() {
         ),
         ChangeNotifierProvider(
           create: (_) => MidiMappingService(
-            websocket: JsonWebsocket(websocket: websocket),
+            websocket: jsonWebsocket,
           ),
         ),
         ChangeNotifierProvider.value(value: uuid),
+        ChangeNotifierProvider(
+          create: (_) => AudioClippingService(websocket: jsonWebsocket),
+        )
       ],
       child: const MyApp(),
     ),
@@ -163,12 +168,41 @@ class MyHomePage extends StatelessWidget {
             },
           ),
           Container(width: 10),
-          const WebSocketStatus(size: kToolbarHeight - 20),
-          Container(width: 10),
         ],
       ),
       body: const Center(
         child: Pedalboard(),
+      ),
+      bottomNavigationBar: BottomAppBar(
+        child: Padding(
+          padding: const EdgeInsets.all(4),
+          child: Row(
+            children: [
+              Tooltip(
+                message: 'Input clipping',
+                child: Icon(
+                  Icons.input,
+                  color: context.watch<AudioClippingService>().inputIsClipped
+                      ? Colors.red
+                      : null,
+                ),
+              ),
+              const SizedBox(width: 8),
+              Tooltip(
+                message: 'Output clipping',
+                child: Icon(
+                  Icons.output,
+                  color: context.watch<AudioClippingService>().outputIsClipped
+                      ? Colors.red
+                      : null,
+                ),
+              ),
+              const Spacer(),
+              // Same size as icons
+              WebSocketStatus(size: IconTheme.of(context).size ?? 24.0),
+            ],
+          ),
+        ),
       ),
     );
   }

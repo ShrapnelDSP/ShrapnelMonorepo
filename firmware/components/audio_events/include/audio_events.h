@@ -19,23 +19,29 @@
 
 #pragma once
 
-#include "freertos/FreeRTOS.h"
-#include "freertos/event_groups.h"
-#include "esp_err.h"
+#include "rapidjson/document.h"
+#include <atomic>
+#include <variant>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+namespace shrapnel::events {
 
-typedef enum
+template <typename T>
+rapidjson::Value to_json(rapidjson::Document &document, const T &object);
+
+struct InputClipped
 {
-    AUDIO_EVENT_OUTPUT_CLIPPED = (1 << 0),
-} audio_event_t;
+};
+struct OutputClipped
+{
+};
 
-extern EventGroupHandle_t g_audio_event_group;
+using ApiMessage = std::variant<InputClipped, OutputClipped>;
 
-esp_err_t audio_event_init(void);
+extern std::atomic_flag input_clipped;
+extern std::atomic_flag output_clipped;
 
-#ifdef __cplusplus
-}
-#endif
+template <>
+rapidjson::Value to_json(rapidjson::Document &document,
+                         const ApiMessage &object);
+
+} // namespace shrapnel::events

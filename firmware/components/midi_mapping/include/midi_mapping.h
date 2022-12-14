@@ -48,6 +48,7 @@
  * See also:
  * - \subpage ws_api_parameters
  * - \subpage ws_api_midi
+ * - \subpage ws_api_events
  *
  * \page ws_api_midi MIDI mapping JSON messages
  *

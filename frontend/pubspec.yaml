@@ -19,6 +19,7 @@ dependencies:
   google_fonts: ^3.0.1
   json_annotation: ^4.4.0
   logging: ^1.0.2
+  pausable_timer: ^1.0.0+6
   provider: ^6.0.0
   remove_from_coverage: ^2.0.0
   rxdart: ^0.27.3

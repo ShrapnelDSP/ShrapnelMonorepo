@@ -72,7 +72,9 @@
 #define MAX_CLIENTS 3
 #define ARRAY_LENGTH(a) (sizeof(a)/sizeof(a[0]))
 
-using ApiMessage = std::variant<shrapnel::parameters::ApiMessage, shrapnel::midi::MappingApiMessage>;
+using ApiMessage = std::variant<shrapnel::parameters::ApiMessage,
+                                shrapnel::midi::MappingApiMessage,
+                                shrapnel::events::ApiMessage>;
 using FileDescriptor = std::optional<int>;
 using AppMessage = std::pair<ApiMessage, FileDescriptor>;
 
@@ -230,6 +232,7 @@ static void connect_handler(void* arg, esp_event_base_t event_base,
                             int32_t event_id, void* event_data);
 static void start_mdns(void);
 static void i2c_setup(void);
+static void do_nothing(TimerHandle_t){};
 }
 
 static esp_err_t websocket_get_handler(httpd_req_t *req)
@@ -686,8 +689,6 @@ midi::Mapping, 10>>(document);
             audio_params.get(),
             event_send);
 
-    ESP_ERROR_CHECK(audio_event_init());
-
     i2c_setup();
 
     profiling_mutex = xSemaphoreCreateMutex();
@@ -803,6 +804,9 @@ midi::Mapping, 10>>(document);
     ESP_LOGI(TAG, "stack: %d", uxTaskGetStackHighWaterMark(NULL));
     heap_caps_print_heap_info(MALLOC_CAP_DEFAULT);
 
+    TimerHandle_t clipping_throttle_timer = xTimerCreate(
+        "clipping throttle", pdMS_TO_TICKS(1000), false, nullptr, do_nothing);
+
     auto midi_uart = new midi::EspMidiUart(UART_NUM_MIDI, GPIO_NUM_MIDI);
 
     auto on_midi_message = [] (midi::Message message) {
@@ -828,6 +832,9 @@ midi::Mapping, 10>>(document);
     assert(buffer[sizeof(buffer) - 1] == '\0');
     ESP_LOGI(TAG, "Task list:\n%s", buffer);
 #endif
+
+    events::input_clipped.test_and_set();
+    events::output_clipped.test_and_set();
 
     while(1)
     {
@@ -896,6 +903,25 @@ midi::Mapping, 10>>(document);
             while(xQueueReceive(i2s_queue, &event, 0))
             {
                 log_i2s_event(event);
+            }
+        }
+
+        if(!xTimerIsTimerActive(clipping_throttle_timer))
+        {
+            if(!events::input_clipped.test_and_set())
+            {
+                ESP_LOGI(TAG, "input was clipped");
+                audio_event_send_callback(
+                    {events::InputClipped{}, std::nullopt});
+                xTimerReset(clipping_throttle_timer, pdMS_TO_TICKS(10));
+            }
+
+            if(!events::output_clipped.test_and_set())
+            {
+                ESP_LOGI(TAG, "output was clipped");
+                audio_event_send_callback(
+                    {events::OutputClipped{}, std::nullopt});
+                xTimerReset(clipping_throttle_timer, pdMS_TO_TICKS(10));
             }
         }
     }

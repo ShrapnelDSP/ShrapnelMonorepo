@@ -28,4 +28,5 @@ BreakBeforeBraces: Custom
 IndentExternBlock: NoIndent
 IndentWidth: 4
 UseTab: Never
+ReflowComments: false
 SpaceBeforeParens: Never

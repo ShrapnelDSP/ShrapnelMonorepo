@@ -25,6 +25,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:provider/provider.dart';
+import 'package:shrapnel/audio_events.dart';
 import 'package:shrapnel/json_websocket.dart';
 import 'package:shrapnel/main.dart';
 import 'package:shrapnel/midi_mapping/model/service.dart';
@@ -133,7 +134,8 @@ class MidiMappingCreatePageObject {
 }
 
 @GenerateMocks([JsonWebsocket, Uuid])
-@GenerateNiceMocks([MockSpec<RobustWebsocket>()])
+@GenerateNiceMocks(
+    [MockSpec<RobustWebsocket>(), MockSpec<AudioClippingService>()])
 void main() {
   testWidgets('Midi mapping can be created', (tester) async {
     final apiController = StreamController<Map<String, dynamic>>.broadcast();
@@ -151,6 +153,9 @@ void main() {
           create: (_) => MidiMappingService(websocket: api),
         ),
         ChangeNotifierProvider<Uuid>.value(value: uuid),
+        ChangeNotifierProvider<AudioClippingService>(
+          create: (_) => MockAudioClippingService(),
+        ),
       ],
       child: const MyApp(),
     );
@@ -269,6 +274,9 @@ void main() {
           create: (_) => MidiMappingService(websocket: api),
         ),
         ChangeNotifierProvider<Uuid>.value(value: uuid),
+        ChangeNotifierProvider<AudioClippingService>(
+          create: (_) => MockAudioClippingService(),
+        ),
       ],
       child: const MyApp(),
     );
@@ -374,6 +382,9 @@ void main() {
           Provider<JsonWebsocket>.value(value: api),
           ChangeNotifierProvider(
             create: (_) => MidiMappingService(websocket: api),
+          ),
+          ChangeNotifierProvider<AudioClippingService>(
+            create: (_) => MockAudioClippingService(),
           ),
         ],
         child: const MyApp(),
@@ -505,6 +516,9 @@ void main() {
           Provider<JsonWebsocket>.value(value: api),
           ChangeNotifierProvider(
             create: (_) => MidiMappingService(websocket: api),
+          ),
+          ChangeNotifierProvider<AudioClippingService>(
+            create: (_) => MockAudioClippingService(),
           ),
         ],
         child: const MyApp(),
