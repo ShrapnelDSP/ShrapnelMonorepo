@@ -58,10 +58,33 @@ class MidiMapping with _$MidiMapping {
     @JsonKey(name: 'midi_channel') required int midiChannel,
     @JsonKey(name: 'cc_number') required int ccNumber,
     @JsonKey(name: 'parameter_id') required String parameterId,
+    @JsonKey(name: 'mode') required MidiMappingMode mode,
   }) = _MidiMapping;
 
-  factory MidiMapping.fromJson(Map<String, dynamic> json) =>
-      _$MidiMappingFromJson(json);
+  const MidiMapping._();
+
+  factory MidiMapping.fromJson(Map<String, dynamic> json) {
+    // Early versions of firmware do not include the mode field. Set it to a
+    // default value (parameter), which behaves the same as those firmware
+    // versions.
+    final mode = json.containsKey('mode')
+        ? MidiMappingMode.values.firstWhere((v) => v.apiName == json['mode'])
+        : MidiMappingMode.parameter;
+
+    return MidiMapping(
+      midiChannel: json['midi_channel'] as int,
+      ccNumber: json['cc_number'] as int,
+      parameterId: json['parameter_id'] as String,
+      mode: mode,
+    );
+  }
+
+  Map<String, dynamic> toJson() => <String, dynamic>{
+        'midi_channel': midiChannel,
+        'cc_number': ccNumber,
+        'parameter_id': parameterId,
+        'mode': mode.apiName,
+      };
 }
 
 @freezed
@@ -92,4 +115,14 @@ class MidiMappingEntry with _$MidiMappingEntry {
       id: mapping.toJson(),
     };
   }
+}
+
+enum MidiMappingMode {
+  toggle(apiName: 'toggle', uiName: 'Toggle'),
+  parameter(apiName: 'parameter', uiName: 'Knob');
+
+  const MidiMappingMode({required this.apiName, required this.uiName});
+
+  final String apiName;
+  final String uiName;
 }

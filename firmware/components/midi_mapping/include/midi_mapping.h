@@ -61,7 +61,8 @@
  * {
  *   "midi_channel": integer,
  *   "cc_number": integer,
- *   "parameter_id": "string"
+ *   "mode": "parameter" or "toggle",
+ *   "parameter_id": "string",
  * }
  * ~~~
  *
@@ -93,8 +94,18 @@
  *   {
  *     "messageType": "MidiMap::get::response",
  *     "mappings": {
- *       "...": { "midi_channel": 1, "cc_number": 2, "parameter_id": "gain" },
- *       "...": { "midi_channel": 3, "cc_number": 4, "parameter_id": "tone" }
+ *       "...": {
+ *         "midi_channel": 1,
+ *         "cc_number": 2,
+ *         "mode": "parameter",
+ *         "parameter_id": "gain"
+ *       },
+ *       "...": {
+ *         "midi_channel": 3,
+ *         "cc_number": 4,
+ *         "mode": "toggle",
+ *         "parameter_id": "tone"
+ *       }
  *     }
  *   }
  *   ~~~
@@ -111,6 +122,7 @@
  *       "...": {
  *         "midi_channel": 1,
  *         "cc_number": 1,
+ *         "mode": "parameter",
  *         "parameter_id": "gain"
  *       }
  *     }
@@ -129,6 +141,7 @@
  *       "...": {
  *         "midi_channel": 1,
  *         "cc_number": 1,
+ *         "mode": "parameter",
  *         "parameter_id": "gain"
  *       }
  *     }
@@ -147,6 +160,7 @@
  *       "...": {
  *         "midi_channel": 1,
  *         "cc_number": 1,
+ *         "mode": "parameter",
  *         "parameter_id": "gain"
  *       }
  *     }
@@ -182,8 +196,15 @@ namespace midi {
 struct Mapping {
     using id_t = std::array<uint8_t, 16>;
 
+    enum class Mode
+    {
+        PARAMETER,
+        TOGGLE,
+    };
+
     uint8_t midi_channel;
     uint8_t cc_number;
+    Mode mode;
     parameters::id_t parameter_name;
 
     std::strong_ordering operator<=>(const Mapping &other) const = default;
@@ -239,21 +260,36 @@ class MappingManager final : public etl::observable<MappingObserver, MAX_OBSERVE
         auto cc_params = get_if<Message::ControlChange>(&message.parameters);
         if(!cc_params) return;
 
-        for(const auto &mapping : mappings)
+        for(const auto &[_, mapping] : mappings)
         {
-            if(mapping.second.midi_channel != message.channel)
+            if(mapping.midi_channel != message.channel)
             {
                 continue;
             }
 
-            if(mapping.second.cc_number != cc_params->control)
+            if(mapping.cc_number != cc_params->control)
             {
                 continue;
             }
 
-            parameters->update(
-                    mapping.second.parameter_name,
-                    cc_params->value / float(CC_VALUE_MAX));
+            switch(mapping.mode)
+            {
+            case Mapping::Mode::PARAMETER:
+                parameters->update(mapping.parameter_name,
+                                   cc_params->value / float(CC_VALUE_MAX));
+                break;
+            case Mapping::Mode::TOGGLE:
+                if(cc_params->value == 0)
+                {
+                    continue;
+                }
+
+                auto old_value = parameters->get(mapping.parameter_name);
+
+                parameters->update(mapping.parameter_name,
+                                   old_value < 0.5f ? 1.f : 0.f);
+                break;
+            }
         }
     };
 

@@ -28,6 +28,7 @@ import 'package:provider/provider.dart';
 import 'package:shrapnel/audio_events.dart';
 import 'package:shrapnel/json_websocket.dart';
 import 'package:shrapnel/main.dart';
+import 'package:shrapnel/midi_mapping/model/models.dart';
 import 'package:shrapnel/midi_mapping/model/service.dart';
 import 'package:shrapnel/midi_mapping/view/midi_mapping.dart';
 import 'package:shrapnel/parameter.dart';
@@ -70,11 +71,23 @@ class MidiMappingPageObject {
     await tester.pumpAndSettle();
   }
 
+  Future<void> updateMode({
+    required String id,
+    required MidiMappingMode value,
+  }) async {
+    await tester.tap(find.byKey(Key('$id-mode-dropdown')).last);
+    await tester.pumpAndSettle();
+    await tester.tap(find.text(value.uiName).last);
+    await tester.pumpAndSettle();
+  }
+
   Future<void> updateParameter({
     required String id,
     required String value,
   }) async {
-    await tester.tap(find.byKey(Key('$id-parameter-id-dropdown')).last);
+    final dropdown = find.byKey(Key('$id-parameter-id-dropdown')).last;
+    await tester.scrollUntilVisible(dropdown, 50);
+    await tester.tap(dropdown);
     await tester.pumpAndSettle();
     await tester.tap(find.text(value).last);
     await tester.pumpAndSettle();
@@ -115,6 +128,18 @@ class MidiMappingCreatePageObject {
     await tester.pumpAndSettle();
   }
 
+  Future<void> selectMode(MidiMappingMode mode) async {
+    await tester.tap(
+      find.ancestor(
+        of: find.text('Mode'),
+        matching: find.byType(DropdownButton<MidiMappingMode>),
+      ),
+    );
+    await tester.pumpAndSettle();
+    await tester.tap(find.text(mode.uiName).last);
+    await tester.pumpAndSettle();
+  }
+
   Future<void> selectParameter(String name) async {
     await tester.tap(
       find.ancestor(
@@ -135,7 +160,8 @@ class MidiMappingCreatePageObject {
 
 @GenerateMocks([JsonWebsocket, Uuid])
 @GenerateNiceMocks(
-    [MockSpec<RobustWebsocket>(), MockSpec<AudioClippingService>()])
+  [MockSpec<RobustWebsocket>(), MockSpec<AudioClippingService>()],
+)
 void main() {
   testWidgets('Midi mapping can be created', (tester) async {
     final apiController = StreamController<Map<String, dynamic>>.broadcast();
@@ -207,7 +233,8 @@ void main() {
           "123": {
             "midi_channel": 1,
             "cc_number": 2,
-            "parameter_id": "noiseGateRelease"
+            "parameter_id": "noiseGateRelease",
+            "mode": "parameter"
           }
         }
       }
@@ -225,7 +252,8 @@ void main() {
                 "123": {
                   "midi_channel": 1,
                   "cc_number": 2,
-                  "parameter_id": "noiseGateRelease"
+                  "parameter_id": "noiseGateRelease",
+                  "mode": "parameter"
                 }
               }
             }
@@ -238,6 +266,7 @@ void main() {
     final midiMappingCreatePage = await midiMappingPage.openCreateDialog();
     await midiMappingCreatePage.selectMidiChannel(1);
     await midiMappingCreatePage.selectCcNumber(2);
+    await midiMappingCreatePage.selectMode(MidiMappingMode.parameter);
     // XXX: There is a bug in flutter where the DropdownButton's popup menu is
     //      unreliable during tests: https://github.com/flutter/flutter/issues/82908
     //
@@ -330,6 +359,7 @@ void main() {
           "123": {
             "midi_channel": 1,
             "cc_number": 2,
+            "mode": "parameter",
             "parameter_id": "noiseGateRelease"
           }
         }
@@ -340,6 +370,7 @@ void main() {
     final midiMappingCreatePage = await midiMappingPage.openCreateDialog();
     await midiMappingCreatePage.selectMidiChannel(1);
     await midiMappingCreatePage.selectCcNumber(2);
+    await midiMappingCreatePage.selectMode(MidiMappingMode.parameter);
     // XXX: There is a bug in flutter where the DropdownButton's popup menu is
     //      unreliable during tests: https://github.com/flutter/flutter/issues/82908
     //
@@ -410,7 +441,12 @@ void main() {
               {
                 "messageType": "MidiMap::get::response",
                 "mappings": {
-                  "123": { "midi_channel": 1, "cc_number": 2, "parameter_id": "ampGain" }
+                  "123": {
+                    "midi_channel": 1,
+                    "cc_number": 2,
+                    "mode": "parameter",
+                    "parameter_id": "ampGain"
+                  }
                 }
               }
               ''',
@@ -440,6 +476,7 @@ void main() {
                 "123": {
                   "midi_channel": 3,
                   "cc_number": 2,
+                  "mode": "parameter",
                   "parameter_id": "ampGain"
                 }
               }
@@ -460,6 +497,7 @@ void main() {
                 "123": {
                   "midi_channel": 3,
                   "cc_number": 4,
+                  "mode": "parameter",
                   "parameter_id": "ampGain"
                 }
               }
@@ -469,6 +507,31 @@ void main() {
         ),
       );
 
+      await midiMappingPage.updateMode(
+        id: '123',
+        value: MidiMappingMode.toggle,
+      );
+      verify(
+        api.send(
+          json.decodeAsMap(
+            '''
+            {
+              "messageType": "MidiMap::update",
+              "mapping": {
+                "123": {
+                  "midi_channel": 3,
+                  "cc_number": 4,
+                  "mode": "toggle",
+                  "parameter_id": "ampGain"
+                }
+              }
+            }
+            ''',
+          ),
+        ),
+      );
+
+      /* The dropdown is not behaving correctly, causing this test to fail */
       await midiMappingPage.updateParameter(
         id: '123',
         value: 'Valvestate: Contour',
@@ -483,6 +546,7 @@ void main() {
                 "123": {
                   "midi_channel": 3,
                   "cc_number": 4,
+                  "mode": "toggle",
                   "parameter_id": "contour"
                 }
               }

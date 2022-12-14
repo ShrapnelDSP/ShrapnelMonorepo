@@ -64,7 +64,7 @@ std::string normalise_json(const std::string &json)
 
 TEST(MappingJsonBuilder, Mapping)
 {
-    Mapping input{1, 2, "test"};
+    Mapping input{1, 2, Mapping::Mode::PARAMETER, "test"};
 
     rapidjson::Document document;
     auto roundtrip = from_json<Mapping>(to_json(document, input));
@@ -73,19 +73,32 @@ TEST(MappingJsonBuilder, Mapping)
 
 TEST(MappingJsonBuilder, CreateResponse)
 {
-    CreateResponse input{{
-        Mapping::id_t{
-            0,  1,  2,  3,  4,  5,  6,  7,
-            8,  9, 10, 11, 12, 13, 14, 15,
-        },
-        Mapping{1, 2, "test"}
-    }};
+    CreateResponse input{{Mapping::id_t{
+                              0,
+                              1,
+                              2,
+                              3,
+                              4,
+                              5,
+                              6,
+                              7,
+                              8,
+                              9,
+                              10,
+                              11,
+                              12,
+                              13,
+                              14,
+                              15,
+                          },
+                          Mapping{1, 2, Mapping::Mode::PARAMETER, "test"}}};
 
     auto reference = normalise_json(R"({
           "mapping": {
             "00010203-0405-0607-0809-0a0b0c0d0e0f": {
               "midi_channel": 1,
               "cc_number": 2,
+              "mode": "parameter",
               "parameter_id": "test"
             }
           }
@@ -96,19 +109,33 @@ TEST(MappingJsonBuilder, CreateResponse)
 
 TEST(MappingJsonBuilder, VariantCreateResponse)
 {
-    MappingApiMessage input{CreateResponse{{
-        Mapping::id_t{
-            0,  1,  2,  3,  4,  5,  6,  7,
-            8,  9, 10, 11, 12, 13, 14, 15,
-        },
-        Mapping{1, 2, "test"}
-    }}};
+    MappingApiMessage input{
+        CreateResponse{{Mapping::id_t{
+                            0,
+                            1,
+                            2,
+                            3,
+                            4,
+                            5,
+                            6,
+                            7,
+                            8,
+                            9,
+                            10,
+                            11,
+                            12,
+                            13,
+                            14,
+                            15,
+                        },
+                        Mapping{1, 2, Mapping::Mode::PARAMETER, "test"}}}};
 
     auto reference = normalise_json(R"({
           "mapping": {
             "00010203-0405-0607-0809-0a0b0c0d0e0f": {
               "midi_channel": 1,
               "cc_number": 2,
+              "mode": "parameter",
               "parameter_id": "test"
             }
           },
@@ -121,15 +148,8 @@ TEST(MappingJsonBuilder, VariantCreateResponse)
 TEST(MappingJsonBuilder, VariantGetResponse)
 {
     etl::map<Mapping::id_t, Mapping, 2> mapping{
-        {
-            Mapping::id_t{0},
-            Mapping{1, 2, "foo"}
-        },
-        {
-            Mapping::id_t{1},
-            Mapping{3, 4, "bar"}
-        }
-    };
+        {Mapping::id_t{0}, Mapping{1, 2, Mapping::Mode::PARAMETER, "foo"}},
+        {Mapping::id_t{1}, Mapping{3, 4, Mapping::Mode::TOGGLE, "bar"}}};
 
     MappingApiMessage input{
         GetResponse{&mapping}
@@ -140,11 +160,13 @@ TEST(MappingJsonBuilder, VariantGetResponse)
             "00000000-0000-0000-0000-000000000000": {
               "midi_channel": 1,
               "cc_number": 2,
+              "mode": "parameter",
               "parameter_id": "foo"
             },
             "01000000-0000-0000-0000-000000000000": {
               "midi_channel": 3,
               "cc_number": 4,
+              "mode": "toggle",
               "parameter_id": "bar"
             }
           },

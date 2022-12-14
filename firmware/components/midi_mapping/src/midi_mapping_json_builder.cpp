@@ -42,6 +42,12 @@ rapidjson::Value to_json(rapidjson::Document &document, const Mapping &object)
     cc_number = object.cc_number;
     json.AddMember("cc_number", cc_number, document.GetAllocator());
 
+    rapidjson::Value mode;
+    mode.SetString(object.mode == Mapping::Mode::TOGGLE ? "toggle"
+                                                        : "parameter",
+                   document.GetAllocator());
+    json.AddMember("mode", mode, document.GetAllocator());
+
     rapidjson::Value parameter_id;
     parameter_id.SetString(object.parameter_name.data(), object.parameter_name.size(), document.GetAllocator());
     json.AddMember("parameter_id", parameter_id, document.GetAllocator());
