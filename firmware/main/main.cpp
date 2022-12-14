@@ -899,7 +899,7 @@ midi::Mapping, 10>>(document);
         vTaskDelay(pdMS_TO_TICKS(10));
         auto tick_count_start = xTaskGetTickCount();
 
-        if(auto byte = midi_uart->get_byte(pdMS_TO_TICKS(10)); byte.has_value())
+        if(auto byte = midi_uart->get_byte(0); byte.has_value())
         {
             ESP_LOGI(TAG, "midi got byte 0x%02x", *byte);
 
