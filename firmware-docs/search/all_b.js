@@ -30,5 +30,7 @@ var searchData=
   ['midi_5fuart_2ecpp_27',['midi_uart.cpp',['../midi__uart_8cpp.html',1,'']]],
   ['midi_5fuart_2eh_28',['midi_uart.h',['../midi__uart_8h.html',1,'']]],
   ['midimappingobserver_29',['MidiMappingObserver',['../classshrapnel_1_1MidiMappingObserver.html#aebd40621db4a0905667bf63bbd3719c4',1,'shrapnel::MidiMappingObserver::MidiMappingObserver()'],['../classshrapnel_1_1MidiMappingObserver.html',1,'shrapnel::MidiMappingObserver&lt; MappingManagerT &gt;']]],
-  ['midiuartbase_30',['MidiUartBase',['../classshrapnel_1_1midi_1_1MidiUartBase.html',1,'shrapnel::midi']]]
+  ['midiuartbase_30',['MidiUartBase',['../classshrapnel_1_1midi_1_1MidiUartBase.html',1,'shrapnel::midi']]],
+  ['mode_31',['mode',['../structshrapnel_1_1midi_1_1Mapping.html#ad02ebea6e6428980d752a6f3844bf21f',1,'shrapnel::midi::Mapping']]],
+  ['mode_32',['Mode',['../structshrapnel_1_1midi_1_1Mapping.html#a9d3978518402ec5df1963f1b8c0a7013',1,'shrapnel::midi::Mapping']]]
 ];

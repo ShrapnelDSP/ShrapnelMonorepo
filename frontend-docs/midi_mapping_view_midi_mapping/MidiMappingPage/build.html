@@ -121,6 +121,7 @@ Widget build(BuildContext context) {
           columns: const [
             DataColumn(label: Text(&#39;MIDI channel&#39;)),
             DataColumn(label: Text(&#39;CC number&#39;)),
+            DataColumn(label: Text(&#39;Mode&#39;)),
             DataColumn(label: Text(&#39;Parameter&#39;)),
             DataColumn(label: Text(&#39;Delete&#39;)),
           ],
@@ -148,6 +149,15 @@ Widget build(BuildContext context) {
                       value: mapping.mapping.ccNumber,
                       onChanged: (value) =&gt; midiMappingService.updateMapping(
                         mapping.copyWith.mapping(ccNumber: value!),
+                      ),
+                    ),
+                  ),
+                  DataCell(
+                    ModeDropdown(
+                      key: Key(&#39;${mapping.id}-mode-dropdown&#39;),
+                      value: mapping.mapping.mode,
+                      onChanged: (value) =&gt; midiMappingService.updateMapping(
+                        mapping.copyWith.mapping(mode: value!),
                       ),
                     ),
                   ),

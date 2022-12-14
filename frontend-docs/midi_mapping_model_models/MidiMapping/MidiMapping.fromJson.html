@@ -60,8 +60,21 @@
     
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">factory MidiMapping.fromJson(Map&lt;String, dynamic&gt; json) =&gt;
-    _$MidiMappingFromJson(json);</code></pre>
+  <pre class="language-dart"><code class="language-dart">factory MidiMapping.fromJson(Map&lt;String, dynamic&gt; json) {
+  &#47;&#47; Early versions of firmware do not include the mode field. Set it to a
+  &#47;&#47; default value (parameter), which behaves the same as those firmware
+  &#47;&#47; versions.
+  final mode = json.containsKey(&#39;mode&#39;)
+      ? MidiMappingMode.values.firstWhere((v) =&gt; v.apiName == json[&#39;mode&#39;])
+      : MidiMappingMode.parameter;
+
+  return MidiMapping(
+    midiChannel: json[&#39;midi_channel&#39;] as int,
+    ccNumber: json[&#39;cc_number&#39;] as int,
+    parameterId: json[&#39;parameter_id&#39;] as String,
+    mode: mode,
+  );
+}</code></pre>
 </section>
 
 
@@ -96,8 +109,9 @@
     <li class="inherited"><a href="https://api.flutter.dev/flutter/dart-core/Object/hashCode.html">hashCode</a></li>
     <li class="inherited"><a href="https://api.flutter.dev/flutter/dart-core/Object/runtimeType.html">runtimeType</a></li>
 
-    <li class="section-title inherited"><a href="../../midi_mapping_model_models/MidiMapping-class.html#instance-methods">Methods</a></li>
+    <li class="section-title"><a href="../../midi_mapping_model_models/MidiMapping-class.html#instance-methods">Methods</a></li>
     <li class="inherited"><a href="https://api.flutter.dev/flutter/dart-core/Object/noSuchMethod.html">noSuchMethod</a></li>
+    <li><a href="../../midi_mapping_model_models/MidiMapping/toJson.html">toJson</a></li>
     <li class="inherited"><a href="https://api.flutter.dev/flutter/dart-core/Object/toString.html">toString</a></li>
 
     <li class="section-title inherited"><a href="../../midi_mapping_model_models/MidiMapping-class.html#operators">Operators</a></li>

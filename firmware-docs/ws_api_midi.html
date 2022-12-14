@@ -99,7 +99,8 @@ $(document).ready(function(){initNavTree('ws_api_midi.html',''); initResizable()
 <div class="fragment"><div class="line">{</div>
 <div class="line">  <span class="stringliteral">&quot;midi_channel&quot;</span>: integer,</div>
 <div class="line">  <span class="stringliteral">&quot;cc_number&quot;</span>: integer,</div>
-<div class="line">  <span class="stringliteral">&quot;parameter_id&quot;</span>: <span class="stringliteral">&quot;string&quot;</span></div>
+<div class="line">  <span class="stringliteral">&quot;mode&quot;</span>: <span class="stringliteral">&quot;parameter&quot;</span> or <span class="stringliteral">&quot;toggle&quot;</span>,</div>
+<div class="line">  <span class="stringliteral">&quot;parameter_id&quot;</span>: <span class="stringliteral">&quot;string&quot;</span>,</div>
 <div class="line">}</div>
 </div><!-- fragment --><dl class="section note"><dt>Note</dt><dd>In the examples of this table, UUIDs are replaced with <code>...</code> for brevity. Normally these would look like <code>12345678-abcd-0000-0000-000000000000</code>.</dd></dl>
 <table class="doxtable">
@@ -114,8 +115,18 @@ $(document).ready(function(){initNavTree('ws_api_midi.html',''); initResizable()
 <td><code>MidiMap::get::response</code> </td><td><code>mappings</code> (map of <code>UUID</code> to <code>MidiMapping</code>): The list of all MIDI mappings </td><td>Firmware -&gt; UI </td><td>Sent in response to <code>MidiMap::get::request</code> </td><td><div class="fragment"><div class="line">{</div>
 <div class="line">  <span class="stringliteral">&quot;messageType&quot;</span>: <span class="stringliteral">&quot;MidiMap::get::response&quot;</span>,</div>
 <div class="line">  <span class="stringliteral">&quot;mappings&quot;</span>: {</div>
-<div class="line">    <span class="stringliteral">&quot;...&quot;</span>: { <span class="stringliteral">&quot;midi_channel&quot;</span>: 1, <span class="stringliteral">&quot;cc_number&quot;</span>: 2, <span class="stringliteral">&quot;parameter_id&quot;</span>: <span class="stringliteral">&quot;gain&quot;</span> },</div>
-<div class="line">    <span class="stringliteral">&quot;...&quot;</span>: { <span class="stringliteral">&quot;midi_channel&quot;</span>: 3, <span class="stringliteral">&quot;cc_number&quot;</span>: 4, <span class="stringliteral">&quot;parameter_id&quot;</span>: <span class="stringliteral">&quot;tone&quot;</span> }</div>
+<div class="line">    <span class="stringliteral">&quot;...&quot;</span>: {</div>
+<div class="line">      <span class="stringliteral">&quot;midi_channel&quot;</span>: 1,</div>
+<div class="line">      <span class="stringliteral">&quot;cc_number&quot;</span>: 2,</div>
+<div class="line">      <span class="stringliteral">&quot;mode&quot;</span>: <span class="stringliteral">&quot;parameter&quot;</span>,</div>
+<div class="line">      <span class="stringliteral">&quot;parameter_id&quot;</span>: <span class="stringliteral">&quot;gain&quot;</span></div>
+<div class="line">    },</div>
+<div class="line">    <span class="stringliteral">&quot;...&quot;</span>: {</div>
+<div class="line">      <span class="stringliteral">&quot;midi_channel&quot;</span>: 3,</div>
+<div class="line">      <span class="stringliteral">&quot;cc_number&quot;</span>: 4,</div>
+<div class="line">      <span class="stringliteral">&quot;mode&quot;</span>: <span class="stringliteral">&quot;toggle&quot;</span>,</div>
+<div class="line">      <span class="stringliteral">&quot;parameter_id&quot;</span>: <span class="stringliteral">&quot;tone&quot;</span></div>
+<div class="line">    }</div>
 <div class="line">  }</div>
 <div class="line">}</div>
 </div><!-- fragment --> </td></tr>
@@ -126,6 +137,7 @@ $(document).ready(function(){initNavTree('ws_api_midi.html',''); initResizable()
 <div class="line">    <span class="stringliteral">&quot;...&quot;</span>: {</div>
 <div class="line">      <span class="stringliteral">&quot;midi_channel&quot;</span>: 1,</div>
 <div class="line">      <span class="stringliteral">&quot;cc_number&quot;</span>: 1,</div>
+<div class="line">      <span class="stringliteral">&quot;mode&quot;</span>: <span class="stringliteral">&quot;parameter&quot;</span>,</div>
 <div class="line">      <span class="stringliteral">&quot;parameter_id&quot;</span>: <span class="stringliteral">&quot;gain&quot;</span></div>
 <div class="line">    }</div>
 <div class="line">  }</div>
@@ -138,6 +150,7 @@ $(document).ready(function(){initNavTree('ws_api_midi.html',''); initResizable()
 <div class="line">    <span class="stringliteral">&quot;...&quot;</span>: {</div>
 <div class="line">      <span class="stringliteral">&quot;midi_channel&quot;</span>: 1,</div>
 <div class="line">      <span class="stringliteral">&quot;cc_number&quot;</span>: 1,</div>
+<div class="line">      <span class="stringliteral">&quot;mode&quot;</span>: <span class="stringliteral">&quot;parameter&quot;</span>,</div>
 <div class="line">      <span class="stringliteral">&quot;parameter_id&quot;</span>: <span class="stringliteral">&quot;gain&quot;</span></div>
 <div class="line">    }</div>
 <div class="line">  }</div>
@@ -150,6 +163,7 @@ $(document).ready(function(){initNavTree('ws_api_midi.html',''); initResizable()
 <div class="line">    <span class="stringliteral">&quot;...&quot;</span>: {</div>
 <div class="line">      <span class="stringliteral">&quot;midi_channel&quot;</span>: 1,</div>
 <div class="line">      <span class="stringliteral">&quot;cc_number&quot;</span>: 1,</div>
+<div class="line">      <span class="stringliteral">&quot;mode&quot;</span>: <span class="stringliteral">&quot;parameter&quot;</span>,</div>
 <div class="line">      <span class="stringliteral">&quot;parameter_id&quot;</span>: <span class="stringliteral">&quot;gain&quot;</span></div>
 <div class="line">    }</div>
 <div class="line">  }</div>
