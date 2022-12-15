@@ -18,6 +18,11 @@
  */
 
 #include <mutex>
+#include "freertos/portmacro.h"
+#include "freertos/projdefs.h"
+#include "queue.h"
+#include "wifi_provisioning/manager.h"
+#include <etl/state_chart.h>
 #include <stdio.h>
 #include <math.h>
 #include <type_traits>
@@ -32,6 +37,7 @@
 
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
+#include "freertos/timers.h"
 #include "freertos/semphr.h"
 #include "freertos/FreeRTOSConfig.h"
 
@@ -63,9 +69,9 @@
 #include "esp_persistence.h"
 #include "pcm3060.h"
 #include "profiling.h"
-#include "wifi_provisioning.h"
 #include "midi_mapping_api.h"
 #include "queue.h"
+#include "wifi_state_machine.h"
 
 #define TAG "main"
 #define QUEUE_LEN 4
@@ -77,6 +83,7 @@ using ApiMessage = std::variant<shrapnel::parameters::ApiMessage,
                                 shrapnel::events::ApiMessage>;
 using FileDescriptor = std::optional<int>;
 using AppMessage = std::pair<ApiMessage, FileDescriptor>;
+using WifiQueue = shrapnel::Queue<shrapnel::wifi::InternalEvent, 3>;
 
 extern "C" void audio_event_send_callback(const AppMessage &message);
 
@@ -376,6 +383,7 @@ static void stop_webserver(httpd_handle_t server)
     /* TODO need to stop tasks that use the web server first */
 
     // Stop the httpd server
+    // XXX: this blocks until the server is stopped
     httpd_stop(server);
 }
 
@@ -386,11 +394,13 @@ static void disconnect_handler(void* arg, esp_event_base_t event_base,
     (void)event_id;
     (void)event_data;
 
-    httpd_handle_t* server = (httpd_handle_t*) arg;
-    if (*server) {
-        ESP_LOGI(TAG, "Stopping webserver");
-        stop_webserver(*server);
-        *server = nullptr;
+    ESP_LOGI(TAG, "WiFi disconnected");
+    auto queue{reinterpret_cast<WifiQueue *>(arg)};
+    wifi::InternalEvent event{wifi::InternalEvent::DISCONNECT};
+    int rc{queue->send(&event, 0)};
+    if(rc != pdPASS)
+    {
+        ESP_LOGE(TAG, "Failed to send disconnect event to queue");
     }
 }
 
@@ -401,10 +411,13 @@ static void connect_handler(void* arg, esp_event_base_t event_base,
     (void)event_id;
     (void)event_data;
 
-    httpd_handle_t* server = (httpd_handle_t*) arg;
-    if (*server == nullptr) {
-        ESP_LOGI(TAG, "Starting webserver");
-        *server = start_webserver();
+    ESP_LOGI(TAG, "WiFi connected");
+    auto queue{reinterpret_cast<WifiQueue *>(arg)};
+    wifi::InternalEvent event{wifi::InternalEvent::CONNECT_SUCCESS};
+    int rc{queue->send(&event, 0)};
+    if(rc != pdPASS)
+    {
+        ESP_LOGE(TAG, "Failed to send connect event to queue");
     }
 }
 
@@ -412,14 +425,15 @@ static void wifi_start_handler(void *arg, esp_event_base_t event_base,
                                int32_t event_id, void* event_data)
 {
     (void)event_data;
-    (void)arg;
     assert(event_base == WIFI_EVENT);
     assert(event_id == WIFI_EVENT_STA_START);
 
-    int rc = esp_wifi_connect();
-    if(rc != ESP_OK)
+    auto queue{reinterpret_cast<WifiQueue *>(arg)};
+    wifi::InternalEvent event{wifi::InternalEvent::STARTED};
+    int rc{queue->send(&event, 0)};
+    if(rc != pdPASS)
     {
-        ESP_LOGE(TAG, "wifi connect failed %d", rc);
+        ESP_LOGE(TAG, "Failed to send start event to queue");
     }
 }
 
@@ -763,49 +777,64 @@ midi::Mapping, 10>>(document);
     /* Start the mdns service */
     start_mdns();
 
-    {
-        wifi_provisioning::WiFiProvisioning wifi_provisioning{};
+    auto wifi_queue = WifiQueue();
 
-#if SHRAPNEL_RESET_WIFI_CREDENTIALS
-        ESP_LOGW(TAG, "Reseting wifi provisioning");
-        wifi_prov_mgr_reset_provisioning();
-#endif
-
-        if(!wifi_provisioning.is_provisioned())
+    auto wifi_send_event = [&] (wifi::InternalEvent event) {
+        auto rc = wifi_queue.send(&event, 0);
+        if(rc != pdPASS)
         {
-             wifi_provisioning.wait_for_provisioning();
-             /* start the websocket server */
-             connect_handler(&_server, IP_EVENT, IP_EVENT_STA_GOT_IP, nullptr);
+            ESP_LOGE(TAG, "Failed to post wifi event to queue");
         }
-    }
+    };
 
-    /* TODO Need to enter provisioning mode again if the WiFi credentials are
-     *      not working. Probably the AP passphrase was changed since we got
-     *      provisionined.
-     */
+    auto app_send_event = [&] (wifi::UserEvent event) {
+        switch(event)
+        {
+            case wifi::UserEvent::CONNECTED:
+                ESP_LOGI(TAG, "Starting webserver");
+                _server = start_webserver();
+                break;
+            case wifi::UserEvent::DISCONNECTED:
+                ESP_LOGI(TAG, "Stopping webserver");
+                stop_webserver(_server);
+                _server = nullptr;
+                break;
+            default:
+                ESP_LOGE(TAG, "Unhandled event %d", event.get_value());
+                break;
+        }
+    };
 
-    /* Register event handlers to stop the server when Wi-Fi or Ethernet is disconnected,
-     * and re-start it upon connection.
-     */
+    static auto wifi = wifi::WifiStateMachine(
+            wifi_send_event,
+            app_send_event);
+
+    auto wifi_state_chart = etl::state_chart_ct<
+        wifi::WifiStateMachine,
+        wifi,
+        wifi::WifiStateMachine::transition_table,
+        ARRAY_LENGTH(wifi::WifiStateMachine::transition_table),
+        wifi::WifiStateMachine::state_table,
+        ARRAY_LENGTH(wifi::WifiStateMachine::state_table),
+        wifi::State::INIT>();
+    wifi_state_chart.start();
+
+    /* Register event handlers to send events on to wifi state machine */
     ESP_ERROR_CHECK(esp_event_handler_register(
                 IP_EVENT,
                 IP_EVENT_STA_GOT_IP,
                 connect_handler,
-                &_server));
+                &wifi_queue));
     ESP_ERROR_CHECK(esp_event_handler_register(
                 WIFI_EVENT,
                 WIFI_EVENT_STA_DISCONNECTED,
                 disconnect_handler,
-                &_server));
+                &wifi_queue));
     ESP_ERROR_CHECK(esp_event_handler_register(
                 WIFI_EVENT,
                 WIFI_EVENT_STA_START,
                 wifi_start_handler,
-                nullptr));
-
-    /* Start Wi-Fi station */
-    ESP_ERROR_CHECK(esp_wifi_set_mode(WIFI_MODE_STA));
-    ESP_ERROR_CHECK(esp_wifi_start());
+                &wifi_queue));
 
     ESP_LOGI(TAG, "setup done");
     ESP_LOGI(TAG, "stack: %d", uxTaskGetStackHighWaterMark(NULL));
@@ -845,7 +874,10 @@ midi::Mapping, 10>>(document);
 
     while(1)
     {
-        if(auto byte = midi_uart->get_byte(pdMS_TO_TICKS(10)); byte.has_value())
+        vTaskDelay(pdMS_TO_TICKS(10));
+        auto tick_count_start = xTaskGetTickCount();
+
+        if(auto byte = midi_uart->get_byte(0); byte.has_value())
         {
             ESP_LOGI(TAG, "midi got byte 0x%02x", *byte);
 
@@ -931,6 +963,33 @@ midi::Mapping, 10>>(document);
                 xTimerReset(clipping_throttle_timer, pdMS_TO_TICKS(10));
             }
         }
+
+        wifi::InternalEvent wifi_event;
+        while(pdPASS == wifi_queue.receive(&wifi_event, 0))
+        {
+            wifi::State state{wifi_state_chart.get_state_id()};
+            ESP_LOGI(TAG, "state: %s event: %s", state.c_str(), wifi_event.c_str());
+
+            wifi_state_chart.process_event(wifi_event);
+
+            wifi::State new_state{wifi_state_chart.get_state_id()};
+            if(new_state != state)
+            {
+                ESP_LOGI(TAG, "changed to state: %s", new_state.c_str());
+            }
+        }
+
+        /* Check if the current iteration of the main loop took too long. This
+         * might be caused by blocking while handling events.
+         *
+         * It can also be caused by another thread that has a higher priority
+         * than the main thread.
+         */
+        auto tick_count_iteration = xTaskGetTickCount() - tick_count_start;
+        if(tick_count_iteration > pdMS_TO_TICKS(5))
+        {
+            ESP_LOGW(TAG, "slow iteration: %d ms", pdTICKS_TO_MS(tick_count_iteration));
+        }
     }
 }
 
@@ -966,6 +1025,9 @@ extern "C" void audio_event_send_callback(const AppMessage &message)
         return;
     }
 
+    // XXX: server is accessed from outside the main thread here. It is
+    // probably incorrect, and will break when the server is being torn down
+    // concurrently to an audio event going out.
     esp_err_t rc = httpd_queue_work(
             shrapnel::_server,
             shrapnel::websocket_send,
