@@ -150,27 +150,31 @@ constexpr WifiStateMachine::transition WifiStateMachine::transition_table[]{
     // when we receive this event, but only if it has been less than
     // CONNECT_TIMEOUT_MS since we have started connecting. Otherwise, return
     // to the provisioning state.
-    transition(State::CONNECTING,            InternalEvent::DISCONNECT,           State::CONNECTING,            &WifiStateMachine::connect_to_ap, &WifiStateMachine::is_reconnecting),
-    transition(State::CONNECTING,            InternalEvent::DISCONNECT,           State::PROVISIONING,          &WifiStateMachine::provisioning_init),
-    transition(State::CONNECTING,            InternalEvent::CONNECT_SUCCESS,      State::CONNECTED),
+    transition(State::CONNECTING,             InternalEvent::DISCONNECT,           State::CONNECTING,             &WifiStateMachine::connect_to_ap, &WifiStateMachine::is_reconnecting),
+    transition(State::CONNECTING,             InternalEvent::DISCONNECT,           State::PROVISIONING,           &WifiStateMachine::provisioning_init),
+    transition(State::CONNECTING,             InternalEvent::CONNECT_SUCCESS,      State::CONNECTED),
 
-    transition(State::CONNECTED,             InternalEvent::DISCONNECT,           State::CONNECTING),
-    transition(State::CONNECTED,             InternalEvent::RESET_PROVISIONING,   State::PROVISIONING,          &WifiStateMachine::provisioning_init),
+    transition(State::CONNECTED,              InternalEvent::DISCONNECT,           State::CONNECTING),
+    transition(State::CONNECTED,              InternalEvent::RESET_PROVISIONING,   State::PROVISIONING,           &WifiStateMachine::provisioning_init),
 
-    transition(State::PROVISIONING,          InternalEvent::PROVISIONING_SUCCESS, State::CONNECTED,             &WifiStateMachine::provisioning_deinit),
-    transition(State::PROVISIONING,          InternalEvent::PROVISIONING_FAILURE, State::PROVISIONING_STOPPING),
-    transition(State::PROVISIONING_STOPPING, InternalEvent::PROVISIONING_END,     State::PROVISIONING),
+    transition(State::PROVISIONING,           InternalEvent::PROVISIONING_SUCCESS, State::PROVISIONING_FINISHING),
+    transition(State::PROVISIONING,           InternalEvent::PROVISIONING_FAILURE, State::PROVISIONING_STOPPING),
+
+    transition(State::PROVISIONING_FINISHING, InternalEvent::PROVISIONING_END,     State::CONNECTED,              &WifiStateMachine::provisioning_deinit),
+
+    transition(State::PROVISIONING_STOPPING,  InternalEvent::PROVISIONING_END,     State::PROVISIONING),
     // clang-format on
 };
 
 constexpr WifiStateMachine::state WifiStateMachine::state_table[]{
     // clang-format off
-    state(State::INIT,                  &WifiStateMachine::check_if_provisioned),
-    state(State::STARTING,              &WifiStateMachine::start),
-    state(State::CONNECTING,            &WifiStateMachine::connect_with_timeout),
-    state(State::CONNECTED,             &WifiStateMachine::on_connected, &WifiStateMachine::on_disconnected),
-    state(State::PROVISIONING,          &WifiStateMachine::provisioning_start),
-    state(State::PROVISIONING_STOPPING, &WifiStateMachine::provisioning_stop),
+    state(State::INIT,         &WifiStateMachine::check_if_provisioned),
+    state(State::STARTING,     &WifiStateMachine::start),
+    state(State::CONNECTING,   &WifiStateMachine::connect_with_timeout),
+    state(State::CONNECTED,    &WifiStateMachine::on_connected,       &WifiStateMachine::on_disconnected),
+    state(State::PROVISIONING, &WifiStateMachine::provisioning_start, &WifiStateMachine::provisioning_stop),
+    state(State::PROVISIONING_FINISHING),
+    state(State::PROVISIONING_STOPPING),
     // clang-format on
 };
 

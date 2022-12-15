@@ -55,6 +55,7 @@ struct State {
         CONNECTED,
         PROVISIONING,
         PROVISIONING_STOPPING,
+        PROVISIONING_FINISHING,
     };
 
     ETL_DECLARE_ENUM_TYPE(State, int)
@@ -64,6 +65,7 @@ struct State {
     ETL_ENUM_TYPE(CONNECTED, "CONNECTED")
     ETL_ENUM_TYPE(PROVISIONING, "PROVISIONING")
     ETL_ENUM_TYPE(PROVISIONING_STOPPING, "PROVISIONING_STOPPING")
+    ETL_ENUM_TYPE(PROVISIONING_FINISHING, "PROVISIONING_STOPPING")
     ETL_END_ENUM_TYPE
 };
 
@@ -100,8 +102,8 @@ class WifiStateMachine {
     using transition = etl::state_chart_traits::transition<WifiStateMachine>;
     using state = etl::state_chart_traits::state<WifiStateMachine>;
 
-    static const transition transition_table[11];
-    static const state state_table[6];
+    static const transition transition_table[12];
+    static const state state_table[7];
 
     private:
     void check_if_provisioned();
