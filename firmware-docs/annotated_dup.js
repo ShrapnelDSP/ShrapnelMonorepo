@@ -48,8 +48,11 @@ var annotated_dup =
         [ "EspStorage", "classshrapnel_1_1persistence_1_1EspStorage.html", "classshrapnel_1_1persistence_1_1EspStorage" ],
         [ "Storage", "classshrapnel_1_1persistence_1_1Storage.html", "classshrapnel_1_1persistence_1_1Storage" ]
       ] ],
-      [ "wifi_provisioning", "namespaceshrapnel_1_1wifi__provisioning.html", [
-        [ "WiFiProvisioning", "classshrapnel_1_1wifi__provisioning_1_1WiFiProvisioning.html", "classshrapnel_1_1wifi__provisioning_1_1WiFiProvisioning" ]
+      [ "wifi", "namespaceshrapnel_1_1wifi.html", [
+        [ "InternalEvent", "structshrapnel_1_1wifi_1_1InternalEvent.html", "structshrapnel_1_1wifi_1_1InternalEvent" ],
+        [ "State", "structshrapnel_1_1wifi_1_1State.html", "structshrapnel_1_1wifi_1_1State" ],
+        [ "UserEvent", "structshrapnel_1_1wifi_1_1UserEvent.html", "structshrapnel_1_1wifi_1_1UserEvent" ],
+        [ "WifiStateMachine", "classshrapnel_1_1wifi_1_1WifiStateMachine.html", "classshrapnel_1_1wifi_1_1WifiStateMachine" ]
       ] ],
       [ "EventSend", "classshrapnel_1_1EventSend.html", "classshrapnel_1_1EventSend" ],
       [ "MidiMappingObserver", "classshrapnel_1_1MidiMappingObserver.html", "classshrapnel_1_1MidiMappingObserver" ],

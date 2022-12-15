@@ -137,7 +137,7 @@ Additional Inherited Members</h2></td></tr>
 <div class="textblock"><div class="compoundTemplParams">template&lt;typename T, std::size_t MAX_SIZE&gt;<br />
 requires (MAX_SIZE &gt; 0)<br />
 class shrapnel::Queue&lt; T, MAX_SIZE &gt;</div>
-<p class="definition">Definition at line <a class="el" href="queue_8h_source.html#l00051">51</a> of file <a class="el" href="queue_8h_source.html">queue.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="queue_8h_source.html#l00052">52</a> of file <a class="el" href="queue_8h_source.html">queue.h</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a9e3da4bcf8b33c8899eb3f54aac22857" name="a9e3da4bcf8b33c8899eb3f54aac22857"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a9e3da4bcf8b33c8899eb3f54aac22857">&#9670;&nbsp;</a></span>Queue()</h2>
@@ -164,8 +164,8 @@ template&lt;typename T , std::size_t MAX_SIZE&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="queue_8h_source.html#l00056">56</a> of file <a class="el" href="queue_8h_source.html">queue.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   56</span>: QueueBase&lt;T&gt;(MAX_SIZE), used_semaphore{0}, free_semaphore{MAX_SIZE} {}</div>
+<p class="definition">Definition at line <a class="el" href="queue_8h_source.html#l00057">57</a> of file <a class="el" href="queue_8h_source.html">queue.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   57</span>: QueueBase&lt;T&gt;(MAX_SIZE), used_semaphore{0}, free_semaphore{MAX_SIZE} {}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -208,30 +208,22 @@ template&lt;typename T , std::size_t MAX_SIZE&gt; </div>
 
 <p>Implements <a class="el" href="classshrapnel_1_1QueueBase.html#ab91cc1fb473ac9499f7843218842a946">shrapnel::QueueBase&lt; T &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="queue_8h_source.html#l00058">58</a> of file <a class="el" href="queue_8h_source.html">queue.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   59</span>    {</div>
-<div class="line"><span class="lineno">   60</span>        <span class="comment">// block until an item is available</span></div>
-<div class="line"><span class="lineno">   61</span>        <span class="keywordtype">bool</span> success = used_semaphore.try_acquire_for(ticks(time_to_wait));</div>
-<div class="line"><span class="lineno">   62</span>        <span class="keywordflow">if</span>(!success) <span class="keywordflow">return</span> errQUEUE_EMPTY;</div>
-<div class="line"><span class="lineno">   63</span> </div>
-<div class="line"><span class="lineno">   64</span>        <span class="comment">// Receive the item</span></div>
-<div class="line"><span class="lineno">   65</span>        {</div>
-<div class="line"><span class="lineno">   66</span>            std::scoped_lock lock{mutex};</div>
-<div class="line"><span class="lineno">   67</span>            *out = queue.front();</div>
-<div class="line"><span class="lineno">   68</span>            queue.pop();</div>
-<div class="line"><span class="lineno">   69</span>        }</div>
-<div class="line"><span class="lineno">   70</span>        free_semaphore.release();</div>
-<div class="line"><span class="lineno">   71</span>        <span class="keywordflow">return</span> pdPASS;</div>
-<div class="line"><span class="lineno">   72</span>    }</div>
+<p class="definition">Definition at line <a class="el" href="queue_8h_source.html#l00059">59</a> of file <a class="el" href="queue_8h_source.html">queue.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   60</span>    {</div>
+<div class="line"><span class="lineno">   61</span>        <span class="comment">// block until an item is available</span></div>
+<div class="line"><span class="lineno">   62</span>        <span class="keywordtype">bool</span> success = used_semaphore.try_acquire_for(ticks(time_to_wait));</div>
+<div class="line"><span class="lineno">   63</span>        <span class="keywordflow">if</span>(!success) <span class="keywordflow">return</span> errQUEUE_EMPTY;</div>
+<div class="line"><span class="lineno">   64</span> </div>
+<div class="line"><span class="lineno">   65</span>        <span class="comment">// Receive the item</span></div>
+<div class="line"><span class="lineno">   66</span>        {</div>
+<div class="line"><span class="lineno">   67</span>            std::scoped_lock lock{mutex};</div>
+<div class="line"><span class="lineno">   68</span>            *out = queue.front();</div>
+<div class="line"><span class="lineno">   69</span>            queue.pop();</div>
+<div class="line"><span class="lineno">   70</span>        }</div>
+<div class="line"><span class="lineno">   71</span>        free_semaphore.release();</div>
+<div class="line"><span class="lineno">   72</span>        <span class="keywordflow">return</span> pdPASS;</div>
+<div class="line"><span class="lineno">   73</span>    }</div>
 </div><!-- fragment -->
-<p class="reference">Referenced by <a class="el" href="wifi__provisioning_8h_source.html#l00213">shrapnel::wifi_provisioning::WiFiProvisioning::wait_for_provisioning()</a>.</p>
-<div class="dynheader">
-Here is the caller graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="classshrapnel_1_1Queue_aea7063f7ef99b8b46f6ba1250012332c_icgraph.svg" width="394" height="67"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
-</div>
-</div>
-
 </div>
 </div>
 <a id="a641b36d0a32ef881c94ab1395cd63818" name="a641b36d0a32ef881c94ab1395cd63818"></a>
@@ -272,20 +264,20 @@ template&lt;typename T , std::size_t MAX_SIZE&gt; </div>
 
 <p>Implements <a class="el" href="classshrapnel_1_1QueueBase.html#a7b76fee63afcc760644ab19e19f96ad2">shrapnel::QueueBase&lt; T &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="queue_8h_source.html#l00074">74</a> of file <a class="el" href="queue_8h_source.html">queue.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   75</span>    {</div>
-<div class="line"><span class="lineno">   76</span>        <span class="comment">// block until a space is available</span></div>
-<div class="line"><span class="lineno">   77</span>        <span class="keywordtype">bool</span> success = free_semaphore.try_acquire_for(ticks(time_to_wait));</div>
-<div class="line"><span class="lineno">   78</span>        <span class="keywordflow">if</span>(!success) <span class="keywordflow">return</span> errQUEUE_FULL;</div>
-<div class="line"><span class="lineno">   79</span> </div>
-<div class="line"><span class="lineno">   80</span>        <span class="comment">// Add item to queue, and notify receivers</span></div>
-<div class="line"><span class="lineno">   81</span>        {</div>
-<div class="line"><span class="lineno">   82</span>            std::scoped_lock lock{mutex};</div>
-<div class="line"><span class="lineno">   83</span>            queue.push(*in);</div>
-<div class="line"><span class="lineno">   84</span>        }</div>
-<div class="line"><span class="lineno">   85</span>        used_semaphore.release();</div>
-<div class="line"><span class="lineno">   86</span>        <span class="keywordflow">return</span> pdPASS;</div>
-<div class="line"><span class="lineno">   87</span>    }</div>
+<p class="definition">Definition at line <a class="el" href="queue_8h_source.html#l00075">75</a> of file <a class="el" href="queue_8h_source.html">queue.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   76</span>    {</div>
+<div class="line"><span class="lineno">   77</span>        <span class="comment">// block until a space is available</span></div>
+<div class="line"><span class="lineno">   78</span>        <span class="keywordtype">bool</span> success = free_semaphore.try_acquire_for(ticks(time_to_wait));</div>
+<div class="line"><span class="lineno">   79</span>        <span class="keywordflow">if</span>(!success) <span class="keywordflow">return</span> errQUEUE_FULL;</div>
+<div class="line"><span class="lineno">   80</span> </div>
+<div class="line"><span class="lineno">   81</span>        <span class="comment">// Add item to queue, and notify receivers</span></div>
+<div class="line"><span class="lineno">   82</span>        {</div>
+<div class="line"><span class="lineno">   83</span>            std::scoped_lock lock{mutex};</div>
+<div class="line"><span class="lineno">   84</span>            queue.push(*in);</div>
+<div class="line"><span class="lineno">   85</span>        }</div>
+<div class="line"><span class="lineno">   86</span>        used_semaphore.release();</div>
+<div class="line"><span class="lineno">   87</span>        <span class="keywordflow">return</span> pdPASS;</div>
+<div class="line"><span class="lineno">   88</span>    }</div>
 </div><!-- fragment -->
 </div>
 </div>

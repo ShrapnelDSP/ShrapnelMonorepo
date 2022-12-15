@@ -6,7 +6,7 @@ var namespaceshrapnel =
     [ "midi", "namespaceshrapnel_1_1midi.html", "namespaceshrapnel_1_1midi" ],
     [ "parameters", "namespaceshrapnel_1_1parameters.html", "namespaceshrapnel_1_1parameters" ],
     [ "persistence", "namespaceshrapnel_1_1persistence.html", "namespaceshrapnel_1_1persistence" ],
-    [ "wifi_provisioning", "namespaceshrapnel_1_1wifi__provisioning.html", "namespaceshrapnel_1_1wifi__provisioning" ],
+    [ "wifi", "namespaceshrapnel_1_1wifi.html", "namespaceshrapnel_1_1wifi" ],
     [ "EventSend", "classshrapnel_1_1EventSend.html", "classshrapnel_1_1EventSend" ],
     [ "MidiMappingObserver", "classshrapnel_1_1MidiMappingObserver.html", "classshrapnel_1_1MidiMappingObserver" ],
     [ "ParameterObserver", "classshrapnel_1_1ParameterObserver.html", "classshrapnel_1_1ParameterObserver" ],

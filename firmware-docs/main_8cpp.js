@@ -8,6 +8,7 @@ var main_8cpp =
     [ "AppMessage", "main_8cpp.html#a4a2a8445978c00038c4b9a0d35ca7a69", null ],
     [ "AudioParameters", "main_8cpp.html#aa010626969fadec55bb5ce236c9ecf20", null ],
     [ "FileDescriptor", "main_8cpp.html#a79edd3397c6cf28f6938fd733697bc61", null ],
+    [ "WifiQueue", "main_8cpp.html#a69811aaa1a7fd4891677577d309248e6", null ],
     [ "app_main", "main_8cpp.html#a9f09f4ea750643310af9143a53735b7d", null ],
     [ "audio_event_send_callback", "main_8cpp.html#a1a66099a9e1054494d0704363a5c8666", null ],
     [ "connect_handler", "main_8cpp.html#a4bf0b1d7c4fef2839a56059a237d1da6", null ],

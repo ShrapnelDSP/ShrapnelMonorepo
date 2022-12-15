@@ -29,6 +29,7 @@ var hierarchy =
     [ "shrapnel::parameters::Initialise", "structshrapnel_1_1parameters_1_1Initialise.html", null ],
     [ "shrapnel::events::InputClipped", "structshrapnel_1_1events_1_1InputClipped.html", null ],
     [ "shrapnel::effect::valvestate::InputFilter", "classshrapnel_1_1effect_1_1valvestate_1_1InputFilter.html", null ],
+    [ "shrapnel::wifi::InternalEvent", "structshrapnel_1_1wifi_1_1InternalEvent.html", null ],
     [ "shrapnel::midi::Mapping", "structshrapnel_1_1midi_1_1Mapping.html", null ],
     [ "midi::MappingObserver", null, [
       [ "shrapnel::MidiMappingObserver< MappingManagerT >", "classshrapnel_1_1MidiMappingObserver.html", null ]
@@ -52,17 +53,16 @@ var hierarchy =
     [ "shrapnel::QueueBase< T >", "classshrapnel_1_1QueueBase.html", [
       [ "shrapnel::Queue< T, MAX_SIZE >", "classshrapnel_1_1Queue.html", null ]
     ] ],
-    [ "shrapnel::QueueBase< Event >", "classshrapnel_1_1QueueBase.html", [
-      [ "shrapnel::Queue< Event, 1 >", "classshrapnel_1_1Queue.html", null ]
-    ] ],
     [ "shrapnel::midi::Remove", "structshrapnel_1_1midi_1_1Remove.html", null ],
     [ "ScopedHeapTracing< N >", "classScopedHeapTracing.html", null ],
+    [ "shrapnel::wifi::State", "structshrapnel_1_1wifi_1_1State.html", null ],
     [ "shrapnel::persistence::Storage", "classshrapnel_1_1persistence_1_1Storage.html", [
       [ "shrapnel::persistence::EspStorage", "classshrapnel_1_1persistence_1_1EspStorage.html", null ]
     ] ],
     [ "shrapnel::TaskBase", "classshrapnel_1_1TaskBase.html", null ],
     [ "shrapnel::midi::Update", "structshrapnel_1_1midi_1_1Update.html", null ],
     [ "shrapnel::parameters::Update", "structshrapnel_1_1parameters_1_1Update.html", null ],
+    [ "shrapnel::wifi::UserEvent", "structshrapnel_1_1wifi_1_1UserEvent.html", null ],
     [ "shrapnel::effect::valvestate::Valvestate", "classshrapnel_1_1effect_1_1valvestate_1_1Valvestate.html", null ],
-    [ "shrapnel::wifi_provisioning::WiFiProvisioning", "classshrapnel_1_1wifi__provisioning_1_1WiFiProvisioning.html", null ]
+    [ "shrapnel::wifi::WifiStateMachine", "classshrapnel_1_1wifi_1_1WifiStateMachine.html", null ]
 ];

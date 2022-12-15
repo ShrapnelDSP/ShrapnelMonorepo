@@ -435,7 +435,7 @@ template&lt;typename T &gt; </div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="audio__param_8h_source.html#l00034">shrapnel::parameters::TAG</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="main_8cpp_source.html#l00581">shrapnel::app_main()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="main_8cpp_source.html#l00595">shrapnel::app_main()</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
@@ -743,7 +743,7 @@ requires std::derived_from&lt;MapType, etl::imap&lt;<a class="el" href="structsh
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="audio__param_8h_source.html#l00034">shrapnel::parameters::TAG</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="main_8cpp_source.html#l00581">shrapnel::app_main()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="main_8cpp_source.html#l00595">shrapnel::app_main()</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
@@ -1153,14 +1153,14 @@ template&lt;&gt; </div>
 
 <p>Convert the message into a object representing it. </p>
 
-<p class="definition">Definition at line <a class="el" href="main_8cpp_source.html#l00089">89</a> of file <a class="el" href="main_8cpp_source.html">main.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   90</span>    {</div>
-<div class="line"><span class="lineno">   91</span>        <span class="keywordflow">if</span>(!value.IsFloat()) {</div>
-<div class="line"><span class="lineno">   92</span>            ESP_LOGE(<a class="code hl_variable" href="namespaceshrapnel_1_1parameters.html#a0cbbede6af96973c56e635f9a90599cd">TAG</a>, <span class="stringliteral">&quot;not float&quot;</span>);</div>
-<div class="line"><span class="lineno">   93</span>            <span class="keywordflow">return</span> std::nullopt;</div>
-<div class="line"><span class="lineno">   94</span>        }</div>
-<div class="line"><span class="lineno">   95</span>        <span class="keywordflow">return</span> value.GetFloat();</div>
-<div class="line"><span class="lineno">   96</span>    }</div>
+<p class="definition">Definition at line <a class="el" href="main_8cpp_source.html#l00096">96</a> of file <a class="el" href="main_8cpp_source.html">main.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   97</span>    {</div>
+<div class="line"><span class="lineno">   98</span>        <span class="keywordflow">if</span>(!value.IsFloat()) {</div>
+<div class="line"><span class="lineno">   99</span>            ESP_LOGE(<a class="code hl_variable" href="namespaceshrapnel_1_1parameters.html#a0cbbede6af96973c56e635f9a90599cd">TAG</a>, <span class="stringliteral">&quot;not float&quot;</span>);</div>
+<div class="line"><span class="lineno">  100</span>            <span class="keywordflow">return</span> std::nullopt;</div>
+<div class="line"><span class="lineno">  101</span>        }</div>
+<div class="line"><span class="lineno">  102</span>        <span class="keywordflow">return</span> value.GetFloat();</div>
+<div class="line"><span class="lineno">  103</span>    }</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="audio__param_8h_source.html#l00034">shrapnel::parameters::TAG</a>.</p>
 
@@ -2079,14 +2079,14 @@ template&lt;&gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="main_8cpp_source.html#l00099">99</a> of file <a class="el" href="main_8cpp_source.html">main.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  100</span>    {</div>
-<div class="line"><span class="lineno">  101</span>        rapidjson::Value out{};</div>
-<div class="line"><span class="lineno">  102</span>        out.SetFloat(<span class="keywordtype">object</span>);</div>
-<div class="line"><span class="lineno">  103</span>        <span class="keywordflow">return</span> out;</div>
-<div class="line"><span class="lineno">  104</span>    }</div>
+<p class="definition">Definition at line <a class="el" href="main_8cpp_source.html#l00106">106</a> of file <a class="el" href="main_8cpp_source.html">main.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  107</span>    {</div>
+<div class="line"><span class="lineno">  108</span>        rapidjson::Value out{};</div>
+<div class="line"><span class="lineno">  109</span>        out.SetFloat(<span class="keywordtype">object</span>);</div>
+<div class="line"><span class="lineno">  110</span>        <span class="keywordflow">return</span> out;</div>
+<div class="line"><span class="lineno">  111</span>    }</div>
 </div><!-- fragment -->
-<p class="reference">Referenced by <a class="el" href="main_8cpp_source.html#l00426">shrapnel::websocket_send()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="main_8cpp_source.html#l00440">shrapnel::websocket_send()</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
