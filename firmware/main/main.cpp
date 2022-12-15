@@ -37,6 +37,7 @@
 
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
+#include "freertos/timers.h"
 #include "freertos/semphr.h"
 #include "freertos/FreeRTOSConfig.h"
 
@@ -68,7 +69,6 @@
 #include "esp_persistence.h"
 #include "pcm3060.h"
 #include "profiling.h"
-#include "wifi_provisioning.h"
 #include "midi_mapping_api.h"
 #include "queue.h"
 #include "wifi_state_machine.h"
@@ -434,23 +434,6 @@ static void wifi_start_handler(void *arg, esp_event_base_t event_base,
     if(rc != pdPASS)
     {
         ESP_LOGE(TAG, "Failed to send start event to queue");
-    }
-}
-
-static void wifi_provisioning_done_handler(void *arg, esp_event_base_t event_base,
-                                           int32_t event_id, void* event_data)
-{
-    (void)event_base;
-    (void)event_id;
-    (void)event_data;
-
-    ESP_LOGI(TAG, "Provisioning done");
-    auto queue{reinterpret_cast<WifiQueue *>(arg)};
-    wifi::InternalEvent event{wifi::InternalEvent::PROVISIONING_DONE};
-    int rc{queue->send(&event, 0)};
-    if(rc != pdPASS)
-    {
-        ESP_LOGE(TAG, "Failed to send provisioning done event to queue");
     }
 }
 
@@ -830,9 +813,9 @@ midi::Mapping, 10>>(document);
         wifi::WifiStateMachine,
         wifi,
         wifi::WifiStateMachine::transition_table,
-        9, /* TODO how to do DRY here? sizeof based macro should work */
+        ARRAY_LENGTH(wifi::WifiStateMachine::transition_table),
         wifi::WifiStateMachine::state_table,
-        5, /* TODO how to do DRY here? */
+        ARRAY_LENGTH(wifi::WifiStateMachine::state_table),
         wifi::State::INIT>();
     wifi_state_chart.start();
 
@@ -851,11 +834,6 @@ midi::Mapping, 10>>(document);
                 WIFI_EVENT,
                 WIFI_EVENT_STA_START,
                 wifi_start_handler,
-                &wifi_queue));
-    ESP_ERROR_CHECK(esp_event_handler_register(
-                WIFI_PROV_EVENT,
-                WIFI_PROV_END,
-                wifi_provisioning_done_handler,
                 &wifi_queue));
 
     ESP_LOGI(TAG, "setup done");

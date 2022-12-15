@@ -1,7 +1,7 @@
-#include "etl/state_chart.h"
-#include "etl/enum_type.h"
-#include "wifi_provisioning.h"
 #include "etl/delegate.h"
+#include "etl/enum_type.h"
+#include "etl/state_chart.h"
+#include <freertos/portmacro.h>
 #include <memory>
 
 namespace shrapnel {
@@ -16,7 +16,9 @@ struct InternalEvent {
         CONNECT_TIMEOUT,
         DISCONNECT,
         RESET_PROVISIONING,
-        PROVISIONING_DONE,
+        PROVISIONING_SUCCESS,
+        PROVISIONING_FAILURE,
+        PROVISIONING_END,
     };
 
     ETL_DECLARE_ENUM_TYPE(InternalEvent, int)
@@ -27,7 +29,9 @@ struct InternalEvent {
     ETL_ENUM_TYPE(CONNECT_TIMEOUT, "CONNECT_TIMEOUT")
     ETL_ENUM_TYPE(DISCONNECT, "DISCONNECT")
     ETL_ENUM_TYPE(RESET_PROVISIONING, "RESET_PROVISIONING")
-    ETL_ENUM_TYPE(PROVISIONING_DONE, "PROVISIONING_DONE")
+    ETL_ENUM_TYPE(PROVISIONING_SUCCESS, "PROVISIONING_SUCCESS")
+    ETL_ENUM_TYPE(PROVISIONING_FAILURE, "PROVISIONING_FAILURE")
+    ETL_ENUM_TYPE(PROVISIONING_END, "PROVISIONING_END")
     ETL_END_ENUM_TYPE
 };
 
@@ -50,6 +54,7 @@ struct State {
         CONNECTING,
         CONNECTED,
         PROVISIONING,
+        PROVISIONING_STOPPING,
     };
 
     ETL_DECLARE_ENUM_TYPE(State, int)
@@ -58,6 +63,7 @@ struct State {
     ETL_ENUM_TYPE(CONNECTING, "CONNECTING")
     ETL_ENUM_TYPE(CONNECTED, "CONNECTED")
     ETL_ENUM_TYPE(PROVISIONING, "PROVISIONING")
+    ETL_ENUM_TYPE(PROVISIONING_STOPPING, "PROVISIONING_STOPPING")
     ETL_END_ENUM_TYPE
 };
 
@@ -94,29 +100,24 @@ class WifiStateMachine {
     using transition = etl::state_chart_traits::transition<WifiStateMachine>;
     using state = etl::state_chart_traits::state<WifiStateMachine>;
 
-    static const transition transition_table[9];
-    static const state state_table[5];
+    static const transition transition_table[11];
+    static const state state_table[6];
 
     private:
     void check_if_provisioned();
-    // construct and start provisioning
+    void provisioning_init();
     void provisioning_start();
-    // destruct provisioning
-    void provisioning_done();
+    void provisioning_stop();
+    void provisioning_deinit();
     void start();
     void connect_with_timeout();
     void connect_to_ap();
     bool is_reconnecting();
     void on_connected();
-    void cleanup_timer();
     void on_disconnected();
-
-    static constexpr char TAG[] = "wifi_state_machine";
 
     internal_event_callback_t send_event_internal;
     user_event_callback_t send_event_user;
-
-    std::unique_ptr<wifi_provisioning::WiFiProvisioning> provisioning = nullptr;
 
     TickType_t connect_start_tick_count = 0;
 };
