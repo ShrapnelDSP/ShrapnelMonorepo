@@ -125,7 +125,7 @@ class AudioParameters final : public etl::observable<ParameterObserver, MAX_OBSE
         return parameters[param]->get_raw_parameter();
     }
 
-    int create_and_add_parameter(
+    [[nodiscard]] int create_and_add_parameter(
         const id_t &name,
         float minimum,
         float maximum,

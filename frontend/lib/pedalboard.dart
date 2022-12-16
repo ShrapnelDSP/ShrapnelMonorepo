@@ -18,6 +18,7 @@
  */
 
 import 'package:flutter/material.dart';
+import 'package:shrapnel/wah.dart';
 
 import 'chorus.dart';
 import 'heavy_metal.dart';
@@ -61,9 +62,18 @@ class _PedalboardState extends State<Pedalboard> {
           onTap: () => _activateGear(GearId.valvestate),
           full: _activeGear == GearId.valvestate,
         ),
-        Chorus(
-          onTap: () => _activateGear(GearId.chorus),
-          full: _activeGear == GearId.chorus,
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Chorus(
+              onTap: () => _activateGear(GearId.chorus),
+              full: _activeGear == GearId.chorus,
+            ),
+            Wah(
+              onTap: () => _activateGear(GearId.wah),
+              full: _activeGear == GearId.wah,
+            )
+          ],
         ),
       ],
     );
@@ -84,5 +94,6 @@ enum GearId {
   noiseGate,
   heavyMetal,
   chorus,
+  wah,
   valvestate,
 }

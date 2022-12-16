@@ -73,6 +73,8 @@
 #include "queue.h"
 #include "wifi_state_machine.h"
 
+#include "iir_concrete.h"
+
 #define TAG "main"
 #define QUEUE_LEN 4
 #define MAX_CLIENTS 3
@@ -202,7 +204,7 @@ private:
     const MappingManagerT &mapping_manager;
 };
 
-constexpr const size_t MAX_PARAMETERS = 17;
+constexpr const size_t MAX_PARAMETERS = 19;
 using AudioParameters = parameters::AudioParameters<MAX_PARAMETERS, 1>;
 
 static Queue<AppMessage, QUEUE_LEN> *in_queue;
@@ -259,6 +261,7 @@ static esp_err_t websocket_get_handler(httpd_req_t *req)
     if(req->method == HTTP_GET)
     {
         ESP_LOGI(TAG, "Got websocket upgrade request");
+        heap_caps_print_heap_info(MALLOC_CAP_DEFAULT);
         return ESP_OK;
     }
 
@@ -594,6 +597,20 @@ void nvs_debug_print();
 
 extern "C" void app_main(void)
 {
+    {
+        shrapnel::dsp::IirFilter parameter_filter;
+        float p = 0.999;
+        parameter_filter.set_coefficients(
+            std::array<float, 6>{1 - p, 0, 0, 1, -p, 0});
+
+        float position = 0.5;
+        for(int i = 0; i < 100; i++)
+        {
+            float current_position;
+            parameter_filter.process(&position, &current_position, 1);
+            ESP_LOGI(TAG, "i = %d, o = %f", i, current_position);
+        }
+    }
     ESP_ERROR_CHECK(heap_caps_register_failed_alloc_callback(failed_alloc_callback));
 
     ESP_ERROR_CHECK(nvs_flash_init());
@@ -640,7 +657,11 @@ extern "C" void app_main(void)
         }
 
 out:
-        audio_params->create_and_add_parameter(name, minimum, maximum, loaded_value.value_or(default_value));
+        rc = audio_params->create_and_add_parameter(name, minimum, maximum, loaded_value.value_or(default_value));
+        if (rc != 0)
+        {
+            ESP_LOGE(TAG, "Failed to create parameter %s", name.c_str());
+        }
     };
 
     create_and_load_parameter("ampGain", 0, 1, 0.5);
@@ -662,10 +683,14 @@ out:
     create_and_load_parameter("chorusRate", 0.1, 4, 0.95);
     create_and_load_parameter("chorusDepth", 0, 1, 0.3);
     create_and_load_parameter("chorusMix", 0, 1, 0.8);
-    create_and_load_parameter("chorusBypass", 0, 1, 0);
+    create_and_load_parameter("chorusBypass", 0, 1, 1);
+
+    create_and_load_parameter("wahPosition", 0, 1, 0.5);
+    create_and_load_parameter("wahBypass", 0, 1, 1);
 
     ParameterObserver<MAX_PARAMETERS> parameter_observer{persistence};
-    audio_params->add_observer(parameter_observer);
+    // TODO this is delaying midi parameter updates
+    // audio_params->add_observer(parameter_observer);
 
     auto parameter_notifier = std::make_shared<ParameterUpdateNotifier>();
 

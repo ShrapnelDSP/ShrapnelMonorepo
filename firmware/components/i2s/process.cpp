@@ -31,6 +31,7 @@
 #include "valvestate.h"
 #include "fast_convolution.h"
 #include "fast_fir.h"
+#include "wah.h"
 
 #include "esp_log.h"
 #define TAG "i2s_process"
@@ -63,8 +64,12 @@ std::atomic<float> *chorus_depth;
 std::atomic<float> *chorus_mix;
 std::atomic<float> *chorus_bypass;
 
+std::atomic<float> *wah_position;
+std::atomic<float> *wah_bypass;
+
 shrapnel::effect::valvestate::Valvestate *valvestate;
 shrapnel::effect::Chorus *chorus;
+shrapnel::effect::Wah *wah;
 
 shrapnel::dsp::FastFir<
     DMA_BUF_SIZE,
@@ -143,6 +148,13 @@ void process_samples(int32_t *buf, size_t buf_len)
     }
     profiling_mark_stage(19);
 
+    wah->set_expression_position(*wah_position);
+
+    if(*wah_bypass < 0.5f)
+    {
+        wah->process(fbuf, buf_len/2);
+    }
+
     for(size_t i = 1; i < buf_len; i+=2)
     {
         if(fbuf[i/2] > 1.f || fbuf[i/2] < -1.f)
@@ -180,6 +192,10 @@ esp_err_t process_init(shrapnel::parameters::AudioParametersBase *audio_params)
     chorus = new shrapnel::effect::Chorus();
     assert(chorus);
     chorus->set_sample_rate(SAMPLE_RATE);
+
+    wah = new shrapnel::effect::Wah();
+    assert(wah);
+    wah->set_sample_rate(SAMPLE_RATE);
 
     valvestate = new shrapnel::effect::valvestate::Valvestate();
     assert(valvestate);
@@ -221,6 +237,11 @@ esp_err_t process_init(shrapnel::parameters::AudioParametersBase *audio_params)
     assert(chorus_mix);
     chorus_bypass = audio_params->get_raw_parameter("chorusBypass");
     assert(chorus_bypass);
+
+    wah_position = audio_params->get_raw_parameter("wahPosition");
+    assert(wah_position);
+    wah_bypass = audio_params->get_raw_parameter("wahBypass");
+    assert(wah_bypass);
 
     ESP_LOGI(TAG, "Initialised FIR filter with length %d", fir_coeff.size());
 

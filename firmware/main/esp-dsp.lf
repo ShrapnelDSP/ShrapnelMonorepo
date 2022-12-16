@@ -13,6 +13,11 @@ archive: libchorus.a
 entries:
     * (noflash)
 
+[mapping:wah]
+archive: libwah.a
+entries:
+    * (noflash)
+
 [mapping:valvestate]
 archive: libvalvestate.a
 entries:
