@@ -31,6 +31,7 @@ var searchData=
   ['midi_5fuart_2eh_28',['midi_uart.h',['../midi__uart_8h.html',1,'']]],
   ['midimappingobserver_29',['MidiMappingObserver',['../classshrapnel_1_1MidiMappingObserver.html#aebd40621db4a0905667bf63bbd3719c4',1,'shrapnel::MidiMappingObserver::MidiMappingObserver()'],['../classshrapnel_1_1MidiMappingObserver.html',1,'shrapnel::MidiMappingObserver&lt; MappingManagerT &gt;']]],
   ['midiuartbase_30',['MidiUartBase',['../classshrapnel_1_1midi_1_1MidiUartBase.html',1,'shrapnel::midi']]],
-  ['mode_31',['Mode',['../structshrapnel_1_1midi_1_1Mapping.html#a9d3978518402ec5df1963f1b8c0a7013',1,'shrapnel::midi::Mapping']]],
-  ['mode_32',['mode',['../structshrapnel_1_1midi_1_1Mapping.html#ad02ebea6e6428980d752a6f3844bf21f',1,'shrapnel::midi::Mapping']]]
+  ['minor_31',['minor',['../namespacewah.html#ad960e329d3b178d3fcf3bc0552a4f302',1,'wah']]],
+  ['mode_32',['mode',['../structshrapnel_1_1midi_1_1Mapping.html#ad02ebea6e6428980d752a6f3844bf21f',1,'shrapnel::midi::Mapping']]],
+  ['mode_33',['Mode',['../structshrapnel_1_1midi_1_1Mapping.html#a9d3978518402ec5df1963f1b8c0a7013',1,'shrapnel::midi::Mapping']]]
 ];

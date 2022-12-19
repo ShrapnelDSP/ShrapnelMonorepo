@@ -64,5 +64,6 @@ var hierarchy =
     [ "shrapnel::parameters::Update", "structshrapnel_1_1parameters_1_1Update.html", null ],
     [ "shrapnel::wifi::UserEvent", "structshrapnel_1_1wifi_1_1UserEvent.html", null ],
     [ "shrapnel::effect::valvestate::Valvestate", "classshrapnel_1_1effect_1_1valvestate_1_1Valvestate.html", null ],
+    [ "shrapnel::effect::Wah", "classshrapnel_1_1effect_1_1Wah.html", null ],
     [ "shrapnel::wifi::WifiStateMachine", "classshrapnel_1_1wifi_1_1WifiStateMachine.html", null ]
 ];

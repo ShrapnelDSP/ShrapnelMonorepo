@@ -16,7 +16,8 @@ var annotated_dup =
           [ "InputFilter", "classshrapnel_1_1effect_1_1valvestate_1_1InputFilter.html", "classshrapnel_1_1effect_1_1valvestate_1_1InputFilter" ],
           [ "Valvestate", "classshrapnel_1_1effect_1_1valvestate_1_1Valvestate.html", "classshrapnel_1_1effect_1_1valvestate_1_1Valvestate" ]
         ] ],
-        [ "Chorus", "classshrapnel_1_1effect_1_1Chorus.html", "classshrapnel_1_1effect_1_1Chorus" ]
+        [ "Chorus", "classshrapnel_1_1effect_1_1Chorus.html", "classshrapnel_1_1effect_1_1Chorus" ],
+        [ "Wah", "classshrapnel_1_1effect_1_1Wah.html", "classshrapnel_1_1effect_1_1Wah" ]
       ] ],
       [ "events", "namespaceshrapnel_1_1events.html", [
         [ "InputClipped", "structshrapnel_1_1events_1_1InputClipped.html", null ],
