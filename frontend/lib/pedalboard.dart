@@ -18,13 +18,13 @@
  */
 
 import 'package:flutter/material.dart';
-import 'package:shrapnel/wah.dart';
 
 import 'chorus.dart';
 import 'heavy_metal.dart';
 import 'noise_gate.dart';
 import 'tube_screamer.dart';
 import 'valvestate.dart';
+import 'wah.dart';
 
 class Pedalboard extends StatefulWidget {
   const Pedalboard({super.key});
