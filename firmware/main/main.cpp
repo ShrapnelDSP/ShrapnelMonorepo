@@ -597,20 +597,6 @@ void nvs_debug_print();
 
 extern "C" void app_main(void)
 {
-    {
-        shrapnel::dsp::IirFilter parameter_filter;
-        float p = 0.999;
-        parameter_filter.set_coefficients(
-            std::array<float, 6>{1 - p, 0, 0, 1, -p, 0});
-
-        float position = 0.5;
-        for(int i = 0; i < 100; i++)
-        {
-            float current_position;
-            parameter_filter.process(&position, &current_position, 1);
-            ESP_LOGI(TAG, "i = %d, o = %f", i, current_position);
-        }
-    }
     ESP_ERROR_CHECK(heap_caps_register_failed_alloc_callback(failed_alloc_callback));
 
     ESP_ERROR_CHECK(nvs_flash_init());
@@ -691,7 +677,7 @@ out:
 
     ParameterObserver<MAX_PARAMETERS> parameter_observer{persistence};
     // TODO this is delaying midi parameter updates
-    // audio_params->add_observer(parameter_observer);
+    audio_params->add_observer(parameter_observer);
 
     auto parameter_notifier = std::make_shared<ParameterUpdateNotifier>();
 
