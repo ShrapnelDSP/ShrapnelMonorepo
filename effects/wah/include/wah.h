@@ -36,6 +36,13 @@ public:
      */
     void set_expression_position(float position);
 
+    /** Set the vocal mod magnitude
+     *
+     * This parameter is normalised to the range [0, 1]. Larger values increase
+     * the resonance filter bandwidth.
+     */
+    void set_vocal(float vocal);
+
     void set_sample_rate(float rate);
 
     void process(float *samples, std::size_t sample_count);
@@ -43,10 +50,12 @@ public:
 private:
     float sample_rate = 0;
 
-    float position;
+    float position_parameter;
+    float vocal_parameter;
 
     shrapnel::dsp::IirFilter wah_filter;
     shrapnel::dsp::IirFilter position_filter;
+    shrapnel::dsp::IirFilter vocal_filter;
 };
 
 }

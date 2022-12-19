@@ -65,6 +65,7 @@ std::atomic<float> *chorus_mix;
 std::atomic<float> *chorus_bypass;
 
 std::atomic<float> *wah_position;
+std::atomic<float> *wah_vocal;
 std::atomic<float> *wah_bypass;
 
 shrapnel::effect::valvestate::Valvestate *valvestate;
@@ -149,6 +150,7 @@ void process_samples(int32_t *buf, size_t buf_len)
     profiling_mark_stage(19);
 
     wah->set_expression_position(*wah_position);
+    wah->set_vocal(*wah_vocal);
 
     if(*wah_bypass < 0.5f)
     {
@@ -240,6 +242,8 @@ esp_err_t process_init(shrapnel::parameters::AudioParametersBase *audio_params)
 
     wah_position = audio_params->get_raw_parameter("wahPosition");
     assert(wah_position);
+    wah_vocal = audio_params->get_raw_parameter("wahVocal");
+    assert(wah_vocal);
     wah_bypass = audio_params->get_raw_parameter("wahBypass");
     assert(wah_bypass);
 

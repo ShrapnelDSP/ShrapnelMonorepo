@@ -51,6 +51,12 @@ class Wah extends StatelessWidget {
               id: 'wahPosition',
               parameterService: parameterService,
             ),
+            AudioParameterDoubleModel(
+              groupName: _name,
+              name: 'Vocal',
+              id: 'wahVocal',
+              parameterService: parameterService,
+            ),
           ],
           bypass: AudioParameterDoubleModel(
             groupName: _name,

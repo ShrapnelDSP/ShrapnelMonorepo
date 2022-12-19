@@ -28,30 +28,38 @@ namespace shrapnel::effect {
 
 Wah::Wah() {}
 
-void Wah::set_expression_position(float a_position) { position = a_position; }
+void Wah::set_expression_position(float position)
+{
+    position_parameter = position;
+}
+
+void Wah::set_vocal(float vocal) { vocal_parameter = vocal; }
 
 void Wah::set_sample_rate(float rate) {
     float p = 0.9;
-    position_filter.set_coefficients(
-        std::array<float, 6>{1 - p, 0, 0, 1, -p, 0});
+    std::array<float, 6> coefficients{1 - p, 0, 0, 1, -p, 0};
+    position_filter.set_coefficients(coefficients );
+    vocal_filter.set_coefficients(coefficients );
     sample_rate = rate;
 }
 
 void Wah::process(float *samples, std::size_t sample_count)
 {
-    constexpr auto vocal = 0;
-
     float wah;
-    position_filter.process(&position, &wah, 1);
+    position_filter.process(&position_parameter, &wah, 1);
+
+    float vocal;
+    vocal_filter.process(&vocal_parameter, &vocal, 1);
 
     constexpr auto base_gain = 14.f;
     constexpr auto gain_factor_wah = -1.2f;
     constexpr auto gain_factor_vocal = -1.f;
+    constexpr auto vocal_range = 2.f;
 
     auto gain =
         base_gain * expf(gain_factor_wah * wah + gain_factor_vocal * vocal);
     auto resonance_frequency_hz = 450.f * powf(2, 2.3f * wah);
-    auto quality = powf(2, 2 * (1 - wah) + 1);
+    auto quality = powf(2, 2 * (1 - wah) + 1 - vocal_range * vocal);
 
     float coefficients[5];
 

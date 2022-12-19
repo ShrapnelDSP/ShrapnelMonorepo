@@ -204,7 +204,7 @@ private:
     const MappingManagerT &mapping_manager;
 };
 
-constexpr const size_t MAX_PARAMETERS = 19;
+constexpr const size_t MAX_PARAMETERS = 20;
 using AudioParameters = parameters::AudioParameters<MAX_PARAMETERS, 1>;
 
 static Queue<AppMessage, QUEUE_LEN> *in_queue;
@@ -686,6 +686,7 @@ out:
     create_and_load_parameter("chorusBypass", 0, 1, 1);
 
     create_and_load_parameter("wahPosition", 0, 1, 0.5);
+    create_and_load_parameter("wahVocal", 0, 1, 0);
     create_and_load_parameter("wahBypass", 0, 1, 1);
 
     ParameterObserver<MAX_PARAMETERS> parameter_observer{persistence};
