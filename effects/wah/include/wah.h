@@ -46,7 +46,7 @@ private:
     float position;
 
     shrapnel::dsp::IirFilter wah_filter;
-    shrapnel::dsp::IirFilter parameter_filter;
+    shrapnel::dsp::IirFilter position_filter;
 };
 
 }

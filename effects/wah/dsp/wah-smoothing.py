@@ -25,14 +25,13 @@ fs = 48e3
 
 # %%
 def design_filter(p):
-    #return ([0, 0, 1 - p], [0, -p, 1])
     return ([1 - p, 0, 0], [1, -p, 0])
 
 
 # %%
 for x in [0.9, 0.99, 0.999, 0.9999]:
     b, a = design_filter(x)
-    w, h = signal.freqz(b, a, worN=10000)
+    w, h = signal.freqz(b, a, worN=100000)
     plt.semilogx(w / (2*math.pi) * fs, 20 * np.log10(np.abs(h)))
     
 plt.grid(which='both')
