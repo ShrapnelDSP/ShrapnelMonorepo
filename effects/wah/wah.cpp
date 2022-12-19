@@ -51,7 +51,7 @@ void Wah::process(float *samples, std::size_t sample_count)
     float vocal;
     vocal_filter.process(&vocal_parameter, &vocal, 1);
 
-    constexpr auto base_gain = 14.f;
+    constexpr auto base_gain = 14.f * std::pow(10.f, -1.f / 20.f);
     constexpr auto gain_factor_wah = -1.2f;
     constexpr auto gain_factor_vocal = -1.f;
     constexpr auto vocal_range = 2.f;
