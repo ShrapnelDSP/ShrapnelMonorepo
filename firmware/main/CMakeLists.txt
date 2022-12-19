@@ -16,6 +16,7 @@ idf_component_register( SRCS main.cpp
                             pcm3060
                             queue
                             wifi
+                            abstract_dsp
                         PRIV_REQUIRES compiler_warning_flags
                         EMBED_FILES index.html
                         LDFRAGMENTS esp-dsp.lf

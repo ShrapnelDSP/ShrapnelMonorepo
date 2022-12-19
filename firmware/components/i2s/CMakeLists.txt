@@ -13,6 +13,7 @@ idf_component_register(SRCS
                        chorus
                        gate
                        valvestate
+                       wah
                        PRIV_REQUIRES compiler_warning_flags)
 
 target_compile_options(${COMPONENT_LIB} PRIVATE -Wdouble-promotion -Werror=double-promotion)
