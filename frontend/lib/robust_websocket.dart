@@ -31,7 +31,7 @@ final log = Logger('shrapnel.robust_websocket');
 /// Auto-reconnecting websocket client
 class RobustWebsocket extends ChangeNotifier {
   RobustWebsocket({required this.uri}) {
-    _connect();
+    unawaited(_connect());
   }
 
   Future<void> _reconnect() async {
@@ -117,8 +117,8 @@ class RobustWebsocket extends ChangeNotifier {
 
   @override
   void dispose() {
-    _ws?.close(1001);
-    _streamController.close();
+    unawaited(_ws?.close(1001));
+    unawaited(_streamController.close());
     super.dispose();
   }
 }

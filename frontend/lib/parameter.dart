@@ -160,7 +160,7 @@ class ParameterService extends ChangeNotifier {
 
   @override
   void dispose() {
-    sink.close();
+    unawaited(sink.close());
     super.dispose();
   }
 }

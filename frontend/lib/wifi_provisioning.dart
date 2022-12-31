@@ -77,7 +77,7 @@ class _WifiPasswordDialogState extends State<_WifiPasswordDialog> {
     if (_formKey.currentState!.validate()) {
       final provisioning =
           Provider.of<WifiProvisioningProvider>(context, listen: false);
-      provisioning.join(null, _controller.value.text);
+      unawaited(provisioning.join(null, _controller.value.text));
       Navigator.pop(context);
     }
   }
@@ -264,9 +264,11 @@ class _WifiDialogState extends State<_WifiDialog> {
                       key: const Key('advanced submit button'),
                       onPressed: () {
                         if (_formKey.currentState!.validate()) {
-                          provisioning.join(
-                            _ssidController.value.text,
-                            _passwordController.value.text,
+                          unawaited(
+                            provisioning.join(
+                              _ssidController.value.text,
+                              _passwordController.value.text,
+                            ),
                           );
                           Navigator.pop(context);
                         }
@@ -343,12 +345,14 @@ class _WifiScanningScreenState extends State<_WifiScanningScreen> {
                       ),
                       onTap: () {
                         provisioning.selectedAccessPoint = index;
-                        showDialog<void>(
-                          context: context,
-                          builder: (context) => ChangeNotifierProvider<
-                              WifiProvisioningProvider>.value(
-                            value: provisioning,
-                            child: _WifiPasswordDialog(),
+                        unawaited(
+                          showDialog<void>(
+                            context: context,
+                            builder: (context) => ChangeNotifierProvider<
+                                WifiProvisioningProvider>.value(
+                              value: provisioning,
+                              child: _WifiPasswordDialog(),
+                            ),
                           ),
                         );
                       },
@@ -359,12 +363,14 @@ class _WifiScanningScreenState extends State<_WifiScanningScreen> {
             ),
             ElevatedButton(
               onPressed: () {
-                showDialog<void>(
-                  context: context,
-                  builder: (context) =>
-                      ChangeNotifierProvider<WifiProvisioningProvider>.value(
-                    value: provisioning,
-                    child: _WifiDialog(),
+                unawaited(
+                  showDialog<void>(
+                    context: context,
+                    builder: (context) =>
+                        ChangeNotifierProvider<WifiProvisioningProvider>.value(
+                      value: provisioning,
+                      child: _WifiDialog(),
+                    ),
                   ),
                 );
               },

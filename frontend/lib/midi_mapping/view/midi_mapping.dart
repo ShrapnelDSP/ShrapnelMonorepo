@@ -17,6 +17,8 @@
  * ShrapnelDSP. If not, see <https://www.gnu.org/licenses/>.
  */
 
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -61,8 +63,10 @@ class MidiMappingPage extends StatelessWidget {
                       MidiChannelDropdown(
                         key: Key('${mapping.id}-midi-channel-dropdown'),
                         value: mapping.mapping.midiChannel,
-                        onChanged: (value) => midiMappingService.updateMapping(
-                          mapping.copyWith.mapping(midiChannel: value!),
+                        onChanged: (value) => unawaited(
+                          midiMappingService.updateMapping(
+                            mapping.copyWith.mapping(midiChannel: value!),
+                          ),
                         ),
                       ),
                     ),
@@ -70,8 +74,10 @@ class MidiMappingPage extends StatelessWidget {
                       MidiCCDropdown(
                         key: Key('${mapping.id}-cc-number-dropdown'),
                         value: mapping.mapping.ccNumber,
-                        onChanged: (value) => midiMappingService.updateMapping(
-                          mapping.copyWith.mapping(ccNumber: value!),
+                        onChanged: (value) => unawaited(
+                          midiMappingService.updateMapping(
+                            mapping.copyWith.mapping(ccNumber: value!),
+                          ),
                         ),
                       ),
                     ),
@@ -79,8 +85,10 @@ class MidiMappingPage extends StatelessWidget {
                       ModeDropdown(
                         key: Key('${mapping.id}-mode-dropdown'),
                         value: mapping.mapping.mode,
-                        onChanged: (value) => midiMappingService.updateMapping(
-                          mapping.copyWith.mapping(mode: value!),
+                        onChanged: (value) => unawaited(
+                          midiMappingService.updateMapping(
+                            mapping.copyWith.mapping(mode: value!),
+                          ),
                         ),
                       ),
                     ),
@@ -88,19 +96,20 @@ class MidiMappingPage extends StatelessWidget {
                       ParametersDropdown(
                         key: Key('${mapping.id}-parameter-id-dropdown'),
                         value: mapping.mapping.parameterId,
-                        onChanged: (value) {
+                        onChanged: (value) => unawaited(
                           midiMappingService.updateMapping(
                             mapping.copyWith.mapping(parameterId: value!),
-                          );
-                        },
+                          ),
+                        ),
                       ),
                     ),
                     DataCell(
                       IconButton(
                         key: Key('${mapping.id}-delete-button'),
                         icon: const Icon(Icons.delete),
-                        onPressed: () =>
-                            midiMappingService.deleteMapping(id: mapping.id),
+                        onPressed: () => unawaited(
+                          midiMappingService.deleteMapping(id: mapping.id),
+                        ),
                       ),
                     ),
                   ],
@@ -112,9 +121,11 @@ class MidiMappingPage extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton(
         child: const Icon(Icons.add),
-        onPressed: () => showDialog<void>(
-          context: context,
-          builder: (context) => const CreateMappingDialog(),
+        onPressed: () => unawaited(
+          showDialog<void>(
+            context: context,
+            builder: (context) => const CreateMappingDialog(),
+          ),
         ),
       ),
     );
@@ -219,14 +230,16 @@ class CreateMappingDialogState extends State<CreateMappingDialog> {
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {
                     Navigator.pop(context);
-                    mappings.createMapping(
-                      MidiMappingEntry(
-                        id: context.read<Uuid>().v4(),
-                        mapping: MidiMapping(
-                          midiChannel: channel!,
-                          ccNumber: ccNumber!,
-                          parameterId: parameter!,
-                          mode: mode!,
+                    unawaited(
+                      mappings.createMapping(
+                        MidiMappingEntry(
+                          id: context.read<Uuid>().v4(),
+                          mapping: MidiMapping(
+                            midiChannel: channel!,
+                            ccNumber: ccNumber!,
+                            parameterId: parameter!,
+                            mode: mode!,
+                          ),
                         ),
                       ),
                     );
