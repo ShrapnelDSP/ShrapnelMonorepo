@@ -17,6 +17,8 @@
  * ShrapnelDSP. If not, see <https://www.gnu.org/licenses/>.
  */
 
+import 'dart:async';
+
 import 'package:esp_softap_provisioning/esp_softap_provisioning.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -144,13 +146,15 @@ class MyHomePage extends StatelessWidget {
             icon: const Icon(Icons.map_outlined),
             key: const Key('midi-mapping-button'),
             onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute<MidiMappingPage>(
-                  builder: (context) {
-                    context.read<MidiMappingService>().getMapping();
-                    return const MidiMappingPage();
-                  },
+              unawaited(
+                Navigator.push(
+                  context,
+                  MaterialPageRoute<MidiMappingPage>(
+                    builder: (context) {
+                      context.read<MidiMappingService>().getMapping();
+                      return const MidiMappingPage();
+                    },
+                  ),
                 ),
               );
             },
@@ -159,10 +163,12 @@ class MyHomePage extends StatelessWidget {
             icon: const Icon(Icons.settings),
             key: const Key('wifi provisioning button'),
             onPressed: () {
-              Navigator.push<ProvisioningPage>(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const ProvisioningPage(),
+              unawaited(
+                Navigator.push<ProvisioningPage>(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const ProvisioningPage(),
+                  ),
                 ),
               );
             },
