@@ -642,9 +642,15 @@ extern "C" void app_main(void)
             }
         }
 
-out:
-        rc = audio_params->create_and_add_parameter(name, minimum, maximum, loaded_value.value_or(default_value));
-        if (rc != 0)
+    out:
+        auto range = maximum - minimum;
+        rc = audio_params->create_and_add_parameter(
+            name,
+            minimum,
+            maximum,
+            loaded_value.has_value() ? *loaded_value * range + minimum
+                                     : default_value);
+        if(rc != 0)
         {
             ESP_LOGE(TAG, "Failed to create parameter %s", name.c_str());
         }
