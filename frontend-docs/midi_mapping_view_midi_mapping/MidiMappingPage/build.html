@@ -138,8 +138,10 @@ Widget build(BuildContext context) {
                     MidiChannelDropdown(
                       key: Key(&#39;${mapping.id}-midi-channel-dropdown&#39;),
                       value: mapping.mapping.midiChannel,
-                      onChanged: (value) =&gt; midiMappingService.updateMapping(
-                        mapping.copyWith.mapping(midiChannel: value!),
+                      onChanged: (value) =&gt; unawaited(
+                        midiMappingService.updateMapping(
+                          mapping.copyWith.mapping(midiChannel: value!),
+                        ),
                       ),
                     ),
                   ),
@@ -147,8 +149,10 @@ Widget build(BuildContext context) {
                     MidiCCDropdown(
                       key: Key(&#39;${mapping.id}-cc-number-dropdown&#39;),
                       value: mapping.mapping.ccNumber,
-                      onChanged: (value) =&gt; midiMappingService.updateMapping(
-                        mapping.copyWith.mapping(ccNumber: value!),
+                      onChanged: (value) =&gt; unawaited(
+                        midiMappingService.updateMapping(
+                          mapping.copyWith.mapping(ccNumber: value!),
+                        ),
                       ),
                     ),
                   ),
@@ -156,8 +160,10 @@ Widget build(BuildContext context) {
                     ModeDropdown(
                       key: Key(&#39;${mapping.id}-mode-dropdown&#39;),
                       value: mapping.mapping.mode,
-                      onChanged: (value) =&gt; midiMappingService.updateMapping(
-                        mapping.copyWith.mapping(mode: value!),
+                      onChanged: (value) =&gt; unawaited(
+                        midiMappingService.updateMapping(
+                          mapping.copyWith.mapping(mode: value!),
+                        ),
                       ),
                     ),
                   ),
@@ -165,19 +171,20 @@ Widget build(BuildContext context) {
                     ParametersDropdown(
                       key: Key(&#39;${mapping.id}-parameter-id-dropdown&#39;),
                       value: mapping.mapping.parameterId,
-                      onChanged: (value) {
+                      onChanged: (value) =&gt; unawaited(
                         midiMappingService.updateMapping(
                           mapping.copyWith.mapping(parameterId: value!),
-                        );
-                      },
+                        ),
+                      ),
                     ),
                   ),
                   DataCell(
                     IconButton(
                       key: Key(&#39;${mapping.id}-delete-button&#39;),
                       icon: const Icon(Icons.delete),
-                      onPressed: () =&gt;
-                          midiMappingService.deleteMapping(id: mapping.id),
+                      onPressed: () =&gt; unawaited(
+                        midiMappingService.deleteMapping(id: mapping.id),
+                      ),
                     ),
                   ),
                 ],
@@ -189,9 +196,11 @@ Widget build(BuildContext context) {
     ),
     floatingActionButton: FloatingActionButton(
       child: const Icon(Icons.add),
-      onPressed: () =&gt; showDialog&lt;void&gt;(
-        context: context,
-        builder: (context) =&gt; const CreateMappingDialog(),
+      onPressed: () =&gt; unawaited(
+        showDialog&lt;void&gt;(
+          context: context,
+          builder: (context) =&gt; const CreateMappingDialog(),
+        ),
       ),
     ),
   );

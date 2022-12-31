@@ -115,13 +115,15 @@ Widget build(BuildContext context) {
           icon: const Icon(Icons.map_outlined),
           key: const Key(&#39;midi-mapping-button&#39;),
           onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute&lt;MidiMappingPage&gt;(
-                builder: (context) {
-                  context.read&lt;MidiMappingService&gt;().getMapping();
-                  return const MidiMappingPage();
-                },
+            unawaited(
+              Navigator.push(
+                context,
+                MaterialPageRoute&lt;MidiMappingPage&gt;(
+                  builder: (context) {
+                    context.read&lt;MidiMappingService&gt;().getMapping();
+                    return const MidiMappingPage();
+                  },
+                ),
               ),
             );
           },
@@ -130,10 +132,12 @@ Widget build(BuildContext context) {
           icon: const Icon(Icons.settings),
           key: const Key(&#39;wifi provisioning button&#39;),
           onPressed: () {
-            Navigator.push&lt;ProvisioningPage&gt;(
-              context,
-              MaterialPageRoute(
-                builder: (context) =&gt; const ProvisioningPage(),
+            unawaited(
+              Navigator.push&lt;ProvisioningPage&gt;(
+                context,
+                MaterialPageRoute(
+                  builder: (context) =&gt; const ProvisioningPage(),
+                ),
               ),
             );
           },

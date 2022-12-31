@@ -240,14 +240,16 @@ Widget build(BuildContext context) {
               onPressed: () {
                 if (_formKey.currentState!.validate()) {
                   Navigator.pop(context);
-                  mappings.createMapping(
-                    MidiMappingEntry(
-                      id: context.read&lt;Uuid&gt;().v4(),
-                      mapping: MidiMapping(
-                        midiChannel: channel!,
-                        ccNumber: ccNumber!,
-                        parameterId: parameter!,
-                        mode: mode!,
+                  unawaited(
+                    mappings.createMapping(
+                      MidiMappingEntry(
+                        id: context.read&lt;Uuid&gt;().v4(),
+                        mapping: MidiMapping(
+                          midiChannel: channel!,
+                          ccNumber: ccNumber!,
+                          parameterId: parameter!,
+                          mode: mode!,
+                        ),
                       ),
                     ),
                   );

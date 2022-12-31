@@ -77,8 +77,8 @@ object is not in a usable state and should be discarded (calls to
   <h2><span>Implementation</span></h2>
   <pre class="language-dart"><code class="language-dart">@override
 void dispose() {
-  _ws?.close(1001);
-  _streamController.close();
+  unawaited(_ws?.close(1001));
+  unawaited(_streamController.close());
   super.dispose();
 }</code></pre>
 </section>
