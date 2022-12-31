@@ -138,6 +138,7 @@ class AudioParameters final : public etl::observable<ParameterObserver, MAX_OBSE
 
         parameters[name] = std::make_unique<AudioParameterFloat>(name, minimum, maximum, default_value);
 
+        ESP_LOGI(TAG, "Added parameter %s with value %f", name.data(), default_value);
         ESP_LOGI(TAG, "%d parameters are registered", parameters.size());
         return 0;
     }

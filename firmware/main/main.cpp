@@ -497,7 +497,7 @@ static void websocket_send(void *arg)
     std::size_t payload_len = strlen(payload);
 
     ESP_LOGD(TAG, "%s len = %zd", __FUNCTION__, payload_len);
-    ESP_LOG_BUFFER_HEXDUMP(TAG, payload, payload_len, ESP_LOG_VERBOSE);
+    ESP_LOG_BUFFER_HEXDUMP(TAG, payload, payload_len, ESP_LOG_INFO);
 
     httpd_ws_frame_t pkt = {
         .final = false,
