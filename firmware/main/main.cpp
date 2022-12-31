@@ -155,8 +155,9 @@ public:
 
     void notification(std::pair<const parameters::id_t &, float> parameter) override
     {
-        auto [id, value] = parameter;
-        ESP_LOGI(TAG, "notified about parameter change %s %f", id.data(), value);
+        auto &[id, value] = parameter;
+        ESP_LOGI(
+            TAG, "notified about parameter change %s %f", id.data(), value);
         if (!updated_parameters.available())
         {
             ESP_LOGE(TAG, "no space available");
@@ -188,7 +189,7 @@ public:
         }
 
         updated_parameters.clear();
-    };
+    }
 
     std::atomic_flag is_save_throttled;
 
@@ -497,7 +498,7 @@ static void websocket_send(void *arg)
     std::size_t payload_len = strlen(payload);
 
     ESP_LOGD(TAG, "%s len = %zd", __FUNCTION__, payload_len);
-    ESP_LOG_BUFFER_HEXDUMP(TAG, payload, payload_len, ESP_LOG_INFO);
+    ESP_LOG_BUFFER_HEXDUMP(TAG, payload, payload_len, ESP_LOG_VERBOSE);
 
     httpd_ws_frame_t pkt = {
         .final = false,
