@@ -20,9 +20,7 @@
 import 'package:flutter/material.dart';
 
 import 'chorus.dart';
-import 'heavy_metal.dart';
 import 'noise_gate.dart';
-import 'tube_screamer.dart';
 import 'valvestate.dart';
 import 'wah.dart';
 
@@ -44,17 +42,9 @@ class _PedalboardState extends State<Pedalboard> {
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            TubeScreamer(
-              onTap: () => _activateGear(GearId.tubeScreamer),
-              full: _activeGear == GearId.tubeScreamer,
-            ),
             NoiseGate(
               onTap: () => _activateGear(GearId.noiseGate),
               full: _activeGear == GearId.noiseGate,
-            ),
-            HeavyMetal(
-              onTap: () => _activateGear(GearId.heavyMetal),
-              full: _activeGear == GearId.heavyMetal,
             ),
           ],
         ),
@@ -90,9 +80,7 @@ class _PedalboardState extends State<Pedalboard> {
 }
 
 enum GearId {
-  tubeScreamer,
   noiseGate,
-  heavyMetal,
   chorus,
   wah,
   valvestate,
