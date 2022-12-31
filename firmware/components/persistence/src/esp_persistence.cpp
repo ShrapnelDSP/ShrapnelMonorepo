@@ -1,22 +1,3 @@
-/*
- * Copyright 2022 Barabas Raffai
- *
- * This file is part of ShrapnelDSP.
- *
- * ShrapnelDSP is free software: you can redistribute it and/or modify it under
- * the terms of the GNU General Public License as published by the Free
- * Software Foundation, either version 3 of the License, or (at your option)
- * any later version.
- *
- * ShrapnelDSP is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
- * more details.
- *
- * You should have received a copy of the GNU General Public License along with
- * ShrapnelDSP. If not, see <https://www.gnu.org/licenses/>.
- */
-
 #include "esp_persistence.h"
 #include "nvs.h"
 #include "esp_log.h"
@@ -27,6 +8,7 @@
 namespace shrapnel::persistence {
 
 int EspStorage::save(const char *key, etl::string_view data) {
+    ESP_LOGE("DEBUG", "save %s %.*s", key, data.size(), data.data());
     nvs_handle_t nvs_handle;
     esp_err_t err;
     int rc = -1;
@@ -77,6 +59,7 @@ int EspStorage::load(const char *key, etl::istring &data) {
     if (err != ESP_OK) goto out;
 
     rc = 0;
+    ESP_LOGE("DEBUG", "loaded %s %.*s", key, data.size(), data.data());
 out:
     nvs_close(nvs_handle);
     return rc;

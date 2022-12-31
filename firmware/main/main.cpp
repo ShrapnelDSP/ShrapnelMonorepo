@@ -17,6 +17,7 @@
  * ShrapnelDSP. If not, see <https://www.gnu.org/licenses/>.
  */
 
+#include <atomic>
 #include <mutex>
 #include "freertos/portmacro.h"
 #include "freertos/projdefs.h"
@@ -72,6 +73,7 @@
 #include "midi_mapping_api.h"
 #include "queue.h"
 #include "wifi_state_machine.h"
+#include "timer.h"
 
 #include "iir_concrete.h"
 
@@ -134,26 +136,44 @@ class EventSend final {
 template<std::size_t MAX_PARAMETERS>
 class ParameterObserver final : public parameters::ParameterObserver {
 public:
-    explicit ParameterObserver(persistence::Storage &persistence) : persistence{persistence} {}
+    explicit ParameterObserver(persistence::Storage &persistence)
+        : persistence{persistence},
+          timer{"param save throttle",
+                pdMS_TO_TICKS(10'000),
+                false,
+                etl::delegate<void(void)>::create<
+                    ParameterObserver<MAX_PARAMETERS>,
+                    &ParameterObserver<MAX_PARAMETERS>::timer_callback>(*this)}
+    {
+    }
+
+    void timer_callback()
+    {
+        is_save_throttled.clear();
+        is_save_throttled.notify_all();
+    }
 
     void notification(std::pair<const parameters::id_t &, float> parameter) override
     {
-        ESP_LOGI(TAG, "notified about parameter change %s %f", parameter.first.data(), parameter.second);
+        auto [id, value] = parameter;
+        ESP_LOGI(TAG, "notified about parameter change %s %f", id.data(), value);
         if (!updated_parameters.available())
         {
             ESP_LOGE(TAG, "no space available");
             return;
         }
 
-        updated_parameters[parameter.first] = parameter.second;
+        updated_parameters[id] = value;
 
-        // TODO throttle this so that parameters are saved every minute or so
-        persist_parameters();
+        if(!timer.is_active())
+        {
+            timer.start(pdMS_TO_TICKS(5));
+        }
     }
 
-private:
-    void persist_parameters() {
-        for (const auto &param : updated_parameters)
+    void persist_parameters()
+    {
+        for(const auto &param : updated_parameters)
         {
             rapidjson::Document document;
 
@@ -170,7 +190,11 @@ private:
         updated_parameters.clear();
     };
 
+    std::atomic_flag is_save_throttled;
+
+private:
     persistence::Storage &persistence;
+    shrapnel::os::Timer timer;
     etl::map<parameters::id_t, float, MAX_PARAMETERS> updated_parameters;
 };
 
@@ -628,6 +652,7 @@ extern "C" void app_main(void)
         int rc = persistence.load(name.data(), json_string);
         if(rc != 0)
         {
+            ESP_LOGW(TAG, "Parameter %s failed to load", name.data());
             goto out;
         }
 
@@ -682,7 +707,6 @@ extern "C" void app_main(void)
     create_and_load_parameter("wahBypass", 0, 1, 1);
 
     ParameterObserver<MAX_PARAMETERS> parameter_observer{persistence};
-    // TODO this is delaying midi parameter updates
     audio_params->add_observer(parameter_observer);
 
     auto parameter_notifier = std::make_shared<ParameterUpdateNotifier>();
@@ -995,6 +1019,12 @@ midi::Mapping, 10>>(document);
             {
                 ESP_LOGI(TAG, "changed to state: %s", new_state.c_str());
             }
+        }
+
+        if(!parameter_observer.is_save_throttled.test_and_set())
+        {
+            parameter_observer.persist_parameters();
+            ESP_LOGI(TAG, "Parameters saved to NVS");
         }
 
         /* Check if the current iteration of the main loop took too long. This
