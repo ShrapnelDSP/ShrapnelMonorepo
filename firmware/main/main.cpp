@@ -886,13 +886,25 @@ midi::Mapping, 10>>(document);
     TimerHandle_t clipping_throttle_timer = xTimerCreate(
         "clipping throttle", pdMS_TO_TICKS(1000), false, nullptr, do_nothing);
 
+    std::atomic_flag is_midi_notify_waiting;
+    auto clear_midi_notify_waiting = [&] { is_midi_notify_waiting.clear(); };
+
+    os::Timer midi_message_notify_timer{
+        "midi notify", pdMS_TO_TICKS(100), true, clear_midi_notify_waiting};
+    midi_message_notify_timer.start(portMAX_DELAY);
+
     auto midi_uart = new midi::EspMidiUart(UART_NUM_MIDI, GPIO_NUM_MIDI);
 
-    auto on_midi_message = [] (midi::Message message) {
+    std::optional<midi::Message> last_midi_message;
+    std::optional<midi::Message> last_notified_midi_message;
+
+    auto on_midi_message = [&] (midi::Message message) {
         etl::string<40> buffer;
         etl::string_stream stream{buffer};
         stream << message;
         ESP_LOGI(TAG, "%s", buffer.data());
+
+        last_midi_message = message;
 
         {
             std::scoped_lock lock{midi_mutex};
@@ -1026,6 +1038,16 @@ midi::Mapping, 10>>(document);
         {
             parameter_observer.persist_parameters();
             ESP_LOGI(TAG, "Parameters saved to NVS");
+        }
+
+        if(!is_midi_notify_waiting.test_and_set() &&
+           last_midi_message.has_value() &&
+           last_notified_midi_message != *last_midi_message)
+        {
+            last_notified_midi_message = *last_midi_message;
+
+            audio_event_send_callback(
+                {midi::MessageReceived{*last_midi_message}, std::nullopt});
         }
 
         /* Check if the current iteration of the main loop took too long. This

@@ -63,5 +63,11 @@ constexpr const char *get_message_type<Remove>()
     return "MidiMap::remove";
 }
 
+template<>
+constexpr const char *get_message_type<MessageReceived>()
+{
+    return "MidiMap::midi_message_received";
+}
+
 }
 }

@@ -31,6 +31,7 @@ import 'audio_events.dart';
 import 'json_websocket.dart';
 import 'midi_mapping/model/midi_learn.dart';
 import 'midi_mapping/model/midi_learn_state.dart';
+import 'midi_mapping/model/models.dart';
 import 'midi_mapping/model/service.dart';
 import 'midi_mapping/view/midi_mapping.dart';
 import 'parameter.dart';
@@ -89,6 +90,13 @@ void main() {
       .map(AudioParameterDouble.fromJson)
       .map((e) => e.id)
       .listen(midiLearnStateMachine.parameterUpdated);
+
+  jsonWebsocket.stream.map(MidiApiMessage.fromJson).map((event) { _log.info(event); return event; }).listen(
+        (m) => m.maybeWhen(
+          midiMessageReceived: midiLearnStateMachine.midiMessageReceived,
+          orElse: () => null,
+        ),
+      );
 
   runApp(
     MultiProvider(
@@ -217,13 +225,8 @@ class MyHomePage extends StatelessWidget {
           Container(width: 10),
         ],
       ),
-      body: Center(
-        child: Column(
-          children: [
-            Text(state.toString()),
-            Pedalboard(),
-          ],
-        ),
+      body: const Center(
+        child: Pedalboard(),
       ),
       bottomNavigationBar: BottomAppBar(
         child: Padding(

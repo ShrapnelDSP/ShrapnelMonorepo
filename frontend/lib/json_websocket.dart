@@ -28,6 +28,7 @@ class JsonWebsocket {
 
   final RobustWebsocket websocket;
 
+  /// The stream of incoming messages
   Stream<Map<String, dynamic>> get stream => websocket.stream.map(
         (dynamic event) => json.decode(event as String) as Map<String, dynamic>,
       );

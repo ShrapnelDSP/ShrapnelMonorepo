@@ -20,6 +20,8 @@
 #include "midi_mapping_json_builder.h"
 #include "midi_mapping_api.h"
 #include "midi_message_type.h"
+#include "rapidjson/document.h"
+#include <variant>
 
 namespace {
     constexpr char TAG[] = "midi_mapping_json_builder";
@@ -27,6 +29,63 @@ namespace {
 
 namespace shrapnel {
 namespace midi {
+
+template<>
+rapidjson::Value to_json(rapidjson::Document &document, const Message &object)
+{
+    rapidjson::Value json;
+    json.SetObject();
+
+    json.AddMember("channel", object.channel, document.GetAllocator());
+
+    std::visit(
+        [&](auto &parameters)
+        {
+            using T = std::decay_t<decltype(parameters)>;
+
+            if constexpr(std::is_same_v<T, Message::NoteOn>)
+            {
+                json.AddMember("runtimeType",
+                               rapidjson::StringRef("noteOn"),
+                               document.GetAllocator());
+                json.AddMember(
+                    "note", parameters.note, document.GetAllocator());
+                json.AddMember(
+                    "velocity", parameters.velocity, document.GetAllocator());
+            }
+            else if constexpr(std::is_same_v<T, Message::NoteOff>)
+            {
+                json.AddMember("runtimeType",
+                               rapidjson::StringRef("noteOff"),
+                               document.GetAllocator());
+                json.AddMember(
+                    "note", parameters.note, document.GetAllocator());
+                json.AddMember(
+                    "velocity", parameters.velocity, document.GetAllocator());
+            }
+            else if constexpr(std::is_same_v<T, Message::ControlChange>)
+            {
+                json.AddMember("runtimeType",
+                               rapidjson::StringRef("controlChange"),
+                               document.GetAllocator());
+                json.AddMember(
+                    "control", parameters.control, document.GetAllocator());
+                json.AddMember(
+                    "value", parameters.value, document.GetAllocator());
+            }
+            else if constexpr(std::is_same_v<T, Message::ProgramChange>)
+            {
+                json.AddMember("runtimeType",
+                               rapidjson::StringRef("programChange"),
+                               document.GetAllocator());
+                json.AddMember(
+                    "number", parameters.number, document.GetAllocator());
+            }
+        },
+        object.parameters);
+
+    return json;
+}
 
 template<>
 rapidjson::Value to_json(rapidjson::Document &document, const Mapping &object)
@@ -107,6 +166,17 @@ rapidjson::Value to_json(rapidjson::Document &document, const GetResponse &objec
 }
 
 template<>
+rapidjson::Value to_json(rapidjson::Document &document, const MessageReceived &object)
+{
+    rapidjson::Value json;
+    json.SetObject();
+
+    rapidjson::Value message = to_json(document, object.message);
+    json.AddMember("message", message, document.GetAllocator());
+    return json;
+}
+
+template<>
 rapidjson::Value to_json(rapidjson::Document &document, const MappingApiMessage &object)
 {
     rapidjson::Value json;
@@ -115,7 +185,8 @@ rapidjson::Value to_json(rapidjson::Document &document, const MappingApiMessage 
         using T = std::decay_t<decltype(message)>;
 
         if constexpr (std::is_same_v<T, CreateResponse> ||
-                      std::is_same_v<T, GetResponse>) {
+                      std::is_same_v<T, GetResponse> ||
+                      std::is_same_v<T, MessageReceived>) {
             json = to_json(document, message);
         } else {
             ESP_LOGE(TAG, "No handler registered for message");
