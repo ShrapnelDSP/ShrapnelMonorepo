@@ -126,3 +126,11 @@ enum MidiMappingMode {
   final String apiName;
   final String uiName;
 }
+
+@freezed
+class MidiMessage with _$MidiMessage {
+  const factory MidiMessage.noteOn(int channel, int note, int velocity) = _NoteOn;
+  const factory MidiMessage.noteOff(int channel, int note, int velocity) = _NoteOff;
+  const factory MidiMessage.controlChange(int channel, int control, int value) = _ControlChange;
+  const factory MidiMessage.programChange(int channel, int number) = _ProgramChange;
+}

@@ -111,7 +111,7 @@ class ParameterService extends ChangeNotifier {
     sink.add(json.encode(message));
   }
 
-  final sink = StreamController<String>();
+  final sink = StreamController<String>.broadcast();
 
   final _parameters = <AudioParameterDoubleModel>[];
 
