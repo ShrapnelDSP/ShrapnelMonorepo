@@ -33,12 +33,14 @@ class _Strings {
   static const initialButtonText = 'Ready';
   static const connectingMessage = 'Connecting...';
   static const testingMessage = 'Testing...';
-  static const sessionFailureMesssage =
+  static const sessionFailureMessage =
       'Connection failed. Please ensure you are connected to the ShrapnelDSP '
       'access point.';
   static const retryButtonText = 'Try again';
   static const failureMessage = 'The ShrapnelDSP device failed to connect to '
       'your WiFi access point.';
+  static const successMessage = 'The ShrapnelDSP device has connected to your '
+      'network successfully.';
   // TODO how to add the SSID to this message?
   // https://stackoverflow.com/questions/52278035/flutter-internationalization-dynamic-strings
   // https://github.com/dart-lang/sdk/issues/1694
@@ -47,6 +49,7 @@ class _Strings {
     WifiConnectFailedReason.NetworkNotFound: 'The network was not found.',
   };
   static const wifiPasswordSubmitButtonText = 'Join';
+  static const okButtonText = 'OK';
 }
 
 final _log = Logger('shrapnel.wifi_provisioning');
@@ -454,7 +457,7 @@ class WifiProvisioningScreen extends StatelessWidget {
           Container(
             margin: const EdgeInsets.all(10),
             child: const Text(
-              _Strings.sessionFailureMesssage,
+              _Strings.sessionFailureMessage,
               textAlign: TextAlign.center,
             ),
           ),
@@ -492,6 +495,27 @@ class WifiProvisioningScreen extends StatelessWidget {
     );
   }
 
+  Widget buildSuccess(BuildContext context) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Container(
+            margin: const EdgeInsets.all(10),
+            child: const Text(
+              _Strings.successMessage,
+              textAlign: TextAlign.center,
+            ),
+          ),
+          ElevatedButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text(_Strings.okButtonText),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Consumer<WifiProvisioningProvider>(
@@ -515,6 +539,9 @@ class WifiProvisioningScreen extends StatelessWidget {
             break;
           case WifiProvisioningState.failure:
             child = buildFailure(context);
+            break;
+          case WifiProvisioningState.success:
+            child = buildSuccess(context);
             break;
           default:
             child = Text(provisioning.state.toString());
