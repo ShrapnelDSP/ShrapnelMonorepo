@@ -60,6 +60,7 @@ var hierarchy =
       [ "shrapnel::persistence::EspStorage", "classshrapnel_1_1persistence_1_1EspStorage.html", null ]
     ] ],
     [ "shrapnel::TaskBase", "classshrapnel_1_1TaskBase.html", null ],
+    [ "shrapnel::os::Timer", "classshrapnel_1_1os_1_1Timer.html", null ],
     [ "shrapnel::midi::Update", "structshrapnel_1_1midi_1_1Update.html", null ],
     [ "shrapnel::parameters::Update", "structshrapnel_1_1parameters_1_1Update.html", null ],
     [ "shrapnel::wifi::UserEvent", "structshrapnel_1_1wifi_1_1UserEvent.html", null ],

@@ -37,6 +37,9 @@ var annotated_dup =
         [ "Remove", "structshrapnel_1_1midi_1_1Remove.html", "structshrapnel_1_1midi_1_1Remove" ],
         [ "Update", "structshrapnel_1_1midi_1_1Update.html", "structshrapnel_1_1midi_1_1Update" ]
       ] ],
+      [ "os", "namespaceshrapnel_1_1os.html", [
+        [ "Timer", "classshrapnel_1_1os_1_1Timer.html", "classshrapnel_1_1os_1_1Timer" ]
+      ] ],
       [ "parameters", "namespaceshrapnel_1_1parameters.html", [
         [ "AudioParameterFloat", "classshrapnel_1_1parameters_1_1AudioParameterFloat.html", "classshrapnel_1_1parameters_1_1AudioParameterFloat" ],
         [ "AudioParameters", "classshrapnel_1_1parameters_1_1AudioParameters.html", "classshrapnel_1_1parameters_1_1AudioParameters" ],

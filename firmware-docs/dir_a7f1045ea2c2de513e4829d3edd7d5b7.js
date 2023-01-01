@@ -14,5 +14,6 @@ var dir_a7f1045ea2c2de513e4829d3edd7d5b7 =
     [ "persistence", "dir_52df58315dc5bb3976de569ae1e31514.html", "dir_52df58315dc5bb3976de569ae1e31514" ],
     [ "queue", "dir_ca536fc1468f26b9da83bacbcb0aa112.html", "dir_ca536fc1468f26b9da83bacbcb0aa112" ],
     [ "task", "dir_75ba980afa295d9fc61deffa1e4ac518.html", "dir_75ba980afa295d9fc61deffa1e4ac518" ],
+    [ "timer", "dir_6b5a5493a9a0dd22ac703a730bbb3b31.html", "dir_6b5a5493a9a0dd22ac703a730bbb3b31" ],
     [ "wifi", "dir_3346a8df6e368028a871d14a77a10ee3.html", "dir_3346a8df6e368028a871d14a77a10ee3" ]
 ];

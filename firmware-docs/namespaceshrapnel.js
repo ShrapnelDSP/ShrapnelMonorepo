@@ -4,6 +4,7 @@ var namespaceshrapnel =
     [ "effect", "namespaceshrapnel_1_1effect.html", "namespaceshrapnel_1_1effect" ],
     [ "events", "namespaceshrapnel_1_1events.html", "namespaceshrapnel_1_1events" ],
     [ "midi", "namespaceshrapnel_1_1midi.html", "namespaceshrapnel_1_1midi" ],
+    [ "os", "namespaceshrapnel_1_1os.html", "namespaceshrapnel_1_1os" ],
     [ "parameters", "namespaceshrapnel_1_1parameters.html", "namespaceshrapnel_1_1parameters" ],
     [ "persistence", "namespaceshrapnel_1_1persistence.html", "namespaceshrapnel_1_1persistence" ],
     [ "wifi", "namespaceshrapnel_1_1wifi.html", "namespaceshrapnel_1_1wifi" ],
