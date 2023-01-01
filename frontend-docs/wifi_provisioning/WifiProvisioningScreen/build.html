@@ -129,6 +129,9 @@ Widget build(BuildContext context) {
         case WifiProvisioningState.failure:
           child = buildFailure(context);
           break;
+        case WifiProvisioningState.success:
+          child = buildSuccess(context);
+          break;
         default:
           child = Text(provisioning.state.toString());
           break;
@@ -184,6 +187,7 @@ Widget build(BuildContext context) {
     <li><a href="../../wifi_provisioning/WifiProvisioningScreen/buildFailure.html">buildFailure</a></li>
     <li><a href="../../wifi_provisioning/WifiProvisioningScreen/buildInitial.html">buildInitial</a></li>
     <li><a href="../../wifi_provisioning/WifiProvisioningScreen/buildSessionFailure.html">buildSessionFailure</a></li>
+    <li><a href="../../wifi_provisioning/WifiProvisioningScreen/buildSuccess.html">buildSuccess</a></li>
     <li><a href="../../wifi_provisioning/WifiProvisioningScreen/buildTesting.html">buildTesting</a></li>
     <li class="inherited"><a href="https://api.flutter.dev/flutter/widgets/StatelessWidget/createElement.html">createElement</a></li>
     <li class="inherited"><a href="https://api.flutter.dev/flutter/foundation/DiagnosticableTree/debugDescribeChildren.html">debugDescribeChildren</a></li>

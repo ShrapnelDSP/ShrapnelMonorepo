@@ -4,8 +4,8 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, user-scalable=no">
-  <meta name="description" content="API docs for the buildFailure method from the WifiProvisioningScreen class, for the Dart programming language.">
-  <title>buildFailure method - WifiProvisioningScreen class - wifi_provisioning library - Dart API</title>
+  <meta name="description" content="API docs for the buildSuccess method from the WifiProvisioningScreen class, for the Dart programming language.">
+  <title>buildSuccess method - WifiProvisioningScreen class - wifi_provisioning library - Dart API</title>
 
 
   
@@ -32,9 +32,9 @@
     <li><a href="../../index.html">shrapnel</a></li>
     <li><a href="../../wifi_provisioning/wifi_provisioning-library.html">wifi_provisioning</a></li>
     <li><a href="../../wifi_provisioning/WifiProvisioningScreen-class.html">WifiProvisioningScreen</a></li>
-    <li class="self-crumb">buildFailure method</li>
+    <li class="self-crumb">buildSuccess method</li>
   </ol>
-  <div class="self-name">buildFailure</div>
+  <div class="self-name">buildSuccess</div>
   <form class="search navbar-right" role="search">
     <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
   </form>
@@ -45,7 +45,7 @@
 
   <div id="dartdoc-main-content" class="main-content">
       <div>
-<h1><span class="kind-method">buildFailure</span> method 
+<h1><span class="kind-method">buildSuccess</span> method 
     <a href="https://dart.dev/null-safety" class="feature feature-null-safety" title="Supports the null safety language feature.">Null safety</a>
 </h1></div>
 
@@ -53,7 +53,7 @@
       
 
 <span class="returntype"><a href="https://api.flutter.dev/flutter/widgets/Widget-class.html">Widget</a></span>
-<span class="name ">buildFailure</span>(<wbr><ol class="parameter-list"><li><span class="parameter" id="buildFailure-param-context"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/widgets/BuildContext-class.html">BuildContext</a></span> <span class="parameter-name">context</span></span></li>
+<span class="name ">buildSuccess</span>(<wbr><ol class="parameter-list"><li><span class="parameter" id="buildSuccess-param-context"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/widgets/BuildContext-class.html">BuildContext</a></span> <span class="parameter-name">context</span></span></li>
 </ol>)
 
       
@@ -65,25 +65,21 @@
     
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">Widget buildFailure(BuildContext context) {
-  final provisioning = Provider.of&lt;WifiProvisioningProvider&gt;(context);
-
+  <pre class="language-dart"><code class="language-dart">Widget buildSuccess(BuildContext context) {
   return Center(
     child: Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Container(
           margin: const EdgeInsets.all(10),
-          child: Text(
-            provisioning.status?.failedReason == null
-                ? _Strings.failureMessage
-                : &#39;${_Strings.failureMessage} ${_Strings.failureReasonMessage[provisioning.status!.failedReason]!}&#39;,
+          child: const Text(
+            _Strings.successMessage,
             textAlign: TextAlign.center,
           ),
         ),
         ElevatedButton(
-          onPressed: provisioning.start,
-          child: const Text(_Strings.retryButtonText),
+          onPressed: () =&gt; Navigator.pop(context),
+          child: const Text(_Strings.okButtonText),
         ),
       ],
     ),
@@ -105,7 +101,7 @@
   <li><a href="../../index.html">shrapnel</a></li>
   <li><a href="../../wifi_provisioning/wifi_provisioning-library.html">wifi_provisioning</a></li>
   <li><a href="../../wifi_provisioning/WifiProvisioningScreen-class.html">WifiProvisioningScreen</a></li>
-  <li class="self-crumb">buildFailure method</li>
+  <li class="self-crumb">buildSuccess method</li>
 </ol>
 
 
