@@ -14,6 +14,7 @@ idf_component_register( SRCS main.cpp
                             nvs_flash
                             persistence
                             pcm3060
+                            timer
                             queue
                             wifi
                             abstract_dsp
