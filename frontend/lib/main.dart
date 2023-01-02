@@ -78,8 +78,8 @@ void main() {
     websocket: jsonWebsocket,
   );
   final parameterService = ParameterService(websocket: websocket);
-  final midiLearnStateMachine = MidiLearnStateMachine(
-    service: midiMappingService,
+  final midiLearnService = MidiLearnService(
+    mappingService: midiMappingService,
     uuid: uuid,
   );
 
@@ -91,14 +91,14 @@ void main() {
       .where((e) => e['messageType'] == 'parameterUpdate')
       .map(AudioParameterDouble.fromJson)
       .map((e) => e.id)
-      .listen(midiLearnStateMachine.parameterUpdated);
+      .listen(midiLearnService.parameterUpdated);
 
   jsonWebsocket.dataStream
       .where((e) => e['messageType'] == 'MidiMap::midi_message_received')
       .map(MidiApiMessage.fromJson)
       .listen(
         (m) => m.maybeWhen(
-          midiMessageReceived: midiLearnStateMachine.midiMessageReceived,
+          midiMessageReceived: midiLearnService.midiMessageReceived,
           orElse: () => null,
         ),
       );
@@ -106,8 +106,8 @@ void main() {
   runApp(
     MultiProvider(
       providers: [
-        StateNotifierProvider<MidiLearnStateMachine, MidiLearnState>.value(
-          value: midiLearnStateMachine,
+        StateNotifierProvider<MidiLearnService, MidiLearnState>.value(
+          value: midiLearnService,
         ),
         ChangeNotifierProvider.value(value: websocket),
         ChangeNotifierProvider(
@@ -184,7 +184,7 @@ class MyHomePage extends StatelessWidget {
               icon: const Icon(Icons.menu_book_outlined),
               key: const Key('midi-learn-button'),
               onPressed: () {
-                context.read<MidiLearnStateMachine>().startLearning();
+                context.read<MidiLearnService>().startLearning();
               },
             ),
           ),

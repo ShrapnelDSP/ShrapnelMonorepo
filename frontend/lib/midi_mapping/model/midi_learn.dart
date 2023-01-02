@@ -10,11 +10,11 @@ import 'service.dart';
 
 final _log = Logger('shrapnel.midi_mapping.model.midi_learn');
 
-class MidiLearnStateMachine extends StateNotifier<MidiLearnState> {
-  MidiLearnStateMachine({required this.uuid, required this.service})
+class MidiLearnService extends StateNotifier<MidiLearnState> {
+  MidiLearnService({required this.uuid, required this.mappingService})
       : super(const MidiLearnState.idle(null));
 
-  final MidiMappingService service;
+  final MidiMappingService mappingService;
   final Uuid uuid;
 
   void startLearning() {
@@ -45,7 +45,7 @@ class MidiLearnStateMachine extends StateNotifier<MidiLearnState> {
               final channel = message.channel;
               final control = message.control;
 
-              final similarMappings = service.mappings.entries.map((e) {
+              final similarMappings = mappingService.mappings.entries.map((e) {
                 _log.fine(e);
                 return e;
               }).where(
@@ -62,11 +62,11 @@ class MidiLearnStateMachine extends StateNotifier<MidiLearnState> {
               if (similarMappingsList.isNotEmpty) {
                 for (final mapping in similarMappingsList) {
                   _log.info('removing similar mapping: $mapping');
-                  await service.deleteMapping(id: mapping.key);
+                  await mappingService.deleteMapping(id: mapping.key);
                 }
               }
 
-              await service.createMapping(
+              await mappingService.createMapping(
                 MidiMappingEntry(
                   id: uuid.v4(),
                   mapping: MidiMapping(
@@ -92,7 +92,7 @@ class MidiLearnStateMachine extends StateNotifier<MidiLearnState> {
     state = const MidiLearnState.idle(null);
   }
 
-  Future<void> undoRemoveDuplicates() async {
+  Future<void> undoRemoveSimilarMappings() async {
     unawaited(
       state.maybeWhen(
         idle: (duplicates) async {
@@ -102,7 +102,7 @@ class MidiLearnStateMachine extends StateNotifier<MidiLearnState> {
 
           state = const MidiLearnState.savingMapping();
           for (final mapping in duplicates) {
-            await service.createMapping(
+            await mappingService.createMapping(
               MidiMappingEntry(
                 id: mapping.key,
                 mapping: mapping.value,
@@ -112,13 +112,8 @@ class MidiLearnStateMachine extends StateNotifier<MidiLearnState> {
           state = const MidiLearnState.idle(null);
         },
         orElse: () =>
-            throw StateError('undoRemoveDuplicates called in state: $state'),
+            throw StateError('undoRemoveSimilarMappings called in state: $state'),
       ),
     );
-  }
-
-  @override
-  Future<void> dispose() async {
-    super.dispose();
   }
 }

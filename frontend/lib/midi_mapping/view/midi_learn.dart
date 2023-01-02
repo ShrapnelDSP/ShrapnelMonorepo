@@ -11,7 +11,7 @@ class MidiLearnStatus extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final midiLearnState = context.watch<MidiLearnState>();
-    final midiLearnStateMachine = context.read<MidiLearnStateMachine>();
+    final midiLearnService = context.read<MidiLearnService>();
 
     final isInProgress = midiLearnState.when(
       idle: (_) => false,
@@ -27,24 +27,6 @@ class MidiLearnStatus extends StatelessWidget {
       savingMapping: () => false,
     );
 
-    /*
-              // An empty widget used to show snackbars when duplicate mappings are deleted
-              StreamBuilder(
-                stream: midiLearnStateMachine.undoRemoveDuplicatesStream,
-                builder: (context, snapshot) {
-                  const snackBar = SnackBar(
-                    content: Text('Yay! A SnackBar!'),
-                  );
-
-                  // Find the ScaffoldMessenger in the widget tree
-                  // and use it to show a SnackBar.
-                  SchedulerBinding.instance.addPostFrameCallback( (_) => ScaffoldMessenger.of(context).showSnackBar(snackBar));
-
-                  return const SizedBox.shrink();
-                },
-              ),
-     */
-
     midiLearnState.maybeWhen(
       idle: (duplicates) {
         if (duplicates == null || duplicates.isEmpty) {
@@ -55,7 +37,7 @@ class MidiLearnStatus extends StatelessWidget {
           content: const Text('Some duplicate mappings were deleted'),
           action: SnackBarAction(
             label: 'Restore',
-            onPressed: midiLearnStateMachine.undoRemoveDuplicates,
+            onPressed: midiLearnService.undoRemoveSimilarMappings,
           ),
         );
 
@@ -94,7 +76,7 @@ class MidiLearnStatus extends StatelessWidget {
               ),
               if (isCancellable)
                 ElevatedButton(
-                  onPressed: midiLearnStateMachine.cancelLearning,
+                  onPressed: midiLearnService.cancelLearning,
                   child: const Text('Cancel'),
                 )
             ],
