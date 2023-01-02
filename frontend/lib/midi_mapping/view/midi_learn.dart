@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';
 
 import '../model/midi_learn.dart';
@@ -13,9 +14,58 @@ class MidiLearnStatus extends StatelessWidget {
     final midiLearnStateMachine = context.read<MidiLearnStateMachine>();
 
     final isInProgress = midiLearnState.when(
-      idle: () => false,
+      idle: (_) => false,
       waitForParameter: () => true,
       waitForMidi: (_) => true,
+      savingMapping: () => true,
+    );
+
+    final isCancellable = midiLearnState.when(
+      idle: (_) => false,
+      waitForParameter: () => true,
+      waitForMidi: (_) => true,
+      savingMapping: () => false,
+    );
+
+    /*
+              // An empty widget used to show snackbars when duplicate mappings are deleted
+              StreamBuilder(
+                stream: midiLearnStateMachine.undoRemoveDuplicatesStream,
+                builder: (context, snapshot) {
+                  const snackBar = SnackBar(
+                    content: Text('Yay! A SnackBar!'),
+                  );
+
+                  // Find the ScaffoldMessenger in the widget tree
+                  // and use it to show a SnackBar.
+                  SchedulerBinding.instance.addPostFrameCallback( (_) => ScaffoldMessenger.of(context).showSnackBar(snackBar));
+
+                  return const SizedBox.shrink();
+                },
+              ),
+     */
+
+    midiLearnState.maybeWhen(
+      idle: (duplicates) {
+        if (duplicates == null || duplicates.isEmpty) {
+          return;
+        }
+
+        final snackBar = SnackBar(
+          content: const Text('Some duplicate mappings were deleted'),
+          action: SnackBarAction(
+            label: 'Restore',
+            onPressed: midiLearnStateMachine.undoRemoveDuplicates,
+          ),
+        );
+
+        // Find the ScaffoldMessenger in the widget tree
+        // and use it to show a SnackBar.
+        SchedulerBinding.instance.addPostFrameCallback(
+          (_) => ScaffoldMessenger.of(context).showSnackBar(snackBar),
+        );
+      },
+      orElse: () {},
     );
 
     if (!isInProgress) {
@@ -35,16 +85,18 @@ class MidiLearnStatus extends StatelessWidget {
                 'MIDI Learn: ${midiLearnState.maybeWhen(
                   waitForParameter: () => 'Move a knob',
                   waitForMidi: (_) => 'Move a MIDI controller',
+                  savingMapping: () => 'Saving...',
                   orElse: () => throw StateError('$midiLearnState'),
                 )}',
               ),
               const SizedBox(
                 width: 10,
               ),
-              ElevatedButton(
-                onPressed: midiLearnStateMachine.cancelLearning,
-                child: const Text('Cancel'),
-              )
+              if (isCancellable)
+                ElevatedButton(
+                  onPressed: midiLearnStateMachine.cancelLearning,
+                  child: const Text('Cancel'),
+                )
             ],
           ),
         ),

@@ -58,7 +58,7 @@ String formatDateTime(DateTime t) {
 }
 
 void main() {
-  Logger.root.level = Level.FINE;
+  Logger.root.level = Level.INFO;
   Logger.root.onRecord.listen((record) {
     debugPrint(
       '${record.level.name.padLeft("WARNING".length)} '
@@ -88,21 +88,20 @@ void main() {
   parameterService.sink.stream
       .map<dynamic>(json.decode)
       .map((dynamic e) => e as Map<String, dynamic>)
-      .where((e) => e['messageType'] == 'parameterUpdate' )
+      .where((e) => e['messageType'] == 'parameterUpdate')
       .map(AudioParameterDouble.fromJson)
       .map((e) => e.id)
       .listen(midiLearnStateMachine.parameterUpdated);
 
-  jsonWebsocket.stream.where((e) => e['messageType'] == 'MidiMap::midi_message_received')
-      .map(MidiApiMessage.fromJson).map((event) {
-    _log.info(event);
-    return event;
-  }).listen(
-    (m) => m.maybeWhen(
-      midiMessageReceived: midiLearnStateMachine.midiMessageReceived,
-      orElse: () => null,
-    ),
-  );
+  jsonWebsocket.stream
+      .where((e) => e['messageType'] == 'MidiMap::midi_message_received')
+      .map(MidiApiMessage.fromJson)
+      .listen(
+        (m) => m.maybeWhen(
+          midiMessageReceived: midiLearnStateMachine.midiMessageReceived,
+          orElse: () => null,
+        ),
+      );
 
   runApp(
     MultiProvider(

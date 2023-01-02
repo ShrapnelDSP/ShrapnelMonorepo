@@ -103,6 +103,7 @@ class MidiMappingService extends ChangeNotifier {
     } on TimeoutException {
       __mappings.remove(mapping.id);
       notifyListeners();
+      rethrow;
     }
   }
 
