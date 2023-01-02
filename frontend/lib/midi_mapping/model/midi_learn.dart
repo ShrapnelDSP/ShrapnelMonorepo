@@ -51,7 +51,8 @@ class MidiLearnStateMachine extends StateNotifier<MidiLearnState> {
               }).where(
                 (e) =>
                     e.value.midiChannel == channel &&
-                    e.value.ccNumber == control,
+                        e.value.ccNumber == control ||
+                    e.value.parameterId == parameterId,
               );
 
               // Need copy to prevent concurrent modification of the lazy iterator
