@@ -48,8 +48,9 @@ class MidiApiMessage with _$MidiApiMessage {
   @FreezedUnionValue('MidiMap::remove')
   const factory MidiApiMessage.remove({required String id}) = Remove;
   @FreezedUnionValue('MidiMap::midi_message_received')
-  const factory MidiApiMessage.midiMessageReceived({required MidiMessage message}) =
-      MidiMessageReceived;
+  const factory MidiApiMessage.midiMessageReceived({
+    required MidiMessage message,
+  }) = MidiMessageReceived;
 
   factory MidiApiMessage.fromJson(Map<String, dynamic> json) =>
       _$MidiApiMessageFromJson(json);

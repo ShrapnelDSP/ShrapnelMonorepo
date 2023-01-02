@@ -58,4 +58,8 @@ class MidiLearnStateMachine extends StateNotifier<MidiLearnState> {
       orElse: () {},
     );
   }
+
+  void cancelLearning() {
+    state = const MidiLearnState.idle();
+  }
 }

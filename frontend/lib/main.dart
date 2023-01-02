@@ -22,10 +22,10 @@ import 'dart:convert';
 
 import 'package:esp_softap_provisioning/esp_softap_provisioning.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_state_notifier/flutter_state_notifier.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:logging/logging.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_state_notifier/flutter_state_notifier.dart';
 
 import 'audio_events.dart';
 import 'json_websocket.dart';
@@ -33,6 +33,7 @@ import 'midi_mapping/model/midi_learn.dart';
 import 'midi_mapping/model/midi_learn_state.dart';
 import 'midi_mapping/model/models.dart';
 import 'midi_mapping/model/service.dart';
+import 'midi_mapping/view/midi_learn.dart';
 import 'midi_mapping/view/midi_mapping.dart';
 import 'parameter.dart';
 import 'pedalboard.dart';
@@ -87,16 +88,21 @@ void main() {
   parameterService.sink.stream
       .map<dynamic>(json.decode)
       .map((dynamic e) => e as Map<String, dynamic>)
+      .where((e) => e['messageType'] == 'parameterUpdate' )
       .map(AudioParameterDouble.fromJson)
       .map((e) => e.id)
       .listen(midiLearnStateMachine.parameterUpdated);
 
-  jsonWebsocket.stream.map(MidiApiMessage.fromJson).map((event) { _log.info(event); return event; }).listen(
-        (m) => m.maybeWhen(
-          midiMessageReceived: midiLearnStateMachine.midiMessageReceived,
-          orElse: () => null,
-        ),
-      );
+  jsonWebsocket.stream.where((e) => e['messageType'] == 'MidiMap::midi_message_received')
+      .map(MidiApiMessage.fromJson).map((event) {
+    _log.info(event);
+    return event;
+  }).listen(
+    (m) => m.maybeWhen(
+      midiMessageReceived: midiLearnStateMachine.midiMessageReceived,
+      orElse: () => null,
+    ),
+  );
 
   runApp(
     MultiProvider(
@@ -169,8 +175,6 @@ class MyHomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final state = context.watch<MidiLearnState>();
-
     return Scaffold(
       appBar: AppBar(
         title: Text(title),
@@ -225,8 +229,15 @@ class MyHomePage extends StatelessWidget {
           Container(width: 10),
         ],
       ),
-      body: const Center(
-        child: Pedalboard(),
+      body: Center(
+        child: Column(
+          children: const [
+            MidiLearnStatus(),
+            Spacer(),
+            Pedalboard(),
+            Spacer(),
+          ],
+        ),
       ),
       bottomNavigationBar: BottomAppBar(
         child: Padding(

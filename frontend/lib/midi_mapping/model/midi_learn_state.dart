@@ -8,4 +8,3 @@ class MidiLearnState with _$MidiLearnState {
   const factory MidiLearnState.waitForParameter() = _WaitForParameter;
   const factory MidiLearnState.waitForMidi(String id) = _WaitForMidi;
 }
-
