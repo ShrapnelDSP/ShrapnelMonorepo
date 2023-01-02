@@ -23,17 +23,21 @@ import 'robust_websocket.dart';
 
 class JsonWebsocket {
   JsonWebsocket({
-    required this.websocket,
-  });
+    required RobustWebsocket websocket,
+  }) : _websocket = websocket;
 
-  final RobustWebsocket websocket;
+  final RobustWebsocket _websocket;
 
   /// The stream of incoming messages
-  Stream<Map<String, dynamic>> get stream => websocket.stream.map(
+  Stream<Map<String, dynamic>> get dataStream => _websocket.dataStream.map(
         (dynamic event) => json.decode(event as String) as Map<String, dynamic>,
       );
 
+  Stream<void> get connectionStream => _websocket.connectionStream;
+
+  bool get isAlive => _websocket.isAlive;
+
   void send(Map<String, dynamic> json) {
-    websocket.sendMessage(jsonEncode(json));
+    _websocket.sendMessage(jsonEncode(json));
   }
 }

@@ -213,7 +213,7 @@ void main() {
       },
     );
 
-    when(api.stream).thenAnswer((_) => apiController.stream);
+    when(api.dataStream).thenAnswer((_) => apiController.stream);
 
     // Open the page
     await tester.tap(find.byKey(const Key('midi-mapping-button')));
@@ -337,7 +337,7 @@ void main() {
       },
     );
 
-    when(api.stream).thenAnswer((_) => apiController.stream);
+    when(api.dataStream).thenAnswer((_) => apiController.stream);
 
     // Open the page
     await tester.tap(find.byKey(const Key('midi-mapping-button')));
@@ -455,7 +455,7 @@ void main() {
         },
       );
 
-      when(api.stream).thenAnswer((_) => apiController.stream);
+      when(api.dataStream).thenAnswer((_) => apiController.stream);
 
       // Open the page
       await tester.tap(find.byKey(const Key('midi-mapping-button')));
@@ -617,7 +617,7 @@ void main() {
         },
       );
 
-      when(api.stream).thenAnswer((_) => apiController.stream);
+      when(api.dataStream).thenAnswer((_) => apiController.stream);
 
       // Open the page
       await tester.tap(find.byKey(const Key('midi-mapping-button')));

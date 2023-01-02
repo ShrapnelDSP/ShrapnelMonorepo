@@ -93,7 +93,7 @@ void main() {
       .map((e) => e.id)
       .listen(midiLearnStateMachine.parameterUpdated);
 
-  jsonWebsocket.stream
+  jsonWebsocket.dataStream
       .where((e) => e['messageType'] == 'MidiMap::midi_message_received')
       .map(MidiApiMessage.fromJson)
       .listen(
