@@ -111,8 +111,8 @@ class MidiLearnService extends StateNotifier<MidiLearnState> {
           }
           state = const MidiLearnState.idle(null);
         },
-        orElse: () =>
-            throw StateError('undoRemoveSimilarMappings called in state: $state'),
+        orElse: () => throw StateError(
+            'undoRemoveSimilarMappings called in state: $state'),
       ),
     );
   }
