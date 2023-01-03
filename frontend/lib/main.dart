@@ -78,7 +78,6 @@ class App extends StatelessWidget {
     super.key,
     RobustWebsocket? websocket,
     JsonWebsocket? jsonWebsocket,
-    AudioClippingService? audioClippingService,
     Uuid? uuid,
     WifiProvisioningService? provisioning,
   }) {
@@ -87,9 +86,7 @@ class App extends StatelessWidget {
           uri: Uri.parse('http://guitar-dsp.local:8080/websocket'),
         );
     jsonWebsocket ??= JsonWebsocket(websocket: this.websocket);
-    // TODO we probably don't need to mock this
-    this.audioClippingService =
-        audioClippingService ?? AudioClippingService(websocket: jsonWebsocket);
+    audioClippingService = AudioClippingService(websocket: jsonWebsocket);
     this.uuid = uuid ?? Uuid();
     this.provisioning = provisioning ??
         WifiProvisioningService(

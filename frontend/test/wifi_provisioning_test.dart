@@ -23,7 +23,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
-import 'package:shrapnel/audio_events.dart';
 import 'package:shrapnel/main.dart';
 import 'package:shrapnel/robust_websocket.dart';
 import 'package:shrapnel/wifi_provisioning.dart';
@@ -45,9 +44,7 @@ Map<String, dynamic> _createFakeWifi({
       'auth': auth,
     };
 
-@GenerateNiceMocks(
-  [MockSpec<RobustWebsocket>(), MockSpec<AudioClippingService>()],
-)
+@GenerateNiceMocks([MockSpec<RobustWebsocket>()])
 @GenerateMocks([Provisioning])
 void main() {
   late Widget sut;
@@ -66,7 +63,6 @@ void main() {
       provisioning: WifiProvisioningService(
         provisioningFactory: provisioningFactoryWrapper,
       ),
-      audioClippingService: MockAudioClippingService(),
     );
   });
 
