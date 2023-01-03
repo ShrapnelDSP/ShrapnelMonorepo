@@ -39,6 +39,9 @@ void main() {
       );
 
       final fakeWebsocket = MockJsonWebsocket();
+      when(fakeWebsocket.connectionStream)
+          .thenAnswer((_) => Stream.fromIterable([]));
+      when(fakeWebsocket.isAlive).thenReturn(false);
       final uut = MidiMappingService(websocket: fakeWebsocket);
 
       final responseJson = json.decode(
@@ -92,6 +95,9 @@ void main() {
       );
 
       final fakeWebsocket = MockJsonWebsocket();
+      when(fakeWebsocket.connectionStream)
+          .thenAnswer((_) => Stream.fromIterable([]));
+      when(fakeWebsocket.isAlive).thenReturn(false);
       final uut = MidiMappingService(websocket: fakeWebsocket);
 
       when(fakeWebsocket.dataStream).thenAnswer((_) => controller.stream);
@@ -120,6 +126,9 @@ void main() {
       );
 
       final fakeWebsocket = MockJsonWebsocket();
+      when(fakeWebsocket.connectionStream)
+          .thenAnswer((_) => Stream.fromIterable([]));
+      when(fakeWebsocket.isAlive).thenReturn(false);
       final uut = MidiMappingService(websocket: fakeWebsocket);
 
       final responseJson = json.decode(
@@ -189,6 +198,9 @@ void main() {
       );
 
       final fakeWebsocket = MockJsonWebsocket();
+      when(fakeWebsocket.connectionStream)
+          .thenAnswer((_) => Stream.fromIterable([]));
+      when(fakeWebsocket.isAlive).thenReturn(false);
       final uut = MidiMappingService(websocket: fakeWebsocket);
 
       when(fakeWebsocket.dataStream).thenAnswer((_) => controller.stream);

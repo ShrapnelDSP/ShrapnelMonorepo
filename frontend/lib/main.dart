@@ -70,57 +70,85 @@ void main() {
 
   GoogleFonts.config.allowRuntimeFetching = false;
 
-  final websocket =
-      RobustWebsocket(uri: Uri.parse('http://guitar-dsp.local:8080/websocket'));
-  final jsonWebsocket = JsonWebsocket(websocket: websocket);
-  final uuid = Uuid();
-  final midiMappingService = MidiMappingService(
-    websocket: jsonWebsocket,
-  );
-  final parameterService = ParameterService(websocket: websocket);
-  final midiLearnService = MidiLearnService(
-    mappingService: midiMappingService,
-    uuid: uuid,
-  );
+  runApp(App());
+}
 
-  // TODO would be nicer to use an interface dedicated for listening to the
-  // parameter update events. This stream has all the outgoing JSON messages.
-  parameterService.sink.stream
-      .map<dynamic>(json.decode)
-      .map((dynamic e) => e as Map<String, dynamic>)
-      .where((e) => e['messageType'] == 'parameterUpdate')
-      .map(AudioParameterDouble.fromJson)
-      .map((e) => e.id)
-      .listen(midiLearnService.parameterUpdated);
+class App extends StatelessWidget {
+  App({
+    super.key,
+    RobustWebsocket? websocket,
+    JsonWebsocket? jsonWebsocket,
+    AudioClippingService? audioClippingService,
+    Uuid? uuid,
+    WifiProvisioningService? provisioning,
+  }) {
+    this.websocket = websocket ??
+        RobustWebsocket(
+          uri: Uri.parse('http://guitar-dsp.local:8080/websocket'),
+        );
+    jsonWebsocket ??= JsonWebsocket(websocket: this.websocket);
+    // TODO we probably don't need to mock this
+    this.audioClippingService =
+        audioClippingService ?? AudioClippingService(websocket: jsonWebsocket);
+    this.uuid = uuid ?? Uuid();
+    this.provisioning = provisioning ??
+        WifiProvisioningService(
+          provisioningFactory: () {
+            _log.info('Creating provisioning connection');
+            return Provisioning(
+              security: Security1(pop: 'abcd1234'),
+              transport: TransportHTTP('guitar-dsp.local'),
+            );
+          },
+        );
 
-  jsonWebsocket.dataStream
-      .where((e) => e['messageType'] == 'MidiMap::midi_message_received')
-      .map(MidiApiMessage.fromJson)
-      .listen(
-        (m) => m.maybeWhen(
-          midiMessageReceived: midiLearnService.midiMessageReceived,
-          orElse: () => null,
-        ),
-      );
+    midiMappingService = MidiMappingService(
+      websocket: jsonWebsocket,
+    );
+    parameterService = ParameterService(websocket: this.websocket);
+    midiLearnService = MidiLearnService(
+      mappingService: midiMappingService,
+      uuid: this.uuid,
+    );
 
-  runApp(
-    MultiProvider(
+    // TODO would be nicer to use an interface dedicated for listening to the
+    // parameter update events. This stream has all the outgoing JSON messages.
+    parameterService.sink.stream
+        .map<dynamic>(json.decode)
+        .map((dynamic e) => e as Map<String, dynamic>)
+        .where((e) => e['messageType'] == 'parameterUpdate')
+        .map(AudioParameterDouble.fromJson)
+        .map((e) => e.id)
+        .listen(midiLearnService.parameterUpdated);
+
+    jsonWebsocket.dataStream
+        .where((e) => e['messageType'] == 'MidiMap::midi_message_received')
+        .map(MidiApiMessage.fromJson)
+        .listen(
+          (m) => m.maybeWhen(
+            midiMessageReceived: midiLearnService.midiMessageReceived,
+            orElse: () => null,
+          ),
+        );
+  }
+
+  late final RobustWebsocket websocket;
+  late final AudioClippingService audioClippingService;
+  late final Uuid uuid;
+  late final WifiProvisioningService provisioning;
+  late final MidiLearnService midiLearnService;
+  late final ParameterService parameterService;
+  late final MidiMappingService midiMappingService;
+
+  @override
+  Widget build(BuildContext context) {
+    return MultiProvider(
       providers: [
         StateNotifierProvider<MidiLearnService, MidiLearnState>.value(
           value: midiLearnService,
         ),
         ChangeNotifierProvider.value(value: websocket),
-        ChangeNotifierProvider(
-          create: (_) => WifiProvisioningProvider(
-            provisioningFactory: () {
-              _log.info('Creating provisioning connection');
-              return Provisioning(
-                security: Security1(pop: 'abcd1234'),
-                transport: TransportHTTP('guitar-dsp.local'),
-              );
-            },
-          ),
-        ),
+        ChangeNotifierProvider.value(value: provisioning),
         ChangeNotifierProvider.value(
           value: parameterService,
         ),
@@ -128,13 +156,11 @@ void main() {
           value: midiMappingService,
         ),
         ChangeNotifierProvider.value(value: uuid),
-        ChangeNotifierProvider(
-          create: (_) => AudioClippingService(websocket: jsonWebsocket),
-        )
+        ChangeNotifierProvider.value(value: audioClippingService),
       ],
       child: const MyApp(),
-    ),
-  );
+    );
+  }
 }
 
 class MyApp extends StatelessWidget {

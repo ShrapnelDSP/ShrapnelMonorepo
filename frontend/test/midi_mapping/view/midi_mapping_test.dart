@@ -24,14 +24,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
-import 'package:provider/provider.dart';
 import 'package:shrapnel/audio_events.dart';
 import 'package:shrapnel/json_websocket.dart';
 import 'package:shrapnel/main.dart';
 import 'package:shrapnel/midi_mapping/model/models.dart';
-import 'package:shrapnel/midi_mapping/model/service.dart';
 import 'package:shrapnel/midi_mapping/view/midi_mapping.dart';
-import 'package:shrapnel/parameter.dart';
 import 'package:shrapnel/robust_websocket.dart';
 import 'package:shrapnel/util/uuid.dart';
 
@@ -167,26 +164,16 @@ void main() {
     final apiController = StreamController<Map<String, dynamic>>.broadcast();
     final websocket = MockRobustWebsocket();
     final api = MockJsonWebsocket();
+    when(api.dataStream).thenAnswer((_) => apiController.stream);
+    when(api.connectionStream).thenAnswer((_) => Stream.fromIterable([]));
+    when(api.isAlive).thenReturn(true);
     final uuid = MockUuid();
-    final sut = MultiProvider(
-      providers: [
-        ChangeNotifierProvider<RobustWebsocket>.value(value: websocket),
-        ChangeNotifierProvider(
-          create: (_) => ParameterService(websocket: websocket),
-        ),
-        Provider<JsonWebsocket>.value(value: api),
-        ChangeNotifierProvider(
-          create: (_) => MidiMappingService(websocket: api),
-        ),
-        ChangeNotifierProvider<Uuid>.value(value: uuid),
-        ChangeNotifierProvider<AudioClippingService>(
-          create: (_) => MockAudioClippingService(),
-        ),
-      ],
-      child: const MyApp(),
-    );
 
-    await tester.pumpWidget(sut);
+    final sut = App(
+      websocket: websocket,
+      jsonWebsocket: api,
+      uuid: uuid,
+    );
 
     final midiMappingPage = MidiMappingPageObject(tester);
 
@@ -213,7 +200,7 @@ void main() {
       },
     );
 
-    when(api.dataStream).thenAnswer((_) => apiController.stream);
+    await tester.pumpWidget(sut);
 
     // Open the page
     await tester.tap(find.byKey(const Key('midi-mapping-button')));
@@ -283,7 +270,6 @@ void main() {
     // TODO check the correct value is visible in all dropdowns
     expect(midiMappingPage.findMappingRows(), findsOneWidget);
 
-    expect(apiController.hasListener, false);
     await apiController.close();
   });
 
@@ -291,26 +277,16 @@ void main() {
     final apiController = StreamController<Map<String, dynamic>>.broadcast();
     final websocket = MockRobustWebsocket();
     final api = MockJsonWebsocket();
+    when(api.dataStream).thenAnswer((_) => apiController.stream);
+    when(api.connectionStream).thenAnswer((_) => Stream.fromIterable([]));
+    when(api.isAlive).thenReturn(true);
     final uuid = MockUuid();
-    final sut = MultiProvider(
-      providers: [
-        ChangeNotifierProvider<RobustWebsocket>.value(value: websocket),
-        ChangeNotifierProvider(
-          create: (_) => ParameterService(websocket: websocket),
-        ),
-        Provider<JsonWebsocket>.value(value: api),
-        ChangeNotifierProvider(
-          create: (_) => MidiMappingService(websocket: api),
-        ),
-        ChangeNotifierProvider<Uuid>.value(value: uuid),
-        ChangeNotifierProvider<AudioClippingService>(
-          create: (_) => MockAudioClippingService(),
-        ),
-      ],
-      child: const MyApp(),
-    );
 
-    await tester.pumpWidget(sut);
+    final sut = App(
+      websocket: websocket,
+      jsonWebsocket: api,
+      uuid: uuid,
+    );
 
     final midiMappingPage = MidiMappingPageObject(tester);
 
@@ -337,7 +313,7 @@ void main() {
       },
     );
 
-    when(api.dataStream).thenAnswer((_) => apiController.stream);
+    await tester.pumpWidget(sut);
 
     // Open the page
     await tester.tap(find.byKey(const Key('midi-mapping-button')));
@@ -394,7 +370,6 @@ void main() {
       reason: 'UI was not rolled back after create request timeout',
     );
 
-    expect(apiController.hasListener, false);
     await apiController.close();
   });
 
@@ -404,24 +379,14 @@ void main() {
       final apiController = StreamController<Map<String, dynamic>>.broadcast();
       final websocket = MockRobustWebsocket();
       final api = MockJsonWebsocket();
-      final sut = MultiProvider(
-        providers: [
-          ChangeNotifierProvider<RobustWebsocket>.value(value: websocket),
-          ChangeNotifierProvider(
-            create: (_) => ParameterService(websocket: websocket),
-          ),
-          Provider<JsonWebsocket>.value(value: api),
-          ChangeNotifierProvider(
-            create: (_) => MidiMappingService(websocket: api),
-          ),
-          ChangeNotifierProvider<AudioClippingService>(
-            create: (_) => MockAudioClippingService(),
-          ),
-        ],
-        child: const MyApp(),
-      );
+      when(api.dataStream).thenAnswer((_) => apiController.stream);
+      when(api.connectionStream).thenAnswer((_) => Stream.fromIterable([]));
+      when(api.isAlive).thenReturn(true);
 
-      await tester.pumpWidget(sut);
+      final sut = App(
+        websocket: websocket,
+        jsonWebsocket: api,
+      );
 
       final midiMappingPage = MidiMappingPageObject(tester);
 
@@ -455,7 +420,7 @@ void main() {
         },
       );
 
-      when(api.dataStream).thenAnswer((_) => apiController.stream);
+      await tester.pumpWidget(sut);
 
       // Open the page
       await tester.tap(find.byKey(const Key('midi-mapping-button')));
@@ -558,7 +523,6 @@ void main() {
 
       // TODO Expect new mapping visible in UI
 
-      expect(apiController.hasListener, false);
       await apiController.close();
     },
   );
@@ -571,24 +535,14 @@ void main() {
       final apiController = StreamController<Map<String, dynamic>>.broadcast();
       final websocket = MockRobustWebsocket();
       final api = MockJsonWebsocket();
-      final sut = MultiProvider(
-        providers: [
-          ChangeNotifierProvider<RobustWebsocket>.value(value: websocket),
-          ChangeNotifierProvider(
-            create: (_) => ParameterService(websocket: websocket),
-          ),
-          Provider<JsonWebsocket>.value(value: api),
-          ChangeNotifierProvider(
-            create: (_) => MidiMappingService(websocket: api),
-          ),
-          ChangeNotifierProvider<AudioClippingService>(
-            create: (_) => MockAudioClippingService(),
-          ),
-        ],
-        child: const MyApp(),
-      );
+      when(api.dataStream).thenAnswer((_) => apiController.stream);
+      when(api.connectionStream).thenAnswer((_) => Stream.fromIterable([]));
+      when(api.isAlive).thenReturn(true);
 
-      await tester.pumpWidget(sut);
+      final sut = App(
+        websocket: websocket,
+        jsonWebsocket: api,
+      );
 
       final midiMappingPage = MidiMappingPageObject(tester);
 
@@ -617,7 +571,7 @@ void main() {
         },
       );
 
-      when(api.dataStream).thenAnswer((_) => apiController.stream);
+      await tester.pumpWidget(sut);
 
       // Open the page
       await tester.tap(find.byKey(const Key('midi-mapping-button')));
@@ -643,7 +597,6 @@ void main() {
       );
       expect(midiMappingPage.findMappingRows(), findsNothing);
 
-      expect(apiController.hasListener, false);
       await apiController.close();
     },
   );

@@ -23,10 +23,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
-import 'package:provider/provider.dart';
 import 'package:shrapnel/audio_events.dart';
 import 'package:shrapnel/main.dart';
-import 'package:shrapnel/parameter.dart';
 import 'package:shrapnel/robust_websocket.dart';
 import 'package:shrapnel/wifi_provisioning.dart';
 
@@ -63,22 +61,12 @@ void main() {
 
   setUp(() async {
     websocket = MockRobustWebsocket();
-    sut = MultiProvider(
-      providers: [
-        ChangeNotifierProvider.value(value: websocket),
-        ChangeNotifierProvider(
-          create: (context) => WifiProvisioningProvider(
-            provisioningFactory: provisioningFactoryWrapper,
-          ),
-        ),
-        ChangeNotifierProvider(
-          create: (_) => ParameterService(websocket: websocket),
-        ),
-        ChangeNotifierProvider<AudioClippingService>(
-          create: (_) => MockAudioClippingService(),
-        ),
-      ],
-      child: const MyApp(),
+    sut = App(
+      websocket: websocket,
+      provisioning: WifiProvisioningService(
+        provisioningFactory: provisioningFactoryWrapper,
+      ),
+      audioClippingService: MockAudioClippingService(),
     );
   });
 
