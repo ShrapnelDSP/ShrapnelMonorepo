@@ -48,7 +48,16 @@ class RobustWebsocket extends ChangeNotifier {
 
   Uri uri;
   bool isAlive = false;
-  void Function()? onConnect;
+
+  final _connectionController = StreamController<void>.broadcast();
+
+  /// A null is emitted every time a connection is successfully created
+  Stream<void> get connectionStream => _connectionController.stream;
+
+  final _dataController = StreamController<dynamic>.broadcast();
+
+  /// Equivalent to the stream of a [WebSocket]
+  Stream<dynamic> get dataStream => _dataController.stream;
 
   WebSocket? _ws;
 
@@ -96,7 +105,7 @@ class RobustWebsocket extends ChangeNotifier {
     _ws = WebSocket.fromUpgradedSocket(socket, serverSide: false);
 
     _ws!.listen(
-      _streamController.add,
+      _dataController.add,
       onError: (Object e) {
         log.warning('websocket error: $e');
       },
@@ -105,11 +114,8 @@ class RobustWebsocket extends ChangeNotifier {
 
     _ws!.pingInterval = const Duration(seconds: 1);
 
-    onConnect?.call();
+    _connectionController.add(null);
   }
-
-  final _streamController = StreamController<dynamic>.broadcast();
-  Stream<dynamic> get stream => _streamController.stream;
 
   void sendMessage(String s) {
     _ws?.add(s);
@@ -117,8 +123,9 @@ class RobustWebsocket extends ChangeNotifier {
 
   @override
   void dispose() {
+    unawaited(_connectionController.close());
     unawaited(_ws?.close(1001));
-    unawaited(_streamController.close());
+    unawaited(_dataController.close());
     super.dispose();
   }
 }

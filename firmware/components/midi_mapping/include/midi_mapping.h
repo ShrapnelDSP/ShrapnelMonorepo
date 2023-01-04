@@ -45,10 +45,17 @@
  * }
  * ~~~
  *
+ * \note The messages should be designed to be compatible with the Freezed
+ *       Dart package. https://pub.dev/packages/freezed#fromjsontojson
+ *
+ * \note This can be made easier if unions or sum types use the `runtimeType`
+ *       field as the type tag. Some messages don't do this, but it can be
+ *       worked around using annotations provided by Freezed.
+ *
  * See also:
- * - \subpage ws_api_parameters
- * - \subpage ws_api_midi
  * - \subpage ws_api_events
+ * - \subpage ws_api_midi
+ * - \subpage ws_api_parameters
  *
  * \page ws_api_midi MIDI mapping JSON messages
  *
@@ -63,6 +70,43 @@
  *   "cc_number": integer,
  *   "mode": "parameter" or "toggle",
  *   "parameter_id": "string",
+ * }
+ * ~~~
+ *
+ * The `MidiMessage` object has four possible formats:
+ *
+ * ~~~
+ * {
+ *   "runtimeType": "noteOn",
+ *   "channel": integer,
+ *   "note": integer,
+ *   "velocity": integer,
+ * }
+ * ~~~
+ *
+ * ~~~
+ * {
+ *   "runtimeType": "noteOff",
+ *   "channel": integer,
+ *   "note": integer,
+ *   "velocity": integer,
+ * }
+ * ~~~
+ *
+ * ~~~
+ * {
+ *   "runtimeType": "controlChange",
+ *   "channel": integer,
+ *   "control": integer,
+ *   "value": integer,
+ * }
+ * ~~~
+ *
+ * ~~~
+ * {
+ *   "runtimeType": "programChange"
+ *   "channel": integer,
+ *   "number": integer
  * }
  * ~~~
  *
@@ -176,6 +220,25 @@
  *   {
  *     "messageType": "MidiMap::remove",
  *     "id": "..."
+ *   }
+ *   ~~~
+ * <tr>
+ *   <td> `MidiMap::midi_message_received`
+ *   <td> `message` (`MidiMessage`): The MIDI message
+ *   <td> Firmware -> UI
+ *   <td> Firmware notifies this periodically, so that the frontend can react
+ *        to MIDI messages, for example to connect a parameter to the MIDI
+ *        message.
+ *   <td>
+ *   ~~~
+ *   {
+ *     "messageType": "MidiMap::midi_message_received",
+ *     "message": {
+ *       "runtimeType": "controlChange",
+ *       "channel": 1,
+ *       "control": 2,
+ *       "value": 3
+ *     }
  *   }
  *   ~~~
  * </table>

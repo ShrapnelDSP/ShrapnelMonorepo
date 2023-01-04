@@ -255,4 +255,34 @@ void main() {
       expected,
     );
   });
+
+  group('MidiMapping::midi_message_received: ', () {
+    test('controlChange', () {
+      const message = '''
+        {
+          "messageType": "MidiMap::midi_message_received",
+          "message": {
+            "runtimeType": "controlChange",
+            "channel": 1,
+            "control": 2,
+            "value": 3
+          }
+        }''';
+
+      const expected = MidiApiMessage.midiMessageReceived(
+        message: MidiMessage.controlChange(
+          channel: 1,
+          control: 2,
+          value: 3,
+        ),
+      );
+
+      expect(
+        MidiApiMessage.fromJson(
+          json.decode(message) as Map<String, dynamic>,
+        ),
+        expected,
+      );
+    });
+  });
 }

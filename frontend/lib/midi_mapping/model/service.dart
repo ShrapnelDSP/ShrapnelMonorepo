@@ -30,6 +30,12 @@ class MidiMappingService extends ChangeNotifier {
     required this.websocket,
   }) {
     _mappingsView = UnmodifiableMapView(__mappings);
+
+    websocket.connectionStream.listen((_) async => getMapping());
+
+    if (websocket.isAlive) {
+      unawaited(getMapping());
+    }
   }
 
   static const responseTimeout = Duration(milliseconds: 500);
@@ -50,7 +56,7 @@ class MidiMappingService extends ChangeNotifier {
   Future<void> getMapping() async {
     const message = MidiApiMessage.getRequest();
 
-    final response = websocket.stream
+    final response = websocket.dataStream
         .map(
           MidiApiMessage.fromJson,
         )
@@ -74,10 +80,11 @@ class MidiMappingService extends ChangeNotifier {
     }
   }
 
+  // TODO this should not take a UUID, instead it should create it internally
   Future<void> createMapping(
     MidiMappingEntry mapping,
   ) async {
-    final response = websocket.stream
+    final response = websocket.dataStream
         .map(
           MidiApiMessage.fromJson,
         )

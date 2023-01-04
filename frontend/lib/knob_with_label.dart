@@ -17,10 +17,11 @@
  * ShrapnelDSP. If not, see <https://www.gnu.org/licenses/>.
  */
 
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'knob.dart';
+import 'midi_mapping/model/midi_learn_state.dart';
 import 'parameter.dart';
 
 class KnobWithLabel extends StatelessWidget {
@@ -36,14 +37,28 @@ class KnobWithLabel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final parameter = Provider.of<AudioParameterDoubleModel>(context);
+    final learningState = context.watch<MidiLearnState>();
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
-        Knob(
-          onChanged: isEnabled ? parameter.onUserChanged : (_) {},
-          value: parameter.value,
-          size: knobSize,
+        AnimatedTheme(
+          data: Theme.of(context).copyWith(
+            colorScheme: learningState.maybeWhen(
+              waitForMidi: (id) => id == parameter.id
+                  ? Theme.of(context)
+                      .colorScheme
+                      .copyWith(primary: Colors.white)
+                  : null,
+              orElse: () => null,
+            ),
+          ),
+          child: Knob(
+            key: Key('knob-${parameter.id}'),
+            onChanged: isEnabled ? parameter.onUserChanged : (_) {},
+            value: parameter.value,
+            size: knobSize,
+          ),
         ),
         if (isEnabled) const SizedBox(height: 5),
         if (isEnabled)

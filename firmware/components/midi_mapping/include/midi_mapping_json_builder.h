@@ -44,6 +44,9 @@ template<typename T>
 rapidjson::Value to_json(rapidjson::Document &document, const T &object);
 
 template<>
+rapidjson::Value to_json(rapidjson::Document &document, const Message &object);
+
+template<>
 rapidjson::Value to_json(rapidjson::Document &document, const Mapping &object);
 
 template<>
@@ -57,6 +60,9 @@ rapidjson::Value to_json(rapidjson::Document &document, const CreateResponse &ob
 
 template<>
 rapidjson::Value to_json(rapidjson::Document &document, const GetResponse &object);
+
+template<>
+rapidjson::Value to_json(rapidjson::Document &document, const MessageReceived &object);
 
 template<>
 rapidjson::Value to_json(rapidjson::Document &document, const MappingApiMessage &object);

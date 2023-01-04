@@ -18,16 +18,22 @@
  */
 
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:esp_softap_provisioning/esp_softap_provisioning.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_state_notifier/flutter_state_notifier.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:logging/logging.dart';
 import 'package:provider/provider.dart';
 
 import 'audio_events.dart';
 import 'json_websocket.dart';
+import 'midi_mapping/model/midi_learn.dart';
+import 'midi_mapping/model/midi_learn_state.dart';
+import 'midi_mapping/model/models.dart';
 import 'midi_mapping/model/service.dart';
+import 'midi_mapping/view/midi_learn.dart';
 import 'midi_mapping/view/midi_mapping.dart';
 import 'parameter.dart';
 import 'pedalboard.dart';
@@ -36,7 +42,7 @@ import 'util/uuid.dart';
 import 'websocket_status.dart';
 import 'wifi_provisioning.dart';
 
-final log = Logger('shrapnel.main');
+final _log = Logger('shrapnel.main');
 
 String formatDateTime(DateTime t) {
   final builder = StringBuffer()
@@ -52,7 +58,7 @@ String formatDateTime(DateTime t) {
 }
 
 void main() {
-  Logger.root.level = Level.FINE;
+  Logger.root.level = Level.INFO;
   Logger.root.onRecord.listen((record) {
     debugPrint(
       '${record.level.name.padLeft("WARNING".length)} '
@@ -64,41 +70,94 @@ void main() {
 
   GoogleFonts.config.allowRuntimeFetching = false;
 
-  final websocket =
-      RobustWebsocket(uri: Uri.parse('http://guitar-dsp.local:8080/websocket'));
-  final jsonWebsocket = JsonWebsocket(websocket: websocket);
-  final uuid = Uuid();
-  runApp(
-    MultiProvider(
+  runApp(App());
+}
+
+class App extends StatelessWidget {
+  App({
+    super.key,
+    RobustWebsocket? websocket,
+    JsonWebsocket? jsonWebsocket,
+    Uuid? uuid,
+    WifiProvisioningService? provisioning,
+  }) {
+    this.websocket = websocket ??
+        RobustWebsocket(
+          uri: Uri.parse('http://guitar-dsp.local:8080/websocket'),
+        );
+    jsonWebsocket ??= JsonWebsocket(websocket: this.websocket);
+    audioClippingService = AudioClippingService(websocket: jsonWebsocket);
+    this.uuid = uuid ?? Uuid();
+    this.provisioning = provisioning ??
+        WifiProvisioningService(
+          provisioningFactory: () {
+            _log.info('Creating provisioning connection');
+            return Provisioning(
+              security: Security1(pop: 'abcd1234'),
+              transport: TransportHTTP('guitar-dsp.local'),
+            );
+          },
+        );
+
+    midiMappingService = MidiMappingService(
+      websocket: jsonWebsocket,
+    );
+    parameterService = ParameterService(websocket: this.websocket);
+    midiLearnService = MidiLearnService(
+      mappingService: midiMappingService,
+      uuid: this.uuid,
+    );
+
+    // TODO would be nicer to use an interface dedicated for listening to the
+    // parameter update events. This stream has all the outgoing JSON messages.
+    parameterService.sink.stream
+        .map<dynamic>(json.decode)
+        .map((dynamic e) => e as Map<String, dynamic>)
+        .where((e) => e['messageType'] == 'parameterUpdate')
+        .map(AudioParameterDouble.fromJson)
+        .map((e) => e.id)
+        .listen(midiLearnService.parameterUpdated);
+
+    jsonWebsocket.dataStream
+        .where((e) => e['messageType'] == 'MidiMap::midi_message_received')
+        .map(MidiApiMessage.fromJson)
+        .listen(
+          (m) => m.maybeWhen(
+            midiMessageReceived: midiLearnService.midiMessageReceived,
+            orElse: () => null,
+          ),
+        );
+  }
+
+  late final RobustWebsocket websocket;
+  late final AudioClippingService audioClippingService;
+  late final Uuid uuid;
+  late final WifiProvisioningService provisioning;
+  late final MidiLearnService midiLearnService;
+  late final ParameterService parameterService;
+  late final MidiMappingService midiMappingService;
+
+  @override
+  Widget build(BuildContext context) {
+    return MultiProvider(
       providers: [
+        StateNotifierProvider<MidiLearnService, MidiLearnState>.value(
+          value: midiLearnService,
+        ),
         ChangeNotifierProvider.value(value: websocket),
-        ChangeNotifierProvider(
-          create: (_) => WifiProvisioningProvider(
-            provisioningFactory: () {
-              log.info('Creating provisioning connection');
-              return Provisioning(
-                security: Security1(pop: 'abcd1234'),
-                transport: TransportHTTP('guitar-dsp.local'),
-              );
-            },
-          ),
+        ChangeNotifierProvider.value(value: provisioning),
+        ChangeNotifierProvider.value(
+          value: parameterService,
         ),
-        ChangeNotifierProvider(
-          create: (_) => ParameterService(websocket: websocket),
-        ),
-        ChangeNotifierProvider(
-          create: (_) => MidiMappingService(
-            websocket: jsonWebsocket,
-          ),
+        ChangeNotifierProvider.value(
+          value: midiMappingService,
         ),
         ChangeNotifierProvider.value(value: uuid),
-        ChangeNotifierProvider(
-          create: (_) => AudioClippingService(websocket: jsonWebsocket),
-        )
+        ChangeNotifierProvider.value(value: audioClippingService),
       ],
       child: const MyApp(),
-    ),
-  );
+    );
+  }
 }
 
 class MyApp extends StatelessWidget {
@@ -142,42 +201,64 @@ class MyHomePage extends StatelessWidget {
       appBar: AppBar(
         title: Text(title),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.map_outlined),
-            key: const Key('midi-mapping-button'),
-            onPressed: () {
-              unawaited(
-                Navigator.push(
-                  context,
-                  MaterialPageRoute<MidiMappingPage>(
-                    builder: (context) {
-                      context.read<MidiMappingService>().getMapping();
-                      return const MidiMappingPage();
-                    },
-                  ),
-                ),
-              );
-            },
+          Tooltip(
+            message: 'MIDI Learn',
+            child: IconButton(
+              icon: const Icon(Icons.menu_book_outlined),
+              key: const Key('midi-learn-button'),
+              onPressed: () {
+                context.read<MidiLearnService>().startLearning();
+              },
+            ),
           ),
-          IconButton(
-            icon: const Icon(Icons.settings),
-            key: const Key('wifi provisioning button'),
-            onPressed: () {
-              unawaited(
-                Navigator.push<ProvisioningPage>(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const ProvisioningPage(),
+          Tooltip(
+            message: 'MIDI Mapping',
+            child: IconButton(
+              icon: const Icon(Icons.map_outlined),
+              key: const Key('midi-mapping-button'),
+              onPressed: () {
+                unawaited(
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute<MidiMappingPage>(
+                      builder: (context) {
+                        return const MidiMappingPage();
+                      },
+                    ),
                   ),
-                ),
-              );
-            },
+                );
+              },
+            ),
+          ),
+          Tooltip(
+            message: 'WiFi Provisioning',
+            child: IconButton(
+              icon: const Icon(Icons.settings),
+              key: const Key('wifi provisioning button'),
+              onPressed: () {
+                unawaited(
+                  Navigator.push<ProvisioningPage>(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const ProvisioningPage(),
+                    ),
+                  ),
+                );
+              },
+            ),
           ),
           Container(width: 10),
         ],
       ),
-      body: const Center(
-        child: Pedalboard(),
+      body: Center(
+        child: Column(
+          children: const [
+            MidiLearnStatus(),
+            Spacer(),
+            Pedalboard(),
+            Spacer(),
+          ],
+        ),
       ),
       bottomNavigationBar: BottomAppBar(
         child: Padding(

@@ -54,7 +54,12 @@ struct Remove {
     std::strong_ordering operator<=>(const Remove &other) const = default;
 };
 
-using MappingApiMessage = std::variant<GetRequest, GetResponse, CreateRequest, CreateResponse, Update, Remove>;
+struct MessageReceived {
+    Message message;
+    std::strong_ordering operator<=>(const MessageReceived &other) const = default;
+};
+
+using MappingApiMessage = std::variant<GetRequest, GetResponse, CreateRequest, CreateResponse, Update, Remove, MessageReceived>;
 
 
 etl::string_stream& operator<<(etl::string_stream&  out, const Mapping& self);
@@ -64,6 +69,7 @@ etl::string_stream& operator<<(etl::string_stream&  out, const CreateRequest& se
 etl::string_stream& operator<<(etl::string_stream&  out, const CreateResponse& self);
 etl::string_stream& operator<<(etl::string_stream&  out, const Update& self);
 etl::string_stream& operator<<(etl::string_stream&  out, const Remove& self);
+etl::string_stream& operator<<(etl::string_stream&  out, const MessageReceived& self);
 etl::string_stream& operator<<(etl::string_stream&  out, const MappingApiMessage& self);
 
 }

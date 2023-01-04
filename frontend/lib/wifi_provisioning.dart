@@ -79,14 +79,14 @@ class _WifiPasswordDialogState extends State<_WifiPasswordDialog> {
   void submitWifiPassword(BuildContext context) {
     if (_formKey.currentState!.validate()) {
       final provisioning =
-          Provider.of<WifiProvisioningProvider>(context, listen: false);
+          Provider.of<WifiProvisioningService>(context, listen: false);
       unawaited(provisioning.join(null, _controller.value.text));
       Navigator.pop(context);
     }
   }
 
   @override
-  Widget build(BuildContext context) => Consumer<WifiProvisioningProvider>(
+  Widget build(BuildContext context) => Consumer<WifiProvisioningService>(
         builder: (context, provisioning, _) {
           final screenWidth = MediaQuery.of(context).size.width;
           const dialogWidth = 300;
@@ -221,7 +221,7 @@ class _WifiDialogState extends State<_WifiDialog> {
   }
 
   @override
-  Widget build(BuildContext context) => Consumer<WifiProvisioningProvider>(
+  Widget build(BuildContext context) => Consumer<WifiProvisioningService>(
         builder: (context, provisioning, _) {
           final screenWidth = MediaQuery.of(context).size.width;
           const dialogWidth = 300;
@@ -295,7 +295,7 @@ class _WifiScanningScreen extends StatefulWidget {
 class _WifiScanningScreenState extends State<_WifiScanningScreen> {
   @override
   Widget build(BuildContext context) {
-    final provisioning = Provider.of<WifiProvisioningProvider>(context);
+    final provisioning = Provider.of<WifiProvisioningService>(context);
 
     final accessPointCount = provisioning.accessPoints?.length ?? 0;
 
@@ -352,7 +352,7 @@ class _WifiScanningScreenState extends State<_WifiScanningScreen> {
                           showDialog<void>(
                             context: context,
                             builder: (context) => ChangeNotifierProvider<
-                                WifiProvisioningProvider>.value(
+                                WifiProvisioningService>.value(
                               value: provisioning,
                               child: _WifiPasswordDialog(),
                             ),
@@ -370,7 +370,7 @@ class _WifiScanningScreenState extends State<_WifiScanningScreen> {
                   showDialog<void>(
                     context: context,
                     builder: (context) =>
-                        ChangeNotifierProvider<WifiProvisioningProvider>.value(
+                        ChangeNotifierProvider<WifiProvisioningService>.value(
                       value: provisioning,
                       child: _WifiDialog(),
                     ),
@@ -395,7 +395,7 @@ class WifiProvisioningScreen extends StatelessWidget {
 
   Widget buildInitial(BuildContext context) {
     final provisioning =
-        Provider.of<WifiProvisioningProvider>(context, listen: false);
+        Provider.of<WifiProvisioningService>(context, listen: false);
 
     return Center(
       child: Column(
@@ -448,7 +448,7 @@ class WifiProvisioningScreen extends StatelessWidget {
 
   Widget buildSessionFailure(BuildContext context) {
     final provisioning =
-        Provider.of<WifiProvisioningProvider>(context, listen: false);
+        Provider.of<WifiProvisioningService>(context, listen: false);
 
     return Center(
       child: Column(
@@ -471,7 +471,7 @@ class WifiProvisioningScreen extends StatelessWidget {
   }
 
   Widget buildFailure(BuildContext context) {
-    final provisioning = Provider.of<WifiProvisioningProvider>(context);
+    final provisioning = Provider.of<WifiProvisioningService>(context);
 
     return Center(
       child: Column(
@@ -518,7 +518,7 @@ class WifiProvisioningScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<WifiProvisioningProvider>(
+    return Consumer<WifiProvisioningService>(
       builder: (_, provisioning, __) {
         Widget child;
         switch (provisioning.state) {
@@ -572,8 +572,8 @@ enum WifiProvisioningState {
   success,
 }
 
-class WifiProvisioningProvider extends ChangeNotifier {
-  WifiProvisioningProvider({required this.provisioningFactory});
+class WifiProvisioningService extends ChangeNotifier {
+  WifiProvisioningService({required this.provisioningFactory});
 
   /// Will be called to construct an instance of [Provisioning]
   Provisioning Function() provisioningFactory;

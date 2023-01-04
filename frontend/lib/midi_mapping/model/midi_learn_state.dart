@@ -17,27 +17,18 @@
  * ShrapnelDSP. If not, see <https://www.gnu.org/licenses/>.
  */
 
-import 'dart:convert';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-import 'robust_websocket.dart';
+import 'models.dart';
 
-class JsonWebsocket {
-  JsonWebsocket({
-    required RobustWebsocket websocket,
-  }) : _websocket = websocket;
+part 'midi_learn_state.freezed.dart';
 
-  final RobustWebsocket _websocket;
-
-  /// The stream of incoming messages
-  Stream<Map<String, dynamic>> get dataStream => _websocket.dataStream.map(
-        (dynamic event) => json.decode(event as String) as Map<String, dynamic>,
-      );
-
-  Stream<void> get connectionStream => _websocket.connectionStream;
-
-  bool get isAlive => _websocket.isAlive;
-
-  void send(Map<String, dynamic> json) {
-    _websocket.sendMessage(jsonEncode(json));
-  }
+@freezed
+class MidiLearnState with _$MidiLearnState {
+  const factory MidiLearnState.idle(
+    List<MapEntry<String, MidiMapping>>? duplicates,
+  ) = _Idle;
+  const factory MidiLearnState.waitForParameter() = _WaitForParameter;
+  const factory MidiLearnState.waitForMidi(String id) = _WaitForMidi;
+  const factory MidiLearnState.savingMapping() = _SavingMapping;
 }

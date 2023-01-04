@@ -37,7 +37,7 @@ class AudioClippingService extends ChangeNotifier {
       _clearInputClipping,
     );
 
-    websocket.stream.listen(_handleMessage);
+    websocket.dataStream.listen(_handleMessage);
   }
 
   bool inputIsClipped = false;

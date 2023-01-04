@@ -47,6 +47,10 @@ class MidiApiMessage with _$MidiApiMessage {
   }) = Update;
   @FreezedUnionValue('MidiMap::remove')
   const factory MidiApiMessage.remove({required String id}) = Remove;
+  @FreezedUnionValue('MidiMap::midi_message_received')
+  const factory MidiApiMessage.midiMessageReceived({
+    required MidiMessage message,
+  }) = MidiMessageReceived;
 
   factory MidiApiMessage.fromJson(Map<String, dynamic> json) =>
       _$MidiApiMessageFromJson(json);
@@ -125,4 +129,30 @@ enum MidiMappingMode {
 
   final String apiName;
   final String uiName;
+}
+
+@freezed
+class MidiMessage with _$MidiMessage {
+  const factory MidiMessage.noteOn({
+    required int channel,
+    required int note,
+    required int velocity,
+  }) = _NoteOn;
+  const factory MidiMessage.noteOff({
+    required int channel,
+    required int note,
+    required int velocity,
+  }) = _NoteOff;
+  const factory MidiMessage.controlChange({
+    required int channel,
+    required int control,
+    required int value,
+  }) = _ControlChange;
+  const factory MidiMessage.programChange({
+    required int channel,
+    required int number,
+  }) = _ProgramChange;
+
+  factory MidiMessage.fromJson(Map<String, dynamic> json) =>
+      _$MidiMessageFromJson(json);
 }
