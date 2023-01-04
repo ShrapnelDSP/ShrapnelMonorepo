@@ -54,6 +54,7 @@ class KnobWithLabel extends StatelessWidget {
             ),
           ),
           child: Knob(
+            key: Key('knob-${parameter.id}'),
             onChanged: isEnabled ? parameter.onUserChanged : (_) {},
             value: parameter.value,
             size: knobSize,

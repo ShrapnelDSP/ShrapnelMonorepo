@@ -99,6 +99,7 @@ class Stompbox extends StatelessWidget {
           child: GestureDetector(
             onTap: onCardTap,
             child: Card(
+              key: Key('stompbox-$name'),
               child: Padding(
                 padding: EdgeInsets.all(scaleFactor * 8),
                 child: Column(

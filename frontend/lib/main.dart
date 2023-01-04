@@ -222,7 +222,6 @@ class MyHomePage extends StatelessWidget {
                     context,
                     MaterialPageRoute<MidiMappingPage>(
                       builder: (context) {
-                        context.read<MidiMappingService>().getMapping();
                         return const MidiMappingPage();
                       },
                     ),

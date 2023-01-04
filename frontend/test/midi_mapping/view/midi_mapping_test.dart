@@ -28,132 +28,11 @@ import 'package:shrapnel/audio_events.dart';
 import 'package:shrapnel/json_websocket.dart';
 import 'package:shrapnel/main.dart';
 import 'package:shrapnel/midi_mapping/model/models.dart';
-import 'package:shrapnel/midi_mapping/view/midi_mapping.dart';
 import 'package:shrapnel/robust_websocket.dart';
 import 'package:shrapnel/util/uuid.dart';
 
+import '../../home_page_object.dart';
 import 'midi_mapping_test.mocks.dart';
-
-class MidiMappingPageObject {
-  const MidiMappingPageObject(this.tester);
-
-  final WidgetTester tester;
-
-  Finder findMappingRows() => find.byType(MidiChannelDropdown);
-  Finder findPage() => find.text('MIDI Mapping');
-
-  Future<MidiMappingCreatePageObject> openCreateDialog() async {
-    await tester.tap(find.byType(FloatingActionButton));
-    await tester.pumpAndSettle();
-    return MidiMappingCreatePageObject(tester);
-  }
-
-  Future<void> updateMidiChannel({
-    required String id,
-    required int value,
-  }) async {
-    await tester.tap(find.byKey(Key('$id-midi-channel-dropdown')).last);
-    await tester.pumpAndSettle();
-    await tester.tap(find.text('$value').last);
-    await tester.pumpAndSettle();
-  }
-
-  Future<void> updateCcNumber({
-    required String id,
-    required int value,
-  }) async {
-    await tester.tap(find.byKey(Key('$id-cc-number-dropdown')).last);
-    await tester.pumpAndSettle();
-    await tester.tap(find.text('$value').last);
-    await tester.pumpAndSettle();
-  }
-
-  Future<void> updateMode({
-    required String id,
-    required MidiMappingMode value,
-  }) async {
-    await tester.tap(find.byKey(Key('$id-mode-dropdown')).last);
-    await tester.pumpAndSettle();
-    await tester.tap(find.text(value.uiName).last);
-    await tester.pumpAndSettle();
-  }
-
-  Future<void> updateParameter({
-    required String id,
-    required String value,
-  }) async {
-    final dropdown = find.byKey(Key('$id-parameter-id-dropdown')).last;
-    await tester.scrollUntilVisible(dropdown, 50);
-    await tester.tap(dropdown);
-    await tester.pumpAndSettle();
-    await tester.tap(find.text(value).last);
-    await tester.pumpAndSettle();
-  }
-
-  Future<void> deleteMapping({required String id}) async {
-    await tester.tap(find.byKey(Key('$id-delete-button')).last);
-    await tester.pumpAndSettle();
-  }
-}
-
-class MidiMappingCreatePageObject {
-  const MidiMappingCreatePageObject(this.tester);
-
-  final WidgetTester tester;
-
-  Future<void> selectMidiChannel(int channel) async {
-    await tester.tap(
-      find.ancestor(
-        of: find.text('MIDI channel'),
-        matching: find.byType(DropdownButton<int>),
-      ),
-    );
-    await tester.pumpAndSettle();
-    await tester.tap(find.text('$channel').last);
-    await tester.pumpAndSettle();
-  }
-
-  Future<void> selectCcNumber(int ccNumber) async {
-    await tester.tap(
-      find.ancestor(
-        of: find.text('CC number'),
-        matching: find.byType(DropdownButton<int>),
-      ),
-    );
-    await tester.pumpAndSettle();
-    await tester.tap(find.text('$ccNumber').last);
-    await tester.pumpAndSettle();
-  }
-
-  Future<void> selectMode(MidiMappingMode mode) async {
-    await tester.tap(
-      find.ancestor(
-        of: find.text('Mode'),
-        matching: find.byType(DropdownButton<MidiMappingMode>),
-      ),
-    );
-    await tester.pumpAndSettle();
-    await tester.tap(find.text(mode.uiName).last);
-    await tester.pumpAndSettle();
-  }
-
-  Future<void> selectParameter(String name) async {
-    await tester.tap(
-      find.ancestor(
-        of: find.text('Parameter'),
-        matching: find.byType(DropdownButton<String>),
-      ),
-    );
-    await tester.pumpAndSettle();
-    await tester.tap(find.text(name).last);
-    await tester.pumpAndSettle();
-  }
-
-  Future<void> submitCreateDialog() async {
-    await tester.tap(find.text('Create'));
-    await tester.pumpAndSettle();
-  }
-}
 
 @GenerateMocks([JsonWebsocket, Uuid])
 @GenerateNiceMocks(
@@ -175,8 +54,6 @@ void main() {
       uuid: uuid,
     );
 
-    final midiMappingPage = MidiMappingPageObject(tester);
-
     final getRequest = json.decodeAsMap(
       '''
       {
@@ -186,7 +63,7 @@ void main() {
     );
 
     when(api.send(getRequest)).thenAnswer(
-      (actualCall) {
+      (_) {
         apiController.add(
           json.decodeAsMap(
             '''
@@ -202,14 +79,11 @@ void main() {
 
     await tester.pumpWidget(sut);
 
-    // Open the page
-    await tester.tap(find.byKey(const Key('midi-mapping-button')));
-    await tester.pumpAndSettle();
+    final midiMappingPage = await HomePageObject(tester).openMidiMapping();
 
     expect(midiMappingPage.findPage(), findsOneWidget);
     expect(midiMappingPage.findMappingRows(), findsNothing);
     verify(api.send(getRequest));
-
     when(uuid.v4()).thenReturn('123');
 
     final createRequest = json.decodeAsMap(
@@ -288,8 +162,6 @@ void main() {
       uuid: uuid,
     );
 
-    final midiMappingPage = MidiMappingPageObject(tester);
-
     final getRequest = json.decodeAsMap(
       '''
       {
@@ -299,7 +171,7 @@ void main() {
     );
 
     when(api.send(getRequest)).thenAnswer(
-      (actualCall) {
+      (_) {
         apiController.add(
           json.decodeAsMap(
             '''
@@ -315,18 +187,13 @@ void main() {
 
     await tester.pumpWidget(sut);
 
-    // Open the page
-    await tester.tap(find.byKey(const Key('midi-mapping-button')));
-    await tester.pumpAndSettle();
+    final midiMappingPage = await HomePageObject(tester).openMidiMapping();
 
     expect(midiMappingPage.findPage(), findsOneWidget);
     expect(midiMappingPage.findMappingRows(), findsNothing);
 
     when(uuid.v4()).thenReturn('123');
 
-    // TODO the mapping ID is hardcoded
-    // Dependency inject a UUID service, and make it return a fake value for
-    // testing
     final createRequest = json.decodeAsMap(
       '''
       {
@@ -383,13 +250,6 @@ void main() {
       when(api.connectionStream).thenAnswer((_) => Stream.fromIterable([]));
       when(api.isAlive).thenReturn(true);
 
-      final sut = App(
-        websocket: websocket,
-        jsonWebsocket: api,
-      );
-
-      final midiMappingPage = MidiMappingPageObject(tester);
-
       final getRequest = json.decodeAsMap(
         '''
         {
@@ -399,7 +259,8 @@ void main() {
       );
 
       when(api.send(getRequest)).thenAnswer(
-        (actualCall) {
+        (_) {
+          debugPrint('sending get response');
           apiController.add(
             json.decodeAsMap(
               '''
@@ -420,15 +281,20 @@ void main() {
         },
       );
 
-      await tester.pumpWidget(sut);
+      await tester.pumpWidget(
+        App(
+          websocket: websocket,
+          jsonWebsocket: api,
+        ),
+      );
 
-      // Open the page
-      await tester.tap(find.byKey(const Key('midi-mapping-button')));
+      verify(api.send(getRequest));
+
+      final midiMappingPage = await HomePageObject(tester).openMidiMapping();
       await tester.pumpAndSettle();
 
       expect(midiMappingPage.findPage(), findsOneWidget);
       expect(midiMappingPage.findMappingRows(), findsOneWidget);
-      verify(api.send(getRequest));
 
       await midiMappingPage.updateMidiChannel(id: '123', value: 3);
       verify(
@@ -496,7 +362,6 @@ void main() {
         ),
       );
 
-      /* The dropdown is not behaving correctly, causing this test to fail */
       await midiMappingPage.updateParameter(
         id: '123',
         value: 'Valvestate: Contour',
@@ -539,13 +404,6 @@ void main() {
       when(api.connectionStream).thenAnswer((_) => Stream.fromIterable([]));
       when(api.isAlive).thenReturn(true);
 
-      final sut = App(
-        websocket: websocket,
-        jsonWebsocket: api,
-      );
-
-      final midiMappingPage = MidiMappingPageObject(tester);
-
       final getRequest = json.decodeAsMap(
         '''
         {
@@ -555,7 +413,7 @@ void main() {
       );
 
       when(api.send(getRequest)).thenAnswer(
-        (actualCall) {
+        (_) {
           apiController.add(
             json.decodeAsMap(
               '''
@@ -571,15 +429,19 @@ void main() {
         },
       );
 
-      await tester.pumpWidget(sut);
+      await tester.pumpWidget(
+        App(
+          websocket: websocket,
+          jsonWebsocket: api,
+        ),
+      );
 
-      // Open the page
-      await tester.tap(find.byKey(const Key('midi-mapping-button')));
-      await tester.pumpAndSettle();
+      verify(api.send(getRequest));
+
+      final midiMappingPage = await HomePageObject(tester).openMidiMapping();
 
       expect(midiMappingPage.findPage(), findsOneWidget);
       expect(midiMappingPage.findMappingRows(), findsOneWidget);
-      verify(api.send(getRequest));
 
       await midiMappingPage.deleteMapping(id: '123');
 
@@ -596,6 +458,140 @@ void main() {
         ),
       );
       expect(midiMappingPage.findMappingRows(), findsNothing);
+
+      await apiController.close();
+    },
+  );
+
+  testWidgets(
+    'MIDI mapping can be learned',
+    (tester) async {
+      await tester.binding.setSurfaceSize(const Size(1920, 1080));
+
+      final apiController = StreamController<Map<String, dynamic>>.broadcast();
+      final websocket = MockRobustWebsocket();
+      final api = MockJsonWebsocket();
+      when(api.dataStream).thenAnswer((_) => apiController.stream);
+      when(api.connectionStream).thenAnswer((_) => Stream.fromIterable([]));
+      when(api.isAlive).thenReturn(true);
+      final uuid = MockUuid();
+
+      final sut = App(
+        websocket: websocket,
+        jsonWebsocket: api,
+        uuid: uuid,
+      );
+
+      final getRequest = json.decodeAsMap(
+        '''
+        {
+          "messageType": "MidiMap::get::request"
+        }
+        ''',
+      );
+
+      when(api.send(getRequest)).thenAnswer(
+        (_) {
+          debugPrint("responding to get request");
+          apiController.add(
+            json.decodeAsMap(
+              '''
+            {
+              "messageType": "MidiMap::get::response",
+              "mappings": { }
+            }
+            ''',
+            ),
+          );
+        },
+      );
+
+      final homePageObject = HomePageObject(tester);
+
+      await tester.pumpWidget(sut);
+
+      await homePageObject.toggleCollapsedAmplifier();
+
+      await homePageObject.startMidiLearn();
+      expect(
+        homePageObject.findMidiLearnWaitingForParameterMessage(),
+        findsOneWidget,
+      );
+
+      await homePageObject.dragKnob(parameterId: 'volume');
+      expect(
+        homePageObject.findMidiLearnWaitingForMidiMessage(),
+        findsOneWidget,
+      );
+
+      final createRequest = json.decodeAsMap(
+        '''
+      {
+        "messageType": "MidiMap::create::request",
+        "mapping": {
+          "123": {
+            "midi_channel": 1,
+            "cc_number": 2,
+            "parameter_id": "volume",
+            "mode": "parameter"
+          }
+        }
+      }
+      ''',
+      );
+
+      when(api.send(createRequest)).thenAnswer(
+        (_) {
+          apiController.add(
+            json.decodeAsMap(
+              '''
+            {
+              "messageType": "MidiMap::create::response",
+              "mapping": {
+                "123": {
+                  "midi_channel": 1,
+                  "cc_number": 2,
+                  "parameter_id": "volume",
+                  "mode": "parameter"
+                }
+              }
+            }
+            ''',
+            ),
+          );
+        },
+      );
+
+      when(uuid.v4()).thenReturn('123');
+
+      // The MIDI message received event finishes the learning process, and
+      // creates a the new mapping
+      apiController.add(
+        json.decodeAsMap('''
+          {
+            "messageType": "MidiMap::midi_message_received",
+            "message": {
+              "runtimeType": "controlChange",
+              "channel": 1,
+              "control": 2,
+              "value": 3
+            }
+          }
+      '''),
+      );
+
+      await tester.pumpAndSettle();
+
+      verify(api.send(createRequest));
+      expect(
+        homePageObject.findMidiLearnWaitingForMidiMessage(),
+        findsNothing,
+      );
+
+      final midiMappingPage = await homePageObject.openMidiMapping();
+      expect(midiMappingPage.findPage(), findsOneWidget);
+      // There should be one row, indicating the new mapping
+      expect(midiMappingPage.findMappingRows(), findsOneWidget);
 
       await apiController.close();
     },
