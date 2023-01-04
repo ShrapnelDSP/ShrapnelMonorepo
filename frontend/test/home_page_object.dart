@@ -32,8 +32,15 @@ class HomePageObject {
 
   Finder findMidiLearnWaitingForParameterMessage() =>
       find.textContaining('Move a knob');
+
   Finder findMidiLearnWaitingForMidiMessage() =>
       find.textContaining('Move a MIDI controller');
+
+  Finder findDuplicateMappingSnackbar() =>
+      find.textContaining('Some duplicate mappings were deleted');
+
+  Finder findDuplicateMappingUndoButton() =>
+      find.byKey(const Key('undo-remove-duplicate-mappings'));
 
   Future<void> startMidiLearn() async {
     await tester.tap(find.byKey(const Key('midi-learn-button')));
@@ -62,6 +69,11 @@ class HomePageObject {
 
   Future<void> toggleCollapsedAmplifier() async {
     await tester.tap(find.byType(Amplifier));
+    await tester.pumpAndSettle();
+  }
+
+  Future<void> restoreRemovedDuplicateMappings() async {
+    await tester.tap(findDuplicateMappingUndoButton());
     await tester.pumpAndSettle();
   }
 }

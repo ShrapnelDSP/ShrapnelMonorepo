@@ -594,6 +594,206 @@ void main() {
       await apiController.close();
     },
   );
+
+  testWidgets(
+    'MIDI mapping learn removes duplicates',
+    (tester) async {
+      await tester.binding.setSurfaceSize(const Size(1920, 1080));
+
+      final apiController = StreamController<Map<String, dynamic>>.broadcast();
+      final websocket = MockRobustWebsocket();
+      final api = MockJsonWebsocket();
+      when(api.dataStream).thenAnswer((_) => apiController.stream);
+      when(api.connectionStream).thenAnswer((_) => Stream.fromIterable([]));
+      when(api.isAlive).thenReturn(true);
+      final uuid = MockUuid();
+
+      final getRequest = json.decodeAsMap(
+        '''
+        {
+          "messageType": "MidiMap::get::request"
+        }
+        ''',
+      );
+
+      when(api.send(getRequest)).thenAnswer(
+        (_) {
+          apiController.add(
+            json.decodeAsMap(
+              '''
+            {
+              "messageType": "MidiMap::get::response",
+              "mappings": {
+                "456": {
+                  "midi_channel": 3,
+                  "cc_number": 4,
+                  "mode": "parameter",
+                  "parameter_id": "volume"
+                }
+              }
+            }
+            ''',
+            ),
+          );
+        },
+      );
+
+      final homePageObject = HomePageObject(tester);
+
+      await tester.pumpWidget(
+        App(
+          websocket: websocket,
+          jsonWebsocket: api,
+          uuid: uuid,
+        ),
+      );
+
+      await homePageObject.toggleCollapsedAmplifier();
+
+      await homePageObject.startMidiLearn();
+      expect(
+        homePageObject.findMidiLearnWaitingForParameterMessage(),
+        findsOneWidget,
+      );
+
+      await homePageObject.dragKnob(parameterId: 'volume');
+      expect(
+        homePageObject.findMidiLearnWaitingForMidiMessage(),
+        findsOneWidget,
+      );
+
+      final createRequest = json.decodeAsMap(
+        '''
+      {
+        "messageType": "MidiMap::create::request",
+        "mapping": {
+          "123": {
+            "midi_channel": 1,
+            "cc_number": 2,
+            "parameter_id": "volume",
+            "mode": "parameter"
+          }
+        }
+      }
+      ''',
+      );
+
+      when(api.send(createRequest)).thenAnswer(
+        (_) {
+          apiController.add(
+            json.decodeAsMap(
+              '''
+            {
+              "messageType": "MidiMap::create::response",
+              "mapping": {
+                "123": {
+                  "midi_channel": 1,
+                  "cc_number": 2,
+                  "parameter_id": "volume",
+                  "mode": "parameter"
+                }
+              }
+            }
+            ''',
+            ),
+          );
+        },
+      );
+
+      when(uuid.v4()).thenReturn('123');
+
+      // The MIDI message received event finishes the learning process, and
+      // creates a the new mapping
+      apiController.add(
+        json.decodeAsMap('''
+          {
+            "messageType": "MidiMap::midi_message_received",
+            "message": {
+              "runtimeType": "controlChange",
+              "channel": 1,
+              "control": 2,
+              "value": 3
+            }
+          }
+      '''),
+      );
+
+      await tester.pumpAndSettle();
+
+      verify(
+        api.send(
+          json.decodeAsMap(
+            '''
+          {
+            "messageType": "MidiMap::remove",
+            "id": "456"
+          }
+          ''',
+          ),
+        ),
+      );
+
+      verify(api.send(createRequest));
+
+      expect(
+        homePageObject.findMidiLearnWaitingForMidiMessage(),
+        findsNothing,
+      );
+
+      expect(
+        homePageObject.findDuplicateMappingSnackbar(),
+        findsOneWidget,
+      );
+
+      final createRequest2 = json.decodeAsMap(
+        '''
+      {
+        "messageType": "MidiMap::create::request",
+        "mapping": {
+          "456": {
+            "midi_channel": 3,
+            "cc_number": 4,
+            "parameter_id": "volume",
+            "mode": "parameter"
+          }
+        }
+      }
+      ''',
+      );
+
+      when(api.send(createRequest2)).thenAnswer(
+        (_) {
+          apiController.add(
+            json.decodeAsMap(
+              '''
+            {
+              "messageType": "MidiMap::create::response",
+              "mapping": {
+                "456": {
+                  "midi_channel": 3,
+                  "cc_number": 4,
+                  "parameter_id": "volume",
+                  "mode": "parameter"
+                }
+              }
+            }
+            ''',
+            ),
+          );
+        },
+      );
+
+      await homePageObject.restoreRemovedDuplicateMappings();
+
+      verify(api.send(createRequest2));
+
+      final midiMappingPage = await homePageObject.openMidiMapping();
+      expect(midiMappingPage.findPage(), findsOneWidget);
+      expect(midiMappingPage.findMappingRows(), findsNWidgets(2));
+
+      await apiController.close();
+    },
+  );
 }
 
 extension on JsonCodec {

@@ -269,5 +269,4 @@ TEST(MappingJsonBuilder, MessageProgramChange)
     EXPECT_THAT(write_json(input), reference);
 }
 
-
 } // namespace

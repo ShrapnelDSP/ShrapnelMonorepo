@@ -55,6 +55,7 @@ class MidiLearnStatus extends StatelessWidget {
         final snackBar = SnackBar(
           content: const Text('Some duplicate mappings were deleted'),
           action: SnackBarAction(
+            key: const Key('undo-remove-duplicate-mappings'),
             label: 'Restore',
             onPressed: midiLearnService.undoRemoveSimilarMappings,
           ),
