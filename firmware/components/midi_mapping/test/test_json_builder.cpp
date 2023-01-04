@@ -26,6 +26,7 @@
 #include "midi_mapping_api.h"
 #include "midi_mapping_json_builder.h"
 #include "midi_mapping_json_parser.h"
+#include "midi_protocol.h"
 #include "rapidjson/document.h"
 #include "rapidjson/stringbuffer.h"
 #include "rapidjson/prettywriter.h"
@@ -176,4 +177,97 @@ TEST(MappingJsonBuilder, VariantGetResponse)
     EXPECT_THAT(write_json(input), reference);
 }
 
+TEST(MappingJsonBuilder, VariantMidiMessageReceived)
+{
+    auto input = MappingApiMessage{
+        MessageReceived{Message{.channel{1},
+                                .parameters{Message::ControlChange{
+                                    .control{2},
+                                    .value{3},
+                                }}}}};
+
+    auto reference = normalise_json(R"({
+          "message": {
+            "channel": 1,
+            "runtimeType": "controlChange",
+            "control": 2,
+            "value": 3
+          },
+          "messageType": "MidiMap::midi_message_received"
+        })");
+
+    EXPECT_THAT(write_json(input), reference);
 }
+
+TEST(MappingJsonBuilder, MessageNoteOn)
+{
+    auto input = Message{.channel{1},
+                         .parameters{Message::NoteOn{
+                             .note{2},
+                             .velocity{3},
+                         }}};
+
+    auto reference = normalise_json(R"({
+            "channel": 1,
+            "runtimeType": "noteOn",
+            "note": 2,
+            "velocity": 3
+      })");
+
+    EXPECT_THAT(write_json(input), reference);
+}
+
+TEST(MappingJsonBuilder, MessageNoteOff)
+{
+    auto input = Message{.channel{1},
+                         .parameters{Message::NoteOff{
+                             .note{2},
+                             .velocity{3},
+                         }}};
+
+    auto reference = normalise_json(R"({
+            "channel": 1,
+            "runtimeType": "noteOff",
+            "note": 2,
+            "velocity": 3
+      })");
+
+    EXPECT_THAT(write_json(input), reference);
+}
+
+TEST(MappingJsonBuilder, MessageControlChange)
+{
+    auto input = Message{.channel{1},
+                         .parameters{Message::ControlChange{
+                             .control{2},
+                             .value{3},
+                         }}};
+
+    auto reference = normalise_json(R"({
+            "channel": 1,
+            "runtimeType": "controlChange",
+            "control": 2,
+            "value": 3
+      })");
+
+    EXPECT_THAT(write_json(input), reference);
+}
+
+TEST(MappingJsonBuilder, MessageProgramChange)
+{
+    auto input = Message{.channel{1},
+                         .parameters{Message::ProgramChange{
+                             .number{2},
+                         }}};
+
+    auto reference = normalise_json(R"({
+            "channel": 1,
+            "runtimeType": "programChange",
+            "number": 2
+      })");
+
+    EXPECT_THAT(write_json(input), reference);
+}
+
+
+} // namespace
