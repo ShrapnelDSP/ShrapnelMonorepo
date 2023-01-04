@@ -260,7 +260,6 @@ void main() {
 
       when(api.send(getRequest)).thenAnswer(
         (_) {
-          debugPrint('sending get response');
           apiController.add(
             json.decodeAsMap(
               '''
@@ -492,7 +491,6 @@ void main() {
 
       when(api.send(getRequest)).thenAnswer(
         (_) {
-          debugPrint("responding to get request");
           apiController.add(
             json.decodeAsMap(
               '''
