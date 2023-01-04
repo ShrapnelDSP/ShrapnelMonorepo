@@ -70,12 +70,12 @@
       )
       .listen(websocket.sendMessage);
 
-  websocket.stream.listen(_handleIncomingEvent);
+  websocket.dataStream.listen(_handleIncomingEvent);
 
   if (websocket.isAlive) {
     _requestParameterInitialisation();
   }
-  websocket.onConnect = _requestParameterInitialisation;
+  websocket.connectionStream.listen((_) =&gt; _requestParameterInitialisation());
 }</code></pre>
 </section>
 

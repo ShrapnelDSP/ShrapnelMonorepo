@@ -107,7 +107,7 @@ and</li>
   <h2><span>Implementation</span></h2>
   <pre class="language-dart"><code class="language-dart">@override
 Widget build(BuildContext context) {
-  return Consumer&lt;WifiProvisioningProvider&gt;(
+  return Consumer&lt;WifiProvisioningService&gt;(
     builder: (_, provisioning, __) {
       Widget child;
       switch (provisioning.state) {

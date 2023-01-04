@@ -102,6 +102,30 @@ $(document).ready(function(){initNavTree('ws_api_midi.html',''); initResizable()
 <div class="line">  <span class="stringliteral">&quot;mode&quot;</span>: <span class="stringliteral">&quot;parameter&quot;</span> or <span class="stringliteral">&quot;toggle&quot;</span>,</div>
 <div class="line">  <span class="stringliteral">&quot;parameter_id&quot;</span>: <span class="stringliteral">&quot;string&quot;</span>,</div>
 <div class="line">}</div>
+</div><!-- fragment --><p >The <code>MidiMessage</code> object has four possible formats:</p>
+<div class="fragment"><div class="line">{</div>
+<div class="line">  <span class="stringliteral">&quot;runtimeType&quot;</span>: <span class="stringliteral">&quot;noteOn&quot;</span>,</div>
+<div class="line">  <span class="stringliteral">&quot;channel&quot;</span>: integer,</div>
+<div class="line">  <span class="stringliteral">&quot;note&quot;</span>: integer,</div>
+<div class="line">  <span class="stringliteral">&quot;velocity&quot;</span>: integer,</div>
+<div class="line">}</div>
+</div><!-- fragment --><div class="fragment"><div class="line">{</div>
+<div class="line">  <span class="stringliteral">&quot;runtimeType&quot;</span>: <span class="stringliteral">&quot;noteOff&quot;</span>,</div>
+<div class="line">  <span class="stringliteral">&quot;channel&quot;</span>: integer,</div>
+<div class="line">  <span class="stringliteral">&quot;note&quot;</span>: integer,</div>
+<div class="line">  <span class="stringliteral">&quot;velocity&quot;</span>: integer,</div>
+<div class="line">}</div>
+</div><!-- fragment --><div class="fragment"><div class="line">{</div>
+<div class="line">  <span class="stringliteral">&quot;runtimeType&quot;</span>: <span class="stringliteral">&quot;controlChange&quot;</span>,</div>
+<div class="line">  <span class="stringliteral">&quot;channel&quot;</span>: integer,</div>
+<div class="line">  <span class="stringliteral">&quot;control&quot;</span>: integer,</div>
+<div class="line">  <span class="stringliteral">&quot;value&quot;</span>: integer,</div>
+<div class="line">}</div>
+</div><!-- fragment --><div class="fragment"><div class="line">{</div>
+<div class="line">  <span class="stringliteral">&quot;runtimeType&quot;</span>: <span class="stringliteral">&quot;programChange&quot;</span></div>
+<div class="line">  <span class="stringliteral">&quot;channel&quot;</span>: integer,</div>
+<div class="line">  <span class="stringliteral">&quot;number&quot;</span>: integer</div>
+<div class="line">}</div>
 </div><!-- fragment --><dl class="section note"><dt>Note</dt><dd>In the examples of this table, UUIDs are replaced with <code>...</code> for brevity. Normally these would look like <code>12345678-abcd-0000-0000-000000000000</code>.</dd></dl>
 <table class="doxtable">
 <tr>
@@ -173,6 +197,17 @@ $(document).ready(function(){initNavTree('ws_api_midi.html',''); initResizable()
 <td><code>MidiMap::remove</code> </td><td><code>id</code> (<code>UUID</code>): The ID of the MIDI mapping to remove </td><td>UI -&gt; Firmware </td><td>Firmware removes the specified MIDI mapping . </td><td><div class="fragment"><div class="line">{</div>
 <div class="line">  <span class="stringliteral">&quot;messageType&quot;</span>: <span class="stringliteral">&quot;MidiMap::remove&quot;</span>,</div>
 <div class="line">  <span class="stringliteral">&quot;id&quot;</span>: <span class="stringliteral">&quot;...&quot;</span></div>
+<div class="line">}</div>
+</div><!-- fragment --> </td></tr>
+<tr>
+<td><code>MidiMap::midi_message_received</code> </td><td><code>message</code> (<code>MidiMessage</code>): The MIDI message </td><td>Firmware -&gt; UI </td><td>Firmware notifies this periodically, so that the frontend can react to MIDI messages, for example to connect a parameter to the MIDI message. </td><td><div class="fragment"><div class="line">{</div>
+<div class="line">  <span class="stringliteral">&quot;messageType&quot;</span>: <span class="stringliteral">&quot;MidiMap::midi_message_received&quot;</span>,</div>
+<div class="line">  <span class="stringliteral">&quot;message&quot;</span>: {</div>
+<div class="line">    <span class="stringliteral">&quot;runtimeType&quot;</span>: <span class="stringliteral">&quot;controlChange&quot;</span>,</div>
+<div class="line">    <span class="stringliteral">&quot;channel&quot;</span>: 1,</div>
+<div class="line">    <span class="stringliteral">&quot;control&quot;</span>: 2,</div>
+<div class="line">    <span class="stringliteral">&quot;value&quot;</span>: 3</div>
+<div class="line">  }</div>
 <div class="line">}</div>
 </div><!-- fragment --> </td></tr>
 </table>

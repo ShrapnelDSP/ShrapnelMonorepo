@@ -179,7 +179,7 @@ $(document).ready(function(){initNavTree('main_8cpp_source.html',''); initResiza
 <div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span><span class="preprocessor">#define ARRAY_LENGTH(a) (sizeof(a)/sizeof(a[0]))</span></div>
 <div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span> </div>
 <div class="line"><a id="l00085" name="l00085"></a><span class="lineno"><a class="line" href="main_8cpp.html#a7d634e4e90beba8bb35bd8b959ec5757">   85</a></span><span class="keyword">using </span><a class="code hl_typedef" href="main_8cpp.html#a7d634e4e90beba8bb35bd8b959ec5757">ApiMessage</a> = std::variant&lt;<a class="code hl_typedef" href="namespaceshrapnel_1_1parameters.html#a7d71cb4080803181d147fe9987baa52f">shrapnel::parameters::ApiMessage</a>,</div>
-<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>                                <a class="code hl_typedef" href="namespaceshrapnel_1_1midi.html#ad9ee9014110e441706a017a889103bd1">shrapnel::midi::MappingApiMessage</a>,</div>
+<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>                                <a class="code hl_typedef" href="namespaceshrapnel_1_1midi.html#aaf7b16e9372891903e3d6de1b406a458">shrapnel::midi::MappingApiMessage</a>,</div>
 <div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>                                <a class="code hl_typedef" href="namespaceshrapnel_1_1events.html#a8dd3c21ae53adc98fc773a8c06ce300a">shrapnel::events::ApiMessage</a>&gt;;</div>
 <div class="line"><a id="l00088" name="l00088"></a><span class="lineno"><a class="line" href="main_8cpp.html#a79edd3397c6cf28f6938fd733697bc61">   88</a></span><span class="keyword">using </span><a class="code hl_typedef" href="main_8cpp.html#a79edd3397c6cf28f6938fd733697bc61">FileDescriptor</a> = std::optional&lt;int&gt;;</div>
 <div class="line"><a id="l00089" name="l00089"></a><span class="lineno"><a class="line" href="main_8cpp.html#a4a2a8445978c00038c4b9a0d35ca7a69">   89</a></span><span class="keyword">using </span><a class="code hl_typedef" href="main_8cpp.html#a4a2a8445978c00038c4b9a0d35ca7a69">AppMessage</a> = std::pair&lt;ApiMessage, FileDescriptor&gt;;</div>
@@ -982,206 +982,228 @@ $(document).ready(function(){initNavTree('main_8cpp_source.html',''); initResiza
 <div class="line"><a id="l00886" name="l00886"></a><span class="lineno">  886</span>    TimerHandle_t clipping_throttle_timer = xTimerCreate(</div>
 <div class="line"><a id="l00887" name="l00887"></a><span class="lineno">  887</span>        <span class="stringliteral">&quot;clipping throttle&quot;</span>, pdMS_TO_TICKS(1000), <span class="keyword">false</span>, <span class="keyword">nullptr</span>, <a class="code hl_function" href="namespaceshrapnel.html#abcae6f4d21df0182843da1ec10660604">do_nothing</a>);</div>
 <div class="line"><a id="l00888" name="l00888"></a><span class="lineno">  888</span> </div>
-<div class="line"><a id="l00889" name="l00889"></a><span class="lineno">  889</span>    <span class="keyword">auto</span> midi_uart = <span class="keyword">new</span> <a class="code hl_class" href="classshrapnel_1_1midi_1_1EspMidiUart.html">midi::EspMidiUart</a>(UART_NUM_MIDI, GPIO_NUM_MIDI);</div>
-<div class="line"><a id="l00890" name="l00890"></a><span class="lineno">  890</span> </div>
-<div class="line"><a id="l00891" name="l00891"></a><span class="lineno">  891</span>    <span class="keyword">auto</span> on_midi_message = [] (<a class="code hl_struct" href="structshrapnel_1_1midi_1_1Message.html">midi::Message</a> message) {</div>
-<div class="line"><a id="l00892" name="l00892"></a><span class="lineno">  892</span>        etl::string&lt;40&gt; buffer;</div>
-<div class="line"><a id="l00893" name="l00893"></a><span class="lineno">  893</span>        etl::string_stream stream{buffer};</div>
-<div class="line"><a id="l00894" name="l00894"></a><span class="lineno">  894</span>        stream &lt;&lt; message;</div>
-<div class="line"><a id="l00895" name="l00895"></a><span class="lineno">  895</span>        ESP_LOGI(<a class="code hl_variable" href="namespaceshrapnel_1_1parameters.html#a0cbbede6af96973c56e635f9a90599cd">TAG</a>, <span class="stringliteral">&quot;%s&quot;</span>, buffer.data());</div>
-<div class="line"><a id="l00896" name="l00896"></a><span class="lineno">  896</span> </div>
-<div class="line"><a id="l00897" name="l00897"></a><span class="lineno">  897</span>        {</div>
-<div class="line"><a id="l00898" name="l00898"></a><span class="lineno">  898</span>            std::scoped_lock lock{<a class="code hl_variable" href="namespaceshrapnel.html#aace3a2116876caa6e4e139d75e6d4eec">midi_mutex</a>};</div>
-<div class="line"><a id="l00899" name="l00899"></a><span class="lineno">  899</span>            <a class="code hl_variable" href="namespaceshrapnel.html#a1c279551793c1879841f4d0bb89bd420">midi_mapping_manager</a>-&gt;process_message(message);</div>
-<div class="line"><a id="l00900" name="l00900"></a><span class="lineno">  900</span>        }</div>
-<div class="line"><a id="l00901" name="l00901"></a><span class="lineno">  901</span>    };</div>
-<div class="line"><a id="l00902" name="l00902"></a><span class="lineno">  902</span> </div>
-<div class="line"><a id="l00903" name="l00903"></a><span class="lineno">  903</span>    <span class="keyword">auto</span> midi_decoder = <span class="keyword">new</span> <a class="code hl_class" href="classshrapnel_1_1midi_1_1Decoder.html">midi::Decoder</a>(on_midi_message);</div>
-<div class="line"><a id="l00904" name="l00904"></a><span class="lineno">  904</span> </div>
-<div class="line"><a id="l00905" name="l00905"></a><span class="lineno">  905</span><span class="preprocessor">#if configUSE_TRACE_FACILITY &amp;&amp; configUSE_STATS_FORMATTING_FUNCTIONS</span></div>
-<div class="line"><a id="l00906" name="l00906"></a><span class="lineno">  906</span>    <span class="keyword">constexpr</span> <span class="keywordtype">size_t</span> characters_per_task = 40;</div>
-<div class="line"><a id="l00907" name="l00907"></a><span class="lineno">  907</span>    <span class="keyword">constexpr</span> <span class="keywordtype">size_t</span> approximate_task_count = 20;</div>
-<div class="line"><a id="l00908" name="l00908"></a><span class="lineno">  908</span>    <span class="keywordtype">char</span> buffer[characters_per_task * approximate_task_count + 1] = {0};</div>
-<div class="line"><a id="l00909" name="l00909"></a><span class="lineno">  909</span>    vTaskList(buffer);</div>
-<div class="line"><a id="l00910" name="l00910"></a><span class="lineno">  910</span>    <span class="comment">// crash if the buffer was overflowed</span></div>
-<div class="line"><a id="l00911" name="l00911"></a><span class="lineno">  911</span>    assert(buffer[<span class="keyword">sizeof</span>(buffer) - 1] == <span class="charliteral">&#39;\0&#39;</span>);</div>
-<div class="line"><a id="l00912" name="l00912"></a><span class="lineno">  912</span>    ESP_LOGI(<a class="code hl_variable" href="namespaceshrapnel_1_1parameters.html#a0cbbede6af96973c56e635f9a90599cd">TAG</a>, <span class="stringliteral">&quot;Task list:\n%s&quot;</span>, buffer);</div>
-<div class="line"><a id="l00913" name="l00913"></a><span class="lineno">  913</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00889" name="l00889"></a><span class="lineno">  889</span>    std::atomic_flag is_midi_notify_waiting;</div>
+<div class="line"><a id="l00890" name="l00890"></a><span class="lineno">  890</span>    <span class="keyword">auto</span> clear_midi_notify_waiting = [&amp;] { is_midi_notify_waiting.clear(); };</div>
+<div class="line"><a id="l00891" name="l00891"></a><span class="lineno">  891</span> </div>
+<div class="line"><a id="l00892" name="l00892"></a><span class="lineno">  892</span>    <a class="code hl_class" href="classshrapnel_1_1os_1_1Timer.html">os::Timer</a> midi_message_notify_timer{</div>
+<div class="line"><a id="l00893" name="l00893"></a><span class="lineno">  893</span>        <span class="stringliteral">&quot;midi notify&quot;</span>, pdMS_TO_TICKS(100), <span class="keyword">true</span>, clear_midi_notify_waiting};</div>
+<div class="line"><a id="l00894" name="l00894"></a><span class="lineno">  894</span>    midi_message_notify_timer.<a class="code hl_function" href="classshrapnel_1_1os_1_1Timer.html#a5ff1b2e05dc1558fb40ef551fc00d6a9">start</a>(portMAX_DELAY);</div>
+<div class="line"><a id="l00895" name="l00895"></a><span class="lineno">  895</span> </div>
+<div class="line"><a id="l00896" name="l00896"></a><span class="lineno">  896</span>    <span class="keyword">auto</span> midi_uart = <span class="keyword">new</span> <a class="code hl_class" href="classshrapnel_1_1midi_1_1EspMidiUart.html">midi::EspMidiUart</a>(UART_NUM_MIDI, GPIO_NUM_MIDI);</div>
+<div class="line"><a id="l00897" name="l00897"></a><span class="lineno">  897</span> </div>
+<div class="line"><a id="l00898" name="l00898"></a><span class="lineno">  898</span>    std::optional&lt;midi::Message&gt; last_midi_message;</div>
+<div class="line"><a id="l00899" name="l00899"></a><span class="lineno">  899</span>    std::optional&lt;midi::Message&gt; last_notified_midi_message;</div>
+<div class="line"><a id="l00900" name="l00900"></a><span class="lineno">  900</span> </div>
+<div class="line"><a id="l00901" name="l00901"></a><span class="lineno">  901</span>    <span class="keyword">auto</span> on_midi_message = [&amp;] (<a class="code hl_struct" href="structshrapnel_1_1midi_1_1Message.html">midi::Message</a> message) {</div>
+<div class="line"><a id="l00902" name="l00902"></a><span class="lineno">  902</span>        etl::string&lt;40&gt; buffer;</div>
+<div class="line"><a id="l00903" name="l00903"></a><span class="lineno">  903</span>        etl::string_stream stream{buffer};</div>
+<div class="line"><a id="l00904" name="l00904"></a><span class="lineno">  904</span>        stream &lt;&lt; message;</div>
+<div class="line"><a id="l00905" name="l00905"></a><span class="lineno">  905</span>        ESP_LOGI(<a class="code hl_variable" href="namespaceshrapnel_1_1parameters.html#a0cbbede6af96973c56e635f9a90599cd">TAG</a>, <span class="stringliteral">&quot;%s&quot;</span>, buffer.data());</div>
+<div class="line"><a id="l00906" name="l00906"></a><span class="lineno">  906</span> </div>
+<div class="line"><a id="l00907" name="l00907"></a><span class="lineno">  907</span>        last_midi_message = message;</div>
+<div class="line"><a id="l00908" name="l00908"></a><span class="lineno">  908</span> </div>
+<div class="line"><a id="l00909" name="l00909"></a><span class="lineno">  909</span>        {</div>
+<div class="line"><a id="l00910" name="l00910"></a><span class="lineno">  910</span>            std::scoped_lock lock{<a class="code hl_variable" href="namespaceshrapnel.html#aace3a2116876caa6e4e139d75e6d4eec">midi_mutex</a>};</div>
+<div class="line"><a id="l00911" name="l00911"></a><span class="lineno">  911</span>            <a class="code hl_variable" href="namespaceshrapnel.html#a1c279551793c1879841f4d0bb89bd420">midi_mapping_manager</a>-&gt;process_message(message);</div>
+<div class="line"><a id="l00912" name="l00912"></a><span class="lineno">  912</span>        }</div>
+<div class="line"><a id="l00913" name="l00913"></a><span class="lineno">  913</span>    };</div>
 <div class="line"><a id="l00914" name="l00914"></a><span class="lineno">  914</span> </div>
-<div class="line"><a id="l00915" name="l00915"></a><span class="lineno">  915</span>    <a class="code hl_variable" href="namespaceshrapnel_1_1events.html#a63fd47484f0f2560469429a7b28b7a0e">events::input_clipped</a>.test_and_set();</div>
-<div class="line"><a id="l00916" name="l00916"></a><span class="lineno">  916</span>    <a class="code hl_variable" href="namespaceshrapnel_1_1events.html#ad28eee14b7b281e8580c0ca9f14adda2">events::output_clipped</a>.test_and_set();</div>
-<div class="line"><a id="l00917" name="l00917"></a><span class="lineno">  917</span> </div>
-<div class="line"><a id="l00918" name="l00918"></a><span class="lineno">  918</span>    <span class="keywordflow">while</span>(1)</div>
-<div class="line"><a id="l00919" name="l00919"></a><span class="lineno">  919</span>    {</div>
-<div class="line"><a id="l00920" name="l00920"></a><span class="lineno">  920</span>        vTaskDelay(pdMS_TO_TICKS(10));</div>
-<div class="line"><a id="l00921" name="l00921"></a><span class="lineno">  921</span>        <span class="keyword">auto</span> tick_count_start = xTaskGetTickCount();</div>
-<div class="line"><a id="l00922" name="l00922"></a><span class="lineno">  922</span> </div>
-<div class="line"><a id="l00923" name="l00923"></a><span class="lineno">  923</span>        <span class="keywordflow">if</span>(<span class="keyword">auto</span> <span class="keywordtype">byte</span> = midi_uart-&gt;get_byte(0); <span class="keywordtype">byte</span>.has_value())</div>
-<div class="line"><a id="l00924" name="l00924"></a><span class="lineno">  924</span>        {</div>
-<div class="line"><a id="l00925" name="l00925"></a><span class="lineno">  925</span>            ESP_LOGI(<a class="code hl_variable" href="namespaceshrapnel_1_1parameters.html#a0cbbede6af96973c56e635f9a90599cd">TAG</a>, <span class="stringliteral">&quot;midi got byte 0x%02x&quot;</span>, *<span class="keywordtype">byte</span>);</div>
+<div class="line"><a id="l00915" name="l00915"></a><span class="lineno">  915</span>    <span class="keyword">auto</span> midi_decoder = <span class="keyword">new</span> <a class="code hl_class" href="classshrapnel_1_1midi_1_1Decoder.html">midi::Decoder</a>(on_midi_message);</div>
+<div class="line"><a id="l00916" name="l00916"></a><span class="lineno">  916</span> </div>
+<div class="line"><a id="l00917" name="l00917"></a><span class="lineno">  917</span><span class="preprocessor">#if configUSE_TRACE_FACILITY &amp;&amp; configUSE_STATS_FORMATTING_FUNCTIONS</span></div>
+<div class="line"><a id="l00918" name="l00918"></a><span class="lineno">  918</span>    <span class="keyword">constexpr</span> <span class="keywordtype">size_t</span> characters_per_task = 40;</div>
+<div class="line"><a id="l00919" name="l00919"></a><span class="lineno">  919</span>    <span class="keyword">constexpr</span> <span class="keywordtype">size_t</span> approximate_task_count = 20;</div>
+<div class="line"><a id="l00920" name="l00920"></a><span class="lineno">  920</span>    <span class="keywordtype">char</span> buffer[characters_per_task * approximate_task_count + 1] = {0};</div>
+<div class="line"><a id="l00921" name="l00921"></a><span class="lineno">  921</span>    vTaskList(buffer);</div>
+<div class="line"><a id="l00922" name="l00922"></a><span class="lineno">  922</span>    <span class="comment">// crash if the buffer was overflowed</span></div>
+<div class="line"><a id="l00923" name="l00923"></a><span class="lineno">  923</span>    assert(buffer[<span class="keyword">sizeof</span>(buffer) - 1] == <span class="charliteral">&#39;\0&#39;</span>);</div>
+<div class="line"><a id="l00924" name="l00924"></a><span class="lineno">  924</span>    ESP_LOGI(<a class="code hl_variable" href="namespaceshrapnel_1_1parameters.html#a0cbbede6af96973c56e635f9a90599cd">TAG</a>, <span class="stringliteral">&quot;Task list:\n%s&quot;</span>, buffer);</div>
+<div class="line"><a id="l00925" name="l00925"></a><span class="lineno">  925</span><span class="preprocessor">#endif</span></div>
 <div class="line"><a id="l00926" name="l00926"></a><span class="lineno">  926</span> </div>
-<div class="line"><a id="l00927" name="l00927"></a><span class="lineno">  927</span>            midi_decoder-&gt;decode(*<span class="keywordtype">byte</span>);</div>
-<div class="line"><a id="l00928" name="l00928"></a><span class="lineno">  928</span>        }</div>
+<div class="line"><a id="l00927" name="l00927"></a><span class="lineno">  927</span>    <a class="code hl_variable" href="namespaceshrapnel_1_1events.html#a63fd47484f0f2560469429a7b28b7a0e">events::input_clipped</a>.test_and_set();</div>
+<div class="line"><a id="l00928" name="l00928"></a><span class="lineno">  928</span>    <a class="code hl_variable" href="namespaceshrapnel_1_1events.html#ad28eee14b7b281e8580c0ca9f14adda2">events::output_clipped</a>.test_and_set();</div>
 <div class="line"><a id="l00929" name="l00929"></a><span class="lineno">  929</span> </div>
-<div class="line"><a id="l00930" name="l00930"></a><span class="lineno">  930</span>        <span class="keywordflow">if</span>(<a class="code hl_typedef" href="main_8cpp.html#a4a2a8445978c00038c4b9a0d35ca7a69">AppMessage</a> message; <a class="code hl_variable" href="namespaceshrapnel.html#af4939089585b30c735a3fd8eeb5c4439">in_queue</a>-&gt;receive(&amp;message, 0))</div>
-<div class="line"><a id="l00931" name="l00931"></a><span class="lineno">  931</span>        {</div>
-<div class="line"><a id="l00932" name="l00932"></a><span class="lineno">  932</span>            <span class="keyword">auto</span> fd = message.second;</div>
-<div class="line"><a id="l00933" name="l00933"></a><span class="lineno">  933</span> </div>
-<div class="line"><a id="l00934" name="l00934"></a><span class="lineno">  934</span>            std::visit([&amp;](<span class="keyword">const</span> <span class="keyword">auto</span> &amp;message){</div>
-<div class="line"><a id="l00935" name="l00935"></a><span class="lineno">  935</span>                <span class="keyword">using </span>T = std::decay_t&lt;<span class="keyword">decltype</span>(message)&gt;;</div>
-<div class="line"><a id="l00936" name="l00936"></a><span class="lineno">  936</span> </div>
-<div class="line"><a id="l00937" name="l00937"></a><span class="lineno">  937</span>                <span class="keywordflow">if</span> <span class="keyword">constexpr</span>(std::is_same_v&lt;T, parameters::ApiMessage&gt;) {</div>
-<div class="line"><a id="l00938" name="l00938"></a><span class="lineno">  938</span>                    <span class="keywordflow">if</span>(!fd.has_value())</div>
-<div class="line"><a id="l00939" name="l00939"></a><span class="lineno">  939</span>                    {</div>
-<div class="line"><a id="l00940" name="l00940"></a><span class="lineno">  940</span>                        ESP_LOGE(<a class="code hl_variable" href="namespaceshrapnel_1_1parameters.html#a0cbbede6af96973c56e635f9a90599cd">TAG</a>, <span class="stringliteral">&quot;Must always have fd&quot;</span>);</div>
-<div class="line"><a id="l00941" name="l00941"></a><span class="lineno">  941</span>                    }</div>
-<div class="line"><a id="l00942" name="l00942"></a><span class="lineno">  942</span> </div>
-<div class="line"><a id="l00943" name="l00943"></a><span class="lineno">  943</span>                    <a class="code hl_variable" href="namespaceshrapnel.html#a41f43adc72634d961fb4b185da37489f">cmd_handling</a>-&gt;dispatch(message, *fd);</div>
-<div class="line"><a id="l00944" name="l00944"></a><span class="lineno">  944</span>                } <span class="keywordflow">else</span> <span class="keywordflow">if</span> <span class="keyword">constexpr</span>(std::is_same_v&lt;T, midi::MappingApiMessage&gt;) {</div>
-<div class="line"><a id="l00945" name="l00945"></a><span class="lineno">  945</span>                    std::scoped_lock lock{<a class="code hl_variable" href="namespaceshrapnel.html#aace3a2116876caa6e4e139d75e6d4eec">midi_mutex</a>};</div>
-<div class="line"><a id="l00946" name="l00946"></a><span class="lineno">  946</span> </div>
-<div class="line"><a id="l00947" name="l00947"></a><span class="lineno">  947</span>                    <span class="keyword">auto</span> response = std::visit([&amp;](<span class="keyword">const</span> <span class="keyword">auto</span> &amp;message) -&gt; std::optional&lt;midi::MappingApiMessage&gt; {</div>
-<div class="line"><a id="l00948" name="l00948"></a><span class="lineno">  948</span>                        <span class="keyword">using </span>T = std::decay_t&lt;<span class="keyword">decltype</span>(message)&gt;;</div>
-<div class="line"><a id="l00949" name="l00949"></a><span class="lineno">  949</span> </div>
-<div class="line"><a id="l00950" name="l00950"></a><span class="lineno">  950</span>                        <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (std::is_same_v&lt;T, midi::GetRequest&gt;) {</div>
-<div class="line"><a id="l00951" name="l00951"></a><span class="lineno">  951</span>                            <span class="keyword">auto</span> mappings = <a class="code hl_variable" href="namespaceshrapnel.html#a1c279551793c1879841f4d0bb89bd420">midi_mapping_manager</a>-&gt;get();</div>
-<div class="line"><a id="l00952" name="l00952"></a><span class="lineno">  952</span>                            <span class="keywordflow">return</span> <a class="code hl_struct" href="structshrapnel_1_1midi_1_1GetResponse.html">midi::GetResponse</a>{mappings};</div>
-<div class="line"><a id="l00953" name="l00953"></a><span class="lineno">  953</span>                        } <span class="keywordflow">else</span> <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (std::is_same_v&lt;T, midi::CreateRequest&gt;) {</div>
-<div class="line"><a id="l00954" name="l00954"></a><span class="lineno">  954</span>                            <span class="keyword">auto</span> rc = <a class="code hl_variable" href="namespaceshrapnel.html#a1c279551793c1879841f4d0bb89bd420">midi_mapping_manager</a>-&gt;create(message.mapping);</div>
-<div class="line"><a id="l00955" name="l00955"></a><span class="lineno">  955</span>                            <span class="keywordflow">if</span>(rc == 0)</div>
-<div class="line"><a id="l00956" name="l00956"></a><span class="lineno">  956</span>                            {</div>
-<div class="line"><a id="l00957" name="l00957"></a><span class="lineno">  957</span>                                <span class="keywordflow">return</span> <a class="code hl_struct" href="structshrapnel_1_1midi_1_1CreateResponse.html">midi::CreateResponse</a>{message.<a class="code hl_variable" href="structshrapnel_1_1midi_1_1CreateResponse.html#a9e3f73aa5d09af4a127809bcf53a758c">mapping</a>};</div>
-<div class="line"><a id="l00958" name="l00958"></a><span class="lineno">  958</span>                            }</div>
-<div class="line"><a id="l00959" name="l00959"></a><span class="lineno">  959</span>                        } <span class="keywordflow">else</span> <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (std::is_same_v&lt;T, midi::Update&gt;) {</div>
-<div class="line"><a id="l00960" name="l00960"></a><span class="lineno">  960</span>                            <span class="comment">// return code ignored, as there is no way to indicate</span></div>
-<div class="line"><a id="l00961" name="l00961"></a><span class="lineno">  961</span>                            <span class="comment">// the error to the frontend</span></div>
-<div class="line"><a id="l00962" name="l00962"></a><span class="lineno">  962</span>                            (void)<a class="code hl_variable" href="namespaceshrapnel.html#a1c279551793c1879841f4d0bb89bd420">midi_mapping_manager</a>-&gt;update(message.mapping);</div>
-<div class="line"><a id="l00963" name="l00963"></a><span class="lineno">  963</span>                        } <span class="keywordflow">else</span> <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (std::is_same_v&lt;T, midi::Remove&gt;) {</div>
-<div class="line"><a id="l00964" name="l00964"></a><span class="lineno">  964</span>                            <a class="code hl_variable" href="namespaceshrapnel.html#a1c279551793c1879841f4d0bb89bd420">midi_mapping_manager</a>-&gt;remove(message.id);</div>
-<div class="line"><a id="l00965" name="l00965"></a><span class="lineno">  965</span>                        } <span class="keywordflow">else</span> {</div>
-<div class="line"><a id="l00966" name="l00966"></a><span class="lineno">  966</span>                            ESP_LOGE(<a class="code hl_variable" href="namespaceshrapnel_1_1parameters.html#a0cbbede6af96973c56e635f9a90599cd">TAG</a>, <span class="stringliteral">&quot;Unhandled message type&quot;</span>);</div>
-<div class="line"><a id="l00967" name="l00967"></a><span class="lineno">  967</span>                        }</div>
-<div class="line"><a id="l00968" name="l00968"></a><span class="lineno">  968</span> </div>
-<div class="line"><a id="l00969" name="l00969"></a><span class="lineno">  969</span>                        <span class="keywordflow">return</span> std::nullopt;</div>
-<div class="line"><a id="l00970" name="l00970"></a><span class="lineno">  970</span>                    }, message);</div>
-<div class="line"><a id="l00971" name="l00971"></a><span class="lineno">  971</span> </div>
-<div class="line"><a id="l00972" name="l00972"></a><span class="lineno">  972</span>                    <span class="keywordflow">if</span>(response.has_value())</div>
-<div class="line"><a id="l00973" name="l00973"></a><span class="lineno">  973</span>                    {</div>
-<div class="line"><a id="l00974" name="l00974"></a><span class="lineno">  974</span>                        <a class="code hl_function" href="main_8cpp.html#a1a66099a9e1054494d0704363a5c8666">audio_event_send_callback</a>({*response, std::nullopt});</div>
-<div class="line"><a id="l00975" name="l00975"></a><span class="lineno">  975</span>                    }</div>
-<div class="line"><a id="l00976" name="l00976"></a><span class="lineno">  976</span>                }</div>
-<div class="line"><a id="l00977" name="l00977"></a><span class="lineno">  977</span>            }, message.first);</div>
-<div class="line"><a id="l00978" name="l00978"></a><span class="lineno">  978</span>        }</div>
-<div class="line"><a id="l00979" name="l00979"></a><span class="lineno">  979</span> </div>
-<div class="line"><a id="l00980" name="l00980"></a><span class="lineno">  980</span>        {</div>
-<div class="line"><a id="l00981" name="l00981"></a><span class="lineno">  981</span>            <span class="comment">// i2s produces an event on each buffer TX/RX. We process all the</span></div>
-<div class="line"><a id="l00982" name="l00982"></a><span class="lineno">  982</span>            <span class="comment">// events in the current iteration, so that the queue doesn&#39;t fill</span></div>
-<div class="line"><a id="l00983" name="l00983"></a><span class="lineno">  983</span>            <span class="comment">// up.</span></div>
-<div class="line"><a id="l00984" name="l00984"></a><span class="lineno">  984</span>            i2s_event_t event;</div>
-<div class="line"><a id="l00985" name="l00985"></a><span class="lineno">  985</span>            <span class="keywordflow">while</span>(xQueueReceive(<a class="code hl_variable" href="i2s_8cpp.html#a9b83a13d267928932fc9d01c7ee09df2">i2s_queue</a>, &amp;event, 0))</div>
-<div class="line"><a id="l00986" name="l00986"></a><span class="lineno">  986</span>            {</div>
-<div class="line"><a id="l00987" name="l00987"></a><span class="lineno">  987</span>                <a class="code hl_function" href="i2s_8cpp.html#a7bd2643748a0d4058522967eecfb1dc1">log_i2s_event</a>(event);</div>
-<div class="line"><a id="l00988" name="l00988"></a><span class="lineno">  988</span>            }</div>
-<div class="line"><a id="l00989" name="l00989"></a><span class="lineno">  989</span>        }</div>
-<div class="line"><a id="l00990" name="l00990"></a><span class="lineno">  990</span> </div>
-<div class="line"><a id="l00991" name="l00991"></a><span class="lineno">  991</span>        <span class="keywordflow">if</span>(!xTimerIsTimerActive(clipping_throttle_timer))</div>
+<div class="line"><a id="l00930" name="l00930"></a><span class="lineno">  930</span>    <span class="keywordflow">while</span>(1)</div>
+<div class="line"><a id="l00931" name="l00931"></a><span class="lineno">  931</span>    {</div>
+<div class="line"><a id="l00932" name="l00932"></a><span class="lineno">  932</span>        vTaskDelay(pdMS_TO_TICKS(10));</div>
+<div class="line"><a id="l00933" name="l00933"></a><span class="lineno">  933</span>        <span class="keyword">auto</span> tick_count_start = xTaskGetTickCount();</div>
+<div class="line"><a id="l00934" name="l00934"></a><span class="lineno">  934</span> </div>
+<div class="line"><a id="l00935" name="l00935"></a><span class="lineno">  935</span>        <span class="keywordflow">if</span>(<span class="keyword">auto</span> <span class="keywordtype">byte</span> = midi_uart-&gt;get_byte(0); <span class="keywordtype">byte</span>.has_value())</div>
+<div class="line"><a id="l00936" name="l00936"></a><span class="lineno">  936</span>        {</div>
+<div class="line"><a id="l00937" name="l00937"></a><span class="lineno">  937</span>            ESP_LOGI(<a class="code hl_variable" href="namespaceshrapnel_1_1parameters.html#a0cbbede6af96973c56e635f9a90599cd">TAG</a>, <span class="stringliteral">&quot;midi got byte 0x%02x&quot;</span>, *<span class="keywordtype">byte</span>);</div>
+<div class="line"><a id="l00938" name="l00938"></a><span class="lineno">  938</span> </div>
+<div class="line"><a id="l00939" name="l00939"></a><span class="lineno">  939</span>            midi_decoder-&gt;decode(*<span class="keywordtype">byte</span>);</div>
+<div class="line"><a id="l00940" name="l00940"></a><span class="lineno">  940</span>        }</div>
+<div class="line"><a id="l00941" name="l00941"></a><span class="lineno">  941</span> </div>
+<div class="line"><a id="l00942" name="l00942"></a><span class="lineno">  942</span>        <span class="keywordflow">if</span>(<a class="code hl_typedef" href="main_8cpp.html#a4a2a8445978c00038c4b9a0d35ca7a69">AppMessage</a> message; <a class="code hl_variable" href="namespaceshrapnel.html#af4939089585b30c735a3fd8eeb5c4439">in_queue</a>-&gt;receive(&amp;message, 0))</div>
+<div class="line"><a id="l00943" name="l00943"></a><span class="lineno">  943</span>        {</div>
+<div class="line"><a id="l00944" name="l00944"></a><span class="lineno">  944</span>            <span class="keyword">auto</span> fd = message.second;</div>
+<div class="line"><a id="l00945" name="l00945"></a><span class="lineno">  945</span> </div>
+<div class="line"><a id="l00946" name="l00946"></a><span class="lineno">  946</span>            std::visit([&amp;](<span class="keyword">const</span> <span class="keyword">auto</span> &amp;message){</div>
+<div class="line"><a id="l00947" name="l00947"></a><span class="lineno">  947</span>                <span class="keyword">using </span>T = std::decay_t&lt;<span class="keyword">decltype</span>(message)&gt;;</div>
+<div class="line"><a id="l00948" name="l00948"></a><span class="lineno">  948</span> </div>
+<div class="line"><a id="l00949" name="l00949"></a><span class="lineno">  949</span>                <span class="keywordflow">if</span> <span class="keyword">constexpr</span>(std::is_same_v&lt;T, parameters::ApiMessage&gt;) {</div>
+<div class="line"><a id="l00950" name="l00950"></a><span class="lineno">  950</span>                    <span class="keywordflow">if</span>(!fd.has_value())</div>
+<div class="line"><a id="l00951" name="l00951"></a><span class="lineno">  951</span>                    {</div>
+<div class="line"><a id="l00952" name="l00952"></a><span class="lineno">  952</span>                        ESP_LOGE(<a class="code hl_variable" href="namespaceshrapnel_1_1parameters.html#a0cbbede6af96973c56e635f9a90599cd">TAG</a>, <span class="stringliteral">&quot;Must always have fd&quot;</span>);</div>
+<div class="line"><a id="l00953" name="l00953"></a><span class="lineno">  953</span>                    }</div>
+<div class="line"><a id="l00954" name="l00954"></a><span class="lineno">  954</span> </div>
+<div class="line"><a id="l00955" name="l00955"></a><span class="lineno">  955</span>                    <a class="code hl_variable" href="namespaceshrapnel.html#a41f43adc72634d961fb4b185da37489f">cmd_handling</a>-&gt;dispatch(message, *fd);</div>
+<div class="line"><a id="l00956" name="l00956"></a><span class="lineno">  956</span>                } <span class="keywordflow">else</span> <span class="keywordflow">if</span> <span class="keyword">constexpr</span>(std::is_same_v&lt;T, midi::MappingApiMessage&gt;) {</div>
+<div class="line"><a id="l00957" name="l00957"></a><span class="lineno">  957</span>                    std::scoped_lock lock{<a class="code hl_variable" href="namespaceshrapnel.html#aace3a2116876caa6e4e139d75e6d4eec">midi_mutex</a>};</div>
+<div class="line"><a id="l00958" name="l00958"></a><span class="lineno">  958</span> </div>
+<div class="line"><a id="l00959" name="l00959"></a><span class="lineno">  959</span>                    <span class="keyword">auto</span> response = std::visit([&amp;](<span class="keyword">const</span> <span class="keyword">auto</span> &amp;message) -&gt; std::optional&lt;midi::MappingApiMessage&gt; {</div>
+<div class="line"><a id="l00960" name="l00960"></a><span class="lineno">  960</span>                        <span class="keyword">using </span>T = std::decay_t&lt;<span class="keyword">decltype</span>(message)&gt;;</div>
+<div class="line"><a id="l00961" name="l00961"></a><span class="lineno">  961</span> </div>
+<div class="line"><a id="l00962" name="l00962"></a><span class="lineno">  962</span>                        <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (std::is_same_v&lt;T, midi::GetRequest&gt;) {</div>
+<div class="line"><a id="l00963" name="l00963"></a><span class="lineno">  963</span>                            <span class="keyword">auto</span> mappings = <a class="code hl_variable" href="namespaceshrapnel.html#a1c279551793c1879841f4d0bb89bd420">midi_mapping_manager</a>-&gt;get();</div>
+<div class="line"><a id="l00964" name="l00964"></a><span class="lineno">  964</span>                            <span class="keywordflow">return</span> <a class="code hl_struct" href="structshrapnel_1_1midi_1_1GetResponse.html">midi::GetResponse</a>{mappings};</div>
+<div class="line"><a id="l00965" name="l00965"></a><span class="lineno">  965</span>                        } <span class="keywordflow">else</span> <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (std::is_same_v&lt;T, midi::CreateRequest&gt;) {</div>
+<div class="line"><a id="l00966" name="l00966"></a><span class="lineno">  966</span>                            <span class="keyword">auto</span> rc = <a class="code hl_variable" href="namespaceshrapnel.html#a1c279551793c1879841f4d0bb89bd420">midi_mapping_manager</a>-&gt;create(message.mapping);</div>
+<div class="line"><a id="l00967" name="l00967"></a><span class="lineno">  967</span>                            <span class="keywordflow">if</span>(rc == 0)</div>
+<div class="line"><a id="l00968" name="l00968"></a><span class="lineno">  968</span>                            {</div>
+<div class="line"><a id="l00969" name="l00969"></a><span class="lineno">  969</span>                                <span class="keywordflow">return</span> <a class="code hl_struct" href="structshrapnel_1_1midi_1_1CreateResponse.html">midi::CreateResponse</a>{message.<a class="code hl_variable" href="structshrapnel_1_1midi_1_1CreateResponse.html#a9e3f73aa5d09af4a127809bcf53a758c">mapping</a>};</div>
+<div class="line"><a id="l00970" name="l00970"></a><span class="lineno">  970</span>                            }</div>
+<div class="line"><a id="l00971" name="l00971"></a><span class="lineno">  971</span>                        } <span class="keywordflow">else</span> <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (std::is_same_v&lt;T, midi::Update&gt;) {</div>
+<div class="line"><a id="l00972" name="l00972"></a><span class="lineno">  972</span>                            <span class="comment">// return code ignored, as there is no way to indicate</span></div>
+<div class="line"><a id="l00973" name="l00973"></a><span class="lineno">  973</span>                            <span class="comment">// the error to the frontend</span></div>
+<div class="line"><a id="l00974" name="l00974"></a><span class="lineno">  974</span>                            (void)<a class="code hl_variable" href="namespaceshrapnel.html#a1c279551793c1879841f4d0bb89bd420">midi_mapping_manager</a>-&gt;update(message.mapping);</div>
+<div class="line"><a id="l00975" name="l00975"></a><span class="lineno">  975</span>                        } <span class="keywordflow">else</span> <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (std::is_same_v&lt;T, midi::Remove&gt;) {</div>
+<div class="line"><a id="l00976" name="l00976"></a><span class="lineno">  976</span>                            <a class="code hl_variable" href="namespaceshrapnel.html#a1c279551793c1879841f4d0bb89bd420">midi_mapping_manager</a>-&gt;remove(message.id);</div>
+<div class="line"><a id="l00977" name="l00977"></a><span class="lineno">  977</span>                        } <span class="keywordflow">else</span> {</div>
+<div class="line"><a id="l00978" name="l00978"></a><span class="lineno">  978</span>                            ESP_LOGE(<a class="code hl_variable" href="namespaceshrapnel_1_1parameters.html#a0cbbede6af96973c56e635f9a90599cd">TAG</a>, <span class="stringliteral">&quot;Unhandled message type&quot;</span>);</div>
+<div class="line"><a id="l00979" name="l00979"></a><span class="lineno">  979</span>                        }</div>
+<div class="line"><a id="l00980" name="l00980"></a><span class="lineno">  980</span> </div>
+<div class="line"><a id="l00981" name="l00981"></a><span class="lineno">  981</span>                        <span class="keywordflow">return</span> std::nullopt;</div>
+<div class="line"><a id="l00982" name="l00982"></a><span class="lineno">  982</span>                    }, message);</div>
+<div class="line"><a id="l00983" name="l00983"></a><span class="lineno">  983</span> </div>
+<div class="line"><a id="l00984" name="l00984"></a><span class="lineno">  984</span>                    <span class="keywordflow">if</span>(response.has_value())</div>
+<div class="line"><a id="l00985" name="l00985"></a><span class="lineno">  985</span>                    {</div>
+<div class="line"><a id="l00986" name="l00986"></a><span class="lineno">  986</span>                        <a class="code hl_function" href="main_8cpp.html#a1a66099a9e1054494d0704363a5c8666">audio_event_send_callback</a>({*response, std::nullopt});</div>
+<div class="line"><a id="l00987" name="l00987"></a><span class="lineno">  987</span>                    }</div>
+<div class="line"><a id="l00988" name="l00988"></a><span class="lineno">  988</span>                }</div>
+<div class="line"><a id="l00989" name="l00989"></a><span class="lineno">  989</span>            }, message.first);</div>
+<div class="line"><a id="l00990" name="l00990"></a><span class="lineno">  990</span>        }</div>
+<div class="line"><a id="l00991" name="l00991"></a><span class="lineno">  991</span> </div>
 <div class="line"><a id="l00992" name="l00992"></a><span class="lineno">  992</span>        {</div>
-<div class="line"><a id="l00993" name="l00993"></a><span class="lineno">  993</span>            <span class="keywordflow">if</span>(!<a class="code hl_variable" href="namespaceshrapnel_1_1events.html#a63fd47484f0f2560469429a7b28b7a0e">events::input_clipped</a>.test_and_set())</div>
-<div class="line"><a id="l00994" name="l00994"></a><span class="lineno">  994</span>            {</div>
-<div class="line"><a id="l00995" name="l00995"></a><span class="lineno">  995</span>                ESP_LOGI(<a class="code hl_variable" href="namespaceshrapnel_1_1parameters.html#a0cbbede6af96973c56e635f9a90599cd">TAG</a>, <span class="stringliteral">&quot;input was clipped&quot;</span>);</div>
-<div class="line"><a id="l00996" name="l00996"></a><span class="lineno">  996</span>                <a class="code hl_function" href="main_8cpp.html#a1a66099a9e1054494d0704363a5c8666">audio_event_send_callback</a>(</div>
-<div class="line"><a id="l00997" name="l00997"></a><span class="lineno">  997</span>                    {<a class="code hl_struct" href="structshrapnel_1_1events_1_1InputClipped.html">events::InputClipped</a>{}, std::nullopt});</div>
-<div class="line"><a id="l00998" name="l00998"></a><span class="lineno">  998</span>                xTimerReset(clipping_throttle_timer, pdMS_TO_TICKS(10));</div>
-<div class="line"><a id="l00999" name="l00999"></a><span class="lineno">  999</span>            }</div>
-<div class="line"><a id="l01000" name="l01000"></a><span class="lineno"> 1000</span> </div>
-<div class="line"><a id="l01001" name="l01001"></a><span class="lineno"> 1001</span>            <span class="keywordflow">if</span>(!<a class="code hl_variable" href="namespaceshrapnel_1_1events.html#ad28eee14b7b281e8580c0ca9f14adda2">events::output_clipped</a>.test_and_set())</div>
-<div class="line"><a id="l01002" name="l01002"></a><span class="lineno"> 1002</span>            {</div>
-<div class="line"><a id="l01003" name="l01003"></a><span class="lineno"> 1003</span>                ESP_LOGI(<a class="code hl_variable" href="namespaceshrapnel_1_1parameters.html#a0cbbede6af96973c56e635f9a90599cd">TAG</a>, <span class="stringliteral">&quot;output was clipped&quot;</span>);</div>
-<div class="line"><a id="l01004" name="l01004"></a><span class="lineno"> 1004</span>                <a class="code hl_function" href="main_8cpp.html#a1a66099a9e1054494d0704363a5c8666">audio_event_send_callback</a>(</div>
-<div class="line"><a id="l01005" name="l01005"></a><span class="lineno"> 1005</span>                    {<a class="code hl_struct" href="structshrapnel_1_1events_1_1OutputClipped.html">events::OutputClipped</a>{}, std::nullopt});</div>
-<div class="line"><a id="l01006" name="l01006"></a><span class="lineno"> 1006</span>                xTimerReset(clipping_throttle_timer, pdMS_TO_TICKS(10));</div>
-<div class="line"><a id="l01007" name="l01007"></a><span class="lineno"> 1007</span>            }</div>
-<div class="line"><a id="l01008" name="l01008"></a><span class="lineno"> 1008</span>        }</div>
-<div class="line"><a id="l01009" name="l01009"></a><span class="lineno"> 1009</span> </div>
-<div class="line"><a id="l01010" name="l01010"></a><span class="lineno"> 1010</span>        <a class="code hl_struct" href="structshrapnel_1_1wifi_1_1InternalEvent.html">wifi::InternalEvent</a> wifi_event;</div>
-<div class="line"><a id="l01011" name="l01011"></a><span class="lineno"> 1011</span>        <span class="keywordflow">while</span>(pdPASS == wifi_queue.receive(&amp;wifi_event, 0))</div>
-<div class="line"><a id="l01012" name="l01012"></a><span class="lineno"> 1012</span>        {</div>
-<div class="line"><a id="l01013" name="l01013"></a><span class="lineno"> 1013</span>            <a class="code hl_struct" href="structshrapnel_1_1wifi_1_1State.html">wifi::State</a> <a class="code hl_variable" href="noise__gate_8cpp.html#a499e7824037af983d0524a98081e7f0b">state</a>{wifi_state_chart.get_state_id()};</div>
-<div class="line"><a id="l01014" name="l01014"></a><span class="lineno"> 1014</span>            ESP_LOGI(<a class="code hl_variable" href="namespaceshrapnel_1_1parameters.html#a0cbbede6af96973c56e635f9a90599cd">TAG</a>, <span class="stringliteral">&quot;state: %s event: %s&quot;</span>, <a class="code hl_variable" href="noise__gate_8cpp.html#a499e7824037af983d0524a98081e7f0b">state</a>.c_str(), wifi_event.c_str());</div>
-<div class="line"><a id="l01015" name="l01015"></a><span class="lineno"> 1015</span> </div>
-<div class="line"><a id="l01016" name="l01016"></a><span class="lineno"> 1016</span>            wifi_state_chart.process_event(wifi_event);</div>
-<div class="line"><a id="l01017" name="l01017"></a><span class="lineno"> 1017</span> </div>
-<div class="line"><a id="l01018" name="l01018"></a><span class="lineno"> 1018</span>            <a class="code hl_struct" href="structshrapnel_1_1wifi_1_1State.html">wifi::State</a> new_state{wifi_state_chart.get_state_id()};</div>
-<div class="line"><a id="l01019" name="l01019"></a><span class="lineno"> 1019</span>            <span class="keywordflow">if</span>(new_state != <a class="code hl_variable" href="noise__gate_8cpp.html#a499e7824037af983d0524a98081e7f0b">state</a>)</div>
-<div class="line"><a id="l01020" name="l01020"></a><span class="lineno"> 1020</span>            {</div>
-<div class="line"><a id="l01021" name="l01021"></a><span class="lineno"> 1021</span>                ESP_LOGI(<a class="code hl_variable" href="namespaceshrapnel_1_1parameters.html#a0cbbede6af96973c56e635f9a90599cd">TAG</a>, <span class="stringliteral">&quot;changed to state: %s&quot;</span>, new_state.c_str());</div>
-<div class="line"><a id="l01022" name="l01022"></a><span class="lineno"> 1022</span>            }</div>
-<div class="line"><a id="l01023" name="l01023"></a><span class="lineno"> 1023</span>        }</div>
-<div class="line"><a id="l01024" name="l01024"></a><span class="lineno"> 1024</span> </div>
-<div class="line"><a id="l01025" name="l01025"></a><span class="lineno"> 1025</span>        <span class="keywordflow">if</span>(!parameter_observer.is_save_throttled.test_and_set())</div>
-<div class="line"><a id="l01026" name="l01026"></a><span class="lineno"> 1026</span>        {</div>
-<div class="line"><a id="l01027" name="l01027"></a><span class="lineno"> 1027</span>            parameter_observer.persist_parameters();</div>
-<div class="line"><a id="l01028" name="l01028"></a><span class="lineno"> 1028</span>            ESP_LOGI(<a class="code hl_variable" href="namespaceshrapnel_1_1parameters.html#a0cbbede6af96973c56e635f9a90599cd">TAG</a>, <span class="stringliteral">&quot;Parameters saved to NVS&quot;</span>);</div>
-<div class="line"><a id="l01029" name="l01029"></a><span class="lineno"> 1029</span>        }</div>
-<div class="line"><a id="l01030" name="l01030"></a><span class="lineno"> 1030</span> </div>
-<div class="line"><a id="l01031" name="l01031"></a><span class="lineno"> 1031</span>        <span class="comment">/* Check if the current iteration of the main loop took too long. This</span></div>
-<div class="line"><a id="l01032" name="l01032"></a><span class="lineno"> 1032</span><span class="comment">         * might be caused by blocking while handling events.</span></div>
-<div class="line"><a id="l01033" name="l01033"></a><span class="lineno"> 1033</span><span class="comment">         *</span></div>
-<div class="line"><a id="l01034" name="l01034"></a><span class="lineno"> 1034</span><span class="comment">         * It can also be caused by another thread that has a higher priority</span></div>
-<div class="line"><a id="l01035" name="l01035"></a><span class="lineno"> 1035</span><span class="comment">         * than the main thread.</span></div>
-<div class="line"><a id="l01036" name="l01036"></a><span class="lineno"> 1036</span><span class="comment">         */</span></div>
-<div class="line"><a id="l01037" name="l01037"></a><span class="lineno"> 1037</span>        <span class="keyword">auto</span> tick_count_iteration = xTaskGetTickCount() - tick_count_start;</div>
-<div class="line"><a id="l01038" name="l01038"></a><span class="lineno"> 1038</span>        <span class="keywordflow">if</span>(tick_count_iteration &gt; pdMS_TO_TICKS(5))</div>
-<div class="line"><a id="l01039" name="l01039"></a><span class="lineno"> 1039</span>        {</div>
-<div class="line"><a id="l01040" name="l01040"></a><span class="lineno"> 1040</span>            ESP_LOGW(<a class="code hl_variable" href="namespaceshrapnel_1_1parameters.html#a0cbbede6af96973c56e635f9a90599cd">TAG</a>, <span class="stringliteral">&quot;slow iteration: %d ms&quot;</span>, pdTICKS_TO_MS(tick_count_iteration));</div>
+<div class="line"><a id="l00993" name="l00993"></a><span class="lineno">  993</span>            <span class="comment">// i2s produces an event on each buffer TX/RX. We process all the</span></div>
+<div class="line"><a id="l00994" name="l00994"></a><span class="lineno">  994</span>            <span class="comment">// events in the current iteration, so that the queue doesn&#39;t fill</span></div>
+<div class="line"><a id="l00995" name="l00995"></a><span class="lineno">  995</span>            <span class="comment">// up.</span></div>
+<div class="line"><a id="l00996" name="l00996"></a><span class="lineno">  996</span>            i2s_event_t event;</div>
+<div class="line"><a id="l00997" name="l00997"></a><span class="lineno">  997</span>            <span class="keywordflow">while</span>(xQueueReceive(<a class="code hl_variable" href="i2s_8cpp.html#a9b83a13d267928932fc9d01c7ee09df2">i2s_queue</a>, &amp;event, 0))</div>
+<div class="line"><a id="l00998" name="l00998"></a><span class="lineno">  998</span>            {</div>
+<div class="line"><a id="l00999" name="l00999"></a><span class="lineno">  999</span>                <a class="code hl_function" href="i2s_8cpp.html#a7bd2643748a0d4058522967eecfb1dc1">log_i2s_event</a>(event);</div>
+<div class="line"><a id="l01000" name="l01000"></a><span class="lineno"> 1000</span>            }</div>
+<div class="line"><a id="l01001" name="l01001"></a><span class="lineno"> 1001</span>        }</div>
+<div class="line"><a id="l01002" name="l01002"></a><span class="lineno"> 1002</span> </div>
+<div class="line"><a id="l01003" name="l01003"></a><span class="lineno"> 1003</span>        <span class="keywordflow">if</span>(!xTimerIsTimerActive(clipping_throttle_timer))</div>
+<div class="line"><a id="l01004" name="l01004"></a><span class="lineno"> 1004</span>        {</div>
+<div class="line"><a id="l01005" name="l01005"></a><span class="lineno"> 1005</span>            <span class="keywordflow">if</span>(!<a class="code hl_variable" href="namespaceshrapnel_1_1events.html#a63fd47484f0f2560469429a7b28b7a0e">events::input_clipped</a>.test_and_set())</div>
+<div class="line"><a id="l01006" name="l01006"></a><span class="lineno"> 1006</span>            {</div>
+<div class="line"><a id="l01007" name="l01007"></a><span class="lineno"> 1007</span>                ESP_LOGI(<a class="code hl_variable" href="namespaceshrapnel_1_1parameters.html#a0cbbede6af96973c56e635f9a90599cd">TAG</a>, <span class="stringliteral">&quot;input was clipped&quot;</span>);</div>
+<div class="line"><a id="l01008" name="l01008"></a><span class="lineno"> 1008</span>                <a class="code hl_function" href="main_8cpp.html#a1a66099a9e1054494d0704363a5c8666">audio_event_send_callback</a>(</div>
+<div class="line"><a id="l01009" name="l01009"></a><span class="lineno"> 1009</span>                    {<a class="code hl_struct" href="structshrapnel_1_1events_1_1InputClipped.html">events::InputClipped</a>{}, std::nullopt});</div>
+<div class="line"><a id="l01010" name="l01010"></a><span class="lineno"> 1010</span>                xTimerReset(clipping_throttle_timer, pdMS_TO_TICKS(10));</div>
+<div class="line"><a id="l01011" name="l01011"></a><span class="lineno"> 1011</span>            }</div>
+<div class="line"><a id="l01012" name="l01012"></a><span class="lineno"> 1012</span> </div>
+<div class="line"><a id="l01013" name="l01013"></a><span class="lineno"> 1013</span>            <span class="keywordflow">if</span>(!<a class="code hl_variable" href="namespaceshrapnel_1_1events.html#ad28eee14b7b281e8580c0ca9f14adda2">events::output_clipped</a>.test_and_set())</div>
+<div class="line"><a id="l01014" name="l01014"></a><span class="lineno"> 1014</span>            {</div>
+<div class="line"><a id="l01015" name="l01015"></a><span class="lineno"> 1015</span>                ESP_LOGI(<a class="code hl_variable" href="namespaceshrapnel_1_1parameters.html#a0cbbede6af96973c56e635f9a90599cd">TAG</a>, <span class="stringliteral">&quot;output was clipped&quot;</span>);</div>
+<div class="line"><a id="l01016" name="l01016"></a><span class="lineno"> 1016</span>                <a class="code hl_function" href="main_8cpp.html#a1a66099a9e1054494d0704363a5c8666">audio_event_send_callback</a>(</div>
+<div class="line"><a id="l01017" name="l01017"></a><span class="lineno"> 1017</span>                    {<a class="code hl_struct" href="structshrapnel_1_1events_1_1OutputClipped.html">events::OutputClipped</a>{}, std::nullopt});</div>
+<div class="line"><a id="l01018" name="l01018"></a><span class="lineno"> 1018</span>                xTimerReset(clipping_throttle_timer, pdMS_TO_TICKS(10));</div>
+<div class="line"><a id="l01019" name="l01019"></a><span class="lineno"> 1019</span>            }</div>
+<div class="line"><a id="l01020" name="l01020"></a><span class="lineno"> 1020</span>        }</div>
+<div class="line"><a id="l01021" name="l01021"></a><span class="lineno"> 1021</span> </div>
+<div class="line"><a id="l01022" name="l01022"></a><span class="lineno"> 1022</span>        <a class="code hl_struct" href="structshrapnel_1_1wifi_1_1InternalEvent.html">wifi::InternalEvent</a> wifi_event;</div>
+<div class="line"><a id="l01023" name="l01023"></a><span class="lineno"> 1023</span>        <span class="keywordflow">while</span>(pdPASS == wifi_queue.receive(&amp;wifi_event, 0))</div>
+<div class="line"><a id="l01024" name="l01024"></a><span class="lineno"> 1024</span>        {</div>
+<div class="line"><a id="l01025" name="l01025"></a><span class="lineno"> 1025</span>            <a class="code hl_struct" href="structshrapnel_1_1wifi_1_1State.html">wifi::State</a> <a class="code hl_variable" href="noise__gate_8cpp.html#a499e7824037af983d0524a98081e7f0b">state</a>{wifi_state_chart.get_state_id()};</div>
+<div class="line"><a id="l01026" name="l01026"></a><span class="lineno"> 1026</span>            ESP_LOGI(<a class="code hl_variable" href="namespaceshrapnel_1_1parameters.html#a0cbbede6af96973c56e635f9a90599cd">TAG</a>, <span class="stringliteral">&quot;state: %s event: %s&quot;</span>, <a class="code hl_variable" href="noise__gate_8cpp.html#a499e7824037af983d0524a98081e7f0b">state</a>.c_str(), wifi_event.c_str());</div>
+<div class="line"><a id="l01027" name="l01027"></a><span class="lineno"> 1027</span> </div>
+<div class="line"><a id="l01028" name="l01028"></a><span class="lineno"> 1028</span>            wifi_state_chart.process_event(wifi_event);</div>
+<div class="line"><a id="l01029" name="l01029"></a><span class="lineno"> 1029</span> </div>
+<div class="line"><a id="l01030" name="l01030"></a><span class="lineno"> 1030</span>            <a class="code hl_struct" href="structshrapnel_1_1wifi_1_1State.html">wifi::State</a> new_state{wifi_state_chart.get_state_id()};</div>
+<div class="line"><a id="l01031" name="l01031"></a><span class="lineno"> 1031</span>            <span class="keywordflow">if</span>(new_state != <a class="code hl_variable" href="noise__gate_8cpp.html#a499e7824037af983d0524a98081e7f0b">state</a>)</div>
+<div class="line"><a id="l01032" name="l01032"></a><span class="lineno"> 1032</span>            {</div>
+<div class="line"><a id="l01033" name="l01033"></a><span class="lineno"> 1033</span>                ESP_LOGI(<a class="code hl_variable" href="namespaceshrapnel_1_1parameters.html#a0cbbede6af96973c56e635f9a90599cd">TAG</a>, <span class="stringliteral">&quot;changed to state: %s&quot;</span>, new_state.c_str());</div>
+<div class="line"><a id="l01034" name="l01034"></a><span class="lineno"> 1034</span>            }</div>
+<div class="line"><a id="l01035" name="l01035"></a><span class="lineno"> 1035</span>        }</div>
+<div class="line"><a id="l01036" name="l01036"></a><span class="lineno"> 1036</span> </div>
+<div class="line"><a id="l01037" name="l01037"></a><span class="lineno"> 1037</span>        <span class="keywordflow">if</span>(!parameter_observer.is_save_throttled.test_and_set())</div>
+<div class="line"><a id="l01038" name="l01038"></a><span class="lineno"> 1038</span>        {</div>
+<div class="line"><a id="l01039" name="l01039"></a><span class="lineno"> 1039</span>            parameter_observer.persist_parameters();</div>
+<div class="line"><a id="l01040" name="l01040"></a><span class="lineno"> 1040</span>            ESP_LOGI(<a class="code hl_variable" href="namespaceshrapnel_1_1parameters.html#a0cbbede6af96973c56e635f9a90599cd">TAG</a>, <span class="stringliteral">&quot;Parameters saved to NVS&quot;</span>);</div>
 <div class="line"><a id="l01041" name="l01041"></a><span class="lineno"> 1041</span>        }</div>
-<div class="line"><a id="l01042" name="l01042"></a><span class="lineno"> 1042</span>    }</div>
-<div class="line"><a id="l01043" name="l01043"></a><span class="lineno"> 1043</span>}</div>
-<div class="line"><a id="l01044" name="l01044"></a><span class="lineno"> 1044</span> </div>
-<div class="line"><a id="l01045" name="l01045"></a><span class="lineno"><a class="line" href="namespaceshrapnel.html#a9c85fa6a77cfb97394c46cf0ebe10298"> 1045</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="namespaceshrapnel.html#a9c85fa6a77cfb97394c46cf0ebe10298">nvs_debug_print</a>()</div>
-<div class="line"><a id="l01046" name="l01046"></a><span class="lineno"> 1046</span>{</div>
-<div class="line"><a id="l01047" name="l01047"></a><span class="lineno"> 1047</span>    nvs_iterator_t it = NULL;</div>
-<div class="line"><a id="l01048" name="l01048"></a><span class="lineno"> 1048</span>    esp_err_t res = nvs_entry_find(<span class="stringliteral">&quot;nvs&quot;</span>, <span class="stringliteral">&quot;persistence&quot;</span>, NVS_TYPE_ANY, &amp;it);</div>
-<div class="line"><a id="l01049" name="l01049"></a><span class="lineno"> 1049</span>    <span class="keywordflow">while</span>(res == ESP_OK) {</div>
-<div class="line"><a id="l01050" name="l01050"></a><span class="lineno"> 1050</span>        nvs_entry_info_t info;</div>
-<div class="line"><a id="l01051" name="l01051"></a><span class="lineno"> 1051</span>        nvs_entry_info(it, &amp;info); <span class="comment">// Can omit error check if parameters are guaranteed to be non-NULL</span></div>
-<div class="line"><a id="l01052" name="l01052"></a><span class="lineno"> 1052</span>        ESP_LOGI(<a class="code hl_variable" href="namespaceshrapnel_1_1parameters.html#a0cbbede6af96973c56e635f9a90599cd">TAG</a>, <span class="stringliteral">&quot;key &#39;%s&#39;, type &#39;%d&#39;&quot;</span>, info.key, info.type);</div>
-<div class="line"><a id="l01053" name="l01053"></a><span class="lineno"> 1053</span>        res = nvs_entry_next(&amp;it);</div>
-<div class="line"><a id="l01054" name="l01054"></a><span class="lineno"> 1054</span>    }</div>
-<div class="line"><a id="l01055" name="l01055"></a><span class="lineno"> 1055</span>    nvs_release_iterator(it);</div>
-<div class="line"><a id="l01056" name="l01056"></a><span class="lineno"> 1056</span>}</div>
-<div class="line"><a id="l01057" name="l01057"></a><span class="lineno"> 1057</span> </div>
-<div class="line"><a id="l01058" name="l01058"></a><span class="lineno"> 1058</span>}</div>
-<div class="line"><a id="l01059" name="l01059"></a><span class="lineno"> 1059</span> </div>
-<div class="line"><a id="l01060" name="l01060"></a><span class="lineno"><a class="line" href="main_8cpp.html#a1a66099a9e1054494d0704363a5c8666"> 1060</a></span><span class="keyword">extern</span> <span class="stringliteral">&quot;C&quot;</span> <span class="keywordtype">void</span> <a class="code hl_function" href="main_8cpp.html#a1a66099a9e1054494d0704363a5c8666">audio_event_send_callback</a>(<span class="keyword">const</span> <a class="code hl_typedef" href="main_8cpp.html#a4a2a8445978c00038c4b9a0d35ca7a69">AppMessage</a> &amp;message)</div>
-<div class="line"><a id="l01061" name="l01061"></a><span class="lineno"> 1061</span>{</div>
-<div class="line"><a id="l01062" name="l01062"></a><span class="lineno"> 1062</span>    ESP_LOGD(<a class="code hl_variable" href="namespaceshrapnel_1_1parameters.html#a0cbbede6af96973c56e635f9a90599cd">TAG</a>, <span class="stringliteral">&quot;%s %s&quot;</span>, __FUNCTION__, pcTaskGetName(NULL));</div>
-<div class="line"><a id="l01063" name="l01063"></a><span class="lineno"> 1063</span> </div>
-<div class="line"><a id="l01064" name="l01064"></a><span class="lineno"> 1064</span>    <span class="keywordflow">if</span>(errQUEUE_FULL ==</div>
-<div class="line"><a id="l01065" name="l01065"></a><span class="lineno"> 1065</span>            <a class="code hl_variable" href="namespaceshrapnel.html#a1350c41ca8ecad036a45252d2c93998a">shrapnel::out_queue</a>-&gt;send(&amp;message, pdMS_TO_TICKS(100)))</div>
-<div class="line"><a id="l01066" name="l01066"></a><span class="lineno"> 1066</span>    {</div>
-<div class="line"><a id="l01067" name="l01067"></a><span class="lineno"> 1067</span>        ESP_LOGE(<a class="code hl_variable" href="namespaceshrapnel_1_1parameters.html#a0cbbede6af96973c56e635f9a90599cd">TAG</a>, <span class="stringliteral">&quot;Failed to send message to websocket&quot;</span>);</div>
-<div class="line"><a id="l01068" name="l01068"></a><span class="lineno"> 1068</span>        <span class="keywordflow">return</span>;</div>
-<div class="line"><a id="l01069" name="l01069"></a><span class="lineno"> 1069</span>    }</div>
-<div class="line"><a id="l01070" name="l01070"></a><span class="lineno"> 1070</span> </div>
-<div class="line"><a id="l01071" name="l01071"></a><span class="lineno"> 1071</span>    <span class="keywordflow">if</span>(!xSemaphoreTake(<a class="code hl_variable" href="namespaceshrapnel.html#ab9671c2bf7feea52d1ba947c71395a73">shrapnel::work_semaphore</a>, 1000 / portTICK_PERIOD_MS))</div>
-<div class="line"><a id="l01072" name="l01072"></a><span class="lineno"> 1072</span>    {</div>
-<div class="line"><a id="l01073" name="l01073"></a><span class="lineno"> 1073</span>        ESP_LOGE(<a class="code hl_variable" href="namespaceshrapnel_1_1parameters.html#a0cbbede6af96973c56e635f9a90599cd">TAG</a>, <span class="stringliteral">&quot;work semaphore timed out&quot;</span>);</div>
-<div class="line"><a id="l01074" name="l01074"></a><span class="lineno"> 1074</span>        <span class="keywordflow">return</span>;</div>
-<div class="line"><a id="l01075" name="l01075"></a><span class="lineno"> 1075</span>    }</div>
-<div class="line"><a id="l01076" name="l01076"></a><span class="lineno"> 1076</span> </div>
-<div class="line"><a id="l01077" name="l01077"></a><span class="lineno"> 1077</span>    <span class="comment">// XXX: server is accessed from outside the main thread here. It is</span></div>
-<div class="line"><a id="l01078" name="l01078"></a><span class="lineno"> 1078</span>    <span class="comment">// probably incorrect, and will break when the server is being torn down</span></div>
-<div class="line"><a id="l01079" name="l01079"></a><span class="lineno"> 1079</span>    <span class="comment">// concurrently to an audio event going out.</span></div>
-<div class="line"><a id="l01080" name="l01080"></a><span class="lineno"> 1080</span>    esp_err_t rc = httpd_queue_work(</div>
-<div class="line"><a id="l01081" name="l01081"></a><span class="lineno"> 1081</span>            <a class="code hl_variable" href="namespaceshrapnel.html#a14fc4d7d4bcc6e89ccd89f7f9e07fb97">shrapnel::_server</a>,</div>
-<div class="line"><a id="l01082" name="l01082"></a><span class="lineno"> 1082</span>            <a class="code hl_function" href="namespaceshrapnel.html#a9df539517dd9158cb2b42a9d9e948a73">shrapnel::websocket_send</a>,</div>
-<div class="line"><a id="l01083" name="l01083"></a><span class="lineno"> 1083</span>            <a class="code hl_variable" href="namespaceshrapnel.html#a14fc4d7d4bcc6e89ccd89f7f9e07fb97">shrapnel::_server</a>);</div>
-<div class="line"><a id="l01084" name="l01084"></a><span class="lineno"> 1084</span>    <span class="keywordflow">if</span>(ESP_OK != rc)</div>
-<div class="line"><a id="l01085" name="l01085"></a><span class="lineno"> 1085</span>    {</div>
-<div class="line"><a id="l01086" name="l01086"></a><span class="lineno"> 1086</span>        ESP_LOGE(<a class="code hl_variable" href="namespaceshrapnel_1_1parameters.html#a0cbbede6af96973c56e635f9a90599cd">TAG</a>, <span class="stringliteral">&quot;failed to queue work for server&quot;</span>);</div>
-<div class="line"><a id="l01087" name="l01087"></a><span class="lineno"> 1087</span>    }</div>
-<div class="line"><a id="l01088" name="l01088"></a><span class="lineno"> 1088</span>}</div>
+<div class="line"><a id="l01042" name="l01042"></a><span class="lineno"> 1042</span> </div>
+<div class="line"><a id="l01043" name="l01043"></a><span class="lineno"> 1043</span>        <span class="keywordflow">if</span>(!is_midi_notify_waiting.test_and_set() &amp;&amp;</div>
+<div class="line"><a id="l01044" name="l01044"></a><span class="lineno"> 1044</span>           last_midi_message.has_value() &amp;&amp;</div>
+<div class="line"><a id="l01045" name="l01045"></a><span class="lineno"> 1045</span>           last_notified_midi_message != *last_midi_message)</div>
+<div class="line"><a id="l01046" name="l01046"></a><span class="lineno"> 1046</span>        {</div>
+<div class="line"><a id="l01047" name="l01047"></a><span class="lineno"> 1047</span>            last_notified_midi_message = *last_midi_message;</div>
+<div class="line"><a id="l01048" name="l01048"></a><span class="lineno"> 1048</span> </div>
+<div class="line"><a id="l01049" name="l01049"></a><span class="lineno"> 1049</span>            <a class="code hl_function" href="main_8cpp.html#a1a66099a9e1054494d0704363a5c8666">audio_event_send_callback</a>(</div>
+<div class="line"><a id="l01050" name="l01050"></a><span class="lineno"> 1050</span>                {<a class="code hl_struct" href="structshrapnel_1_1midi_1_1MessageReceived.html">midi::MessageReceived</a>{*last_midi_message}, std::nullopt});</div>
+<div class="line"><a id="l01051" name="l01051"></a><span class="lineno"> 1051</span>        }</div>
+<div class="line"><a id="l01052" name="l01052"></a><span class="lineno"> 1052</span> </div>
+<div class="line"><a id="l01053" name="l01053"></a><span class="lineno"> 1053</span>        <span class="comment">/* Check if the current iteration of the main loop took too long. This</span></div>
+<div class="line"><a id="l01054" name="l01054"></a><span class="lineno"> 1054</span><span class="comment">         * might be caused by blocking while handling events.</span></div>
+<div class="line"><a id="l01055" name="l01055"></a><span class="lineno"> 1055</span><span class="comment">         *</span></div>
+<div class="line"><a id="l01056" name="l01056"></a><span class="lineno"> 1056</span><span class="comment">         * It can also be caused by another thread that has a higher priority</span></div>
+<div class="line"><a id="l01057" name="l01057"></a><span class="lineno"> 1057</span><span class="comment">         * than the main thread.</span></div>
+<div class="line"><a id="l01058" name="l01058"></a><span class="lineno"> 1058</span><span class="comment">         */</span></div>
+<div class="line"><a id="l01059" name="l01059"></a><span class="lineno"> 1059</span>        <span class="keyword">auto</span> tick_count_iteration = xTaskGetTickCount() - tick_count_start;</div>
+<div class="line"><a id="l01060" name="l01060"></a><span class="lineno"> 1060</span>        <span class="keywordflow">if</span>(tick_count_iteration &gt; pdMS_TO_TICKS(5))</div>
+<div class="line"><a id="l01061" name="l01061"></a><span class="lineno"> 1061</span>        {</div>
+<div class="line"><a id="l01062" name="l01062"></a><span class="lineno"> 1062</span>            ESP_LOGW(<a class="code hl_variable" href="namespaceshrapnel_1_1parameters.html#a0cbbede6af96973c56e635f9a90599cd">TAG</a>, <span class="stringliteral">&quot;slow iteration: %d ms&quot;</span>, pdTICKS_TO_MS(tick_count_iteration));</div>
+<div class="line"><a id="l01063" name="l01063"></a><span class="lineno"> 1063</span>        }</div>
+<div class="line"><a id="l01064" name="l01064"></a><span class="lineno"> 1064</span>    }</div>
+<div class="line"><a id="l01065" name="l01065"></a><span class="lineno"> 1065</span>}</div>
+<div class="line"><a id="l01066" name="l01066"></a><span class="lineno"> 1066</span> </div>
+<div class="line"><a id="l01067" name="l01067"></a><span class="lineno"><a class="line" href="namespaceshrapnel.html#a9c85fa6a77cfb97394c46cf0ebe10298"> 1067</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="namespaceshrapnel.html#a9c85fa6a77cfb97394c46cf0ebe10298">nvs_debug_print</a>()</div>
+<div class="line"><a id="l01068" name="l01068"></a><span class="lineno"> 1068</span>{</div>
+<div class="line"><a id="l01069" name="l01069"></a><span class="lineno"> 1069</span>    nvs_iterator_t it = NULL;</div>
+<div class="line"><a id="l01070" name="l01070"></a><span class="lineno"> 1070</span>    esp_err_t res = nvs_entry_find(<span class="stringliteral">&quot;nvs&quot;</span>, <span class="stringliteral">&quot;persistence&quot;</span>, NVS_TYPE_ANY, &amp;it);</div>
+<div class="line"><a id="l01071" name="l01071"></a><span class="lineno"> 1071</span>    <span class="keywordflow">while</span>(res == ESP_OK) {</div>
+<div class="line"><a id="l01072" name="l01072"></a><span class="lineno"> 1072</span>        nvs_entry_info_t info;</div>
+<div class="line"><a id="l01073" name="l01073"></a><span class="lineno"> 1073</span>        nvs_entry_info(it, &amp;info); <span class="comment">// Can omit error check if parameters are guaranteed to be non-NULL</span></div>
+<div class="line"><a id="l01074" name="l01074"></a><span class="lineno"> 1074</span>        ESP_LOGI(<a class="code hl_variable" href="namespaceshrapnel_1_1parameters.html#a0cbbede6af96973c56e635f9a90599cd">TAG</a>, <span class="stringliteral">&quot;key &#39;%s&#39;, type &#39;%d&#39;&quot;</span>, info.key, info.type);</div>
+<div class="line"><a id="l01075" name="l01075"></a><span class="lineno"> 1075</span>        res = nvs_entry_next(&amp;it);</div>
+<div class="line"><a id="l01076" name="l01076"></a><span class="lineno"> 1076</span>    }</div>
+<div class="line"><a id="l01077" name="l01077"></a><span class="lineno"> 1077</span>    nvs_release_iterator(it);</div>
+<div class="line"><a id="l01078" name="l01078"></a><span class="lineno"> 1078</span>}</div>
+<div class="line"><a id="l01079" name="l01079"></a><span class="lineno"> 1079</span> </div>
+<div class="line"><a id="l01080" name="l01080"></a><span class="lineno"> 1080</span>}</div>
+<div class="line"><a id="l01081" name="l01081"></a><span class="lineno"> 1081</span> </div>
+<div class="line"><a id="l01082" name="l01082"></a><span class="lineno"><a class="line" href="main_8cpp.html#a1a66099a9e1054494d0704363a5c8666"> 1082</a></span><span class="keyword">extern</span> <span class="stringliteral">&quot;C&quot;</span> <span class="keywordtype">void</span> <a class="code hl_function" href="main_8cpp.html#a1a66099a9e1054494d0704363a5c8666">audio_event_send_callback</a>(<span class="keyword">const</span> <a class="code hl_typedef" href="main_8cpp.html#a4a2a8445978c00038c4b9a0d35ca7a69">AppMessage</a> &amp;message)</div>
+<div class="line"><a id="l01083" name="l01083"></a><span class="lineno"> 1083</span>{</div>
+<div class="line"><a id="l01084" name="l01084"></a><span class="lineno"> 1084</span>    ESP_LOGD(<a class="code hl_variable" href="namespaceshrapnel_1_1parameters.html#a0cbbede6af96973c56e635f9a90599cd">TAG</a>, <span class="stringliteral">&quot;%s %s&quot;</span>, __FUNCTION__, pcTaskGetName(NULL));</div>
+<div class="line"><a id="l01085" name="l01085"></a><span class="lineno"> 1085</span> </div>
+<div class="line"><a id="l01086" name="l01086"></a><span class="lineno"> 1086</span>    <span class="keywordflow">if</span>(errQUEUE_FULL ==</div>
+<div class="line"><a id="l01087" name="l01087"></a><span class="lineno"> 1087</span>            <a class="code hl_variable" href="namespaceshrapnel.html#a1350c41ca8ecad036a45252d2c93998a">shrapnel::out_queue</a>-&gt;send(&amp;message, pdMS_TO_TICKS(100)))</div>
+<div class="line"><a id="l01088" name="l01088"></a><span class="lineno"> 1088</span>    {</div>
+<div class="line"><a id="l01089" name="l01089"></a><span class="lineno"> 1089</span>        ESP_LOGE(<a class="code hl_variable" href="namespaceshrapnel_1_1parameters.html#a0cbbede6af96973c56e635f9a90599cd">TAG</a>, <span class="stringliteral">&quot;Failed to send message to websocket&quot;</span>);</div>
+<div class="line"><a id="l01090" name="l01090"></a><span class="lineno"> 1090</span>        <span class="keywordflow">return</span>;</div>
+<div class="line"><a id="l01091" name="l01091"></a><span class="lineno"> 1091</span>    }</div>
+<div class="line"><a id="l01092" name="l01092"></a><span class="lineno"> 1092</span> </div>
+<div class="line"><a id="l01093" name="l01093"></a><span class="lineno"> 1093</span>    <span class="keywordflow">if</span>(!xSemaphoreTake(<a class="code hl_variable" href="namespaceshrapnel.html#ab9671c2bf7feea52d1ba947c71395a73">shrapnel::work_semaphore</a>, 1000 / portTICK_PERIOD_MS))</div>
+<div class="line"><a id="l01094" name="l01094"></a><span class="lineno"> 1094</span>    {</div>
+<div class="line"><a id="l01095" name="l01095"></a><span class="lineno"> 1095</span>        ESP_LOGE(<a class="code hl_variable" href="namespaceshrapnel_1_1parameters.html#a0cbbede6af96973c56e635f9a90599cd">TAG</a>, <span class="stringliteral">&quot;work semaphore timed out&quot;</span>);</div>
+<div class="line"><a id="l01096" name="l01096"></a><span class="lineno"> 1096</span>        <span class="keywordflow">return</span>;</div>
+<div class="line"><a id="l01097" name="l01097"></a><span class="lineno"> 1097</span>    }</div>
+<div class="line"><a id="l01098" name="l01098"></a><span class="lineno"> 1098</span> </div>
+<div class="line"><a id="l01099" name="l01099"></a><span class="lineno"> 1099</span>    <span class="comment">// XXX: server is accessed from outside the main thread here. It is</span></div>
+<div class="line"><a id="l01100" name="l01100"></a><span class="lineno"> 1100</span>    <span class="comment">// probably incorrect, and will break when the server is being torn down</span></div>
+<div class="line"><a id="l01101" name="l01101"></a><span class="lineno"> 1101</span>    <span class="comment">// concurrently to an audio event going out.</span></div>
+<div class="line"><a id="l01102" name="l01102"></a><span class="lineno"> 1102</span>    esp_err_t rc = httpd_queue_work(</div>
+<div class="line"><a id="l01103" name="l01103"></a><span class="lineno"> 1103</span>            <a class="code hl_variable" href="namespaceshrapnel.html#a14fc4d7d4bcc6e89ccd89f7f9e07fb97">shrapnel::_server</a>,</div>
+<div class="line"><a id="l01104" name="l01104"></a><span class="lineno"> 1104</span>            <a class="code hl_function" href="namespaceshrapnel.html#a9df539517dd9158cb2b42a9d9e948a73">shrapnel::websocket_send</a>,</div>
+<div class="line"><a id="l01105" name="l01105"></a><span class="lineno"> 1105</span>            <a class="code hl_variable" href="namespaceshrapnel.html#a14fc4d7d4bcc6e89ccd89f7f9e07fb97">shrapnel::_server</a>);</div>
+<div class="line"><a id="l01106" name="l01106"></a><span class="lineno"> 1106</span>    <span class="keywordflow">if</span>(ESP_OK != rc)</div>
+<div class="line"><a id="l01107" name="l01107"></a><span class="lineno"> 1107</span>    {</div>
+<div class="line"><a id="l01108" name="l01108"></a><span class="lineno"> 1108</span>        ESP_LOGE(<a class="code hl_variable" href="namespaceshrapnel_1_1parameters.html#a0cbbede6af96973c56e635f9a90599cd">TAG</a>, <span class="stringliteral">&quot;failed to queue work for server&quot;</span>);</div>
+<div class="line"><a id="l01109" name="l01109"></a><span class="lineno"> 1109</span>    }</div>
+<div class="line"><a id="l01110" name="l01110"></a><span class="lineno"> 1110</span>}</div>
 <div class="ttc" id="aaudio__events_8h_html"><div class="ttname"><a href="audio__events_8h.html">audio_events.h</a></div></div>
 <div class="ttc" id="aaudio__param_8h_html"><div class="ttname"><a href="audio__param_8h.html">audio_param.h</a></div></div>
 <div class="ttc" id="aclassshrapnel_1_1EventSend_html"><div class="ttname"><a href="classshrapnel_1_1EventSend.html">shrapnel::EventSend</a></div><div class="ttdef"><b>Definition:</b> <a href="main_8cpp_source.html#l00124">main.cpp:124</a></div></div>
@@ -1201,7 +1223,7 @@ $(document).ready(function(){initNavTree('main_8cpp_source.html',''); initResiza
 <div class="ttc" id="aclassshrapnel_1_1Queue_html"><div class="ttname"><a href="classshrapnel_1_1Queue.html">shrapnel::Queue</a></div><div class="ttdef"><b>Definition:</b> <a href="queue_8h_source.html#l00052">queue.h:53</a></div></div>
 <div class="ttc" id="aclassshrapnel_1_1midi_1_1Decoder_html"><div class="ttname"><a href="classshrapnel_1_1midi_1_1Decoder.html">shrapnel::midi::Decoder</a></div><div class="ttdef"><b>Definition:</b> <a href="midi__protocol_8h_source.html#l00102">midi_protocol.h:102</a></div></div>
 <div class="ttc" id="aclassshrapnel_1_1midi_1_1EspMidiUart_html"><div class="ttname"><a href="classshrapnel_1_1midi_1_1EspMidiUart.html">shrapnel::midi::EspMidiUart</a></div><div class="ttdef"><b>Definition:</b> <a href="midi__uart_8h_source.html#l00037">midi_uart.h:37</a></div></div>
-<div class="ttc" id="aclassshrapnel_1_1midi_1_1MappingManager_html"><div class="ttname"><a href="classshrapnel_1_1midi_1_1MappingManager.html">shrapnel::midi::MappingManager</a></div><div class="ttdef"><b>Definition:</b> <a href="midi__mapping_8h_source.html#l00216">midi_mapping.h:216</a></div></div>
+<div class="ttc" id="aclassshrapnel_1_1midi_1_1MappingManager_html"><div class="ttname"><a href="classshrapnel_1_1midi_1_1MappingManager.html">shrapnel::midi::MappingManager</a></div><div class="ttdef"><b>Definition:</b> <a href="midi__mapping_8h_source.html#l00279">midi_mapping.h:279</a></div></div>
 <div class="ttc" id="aclassshrapnel_1_1os_1_1Timer_html"><div class="ttname"><a href="classshrapnel_1_1os_1_1Timer.html">shrapnel::os::Timer</a></div><div class="ttdef"><b>Definition:</b> <a href="timer_8h_source.html#l00030">timer.h:31</a></div></div>
 <div class="ttc" id="aclassshrapnel_1_1os_1_1Timer_html_a5ff1b2e05dc1558fb40ef551fc00d6a9"><div class="ttname"><a href="classshrapnel_1_1os_1_1Timer.html#a5ff1b2e05dc1558fb40ef551fc00d6a9">shrapnel::os::Timer::start</a></div><div class="ttdeci">BaseType_t start(TickType_t xBlockTime)</div><div class="ttdef"><b>Definition:</b> <a href="timer_8cpp_source.html#l00050">timer.cpp:50</a></div></div>
 <div class="ttc" id="aclassshrapnel_1_1os_1_1Timer_html_a700eee72ff07045cfdebbef6d397668e"><div class="ttname"><a href="classshrapnel_1_1os_1_1Timer.html#a700eee72ff07045cfdebbef6d397668e">shrapnel::os::Timer::is_active</a></div><div class="ttdeci">BaseType_t is_active() const</div><div class="ttdef"><b>Definition:</b> <a href="timer_8cpp_source.html#l00048">timer.cpp:48</a></div></div>
@@ -1221,7 +1243,7 @@ $(document).ready(function(){initNavTree('main_8cpp_source.html',''); initResiza
 <div class="ttc" id="ai2s_8cpp_html_a9b83a13d267928932fc9d01c7ee09df2"><div class="ttname"><a href="i2s_8cpp.html#a9b83a13d267928932fc9d01c7ee09df2">i2s_queue</a></div><div class="ttdeci">QueueHandle_t i2s_queue</div><div class="ttdef"><b>Definition:</b> <a href="i2s_8cpp_source.html#l00045">i2s.cpp:45</a></div></div>
 <div class="ttc" id="ai2s_8cpp_html_ab949ae727fd1608d465238ba29ab2dab"><div class="ttname"><a href="i2s_8cpp.html#ab949ae727fd1608d465238ba29ab2dab">i2s_setup</a></div><div class="ttdeci">esp_err_t i2s_setup(gpio_num_t profiling_gpio, shrapnel::parameters::AudioParametersBase *audio_param)</div><div class="ttdef"><b>Definition:</b> <a href="i2s_8cpp_source.html#l00200">i2s.cpp:200</a></div></div>
 <div class="ttc" id="ai2s_8h_html"><div class="ttname"><a href="i2s_8h.html">i2s.h</a></div></div>
-<div class="ttc" id="amain_8cpp_html_a1a66099a9e1054494d0704363a5c8666"><div class="ttname"><a href="main_8cpp.html#a1a66099a9e1054494d0704363a5c8666">audio_event_send_callback</a></div><div class="ttdeci">void audio_event_send_callback(const AppMessage &amp;message)</div><div class="ttdef"><b>Definition:</b> <a href="main_8cpp_source.html#l01060">main.cpp:1060</a></div></div>
+<div class="ttc" id="amain_8cpp_html_a1a66099a9e1054494d0704363a5c8666"><div class="ttname"><a href="main_8cpp.html#a1a66099a9e1054494d0704363a5c8666">audio_event_send_callback</a></div><div class="ttdeci">void audio_event_send_callback(const AppMessage &amp;message)</div><div class="ttdef"><b>Definition:</b> <a href="main_8cpp_source.html#l01082">main.cpp:1082</a></div></div>
 <div class="ttc" id="amain_8cpp_html_a4a2a8445978c00038c4b9a0d35ca7a69"><div class="ttname"><a href="main_8cpp.html#a4a2a8445978c00038c4b9a0d35ca7a69">AppMessage</a></div><div class="ttdeci">std::pair&lt; ApiMessage, FileDescriptor &gt; AppMessage</div><div class="ttdef"><b>Definition:</b> <a href="main_8cpp_source.html#l00089">main.cpp:89</a></div></div>
 <div class="ttc" id="amain_8cpp_html_a69811aaa1a7fd4891677577d309248e6"><div class="ttname"><a href="main_8cpp.html#a69811aaa1a7fd4891677577d309248e6">WifiQueue</a></div><div class="ttdeci">shrapnel::Queue&lt; shrapnel::wifi::InternalEvent, 3 &gt; WifiQueue</div><div class="ttdef"><b>Definition:</b> <a href="main_8cpp_source.html#l00090">main.cpp:90</a></div></div>
 <div class="ttc" id="amain_8cpp_html_a79edd3397c6cf28f6938fd733697bc61"><div class="ttname"><a href="main_8cpp.html#a79edd3397c6cf28f6938fd733697bc61">FileDescriptor</a></div><div class="ttdeci">std::optional&lt; int &gt; FileDescriptor</div><div class="ttdef"><b>Definition:</b> <a href="main_8cpp_source.html#l00088">main.cpp:88</a></div></div>
@@ -1238,8 +1260,8 @@ $(document).ready(function(){initNavTree('main_8cpp_source.html',''); initResiza
 <div class="ttc" id="anamespaceshrapnel_1_1midi_html_a3ce92c675faa537c28f3f68743f0bf16"><div class="ttname"><a href="namespaceshrapnel_1_1midi.html#a3ce92c675faa537c28f3f68743f0bf16">shrapnel::midi::to_json</a></div><div class="ttdeci">rapidjson::Value to_json(rapidjson::Document &amp;document, const float &amp;object)</div><div class="ttdef"><b>Definition:</b> <a href="main_8cpp_source.html#l00110">main.cpp:110</a></div></div>
 <div class="ttc" id="anamespaceshrapnel_1_1midi_html_a745f9f03858045cdfabbd014152fbc15"><div class="ttname"><a href="namespaceshrapnel_1_1midi.html#a745f9f03858045cdfabbd014152fbc15">shrapnel::midi::to_json</a></div><div class="ttdeci">rapidjson::Value to_json(rapidjson::Document &amp;document, const T &amp;object)</div><div class="ttdoc">Convert object to a JSON value.</div></div>
 <div class="ttc" id="anamespaceshrapnel_1_1midi_html_a7ca8b7f586d738415484d2f612a1a814"><div class="ttname"><a href="namespaceshrapnel_1_1midi.html#a7ca8b7f586d738415484d2f612a1a814">shrapnel::midi::from_json</a></div><div class="ttdeci">std::optional&lt; T &gt; from_json(const rapidjson::Value &amp;)</div><div class="ttdef"><b>Definition:</b> <a href="midi__mapping__json__parser_8h_source.html#l00072">midi_mapping_json_parser.h:72</a></div></div>
-<div class="ttc" id="anamespaceshrapnel_1_1midi_html_a8d164e7760821dee388c9f3e33cbb928"><div class="ttname"><a href="namespaceshrapnel_1_1midi.html#a8d164e7760821dee388c9f3e33cbb928">shrapnel::midi::MappingObserver</a></div><div class="ttdeci">etl::observer&lt; const Mapping::id_t &amp; &gt; MappingObserver</div><div class="ttdef"><b>Definition:</b> <a href="midi__mapping_8h_source.html#l00213">midi_mapping.h:213</a></div></div>
-<div class="ttc" id="anamespaceshrapnel_1_1midi_html_ad9ee9014110e441706a017a889103bd1"><div class="ttname"><a href="namespaceshrapnel_1_1midi.html#ad9ee9014110e441706a017a889103bd1">shrapnel::midi::MappingApiMessage</a></div><div class="ttdeci">std::variant&lt; GetRequest, GetResponse, CreateRequest, CreateResponse, Update, Remove &gt; MappingApiMessage</div><div class="ttdef"><b>Definition:</b> <a href="midi__mapping__api_8h_source.html#l00057">midi_mapping_api.h:57</a></div></div>
+<div class="ttc" id="anamespaceshrapnel_1_1midi_html_a8d164e7760821dee388c9f3e33cbb928"><div class="ttname"><a href="namespaceshrapnel_1_1midi.html#a8d164e7760821dee388c9f3e33cbb928">shrapnel::midi::MappingObserver</a></div><div class="ttdeci">etl::observer&lt; const Mapping::id_t &amp; &gt; MappingObserver</div><div class="ttdef"><b>Definition:</b> <a href="midi__mapping_8h_source.html#l00276">midi_mapping.h:276</a></div></div>
+<div class="ttc" id="anamespaceshrapnel_1_1midi_html_aaf7b16e9372891903e3d6de1b406a458"><div class="ttname"><a href="namespaceshrapnel_1_1midi.html#aaf7b16e9372891903e3d6de1b406a458">shrapnel::midi::MappingApiMessage</a></div><div class="ttdeci">std::variant&lt; GetRequest, GetResponse, CreateRequest, CreateResponse, Update, Remove, MessageReceived &gt; MappingApiMessage</div><div class="ttdef"><b>Definition:</b> <a href="midi__mapping__api_8h_source.html#l00062">midi_mapping_api.h:62</a></div></div>
 <div class="ttc" id="anamespaceshrapnel_1_1parameters_html_a0cbbede6af96973c56e635f9a90599cd"><div class="ttname"><a href="namespaceshrapnel_1_1parameters.html#a0cbbede6af96973c56e635f9a90599cd">shrapnel::parameters::TAG</a></div><div class="ttdeci">constexpr const char * TAG</div><div class="ttdef"><b>Definition:</b> <a href="audio__param_8h_source.html#l00034">audio_param.h:34</a></div></div>
 <div class="ttc" id="anamespaceshrapnel_1_1parameters_html_a5506267ab65b64b98595a4269027196b"><div class="ttname"><a href="namespaceshrapnel_1_1parameters.html#a5506267ab65b64b98595a4269027196b">shrapnel::parameters::id_t</a></div><div class="ttdeci">etl::string&lt; 32 &gt; id_t</div><div class="ttdef"><b>Definition:</b> <a href="audio__param_8h_source.html#l00036">audio_param.h:36</a></div></div>
 <div class="ttc" id="anamespaceshrapnel_1_1parameters_html_a7d71cb4080803181d147fe9987baa52f"><div class="ttname"><a href="namespaceshrapnel_1_1parameters.html#a7d71cb4080803181d147fe9987baa52f">shrapnel::parameters::ApiMessage</a></div><div class="ttdeci">std::variant&lt; Update, Initialise &gt; ApiMessage</div><div class="ttdef"><b>Definition:</b> <a href="cmd__handling__api_8h_source.html#l00036">cmd_handling_api.h:36</a></div></div>
@@ -1257,7 +1279,7 @@ $(document).ready(function(){initNavTree('main_8cpp_source.html',''); initResiza
 <div class="ttc" id="anamespaceshrapnel_html_a686cfb16562461b078165d746966c2bf"><div class="ttname"><a href="namespaceshrapnel.html#a686cfb16562461b078165d746966c2bf">shrapnel::audio_params</a></div><div class="ttdeci">static std::shared_ptr&lt; AudioParameters &gt; audio_params</div><div class="ttdef"><b>Definition:</b> <a href="main_8cpp_source.html#l00236">main.cpp:236</a></div></div>
 <div class="ttc" id="anamespaceshrapnel_html_a7ab448c59a74266fc5aaded062ed1961"><div class="ttname"><a href="namespaceshrapnel.html#a7ab448c59a74266fc5aaded062ed1961">shrapnel::start_webserver</a></div><div class="ttdeci">static httpd_handle_t start_webserver(void)</div><div class="ttdef"><b>Definition:</b> <a href="main_8cpp_source.html#l00387">main.cpp:387</a></div></div>
 <div class="ttc" id="anamespaceshrapnel_html_a7e01d080294d5dae6e2840562e397fb7"><div class="ttname"><a href="namespaceshrapnel.html#a7e01d080294d5dae6e2840562e397fb7">shrapnel::ui</a></div><div class="ttdeci">static const httpd_uri_t ui</div><div class="ttdef"><b>Definition:</b> <a href="main_8cpp_source.html#l00377">main.cpp:377</a></div></div>
-<div class="ttc" id="anamespaceshrapnel_html_a9c85fa6a77cfb97394c46cf0ebe10298"><div class="ttname"><a href="namespaceshrapnel.html#a9c85fa6a77cfb97394c46cf0ebe10298">shrapnel::nvs_debug_print</a></div><div class="ttdeci">void nvs_debug_print()</div><div class="ttdef"><b>Definition:</b> <a href="main_8cpp_source.html#l01045">main.cpp:1045</a></div></div>
+<div class="ttc" id="anamespaceshrapnel_html_a9c85fa6a77cfb97394c46cf0ebe10298"><div class="ttname"><a href="namespaceshrapnel.html#a9c85fa6a77cfb97394c46cf0ebe10298">shrapnel::nvs_debug_print</a></div><div class="ttdeci">void nvs_debug_print()</div><div class="ttdef"><b>Definition:</b> <a href="main_8cpp_source.html#l01067">main.cpp:1067</a></div></div>
 <div class="ttc" id="anamespaceshrapnel_html_a9df539517dd9158cb2b42a9d9e948a73"><div class="ttname"><a href="namespaceshrapnel.html#a9df539517dd9158cb2b42a9d9e948a73">shrapnel::websocket_send</a></div><div class="ttdeci">static void websocket_send(void *arg)</div><div class="ttdef"><b>Definition:</b> <a href="main_8cpp_source.html#l00468">main.cpp:468</a></div></div>
 <div class="ttc" id="anamespaceshrapnel_html_a9f01b77156c5fc53346d256b9735e6f8"><div class="ttname"><a href="namespaceshrapnel.html#a9f01b77156c5fc53346d256b9735e6f8">shrapnel::failed_alloc_callback</a></div><div class="ttdeci">static void failed_alloc_callback(size_t size, uint32_t caps, const char *function_name)</div><div class="ttdef"><b>Definition:</b> <a href="main_8cpp_source.html#l00596">main.cpp:596</a></div></div>
 <div class="ttc" id="anamespaceshrapnel_html_a9f09f4ea750643310af9143a53735b7d"><div class="ttname"><a href="namespaceshrapnel.html#a9f09f4ea750643310af9143a53735b7d">shrapnel::app_main</a></div><div class="ttdeci">void app_main(void)</div><div class="ttdef"><b>Definition:</b> <a href="main_8cpp_source.html#l00623">main.cpp:623</a></div></div>
@@ -1284,10 +1306,11 @@ $(document).ready(function(){initNavTree('main_8cpp_source.html',''); initResiza
 <div class="ttc" id="astructshrapnel_1_1midi_1_1CreateResponse_html"><div class="ttname"><a href="structshrapnel_1_1midi_1_1CreateResponse.html">shrapnel::midi::CreateResponse</a></div><div class="ttdef"><b>Definition:</b> <a href="midi__mapping__api_8h_source.html#l00042">midi_mapping_api.h:42</a></div></div>
 <div class="ttc" id="astructshrapnel_1_1midi_1_1CreateResponse_html_a9e3f73aa5d09af4a127809bcf53a758c"><div class="ttname"><a href="structshrapnel_1_1midi_1_1CreateResponse.html#a9e3f73aa5d09af4a127809bcf53a758c">shrapnel::midi::CreateResponse::mapping</a></div><div class="ttdeci">std::pair&lt; Mapping::id_t, Mapping &gt; mapping</div><div class="ttdef"><b>Definition:</b> <a href="midi__mapping__api_8h_source.html#l00043">midi_mapping_api.h:43</a></div></div>
 <div class="ttc" id="astructshrapnel_1_1midi_1_1GetResponse_html"><div class="ttname"><a href="structshrapnel_1_1midi_1_1GetResponse.html">shrapnel::midi::GetResponse</a></div><div class="ttdef"><b>Definition:</b> <a href="midi__mapping__api_8h_source.html#l00032">midi_mapping_api.h:32</a></div></div>
-<div class="ttc" id="astructshrapnel_1_1midi_1_1Mapping_html"><div class="ttname"><a href="structshrapnel_1_1midi_1_1Mapping.html">shrapnel::midi::Mapping</a></div><div class="ttdef"><b>Definition:</b> <a href="midi__mapping_8h_source.html#l00196">midi_mapping.h:196</a></div></div>
-<div class="ttc" id="astructshrapnel_1_1midi_1_1Mapping_html_a212fd4d87c151bab5982bc9138990a02"><div class="ttname"><a href="structshrapnel_1_1midi_1_1Mapping.html#a212fd4d87c151bab5982bc9138990a02">shrapnel::midi::Mapping::id_t</a></div><div class="ttdeci">std::array&lt; uint8_t, 16 &gt; id_t</div><div class="ttdef"><b>Definition:</b> <a href="midi__mapping_8h_source.html#l00197">midi_mapping.h:197</a></div></div>
-<div class="ttc" id="astructshrapnel_1_1midi_1_1Mapping_html_a46fa239f0d9c9c4db85812d0f38b0f29"><div class="ttname"><a href="structshrapnel_1_1midi_1_1Mapping.html#a46fa239f0d9c9c4db85812d0f38b0f29">shrapnel::midi::Mapping::midi_channel</a></div><div class="ttdeci">uint8_t midi_channel</div><div class="ttdef"><b>Definition:</b> <a href="midi__mapping_8h_source.html#l00205">midi_mapping.h:205</a></div></div>
+<div class="ttc" id="astructshrapnel_1_1midi_1_1Mapping_html"><div class="ttname"><a href="structshrapnel_1_1midi_1_1Mapping.html">shrapnel::midi::Mapping</a></div><div class="ttdef"><b>Definition:</b> <a href="midi__mapping_8h_source.html#l00259">midi_mapping.h:259</a></div></div>
+<div class="ttc" id="astructshrapnel_1_1midi_1_1Mapping_html_a212fd4d87c151bab5982bc9138990a02"><div class="ttname"><a href="structshrapnel_1_1midi_1_1Mapping.html#a212fd4d87c151bab5982bc9138990a02">shrapnel::midi::Mapping::id_t</a></div><div class="ttdeci">std::array&lt; uint8_t, 16 &gt; id_t</div><div class="ttdef"><b>Definition:</b> <a href="midi__mapping_8h_source.html#l00260">midi_mapping.h:260</a></div></div>
+<div class="ttc" id="astructshrapnel_1_1midi_1_1Mapping_html_a46fa239f0d9c9c4db85812d0f38b0f29"><div class="ttname"><a href="structshrapnel_1_1midi_1_1Mapping.html#a46fa239f0d9c9c4db85812d0f38b0f29">shrapnel::midi::Mapping::midi_channel</a></div><div class="ttdeci">uint8_t midi_channel</div><div class="ttdef"><b>Definition:</b> <a href="midi__mapping_8h_source.html#l00268">midi_mapping.h:268</a></div></div>
 <div class="ttc" id="astructshrapnel_1_1midi_1_1Mapping_html_a9d3978518402ec5df1963f1b8c0a7013abf1d4bbf6ed8626603df4a7cac94ee8c"><div class="ttname"><a href="structshrapnel_1_1midi_1_1Mapping.html#a9d3978518402ec5df1963f1b8c0a7013abf1d4bbf6ed8626603df4a7cac94ee8c">shrapnel::midi::Mapping::Mode::PARAMETER</a></div><div class="ttdeci">@ PARAMETER</div></div>
+<div class="ttc" id="astructshrapnel_1_1midi_1_1MessageReceived_html"><div class="ttname"><a href="structshrapnel_1_1midi_1_1MessageReceived.html">shrapnel::midi::MessageReceived</a></div><div class="ttdef"><b>Definition:</b> <a href="midi__mapping__api_8h_source.html#l00057">midi_mapping_api.h:57</a></div></div>
 <div class="ttc" id="astructshrapnel_1_1midi_1_1Message_html"><div class="ttname"><a href="structshrapnel_1_1midi_1_1Message.html">shrapnel::midi::Message</a></div><div class="ttdef"><b>Definition:</b> <a href="midi__protocol_8h_source.html#l00040">midi_protocol.h:40</a></div></div>
 <div class="ttc" id="astructshrapnel_1_1parameters_1_1Update_html"><div class="ttname"><a href="structshrapnel_1_1parameters_1_1Update.html">shrapnel::parameters::Update</a></div><div class="ttdef"><b>Definition:</b> <a href="cmd__handling__api_8h_source.html#l00027">cmd_handling_api.h:27</a></div></div>
 <div class="ttc" id="astructshrapnel_1_1wifi_1_1InternalEvent_html"><div class="ttname"><a href="structshrapnel_1_1wifi_1_1InternalEvent.html">shrapnel::wifi::InternalEvent</a></div><div class="ttdef"><b>Definition:</b> <a href="wifi__state__machine_8h_source.html#l00029">wifi_state_machine.h:29</a></div></div>

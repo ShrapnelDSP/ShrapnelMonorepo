@@ -1,5 +1,5 @@
 <map id="shrapnel::app_main" name="shrapnel::app_main">
-<area shape="rect" id="node1" title=" " alt="" coords="5,443,139,469"/>
+<area shape="rect" id="node1" title=" " alt="" coords="5,468,139,495"/>
 <area shape="rect" id="node2" href="$main_8cpp.html#a1a66099a9e1054494d0704363a5c8666" title=" " alt="" coords="187,5,369,32"/>
 <area shape="rect" id="node5" href="$namespaceshrapnel.html#a4bf0b1d7c4fef2839a56059a237d1da6" title=" " alt="" coords="192,56,364,83"/>
 <area shape="rect" id="node6" href="$namespaceshrapnel.html#ae3cbca1e45f686a5790d51825e2754a2" title=" " alt="" coords="208,107,348,149"/>
@@ -13,10 +13,11 @@
 <area shape="rect" id="node40" href="$namespaceshrapnel.html#a9c85fa6a77cfb97394c46cf0ebe10298" title=" " alt="" coords="208,545,348,586"/>
 <area shape="rect" id="node41" href="$pcm3060_8c.html#ae4f3fcba29da4e434a2fb51e429c156b" title="Initialise the driver." alt="" coords="229,611,327,637"/>
 <area shape="rect" id="node42" href="$pcm3060_8c.html#a4b08ec86eb0407470554c4e5c5759521" title="perform power up sequence" alt="" coords="209,661,347,688"/>
-<area shape="rect" id="node46" href="$namespaceshrapnel.html#a62ed101f04b8c40f7fdc427e6b169353" title=" " alt="" coords="207,712,349,739"/>
-<area shape="rect" id="node47" href="$namespaceshrapnel.html#a7ab448c59a74266fc5aaded062ed1961" title=" " alt="" coords="193,763,363,789"/>
-<area shape="rect" id="node48" href="$namespaceshrapnel.html#ac11c58ef0962c52aa2cbcb5885d6261a" title=" " alt="" coords="193,813,363,840"/>
-<area shape="rect" id="node49" href="$namespaceshrapnel.html#ad3636f58faa95196bef6352b331ed3da" title=" " alt="" coords="213,865,343,906"/>
+<area shape="rect" id="node46" href="$classshrapnel_1_1os_1_1Timer.html#a5ff1b2e05dc1558fb40ef551fc00d6a9" title=" " alt="" coords="213,713,343,754"/>
+<area shape="rect" id="node47" href="$namespaceshrapnel.html#a62ed101f04b8c40f7fdc427e6b169353" title=" " alt="" coords="207,779,349,805"/>
+<area shape="rect" id="node48" href="$namespaceshrapnel.html#a7ab448c59a74266fc5aaded062ed1961" title=" " alt="" coords="193,829,363,856"/>
+<area shape="rect" id="node49" href="$namespaceshrapnel.html#ac11c58ef0962c52aa2cbcb5885d6261a" title=" " alt="" coords="193,880,363,907"/>
+<area shape="rect" id="node50" href="$namespaceshrapnel.html#ad3636f58faa95196bef6352b331ed3da" title=" " alt="" coords="213,931,343,973"/>
 <area shape="rect" id="node3" href="$namespaceshrapnel.html#a9df539517dd9158cb2b42a9d9e948a73" title=" " alt="" coords="417,5,592,32"/>
 <area shape="rect" id="node4" href="$namespaceshrapnel_1_1midi.html#a3ce92c675faa537c28f3f68743f0bf16" title=" " alt="" coords="640,5,789,32"/>
 <area shape="rect" id="node12" href="$profiling_8cpp.html#a96b462c18367729bd8d5e19d7d98a619" title=" " alt="" coords="441,341,568,368"/>

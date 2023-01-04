@@ -63,7 +63,7 @@
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
   <pre class="language-dart"><code class="language-dart">void main() {
-  Logger.root.level = Level.FINE;
+  Logger.root.level = Level.INFO;
   Logger.root.onRecord.listen((record) {
     debugPrint(
       &#39;${record.level.name.padLeft(&quot;WARNING&quot;.length)} &#39;
@@ -75,41 +75,7 @@
 
   GoogleFonts.config.allowRuntimeFetching = false;
 
-  final websocket =
-      RobustWebsocket(uri: Uri.parse(&#39;http:&#47;&#47;guitar-dsp.local:8080&#47;websocket&#39;));
-  final jsonWebsocket = JsonWebsocket(websocket: websocket);
-  final uuid = Uuid();
-  runApp(
-    MultiProvider(
-      providers: [
-        ChangeNotifierProvider.value(value: websocket),
-        ChangeNotifierProvider(
-          create: (_) =&gt; WifiProvisioningProvider(
-            provisioningFactory: () {
-              log.info(&#39;Creating provisioning connection&#39;);
-              return Provisioning(
-                security: Security1(pop: &#39;abcd1234&#39;),
-                transport: TransportHTTP(&#39;guitar-dsp.local&#39;),
-              );
-            },
-          ),
-        ),
-        ChangeNotifierProvider(
-          create: (_) =&gt; ParameterService(websocket: websocket),
-        ),
-        ChangeNotifierProvider(
-          create: (_) =&gt; MidiMappingService(
-            websocket: jsonWebsocket,
-          ),
-        ),
-        ChangeNotifierProvider.value(value: uuid),
-        ChangeNotifierProvider(
-          create: (_) =&gt; AudioClippingService(websocket: jsonWebsocket),
-        )
-      ],
-      child: const MyApp(),
-    ),
-  );
+  runApp(App());
 }</code></pre>
 </section>
 
@@ -133,6 +99,7 @@
     <h5>main library</h5>
     <ol>
   <li class="section-title"><a href="../main/main-library.html#classes">Classes</a></li>
+  <li><a href="../main/App-class.html">App</a></li>
   <li><a href="../main/MyApp-class.html">MyApp</a></li>
   <li><a href="../main/MyHomePage-class.html">MyHomePage</a></li>
   <li><a href="../main/ProvisioningPage-class.html">ProvisioningPage</a></li>
@@ -140,8 +107,6 @@
 
 
 
-  <li class="section-title"><a href="../main/main-library.html#properties">Properties</a></li>
-  <li><a href="../main/log.html">log</a></li>
 
   <li class="section-title"><a href="../main/main-library.html#functions">Functions</a></li>
   <li><a href="../main/formatDateTime.html">formatDateTime</a></li>

@@ -73,8 +73,8 @@ var NAVTREEINDEX =
 "abstract__dsp_8h.html",
 "classshrapnel_1_1effect_1_1valvestate_1_1Valvestate.html#a9636b34accae16b0e8681d701816eca5",
 "dir_cb9dd9581595cc79941cf7a25688572e.html",
-"namespaceshrapnel.html#a14fc4d7d4bcc6e89ccd89f7f9e07fb97",
-"structshrapnel_1_1midi_1_1CreateResponse.html#af41b1a8040e98e1396a29a357fbf9b13"
+"namespacemembers_type.html",
+"structshrapnel_1_1events_1_1OutputClipped.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

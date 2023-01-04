@@ -123,7 +123,7 @@ Namespaces</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="typedef-members" name="typedef-members"></a>
 Typedefs</h2></td></tr>
-<tr class="memitem:a7d634e4e90beba8bb35bd8b959ec5757"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="main_8cpp.html#a7d634e4e90beba8bb35bd8b959ec5757">ApiMessage</a> = std::variant&lt; <a class="el" href="namespaceshrapnel_1_1parameters.html#a7d71cb4080803181d147fe9987baa52f">shrapnel::parameters::ApiMessage</a>, <a class="el" href="namespaceshrapnel_1_1midi.html#ad9ee9014110e441706a017a889103bd1">shrapnel::midi::MappingApiMessage</a>, <a class="el" href="namespaceshrapnel_1_1events.html#a8dd3c21ae53adc98fc773a8c06ce300a">shrapnel::events::ApiMessage</a> &gt;</td></tr>
+<tr class="memitem:a7d634e4e90beba8bb35bd8b959ec5757"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="main_8cpp.html#a7d634e4e90beba8bb35bd8b959ec5757">ApiMessage</a> = std::variant&lt; <a class="el" href="namespaceshrapnel_1_1parameters.html#a7d71cb4080803181d147fe9987baa52f">shrapnel::parameters::ApiMessage</a>, <a class="el" href="namespaceshrapnel_1_1midi.html#aaf7b16e9372891903e3d6de1b406a458">shrapnel::midi::MappingApiMessage</a>, <a class="el" href="namespaceshrapnel_1_1events.html#a8dd3c21ae53adc98fc773a8c06ce300a">shrapnel::events::ApiMessage</a> &gt;</td></tr>
 <tr class="separator:a7d634e4e90beba8bb35bd8b959ec5757"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a79edd3397c6cf28f6938fd733697bc61"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="main_8cpp.html#a79edd3397c6cf28f6938fd733697bc61">FileDescriptor</a> = std::optional&lt; int &gt;</td></tr>
 <tr class="separator:a79edd3397c6cf28f6938fd733697bc61"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -209,7 +209,7 @@ Variables</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">using <a class="el" href="main_8cpp.html#a7d634e4e90beba8bb35bd8b959ec5757">ApiMessage</a> =  std::variant&lt;<a class="el" href="namespaceshrapnel_1_1parameters.html#a7d71cb4080803181d147fe9987baa52f">shrapnel::parameters::ApiMessage</a>, <a class="el" href="namespaceshrapnel_1_1midi.html#ad9ee9014110e441706a017a889103bd1">shrapnel::midi::MappingApiMessage</a>, <a class="el" href="namespaceshrapnel_1_1events.html#a8dd3c21ae53adc98fc773a8c06ce300a">shrapnel::events::ApiMessage</a>&gt;</td>
+          <td class="memname">using <a class="el" href="main_8cpp.html#a7d634e4e90beba8bb35bd8b959ec5757">ApiMessage</a> =  std::variant&lt;<a class="el" href="namespaceshrapnel_1_1parameters.html#a7d71cb4080803181d147fe9987baa52f">shrapnel::parameters::ApiMessage</a>, <a class="el" href="namespaceshrapnel_1_1midi.html#aaf7b16e9372891903e3d6de1b406a458">shrapnel::midi::MappingApiMessage</a>, <a class="el" href="namespaceshrapnel_1_1events.html#a8dd3c21ae53adc98fc773a8c06ce300a">shrapnel::events::ApiMessage</a>&gt;</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -283,35 +283,35 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="main_8cpp_source.html#l01060">1060</a> of file <a class="el" href="main_8cpp_source.html">main.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno"> 1061</span>{</div>
-<div class="line"><span class="lineno"> 1062</span>    ESP_LOGD(<a class="code hl_variable" href="namespaceshrapnel_1_1parameters.html#a0cbbede6af96973c56e635f9a90599cd">TAG</a>, <span class="stringliteral">&quot;%s %s&quot;</span>, __FUNCTION__, pcTaskGetName(NULL));</div>
-<div class="line"><span class="lineno"> 1063</span> </div>
-<div class="line"><span class="lineno"> 1064</span>    <span class="keywordflow">if</span>(errQUEUE_FULL ==</div>
-<div class="line"><span class="lineno"> 1065</span>            <a class="code hl_variable" href="namespaceshrapnel.html#a1350c41ca8ecad036a45252d2c93998a">shrapnel::out_queue</a>-&gt;send(&amp;message, pdMS_TO_TICKS(100)))</div>
-<div class="line"><span class="lineno"> 1066</span>    {</div>
-<div class="line"><span class="lineno"> 1067</span>        ESP_LOGE(<a class="code hl_variable" href="namespaceshrapnel_1_1parameters.html#a0cbbede6af96973c56e635f9a90599cd">TAG</a>, <span class="stringliteral">&quot;Failed to send message to websocket&quot;</span>);</div>
-<div class="line"><span class="lineno"> 1068</span>        <span class="keywordflow">return</span>;</div>
-<div class="line"><span class="lineno"> 1069</span>    }</div>
-<div class="line"><span class="lineno"> 1070</span> </div>
-<div class="line"><span class="lineno"> 1071</span>    <span class="keywordflow">if</span>(!xSemaphoreTake(<a class="code hl_variable" href="namespaceshrapnel.html#ab9671c2bf7feea52d1ba947c71395a73">shrapnel::work_semaphore</a>, 1000 / portTICK_PERIOD_MS))</div>
-<div class="line"><span class="lineno"> 1072</span>    {</div>
-<div class="line"><span class="lineno"> 1073</span>        ESP_LOGE(<a class="code hl_variable" href="namespaceshrapnel_1_1parameters.html#a0cbbede6af96973c56e635f9a90599cd">TAG</a>, <span class="stringliteral">&quot;work semaphore timed out&quot;</span>);</div>
-<div class="line"><span class="lineno"> 1074</span>        <span class="keywordflow">return</span>;</div>
-<div class="line"><span class="lineno"> 1075</span>    }</div>
-<div class="line"><span class="lineno"> 1076</span> </div>
-<div class="line"><span class="lineno"> 1077</span>    <span class="comment">// XXX: server is accessed from outside the main thread here. It is</span></div>
-<div class="line"><span class="lineno"> 1078</span>    <span class="comment">// probably incorrect, and will break when the server is being torn down</span></div>
-<div class="line"><span class="lineno"> 1079</span>    <span class="comment">// concurrently to an audio event going out.</span></div>
-<div class="line"><span class="lineno"> 1080</span>    esp_err_t rc = httpd_queue_work(</div>
-<div class="line"><span class="lineno"> 1081</span>            <a class="code hl_variable" href="namespaceshrapnel.html#a14fc4d7d4bcc6e89ccd89f7f9e07fb97">shrapnel::_server</a>,</div>
-<div class="line"><span class="lineno"> 1082</span>            <a class="code hl_function" href="namespaceshrapnel.html#a9df539517dd9158cb2b42a9d9e948a73">shrapnel::websocket_send</a>,</div>
-<div class="line"><span class="lineno"> 1083</span>            <a class="code hl_variable" href="namespaceshrapnel.html#a14fc4d7d4bcc6e89ccd89f7f9e07fb97">shrapnel::_server</a>);</div>
-<div class="line"><span class="lineno"> 1084</span>    <span class="keywordflow">if</span>(ESP_OK != rc)</div>
-<div class="line"><span class="lineno"> 1085</span>    {</div>
-<div class="line"><span class="lineno"> 1086</span>        ESP_LOGE(<a class="code hl_variable" href="namespaceshrapnel_1_1parameters.html#a0cbbede6af96973c56e635f9a90599cd">TAG</a>, <span class="stringliteral">&quot;failed to queue work for server&quot;</span>);</div>
-<div class="line"><span class="lineno"> 1087</span>    }</div>
-<div class="line"><span class="lineno"> 1088</span>}</div>
+<p class="definition">Definition at line <a class="el" href="main_8cpp_source.html#l01082">1082</a> of file <a class="el" href="main_8cpp_source.html">main.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno"> 1083</span>{</div>
+<div class="line"><span class="lineno"> 1084</span>    ESP_LOGD(<a class="code hl_variable" href="namespaceshrapnel_1_1parameters.html#a0cbbede6af96973c56e635f9a90599cd">TAG</a>, <span class="stringliteral">&quot;%s %s&quot;</span>, __FUNCTION__, pcTaskGetName(NULL));</div>
+<div class="line"><span class="lineno"> 1085</span> </div>
+<div class="line"><span class="lineno"> 1086</span>    <span class="keywordflow">if</span>(errQUEUE_FULL ==</div>
+<div class="line"><span class="lineno"> 1087</span>            <a class="code hl_variable" href="namespaceshrapnel.html#a1350c41ca8ecad036a45252d2c93998a">shrapnel::out_queue</a>-&gt;send(&amp;message, pdMS_TO_TICKS(100)))</div>
+<div class="line"><span class="lineno"> 1088</span>    {</div>
+<div class="line"><span class="lineno"> 1089</span>        ESP_LOGE(<a class="code hl_variable" href="namespaceshrapnel_1_1parameters.html#a0cbbede6af96973c56e635f9a90599cd">TAG</a>, <span class="stringliteral">&quot;Failed to send message to websocket&quot;</span>);</div>
+<div class="line"><span class="lineno"> 1090</span>        <span class="keywordflow">return</span>;</div>
+<div class="line"><span class="lineno"> 1091</span>    }</div>
+<div class="line"><span class="lineno"> 1092</span> </div>
+<div class="line"><span class="lineno"> 1093</span>    <span class="keywordflow">if</span>(!xSemaphoreTake(<a class="code hl_variable" href="namespaceshrapnel.html#ab9671c2bf7feea52d1ba947c71395a73">shrapnel::work_semaphore</a>, 1000 / portTICK_PERIOD_MS))</div>
+<div class="line"><span class="lineno"> 1094</span>    {</div>
+<div class="line"><span class="lineno"> 1095</span>        ESP_LOGE(<a class="code hl_variable" href="namespaceshrapnel_1_1parameters.html#a0cbbede6af96973c56e635f9a90599cd">TAG</a>, <span class="stringliteral">&quot;work semaphore timed out&quot;</span>);</div>
+<div class="line"><span class="lineno"> 1096</span>        <span class="keywordflow">return</span>;</div>
+<div class="line"><span class="lineno"> 1097</span>    }</div>
+<div class="line"><span class="lineno"> 1098</span> </div>
+<div class="line"><span class="lineno"> 1099</span>    <span class="comment">// XXX: server is accessed from outside the main thread here. It is</span></div>
+<div class="line"><span class="lineno"> 1100</span>    <span class="comment">// probably incorrect, and will break when the server is being torn down</span></div>
+<div class="line"><span class="lineno"> 1101</span>    <span class="comment">// concurrently to an audio event going out.</span></div>
+<div class="line"><span class="lineno"> 1102</span>    esp_err_t rc = httpd_queue_work(</div>
+<div class="line"><span class="lineno"> 1103</span>            <a class="code hl_variable" href="namespaceshrapnel.html#a14fc4d7d4bcc6e89ccd89f7f9e07fb97">shrapnel::_server</a>,</div>
+<div class="line"><span class="lineno"> 1104</span>            <a class="code hl_function" href="namespaceshrapnel.html#a9df539517dd9158cb2b42a9d9e948a73">shrapnel::websocket_send</a>,</div>
+<div class="line"><span class="lineno"> 1105</span>            <a class="code hl_variable" href="namespaceshrapnel.html#a14fc4d7d4bcc6e89ccd89f7f9e07fb97">shrapnel::_server</a>);</div>
+<div class="line"><span class="lineno"> 1106</span>    <span class="keywordflow">if</span>(ESP_OK != rc)</div>
+<div class="line"><span class="lineno"> 1107</span>    {</div>
+<div class="line"><span class="lineno"> 1108</span>        ESP_LOGE(<a class="code hl_variable" href="namespaceshrapnel_1_1parameters.html#a0cbbede6af96973c56e635f9a90599cd">TAG</a>, <span class="stringliteral">&quot;failed to queue work for server&quot;</span>);</div>
+<div class="line"><span class="lineno"> 1109</span>    }</div>
+<div class="line"><span class="lineno"> 1110</span>}</div>
 <div class="ttc" id="anamespaceshrapnel_1_1parameters_html_a0cbbede6af96973c56e635f9a90599cd"><div class="ttname"><a href="namespaceshrapnel_1_1parameters.html#a0cbbede6af96973c56e635f9a90599cd">shrapnel::parameters::TAG</a></div><div class="ttdeci">constexpr const char * TAG</div><div class="ttdef"><b>Definition:</b> <a href="audio__param_8h_source.html#l00034">audio_param.h:34</a></div></div>
 <div class="ttc" id="anamespaceshrapnel_html_a1350c41ca8ecad036a45252d2c93998a"><div class="ttname"><a href="namespaceshrapnel.html#a1350c41ca8ecad036a45252d2c93998a">shrapnel::out_queue</a></div><div class="ttdeci">static Queue&lt; AppMessage, QUEUE_LEN &gt; * out_queue</div><div class="ttdef"><b>Definition:</b> <a href="main_8cpp_source.html#l00242">main.cpp:242</a></div></div>
 <div class="ttc" id="anamespaceshrapnel_html_a14fc4d7d4bcc6e89ccd89f7f9e07fb97"><div class="ttname"><a href="namespaceshrapnel.html#a14fc4d7d4bcc6e89ccd89f7f9e07fb97">shrapnel::_server</a></div><div class="ttdeci">static httpd_handle_t _server</div><div class="ttdef"><b>Definition:</b> <a href="main_8cpp_source.html#l00255">main.cpp:255</a></div></div>

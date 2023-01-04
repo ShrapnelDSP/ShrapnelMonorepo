@@ -67,7 +67,7 @@
   <h2><span>Implementation</span></h2>
   <pre class="language-dart"><code class="language-dart">Widget buildSessionFailure(BuildContext context) {
   final provisioning =
-      Provider.of&lt;WifiProvisioningProvider&gt;(context, listen: false);
+      Provider.of&lt;WifiProvisioningService&gt;(context, listen: false);
 
   return Center(
     child: Column(

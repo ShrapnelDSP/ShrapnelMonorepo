@@ -125,6 +125,7 @@ Widget build(BuildContext context) {
         child: GestureDetector(
           onTap: onCardTap,
           child: Card(
+            key: Key(&#39;stompbox-$name&#39;),
             child: Padding(
               padding: EdgeInsets.all(scaleFactor * 8),
               child: Column(

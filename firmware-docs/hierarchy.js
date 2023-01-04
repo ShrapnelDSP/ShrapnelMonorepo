@@ -35,6 +35,7 @@ var hierarchy =
       [ "shrapnel::MidiMappingObserver< MappingManagerT >", "classshrapnel_1_1MidiMappingObserver.html", null ]
     ] ],
     [ "shrapnel::midi::Message", "structshrapnel_1_1midi_1_1Message.html", null ],
+    [ "shrapnel::midi::MessageReceived", "structshrapnel_1_1midi_1_1MessageReceived.html", null ],
     [ "shrapnel::midi::MidiUartBase", "classshrapnel_1_1midi_1_1MidiUartBase.html", [
       [ "shrapnel::midi::EspMidiUart", "classshrapnel_1_1midi_1_1EspMidiUart.html", null ]
     ] ],

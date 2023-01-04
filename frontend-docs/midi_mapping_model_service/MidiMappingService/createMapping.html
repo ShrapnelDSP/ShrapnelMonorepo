@@ -68,7 +68,7 @@
   <pre class="language-dart"><code class="language-dart">Future&lt;void&gt; createMapping(
   MidiMappingEntry mapping,
 ) async {
-  final response = websocket.stream
+  final response = websocket.dataStream
       .map(
         MidiApiMessage.fromJson,
       )

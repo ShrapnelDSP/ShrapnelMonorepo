@@ -108,14 +108,28 @@ and</li>
   <pre class="language-dart"><code class="language-dart">@override
 Widget build(BuildContext context) {
   final parameter = Provider.of&lt;AudioParameterDoubleModel&gt;(context);
+  final learningState = context.watch&lt;MidiLearnState&gt;();
 
   return Column(
     mainAxisAlignment: MainAxisAlignment.center,
     children: &lt;Widget&gt;[
-      Knob(
-        onChanged: isEnabled ? parameter.onUserChanged : (_) {},
-        value: parameter.value,
-        size: knobSize,
+      AnimatedTheme(
+        data: Theme.of(context).copyWith(
+          colorScheme: learningState.maybeWhen(
+            waitForMidi: (id) =&gt; id == parameter.id
+                ? Theme.of(context)
+                    .colorScheme
+                    .copyWith(primary: Colors.white)
+                : null,
+            orElse: () =&gt; null,
+          ),
+        ),
+        child: Knob(
+          key: Key(&#39;knob-${parameter.id}&#39;),
+          onChanged: isEnabled ? parameter.onUserChanged : (_) {},
+          value: parameter.value,
+          size: knobSize,
+        ),
       ),
       if (isEnabled) const SizedBox(height: 5),
       if (isEnabled)

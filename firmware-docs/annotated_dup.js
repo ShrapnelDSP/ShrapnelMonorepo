@@ -33,6 +33,7 @@ var annotated_dup =
         [ "Mapping", "structshrapnel_1_1midi_1_1Mapping.html", "structshrapnel_1_1midi_1_1Mapping" ],
         [ "MappingManager", "classshrapnel_1_1midi_1_1MappingManager.html", "classshrapnel_1_1midi_1_1MappingManager" ],
         [ "Message", "structshrapnel_1_1midi_1_1Message.html", "structshrapnel_1_1midi_1_1Message" ],
+        [ "MessageReceived", "structshrapnel_1_1midi_1_1MessageReceived.html", "structshrapnel_1_1midi_1_1MessageReceived" ],
         [ "MidiUartBase", "classshrapnel_1_1midi_1_1MidiUartBase.html", "classshrapnel_1_1midi_1_1MidiUartBase" ],
         [ "Remove", "structshrapnel_1_1midi_1_1Remove.html", "structshrapnel_1_1midi_1_1Remove" ],
         [ "Update", "structshrapnel_1_1midi_1_1Update.html", "structshrapnel_1_1midi_1_1Update" ]

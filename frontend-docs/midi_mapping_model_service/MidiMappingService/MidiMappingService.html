@@ -64,6 +64,12 @@
   required this.websocket,
 }) {
   _mappingsView = UnmodifiableMapView(__mappings);
+
+  websocket.connectionStream.listen((_) async =&gt; getMapping());
+
+  if (websocket.isAlive) {
+    unawaited(getMapping());
+  }
 }</code></pre>
 </section>
 
