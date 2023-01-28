@@ -1,6 +1,5 @@
 idf_component_register( SRCS main.cpp
                         REQUIRES
-                            audio
                             audio_events
                             cmd_handling
                             driver
@@ -8,6 +7,7 @@ idf_component_register( SRCS main.cpp
                             etl
                             hardware
                             heap_tracing
+                            i2s
                             mdns
                             midi_protocol
                             midi_mapping

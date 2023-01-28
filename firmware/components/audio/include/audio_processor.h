@@ -19,15 +19,15 @@
 
 #pragma once
 
-#include "audio_param.h"
-#include "esp_err.h"
-#include <chorus.h>
+#include "chorus.h"
+#include "fast_convolution.h"
+#include "fast_fir.h"
+#include "valvestate.h"
+#include "wah.h"
+
 #include <cstddef>
 #include <cstdint>
-#include <fast_convolution.h>
-#include <fast_fir.h>
-#include <valvestate.h>
-#include <wah.h>
+#include <atomic>
 
 namespace shrapnel {
 
