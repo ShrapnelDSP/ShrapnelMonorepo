@@ -32,37 +32,23 @@ float triangle(float phase)
     }
     else
     {
-        return - 3 + 2 * phase / (float)M_PI;
+        return -3 + 2 * phase / (float)M_PI;
     }
 }
 
-}
+} // namespace
 
+namespace shrapnel::effect {
 
-namespace shrapnel {
-namespace effect {
+void Chorus::set_modulation_rate_hz(float rate) { modulation_rate = rate; }
 
-Chorus::Chorus() {
-}
+void Chorus::set_modulation_depth(float depth) { modulation_depth = depth; }
 
-void Chorus::set_modulation_rate_hz(float rate)
+void Chorus::set_modulation_mix(float mix) { modulation_mix = mix; }
+
+void Chorus::process(std::span<float> samples)
 {
-    modulation_rate = rate;
-}
-
-void Chorus::set_modulation_depth(float depth)
-{
-    modulation_depth = depth;
-}
-
-void Chorus::set_modulation_mix(float mix)
-{
-    modulation_mix = mix;
-}
-
-void Chorus::process(float *samples, std::size_t sample_count)
-{
-    for(std::size_t i = 0; i < sample_count; i++)
+    for(float &sample : samples)
     {
         float lfo = 0.5f * triangle(phase);
         phase += modulation_rate / sample_rate * 2 * (float)M_PI;
@@ -74,32 +60,32 @@ void Chorus::process(float *samples, std::size_t sample_count)
 
 #if 1
         float delay = MAX_DELAY_MS / 1000 * sample_rate *
-                (0.5f + (modulation_depth * lfo));
+                      (0.5f + (modulation_depth * lfo));
 
         dspal_delayline_set_delay(delayline, delay);
 
-        dspal_delayline_push_sample(delayline, samples[i]);
-        samples[i] = samples[i] +
-            (modulation_mix * dspal_delayline_pop_sample(delayline));
+        dspal_delayline_push_sample(delayline, sample);
+        sample =
+            sample + (modulation_mix * dspal_delayline_pop_sample(delayline));
 #else
         samples[i] = lfo;
 #endif
     }
 }
 
-
-void Chorus::set_sample_rate(float rate)
+void Chorus::prepare(float rate, size_t)
 {
-    if(nullptr != delayline)
+    reset();
+    delayline = dspal_delayline_create(rate * MAX_DELAY_MS / 1000);
+    sample_rate = rate;
+}
+
+void Chorus::reset() {
+    if(delayline)
     {
         dspal_delayline_destroy(delayline);
         delayline = nullptr;
     }
-
-    delayline = dspal_delayline_create(rate * MAX_DELAY_MS / 1000);
-
-    sample_rate = rate;
 }
 
-}
-}
+} // namespace shrapnel::effect

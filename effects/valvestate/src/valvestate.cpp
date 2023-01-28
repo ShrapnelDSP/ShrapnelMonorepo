@@ -19,10 +19,9 @@
  */
 
 #include "valvestate.h"
+#include "dsps_mulc.h"
 
-namespace shrapnel {
-namespace effect {
-namespace valvestate {
+namespace shrapnel::effect::valvestate {
 
 Valvestate::Valvestate() : volume(0) {}
 
@@ -46,29 +45,29 @@ void Valvestate::set_volume(float a_volume)
     volume = a_volume;
 }
 
-void Valvestate::process(float *buffer, std::size_t buffer_size)
+void Valvestate::process(std::span<float> buffer)
 {
-    input.process(buffer, buffer_size);
-    gaincontrol.process(buffer, buffer_size);
-    clipping.process(buffer, buffer_size);
-    fmv.process(buffer, buffer_size);
-    contour.process(buffer, buffer_size);
+    input.process(buffer);
+    gaincontrol.process(buffer);
+    clipping.process(buffer);
+    fmv.process(buffer);
+    contour.process(buffer);
 
-    for(std::size_t i = 0; i < buffer_size; i++)
+    for(float &sample : buffer)
     {
-        buffer[i] *= volume;
+        sample *= volume;
     }
 }
 
-void Valvestate::prepare(float samplerate)
+void Valvestate::prepare(float samplerate, size_t size)
 {
-    input.prepare(samplerate);
-    gaincontrol.prepare(samplerate);
-    fmv.prepare(samplerate);
-    contour.prepare(samplerate);
+    input.prepare(samplerate, size);
+    gaincontrol.prepare(samplerate, size);
+    fmv.prepare(samplerate, size);
+    contour.prepare(samplerate, size);
 }
 
-void Valvestate::reset(void)
+void Valvestate::reset()
 {
     input.reset();
     gaincontrol.reset();
@@ -76,6 +75,4 @@ void Valvestate::reset(void)
     contour.reset();
 }
 
-}
-}
 }

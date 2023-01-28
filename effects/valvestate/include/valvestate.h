@@ -26,6 +26,7 @@
 #include "clipping.h"
 #include "fmv.h"
 #include "contour.h"
+#include "dsp_concepts.h"
 
 namespace shrapnel {
 namespace effect {
@@ -44,10 +45,9 @@ class Valvestate
 
     void set_volume(float volume);
 
-    void process(float *buffer, std::size_t buffer_size);
-
-    void prepare(float samplerate);
-    void reset(void);
+    void prepare(float samplerate, size_t);
+    void process(std::span<float> buffer);
+    void reset();
 
     private:
     InputFilter input;
@@ -57,6 +57,7 @@ class Valvestate
     ContourFilter contour;
     float volume;
 };
+static_assert(dsp::Processor<Valvestate>);
 
 }
 }

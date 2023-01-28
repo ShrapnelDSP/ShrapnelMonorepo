@@ -19,17 +19,19 @@
 
 #pragma once
 
-#include <stdint.h>
-#include <stddef.h>
-#include "esp_err.h"
-#include "audio_param.h"
+#include "freertos/FreeRTOS.h"
+#include "freertos/semphr.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-void process_samples(int32_t *buf, size_t buf_len);
-esp_err_t process_init(shrapnel::parameters::AudioParametersBase *audio_params);
+void profiling_init(size_t buffer_size, float sample_rate);
+void profiling_start(void);
+void profiling_mark_stage(unsigned int stage);
+void profiling_stop(void);
+
+void profiling_task(void *param);
 
 #ifdef __cplusplus
 }

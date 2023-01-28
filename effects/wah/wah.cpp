@@ -26,8 +26,6 @@
 
 namespace shrapnel::effect {
 
-Wah::Wah() {}
-
 void Wah::set_expression_position(float position)
 {
     position_parameter = position;
@@ -35,7 +33,7 @@ void Wah::set_expression_position(float position)
 
 void Wah::set_vocal(float vocal) { vocal_parameter = vocal; }
 
-void Wah::set_sample_rate(float rate) {
+void Wah::prepare(float rate, size_t) {
     float p = 0.9;
     std::array<float, 6> coefficients{1 - p, 0, 0, 1, -p, 0};
     position_filter.set_coefficients(coefficients );
@@ -43,7 +41,7 @@ void Wah::set_sample_rate(float rate) {
     sample_rate = rate;
 }
 
-void Wah::process(float *samples, std::size_t sample_count)
+void Wah::process(std::span<float> samples)
 {
     float wah;
     position_filter.process(&position_parameter, &wah, 1);
@@ -77,7 +75,13 @@ void Wah::process(float *samples, std::size_t sample_count)
             coefficients[3],
             coefficients[4]});
 
-    wah_filter.process(samples, samples, sample_count);
+    wah_filter.process(samples.data(), samples.data(), samples.size());
+}
+
+void Wah::reset() {
+    wah_filter.reset();
+    position_filter.reset();
+    vocal_filter.reset();
 }
 
 }

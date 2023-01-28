@@ -24,15 +24,15 @@ namespace shrapnel {
 namespace effect {
 namespace valvestate {
 
-void FMVFilter::prepare(float a_samplerate)
+void FMVFilter::prepare(float a_samplerate, size_t)
 {
     filter.reset();
     samplerate = a_samplerate;
 }
 
-void FMVFilter::process(float *buffer, std::size_t buffer_size)
+void FMVFilter::process(std::span<float> buffer)
 {
-    filter.process(buffer, buffer, buffer_size);
+    filter.process(buffer.data(), buffer.data(), buffer.size());
 }
 
 void FMVFilter::reset()

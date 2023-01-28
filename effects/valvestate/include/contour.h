@@ -19,22 +19,24 @@
  */
 
 #pragma once
+#include "dsp_concepts.h"
 #include "iir_concrete.h"
 #include <cstddef>
 
 class ContourFilter
 {
-    public:
+public:
     ContourFilter();
-    ~ContourFilter();
 
-    void prepare(float samplerate);
-    void process(float *buffer, std::size_t buffer_size);
-    void reset(void);
+    void prepare(float samplerate, size_t);
+    void process(std::span<float> buffer);
+    void reset();
 
     void set_parameter(float p);
 
-    private:
+private:
     shrapnel::dsp::IirFilter filter;
     float samplerate;
 };
+
+static_assert(shrapnel::dsp::Processor<ContourFilter>);

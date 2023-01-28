@@ -21,6 +21,7 @@
 #pragma once
 
 #include <cstddef>
+#include <span>
 
 namespace shrapnel {
 namespace effect {
@@ -29,7 +30,7 @@ namespace valvestate {
 class Clipping
 {
     public:
-        void process(float *buffer, std::size_t buffer_size);
+        void process(std::span<float> buffer);
 };
 
 }

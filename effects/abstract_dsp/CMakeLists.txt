@@ -1,6 +1,7 @@
 if(ESP_PLATFORM)
     idf_component_register(SRCS
                              esp32/abstract_dsp_esp32.c
+                             esp32/profiling.c
                              universal/delayline.cpp
                              universal/delayline_c.cpp
                              universal/fast_convolution.cpp

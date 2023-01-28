@@ -30,6 +30,8 @@
 #define DMA_BUF_SIZE    (512)
 #define SAMPLE_RATE     (48000)
 
+namespace shrapnel::audio {
+
 extern QueueHandle_t i2s_queue;
 
 /**
@@ -39,6 +41,9 @@ extern QueueHandle_t i2s_queue;
  *                       is finished.
  *
  */
-esp_err_t i2s_setup(gpio_num_t profiling_gpio, shrapnel::parameters::AudioParametersBase *audio_params);
+esp_err_t i2s_setup(gpio_num_t profiling_gpio,
+                    shrapnel::parameters::AudioParametersBase *audio_params);
 
 void log_i2s_event(const i2s_event_t &event);
+
+}

@@ -19,12 +19,9 @@
 
 #include "profiling.h"
 
-#include "i2s.h"
 #include "esp_log.h"
 #include "hal/cpu_hal.h"
 #include "rom/ets_sys.h"
-#include "freertos/task.h"
-#include <assert.h>
 
 #define TAG "profiling"
 
@@ -32,16 +29,29 @@
 
 static uint32_t start_cycles = 0;
 static uint32_t stage_cycles[NUMBER_OF_STAGES] = {};
-SemaphoreHandle_t profiling_mutex;
+static SemaphoreHandle_t profiling_mutex;
 static bool got_semaphore = false;
 static uint32_t cpu_freq_mhz;
+static size_t buffer_size;
+static float sample_rate;
+
+void profiling_init(size_t a_buffer_size, float a_sample_rate)
+{
+    profiling_mutex = xSemaphoreCreateMutex();
+    buffer_size = a_buffer_size;
+    sample_rate = a_sample_rate;
+
+    cpu_freq_mhz = ets_get_cpu_frequency();
+    ESP_LOGI(TAG, "CPU frequency: %d MHz", cpu_freq_mhz);
+
+}
 
 void profiling_start(void)
 {
     if(xSemaphoreTake(profiling_mutex, 0))
     {
         got_semaphore = true;
-        start_cycles = cpu_hal_get_cycle_count();
+        start_cycles = esp_cpu_get_cycle_count();
     }
 }
 
@@ -51,7 +61,7 @@ void profiling_mark_stage(unsigned int stage)
 
     if(got_semaphore)
     {
-        stage_cycles[stage] = cpu_hal_get_cycle_count();
+        stage_cycles[stage] = esp_cpu_get_cycle_count();
     }
 }
 
@@ -69,7 +79,7 @@ static double cycles_to_percent(int64_t cycles)
     float cycles_per_second = cpu_freq_mhz * 1e6f;
 
     float ratio = cycles /
-        ((float)DMA_BUF_SIZE / SAMPLE_RATE) /
+        ((float)buffer_size / sample_rate) /
         (cycles_per_second);
 
     return (double)(100 * ratio);
@@ -80,13 +90,9 @@ static int64_t cycles_to_us(int64_t cycles)
     return cycles / cpu_freq_mhz;
 }
 
-void i2s_profiling_task(void *param)
+void profiling_task(void *param)
 {
     (void) param;
-
-    cpu_freq_mhz = ets_get_cpu_frequency();
-    ESP_LOGI(TAG, "CPU frequency: %d MHz", cpu_freq_mhz);
-
     while(1)
     {
         vTaskDelay(1000 / portTICK_PERIOD_MS);

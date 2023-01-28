@@ -1,7 +1,7 @@
 if(NOT DEFINED TESTING)
     idf_component_register(SRCS "src/audio_param.cpp"
                            INCLUDE_DIRS "include"
-                           PRIV_REQUIRES i2s gate compiler_warning_flags
+                           PRIV_REQUIRES compiler_warning_flags
                            REQUIRES etl)
 else()
     add_library(audio_param_mock INTERFACE)

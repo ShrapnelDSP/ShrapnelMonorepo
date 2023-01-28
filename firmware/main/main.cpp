@@ -755,8 +755,8 @@ midi::Mapping, 10>>(document);
 
     i2c_setup();
 
-    profiling_mutex = xSemaphoreCreateMutex();
-    i2s_setup(PROFILING_GPIO, audio_params.get());
+    profiling_init(DMA_BUF_SIZE, SAMPLE_RATE);
+    audio::i2s_setup(PROFILING_GPIO, audio_params.get());
 
     //dac must be powered up after the i2s clocks have stabilised
     vTaskDelay(100 / portTICK_PERIOD_MS);
@@ -805,7 +805,7 @@ midi::Mapping, 10>>(document);
     start_mdns();
 
 #if 0
-    rc = xTaskCreate(i2s_profiling_task, "i2s profiling", 2000, NULL, tskIDLE_PRIORITY + 2, NULL);
+    rc = xTaskCreate(profiling_task, "i2s profiling", 2000, NULL, tskIDLE_PRIORITY + 2, NULL);
     if(rc != pdPASS)
     {
         ESP_LOGE(TAG, "Profiling task create failed %d", rc);
@@ -994,9 +994,9 @@ midi::Mapping, 10>>(document);
             // events in the current iteration, so that the queue doesn't fill
             // up.
             i2s_event_t event;
-            while(xQueueReceive(i2s_queue, &event, 0))
+            while(xQueueReceive(audio::i2s_queue, &event, 0))
             {
-                log_i2s_event(event);
+                audio::log_i2s_event(event);
             }
         }
 

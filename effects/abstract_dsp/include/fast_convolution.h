@@ -20,20 +20,20 @@
 
 #pragma once
 
+#include "esp_dsp.h"
+#include "profiling.h"
+#include <algorithm>
+#include <array>
 #include <complex>
 #include <cstddef>
-#include <array>
-#include <algorithm>
-#include "esp_dsp.h"
 
-void profiling_mark_stage(unsigned int);
-
-namespace shrapnel {
-namespace dsp {
+namespace shrapnel::dsp {
 
 template<std::size_t N, std::size_t K>
 class FastConvolution final {
     public:
+    // TODO move the definition of A into the prepare method
+    // Resample A to the current sample rate in the prepare method
     FastConvolution(const std::array<float, K> &a)
     {
         ESP_ERROR_CHECK(dsps_fft4r_init_fc32(NULL, CONFIG_DSP_MAX_FFT_SIZE));
@@ -91,7 +91,7 @@ class FastConvolution final {
     }
 
     private:
-    float scale_factor = 1.f/N;
+    static constexpr float scale_factor = 1.f/N;
     std::array<std::complex<float>, N> a_complex;
 
     std::array<std::complex<float>, N> real_to_complex(const std::array<float, N> &real)
@@ -153,5 +153,4 @@ class FastConvolution final {
     }
 };
 
-}
 }
