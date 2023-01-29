@@ -5,13 +5,26 @@
 
 namespace shrapnel::dsp {
 
-template <size_t N>
+template <size_t N, typename ChildProcessor>
 class BlockProcessor : public juce::dsp::ProcessorBase
 {
 public:
-    void prepare(const juce::dsp::ProcessSpec &) override { reset(); };
+    explicit BlockProcessor(ChildProcessor a_child) : child{a_child} {}
 
-    void reset() override { buffers.clear(); };
+    void prepare(const juce::dsp::ProcessSpec &spec) override
+    {
+        reset();
+
+        auto childSpec = spec;
+        childSpec.maximumBlockSize = N;
+        child.prepare(childSpec);
+    };
+
+    void reset() override
+    {
+        buffers.clear();
+        child.reset();
+    };
 
     void
     process(const juce::dsp::ProcessContextReplacing<float> &context) override
@@ -53,11 +66,8 @@ public:
             // let the block processor process it.
             if(write_size == N)
             {
-                // dummy processing for now, multiple all samples by 0.1
-                // TODO let the user pass in a processor to run here instead
-                std::for_each(write_buffer,
-                              write_buffer + N,
-                              [](auto &value) { value *= 0.1; });
+                auto completeBlock = block.getSingleChannelBlock(!read_buffer_channel);
+                child.process(completeBlock);
                 read_size = 0;
                 write_size = 0;
                 read_buffer_channel = !read_buffer_channel;
@@ -66,6 +76,7 @@ public:
     };
 
 private:
+    ChildProcessor child;
     juce::AudioBuffer<float> buffers{2, N};
     juce::dsp::AudioBlock<float> block{buffers};
     size_t read_buffer_channel = 0;

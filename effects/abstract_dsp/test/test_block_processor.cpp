@@ -22,6 +22,35 @@
 
 #include "block_processor.h"
 
+#define PROCESSOR_BLOCK_SIZE 2
+
+class Negative20dBGainProcessor
+{
+public:
+    void prepare(juce::dsp::ProcessSpec spec)
+    {
+        is_ready = true;
+        EXPECT_THAT(spec.maximumBlockSize, PROCESSOR_BLOCK_SIZE);
+    }
+
+    void reset() { is_ready = false; }
+
+    void process(juce::dsp::ProcessContextReplacing<float> context)
+    {
+        EXPECT_TRUE(is_ready);
+        auto block = context.getOutputBlock();
+        EXPECT_THAT(block.getNumSamples(), PROCESSOR_BLOCK_SIZE);
+        EXPECT_THAT(block.getNumChannels(), 1);
+        auto samples = block.getChannelPointer(0);
+        std::for_each(samples,
+                      samples + PROCESSOR_BLOCK_SIZE,
+                      [](auto &value) { value *= 0.1; });
+    }
+
+private:
+    bool is_ready = false;
+};
+
 class BlockProcessor : public ::testing::Test
 {
 protected:
@@ -29,7 +58,8 @@ protected:
 
     void TearDown() override { uut.reset(); }
 
-    shrapnel::dsp::BlockProcessor<2> uut;
+    shrapnel::dsp::BlockProcessor<2, Negative20dBGainProcessor> uut{
+        Negative20dBGainProcessor()};
 };
 
 TEST_F(BlockProcessor, BlockSizedInputs)
