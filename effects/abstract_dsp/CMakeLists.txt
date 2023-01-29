@@ -1,28 +1,32 @@
-if(ESP_PLATFORM)
+if (ESP_PLATFORM)
     idf_component_register(SRCS
-                             esp32/abstract_dsp_esp32.c
-                             esp32/profiling.c
-                             universal/delayline.cpp
-                             universal/delayline_c.cpp
-                             universal/fast_convolution.cpp
-                             universal/fast_fir.cpp
-                             universal/iir_universal.c
-                           INCLUDE_DIRS
-                             include
-                             esp32/include
-                           PRIV_INCLUDE_DIRS universal
-                           REQUIRES esp-dsp
-                           PRIV_REQUIRES compiler_warning_flags)
+            esp32/abstract_dsp_esp32.c
+            esp32/profiling.c
+            universal/delayline.cpp
+            universal/delayline_c.cpp
+            universal/fast_convolution.cpp
+            universal/fast_fir.cpp
+            universal/iir_universal.c
+            INCLUDE_DIRS
+            include
+            esp32/include
+            PRIV_INCLUDE_DIRS universal
+            REQUIRES esp-dsp
+            PRIV_REQUIRES compiler_warning_flags)
 
     target_compile_options(${COMPONENT_LIB} PRIVATE -Wdouble-promotion)
     return()
-endif()
+endif ()
 
 add_library(abstract_dsp STATIC
-            desktop/abstract_dsp_juce.cpp
-            desktop/profiling.c
-            universal/delayline.cpp
-            universal/delayline_c.cpp)
+        desktop/abstract_dsp_juce.cpp
+        desktop/profiling.c
+        universal/delayline.cpp
+        universal/delayline_c.cpp
+        universal/fast_convolution.cpp
+        universal/fast_fir.cpp
+        universal/iir_universal.c
+        )
 
 target_include_directories(abstract_dsp PUBLIC include)
 target_include_directories(abstract_dsp PUBLIC desktop/include)
@@ -32,7 +36,7 @@ target_link_libraries(abstract_dsp PUBLIC shrapnel::juce_modules)
 target_link_libraries(abstract_dsp PUBLIC esp-dsp)
 target_link_libraries(abstract_dsp PRIVATE compiler_warning_flags)
 
-if(DEFINED TESTING)
+if (DEFINED TESTING)
     add_executable(delayline_test test/test_delayline.cpp)
     target_link_libraries(delayline_test PRIVATE abstract_dsp)
     target_link_libraries(delayline_test PRIVATE gtest_main)
@@ -74,4 +78,4 @@ if(DEFINED TESTING)
     target_link_libraries(block_processor_test PRIVATE gmock)
     target_link_libraries(block_processor_test PRIVATE compiler_warning_flags)
     gtest_discover_tests(block_processor_test)
-endif()
+endif ()
