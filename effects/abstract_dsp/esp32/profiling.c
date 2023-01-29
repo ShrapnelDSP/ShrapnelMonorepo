@@ -22,6 +22,8 @@
 #include "esp_log.h"
 #include "hal/cpu_hal.h"
 #include "rom/ets_sys.h"
+#include "freertos/FreeRTOS.h"
+#include "freertos/semphr.h"
 
 #define TAG "profiling"
 
@@ -43,7 +45,6 @@ void profiling_init(size_t a_buffer_size, float a_sample_rate)
 
     cpu_freq_mhz = ets_get_cpu_frequency();
     ESP_LOGI(TAG, "CPU frequency: %d MHz", cpu_freq_mhz);
-
 }
 
 void profiling_start(void)

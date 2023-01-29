@@ -32,7 +32,6 @@
 #include "esp_heap_caps.h"
 #include "midi_mapping.h"
 #include "rapidjson/writer.h"
-#define LOG_LOCAL_LEVEL ESP_LOG_VERBOSE
 #include "esp_log.h"
 #include "freertos/projdefs.h"
 
@@ -325,7 +324,11 @@ static esp_err_t websocket_get_handler(httpd_req_t *req)
         if(message.has_value())
         {
             auto out = AppMessage{*message, fd};
-            in_queue->send(&out, pdMS_TO_TICKS(100));
+            int queue_rc = in_queue->send(&out, pdMS_TO_TICKS(100));
+            if(queue_rc != pdPASS)
+            {
+                ESP_LOGE(TAG, "in_queue message dropped");
+            }
             goto out;
         }
     }
@@ -335,7 +338,11 @@ static esp_err_t websocket_get_handler(httpd_req_t *req)
         if(message.has_value())
         {
             auto out = AppMessage{*message, fd};
-            in_queue->send(&out, pdMS_TO_TICKS(100));
+            int queue_rc = in_queue->send(&out, pdMS_TO_TICKS(100));
+            if(queue_rc != pdPASS)
+            {
+                ESP_LOGE(TAG, "in_queue message dropped");
+            }
 
             etl::string<256> buffer;
             etl::string_stream stream{buffer};
@@ -343,7 +350,6 @@ static esp_err_t websocket_get_handler(httpd_req_t *req)
             ESP_LOGI(TAG, "decoded %s", buffer.data());
 
             goto out;
-
         }
     }
 
