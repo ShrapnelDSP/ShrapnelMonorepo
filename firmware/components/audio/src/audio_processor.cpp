@@ -17,9 +17,10 @@ AudioProcessor::AudioProcessor(AudioProcessorParameters a_parameters)
     : parameters{a_parameters},
       speaker{{std::make_unique<shrapnel::dsp::FastConvolution<1024, 512>>(fir_coeff)}}
 {
-    ESP_ERROR_CHECK(gate_init());
+    esp_err_t rc = gate_init();
+    assert(rc == ESP_OK);
 
-    ESP_LOGI(TAG, "Initialised FIR filter with length %d", fir_coeff.size());
+    ESP_LOGI(TAG, "Initialised FIR filter with length %zd", fir_coeff.size());
 }
 
 void AudioProcessor::prepare(float sample_rate, size_t buffer_size)

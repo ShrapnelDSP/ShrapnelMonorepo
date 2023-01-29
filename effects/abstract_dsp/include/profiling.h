@@ -19,8 +19,7 @@
 
 #pragma once
 
-#include "freertos/FreeRTOS.h"
-#include "freertos/semphr.h"
+#include <stddef.h>
 
 #ifdef __cplusplus
 extern "C" {

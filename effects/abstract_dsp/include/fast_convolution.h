@@ -24,6 +24,7 @@
 #include "profiling.h"
 #include <algorithm>
 #include <array>
+#include <cassert>
 #include <complex>
 #include <cstddef>
 
@@ -36,13 +37,15 @@ class FastConvolution final {
     // Resample A to the current sample rate in the prepare method
     FastConvolution(const std::array<float, K> &a)
     {
-        ESP_ERROR_CHECK(dsps_fft4r_init_fc32(NULL, CONFIG_DSP_MAX_FFT_SIZE));
+        esp_err_t rc = dsps_fft4r_init_fc32(NULL, CONFIG_DSP_MAX_FFT_SIZE);
+        assert(rc == ESP_OK);
 
         // transform a
         std::array<float, N> a_copy{};
         std::copy(a.cbegin(), a.cend(), a_copy.begin());
         a_complex = real_to_complex(a_copy);
-        ESP_ERROR_CHECK(dsps_fft4r_fc32(reinterpret_cast<float *>(a_complex.data()), N));
+        rc = dsps_fft4r_fc32(reinterpret_cast<float *>(a_complex.data()), N);
+        assert(rc == ESP_OK);
         dsps_bit_rev4r_fc32(reinterpret_cast<float *>(a_complex.data()), N);
     }
 
@@ -58,7 +61,8 @@ class FastConvolution final {
         // transform b
         auto b_complex = real_to_complex(b);
         profiling_mark_stage(7);
-        ESP_ERROR_CHECK(dsps_fft4r_fc32(reinterpret_cast<float *>(b_complex.data()), N));
+        int rc = dsps_fft4r_fc32(reinterpret_cast<float *>(b_complex.data()), N);
+        assert(rc == ESP_OK);
         profiling_mark_stage(8);
         dsps_bit_rev4r_fc32(reinterpret_cast<float *>(b_complex.data()), N);
         profiling_mark_stage(9);
@@ -78,7 +82,8 @@ class FastConvolution final {
         auto multiplied_ptr = reinterpret_cast<float *>(multiplied.data());
         dsps_mulc_f32(multiplied_ptr + 1, multiplied_ptr + 1, N, -1, 2, 2);
         profiling_mark_stage(11);
-        ESP_ERROR_CHECK(dsps_fft4r_fc32(multiplied_ptr, N));
+        rc = (dsps_fft4r_fc32(multiplied_ptr, N));
+        assert(rc == ESP_OK);
         profiling_mark_stage(12);
         dsps_bit_rev4r_fc32(multiplied_ptr, N);
         profiling_mark_stage(13);

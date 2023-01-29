@@ -682,6 +682,8 @@ extern "C" void app_main(void)
         }
     };
 
+    // XXX: These are duplicated in the JUCE plugin, be sure to update both at
+    // the same time
     create_and_load_parameter("ampGain", 0, 1, 0.5);
     create_and_load_parameter("ampChannel", 0, 1, 0);
     create_and_load_parameter("bass", 0, 1, 0.5);
