@@ -9,7 +9,7 @@ template <size_t N, typename ChildProcessor>
 class BlockProcessor : public juce::dsp::ProcessorBase
 {
 public:
-    explicit BlockProcessor(ChildProcessor a_child) : child{a_child} {}
+    explicit BlockProcessor(ChildProcessor a_child) : child{std::move(a_child)} {}
 
     void prepare(const juce::dsp::ProcessSpec &spec) override
     {

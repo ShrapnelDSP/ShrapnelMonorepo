@@ -5,6 +5,8 @@ project(ShrapnelDSP VERSION 0.0.1)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED TRUE)
 
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+
 add_subdirectory(../../effects/abstract_dsp abstract_dsp)
 add_subdirectory(../../effects/chorus chorus)
 add_subdirectory(../../effects/gate gate)

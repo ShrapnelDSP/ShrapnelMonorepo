@@ -38,6 +38,6 @@ public:
 
 private:
     juce::AudioProcessorValueTreeState parameters;
-    ShrapnelAudioProcessor processor;
+    shrapnel::dsp::BlockProcessor<ShrapnelAudioProcessor::block_size, ShrapnelAudioProcessor> processor;
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(AudioPluginAudioProcessor)
 };

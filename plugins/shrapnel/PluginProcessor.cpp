@@ -62,37 +62,42 @@ AudioPluginAudioProcessor::AudioPluginAudioProcessor()
                   "wahBypass", "Wah Bypass", 0.f, 1.f, 1.f),
           },
       },
-      processor{{
-          .amplifier{
-              .gain{parameters.getRawParameterValue("ampGain")},
-              .channel{parameters.getRawParameterValue("ampChannel")},
-              .bass{parameters.getRawParameterValue("bass")},
-              .middle{parameters.getRawParameterValue("middle")},
-              .treble{parameters.getRawParameterValue("treble")},
-              .contour{parameters.getRawParameterValue("contour")},
-              .volume{parameters.getRawParameterValue("volume")},
+      processor{
+          // clang-format off
+          ShrapnelAudioProcessor{
+              {
+                  .amplifier{
+                      .gain{parameters.getRawParameterValue("ampGain")},
+                      .channel{parameters.getRawParameterValue("ampChannel")},
+                      .bass{parameters.getRawParameterValue("bass")},
+                      .middle{parameters.getRawParameterValue("middle")},
+                      .treble{parameters.getRawParameterValue("treble")},
+                      .contour{parameters.getRawParameterValue("contour")},
+                      .volume{parameters.getRawParameterValue("volume")},
+                  },
+                  .gate{
+                      .threshold{parameters.getRawParameterValue( "noiseGateThreshold")},
+                      .hysteresis{parameters.getRawParameterValue( "noiseGateHysteresis")},
+                      .attack{ parameters.getRawParameterValue("noiseGateAttack")},
+                      .hold{parameters.getRawParameterValue("noiseGateHold")},
+                      .release{ parameters.getRawParameterValue("noiseGateRelease")},
+                      .bypass{ parameters.getRawParameterValue("noiseGateBypass")},
+                  },
+                  .chorus{
+                      .rate{parameters.getRawParameterValue("chorusRate")},
+                      .depth{parameters.getRawParameterValue("chorusDepth")},
+                      .mix{parameters.getRawParameterValue("chorusMix")},
+                      .bypass{parameters.getRawParameterValue("chorusBypass")},
+                  },
+                  .wah{
+                      .position{parameters.getRawParameterValue("wahPosition")},
+                      .vocal{parameters.getRawParameterValue("wahVocal")},
+                      .bypass{parameters.getRawParameterValue("wahBypass")},
+                  },
+              },
           },
-          .gate{
-              .threshold{parameters.getRawParameterValue("noiseGateThreshold")},
-              .hysteresis{
-                  parameters.getRawParameterValue("noiseGateHysteresis")},
-              .attack{parameters.getRawParameterValue("noiseGateAttack")},
-              .hold{parameters.getRawParameterValue("noiseGateHold")},
-              .release{parameters.getRawParameterValue("noiseGateRelease")},
-              .bypass{parameters.getRawParameterValue("noiseGateBypass")},
-          },
-          .chorus{
-              .rate{parameters.getRawParameterValue("chorusRate")},
-              .depth{parameters.getRawParameterValue("chorusDepth")},
-              .mix{parameters.getRawParameterValue("chorusMix")},
-              .bypass{parameters.getRawParameterValue("chorusBypass")},
-          },
-          .wah{
-              .position{parameters.getRawParameterValue("wahPosition")},
-              .vocal{parameters.getRawParameterValue("wahVocal")},
-              .bypass{parameters.getRawParameterValue("wahBypass")},
-          },
-      }}
+          // clang-format on
+      }
 {
 }
 
@@ -174,12 +179,9 @@ bool AudioPluginAudioProcessor::isBusesLayoutSupported(
     juce::ignoreUnused(layouts);
     return true;
 #else
-    // This is the place where you check if the layout is supported.
-    // In this template code we only support mono or stereo.
     // Some plugin hosts, such as certain GarageBand versions, will only
     // load plugins that support stereo bus layouts.
-    if(layouts.getMainOutputChannelSet() != juce::AudioChannelSet::mono() &&
-       layouts.getMainOutputChannelSet() != juce::AudioChannelSet::stereo())
+    if(layouts.getMainOutputChannelSet() != juce::AudioChannelSet::stereo())
         return false;
 
         // This checks if the input layout matches the output layout
@@ -198,21 +200,16 @@ void AudioPluginAudioProcessor::processBlock(juce::AudioBuffer<float> &buffer,
     juce::ignoreUnused(midiMessages);
 
     juce::ScopedNoDenormals noDenormals;
-    auto totalNumInputChannels = getTotalNumInputChannels();
-    auto totalNumOutputChannels = getTotalNumOutputChannels();
 
-    // In case we have more outputs than inputs, this code clears any output
-    // channels that didn't contain input data, (because these aren't
-    // guaranteed to be empty - they may contain garbage).
-    // This is here to avoid people getting screaming feedback
-    // when they first compile a plugin, but obviously you don't need to keep
-    // this code if your algorithm always overwrites all the output channels.
-    for(auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
-        buffer.clear(i, 0, buffer.getNumSamples());
+    // Sum input channels
+    buffer.addFrom(0, 0, buffer.getReadPointer(1), buffer.getNumSamples());
+    auto samples = buffer.getWritePointer(0);
+    juce::dsp::AudioBlock<float> block{&samples, 1, static_cast<size_t>(buffer.getNumSamples())};
 
-
-    juce::dsp::AudioBlock<float> block{buffer};
     processor.process(block);
+
+    // copy processed output to other channel for mono output
+    buffer.copyFrom(1, 0, samples, buffer.getNumSamples());
 }
 
 bool AudioPluginAudioProcessor::hasEditor() const

@@ -1,60 +1,40 @@
 #pragma once
 
-#include "FixedBlockProcessor.h"
 #include "audio_processor.h"
+#include "block_processor.h"
 #include <juce_dsp/juce_dsp.h>
 
-class ShrapnelAudioProcessor final : public FixedBlockProcessor
+class ShrapnelAudioProcessor : juce::dsp::ProcessorBase
 {
 public:
+    static constexpr size_t block_size = 512;
+
     explicit ShrapnelAudioProcessor(
         shrapnel::AudioProcessorParameters parameters)
-        : FixedBlockProcessor(512), processor{parameters}
+        : processor{parameters}
     {
     }
 
     void prepare(const juce::dsp::ProcessSpec &spec) override
     {
-        FixedBlockProcessor::prepare(spec);
-        processor.prepare(spec.sampleRate,
-                          static_cast<size_t>(getMaximumBlockSize()));
+        jassert(spec.numChannels == 1);
+        jassert(spec.maximumBlockSize == block_size);
+
+        processor.prepare(spec.sampleRate, block_size);
     }
 
-    void reset()
+    void reset() override
     {
-        resetFrame();
         processor.reset();
     }
 
-    void process(const juce::dsp::ProcessContextReplacing<float> &context)
+    void process(const juce::dsp::ProcessContextReplacing<float> &context) override
     {
-        // TODO This is certainly not correct, we need to pull data out of the buffer when it is available
-        jassert(!context.usesSeparateInputAndOutputBlocks());
+        jassert(context.getOutputBlock().getNumSamples() == block_size);
 
-        const auto &block = context.getOutputBlock();
+        auto samples = context.getOutputBlock().getChannelPointer(0);
+        processor.process(std::span<float, block_size>(samples, block_size));
 
-        for(size_t i = 0; i < block.getNumChannels(); i++)
-        {
-            // This might call performProcessing multiple times, how do we write to the output?
-            appendData(i, block.getNumSamples(), block.getChannelPointer(i));
-        }
-    }
-
-    void performProcessing(int channel) override
-    {
-        jassert(buffer.getNumSamples() == 512);
-
-        // TODO handle multichannel correctly
-        if(channel == 0)
-        {
-            auto samples = buffer.getWritePointer(channel);
-            processor.process(std::span<float, 512>(
-                samples, static_cast<size_t>(buffer.getNumSamples())));
-        }
-        else
-        {
-            buffer.clear(channel, 0, buffer.getNumSamples());
-        }
     }
 
 private:
