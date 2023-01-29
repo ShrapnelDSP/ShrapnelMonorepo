@@ -66,7 +66,8 @@ public:
             // let the block processor process it.
             if(write_size == N)
             {
-                auto completeBlock = block.getSingleChannelBlock(!read_buffer_channel);
+                auto completeBlock =
+                    block.getSingleChannelBlock(!read_buffer_channel);
                 child.process(completeBlock);
                 read_size = 0;
                 write_size = 0;

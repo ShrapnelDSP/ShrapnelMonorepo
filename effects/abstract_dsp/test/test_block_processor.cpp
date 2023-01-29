@@ -54,21 +54,23 @@ private:
 class BlockProcessor : public ::testing::Test
 {
 protected:
-    void SetUp() override { uut.prepare(juce::dsp::ProcessSpec{48e3, 8, 1}); }
+    void SetUp() override { uut.prepare(juce::dsp::ProcessSpec{48e3, 3, 1}); }
 
     void TearDown() override { uut.reset(); }
 
-    shrapnel::dsp::BlockProcessor<2, Negative20dBGainProcessor> uut{
-        Negative20dBGainProcessor()};
+    shrapnel::dsp::BlockProcessor<PROCESSOR_BLOCK_SIZE,
+                                  Negative20dBGainProcessor>
+        uut{Negative20dBGainProcessor()};
 };
 
 TEST_F(BlockProcessor, BlockSizedInputs)
 {
-    std::array<float, 2> samples{};
+    std::array<float, PROCESSOR_BLOCK_SIZE> samples{};
     float *samples_ptr = samples.data();
     float *const *channels = &samples_ptr;
 
-    auto block = juce::dsp::AudioBlock<float>(channels, 1, 2);
+    auto block =
+        juce::dsp::AudioBlock<float>(channels, 1, PROCESSOR_BLOCK_SIZE);
 
     samples = {1.f, 2.f};
     uut.process(block);
