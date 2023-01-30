@@ -35,7 +35,7 @@
 
 #define DMA_BUF_COUNT (3)
 
-#define TASK_STACK (31000)
+#define TASK_STACK (35000)
 
 /* Guarantee no preemption by esp-idf tasks.
  *
@@ -323,7 +323,7 @@ void process_samples(std::span<int32_t, 2 * DMA_BUF_SIZE> buf,
     profiling_stop();
     gpio_set_level(g_profiling_gpio, 0);
 
-    ESP_LOGD(TAG, "stack: %d", uxTaskGetStackHighWaterMark(NULL));
+    ESP_LOGD(TAG, "stack: %d", uxTaskGetStackHighWaterMark(nullptr));
 }
 
 AudioProcessorParameters
