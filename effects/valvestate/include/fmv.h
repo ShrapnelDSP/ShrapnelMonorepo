@@ -21,6 +21,7 @@
 #pragma once
 
 #include "iir_concrete.h"
+#include "dsp_concepts.h"
 
 namespace shrapnel {
 namespace effect {
@@ -31,14 +32,16 @@ class FMVFilter
     public:
     void set_parameters(float l, float m, float t);
 
-    void prepare(float samplerate);
-    void process(float *buffer, std::size_t buffer_size);
+    void prepare(float samplerate, size_t);
+    void process(std::span<float> buffer);
     void reset();
 
     private:
     shrapnel::dsp::IirFilter filter;
     float samplerate;
 };
+
+static_assert(dsp::Processor<FMVFilter>);
 
 }
 }

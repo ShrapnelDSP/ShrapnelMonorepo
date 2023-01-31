@@ -21,9 +21,7 @@
 #include "gain_control.h"
 #include <cmath>
 
-namespace shrapnel {
-namespace effect {
-namespace valvestate {
+namespace shrapnel::effect::valvestate {
 
 void GainControl::set_parameters(float g, float channel)
 {
@@ -58,22 +56,20 @@ void GainControl::set_parameters(float g, float channel)
     filter.set_coefficients(std::array<float, 6>({B0, B1, B2, A0, A1, A2}));
 }
 
-void GainControl::prepare(float a_samplerate)
+void GainControl::prepare(float a_samplerate, size_t)
 {
     filter.reset();
     samplerate = a_samplerate;
 }
 
-void GainControl::process(float *buffer, std::size_t buffer_size)
+void GainControl::process(std::span<float> buffer)
 {
-    filter.process(buffer, buffer, buffer_size);
+    filter.process(buffer.data(), buffer.data(), buffer.size());
 }
 
-void GainControl::reset(void)
+void GainControl::reset()
 {
     filter.reset();
 }
 
-}
-}
 }

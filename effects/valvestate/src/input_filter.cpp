@@ -25,7 +25,7 @@ namespace shrapnel {
 namespace effect {
 namespace valvestate {
 
-void InputFilter::prepare(float samplerate)
+void InputFilter::prepare(float samplerate, size_t)
 {
     float K = 2 * samplerate;
     float B0 = 1.10449884469421e-9f*std::pow(K, 2.f) + 0.00246545127613797f*K + 0.5f;
@@ -41,9 +41,9 @@ void InputFilter::prepare(float samplerate)
     filter.reset();
 }
 
-void InputFilter::process(float *buffer, std::size_t buffer_size)
+void InputFilter::process(std::span<float> buffer)
 {
-    filter.process(buffer, buffer, buffer_size);
+    filter.process(buffer.data(), buffer.data(), buffer.size());
 }
 
 void InputFilter::reset()

@@ -25,61 +25,73 @@
 
 #pragma once
 
+#include "dsp_concepts.h"
 #include <algorithm>
 #include <array>
 #include <cstddef>
 #include <memory>
+#include "profiling.h"
 
-void profiling_mark_stage(unsigned int stage);
+namespace {
+template <typename T, T value>
+concept integral_power_of_2 =
+    std::unsigned_integral<T> && requires { value && !(value & (value - 1)); };
+}
 
-namespace shrapnel {
-namespace dsp {
+namespace shrapnel::dsp {
 
 /**
  * \tparam N The number of samples in each buffer passed to \ref process()
  * \tparam M The number of samples used for convolution
  * \tparam Convolution The circular convolution processor to use
  */
-template<size_t N, size_t M, typename Convolution>
-class FastFir final {
-    // TODO add static asserts for the following:
-    // buffer size is power of two
-    // convolution size is power of two
-    // Coefficients size is not more than convolutions size / 2
-
-    public:
+template <size_t N, size_t M, typename Convolution>
+    requires integral_power_of_2<decltype(N), N> &&
+             integral_power_of_2<decltype(M), M> && requires { M <= N / 2; }
+class FastFir final
+{
+public:
     /** Initialise the filter
      */
-    FastFir(std::unique_ptr<Convolution> a_convolution) : signal{}, convolution{std::move(a_convolution)} {}
+    explicit FastFir(std::unique_ptr<Convolution> a_convolution)
+        requires(dsp::Processor<FastFir<N, M, Convolution>, N>)
+    : signal{}, convolution{std::move(a_convolution)}
+    {
+    }
+
+    // TODO implement variable buffer size processing
+    void prepare(float, size_t){};
 
     /** Filter samples
      *
      * \param[in,out] buffer Samples to process. Must be \p N samples long.
      */
-    void process(float *buffer)
+    void process(std::span<float, N> buffer)
     {
         std::copy(signal.begin() + N, signal.end(), signal.begin());
         profiling_mark_stage(5);
-        std::copy(buffer, buffer + N, signal.end() - N);
+        std::copy(buffer.data(), buffer.data() + N, signal.end() - N);
         profiling_mark_stage(6);
 
         std::array<float, M> out;
         convolution->process(signal, out);
         profiling_mark_stage(16);
 
-        std::copy(out.end() - N, out.end(), buffer);
+        std::copy(out.end() - N, out.end(), buffer.data());
     }
 
     /** Reset the state of the filter
      *
      * \note Does not reset coefficients
      */
-    void reset(void);
+    void reset()
+    {
+        signal.fill(0);
+    };
 
-    private:
+private:
     std::array<float, M> signal;
     std::unique_ptr<Convolution> convolution;
 };
 
-}
-}
+} // namespace shrapnel::dsp

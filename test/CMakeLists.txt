@@ -1,10 +1,9 @@
 cmake_minimum_required(VERSION 3.14)
-project (Tutorial
-         LANGUAGES C CXX
-         )
+project (ShrapnelDSPTest LANGUAGES C CXX)
 
 # This project uses C++20 features
 set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED TRUE)
 
 include(FetchContent)
 FetchContent_Declare(
@@ -34,11 +33,13 @@ add_subdirectory(../effects/abstract_dsp/ abstract_dsp)
 add_subdirectory(../firmware/components/audio_events audio_events)
 add_subdirectory(../firmware/components/audio_param audio_param)
 add_subdirectory(../firmware/components/cmd_handling cmd_handling)
-add_subdirectory(../firmware/components/midi_protocol midi_protocol)
+add_subdirectory(../firmware/components/compiler_warning_flags compiler_warning_flags)
 add_subdirectory(../firmware/components/midi_mapping midi_mapping)
-add_subdirectory(../thirdparty/esp-idf-components/etl etl)
+add_subdirectory(../firmware/components/midi_protocol midi_protocol)
 add_subdirectory(../firmware/components/queue queue)
 add_subdirectory(../firmware/components/task task)
-add_subdirectory(../firmware/components/compiler_warning_flags compiler_warning_flags)
+add_subdirectory(../plugins/JUCE_static JUCE_static)
+add_subdirectory(../thirdparty/JUCE JUCE)
 add_subdirectory(../thirdparty/esp-idf-components/esp-dsp esp_dsp)
+add_subdirectory(../thirdparty/esp-idf-components/etl etl)
 add_subdirectory(../thirdparty/esp-idf-components/rapidjson rapidjson)

@@ -21,18 +21,14 @@
 #include "clipping.h"
 #include "wave_shape.h"
 
-namespace shrapnel {
-namespace effect {
-namespace valvestate {
+namespace shrapnel::effect::valvestate {
 
-void Clipping::process(float *buffer, std::size_t buffer_size)
+void Clipping::process(std::span<float> buffer)
 {
-    for(std::size_t i = 0; i < buffer_size; i++)
+    for(float &sample : buffer)
     {
-        buffer[i] = waveshape(buffer[i]);
+        sample = waveshape(sample);
     }
 }
 
-}
-}
-}
+} // namespace shrapnel::effect::valvestate

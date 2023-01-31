@@ -32,7 +32,6 @@
 #include "esp_heap_caps.h"
 #include "midi_mapping.h"
 #include "rapidjson/writer.h"
-#define LOG_LOCAL_LEVEL ESP_LOG_VERBOSE
 #include "esp_log.h"
 #include "freertos/projdefs.h"
 
@@ -325,7 +324,11 @@ static esp_err_t websocket_get_handler(httpd_req_t *req)
         if(message.has_value())
         {
             auto out = AppMessage{*message, fd};
-            in_queue->send(&out, pdMS_TO_TICKS(100));
+            int queue_rc = in_queue->send(&out, pdMS_TO_TICKS(100));
+            if(queue_rc != pdPASS)
+            {
+                ESP_LOGE(TAG, "in_queue message dropped");
+            }
             goto out;
         }
     }
@@ -335,7 +338,11 @@ static esp_err_t websocket_get_handler(httpd_req_t *req)
         if(message.has_value())
         {
             auto out = AppMessage{*message, fd};
-            in_queue->send(&out, pdMS_TO_TICKS(100));
+            int queue_rc = in_queue->send(&out, pdMS_TO_TICKS(100));
+            if(queue_rc != pdPASS)
+            {
+                ESP_LOGE(TAG, "in_queue message dropped");
+            }
 
             etl::string<256> buffer;
             etl::string_stream stream{buffer};
@@ -343,7 +350,6 @@ static esp_err_t websocket_get_handler(httpd_req_t *req)
             ESP_LOGI(TAG, "decoded %s", buffer.data());
 
             goto out;
-
         }
     }
 
@@ -682,6 +688,8 @@ extern "C" void app_main(void)
         }
     };
 
+    // XXX: These are duplicated in the JUCE plugin, be sure to update both at
+    // the same time
     create_and_load_parameter("ampGain", 0, 1, 0.5);
     create_and_load_parameter("ampChannel", 0, 1, 0);
     create_and_load_parameter("bass", 0, 1, 0.5);
@@ -755,8 +763,8 @@ midi::Mapping, 10>>(document);
 
     i2c_setup();
 
-    profiling_mutex = xSemaphoreCreateMutex();
-    i2s_setup(PROFILING_GPIO, audio_params.get());
+    profiling_init(DMA_BUF_SIZE, SAMPLE_RATE);
+    audio::i2s_setup(PROFILING_GPIO, audio_params.get());
 
     //dac must be powered up after the i2s clocks have stabilised
     vTaskDelay(100 / portTICK_PERIOD_MS);
@@ -805,7 +813,7 @@ midi::Mapping, 10>>(document);
     start_mdns();
 
 #if 0
-    rc = xTaskCreate(i2s_profiling_task, "i2s profiling", 2000, NULL, tskIDLE_PRIORITY + 2, NULL);
+    rc = xTaskCreate(profiling_task, "i2s profiling", 2000, NULL, tskIDLE_PRIORITY + 2, NULL);
     if(rc != pdPASS)
     {
         ESP_LOGE(TAG, "Profiling task create failed %d", rc);
@@ -994,9 +1002,9 @@ midi::Mapping, 10>>(document);
             // events in the current iteration, so that the queue doesn't fill
             // up.
             i2s_event_t event;
-            while(xQueueReceive(i2s_queue, &event, 0))
+            while(xQueueReceive(audio::i2s_queue, &event, 0))
             {
-                log_i2s_event(event);
+                audio::log_i2s_event(event);
             }
         }
 

@@ -1,4 +1,5 @@
 add_library(juce_modules STATIC)
+add_library(shrapnel::juce_modules ALIAS juce_modules)
 
 target_link_libraries(juce_modules
     PRIVATE

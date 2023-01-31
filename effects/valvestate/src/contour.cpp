@@ -29,9 +29,7 @@ ContourFilter::ContourFilter()
     set_parameter(0.5);
 }
 
-ContourFilter::~ContourFilter(){}
-
-void ContourFilter::prepare(float a_samplerate)
+void ContourFilter::prepare(float a_samplerate, size_t)
 {
     filter.reset();
     samplerate = a_samplerate;
@@ -105,12 +103,12 @@ void ContourFilter::set_parameter(float p)
     filter.set_coefficients(std::array<float, 10>{B0, B1, B2, B3, B4, A0, A1, A2, A3, A4});
 }
 
-void ContourFilter::process(float *buffer, std::size_t buffer_size)
+void ContourFilter::process(std::span<float> buffer)
 {
-    filter.process(buffer, buffer, buffer_size);
+    filter.process(buffer.data(), buffer.data(), buffer.size());
 }
 
-void ContourFilter::reset(void)
+void ContourFilter::reset()
 {
     filter.reset();
 }

@@ -21,14 +21,13 @@
 
 #include "iir_concrete.h"
 #include <cstddef>
+#include "dsp_concepts.h"
 
 namespace shrapnel::effect {
 
 class Wah
 {
 public:
-    Wah();
-
     /** Set the expression pedal position
      *
      * This parameter is normalised to the range [0, 1]. 1 corresponds to the
@@ -43,19 +42,20 @@ public:
      */
     void set_vocal(float vocal);
 
-    void set_sample_rate(float rate);
-
-    void process(float *samples, std::size_t sample_count);
+    void prepare(float sample_rate, size_t);
+    void reset();
+    void process(std::span<float> samples);
 
 private:
     float sample_rate = 0;
 
-    float position_parameter;
-    float vocal_parameter;
+    float position_parameter = 0.5;
+    float vocal_parameter = 0.5;
 
     shrapnel::dsp::IirFilter wah_filter;
     shrapnel::dsp::IirFilter position_filter;
     shrapnel::dsp::IirFilter vocal_filter;
 };
+static_assert(dsp::Processor<Wah, std::dynamic_extent>);
 
 }

@@ -113,7 +113,7 @@ TEST_F(FastFir, SignalIsBufferedCorrectly)
 
     for(auto &in : input)
     {
-        uut.process(in.data());
+        uut.process(in);
     }
 }
 
@@ -130,6 +130,6 @@ TEST_F(FastFir, OutputIsCopiedCorrectly)
 
     shrapnel::dsp::FastFir<2, 8, MockFastConvolution<8>> uut(std::move(convolution));
 
-    uut.process(signal.data());
+    uut.process(signal);
     EXPECT_THAT(signal, ElementsAre(2.f, 1.f));
 }
