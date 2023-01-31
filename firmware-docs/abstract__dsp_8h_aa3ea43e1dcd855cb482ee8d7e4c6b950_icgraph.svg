@@ -20,10 +20,10 @@
 <!-- Node2 -->
 <g id="node2" class="node">
 <title>Node2</title>
-<g id="a_node2"><a xlink:href="classshrapnel_1_1effect_1_1Chorus.html#a928829eccf4e1ab2d3449331efec6b04" target="_top" xlink:title=" ">
+<g id="a_node2"><a xlink:href="classshrapnel_1_1effect_1_1Chorus.html#ab721c376bd1680c901101a6f366fc6a2" target="_top" xlink:title=" ">
 <polygon fill="none" stroke="black" points="0,-0.5 0,-30.5 117,-30.5 117,-0.5 0,-0.5"/>
 <text text-anchor="start" x="8" y="-18.5" font-family="Helvetica,sans-Serif" font-size="10.00">shrapnel::effect::Chorus</text>
-<text text-anchor="middle" x="58.5" y="-7.5" font-family="Helvetica,sans-Serif" font-size="10.00">::set_sample_rate</text>
+<text text-anchor="middle" x="58.5" y="-7.5" font-family="Helvetica,sans-Serif" font-size="10.00">::prepare</text>
 </a>
 </g>
 </g>

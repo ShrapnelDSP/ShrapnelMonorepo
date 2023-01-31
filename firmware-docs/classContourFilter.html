@@ -103,20 +103,18 @@ $(document).ready(function(){initNavTree('classContourFilter.html',''); initResi
 Public Member Functions</h2></td></tr>
 <tr class="memitem:af4486d2fb4e9beb086f2b11b5f48d111"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classContourFilter.html#af4486d2fb4e9beb086f2b11b5f48d111">ContourFilter</a> ()</td></tr>
 <tr class="separator:af4486d2fb4e9beb086f2b11b5f48d111"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5f3433bf121dc77f8aeececeffc89d45"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classContourFilter.html#a5f3433bf121dc77f8aeececeffc89d45">~ContourFilter</a> ()</td></tr>
-<tr class="separator:a5f3433bf121dc77f8aeececeffc89d45"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a934f8c64010e0434fb88f96a01865738"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classContourFilter.html#a934f8c64010e0434fb88f96a01865738">prepare</a> (float samplerate)</td></tr>
-<tr class="separator:a934f8c64010e0434fb88f96a01865738"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2baf26150cbf88c8261ba2b42ae83703"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classContourFilter.html#a2baf26150cbf88c8261ba2b42ae83703">process</a> (float *buffer, std::size_t <a class="el" href="noise__gate_8cpp.html#a799a743b3abd553a37fc01ad3097df08">buffer_size</a>)</td></tr>
-<tr class="separator:a2baf26150cbf88c8261ba2b42ae83703"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac12574e070f454adde05a20b80407d16"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classContourFilter.html#ac12574e070f454adde05a20b80407d16">reset</a> (void)</td></tr>
-<tr class="separator:ac12574e070f454adde05a20b80407d16"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5789ed6d2da0b980a2dc1469925a0509"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classContourFilter.html#a5789ed6d2da0b980a2dc1469925a0509">prepare</a> (float samplerate, size_t)</td></tr>
+<tr class="separator:a5789ed6d2da0b980a2dc1469925a0509"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af730f92633ec29b43ebf57b724383d3d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classContourFilter.html#af730f92633ec29b43ebf57b724383d3d">process</a> (std::span&lt; float &gt; buffer)</td></tr>
+<tr class="separator:af730f92633ec29b43ebf57b724383d3d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7b6a52867eb20a552fb8f66abe35881e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classContourFilter.html#a7b6a52867eb20a552fb8f66abe35881e">reset</a> ()</td></tr>
+<tr class="separator:a7b6a52867eb20a552fb8f66abe35881e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a882a98cba62c5082d3afa3ebc828fe65"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classContourFilter.html#a882a98cba62c5082d3afa3ebc828fe65">set_parameter</a> (float p)</td></tr>
 <tr class="separator:a882a98cba62c5082d3afa3ebc828fe65"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock">
-<p class="definition">Definition at line <a class="el" href="contour_8h_source.html#l00025">25</a> of file <a class="el" href="contour_8h_source.html">contour.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="contour_8h_source.html#l00026">26</a> of file <a class="el" href="contour_8h_source.html">contour.h</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="af4486d2fb4e9beb086f2b11b5f48d111" name="af4486d2fb4e9beb086f2b11b5f48d111"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#af4486d2fb4e9beb086f2b11b5f48d111">&#9670;&nbsp;</a></span>ContourFilter()</h2>
@@ -139,9 +137,9 @@ Public Member Functions</h2></td></tr>
 <div class="line"><span class="lineno">   28</span>    <span class="comment">//the correct amount of memory gets allocated</span></div>
 <div class="line"><span class="lineno">   29</span>    <a class="code hl_function" href="classContourFilter.html#a882a98cba62c5082d3afa3ebc828fe65">set_parameter</a>(0.5);</div>
 <div class="line"><span class="lineno">   30</span>}</div>
-<div class="ttc" id="aclassContourFilter_html_a882a98cba62c5082d3afa3ebc828fe65"><div class="ttname"><a href="classContourFilter.html#a882a98cba62c5082d3afa3ebc828fe65">ContourFilter::set_parameter</a></div><div class="ttdeci">void set_parameter(float p)</div><div class="ttdef"><b>Definition:</b> <a href="contour_8cpp_source.html#l00040">contour.cpp:40</a></div></div>
+<div class="ttc" id="aclassContourFilter_html_a882a98cba62c5082d3afa3ebc828fe65"><div class="ttname"><a href="classContourFilter.html#a882a98cba62c5082d3afa3ebc828fe65">ContourFilter::set_parameter</a></div><div class="ttdeci">void set_parameter(float p)</div><div class="ttdef"><b>Definition:</b> <a href="contour_8cpp_source.html#l00038">contour.cpp:38</a></div></div>
 </div><!-- fragment -->
-<p class="reference">References <a class="el" href="contour_8cpp_source.html#l00040">set_parameter()</a>.</p>
+<p class="reference">References <a class="el" href="contour_8cpp_source.html#l00038">set_parameter()</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -151,29 +149,9 @@ Here is the call graph for this function:</div>
 
 </div>
 </div>
-<a id="a5f3433bf121dc77f8aeececeffc89d45" name="a5f3433bf121dc77f8aeececeffc89d45"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5f3433bf121dc77f8aeececeffc89d45">&#9670;&nbsp;</a></span>~ContourFilter()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">ContourFilter::~ContourFilter </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="contour_8cpp_source.html#l00032">32</a> of file <a class="el" href="contour_8cpp_source.html">contour.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   32</span>{}</div>
-</div><!-- fragment -->
-</div>
-</div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="a934f8c64010e0434fb88f96a01865738" name="a934f8c64010e0434fb88f96a01865738"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a934f8c64010e0434fb88f96a01865738">&#9670;&nbsp;</a></span>prepare()</h2>
+<a id="a5789ed6d2da0b980a2dc1469925a0509" name="a5789ed6d2da0b980a2dc1469925a0509"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5789ed6d2da0b980a2dc1469925a0509">&#9670;&nbsp;</a></span>prepare()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -182,54 +160,13 @@ Here is the call graph for this function:</div>
           <td class="memname">void ContourFilter::prepare </td>
           <td>(</td>
           <td class="paramtype">float&#160;</td>
-          <td class="paramname"><em>samplerate</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="contour_8cpp_source.html#l00034">34</a> of file <a class="el" href="contour_8cpp_source.html">contour.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   35</span>{</div>
-<div class="line"><span class="lineno">   36</span>    filter.<a class="code hl_function" href="classshrapnel_1_1dsp_1_1IirFilter.html#a0849f4c727beedd3b29f6b8ff50f6b02">reset</a>();</div>
-<div class="line"><span class="lineno">   37</span>    samplerate = a_samplerate;</div>
-<div class="line"><span class="lineno">   38</span>}</div>
-<div class="ttc" id="aclassshrapnel_1_1dsp_1_1IirFilter_html_a0849f4c727beedd3b29f6b8ff50f6b02"><div class="ttname"><a href="classshrapnel_1_1dsp_1_1IirFilter.html#a0849f4c727beedd3b29f6b8ff50f6b02">shrapnel::dsp::IirFilter::reset</a></div><div class="ttdeci">void reset(void) override</div><div class="ttdef"><b>Definition:</b> <a href="esp32_2include_2iir__concrete_8h_source.html#l00051">iir_concrete.h:51</a></div></div>
-</div><!-- fragment -->
-<p class="reference">References <a class="el" href="esp32_2include_2iir__concrete_8h_source.html#l00051">shrapnel::dsp::IirFilter::reset()</a>.</p>
-
-<p class="reference">Referenced by <a class="el" href="valvestate_8cpp_source.html#l00063">shrapnel::effect::valvestate::Valvestate::prepare()</a>.</p>
-<div class="dynheader">
-Here is the call graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="classContourFilter_a934f8c64010e0434fb88f96a01865738_cgraph.svg" width="348" height="52"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
-</div>
-</div>
-<div class="dynheader">
-Here is the caller graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="classContourFilter_a934f8c64010e0434fb88f96a01865738_icgraph.svg" width="379" height="52"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
-</div>
-</div>
-
-</div>
-</div>
-<a id="a2baf26150cbf88c8261ba2b42ae83703" name="a2baf26150cbf88c8261ba2b42ae83703"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2baf26150cbf88c8261ba2b42ae83703">&#9670;&nbsp;</a></span>process()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void ContourFilter::process </td>
-          <td>(</td>
-          <td class="paramtype">float *&#160;</td>
-          <td class="paramname"><em>buffer</em>, </td>
+          <td class="paramname"><em>samplerate</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">std::size_t&#160;</td>
-          <td class="paramname"><em>buffer_size</em>&#160;</td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname">&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -239,33 +176,73 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="contour_8cpp_source.html#l00108">108</a> of file <a class="el" href="contour_8cpp_source.html">contour.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  109</span>{</div>
-<div class="line"><span class="lineno">  110</span>    filter.<a class="code hl_function" href="classshrapnel_1_1dsp_1_1IirFilter.html#a53cb5a72d2a310cd4b35d4329af682f0">process</a>(buffer, buffer, <a class="code hl_variable" href="noise__gate_8cpp.html#a799a743b3abd553a37fc01ad3097df08">buffer_size</a>);</div>
-<div class="line"><span class="lineno">  111</span>}</div>
-<div class="ttc" id="aclassshrapnel_1_1dsp_1_1IirFilter_html_a53cb5a72d2a310cd4b35d4329af682f0"><div class="ttname"><a href="classshrapnel_1_1dsp_1_1IirFilter.html#a53cb5a72d2a310cd4b35d4329af682f0">shrapnel::dsp::IirFilter::process</a></div><div class="ttdeci">void process(const float *in, float *out, size_t buf_size) override</div><div class="ttdef"><b>Definition:</b> <a href="esp32_2include_2iir__concrete_8h_source.html#l00039">iir_concrete.h:39</a></div></div>
-<div class="ttc" id="anoise__gate_8cpp_html_a799a743b3abd553a37fc01ad3097df08"><div class="ttname"><a href="noise__gate_8cpp.html#a799a743b3abd553a37fc01ad3097df08">buffer_size</a></div><div class="ttdeci">static size_t buffer_size</div><div class="ttdef"><b>Definition:</b> <a href="noise__gate_8cpp_source.html#l00037">noise_gate.cpp:37</a></div></div>
+<p class="definition">Definition at line <a class="el" href="contour_8cpp_source.html#l00032">32</a> of file <a class="el" href="contour_8cpp_source.html">contour.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   33</span>{</div>
+<div class="line"><span class="lineno">   34</span>    filter.<a class="code hl_function" href="classshrapnel_1_1dsp_1_1IirFilter.html#a0849f4c727beedd3b29f6b8ff50f6b02">reset</a>();</div>
+<div class="line"><span class="lineno">   35</span>    samplerate = a_samplerate;</div>
+<div class="line"><span class="lineno">   36</span>}</div>
+<div class="ttc" id="aclassshrapnel_1_1dsp_1_1IirFilter_html_a0849f4c727beedd3b29f6b8ff50f6b02"><div class="ttname"><a href="classshrapnel_1_1dsp_1_1IirFilter.html#a0849f4c727beedd3b29f6b8ff50f6b02">shrapnel::dsp::IirFilter::reset</a></div><div class="ttdeci">void reset(void) override</div><div class="ttdef"><b>Definition:</b> <a href="desktop_2include_2iir__concrete_8h_source.html#l00054">iir_concrete.h:54</a></div></div>
 </div><!-- fragment -->
-<p class="reference">References <a class="el" href="noise__gate_8cpp_source.html#l00037">buffer_size</a>, and <a class="el" href="esp32_2include_2iir__concrete_8h_source.html#l00039">shrapnel::dsp::IirFilter::process()</a>.</p>
+<p class="reference">References <a class="el" href="desktop_2include_2iir__concrete_8h_source.html#l00054">shrapnel::dsp::IirFilter::reset()</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="valvestate_8cpp_source.html#l00049">shrapnel::effect::valvestate::Valvestate::process()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="valvestate_8cpp_source.html#l00062">shrapnel::effect::valvestate::Valvestate::prepare()</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="classContourFilter_a2baf26150cbf88c8261ba2b42ae83703_cgraph.svg" width="484" height="52"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+<div class="center"><iframe scrolling="no" frameborder="0" src="classContourFilter_a5789ed6d2da0b980a2dc1469925a0509_cgraph.svg" width="348" height="52"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
 </div>
 </div>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="classContourFilter_a2baf26150cbf88c8261ba2b42ae83703_icgraph.svg" width="382" height="52"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+<div class="center"><iframe scrolling="no" frameborder="0" src="classContourFilter_a5789ed6d2da0b980a2dc1469925a0509_icgraph.svg" width="379" height="52"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
 </div>
 </div>
 
 </div>
 </div>
-<a id="ac12574e070f454adde05a20b80407d16" name="ac12574e070f454adde05a20b80407d16"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac12574e070f454adde05a20b80407d16">&#9670;&nbsp;</a></span>reset()</h2>
+<a id="af730f92633ec29b43ebf57b724383d3d" name="af730f92633ec29b43ebf57b724383d3d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af730f92633ec29b43ebf57b724383d3d">&#9670;&nbsp;</a></span>process()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void ContourFilter::process </td>
+          <td>(</td>
+          <td class="paramtype">std::span&lt; float &gt;&#160;</td>
+          <td class="paramname"><em>buffer</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="contour_8cpp_source.html#l00106">106</a> of file <a class="el" href="contour_8cpp_source.html">contour.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  107</span>{</div>
+<div class="line"><span class="lineno">  108</span>    filter.<a class="code hl_function" href="classshrapnel_1_1dsp_1_1IirFilter.html#a53cb5a72d2a310cd4b35d4329af682f0">process</a>(buffer.data(), buffer.data(), buffer.size());</div>
+<div class="line"><span class="lineno">  109</span>}</div>
+<div class="ttc" id="aclassshrapnel_1_1dsp_1_1IirFilter_html_a53cb5a72d2a310cd4b35d4329af682f0"><div class="ttname"><a href="classshrapnel_1_1dsp_1_1IirFilter.html#a53cb5a72d2a310cd4b35d4329af682f0">shrapnel::dsp::IirFilter::process</a></div><div class="ttdeci">void process(const float *in, float *out, size_t buf_size) override</div><div class="ttdef"><b>Definition:</b> <a href="desktop_2include_2iir__concrete_8h_source.html#l00037">iir_concrete.h:37</a></div></div>
+</div><!-- fragment -->
+<p class="reference">References <a class="el" href="desktop_2include_2iir__concrete_8h_source.html#l00037">shrapnel::dsp::IirFilter::process()</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="valvestate_8cpp_source.html#l00048">shrapnel::effect::valvestate::Valvestate::process()</a>.</p>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" frameborder="0" src="classContourFilter_af730f92633ec29b43ebf57b724383d3d_cgraph.svg" width="351" height="52"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
+</div>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" frameborder="0" src="classContourFilter_af730f92633ec29b43ebf57b724383d3d_icgraph.svg" width="382" height="52"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
+</div>
+
+</div>
+</div>
+<a id="a7b6a52867eb20a552fb8f66abe35881e" name="a7b6a52867eb20a552fb8f66abe35881e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7b6a52867eb20a552fb8f66abe35881e">&#9670;&nbsp;</a></span>reset()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -280,24 +257,24 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="contour_8cpp_source.html#l00113">113</a> of file <a class="el" href="contour_8cpp_source.html">contour.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  114</span>{</div>
-<div class="line"><span class="lineno">  115</span>    filter.<a class="code hl_function" href="classshrapnel_1_1dsp_1_1IirFilter.html#a0849f4c727beedd3b29f6b8ff50f6b02">reset</a>();</div>
-<div class="line"><span class="lineno">  116</span>}</div>
+<p class="definition">Definition at line <a class="el" href="contour_8cpp_source.html#l00111">111</a> of file <a class="el" href="contour_8cpp_source.html">contour.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  112</span>{</div>
+<div class="line"><span class="lineno">  113</span>    filter.<a class="code hl_function" href="classshrapnel_1_1dsp_1_1IirFilter.html#a0849f4c727beedd3b29f6b8ff50f6b02">reset</a>();</div>
+<div class="line"><span class="lineno">  114</span>}</div>
 </div><!-- fragment -->
-<p class="reference">References <a class="el" href="esp32_2include_2iir__concrete_8h_source.html#l00051">shrapnel::dsp::IirFilter::reset()</a>.</p>
+<p class="reference">References <a class="el" href="desktop_2include_2iir__concrete_8h_source.html#l00054">shrapnel::dsp::IirFilter::reset()</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="valvestate_8cpp_source.html#l00071">shrapnel::effect::valvestate::Valvestate::reset()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="valvestate_8cpp_source.html#l00070">shrapnel::effect::valvestate::Valvestate::reset()</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="classContourFilter_ac12574e070f454adde05a20b80407d16_cgraph.svg" width="334" height="52"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+<div class="center"><iframe scrolling="no" frameborder="0" src="classContourFilter_a7b6a52867eb20a552fb8f66abe35881e_cgraph.svg" width="334" height="52"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
 </div>
 </div>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="classContourFilter_ac12574e070f454adde05a20b80407d16_icgraph.svg" width="364" height="52"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+<div class="center"><iframe scrolling="no" frameborder="0" src="classContourFilter_a7b6a52867eb20a552fb8f66abe35881e_icgraph.svg" width="364" height="52"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
 </div>
 </div>
 
@@ -319,78 +296,78 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="contour_8cpp_source.html#l00040">40</a> of file <a class="el" href="contour_8cpp_source.html">contour.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   41</span>{</div>
-<div class="line"><span class="lineno">   42</span>    <span class="keywordtype">float</span> K = 2*samplerate;</div>
-<div class="line"><span class="lineno">   43</span> </div>
-<div class="line"><span class="lineno">   44</span>    <span class="keywordtype">float</span> B0 = 9.05251759610179e-11f*std::pow(K, 3.f)*std::pow(p, 2.f) -</div>
-<div class="line"><span class="lineno">   45</span>        1.08075708355892e-10f*std::pow(K, 3.f)*p + 1.13156469951272e-6f*std::pow(K,</div>
-<div class="line"><span class="lineno">   46</span>                2.f)*std::pow(p, 2.f) - 1.15683089695001e-6f*std::pow(K, 2.f)*p -</div>
-<div class="line"><span class="lineno">   47</span>        1.89606569211334e-8f*std::pow(K, 2.f) - 0.000315827467966071f*K*p -</div>
-<div class="line"><span class="lineno">   48</span>        0.000205739036275041f*K - 0.0902364194188775f;</div>
-<div class="line"><span class="lineno">   49</span> </div>
-<div class="line"><span class="lineno">   50</span>    <span class="keywordtype">float</span> B1 = -1.81050351922036e-10f*std::pow(K, 3.f)*std::pow(p, 2.f) +</div>
-<div class="line"><span class="lineno">   51</span>        2.16151416711785e-10f*std::pow(K, 3.f)*p - 0.000631654935932142f*K*p -</div>
-<div class="line"><span class="lineno">   52</span>        0.000411478072550081f*K - 0.36094567767551f;</div>
-<div class="line"><span class="lineno">   53</span> </div>
-<div class="line"><span class="lineno">   54</span>    <span class="keywordtype">float</span> B2 = -2.26312939902545e-6f*std::pow(K, 2.f)*std::pow(p, 2.f) +</div>
-<div class="line"><span class="lineno">   55</span>        2.31366179390002e-6f*std::pow(K, 2.f)*p + 3.79213138422667e-8f*std::pow(K,</div>
-<div class="line"><span class="lineno">   56</span>                2.f) - 0.541418516513265f;</div>
-<div class="line"><span class="lineno">   57</span> </div>
-<div class="line"><span class="lineno">   58</span>    <span class="keywordtype">float</span> B3 = 1.81050351922036e-10f*std::pow(K, 3.f)*std::pow(p, 2.f) -</div>
-<div class="line"><span class="lineno">   59</span>        2.16151416711785e-10f*std::pow(K, 3.f)*p + 0.000631654935932142f*K*p +</div>
-<div class="line"><span class="lineno">   60</span>        0.000411478072550081f*K - 0.36094567767551f;</div>
-<div class="line"><span class="lineno">   61</span> </div>
-<div class="line"><span class="lineno">   62</span>    <span class="keywordtype">float</span> B4 = -9.05251759610179e-11f*std::pow(K, 3.f)*std::pow(p, 2.f) +</div>
-<div class="line"><span class="lineno">   63</span>        1.08075708355892e-10f*std::pow(K, 3.f)*p + 1.13156469951272e-6f*std::pow(K,</div>
-<div class="line"><span class="lineno">   64</span>                2.f)*std::pow(p, 2.f) - 1.15683089695001e-6f*std::pow(K, 2.f)*p -</div>
-<div class="line"><span class="lineno">   65</span>        1.89606569211334e-8f*std::pow(K, 2.f) + 0.000315827467966071f*K*p +</div>
-<div class="line"><span class="lineno">   66</span>        0.000205739036275041f*K - 0.0902364194188775f;</div>
-<div class="line"><span class="lineno">   67</span> </div>
-<div class="line"><span class="lineno">   68</span>    <span class="keywordtype">float</span> A0 = 3.50824760873489e-15f*std::pow(K, 4.f)*std::pow(p, 2.f) -</div>
-<div class="line"><span class="lineno">   69</span>        4.18840913192565e-15f*std::pow(K, 4.f)*p +</div>
-<div class="line"><span class="lineno">   70</span>        1.73715033387475e-10f*std::pow(K, 3.f)*std::pow(p, 2.f) -</div>
-<div class="line"><span class="lineno">   71</span>        2.15704710341094e-10f*std::pow(K, 3.f)*p -</div>
-<div class="line"><span class="lineno">   72</span>        4.18840913192564e-12f*std::pow(K, 3.f) + 2.09000180472839e-6f*std::pow(K,</div>
-<div class="line"><span class="lineno">   73</span>                2.f)*std::pow(p, 2.f) - 2.70050081212777e-6f*std::pow(K, 2.f)*p -</div>
-<div class="line"><span class="lineno">   74</span>        1.22402003248511e-7f*std::pow(K, 2.f) - 0.000583333333333333f*K*p -</div>
-<div class="line"><span class="lineno">   75</span>        0.00052012272153041f*K - 0.166666666666667f;</div>
-<div class="line"><span class="lineno">   76</span> </div>
-<div class="line"><span class="lineno">   77</span>    <span class="keywordtype">float</span> A1 = -1.40329904349395e-14f*std::pow(K, 4.f)*std::pow(p, 2.f) +</div>
-<div class="line"><span class="lineno">   78</span>        1.67536365277026e-14f*std::pow(K, 4.f)*p - 3.4743006677495e-10f*std::pow(K,</div>
-<div class="line"><span class="lineno">   79</span>                3.f)*std::pow(p, 2.f) + 4.31409420682187e-10f*std::pow(K, 3.f)*p +</div>
-<div class="line"><span class="lineno">   80</span>        8.37681826385129e-12f*std::pow(K, 3.f) - 0.00116666666666667f*K*p -</div>
-<div class="line"><span class="lineno">   81</span>        0.00104024544306082f*K - 0.666666666666667f;</div>
-<div class="line"><span class="lineno">   82</span> </div>
-<div class="line"><span class="lineno">   83</span>    <span class="keywordtype">float</span> A2 = 2.10494856524093e-14f*std::pow(K, 4.f)*std::pow(p, 2.f) -</div>
-<div class="line"><span class="lineno">   84</span>        2.51304547915539e-14f*std::pow(K, 4.f)*p - 4.18000360945678e-6f*std::pow(K,</div>
-<div class="line"><span class="lineno">   85</span>                2.f)*std::pow(p, 2.f) + 5.40100162425555e-6f*std::pow(K, 2.f)*p +</div>
-<div class="line"><span class="lineno">   86</span>        2.44804006497022e-7f*std::pow(K, 2.f) - 1.0f;</div>
-<div class="line"><span class="lineno">   87</span> </div>
-<div class="line"><span class="lineno">   88</span>    <span class="keywordtype">float</span> A3 = -1.40329904349395e-14f*std::pow(K, 4.f)*std::pow(p, 2.f) +</div>
-<div class="line"><span class="lineno">   89</span>        1.67536365277026e-14f*std::pow(K, 4.f)*p + 3.4743006677495e-10f*std::pow(K,</div>
-<div class="line"><span class="lineno">   90</span>                3.f)*std::pow(p, 2.f) - 4.31409420682187e-10f*std::pow(K, 3.f)*p -</div>
-<div class="line"><span class="lineno">   91</span>        8.37681826385129e-12f*std::pow(K, 3.f) + 0.00116666666666667f*K*p +</div>
-<div class="line"><span class="lineno">   92</span>        0.00104024544306082f*K - 0.666666666666667f;</div>
-<div class="line"><span class="lineno">   93</span> </div>
-<div class="line"><span class="lineno">   94</span>    <span class="keywordtype">float</span> A4 = 3.50824760873489e-15f*std::pow(K, 4.f)*std::pow(p, 2.f) -</div>
-<div class="line"><span class="lineno">   95</span>        4.18840913192565e-15f*std::pow(K, 4.f)*p -</div>
-<div class="line"><span class="lineno">   96</span>        1.73715033387475e-10f*std::pow(K, 3.f)*std::pow(p, 2.f) +</div>
-<div class="line"><span class="lineno">   97</span>        2.15704710341094e-10f*std::pow(K, 3.f)*p +</div>
-<div class="line"><span class="lineno">   98</span>        4.18840913192564e-12f*std::pow(K, 3.f) + 2.09000180472839e-6f*std::pow(K,</div>
-<div class="line"><span class="lineno">   99</span>                2.f)*std::pow(p, 2.f) - 2.70050081212777e-6f*std::pow(K, 2.f)*p -</div>
-<div class="line"><span class="lineno">  100</span>        1.22402003248511e-7f*std::pow(K, 2.f) + 0.000583333333333333f*K*p +</div>
-<div class="line"><span class="lineno">  101</span>        0.00052012272153041f*K - 0.166666666666667f;</div>
+<p class="definition">Definition at line <a class="el" href="contour_8cpp_source.html#l00038">38</a> of file <a class="el" href="contour_8cpp_source.html">contour.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   39</span>{</div>
+<div class="line"><span class="lineno">   40</span>    <span class="keywordtype">float</span> K = 2*samplerate;</div>
+<div class="line"><span class="lineno">   41</span> </div>
+<div class="line"><span class="lineno">   42</span>    <span class="keywordtype">float</span> B0 = 9.05251759610179e-11f*std::pow(K, 3.f)*std::pow(p, 2.f) -</div>
+<div class="line"><span class="lineno">   43</span>        1.08075708355892e-10f*std::pow(K, 3.f)*p + 1.13156469951272e-6f*std::pow(K,</div>
+<div class="line"><span class="lineno">   44</span>                2.f)*std::pow(p, 2.f) - 1.15683089695001e-6f*std::pow(K, 2.f)*p -</div>
+<div class="line"><span class="lineno">   45</span>        1.89606569211334e-8f*std::pow(K, 2.f) - 0.000315827467966071f*K*p -</div>
+<div class="line"><span class="lineno">   46</span>        0.000205739036275041f*K - 0.0902364194188775f;</div>
+<div class="line"><span class="lineno">   47</span> </div>
+<div class="line"><span class="lineno">   48</span>    <span class="keywordtype">float</span> B1 = -1.81050351922036e-10f*std::pow(K, 3.f)*std::pow(p, 2.f) +</div>
+<div class="line"><span class="lineno">   49</span>        2.16151416711785e-10f*std::pow(K, 3.f)*p - 0.000631654935932142f*K*p -</div>
+<div class="line"><span class="lineno">   50</span>        0.000411478072550081f*K - 0.36094567767551f;</div>
+<div class="line"><span class="lineno">   51</span> </div>
+<div class="line"><span class="lineno">   52</span>    <span class="keywordtype">float</span> B2 = -2.26312939902545e-6f*std::pow(K, 2.f)*std::pow(p, 2.f) +</div>
+<div class="line"><span class="lineno">   53</span>        2.31366179390002e-6f*std::pow(K, 2.f)*p + 3.79213138422667e-8f*std::pow(K,</div>
+<div class="line"><span class="lineno">   54</span>                2.f) - 0.541418516513265f;</div>
+<div class="line"><span class="lineno">   55</span> </div>
+<div class="line"><span class="lineno">   56</span>    <span class="keywordtype">float</span> B3 = 1.81050351922036e-10f*std::pow(K, 3.f)*std::pow(p, 2.f) -</div>
+<div class="line"><span class="lineno">   57</span>        2.16151416711785e-10f*std::pow(K, 3.f)*p + 0.000631654935932142f*K*p +</div>
+<div class="line"><span class="lineno">   58</span>        0.000411478072550081f*K - 0.36094567767551f;</div>
+<div class="line"><span class="lineno">   59</span> </div>
+<div class="line"><span class="lineno">   60</span>    <span class="keywordtype">float</span> B4 = -9.05251759610179e-11f*std::pow(K, 3.f)*std::pow(p, 2.f) +</div>
+<div class="line"><span class="lineno">   61</span>        1.08075708355892e-10f*std::pow(K, 3.f)*p + 1.13156469951272e-6f*std::pow(K,</div>
+<div class="line"><span class="lineno">   62</span>                2.f)*std::pow(p, 2.f) - 1.15683089695001e-6f*std::pow(K, 2.f)*p -</div>
+<div class="line"><span class="lineno">   63</span>        1.89606569211334e-8f*std::pow(K, 2.f) + 0.000315827467966071f*K*p +</div>
+<div class="line"><span class="lineno">   64</span>        0.000205739036275041f*K - 0.0902364194188775f;</div>
+<div class="line"><span class="lineno">   65</span> </div>
+<div class="line"><span class="lineno">   66</span>    <span class="keywordtype">float</span> A0 = 3.50824760873489e-15f*std::pow(K, 4.f)*std::pow(p, 2.f) -</div>
+<div class="line"><span class="lineno">   67</span>        4.18840913192565e-15f*std::pow(K, 4.f)*p +</div>
+<div class="line"><span class="lineno">   68</span>        1.73715033387475e-10f*std::pow(K, 3.f)*std::pow(p, 2.f) -</div>
+<div class="line"><span class="lineno">   69</span>        2.15704710341094e-10f*std::pow(K, 3.f)*p -</div>
+<div class="line"><span class="lineno">   70</span>        4.18840913192564e-12f*std::pow(K, 3.f) + 2.09000180472839e-6f*std::pow(K,</div>
+<div class="line"><span class="lineno">   71</span>                2.f)*std::pow(p, 2.f) - 2.70050081212777e-6f*std::pow(K, 2.f)*p -</div>
+<div class="line"><span class="lineno">   72</span>        1.22402003248511e-7f*std::pow(K, 2.f) - 0.000583333333333333f*K*p -</div>
+<div class="line"><span class="lineno">   73</span>        0.00052012272153041f*K - 0.166666666666667f;</div>
+<div class="line"><span class="lineno">   74</span> </div>
+<div class="line"><span class="lineno">   75</span>    <span class="keywordtype">float</span> A1 = -1.40329904349395e-14f*std::pow(K, 4.f)*std::pow(p, 2.f) +</div>
+<div class="line"><span class="lineno">   76</span>        1.67536365277026e-14f*std::pow(K, 4.f)*p - 3.4743006677495e-10f*std::pow(K,</div>
+<div class="line"><span class="lineno">   77</span>                3.f)*std::pow(p, 2.f) + 4.31409420682187e-10f*std::pow(K, 3.f)*p +</div>
+<div class="line"><span class="lineno">   78</span>        8.37681826385129e-12f*std::pow(K, 3.f) - 0.00116666666666667f*K*p -</div>
+<div class="line"><span class="lineno">   79</span>        0.00104024544306082f*K - 0.666666666666667f;</div>
+<div class="line"><span class="lineno">   80</span> </div>
+<div class="line"><span class="lineno">   81</span>    <span class="keywordtype">float</span> A2 = 2.10494856524093e-14f*std::pow(K, 4.f)*std::pow(p, 2.f) -</div>
+<div class="line"><span class="lineno">   82</span>        2.51304547915539e-14f*std::pow(K, 4.f)*p - 4.18000360945678e-6f*std::pow(K,</div>
+<div class="line"><span class="lineno">   83</span>                2.f)*std::pow(p, 2.f) + 5.40100162425555e-6f*std::pow(K, 2.f)*p +</div>
+<div class="line"><span class="lineno">   84</span>        2.44804006497022e-7f*std::pow(K, 2.f) - 1.0f;</div>
+<div class="line"><span class="lineno">   85</span> </div>
+<div class="line"><span class="lineno">   86</span>    <span class="keywordtype">float</span> A3 = -1.40329904349395e-14f*std::pow(K, 4.f)*std::pow(p, 2.f) +</div>
+<div class="line"><span class="lineno">   87</span>        1.67536365277026e-14f*std::pow(K, 4.f)*p + 3.4743006677495e-10f*std::pow(K,</div>
+<div class="line"><span class="lineno">   88</span>                3.f)*std::pow(p, 2.f) - 4.31409420682187e-10f*std::pow(K, 3.f)*p -</div>
+<div class="line"><span class="lineno">   89</span>        8.37681826385129e-12f*std::pow(K, 3.f) + 0.00116666666666667f*K*p +</div>
+<div class="line"><span class="lineno">   90</span>        0.00104024544306082f*K - 0.666666666666667f;</div>
+<div class="line"><span class="lineno">   91</span> </div>
+<div class="line"><span class="lineno">   92</span>    <span class="keywordtype">float</span> A4 = 3.50824760873489e-15f*std::pow(K, 4.f)*std::pow(p, 2.f) -</div>
+<div class="line"><span class="lineno">   93</span>        4.18840913192565e-15f*std::pow(K, 4.f)*p -</div>
+<div class="line"><span class="lineno">   94</span>        1.73715033387475e-10f*std::pow(K, 3.f)*std::pow(p, 2.f) +</div>
+<div class="line"><span class="lineno">   95</span>        2.15704710341094e-10f*std::pow(K, 3.f)*p +</div>
+<div class="line"><span class="lineno">   96</span>        4.18840913192564e-12f*std::pow(K, 3.f) + 2.09000180472839e-6f*std::pow(K,</div>
+<div class="line"><span class="lineno">   97</span>                2.f)*std::pow(p, 2.f) - 2.70050081212777e-6f*std::pow(K, 2.f)*p -</div>
+<div class="line"><span class="lineno">   98</span>        1.22402003248511e-7f*std::pow(K, 2.f) + 0.000583333333333333f*K*p +</div>
+<div class="line"><span class="lineno">   99</span>        0.00052012272153041f*K - 0.166666666666667f;</div>
+<div class="line"><span class="lineno">  100</span> </div>
+<div class="line"><span class="lineno">  101</span>    assert (A0 != 0);</div>
 <div class="line"><span class="lineno">  102</span> </div>
-<div class="line"><span class="lineno">  103</span>    assert (A0 != 0);</div>
-<div class="line"><span class="lineno">  104</span> </div>
-<div class="line"><span class="lineno">  105</span>    filter.<a class="code hl_function" href="classshrapnel_1_1dsp_1_1IirFilter.html#aa09e7c1ab99d85c0fdd1c98c80636550">set_coefficients</a>(std::array&lt;float, 10&gt;{B0, B1, B2, B3, B4, A0, A1, A2, A3, A4});</div>
-<div class="line"><span class="lineno">  106</span>}</div>
-<div class="ttc" id="aclassshrapnel_1_1dsp_1_1IirFilter_html_aa09e7c1ab99d85c0fdd1c98c80636550"><div class="ttname"><a href="classshrapnel_1_1dsp_1_1IirFilter.html#aa09e7c1ab99d85c0fdd1c98c80636550">shrapnel::dsp::IirFilter::set_coefficients</a></div><div class="ttdeci">void set_coefficients(std::array&lt; float, 6 &gt; new_coefficients) override</div><div class="ttdef"><b>Definition:</b> <a href="esp32_2include_2iir__concrete_8h_source.html#l00056">iir_concrete.h:56</a></div></div>
+<div class="line"><span class="lineno">  103</span>    filter.<a class="code hl_function" href="classshrapnel_1_1dsp_1_1IirFilter.html#aa09e7c1ab99d85c0fdd1c98c80636550">set_coefficients</a>(std::array&lt;float, 10&gt;{B0, B1, B2, B3, B4, A0, A1, A2, A3, A4});</div>
+<div class="line"><span class="lineno">  104</span>}</div>
+<div class="ttc" id="aclassshrapnel_1_1dsp_1_1IirFilter_html_aa09e7c1ab99d85c0fdd1c98c80636550"><div class="ttname"><a href="classshrapnel_1_1dsp_1_1IirFilter.html#aa09e7c1ab99d85c0fdd1c98c80636550">shrapnel::dsp::IirFilter::set_coefficients</a></div><div class="ttdeci">void set_coefficients(std::array&lt; float, 6 &gt; new_coefficients) override</div><div class="ttdef"><b>Definition:</b> <a href="desktop_2include_2iir__concrete_8h_source.html#l00059">iir_concrete.h:59</a></div></div>
 </div><!-- fragment -->
-<p class="reference">References <a class="el" href="esp32_2include_2iir__concrete_8h_source.html#l00056">shrapnel::dsp::IirFilter::set_coefficients()</a>.</p>
+<p class="reference">References <a class="el" href="desktop_2include_2iir__concrete_8h_source.html#l00059">shrapnel::dsp::IirFilter::set_coefficients()</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="contour_8cpp_source.html#l00025">ContourFilter()</a>, and <a class="el" href="valvestate_8cpp_source.html#l00039">shrapnel::effect::valvestate::Valvestate::set_contour()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="contour_8cpp_source.html#l00025">ContourFilter()</a>, and <a class="el" href="valvestate_8cpp_source.html#l00038">shrapnel::effect::valvestate::Valvestate::set_contour()</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">

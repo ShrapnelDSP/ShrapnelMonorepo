@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['update_0',['Update',['../structshrapnel_1_1midi_1_1Update.html',1,'shrapnel::midi::Update'],['../structshrapnel_1_1parameters_1_1Update.html',1,'shrapnel::parameters::Update']]],
-  ['userevent_1',['UserEvent',['../structshrapnel_1_1wifi_1_1UserEvent.html',1,'shrapnel::wifi']]]
+  ['taskbase_0',['TaskBase',['../classshrapnel_1_1TaskBase.html',1,'shrapnel']]],
+  ['timer_1',['Timer',['../classshrapnel_1_1os_1_1Timer.html',1,'shrapnel::os']]]
 ];

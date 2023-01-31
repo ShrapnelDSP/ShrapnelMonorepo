@@ -93,8 +93,7 @@ $(document).ready(function(){initNavTree('fast__convolution_8h.html',''); initRe
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Data Structures</a> &#124;
-<a href="#namespaces">Namespaces</a> &#124;
-<a href="#func-members">Functions</a>  </div>
+<a href="#namespaces">Namespaces</a>  </div>
   <div class="headertitle"><div class="title">fast_convolution.h File Reference</div></div>
 </div><!--header-->
 <div class="contents">
@@ -112,51 +111,7 @@ Namespaces</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:namespaceshrapnel_1_1dsp"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceshrapnel_1_1dsp.html">shrapnel::dsp</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
-Functions</h2></td></tr>
-<tr class="memitem:ae261735a0ceba34dafc40728c277bba4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="fast__convolution_8h.html#ae261735a0ceba34dafc40728c277bba4">profiling_mark_stage</a> (unsigned int)</td></tr>
-<tr class="separator:ae261735a0ceba34dafc40728c277bba4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Function Documentation</h2>
-<a id="ae261735a0ceba34dafc40728c277bba4" name="ae261735a0ceba34dafc40728c277bba4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae261735a0ceba34dafc40728c277bba4">&#9670;&nbsp;</a></span>profiling_mark_stage()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void profiling_mark_stage </td>
-          <td>(</td>
-          <td class="paramtype">unsigned int&#160;</td>
-          <td class="paramname"><em>stage</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="profiling_8cpp_source.html#l00048">48</a> of file <a class="el" href="profiling_8cpp_source.html">profiling.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   49</span>{</div>
-<div class="line"><span class="lineno">   50</span>    assert(stage &lt; NUMBER_OF_STAGES);</div>
-<div class="line"><span class="lineno">   51</span> </div>
-<div class="line"><span class="lineno">   52</span>    <span class="keywordflow">if</span>(<a class="code hl_variable" href="profiling_8cpp.html#a4ff804bf46703f603a1541568cef5531">got_semaphore</a>)</div>
-<div class="line"><span class="lineno">   53</span>    {</div>
-<div class="line"><span class="lineno">   54</span>        <a class="code hl_variable" href="profiling_8cpp.html#ade2d6f84e5a6696fba128c5769eef4db">stage_cycles</a>[stage] = cpu_hal_get_cycle_count();</div>
-<div class="line"><span class="lineno">   55</span>    }</div>
-<div class="line"><span class="lineno">   56</span>}</div>
-<div class="ttc" id="aprofiling_8cpp_html_a4ff804bf46703f603a1541568cef5531"><div class="ttname"><a href="profiling_8cpp.html#a4ff804bf46703f603a1541568cef5531">got_semaphore</a></div><div class="ttdeci">static bool got_semaphore</div><div class="ttdef"><b>Definition:</b> <a href="profiling_8cpp_source.html#l00036">profiling.cpp:36</a></div></div>
-<div class="ttc" id="aprofiling_8cpp_html_ade2d6f84e5a6696fba128c5769eef4db"><div class="ttname"><a href="profiling_8cpp.html#ade2d6f84e5a6696fba128c5769eef4db">stage_cycles</a></div><div class="ttdeci">static uint32_t stage_cycles[NUMBER_OF_STAGES]</div><div class="ttdef"><b>Definition:</b> <a href="profiling_8cpp_source.html#l00034">profiling.cpp:34</a></div></div>
-</div><!-- fragment -->
-<p class="reference">Referenced by <a class="el" href="fast__convolution_8h_source.html#l00054">shrapnel::dsp::FastConvolution&lt; N, K &gt;::process()</a>.</p>
-<div class="dynheader">
-Here is the caller graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="fast__convolution_8h_ae261735a0ceba34dafc40728c277bba4_icgraph.svg" width="399" height="52"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
-</div>
-</div>
-
-</div>
-</div>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

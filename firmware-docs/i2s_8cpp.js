@@ -1,9 +1,7 @@
 var i2s_8cpp =
 [
-    [ "i2s_processing_task", "i2s_8cpp.html#a4e37f563a34c1a559515cc40782caf07", null ],
-    [ "i2s_setup", "i2s_8cpp.html#ab949ae727fd1608d465238ba29ab2dab", null ],
-    [ "log_i2s_event", "i2s_8cpp.html#a7bd2643748a0d4058522967eecfb1dc1", null ],
-    [ "g_profiling_gpio", "i2s_8cpp.html#aa5ff31a870fe9e98978a1013e6735d45", null ],
-    [ "i2s_queue", "i2s_8cpp.html#a9b83a13d267928932fc9d01c7ee09df2", null ],
-    [ "rx_buf", "i2s_8cpp.html#a4025221c11b823336cd64a55623f8a1e", null ]
+    [ "i2s_processing_task", "i2s_8cpp.html#af73614d414adf5014704433913ee11db", null ],
+    [ "i2s_setup", "i2s_8cpp.html#a53d05b5ded7bb39aff7189392d0566c9", null ],
+    [ "log_i2s_event", "i2s_8cpp.html#a5e4994d9de1b430ad5473efe241521aa", null ],
+    [ "g_profiling_gpio", "i2s_8cpp.html#a82e419da4aa6e86ef0a168ea7fe0e797", null ]
 ];

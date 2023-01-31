@@ -1,0 +1,7 @@
+<map id="shrapnel::AudioProcessor::prepare" name="shrapnel::AudioProcessor::prepare">
+<area shape="rect" id="node1" title=" " alt="" coords="5,23,175,65"/>
+<area shape="rect" id="node2" href="$noise__gate_8cpp.html#a184d915d5eb18d4743c6e3008bb47e62" title="Set the buffer size in number of samples." alt="" coords="227,5,369,32"/>
+<area shape="rect" id="node3" href="$noise__gate_8cpp.html#a2691256497a1cec4e14434f48eccfb56" title="Set the sample rate in Hz." alt="" coords="223,56,373,83"/>
+<area shape="rect" id="node4" href="$abstract__dsp__juce_8cpp.html#ab721c839889c1267077f4cb3304b655d" title=" " alt="" coords="422,15,565,57"/>
+<area shape="rect" id="node5" href="$classshrapnel_1_1dsp_1_1IirFilter.html#aa09e7c1ab99d85c0fdd1c98c80636550" title=" " alt="" coords="421,81,565,122"/>
+</map>

@@ -37,7 +37,7 @@
 <!-- Node3 -->
 <g id="node3" class="node">
 <title>Node3</title>
-<g id="a_node3"><a xlink:href="profiling_8cpp.html#a3171d2be3fbf00e49982243e9869735a" target="_top" xlink:title=" ">
+<g id="a_node3"><a xlink:href="desktop_2profiling_8c.html#a3171d2be3fbf00e49982243e9869735a" target="_top" xlink:title=" ">
 <polygon fill="none" stroke="black" points="206.5,-0.5 206.5,-19.5 312.5,-19.5 312.5,-0.5 206.5,-0.5"/>
 <text text-anchor="middle" x="259.5" y="-7.5" font-family="Helvetica,sans-Serif" font-size="10.00">profiling_mark_stage</text>
 </a>

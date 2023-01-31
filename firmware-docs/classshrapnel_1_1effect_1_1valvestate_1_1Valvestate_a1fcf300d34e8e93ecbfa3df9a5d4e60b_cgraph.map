@@ -1,0 +1,10 @@
+<map id="shrapnel::effect::valvestate::Valvestate::process" name="shrapnel::effect::valvestate::Valvestate::process">
+<area shape="rect" id="node1" title=" " alt="" coords="5,123,180,164"/>
+<area shape="rect" id="node2" href="$classshrapnel_1_1effect_1_1valvestate_1_1Clipping.html#acaff86b907d11504a3a3f7acba658674" title=" " alt="" coords="228,5,403,47"/>
+<area shape="rect" id="node4" href="$classContourFilter.html#af730f92633ec29b43ebf57b724383d3d" title=" " alt="" coords="241,71,389,98"/>
+<area shape="rect" id="node6" href="$classshrapnel_1_1effect_1_1valvestate_1_1FMVFilter.html#aa8dd5942773e2395ab26943bdab43a8b" title=" " alt="" coords="228,123,403,164"/>
+<area shape="rect" id="node7" href="$classshrapnel_1_1effect_1_1valvestate_1_1GainControl.html#afda20aeb86df7b9154107f5c94e08096" title=" " alt="" coords="228,188,403,229"/>
+<area shape="rect" id="node8" href="$classshrapnel_1_1effect_1_1valvestate_1_1InputFilter.html#a7a43ef10c105e8ff5fc6294ebf8a0a71" title=" " alt="" coords="228,253,403,295"/>
+<area shape="rect" id="node3" href="$wave__shape_8cpp.html#a737ee48b7321d3c9c5fb0c49bc6f14af" title=" " alt="" coords="479,13,567,39"/>
+<area shape="rect" id="node5" href="$classshrapnel_1_1dsp_1_1IirFilter.html#a53cb5a72d2a310cd4b35d4329af682f0" title=" " alt="" coords="451,155,595,196"/>
+</map>

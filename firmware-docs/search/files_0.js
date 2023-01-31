@@ -6,5 +6,7 @@ var searchData=
   ['audio_5fevents_2ecpp_3',['audio_events.cpp',['../audio__events_8cpp.html',1,'']]],
   ['audio_5fevents_2eh_4',['audio_events.h',['../audio__events_8h.html',1,'']]],
   ['audio_5fparam_2ecpp_5',['audio_param.cpp',['../audio__param_8cpp.html',1,'']]],
-  ['audio_5fparam_2eh_6',['audio_param.h',['../audio__param_8h.html',1,'']]]
+  ['audio_5fparam_2eh_6',['audio_param.h',['../audio__param_8h.html',1,'']]],
+  ['audio_5fprocessor_2ecpp_7',['audio_processor.cpp',['../audio__processor_8cpp.html',1,'']]],
+  ['audio_5fprocessor_2eh_8',['audio_processor.h',['../audio__processor_8h.html',1,'']]]
 ];

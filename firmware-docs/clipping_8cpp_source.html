@@ -117,25 +117,20 @@ $(document).ready(function(){initNavTree('clipping_8cpp_source.html',''); initRe
 <div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span><span class="preprocessor">#include &quot;<a class="code" href="clipping_8h.html">clipping.h</a>&quot;</span></div>
 <div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="preprocessor">#include &quot;<a class="code" href="wave__shape_8h.html">wave_shape.h</a>&quot;</span></div>
 <div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span> </div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespaceshrapnel.html">shrapnel</a> {</div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="keyword">namespace </span>effect {</div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="keyword">namespace </span>valvestate {</div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span> </div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno"><a class="line" href="classshrapnel_1_1effect_1_1valvestate_1_1Clipping.html#ac3012b2a5521ab0f7aefd9fb52f926b8">   28</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="classshrapnel_1_1effect_1_1valvestate_1_1Clipping.html#ac3012b2a5521ab0f7aefd9fb52f926b8">Clipping::process</a>(<span class="keywordtype">float</span> *buffer, std::size_t <a class="code hl_variable" href="noise__gate_8cpp.html#a799a743b3abd553a37fc01ad3097df08">buffer_size</a>)</div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>{</div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>    <span class="keywordflow">for</span>(std::size_t i = 0; i &lt; <a class="code hl_variable" href="noise__gate_8cpp.html#a799a743b3abd553a37fc01ad3097df08">buffer_size</a>; i++)</div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>    {</div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>        buffer[i] = <a class="code hl_function" href="wave__shape_8h.html#a737ee48b7321d3c9c5fb0c49bc6f14af">waveshape</a>(buffer[i]);</div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>    }</div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>}</div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span> </div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>}</div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>}</div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>}</div>
-<div class="ttc" id="aclassshrapnel_1_1effect_1_1valvestate_1_1Clipping_html_ac3012b2a5521ab0f7aefd9fb52f926b8"><div class="ttname"><a href="classshrapnel_1_1effect_1_1valvestate_1_1Clipping.html#ac3012b2a5521ab0f7aefd9fb52f926b8">shrapnel::effect::valvestate::Clipping::process</a></div><div class="ttdeci">void process(float *buffer, std::size_t buffer_size)</div><div class="ttdef"><b>Definition:</b> <a href="clipping_8cpp_source.html#l00028">clipping.cpp:28</a></div></div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespaceshrapnel_1_1effect_1_1valvestate.html">shrapnel::effect::valvestate</a> {</div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span> </div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno"><a class="line" href="classshrapnel_1_1effect_1_1valvestate_1_1Clipping.html#acaff86b907d11504a3a3f7acba658674">   26</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="classshrapnel_1_1effect_1_1valvestate_1_1Clipping.html#acaff86b907d11504a3a3f7acba658674">Clipping::process</a>(std::span&lt;float&gt; buffer)</div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>{</div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>    <span class="keywordflow">for</span>(<span class="keywordtype">float</span> &amp;sample : buffer)</div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>    {</div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>        sample = <a class="code hl_function" href="wave__shape_8h.html#a737ee48b7321d3c9c5fb0c49bc6f14af">waveshape</a>(sample);</div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>    }</div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>}</div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span> </div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>} <span class="comment">// namespace shrapnel::effect::valvestate</span></div>
+<div class="ttc" id="aclassshrapnel_1_1effect_1_1valvestate_1_1Clipping_html_acaff86b907d11504a3a3f7acba658674"><div class="ttname"><a href="classshrapnel_1_1effect_1_1valvestate_1_1Clipping.html#acaff86b907d11504a3a3f7acba658674">shrapnel::effect::valvestate::Clipping::process</a></div><div class="ttdeci">void process(std::span&lt; float &gt; buffer)</div><div class="ttdef"><b>Definition:</b> <a href="clipping_8cpp_source.html#l00026">clipping.cpp:26</a></div></div>
 <div class="ttc" id="aclipping_8h_html"><div class="ttname"><a href="clipping_8h.html">clipping.h</a></div></div>
-<div class="ttc" id="anamespaceshrapnel_html"><div class="ttname"><a href="namespaceshrapnel.html">shrapnel</a></div><div class="ttdef"><b>Definition:</b> <a href="audio__events_8h_source.html#l00026">audio_events.h:26</a></div></div>
-<div class="ttc" id="anoise__gate_8cpp_html_a799a743b3abd553a37fc01ad3097df08"><div class="ttname"><a href="noise__gate_8cpp.html#a799a743b3abd553a37fc01ad3097df08">buffer_size</a></div><div class="ttdeci">static size_t buffer_size</div><div class="ttdef"><b>Definition:</b> <a href="noise__gate_8cpp_source.html#l00037">noise_gate.cpp:37</a></div></div>
+<div class="ttc" id="anamespaceshrapnel_1_1effect_1_1valvestate_html"><div class="ttname"><a href="namespaceshrapnel_1_1effect_1_1valvestate.html">shrapnel::effect::valvestate</a></div><div class="ttdef"><b>Definition:</b> <a href="clipping_8h_source.html#l00028">clipping.h:28</a></div></div>
 <div class="ttc" id="awave__shape_8h_html"><div class="ttname"><a href="wave__shape_8h.html">wave_shape.h</a></div></div>
 <div class="ttc" id="awave__shape_8h_html_a737ee48b7321d3c9c5fb0c49bc6f14af"><div class="ttname"><a href="wave__shape_8h.html#a737ee48b7321d3c9c5fb0c49bc6f14af">waveshape</a></div><div class="ttdeci">float waveshape(float input)</div><div class="ttdef"><b>Definition:</b> <a href="wave__shape_8cpp_source.html#l00049">wave_shape.cpp:49</a></div></div>
 </div><!-- fragment --></div><!-- contents -->

@@ -1,0 +1,8 @@
+<map id="shrapnel::effect::valvestate::Valvestate::reset" name="shrapnel::effect::valvestate::Valvestate::reset">
+<area shape="rect" id="node1" title=" " alt="" coords="5,90,180,131"/>
+<area shape="rect" id="node2" href="$classContourFilter.html#a7b6a52867eb20a552fb8f66abe35881e" title=" " alt="" coords="250,5,381,32"/>
+<area shape="rect" id="node4" href="$classshrapnel_1_1effect_1_1valvestate_1_1FMVFilter.html#a825b1d349a4bcb1e4250174b4de9a7a4" title=" " alt="" coords="228,57,403,98"/>
+<area shape="rect" id="node5" href="$classshrapnel_1_1effect_1_1valvestate_1_1GainControl.html#ac97c745cedd949319f4064d2b20c5d17" title=" " alt="" coords="228,122,403,163"/>
+<area shape="rect" id="node6" href="$classshrapnel_1_1effect_1_1valvestate_1_1InputFilter.html#a2b8b63ac88d63972aac7d67121e9f97c" title=" " alt="" coords="228,187,403,229"/>
+<area shape="rect" id="node3" href="$classshrapnel_1_1dsp_1_1IirFilter.html#a0849f4c727beedd3b29f6b8ff50f6b02" title=" " alt="" coords="451,90,595,131"/>
+</map>

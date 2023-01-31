@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.4"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>ShrapnelDSP: firmware/components/i2s/include/profiling.h File Reference</title>
+<title>ShrapnelDSP: effects/abstract_dsp/include/profiling.h File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -92,8 +92,7 @@ $(document).ready(function(){initNavTree('profiling_8h.html',''); initResizable(
 
 <div class="header">
   <div class="summary">
-<a href="#func-members">Functions</a> &#124;
-<a href="#var-members">Variables</a>  </div>
+<a href="#func-members">Functions</a>  </div>
   <div class="headertitle"><div class="title">profiling.h File Reference</div></div>
 </div><!--header-->
 <div class="contents">
@@ -102,107 +101,59 @@ $(document).ready(function(){initNavTree('profiling_8h.html',''); initResizable(
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
+<tr class="memitem:a58ceeae747d300e67b1ecf70a9b24526"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="profiling_8h.html#a58ceeae747d300e67b1ecf70a9b24526">profiling_init</a> (size_t <a class="el" href="noise__gate_8cpp.html#a799a743b3abd553a37fc01ad3097df08">buffer_size</a>, float <a class="el" href="noise__gate_8cpp.html#a63433fe701b4e06f2cfdd50509e660db">sample_rate</a>)</td></tr>
+<tr class="separator:a58ceeae747d300e67b1ecf70a9b24526"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac05fdc10ded37340f2ab202bbc184d20"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="profiling_8h.html#ac05fdc10ded37340f2ab202bbc184d20">profiling_start</a> (void)</td></tr>
 <tr class="separator:ac05fdc10ded37340f2ab202bbc184d20"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3171d2be3fbf00e49982243e9869735a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="profiling_8h.html#a3171d2be3fbf00e49982243e9869735a">profiling_mark_stage</a> (unsigned int stage)</td></tr>
 <tr class="separator:a3171d2be3fbf00e49982243e9869735a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9f4516d77db32a65ee99933c6c9d3802"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="profiling_8h.html#a9f4516d77db32a65ee99933c6c9d3802">profiling_stop</a> (void)</td></tr>
 <tr class="separator:a9f4516d77db32a65ee99933c6c9d3802"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a419c836fb596d360dbc40e678127eb90"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="profiling_8h.html#a419c836fb596d360dbc40e678127eb90">i2s_profiling_task</a> (void *param)</td></tr>
-<tr class="separator:a419c836fb596d360dbc40e678127eb90"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
-Variables</h2></td></tr>
-<tr class="memitem:a3b34b520123016210f0a0bb409286805"><td class="memItemLeft" align="right" valign="top">SemaphoreHandle_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="profiling_8h.html#a3b34b520123016210f0a0bb409286805">profiling_mutex</a></td></tr>
-<tr class="separator:a3b34b520123016210f0a0bb409286805"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa8ff71a343036a362fc1953d5572d0ce"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="profiling_8h.html#aa8ff71a343036a362fc1953d5572d0ce">profiling_task</a> (void *param)</td></tr>
+<tr class="separator:aa8ff71a343036a362fc1953d5572d0ce"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Function Documentation</h2>
-<a id="a419c836fb596d360dbc40e678127eb90" name="a419c836fb596d360dbc40e678127eb90"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a419c836fb596d360dbc40e678127eb90">&#9670;&nbsp;</a></span>i2s_profiling_task()</h2>
+<a id="a58ceeae747d300e67b1ecf70a9b24526" name="a58ceeae747d300e67b1ecf70a9b24526"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a58ceeae747d300e67b1ecf70a9b24526">&#9670;&nbsp;</a></span>profiling_init()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void i2s_profiling_task </td>
+          <td class="memname">void profiling_init </td>
           <td>(</td>
-          <td class="paramtype">void *&#160;</td>
-          <td class="paramname"><em>param</em></td><td>)</td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>buffer_size</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>sample_rate</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="profiling_8cpp_source.html#l00083">83</a> of file <a class="el" href="profiling_8cpp_source.html">profiling.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   84</span>{</div>
-<div class="line"><span class="lineno">   85</span>    (void) param;</div>
-<div class="line"><span class="lineno">   86</span> </div>
-<div class="line"><span class="lineno">   87</span>    <a class="code hl_variable" href="profiling_8cpp.html#a12d55287a43c286880f5a53b5433fce1">cpu_freq_mhz</a> = ets_get_cpu_frequency();</div>
-<div class="line"><span class="lineno">   88</span>    ESP_LOGI(<a class="code hl_variable" href="namespaceshrapnel_1_1parameters.html#a0cbbede6af96973c56e635f9a90599cd">TAG</a>, <span class="stringliteral">&quot;CPU frequency: %d MHz&quot;</span>, <a class="code hl_variable" href="profiling_8cpp.html#a12d55287a43c286880f5a53b5433fce1">cpu_freq_mhz</a>);</div>
-<div class="line"><span class="lineno">   89</span> </div>
-<div class="line"><span class="lineno">   90</span>    <span class="keywordflow">while</span>(1)</div>
-<div class="line"><span class="lineno">   91</span>    {</div>
-<div class="line"><span class="lineno">   92</span>        vTaskDelay(1000 / portTICK_PERIOD_MS);</div>
-<div class="line"><span class="lineno">   93</span> </div>
-<div class="line"><span class="lineno">   94</span>        <span class="keywordflow">if</span>(xSemaphoreTake(<a class="code hl_variable" href="profiling_8cpp.html#a3b34b520123016210f0a0bb409286805">profiling_mutex</a>, 100 / portTICK_PERIOD_MS))</div>
-<div class="line"><span class="lineno">   95</span>        {</div>
-<div class="line"><span class="lineno">   96</span>            ESP_LOGI(<a class="code hl_variable" href="namespaceshrapnel_1_1parameters.html#a0cbbede6af96973c56e635f9a90599cd">TAG</a>, <span class="stringliteral">&quot; ========= \n&quot;</span>);</div>
-<div class="line"><span class="lineno">   97</span> </div>
-<div class="line"><span class="lineno">   98</span>            int64_t total_cycles = 0;</div>
-<div class="line"><span class="lineno">   99</span>            <span class="keywordflow">for</span>(<span class="keywordtype">int</span> i = 0; i &lt; NUMBER_OF_STAGES; i++)</div>
-<div class="line"><span class="lineno">  100</span>            {</div>
-<div class="line"><span class="lineno">  101</span>                <span class="comment">//if the stage has not been assigned, stop printing</span></div>
-<div class="line"><span class="lineno">  102</span>                <span class="keywordflow">if</span>(<a class="code hl_variable" href="profiling_8cpp.html#ade2d6f84e5a6696fba128c5769eef4db">stage_cycles</a>[i] == 0)</div>
-<div class="line"><span class="lineno">  103</span>                {</div>
-<div class="line"><span class="lineno">  104</span>                    <span class="keywordflow">break</span>;</div>
-<div class="line"><span class="lineno">  105</span>                }</div>
-<div class="line"><span class="lineno">  106</span> </div>
-<div class="line"><span class="lineno">  107</span>                int64_t current_stage_cycles = <a class="code hl_variable" href="profiling_8cpp.html#ade2d6f84e5a6696fba128c5769eef4db">stage_cycles</a>[i] - ((i == 0) ? <a class="code hl_variable" href="profiling_8cpp.html#abbb1d59d5361eaadca69523f17e12a25">start_cycles</a> : <a class="code hl_variable" href="profiling_8cpp.html#ade2d6f84e5a6696fba128c5769eef4db">stage_cycles</a>[i - 1]);</div>
-<div class="line"><span class="lineno">  108</span>                ESP_LOGI(<a class="code hl_variable" href="namespaceshrapnel_1_1parameters.html#a0cbbede6af96973c56e635f9a90599cd">TAG</a>, <span class="stringliteral">&quot;Stage %3d processing took %7lld cycles %4lld us (%03.1f %%)&quot;</span>,</div>
-<div class="line"><span class="lineno">  109</span>                        i,</div>
-<div class="line"><span class="lineno">  110</span>                        current_stage_cycles,</div>
-<div class="line"><span class="lineno">  111</span>                        <a class="code hl_function" href="profiling_8cpp.html#ab43df9ddabf19beb65958fe84cac89b5">cycles_to_us</a>(current_stage_cycles),</div>
-<div class="line"><span class="lineno">  112</span>                        <a class="code hl_function" href="profiling_8cpp.html#a96b462c18367729bd8d5e19d7d98a619">cycles_to_percent</a>(current_stage_cycles));</div>
-<div class="line"><span class="lineno">  113</span> </div>
-<div class="line"><span class="lineno">  114</span>                total_cycles += current_stage_cycles;</div>
-<div class="line"><span class="lineno">  115</span>            }</div>
-<div class="line"><span class="lineno">  116</span> </div>
-<div class="line"><span class="lineno">  117</span>            ESP_LOGI(<a class="code hl_variable" href="namespaceshrapnel_1_1parameters.html#a0cbbede6af96973c56e635f9a90599cd">TAG</a>, <span class="stringliteral">&quot;Total processing took     %7lld cycles %4lld us (%03.1f %%)&quot;</span>,</div>
-<div class="line"><span class="lineno">  118</span>                    total_cycles,</div>
-<div class="line"><span class="lineno">  119</span>                    <a class="code hl_function" href="profiling_8cpp.html#ab43df9ddabf19beb65958fe84cac89b5">cycles_to_us</a>(total_cycles),</div>
-<div class="line"><span class="lineno">  120</span>                    <a class="code hl_function" href="profiling_8cpp.html#a96b462c18367729bd8d5e19d7d98a619">cycles_to_percent</a>(total_cycles));</div>
-<div class="line"><span class="lineno">  121</span> </div>
-<div class="line"><span class="lineno">  122</span>            ESP_LOGI(<a class="code hl_variable" href="namespaceshrapnel_1_1parameters.html#a0cbbede6af96973c56e635f9a90599cd">TAG</a>, <span class="stringliteral">&quot; ========= \n&quot;</span>);</div>
-<div class="line"><span class="lineno">  123</span> </div>
-<div class="line"><span class="lineno">  124</span>            xSemaphoreGive(<a class="code hl_variable" href="profiling_8cpp.html#a3b34b520123016210f0a0bb409286805">profiling_mutex</a>);</div>
-<div class="line"><span class="lineno">  125</span>        }</div>
-<div class="line"><span class="lineno">  126</span>        <span class="keywordflow">else</span></div>
-<div class="line"><span class="lineno">  127</span>        {</div>
-<div class="line"><span class="lineno">  128</span>            ESP_LOGE(<a class="code hl_variable" href="namespaceshrapnel_1_1parameters.html#a0cbbede6af96973c56e635f9a90599cd">TAG</a>, <span class="stringliteral">&quot;%s failed to take semaphore&quot;</span>, __FUNCTION__);</div>
-<div class="line"><span class="lineno">  129</span>        }</div>
-<div class="line"><span class="lineno">  130</span>    }</div>
-<div class="line"><span class="lineno">  131</span>}</div>
-<div class="ttc" id="anamespaceshrapnel_1_1parameters_html_a0cbbede6af96973c56e635f9a90599cd"><div class="ttname"><a href="namespaceshrapnel_1_1parameters.html#a0cbbede6af96973c56e635f9a90599cd">shrapnel::parameters::TAG</a></div><div class="ttdeci">constexpr const char * TAG</div><div class="ttdef"><b>Definition:</b> <a href="audio__param_8h_source.html#l00034">audio_param.h:34</a></div></div>
-<div class="ttc" id="aprofiling_8cpp_html_a12d55287a43c286880f5a53b5433fce1"><div class="ttname"><a href="profiling_8cpp.html#a12d55287a43c286880f5a53b5433fce1">cpu_freq_mhz</a></div><div class="ttdeci">static uint32_t cpu_freq_mhz</div><div class="ttdef"><b>Definition:</b> <a href="profiling_8cpp_source.html#l00037">profiling.cpp:37</a></div></div>
-<div class="ttc" id="aprofiling_8cpp_html_a3b34b520123016210f0a0bb409286805"><div class="ttname"><a href="profiling_8cpp.html#a3b34b520123016210f0a0bb409286805">profiling_mutex</a></div><div class="ttdeci">SemaphoreHandle_t profiling_mutex</div><div class="ttdef"><b>Definition:</b> <a href="profiling_8cpp_source.html#l00035">profiling.cpp:35</a></div></div>
-<div class="ttc" id="aprofiling_8cpp_html_a96b462c18367729bd8d5e19d7d98a619"><div class="ttname"><a href="profiling_8cpp.html#a96b462c18367729bd8d5e19d7d98a619">cycles_to_percent</a></div><div class="ttdeci">static double cycles_to_percent(int64_t cycles)</div><div class="ttdef"><b>Definition:</b> <a href="profiling_8cpp_source.html#l00067">profiling.cpp:67</a></div></div>
-<div class="ttc" id="aprofiling_8cpp_html_ab43df9ddabf19beb65958fe84cac89b5"><div class="ttname"><a href="profiling_8cpp.html#ab43df9ddabf19beb65958fe84cac89b5">cycles_to_us</a></div><div class="ttdeci">static int64_t cycles_to_us(int64_t cycles)</div><div class="ttdef"><b>Definition:</b> <a href="profiling_8cpp_source.html#l00078">profiling.cpp:78</a></div></div>
-<div class="ttc" id="aprofiling_8cpp_html_abbb1d59d5361eaadca69523f17e12a25"><div class="ttname"><a href="profiling_8cpp.html#abbb1d59d5361eaadca69523f17e12a25">start_cycles</a></div><div class="ttdeci">static uint32_t start_cycles</div><div class="ttdef"><b>Definition:</b> <a href="profiling_8cpp_source.html#l00033">profiling.cpp:33</a></div></div>
-<div class="ttc" id="aprofiling_8cpp_html_ade2d6f84e5a6696fba128c5769eef4db"><div class="ttname"><a href="profiling_8cpp.html#ade2d6f84e5a6696fba128c5769eef4db">stage_cycles</a></div><div class="ttdeci">static uint32_t stage_cycles[NUMBER_OF_STAGES]</div><div class="ttdef"><b>Definition:</b> <a href="profiling_8cpp_source.html#l00034">profiling.cpp:34</a></div></div>
+<p class="definition">Definition at line <a class="el" href="desktop_2profiling_8c_source.html#l00022">22</a> of file <a class="el" href="desktop_2profiling_8c_source.html">profiling.c</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   22</span>                                                           {</div>
+<div class="line"><span class="lineno">   23</span>    (void) <a class="code hl_variable" href="esp32_2profiling_8c.html#a799a743b3abd553a37fc01ad3097df08">buffer_size</a>;</div>
+<div class="line"><span class="lineno">   24</span>    (void) <a class="code hl_variable" href="esp32_2profiling_8c.html#a63433fe701b4e06f2cfdd50509e660db">sample_rate</a>;</div>
+<div class="line"><span class="lineno">   25</span>}</div>
+<div class="ttc" id="aesp32_2profiling_8c_html_a63433fe701b4e06f2cfdd50509e660db"><div class="ttname"><a href="esp32_2profiling_8c.html#a63433fe701b4e06f2cfdd50509e660db">sample_rate</a></div><div class="ttdeci">static float sample_rate</div><div class="ttdef"><b>Definition:</b> <a href="esp32_2profiling_8c_source.html#l00038">profiling.c:38</a></div></div>
+<div class="ttc" id="aesp32_2profiling_8c_html_a799a743b3abd553a37fc01ad3097df08"><div class="ttname"><a href="esp32_2profiling_8c.html#a799a743b3abd553a37fc01ad3097df08">buffer_size</a></div><div class="ttdeci">static size_t buffer_size</div><div class="ttdef"><b>Definition:</b> <a href="esp32_2profiling_8c_source.html#l00037">profiling.c:37</a></div></div>
 </div><!-- fragment -->
-<p class="reference">References <a class="el" href="profiling_8cpp_source.html#l00037">cpu_freq_mhz</a>, <a class="el" href="profiling_8cpp_source.html#l00067">cycles_to_percent()</a>, <a class="el" href="profiling_8cpp_source.html#l00078">cycles_to_us()</a>, <a class="el" href="profiling_8cpp_source.html#l00035">profiling_mutex</a>, <a class="el" href="profiling_8cpp_source.html#l00034">stage_cycles</a>, <a class="el" href="profiling_8cpp_source.html#l00033">start_cycles</a>, and <a class="el" href="audio__param_8h_source.html#l00034">shrapnel::parameters::TAG</a>.</p>
+<p class="reference">References <a class="el" href="esp32_2profiling_8c_source.html#l00037">buffer_size</a>, <a class="el" href="esp32_2profiling_8c_source.html#l00036">cpu_freq_mhz</a>, <a class="el" href="esp32_2profiling_8c_source.html#l00034">profiling_mutex</a>, <a class="el" href="esp32_2profiling_8c_source.html#l00038">sample_rate</a>, and <a class="el" href="audio__param_8h_source.html#l00034">shrapnel::parameters::TAG</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="main_8cpp_source.html#l00623">shrapnel::app_main()</a>.</p>
-<div class="dynheader">
-Here is the call graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="profiling_8h_a419c836fb596d360dbc40e678127eb90_cgraph.svg" width="308" height="88"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
-</div>
-</div>
+<p class="reference">Referenced by <a class="el" href="main_8cpp_source.html#l00629">shrapnel::app_main()</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="profiling_8h_a419c836fb596d360dbc40e678127eb90_icgraph.svg" width="315" height="38"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+<div class="center"><iframe scrolling="no" frameborder="0" src="profiling_8h_a58ceeae747d300e67b1ecf70a9b24526_icgraph.svg" width="283" height="38"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
 </div>
 </div>
 
@@ -224,24 +175,18 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="profiling_8cpp_source.html#l00048">48</a> of file <a class="el" href="profiling_8cpp_source.html">profiling.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   49</span>{</div>
-<div class="line"><span class="lineno">   50</span>    assert(stage &lt; NUMBER_OF_STAGES);</div>
-<div class="line"><span class="lineno">   51</span> </div>
-<div class="line"><span class="lineno">   52</span>    <span class="keywordflow">if</span>(<a class="code hl_variable" href="profiling_8cpp.html#a4ff804bf46703f603a1541568cef5531">got_semaphore</a>)</div>
-<div class="line"><span class="lineno">   53</span>    {</div>
-<div class="line"><span class="lineno">   54</span>        <a class="code hl_variable" href="profiling_8cpp.html#ade2d6f84e5a6696fba128c5769eef4db">stage_cycles</a>[stage] = cpu_hal_get_cycle_count();</div>
-<div class="line"><span class="lineno">   55</span>    }</div>
-<div class="line"><span class="lineno">   56</span>}</div>
-<div class="ttc" id="aprofiling_8cpp_html_a4ff804bf46703f603a1541568cef5531"><div class="ttname"><a href="profiling_8cpp.html#a4ff804bf46703f603a1541568cef5531">got_semaphore</a></div><div class="ttdeci">static bool got_semaphore</div><div class="ttdef"><b>Definition:</b> <a href="profiling_8cpp_source.html#l00036">profiling.cpp:36</a></div></div>
+<p class="definition">Definition at line <a class="el" href="desktop_2profiling_8c_source.html#l00027">27</a> of file <a class="el" href="desktop_2profiling_8c_source.html">profiling.c</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   27</span>                                              {</div>
+<div class="line"><span class="lineno">   28</span>    (void) stage;</div>
+<div class="line"><span class="lineno">   29</span>}</div>
 </div><!-- fragment -->
-<p class="reference">References <a class="el" href="profiling_8cpp_source.html#l00036">got_semaphore</a>, and <a class="el" href="profiling_8cpp_source.html#l00034">stage_cycles</a>.</p>
+<p class="reference">References <a class="el" href="esp32_2profiling_8c_source.html#l00035">got_semaphore</a>, and <a class="el" href="esp32_2profiling_8c_source.html#l00033">stage_cycles</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="process_8cpp_source.html#l00093">process_samples()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="fast__convolution_8h_source.html#l00057">shrapnel::dsp::FastConvolution&lt; N, K &gt;::process()</a>, <a class="el" href="audio__processor_8cpp_source.html#l00055">shrapnel::AudioProcessor::process()</a>, and <a class="el" href="fast__fir_8h_source.html#l00069">shrapnel::dsp::FastFir&lt; N, M, Convolution &gt;::process()</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="profiling_8h_a3171d2be3fbf00e49982243e9869735a_icgraph.svg" width="822" height="38"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+<div class="center"><iframe scrolling="no" frameborder="0" src="profiling_8h_a3171d2be3fbf00e49982243e9869735a_icgraph.svg" width="399" height="183"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
 </div>
 </div>
 
@@ -263,24 +208,10 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="profiling_8cpp_source.html#l00039">39</a> of file <a class="el" href="profiling_8cpp_source.html">profiling.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   40</span>{</div>
-<div class="line"><span class="lineno">   41</span>    <span class="keywordflow">if</span>(xSemaphoreTake(<a class="code hl_variable" href="profiling_8cpp.html#a3b34b520123016210f0a0bb409286805">profiling_mutex</a>, 0))</div>
-<div class="line"><span class="lineno">   42</span>    {</div>
-<div class="line"><span class="lineno">   43</span>        <a class="code hl_variable" href="profiling_8cpp.html#a4ff804bf46703f603a1541568cef5531">got_semaphore</a> = <span class="keyword">true</span>;</div>
-<div class="line"><span class="lineno">   44</span>        <a class="code hl_variable" href="profiling_8cpp.html#abbb1d59d5361eaadca69523f17e12a25">start_cycles</a> = cpu_hal_get_cycle_count();</div>
-<div class="line"><span class="lineno">   45</span>    }</div>
-<div class="line"><span class="lineno">   46</span>}</div>
+<p class="definition">Definition at line <a class="el" href="desktop_2profiling_8c_source.html#l00026">26</a> of file <a class="el" href="desktop_2profiling_8c_source.html">profiling.c</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   26</span>{}</div>
 </div><!-- fragment -->
-<p class="reference">References <a class="el" href="profiling_8cpp_source.html#l00036">got_semaphore</a>, <a class="el" href="profiling_8cpp_source.html#l00035">profiling_mutex</a>, and <a class="el" href="profiling_8cpp_source.html#l00033">start_cycles</a>.</p>
-
-<p class="reference">Referenced by <a class="el" href="process_8cpp_source.html#l00093">process_samples()</a>.</p>
-<div class="dynheader">
-Here is the caller graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="profiling_8h_ac05fdc10ded37340f2ab202bbc184d20_icgraph.svg" width="779" height="38"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
-</div>
-</div>
+<p class="reference">References <a class="el" href="esp32_2profiling_8c_source.html#l00035">got_semaphore</a>, <a class="el" href="esp32_2profiling_8c_source.html#l00034">profiling_mutex</a>, and <a class="el" href="esp32_2profiling_8c_source.html#l00032">start_cycles</a>.</p>
 
 </div>
 </div>
@@ -300,51 +231,49 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="profiling_8cpp_source.html#l00058">58</a> of file <a class="el" href="profiling_8cpp_source.html">profiling.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   59</span>{</div>
-<div class="line"><span class="lineno">   60</span>    <span class="keywordflow">if</span>(<a class="code hl_variable" href="profiling_8cpp.html#a4ff804bf46703f603a1541568cef5531">got_semaphore</a>)</div>
-<div class="line"><span class="lineno">   61</span>    {</div>
-<div class="line"><span class="lineno">   62</span>        xSemaphoreGive(<a class="code hl_variable" href="profiling_8cpp.html#a3b34b520123016210f0a0bb409286805">profiling_mutex</a>);</div>
-<div class="line"><span class="lineno">   63</span>        <a class="code hl_variable" href="profiling_8cpp.html#a4ff804bf46703f603a1541568cef5531">got_semaphore</a> = <span class="keyword">false</span>;</div>
-<div class="line"><span class="lineno">   64</span>    }</div>
-<div class="line"><span class="lineno">   65</span>}</div>
+<p class="definition">Definition at line <a class="el" href="desktop_2profiling_8c_source.html#l00030">30</a> of file <a class="el" href="desktop_2profiling_8c_source.html">profiling.c</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   30</span>{}</div>
 </div><!-- fragment -->
-<p class="reference">References <a class="el" href="profiling_8cpp_source.html#l00036">got_semaphore</a>, and <a class="el" href="profiling_8cpp_source.html#l00035">profiling_mutex</a>.</p>
-
-<p class="reference">Referenced by <a class="el" href="process_8cpp_source.html#l00093">process_samples()</a>.</p>
-<div class="dynheader">
-Here is the caller graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="profiling_8h_a9f4516d77db32a65ee99933c6c9d3802_icgraph.svg" width="779" height="38"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
-</div>
-</div>
+<p class="reference">References <a class="el" href="esp32_2profiling_8c_source.html#l00035">got_semaphore</a>, and <a class="el" href="esp32_2profiling_8c_source.html#l00034">profiling_mutex</a>.</p>
 
 </div>
 </div>
-<h2 class="groupheader">Variable Documentation</h2>
-<a id="a3b34b520123016210f0a0bb409286805" name="a3b34b520123016210f0a0bb409286805"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3b34b520123016210f0a0bb409286805">&#9670;&nbsp;</a></span>profiling_mutex</h2>
+<a id="aa8ff71a343036a362fc1953d5572d0ce" name="aa8ff71a343036a362fc1953d5572d0ce"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa8ff71a343036a362fc1953d5572d0ce">&#9670;&nbsp;</a></span>profiling_task()</h2>
 
 <div class="memitem">
 <div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">SemaphoreHandle_t profiling_mutex</td>
+          <td class="memname">void profiling_task </td>
+          <td>(</td>
+          <td class="paramtype">void *&#160;</td>
+          <td class="paramname"><em>param</em></td><td>)</td>
+          <td></td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">extern</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="profiling_8cpp_source.html#l00035">35</a> of file <a class="el" href="profiling_8cpp_source.html">profiling.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="desktop_2profiling_8c_source.html#l00032">32</a> of file <a class="el" href="desktop_2profiling_8c_source.html">profiling.c</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   32</span>                                 {</div>
+<div class="line"><span class="lineno">   33</span>    (void) param;</div>
+<div class="line"><span class="lineno">   34</span>}</div>
+</div><!-- fragment -->
+<p class="reference">References <a class="el" href="esp32_2profiling_8c_source.html#l00078">cycles_to_percent()</a>, <a class="el" href="esp32_2profiling_8c_source.html#l00089">cycles_to_us()</a>, <a class="el" href="esp32_2profiling_8c_source.html#l00034">profiling_mutex</a>, <a class="el" href="esp32_2profiling_8c_source.html#l00033">stage_cycles</a>, <a class="el" href="esp32_2profiling_8c_source.html#l00032">start_cycles</a>, and <a class="el" href="audio__param_8h_source.html#l00034">shrapnel::parameters::TAG</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="main_8cpp_source.html#l00623">shrapnel::app_main()</a>, <a class="el" href="profiling_8cpp_source.html#l00083">i2s_profiling_task()</a>, <a class="el" href="profiling_8cpp_source.html#l00039">profiling_start()</a>, and <a class="el" href="profiling_8cpp_source.html#l00058">profiling_stop()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="main_8cpp_source.html#l00629">shrapnel::app_main()</a>.</p>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" frameborder="0" src="profiling_8h_aa8ff71a343036a362fc1953d5572d0ce_cgraph.svg" width="284" height="88"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
+</div>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" frameborder="0" src="profiling_8h_aa8ff71a343036a362fc1953d5572d0ce_icgraph.svg" width="291" height="38"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
+</div>
 
 </div>
 </div>
@@ -353,7 +282,7 @@ Here is the caller graph for this function:</div>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_d9edf6c004b4a7ff14fe9ae7a92214ee.html">firmware</a></li><li class="navelem"><a class="el" href="dir_a7f1045ea2c2de513e4829d3edd7d5b7.html">components</a></li><li class="navelem"><a class="el" href="dir_7092270a206f379af139e0c789bb92ec.html">i2s</a></li><li class="navelem"><a class="el" href="dir_d9bcfe3086f6b65709994742c5706db8.html">include</a></li><li class="navelem"><a class="el" href="profiling_8h.html">profiling.h</a></li>
+    <li class="navelem"><a class="el" href="dir_63bb297c276a119495816091bcd678e9.html">effects</a></li><li class="navelem"><a class="el" href="dir_4dd29be76a1e4902177758ddecb725ac.html">abstract_dsp</a></li><li class="navelem"><a class="el" href="dir_cb9dd9581595cc79941cf7a25688572e.html">include</a></li><li class="navelem"><a class="el" href="profiling_8h.html">profiling.h</a></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.4 </li>
   </ul>
 </div>

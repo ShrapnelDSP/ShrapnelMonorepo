@@ -1,5 +1,6 @@
 var searchData=
 [
-  ['taskbase_0',['TaskBase',['../classshrapnel_1_1TaskBase.html',1,'shrapnel']]],
-  ['timer_1',['Timer',['../classshrapnel_1_1os_1_1Timer.html',1,'shrapnel::os']]]
+  ['scopedheaptracing_0',['ScopedHeapTracing',['../classScopedHeapTracing.html',1,'']]],
+  ['state_1',['State',['../structshrapnel_1_1wifi_1_1State.html',1,'shrapnel::wifi']]],
+  ['storage_2',['Storage',['../classshrapnel_1_1persistence_1_1Storage.html',1,'shrapnel::persistence']]]
 ];

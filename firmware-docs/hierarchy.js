@@ -4,6 +4,8 @@ var hierarchy =
     [ "shrapnel::parameters::AudioParametersBase", "classshrapnel_1_1parameters_1_1AudioParametersBase.html", [
       [ "shrapnel::parameters::AudioParameters< MAX_PARAMETERS, MAX_OBSERVERS >", "classshrapnel_1_1parameters_1_1AudioParameters.html", null ]
     ] ],
+    [ "shrapnel::AudioProcessor", "classshrapnel_1_1AudioProcessor.html", null ],
+    [ "shrapnel::AudioProcessorParameters", "structshrapnel_1_1AudioProcessorParameters.html", null ],
     [ "shrapnel::effect::Chorus", "classshrapnel_1_1effect_1_1Chorus.html", null ],
     [ "shrapnel::effect::valvestate::Clipping", "classshrapnel_1_1effect_1_1valvestate_1_1Clipping.html", null ],
     [ "shrapnel::parameters::CommandHandling< AudioParametersT, EventSendT >", "classshrapnel_1_1parameters_1_1CommandHandling.html", null ],
@@ -18,6 +20,7 @@ var hierarchy =
     [ "shrapnel::EventSend", "classshrapnel_1_1EventSend.html", null ],
     [ "shrapnel::dsp::FastConvolution< N, K >", "classshrapnel_1_1dsp_1_1FastConvolution.html", null ],
     [ "shrapnel::dsp::FastFir< N, M, Convolution >", "classshrapnel_1_1dsp_1_1FastFir.html", null ],
+    [ "shrapnel::dsp::FastFir< 512, 1024, shrapnel::dsp::FastConvolution< 1024, 512 > >", "classshrapnel_1_1dsp_1_1FastFir.html", null ],
     [ "shrapnel::effect::valvestate::FMVFilter", "classshrapnel_1_1effect_1_1valvestate_1_1FMVFilter.html", null ],
     [ "shrapnel::effect::valvestate::GainControl", "classshrapnel_1_1effect_1_1valvestate_1_1GainControl.html", null ],
     [ "shrapnel::midi::GetRequest", "structshrapnel_1_1midi_1_1GetRequest.html", null ],
@@ -50,6 +53,9 @@ var hierarchy =
       [ "shrapnel::ParameterObserver< MAX_PARAMETERS >", "classshrapnel_1_1ParameterObserver.html", null ]
     ] ],
     [ "shrapnel::ParameterUpdateNotifier", "classshrapnel_1_1ParameterUpdateNotifier.html", null ],
+    [ "juce::dsp::ProcessorBase", null, [
+      [ "shrapnel::dsp::BlockProcessor< N, ChildProcessor >", "classshrapnel_1_1dsp_1_1BlockProcessor.html", null ]
+    ] ],
     [ "shrapnel::midi::Message::ProgramChange", "structshrapnel_1_1midi_1_1Message_1_1ProgramChange.html", null ],
     [ "shrapnel::QueueBase< T >", "classshrapnel_1_1QueueBase.html", [
       [ "shrapnel::Queue< T, MAX_SIZE >", "classshrapnel_1_1Queue.html", null ]

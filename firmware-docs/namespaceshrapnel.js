@@ -1,5 +1,12 @@
 var namespaceshrapnel =
 [
+    [ "audio", "namespaceshrapnel_1_1audio.html", [
+      [ "i2s_processing_task", "namespaceshrapnel_1_1audio.html#af73614d414adf5014704433913ee11db", null ],
+      [ "i2s_setup", "namespaceshrapnel_1_1audio.html#a53d05b5ded7bb39aff7189392d0566c9", null ],
+      [ "log_i2s_event", "namespaceshrapnel_1_1audio.html#a5e4994d9de1b430ad5473efe241521aa", null ],
+      [ "g_profiling_gpio", "namespaceshrapnel_1_1audio.html#a82e419da4aa6e86ef0a168ea7fe0e797", null ],
+      [ "i2s_queue", "namespaceshrapnel_1_1audio.html#ab7793cdc1c2c73fcdcba8fea2f35c9c8", null ]
+    ] ],
     [ "dsp", "namespaceshrapnel_1_1dsp.html", "namespaceshrapnel_1_1dsp" ],
     [ "effect", "namespaceshrapnel_1_1effect.html", "namespaceshrapnel_1_1effect" ],
     [ "events", "namespaceshrapnel_1_1events.html", "namespaceshrapnel_1_1events" ],
@@ -8,6 +15,8 @@ var namespaceshrapnel =
     [ "parameters", "namespaceshrapnel_1_1parameters.html", "namespaceshrapnel_1_1parameters" ],
     [ "persistence", "namespaceshrapnel_1_1persistence.html", "namespaceshrapnel_1_1persistence" ],
     [ "wifi", "namespaceshrapnel_1_1wifi.html", "namespaceshrapnel_1_1wifi" ],
+    [ "AudioProcessor", "classshrapnel_1_1AudioProcessor.html", "classshrapnel_1_1AudioProcessor" ],
+    [ "AudioProcessorParameters", "structshrapnel_1_1AudioProcessorParameters.html", "structshrapnel_1_1AudioProcessorParameters" ],
     [ "EventSend", "classshrapnel_1_1EventSend.html", "classshrapnel_1_1EventSend" ],
     [ "MidiMappingObserver", "classshrapnel_1_1MidiMappingObserver.html", "classshrapnel_1_1MidiMappingObserver" ],
     [ "ParameterObserver", "classshrapnel_1_1ParameterObserver.html", "classshrapnel_1_1ParameterObserver" ],

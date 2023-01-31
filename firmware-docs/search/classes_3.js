@@ -1,7 +1,6 @@
 var searchData=
 [
-  ['espheaptracing_0',['EspHeapTracing',['../classEspHeapTracing.html',1,'']]],
-  ['espmidiuart_1',['EspMidiUart',['../classshrapnel_1_1midi_1_1EspMidiUart.html',1,'shrapnel::midi']]],
-  ['espstorage_2',['EspStorage',['../classshrapnel_1_1persistence_1_1EspStorage.html',1,'shrapnel::persistence']]],
-  ['eventsend_3',['EventSend',['../classshrapnel_1_1EventSend.html',1,'shrapnel']]]
+  ['decoder_0',['Decoder',['../classshrapnel_1_1midi_1_1Decoder.html',1,'shrapnel::midi']]],
+  ['delayline_1',['DelayLine',['../classshrapnel_1_1dsp_1_1DelayLine.html',1,'shrapnel::dsp']]],
+  ['dspal_5fdelayline_2',['dspal_delayline',['../structdspal__delayline.html',1,'']]]
 ];

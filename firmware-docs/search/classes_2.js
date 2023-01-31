@@ -1,6 +1,10 @@
 var searchData=
 [
-  ['decoder_0',['Decoder',['../classshrapnel_1_1midi_1_1Decoder.html',1,'shrapnel::midi']]],
-  ['delayline_1',['DelayLine',['../classshrapnel_1_1dsp_1_1DelayLine.html',1,'shrapnel::dsp']]],
-  ['dspal_5fdelayline_2',['dspal_delayline',['../structdspal__delayline.html',1,'']]]
+  ['chorus_0',['Chorus',['../classshrapnel_1_1effect_1_1Chorus.html',1,'shrapnel::effect']]],
+  ['clipping_1',['Clipping',['../classshrapnel_1_1effect_1_1valvestate_1_1Clipping.html',1,'shrapnel::effect::valvestate']]],
+  ['commandhandling_2',['CommandHandling',['../classshrapnel_1_1parameters_1_1CommandHandling.html',1,'shrapnel::parameters']]],
+  ['contourfilter_3',['ContourFilter',['../classContourFilter.html',1,'']]],
+  ['controlchange_4',['ControlChange',['../structshrapnel_1_1midi_1_1Message_1_1ControlChange.html',1,'shrapnel::midi::Message']]],
+  ['createrequest_5',['CreateRequest',['../structshrapnel_1_1midi_1_1CreateRequest.html',1,'shrapnel::midi']]],
+  ['createresponse_6',['CreateResponse',['../structshrapnel_1_1midi_1_1CreateResponse.html',1,'shrapnel::midi']]]
 ];

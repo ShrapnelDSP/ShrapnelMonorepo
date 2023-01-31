@@ -103,19 +103,19 @@ $(document).ready(function(){initNavTree('classshrapnel_1_1effect_1_1valvestate_
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a98ef2d50b4b3529f4154b2f46900c3cf"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classshrapnel_1_1effect_1_1valvestate_1_1FMVFilter.html#a98ef2d50b4b3529f4154b2f46900c3cf">set_parameters</a> (float l, float m, float t)</td></tr>
 <tr class="separator:a98ef2d50b4b3529f4154b2f46900c3cf"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1a63e9981469f1ae6eca95d4cf76bcbb"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classshrapnel_1_1effect_1_1valvestate_1_1FMVFilter.html#a1a63e9981469f1ae6eca95d4cf76bcbb">prepare</a> (float samplerate)</td></tr>
-<tr class="separator:a1a63e9981469f1ae6eca95d4cf76bcbb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1054a330bdb72fa1d10e8fcc6bc51edb"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classshrapnel_1_1effect_1_1valvestate_1_1FMVFilter.html#a1054a330bdb72fa1d10e8fcc6bc51edb">process</a> (float *buffer, std::size_t <a class="el" href="noise__gate_8cpp.html#a799a743b3abd553a37fc01ad3097df08">buffer_size</a>)</td></tr>
-<tr class="separator:a1054a330bdb72fa1d10e8fcc6bc51edb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6a9cccdc8327967719bb5c07f4942ed9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classshrapnel_1_1effect_1_1valvestate_1_1FMVFilter.html#a6a9cccdc8327967719bb5c07f4942ed9">prepare</a> (float samplerate, size_t)</td></tr>
+<tr class="separator:a6a9cccdc8327967719bb5c07f4942ed9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa8dd5942773e2395ab26943bdab43a8b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classshrapnel_1_1effect_1_1valvestate_1_1FMVFilter.html#aa8dd5942773e2395ab26943bdab43a8b">process</a> (std::span&lt; float &gt; buffer)</td></tr>
+<tr class="separator:aa8dd5942773e2395ab26943bdab43a8b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a825b1d349a4bcb1e4250174b4de9a7a4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classshrapnel_1_1effect_1_1valvestate_1_1FMVFilter.html#a825b1d349a4bcb1e4250174b4de9a7a4">reset</a> ()</td></tr>
 <tr class="separator:a825b1d349a4bcb1e4250174b4de9a7a4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock">
-<p class="definition">Definition at line <a class="el" href="fmv_8h_source.html#l00029">29</a> of file <a class="el" href="fmv_8h_source.html">fmv.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="fmv_8h_source.html#l00030">30</a> of file <a class="el" href="fmv_8h_source.html">fmv.h</a>.</p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
-<a id="a1a63e9981469f1ae6eca95d4cf76bcbb" name="a1a63e9981469f1ae6eca95d4cf76bcbb"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1a63e9981469f1ae6eca95d4cf76bcbb">&#9670;&nbsp;</a></span>prepare()</h2>
+<a id="a6a9cccdc8327967719bb5c07f4942ed9" name="a6a9cccdc8327967719bb5c07f4942ed9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6a9cccdc8327967719bb5c07f4942ed9">&#9670;&nbsp;</a></span>prepare()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -124,54 +124,13 @@ Public Member Functions</h2></td></tr>
           <td class="memname">void shrapnel::effect::valvestate::FMVFilter::prepare </td>
           <td>(</td>
           <td class="paramtype">float&#160;</td>
-          <td class="paramname"><em>samplerate</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="fmv_8cpp_source.html#l00027">27</a> of file <a class="el" href="fmv_8cpp_source.html">fmv.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   28</span>{</div>
-<div class="line"><span class="lineno">   29</span>    filter.<a class="code hl_function" href="classshrapnel_1_1dsp_1_1IirFilter.html#a0849f4c727beedd3b29f6b8ff50f6b02">reset</a>();</div>
-<div class="line"><span class="lineno">   30</span>    samplerate = a_samplerate;</div>
-<div class="line"><span class="lineno">   31</span>}</div>
-<div class="ttc" id="aclassshrapnel_1_1dsp_1_1IirFilter_html_a0849f4c727beedd3b29f6b8ff50f6b02"><div class="ttname"><a href="classshrapnel_1_1dsp_1_1IirFilter.html#a0849f4c727beedd3b29f6b8ff50f6b02">shrapnel::dsp::IirFilter::reset</a></div><div class="ttdeci">void reset(void) override</div><div class="ttdef"><b>Definition:</b> <a href="esp32_2include_2iir__concrete_8h_source.html#l00051">iir_concrete.h:51</a></div></div>
-</div><!-- fragment -->
-<p class="reference">References <a class="el" href="esp32_2include_2iir__concrete_8h_source.html#l00051">shrapnel::dsp::IirFilter::reset()</a>.</p>
-
-<p class="reference">Referenced by <a class="el" href="valvestate_8cpp_source.html#l00063">shrapnel::effect::valvestate::Valvestate::prepare()</a>.</p>
-<div class="dynheader">
-Here is the call graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="classshrapnel_1_1effect_1_1valvestate_1_1FMVFilter_a1a63e9981469f1ae6eca95d4cf76bcbb_cgraph.svg" width="378" height="52"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
-</div>
-</div>
-<div class="dynheader">
-Here is the caller graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="classshrapnel_1_1effect_1_1valvestate_1_1FMVFilter_a1a63e9981469f1ae6eca95d4cf76bcbb_icgraph.svg" width="408" height="52"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
-</div>
-</div>
-
-</div>
-</div>
-<a id="a1054a330bdb72fa1d10e8fcc6bc51edb" name="a1054a330bdb72fa1d10e8fcc6bc51edb"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1054a330bdb72fa1d10e8fcc6bc51edb">&#9670;&nbsp;</a></span>process()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void shrapnel::effect::valvestate::FMVFilter::process </td>
-          <td>(</td>
-          <td class="paramtype">float *&#160;</td>
-          <td class="paramname"><em>buffer</em>, </td>
+          <td class="paramname"><em>samplerate</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">std::size_t&#160;</td>
-          <td class="paramname"><em>buffer_size</em>&#160;</td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname">&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -181,26 +140,66 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="fmv_8cpp_source.html#l00033">33</a> of file <a class="el" href="fmv_8cpp_source.html">fmv.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   34</span>{</div>
-<div class="line"><span class="lineno">   35</span>    filter.<a class="code hl_function" href="classshrapnel_1_1dsp_1_1IirFilter.html#a53cb5a72d2a310cd4b35d4329af682f0">process</a>(buffer, buffer, <a class="code hl_variable" href="noise__gate_8cpp.html#a799a743b3abd553a37fc01ad3097df08">buffer_size</a>);</div>
-<div class="line"><span class="lineno">   36</span>}</div>
-<div class="ttc" id="aclassshrapnel_1_1dsp_1_1IirFilter_html_a53cb5a72d2a310cd4b35d4329af682f0"><div class="ttname"><a href="classshrapnel_1_1dsp_1_1IirFilter.html#a53cb5a72d2a310cd4b35d4329af682f0">shrapnel::dsp::IirFilter::process</a></div><div class="ttdeci">void process(const float *in, float *out, size_t buf_size) override</div><div class="ttdef"><b>Definition:</b> <a href="esp32_2include_2iir__concrete_8h_source.html#l00039">iir_concrete.h:39</a></div></div>
-<div class="ttc" id="anoise__gate_8cpp_html_a799a743b3abd553a37fc01ad3097df08"><div class="ttname"><a href="noise__gate_8cpp.html#a799a743b3abd553a37fc01ad3097df08">buffer_size</a></div><div class="ttdeci">static size_t buffer_size</div><div class="ttdef"><b>Definition:</b> <a href="noise__gate_8cpp_source.html#l00037">noise_gate.cpp:37</a></div></div>
+<p class="definition">Definition at line <a class="el" href="fmv_8cpp_source.html#l00027">27</a> of file <a class="el" href="fmv_8cpp_source.html">fmv.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   28</span>{</div>
+<div class="line"><span class="lineno">   29</span>    filter.<a class="code hl_function" href="classshrapnel_1_1dsp_1_1IirFilter.html#a0849f4c727beedd3b29f6b8ff50f6b02">reset</a>();</div>
+<div class="line"><span class="lineno">   30</span>    samplerate = a_samplerate;</div>
+<div class="line"><span class="lineno">   31</span>}</div>
+<div class="ttc" id="aclassshrapnel_1_1dsp_1_1IirFilter_html_a0849f4c727beedd3b29f6b8ff50f6b02"><div class="ttname"><a href="classshrapnel_1_1dsp_1_1IirFilter.html#a0849f4c727beedd3b29f6b8ff50f6b02">shrapnel::dsp::IirFilter::reset</a></div><div class="ttdeci">void reset(void) override</div><div class="ttdef"><b>Definition:</b> <a href="desktop_2include_2iir__concrete_8h_source.html#l00054">iir_concrete.h:54</a></div></div>
 </div><!-- fragment -->
-<p class="reference">References <a class="el" href="noise__gate_8cpp_source.html#l00037">buffer_size</a>, and <a class="el" href="esp32_2include_2iir__concrete_8h_source.html#l00039">shrapnel::dsp::IirFilter::process()</a>.</p>
+<p class="reference">References <a class="el" href="desktop_2include_2iir__concrete_8h_source.html#l00054">shrapnel::dsp::IirFilter::reset()</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="valvestate_8cpp_source.html#l00049">shrapnel::effect::valvestate::Valvestate::process()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="valvestate_8cpp_source.html#l00062">shrapnel::effect::valvestate::Valvestate::prepare()</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="classshrapnel_1_1effect_1_1valvestate_1_1FMVFilter_a1054a330bdb72fa1d10e8fcc6bc51edb_cgraph.svg" width="511" height="52"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+<div class="center"><iframe scrolling="no" frameborder="0" src="classshrapnel_1_1effect_1_1valvestate_1_1FMVFilter_a6a9cccdc8327967719bb5c07f4942ed9_cgraph.svg" width="378" height="52"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
 </div>
 </div>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="classshrapnel_1_1effect_1_1valvestate_1_1FMVFilter_a1054a330bdb72fa1d10e8fcc6bc51edb_icgraph.svg" width="408" height="52"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+<div class="center"><iframe scrolling="no" frameborder="0" src="classshrapnel_1_1effect_1_1valvestate_1_1FMVFilter_a6a9cccdc8327967719bb5c07f4942ed9_icgraph.svg" width="408" height="52"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
+</div>
+
+</div>
+</div>
+<a id="aa8dd5942773e2395ab26943bdab43a8b" name="aa8dd5942773e2395ab26943bdab43a8b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa8dd5942773e2395ab26943bdab43a8b">&#9670;&nbsp;</a></span>process()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void shrapnel::effect::valvestate::FMVFilter::process </td>
+          <td>(</td>
+          <td class="paramtype">std::span&lt; float &gt;&#160;</td>
+          <td class="paramname"><em>buffer</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="fmv_8cpp_source.html#l00033">33</a> of file <a class="el" href="fmv_8cpp_source.html">fmv.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   34</span>{</div>
+<div class="line"><span class="lineno">   35</span>    filter.<a class="code hl_function" href="classshrapnel_1_1dsp_1_1IirFilter.html#a53cb5a72d2a310cd4b35d4329af682f0">process</a>(buffer.data(), buffer.data(), buffer.size());</div>
+<div class="line"><span class="lineno">   36</span>}</div>
+<div class="ttc" id="aclassshrapnel_1_1dsp_1_1IirFilter_html_a53cb5a72d2a310cd4b35d4329af682f0"><div class="ttname"><a href="classshrapnel_1_1dsp_1_1IirFilter.html#a53cb5a72d2a310cd4b35d4329af682f0">shrapnel::dsp::IirFilter::process</a></div><div class="ttdeci">void process(const float *in, float *out, size_t buf_size) override</div><div class="ttdef"><b>Definition:</b> <a href="desktop_2include_2iir__concrete_8h_source.html#l00037">iir_concrete.h:37</a></div></div>
+</div><!-- fragment -->
+<p class="reference">References <a class="el" href="desktop_2include_2iir__concrete_8h_source.html#l00037">shrapnel::dsp::IirFilter::process()</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="valvestate_8cpp_source.html#l00048">shrapnel::effect::valvestate::Valvestate::process()</a>.</p>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" frameborder="0" src="classshrapnel_1_1effect_1_1valvestate_1_1FMVFilter_aa8dd5942773e2395ab26943bdab43a8b_cgraph.svg" width="378" height="52"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
+</div>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" frameborder="0" src="classshrapnel_1_1effect_1_1valvestate_1_1FMVFilter_aa8dd5942773e2395ab26943bdab43a8b_icgraph.svg" width="408" height="52"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
 </div>
 </div>
 
@@ -227,9 +226,9 @@ Here is the caller graph for this function:</div>
 <div class="line"><span class="lineno">   40</span>    filter.<a class="code hl_function" href="classshrapnel_1_1dsp_1_1IirFilter.html#a0849f4c727beedd3b29f6b8ff50f6b02">reset</a>();</div>
 <div class="line"><span class="lineno">   41</span>}</div>
 </div><!-- fragment -->
-<p class="reference">References <a class="el" href="esp32_2include_2iir__concrete_8h_source.html#l00051">shrapnel::dsp::IirFilter::reset()</a>.</p>
+<p class="reference">References <a class="el" href="desktop_2include_2iir__concrete_8h_source.html#l00054">shrapnel::dsp::IirFilter::reset()</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="valvestate_8cpp_source.html#l00071">shrapnel::effect::valvestate::Valvestate::reset()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="valvestate_8cpp_source.html#l00070">shrapnel::effect::valvestate::Valvestate::reset()</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -339,11 +338,11 @@ Here is the caller graph for this function:</div>
 <div class="line"><span class="lineno">  102</span> </div>
 <div class="line"><span class="lineno">  103</span>    filter.<a class="code hl_function" href="classshrapnel_1_1dsp_1_1IirFilter.html#aa09e7c1ab99d85c0fdd1c98c80636550">set_coefficients</a>(std::array&lt;float, 8&gt;{B0, B1, B2, B3, A0, A1, A2, A3});</div>
 <div class="line"><span class="lineno">  104</span>}</div>
-<div class="ttc" id="aclassshrapnel_1_1dsp_1_1IirFilter_html_aa09e7c1ab99d85c0fdd1c98c80636550"><div class="ttname"><a href="classshrapnel_1_1dsp_1_1IirFilter.html#aa09e7c1ab99d85c0fdd1c98c80636550">shrapnel::dsp::IirFilter::set_coefficients</a></div><div class="ttdeci">void set_coefficients(std::array&lt; float, 6 &gt; new_coefficients) override</div><div class="ttdef"><b>Definition:</b> <a href="esp32_2include_2iir__concrete_8h_source.html#l00056">iir_concrete.h:56</a></div></div>
+<div class="ttc" id="aclassshrapnel_1_1dsp_1_1IirFilter_html_aa09e7c1ab99d85c0fdd1c98c80636550"><div class="ttname"><a href="classshrapnel_1_1dsp_1_1IirFilter.html#aa09e7c1ab99d85c0fdd1c98c80636550">shrapnel::dsp::IirFilter::set_coefficients</a></div><div class="ttdeci">void set_coefficients(std::array&lt; float, 6 &gt; new_coefficients) override</div><div class="ttdef"><b>Definition:</b> <a href="desktop_2include_2iir__concrete_8h_source.html#l00059">iir_concrete.h:59</a></div></div>
 </div><!-- fragment -->
-<p class="reference">References <a class="el" href="esp32_2include_2iir__concrete_8h_source.html#l00056">shrapnel::dsp::IirFilter::set_coefficients()</a>.</p>
+<p class="reference">References <a class="el" href="desktop_2include_2iir__concrete_8h_source.html#l00059">shrapnel::dsp::IirFilter::set_coefficients()</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="valvestate_8cpp_source.html#l00034">shrapnel::effect::valvestate::Valvestate::set_fmv()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="valvestate_8cpp_source.html#l00033">shrapnel::effect::valvestate::Valvestate::set_fmv()</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">

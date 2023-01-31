@@ -1,8 +1,4 @@
 <map id="gate_reset" name="gate_reset">
-<area shape="rect" id="node1" title="Reset the state." alt="" coords="761,5,844,32"/>
-<area shape="rect" id="node2" href="$noise__gate_8cpp.html#a949bfebe851dee44040d83bbd068dad1" title="Initialise the effect." alt="" coords="643,5,713,32"/>
-<area shape="rect" id="node3" href="$process_8cpp.html#a98369bdde76db63c92e6173d29c6dc78" title=" " alt="" coords="503,5,595,32"/>
-<area shape="rect" id="node4" href="$i2s_8cpp.html#a4e37f563a34c1a559515cc40782caf07" title=" " alt="" coords="313,5,455,32"/>
-<area shape="rect" id="node5" href="$i2s_8cpp.html#ab949ae727fd1608d465238ba29ab2dab" title=" " alt="" coords="187,5,265,32"/>
-<area shape="rect" id="node6" href="$namespaceshrapnel.html#a9f09f4ea750643310af9143a53735b7d" title=" " alt="" coords="5,5,139,32"/>
+<area shape="rect" id="node1" title="Reset the state." alt="" coords="124,5,207,32"/>
+<area shape="rect" id="node2" href="$noise__gate_8cpp.html#a949bfebe851dee44040d83bbd068dad1" title="Initialise the effect." alt="" coords="5,5,76,32"/>
 </map>

@@ -1,4 +1,4 @@
 <map id="gate_process" name="gate_process">
 <area shape="rect" id="node1" title="Apply the precalculated gain to the audio." alt="" coords="5,5,105,32"/>
-<area shape="rect" id="node2" href="$abstract__dsp__esp32_8c.html#a52d208742d325a0cdb7225bd9fe0e902" title=" " alt="" coords="153,5,257,32"/>
+<area shape="rect" id="node2" href="$abstract__dsp__juce_8cpp.html#a52d208742d325a0cdb7225bd9fe0e902" title=" " alt="" coords="153,5,257,32"/>
 </map>

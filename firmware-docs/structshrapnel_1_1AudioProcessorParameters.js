@@ -1,0 +1,25 @@
+var structshrapnel_1_1AudioProcessorParameters =
+[
+    [ "amplifier", "structshrapnel_1_1AudioProcessorParameters.html#acde5aa02379e0e2cfe2af455f774e683", null ],
+    [ "attack", "structshrapnel_1_1AudioProcessorParameters.html#aee6d41c9b3e8e2601700b2af87e94fe8", null ],
+    [ "bass", "structshrapnel_1_1AudioProcessorParameters.html#a74ee71e211d8872bd3638cd7fe6a1bcf", null ],
+    [ "bypass", "structshrapnel_1_1AudioProcessorParameters.html#a078db43c73e16a774f44fab22f12bfc5", null ],
+    [ "channel", "structshrapnel_1_1AudioProcessorParameters.html#a57578f9afb03483965f75857a7489ab4", null ],
+    [ "chorus", "structshrapnel_1_1AudioProcessorParameters.html#acf9f3d778f270135aa5b977120c0a685", null ],
+    [ "contour", "structshrapnel_1_1AudioProcessorParameters.html#a851164453c452de2d1d50ac3a10350f2", null ],
+    [ "depth", "structshrapnel_1_1AudioProcessorParameters.html#a01556f0d7b6987b9113e53d99d6283f7", null ],
+    [ "gain", "structshrapnel_1_1AudioProcessorParameters.html#a49a9edf2d065e934144d1f0202ef929f", null ],
+    [ "gate", "structshrapnel_1_1AudioProcessorParameters.html#ab14e911bd4151183ed89fbdf16ab0752", null ],
+    [ "hold", "structshrapnel_1_1AudioProcessorParameters.html#a0de51725e8a1aca7d3353bf32916be2f", null ],
+    [ "hysteresis", "structshrapnel_1_1AudioProcessorParameters.html#a184d32fcaff1e8cfe8e5c5f846f7199c", null ],
+    [ "middle", "structshrapnel_1_1AudioProcessorParameters.html#a0818fc120aa3b6cbddb71572a40348c9", null ],
+    [ "mix", "structshrapnel_1_1AudioProcessorParameters.html#a9fb06b1c2a1949abbe9c19a0e83fe797", null ],
+    [ "position", "structshrapnel_1_1AudioProcessorParameters.html#ad858fa39fcab80d8e5c1f7fc5781a6fd", null ],
+    [ "rate", "structshrapnel_1_1AudioProcessorParameters.html#a529d074f4132e64457a3fc2ef5338728", null ],
+    [ "release", "structshrapnel_1_1AudioProcessorParameters.html#a43ed7c1d6fe3d05c368c4545809231f2", null ],
+    [ "threshold", "structshrapnel_1_1AudioProcessorParameters.html#a0d536cc617664abe74d2972c348d8d6d", null ],
+    [ "treble", "structshrapnel_1_1AudioProcessorParameters.html#a388a51f2ff3a51cd792f982502200582", null ],
+    [ "vocal", "structshrapnel_1_1AudioProcessorParameters.html#a01c7b16f5f94cc85804344fc4086f40d", null ],
+    [ "volume", "structshrapnel_1_1AudioProcessorParameters.html#a1a4680847e8471c1e439ee679cf95e94", null ],
+    [ "wah", "structshrapnel_1_1AudioProcessorParameters.html#a4280d242bf860476723385ac37892f9c", null ]
+];

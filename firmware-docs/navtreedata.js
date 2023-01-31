@@ -40,6 +40,7 @@ var NAVTREE =
         [ "Enumerator", "namespacemembers_eval.html", null ]
       ] ]
     ] ],
+    [ "Concepts", "concepts.html", "concepts" ],
     [ "Data Structures", "annotated.html", [
       [ "Data Structures", "annotated.html", "annotated_dup" ],
       [ "Data Structure Index", "classes.html", null ],
@@ -71,10 +72,11 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "abstract__dsp_8h.html",
-"classshrapnel_1_1effect_1_1valvestate_1_1Valvestate.html#a9636b34accae16b0e8681d701816eca5",
-"dir_cb9dd9581595cc79941cf7a25688572e.html",
-"namespacemembers_type.html",
-"structshrapnel_1_1events_1_1OutputClipped.html"
+"classshrapnel_1_1effect_1_1valvestate_1_1GainControl.html#a21755e85c7ea233796c12d6c485f4b75",
+"dir_4a0cde8174421f79b24d0a2ec9fdbc15.html",
+"midi__mapping__json__builder_8h.html#a745f9f03858045cdfabbd014152fbc15",
+"noise__gate_8h.html#a5d3ba76b4666ac1820b498aaf04ea22e",
+"structshrapnel_1_1wifi_1_1State.html#a5eb981153001087216e4eee02a60e2f5"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

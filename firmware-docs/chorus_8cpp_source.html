@@ -128,90 +128,76 @@ $(document).ready(function(){initNavTree('chorus_8cpp_source.html',''); initResi
 <div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>    }</div>
 <div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>    <span class="keywordflow">else</span></div>
 <div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>    {</div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>        <span class="keywordflow">return</span> - 3 + 2 * phase / (float)M_PI;</div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>        <span class="keywordflow">return</span> -3 + 2 * phase / (float)M_PI;</div>
 <div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>    }</div>
 <div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>}</div>
 <div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span> </div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>}</div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>} <span class="comment">// namespace</span></div>
 <div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span> </div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span> </div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespaceshrapnel.html">shrapnel</a> {</div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span><span class="keyword">namespace </span>effect {</div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespaceshrapnel_1_1effect.html">shrapnel::effect</a> {</div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span> </div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno"><a class="line" href="classshrapnel_1_1effect_1_1Chorus.html#a3227f5f45870b3f1e781e5c76c05d33e">   43</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="classshrapnel_1_1effect_1_1Chorus.html#a3227f5f45870b3f1e781e5c76c05d33e">Chorus::set_modulation_rate_hz</a>(<span class="keywordtype">float</span> rate) { modulation_rate = rate; }</div>
 <div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span> </div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno"><a class="line" href="classshrapnel_1_1effect_1_1Chorus.html#a8f48cd6fb238cb203d84c0e32fe614bd">   45</a></span><a class="code hl_function" href="classshrapnel_1_1effect_1_1Chorus.html#a8f48cd6fb238cb203d84c0e32fe614bd">Chorus::Chorus</a>() {</div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>}</div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span> </div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno"><a class="line" href="classshrapnel_1_1effect_1_1Chorus.html#a3227f5f45870b3f1e781e5c76c05d33e">   48</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="classshrapnel_1_1effect_1_1Chorus.html#a3227f5f45870b3f1e781e5c76c05d33e">Chorus::set_modulation_rate_hz</a>(<span class="keywordtype">float</span> rate)</div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>{</div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>    modulation_rate = rate;</div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>}</div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span> </div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno"><a class="line" href="classshrapnel_1_1effect_1_1Chorus.html#ab34c32f92c6009b2fb4105a31de8eea4">   53</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="classshrapnel_1_1effect_1_1Chorus.html#ab34c32f92c6009b2fb4105a31de8eea4">Chorus::set_modulation_depth</a>(<span class="keywordtype">float</span> depth)</div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>{</div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>    modulation_depth = depth;</div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>}</div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span> </div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno"><a class="line" href="classshrapnel_1_1effect_1_1Chorus.html#ace4fac9fa6f54bd13e22986a8efc470e">   58</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="classshrapnel_1_1effect_1_1Chorus.html#ace4fac9fa6f54bd13e22986a8efc470e">Chorus::set_modulation_mix</a>(<span class="keywordtype">float</span> mix)</div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>{</div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>    modulation_mix = mix;</div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>}</div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span> </div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno"><a class="line" href="classshrapnel_1_1effect_1_1Chorus.html#aa8c2d5c2e577530b614fd8d2630f32a3">   63</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="classshrapnel_1_1effect_1_1Chorus.html#aa8c2d5c2e577530b614fd8d2630f32a3">Chorus::process</a>(<span class="keywordtype">float</span> *samples, std::size_t sample_count)</div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>{</div>
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>    <span class="keywordflow">for</span>(std::size_t i = 0; i &lt; sample_count; i++)</div>
-<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>    {</div>
-<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>        <span class="keywordtype">float</span> lfo = 0.5f * triangle(phase);</div>
-<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>        phase += modulation_rate / sample_rate * 2 * (float)M_PI;</div>
-<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span> </div>
-<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>        <span class="keywordflow">if</span>(phase &gt; 2 * (<span class="keywordtype">float</span>)M_PI)</div>
-<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>        {</div>
-<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>            phase -= 2 * (float)M_PI;</div>
-<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>        }</div>
-<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span> </div>
-<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span><span class="preprocessor">#if 1</span></div>
-<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>        <span class="keywordtype">float</span> delay = MAX_DELAY_MS / 1000 * sample_rate *</div>
-<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>                (0.5f + (modulation_depth * lfo));</div>
-<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span> </div>
-<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>        <a class="code hl_function" href="abstract__dsp_8h.html#a58e848033be861a7db4b0e00ce45e6d9">dspal_delayline_set_delay</a>(delayline, delay);</div>
-<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span> </div>
-<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>        <a class="code hl_function" href="abstract__dsp_8h.html#aa53306eedd2d18301f9295a7fb801c2e">dspal_delayline_push_sample</a>(delayline, samples[i]);</div>
-<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>        samples[i] = samples[i] +</div>
-<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>            (modulation_mix * <a class="code hl_function" href="abstract__dsp_8h.html#af68889c2abe22b30af482aaa5b41c621">dspal_delayline_pop_sample</a>(delayline));</div>
-<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span><span class="preprocessor">#else</span></div>
-<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>        samples[i] = lfo;</div>
-<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span><span class="preprocessor">#endif</span></div>
-<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>    }</div>
-<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>}</div>
-<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span> </div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno"><a class="line" href="classshrapnel_1_1effect_1_1Chorus.html#ab34c32f92c6009b2fb4105a31de8eea4">   45</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="classshrapnel_1_1effect_1_1Chorus.html#ab34c32f92c6009b2fb4105a31de8eea4">Chorus::set_modulation_depth</a>(<span class="keywordtype">float</span> depth) { modulation_depth = depth; }</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span> </div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno"><a class="line" href="classshrapnel_1_1effect_1_1Chorus.html#ace4fac9fa6f54bd13e22986a8efc470e">   47</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="classshrapnel_1_1effect_1_1Chorus.html#ace4fac9fa6f54bd13e22986a8efc470e">Chorus::set_modulation_mix</a>(<span class="keywordtype">float</span> mix) { modulation_mix = mix; }</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span> </div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno"><a class="line" href="classshrapnel_1_1effect_1_1Chorus.html#aba0c20ab8c17c9b56d4feb37fda76b76">   49</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="classshrapnel_1_1effect_1_1Chorus.html#aba0c20ab8c17c9b56d4feb37fda76b76">Chorus::process</a>(std::span&lt;float&gt; samples)</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>{</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>    <span class="keywordflow">for</span>(<span class="keywordtype">float</span> &amp;sample : samples)</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>    {</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>        <span class="keywordtype">float</span> lfo = 0.5f * triangle(phase);</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>        phase += modulation_rate / sample_rate * 2 * (float)M_PI;</div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span> </div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>        <span class="keywordflow">if</span>(phase &gt; 2 * (<span class="keywordtype">float</span>)M_PI)</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>        {</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>            phase -= 2 * (float)M_PI;</div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>        }</div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span> </div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span><span class="preprocessor">#if 1</span></div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>        <span class="keywordtype">float</span> delay = MAX_DELAY_MS / 1000 * sample_rate *</div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>                      (0.5f + (modulation_depth * lfo));</div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span> </div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>        <a class="code hl_function" href="abstract__dsp_8h.html#a58e848033be861a7db4b0e00ce45e6d9">dspal_delayline_set_delay</a>(delayline, delay);</div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span> </div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>        <a class="code hl_function" href="abstract__dsp_8h.html#aa53306eedd2d18301f9295a7fb801c2e">dspal_delayline_push_sample</a>(delayline, sample);</div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>        sample =</div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>            sample + (modulation_mix * <a class="code hl_function" href="abstract__dsp_8h.html#af68889c2abe22b30af482aaa5b41c621">dspal_delayline_pop_sample</a>(delayline));</div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span><span class="preprocessor">#else</span></div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>        samples[i] = lfo;</div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>    }</div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>}</div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span> </div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno"><a class="line" href="classshrapnel_1_1effect_1_1Chorus.html#ab721c376bd1680c901101a6f366fc6a2">   76</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="classshrapnel_1_1effect_1_1Chorus.html#ab721c376bd1680c901101a6f366fc6a2">Chorus::prepare</a>(<span class="keywordtype">float</span> rate, <span class="keywordtype">size_t</span>)</div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>{</div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>    <a class="code hl_function" href="classshrapnel_1_1effect_1_1Chorus.html#ae7bd524a7510e0236cdbfc4eda860fd7">reset</a>();</div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>    delayline = <a class="code hl_function" href="abstract__dsp_8h.html#aa3ea43e1dcd855cb482ee8d7e4c6b950">dspal_delayline_create</a>(rate * MAX_DELAY_MS / 1000);</div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>    sample_rate = rate;</div>
+<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>}</div>
+<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span> </div>
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno"><a class="line" href="classshrapnel_1_1effect_1_1Chorus.html#ae7bd524a7510e0236cdbfc4eda860fd7">   83</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="classshrapnel_1_1effect_1_1Chorus.html#ae7bd524a7510e0236cdbfc4eda860fd7">Chorus::reset</a>() {</div>
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>    <span class="keywordflow">if</span>(delayline)</div>
+<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>    {</div>
+<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>        <a class="code hl_function" href="abstract__dsp_8h.html#a91d55c2a92525ad8f7614885e9d9fb54">dspal_delayline_destroy</a>(delayline);</div>
+<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>        delayline = <span class="keyword">nullptr</span>;</div>
+<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>    }</div>
+<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>}</div>
 <div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span> </div>
-<div class="line"><a id="l00091" name="l00091"></a><span class="lineno"><a class="line" href="classshrapnel_1_1effect_1_1Chorus.html#a928829eccf4e1ab2d3449331efec6b04">   91</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="classshrapnel_1_1effect_1_1Chorus.html#a928829eccf4e1ab2d3449331efec6b04">Chorus::set_sample_rate</a>(<span class="keywordtype">float</span> rate)</div>
-<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>{</div>
-<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>    <span class="keywordflow">if</span>(<span class="keyword">nullptr</span> != delayline)</div>
-<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>    {</div>
-<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>        <a class="code hl_function" href="abstract__dsp_8h.html#a91d55c2a92525ad8f7614885e9d9fb54">dspal_delayline_destroy</a>(delayline);</div>
-<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>        delayline = <span class="keyword">nullptr</span>;</div>
-<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>    }</div>
-<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span> </div>
-<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>    delayline = <a class="code hl_function" href="abstract__dsp_8h.html#aa3ea43e1dcd855cb482ee8d7e4c6b950">dspal_delayline_create</a>(rate * MAX_DELAY_MS / 1000);</div>
-<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span> </div>
-<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>    sample_rate = rate;</div>
-<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>}</div>
-<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span> </div>
-<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>}</div>
-<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>}</div>
+<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>} <span class="comment">// namespace shrapnel::effect</span></div>
 <div class="ttc" id="aabstract__dsp_8h_html_a58e848033be861a7db4b0e00ce45e6d9"><div class="ttname"><a href="abstract__dsp_8h.html#a58e848033be861a7db4b0e00ce45e6d9">dspal_delayline_set_delay</a></div><div class="ttdeci">void dspal_delayline_set_delay(dspal_delayline_t delayline, float delay)</div><div class="ttdef"><b>Definition:</b> <a href="delayline__c_8cpp_source.html#l00042">delayline_c.cpp:42</a></div></div>
 <div class="ttc" id="aabstract__dsp_8h_html_a91d55c2a92525ad8f7614885e9d9fb54"><div class="ttname"><a href="abstract__dsp_8h.html#a91d55c2a92525ad8f7614885e9d9fb54">dspal_delayline_destroy</a></div><div class="ttdeci">void dspal_delayline_destroy(dspal_delayline_t delayline)</div><div class="ttdef"><b>Definition:</b> <a href="delayline__c_8cpp_source.html#l00037">delayline_c.cpp:37</a></div></div>
 <div class="ttc" id="aabstract__dsp_8h_html_aa3ea43e1dcd855cb482ee8d7e4c6b950"><div class="ttname"><a href="abstract__dsp_8h.html#aa3ea43e1dcd855cb482ee8d7e4c6b950">dspal_delayline_create</a></div><div class="ttdeci">dspal_delayline_t dspal_delayline_create(size_t max_samples)</div><div class="ttdef"><b>Definition:</b> <a href="delayline__c_8cpp_source.html#l00028">delayline_c.cpp:28</a></div></div>
 <div class="ttc" id="aabstract__dsp_8h_html_aa53306eedd2d18301f9295a7fb801c2e"><div class="ttname"><a href="abstract__dsp_8h.html#aa53306eedd2d18301f9295a7fb801c2e">dspal_delayline_push_sample</a></div><div class="ttdeci">void dspal_delayline_push_sample(dspal_delayline_t delayline, float sample)</div><div class="ttdef"><b>Definition:</b> <a href="delayline__c_8cpp_source.html#l00047">delayline_c.cpp:47</a></div></div>
 <div class="ttc" id="aabstract__dsp_8h_html_af68889c2abe22b30af482aaa5b41c621"><div class="ttname"><a href="abstract__dsp_8h.html#af68889c2abe22b30af482aaa5b41c621">dspal_delayline_pop_sample</a></div><div class="ttdeci">float dspal_delayline_pop_sample(dspal_delayline_t delayline)</div><div class="ttdef"><b>Definition:</b> <a href="delayline__c_8cpp_source.html#l00052">delayline_c.cpp:52</a></div></div>
 <div class="ttc" id="achorus_8h_html"><div class="ttname"><a href="chorus_8h.html">chorus.h</a></div></div>
-<div class="ttc" id="aclassshrapnel_1_1effect_1_1Chorus_html_a3227f5f45870b3f1e781e5c76c05d33e"><div class="ttname"><a href="classshrapnel_1_1effect_1_1Chorus.html#a3227f5f45870b3f1e781e5c76c05d33e">shrapnel::effect::Chorus::set_modulation_rate_hz</a></div><div class="ttdeci">void set_modulation_rate_hz(float rate)</div><div class="ttdoc">Set the rate of modulation.</div><div class="ttdef"><b>Definition:</b> <a href="chorus_8cpp_source.html#l00048">chorus.cpp:48</a></div></div>
-<div class="ttc" id="aclassshrapnel_1_1effect_1_1Chorus_html_a8f48cd6fb238cb203d84c0e32fe614bd"><div class="ttname"><a href="classshrapnel_1_1effect_1_1Chorus.html#a8f48cd6fb238cb203d84c0e32fe614bd">shrapnel::effect::Chorus::Chorus</a></div><div class="ttdeci">Chorus()</div><div class="ttdef"><b>Definition:</b> <a href="chorus_8cpp_source.html#l00045">chorus.cpp:45</a></div></div>
-<div class="ttc" id="aclassshrapnel_1_1effect_1_1Chorus_html_a928829eccf4e1ab2d3449331efec6b04"><div class="ttname"><a href="classshrapnel_1_1effect_1_1Chorus.html#a928829eccf4e1ab2d3449331efec6b04">shrapnel::effect::Chorus::set_sample_rate</a></div><div class="ttdeci">void set_sample_rate(float rate)</div><div class="ttdef"><b>Definition:</b> <a href="chorus_8cpp_source.html#l00091">chorus.cpp:91</a></div></div>
-<div class="ttc" id="aclassshrapnel_1_1effect_1_1Chorus_html_aa8c2d5c2e577530b614fd8d2630f32a3"><div class="ttname"><a href="classshrapnel_1_1effect_1_1Chorus.html#aa8c2d5c2e577530b614fd8d2630f32a3">shrapnel::effect::Chorus::process</a></div><div class="ttdeci">void process(float *samples, std::size_t sample_count)</div><div class="ttdef"><b>Definition:</b> <a href="chorus_8cpp_source.html#l00063">chorus.cpp:63</a></div></div>
-<div class="ttc" id="aclassshrapnel_1_1effect_1_1Chorus_html_ab34c32f92c6009b2fb4105a31de8eea4"><div class="ttname"><a href="classshrapnel_1_1effect_1_1Chorus.html#ab34c32f92c6009b2fb4105a31de8eea4">shrapnel::effect::Chorus::set_modulation_depth</a></div><div class="ttdeci">void set_modulation_depth(float depth)</div><div class="ttdoc">Set the depth of modulation.</div><div class="ttdef"><b>Definition:</b> <a href="chorus_8cpp_source.html#l00053">chorus.cpp:53</a></div></div>
-<div class="ttc" id="aclassshrapnel_1_1effect_1_1Chorus_html_ace4fac9fa6f54bd13e22986a8efc470e"><div class="ttname"><a href="classshrapnel_1_1effect_1_1Chorus.html#ace4fac9fa6f54bd13e22986a8efc470e">shrapnel::effect::Chorus::set_modulation_mix</a></div><div class="ttdeci">void set_modulation_mix(float depth)</div><div class="ttdoc">Set the mix ratio of modulation.</div><div class="ttdef"><b>Definition:</b> <a href="chorus_8cpp_source.html#l00058">chorus.cpp:58</a></div></div>
-<div class="ttc" id="anamespaceshrapnel_html"><div class="ttname"><a href="namespaceshrapnel.html">shrapnel</a></div><div class="ttdef"><b>Definition:</b> <a href="audio__events_8h_source.html#l00026">audio_events.h:26</a></div></div>
+<div class="ttc" id="aclassshrapnel_1_1effect_1_1Chorus_html_a3227f5f45870b3f1e781e5c76c05d33e"><div class="ttname"><a href="classshrapnel_1_1effect_1_1Chorus.html#a3227f5f45870b3f1e781e5c76c05d33e">shrapnel::effect::Chorus::set_modulation_rate_hz</a></div><div class="ttdeci">void set_modulation_rate_hz(float rate)</div><div class="ttdoc">Set the rate of modulation.</div><div class="ttdef"><b>Definition:</b> <a href="chorus_8cpp_source.html#l00043">chorus.cpp:43</a></div></div>
+<div class="ttc" id="aclassshrapnel_1_1effect_1_1Chorus_html_ab34c32f92c6009b2fb4105a31de8eea4"><div class="ttname"><a href="classshrapnel_1_1effect_1_1Chorus.html#ab34c32f92c6009b2fb4105a31de8eea4">shrapnel::effect::Chorus::set_modulation_depth</a></div><div class="ttdeci">void set_modulation_depth(float depth)</div><div class="ttdoc">Set the depth of modulation.</div><div class="ttdef"><b>Definition:</b> <a href="chorus_8cpp_source.html#l00045">chorus.cpp:45</a></div></div>
+<div class="ttc" id="aclassshrapnel_1_1effect_1_1Chorus_html_ab721c376bd1680c901101a6f366fc6a2"><div class="ttname"><a href="classshrapnel_1_1effect_1_1Chorus.html#ab721c376bd1680c901101a6f366fc6a2">shrapnel::effect::Chorus::prepare</a></div><div class="ttdeci">void prepare(float, size_t)</div><div class="ttdef"><b>Definition:</b> <a href="chorus_8cpp_source.html#l00076">chorus.cpp:76</a></div></div>
+<div class="ttc" id="aclassshrapnel_1_1effect_1_1Chorus_html_aba0c20ab8c17c9b56d4feb37fda76b76"><div class="ttname"><a href="classshrapnel_1_1effect_1_1Chorus.html#aba0c20ab8c17c9b56d4feb37fda76b76">shrapnel::effect::Chorus::process</a></div><div class="ttdeci">void process(std::span&lt; float &gt; samples)</div><div class="ttdef"><b>Definition:</b> <a href="chorus_8cpp_source.html#l00049">chorus.cpp:49</a></div></div>
+<div class="ttc" id="aclassshrapnel_1_1effect_1_1Chorus_html_ace4fac9fa6f54bd13e22986a8efc470e"><div class="ttname"><a href="classshrapnel_1_1effect_1_1Chorus.html#ace4fac9fa6f54bd13e22986a8efc470e">shrapnel::effect::Chorus::set_modulation_mix</a></div><div class="ttdeci">void set_modulation_mix(float depth)</div><div class="ttdoc">Set the mix ratio of modulation.</div><div class="ttdef"><b>Definition:</b> <a href="chorus_8cpp_source.html#l00047">chorus.cpp:47</a></div></div>
+<div class="ttc" id="aclassshrapnel_1_1effect_1_1Chorus_html_ae7bd524a7510e0236cdbfc4eda860fd7"><div class="ttname"><a href="classshrapnel_1_1effect_1_1Chorus.html#ae7bd524a7510e0236cdbfc4eda860fd7">shrapnel::effect::Chorus::reset</a></div><div class="ttdeci">void reset()</div><div class="ttdef"><b>Definition:</b> <a href="chorus_8cpp_source.html#l00083">chorus.cpp:83</a></div></div>
+<div class="ttc" id="anamespaceshrapnel_1_1effect_html"><div class="ttname"><a href="namespaceshrapnel_1_1effect.html">shrapnel::effect</a></div><div class="ttdef"><b>Definition:</b> <a href="chorus_8h_source.html#l00026">chorus.h:26</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

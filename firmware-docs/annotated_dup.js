@@ -2,6 +2,7 @@ var annotated_dup =
 [
     [ "shrapnel", "namespaceshrapnel.html", [
       [ "dsp", "namespaceshrapnel_1_1dsp.html", [
+        [ "BlockProcessor", "classshrapnel_1_1dsp_1_1BlockProcessor.html", "classshrapnel_1_1dsp_1_1BlockProcessor" ],
         [ "DelayLine", "classshrapnel_1_1dsp_1_1DelayLine.html", "classshrapnel_1_1dsp_1_1DelayLine" ],
         [ "FastConvolution", "classshrapnel_1_1dsp_1_1FastConvolution.html", "classshrapnel_1_1dsp_1_1FastConvolution" ],
         [ "FastFir", "classshrapnel_1_1dsp_1_1FastFir.html", "classshrapnel_1_1dsp_1_1FastFir" ],
@@ -59,6 +60,8 @@ var annotated_dup =
         [ "UserEvent", "structshrapnel_1_1wifi_1_1UserEvent.html", "structshrapnel_1_1wifi_1_1UserEvent" ],
         [ "WifiStateMachine", "classshrapnel_1_1wifi_1_1WifiStateMachine.html", "classshrapnel_1_1wifi_1_1WifiStateMachine" ]
       ] ],
+      [ "AudioProcessor", "classshrapnel_1_1AudioProcessor.html", "classshrapnel_1_1AudioProcessor" ],
+      [ "AudioProcessorParameters", "structshrapnel_1_1AudioProcessorParameters.html", "structshrapnel_1_1AudioProcessorParameters" ],
       [ "EventSend", "classshrapnel_1_1EventSend.html", "classshrapnel_1_1EventSend" ],
       [ "MidiMappingObserver", "classshrapnel_1_1MidiMappingObserver.html", "classshrapnel_1_1MidiMappingObserver" ],
       [ "ParameterObserver", "classshrapnel_1_1ParameterObserver.html", "classshrapnel_1_1ParameterObserver" ],

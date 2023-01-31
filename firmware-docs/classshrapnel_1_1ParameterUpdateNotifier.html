@@ -106,7 +106,7 @@ Public Member Functions</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock">
-<p class="definition">Definition at line <a class="el" href="main_8cpp_source.html#l00118">118</a> of file <a class="el" href="main_8cpp_source.html">main.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="main_8cpp_source.html#l00117">117</a> of file <a class="el" href="main_8cpp_source.html">main.cpp</a>.</p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
 <a id="a4ff77e5e169d2bfb4bae67bf9deb6353" name="a4ff77e5e169d2bfb4bae67bf9deb6353"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a4ff77e5e169d2bfb4bae67bf9deb6353">&#9670;&nbsp;</a></span>get()</h2>
@@ -124,13 +124,13 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="main_8cpp_source.html#l00616">616</a> of file <a class="el" href="main_8cpp_source.html">main.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  617</span>{</div>
-<div class="line"><span class="lineno">  618</span>    <span class="keywordflow">return</span> <a class="code hl_variable" href="namespaceshrapnel.html#a686cfb16562461b078165d746966c2bf">audio_params</a>-&gt;get(param);</div>
-<div class="line"><span class="lineno">  619</span>}</div>
-<div class="ttc" id="anamespaceshrapnel_html_a686cfb16562461b078165d746966c2bf"><div class="ttname"><a href="namespaceshrapnel.html#a686cfb16562461b078165d746966c2bf">shrapnel::audio_params</a></div><div class="ttdeci">static std::shared_ptr&lt; AudioParameters &gt; audio_params</div><div class="ttdef"><b>Definition:</b> <a href="main_8cpp_source.html#l00236">main.cpp:236</a></div></div>
+<p class="definition">Definition at line <a class="el" href="main_8cpp_source.html#l00622">622</a> of file <a class="el" href="main_8cpp_source.html">main.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  623</span>{</div>
+<div class="line"><span class="lineno">  624</span>    <span class="keywordflow">return</span> <a class="code hl_variable" href="namespaceshrapnel.html#a686cfb16562461b078165d746966c2bf">audio_params</a>-&gt;get(param);</div>
+<div class="line"><span class="lineno">  625</span>}</div>
+<div class="ttc" id="anamespaceshrapnel_html_a686cfb16562461b078165d746966c2bf"><div class="ttname"><a href="namespaceshrapnel.html#a686cfb16562461b078165d746966c2bf">shrapnel::audio_params</a></div><div class="ttdeci">static std::shared_ptr&lt; AudioParameters &gt; audio_params</div><div class="ttdef"><b>Definition:</b> <a href="main_8cpp_source.html#l00235">main.cpp:235</a></div></div>
 </div><!-- fragment -->
-<p class="reference">References <a class="el" href="main_8cpp_source.html#l00236">shrapnel::audio_params</a>.</p>
+<p class="reference">References <a class="el" href="main_8cpp_source.html#l00235">shrapnel::audio_params</a>.</p>
 
 </div>
 </div>
@@ -160,22 +160,22 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="main_8cpp_source.html#l00603">603</a> of file <a class="el" href="main_8cpp_source.html">main.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  604</span>{</div>
-<div class="line"><span class="lineno">  605</span>    <span class="keyword">auto</span> message = <a class="code hl_typedef" href="main_8cpp.html#a4a2a8445978c00038c4b9a0d35ca7a69">AppMessage</a>{</div>
-<div class="line"><span class="lineno">  606</span>        parameters::Update{</div>
-<div class="line"><span class="lineno">  607</span>            param,</div>
-<div class="line"><span class="lineno">  608</span>            value,</div>
-<div class="line"><span class="lineno">  609</span>        },</div>
-<div class="line"><span class="lineno">  610</span>        std::nullopt,</div>
-<div class="line"><span class="lineno">  611</span>    };</div>
-<div class="line"><span class="lineno">  612</span>    <a class="code hl_function" href="main_8cpp.html#a1a66099a9e1054494d0704363a5c8666">audio_event_send_callback</a>(message);</div>
-<div class="line"><span class="lineno">  613</span>    <span class="keywordflow">return</span> <a class="code hl_variable" href="namespaceshrapnel.html#a686cfb16562461b078165d746966c2bf">audio_params</a>-&gt;update(param, value);</div>
-<div class="line"><span class="lineno">  614</span>}</div>
-<div class="ttc" id="amain_8cpp_html_a1a66099a9e1054494d0704363a5c8666"><div class="ttname"><a href="main_8cpp.html#a1a66099a9e1054494d0704363a5c8666">audio_event_send_callback</a></div><div class="ttdeci">void audio_event_send_callback(const AppMessage &amp;message)</div><div class="ttdef"><b>Definition:</b> <a href="main_8cpp_source.html#l01082">main.cpp:1082</a></div></div>
-<div class="ttc" id="amain_8cpp_html_a4a2a8445978c00038c4b9a0d35ca7a69"><div class="ttname"><a href="main_8cpp.html#a4a2a8445978c00038c4b9a0d35ca7a69">AppMessage</a></div><div class="ttdeci">std::pair&lt; ApiMessage, FileDescriptor &gt; AppMessage</div><div class="ttdef"><b>Definition:</b> <a href="main_8cpp_source.html#l00089">main.cpp:89</a></div></div>
+<p class="definition">Definition at line <a class="el" href="main_8cpp_source.html#l00609">609</a> of file <a class="el" href="main_8cpp_source.html">main.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  610</span>{</div>
+<div class="line"><span class="lineno">  611</span>    <span class="keyword">auto</span> message = <a class="code hl_typedef" href="main_8cpp.html#a4a2a8445978c00038c4b9a0d35ca7a69">AppMessage</a>{</div>
+<div class="line"><span class="lineno">  612</span>        parameters::Update{</div>
+<div class="line"><span class="lineno">  613</span>            param,</div>
+<div class="line"><span class="lineno">  614</span>            value,</div>
+<div class="line"><span class="lineno">  615</span>        },</div>
+<div class="line"><span class="lineno">  616</span>        std::nullopt,</div>
+<div class="line"><span class="lineno">  617</span>    };</div>
+<div class="line"><span class="lineno">  618</span>    <a class="code hl_function" href="main_8cpp.html#a1a66099a9e1054494d0704363a5c8666">audio_event_send_callback</a>(message);</div>
+<div class="line"><span class="lineno">  619</span>    <span class="keywordflow">return</span> <a class="code hl_variable" href="namespaceshrapnel.html#a686cfb16562461b078165d746966c2bf">audio_params</a>-&gt;update(param, value);</div>
+<div class="line"><span class="lineno">  620</span>}</div>
+<div class="ttc" id="amain_8cpp_html_a1a66099a9e1054494d0704363a5c8666"><div class="ttname"><a href="main_8cpp.html#a1a66099a9e1054494d0704363a5c8666">audio_event_send_callback</a></div><div class="ttdeci">void audio_event_send_callback(const AppMessage &amp;message)</div><div class="ttdef"><b>Definition:</b> <a href="main_8cpp_source.html#l01090">main.cpp:1090</a></div></div>
+<div class="ttc" id="amain_8cpp_html_a4a2a8445978c00038c4b9a0d35ca7a69"><div class="ttname"><a href="main_8cpp.html#a4a2a8445978c00038c4b9a0d35ca7a69">AppMessage</a></div><div class="ttdeci">std::pair&lt; ApiMessage, FileDescriptor &gt; AppMessage</div><div class="ttdef"><b>Definition:</b> <a href="main_8cpp_source.html#l00088">main.cpp:88</a></div></div>
 </div><!-- fragment -->
-<p class="reference">References <a class="el" href="main_8cpp_source.html#l01082">audio_event_send_callback()</a>, and <a class="el" href="main_8cpp_source.html#l00236">shrapnel::audio_params</a>.</p>
+<p class="reference">References <a class="el" href="main_8cpp_source.html#l01090">audio_event_send_callback()</a>, and <a class="el" href="main_8cpp_source.html#l00235">shrapnel::audio_params</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">

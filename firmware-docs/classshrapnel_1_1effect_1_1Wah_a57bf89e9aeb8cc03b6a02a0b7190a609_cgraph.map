@@ -1,0 +1,5 @@
+<map id="shrapnel::effect::Wah::process" name="shrapnel::effect::Wah::process">
+<area shape="rect" id="node1" title=" " alt="" coords="5,39,147,80"/>
+<area shape="rect" id="node2" href="$classshrapnel_1_1dsp_1_1IirFilter.html#a53cb5a72d2a310cd4b35d4329af682f0" title=" " alt="" coords="195,5,339,47"/>
+<area shape="rect" id="node3" href="$classshrapnel_1_1dsp_1_1IirFilter.html#aa09e7c1ab99d85c0fdd1c98c80636550" title=" " alt="" coords="195,71,339,112"/>
+</map>

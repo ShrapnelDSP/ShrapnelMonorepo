@@ -1,9 +1,9 @@
 var searchData=
 [
-  ['value_0',['value',['../structshrapnel_1_1parameters_1_1Update.html#a4e6b9e60fd8c7c94769b080cd0137dae',1,'shrapnel::parameters::Update::value()'],['../structshrapnel_1_1midi_1_1Message_1_1ControlChange.html#a2615450c8f2f31fc8c4298f8363d076c',1,'shrapnel::midi::Message::ControlChange::value()']]],
-  ['value_5ftype_1',['value_type',['../classshrapnel_1_1QueueBase.html#afa21cb52927682003ac47f842c5e8d68',1,'shrapnel::QueueBase']]],
-  ['valvestate_2',['Valvestate',['../classshrapnel_1_1effect_1_1valvestate_1_1Valvestate.html',1,'shrapnel::effect::valvestate::Valvestate'],['../classshrapnel_1_1effect_1_1valvestate_1_1Valvestate.html#aebf55d7e4810fd3eab785699a5c2cfb9',1,'shrapnel::effect::valvestate::Valvestate::Valvestate()']]],
-  ['valvestate_2ecpp_3',['valvestate.cpp',['../valvestate_8cpp.html',1,'']]],
-  ['valvestate_2eh_4',['valvestate.h',['../valvestate_8h.html',1,'']]],
-  ['velocity_5',['velocity',['../structshrapnel_1_1midi_1_1Message_1_1NoteOn.html#a3377e69df50e588b93683fd3c3aa8a43',1,'shrapnel::midi::Message::NoteOn::velocity()'],['../structshrapnel_1_1midi_1_1Message_1_1NoteOff.html#a854bc5ff80d66e047c66678ca281df8d',1,'shrapnel::midi::Message::NoteOff::velocity()']]]
+  ['ui_0',['ui',['../namespaceshrapnel.html#a7e01d080294d5dae6e2840562e397fb7',1,'shrapnel']]],
+  ['ui_5fget_5fhandler_1',['ui_get_handler',['../namespaceshrapnel.html#a39fa0ecf6c29c9e280780ff1fe11517a',1,'shrapnel']]],
+  ['update_2',['Update',['../structshrapnel_1_1midi_1_1Update.html',1,'shrapnel::midi::Update'],['../structshrapnel_1_1parameters_1_1Update.html',1,'shrapnel::parameters::Update']]],
+  ['update_3',['update',['../classshrapnel_1_1parameters_1_1AudioParameterFloat.html#a4746a6da46d63038a0b4e8fe6e9c7e91',1,'shrapnel::parameters::AudioParameterFloat::update()'],['../classshrapnel_1_1parameters_1_1AudioParameters.html#af100ef22bb8bbd682f1c73e3b3dd45b0',1,'shrapnel::parameters::AudioParameters::update()'],['../classshrapnel_1_1midi_1_1MappingManager.html#a8faaecc25616ec5ded042a51160d8f50',1,'shrapnel::midi::MappingManager::update()'],['../classshrapnel_1_1ParameterUpdateNotifier.html#a967cc4697c8d692d1c91d8295d8c1012',1,'shrapnel::ParameterUpdateNotifier::update()']]],
+  ['user_5fevent_5fcallback_5ft_4',['user_event_callback_t',['../classshrapnel_1_1wifi_1_1WifiStateMachine.html#a36f25ddf9899f8be9aa46c9826504e44',1,'shrapnel::wifi::WifiStateMachine']]],
+  ['userevent_5',['UserEvent',['../structshrapnel_1_1wifi_1_1UserEvent.html',1,'shrapnel::wifi']]]
 ];
