@@ -387,7 +387,6 @@ extern "C" void app_main(void)
 
         main_thread.loop();
 
-        // TODO this depends on ESP too much, move it out
         wifi::InternalEvent wifi_event;
         while(pdPASS == wifi_queue.receive(&wifi_event, 0))
         {
