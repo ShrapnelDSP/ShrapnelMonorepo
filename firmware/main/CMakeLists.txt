@@ -1,4 +1,5 @@
-idf_component_register( SRCS main.cpp
+idf_component_register( SRCS main.cpp server.cpp
+                        INCLUDE_DIRS include
                         REQUIRES
                             audio_events
                             cmd_handling
@@ -19,6 +20,5 @@ idf_component_register( SRCS main.cpp
                             wifi
                             abstract_dsp
                         PRIV_REQUIRES compiler_warning_flags
-                        EMBED_FILES index.html
                         LDFRAGMENTS esp-dsp.lf
                         )
