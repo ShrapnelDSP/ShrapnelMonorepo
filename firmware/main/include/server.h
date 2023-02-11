@@ -1,19 +1,39 @@
 #pragma once
 
 #include "esp_http_server.h"
-#include "queue.h"
 #include "messages.h"
+#include "queue.h"
+#include <freertos/FreeRTOS.h>
+#include <freertos/semphr.h>
 
 namespace shrapnel {
 
-void init_webserver(
-    QueueBase<AppMessage> *in_queue,
-    QueueBase<AppMessage> *out_queue
-    );
+class Server
+{
+public:
+    Server(QueueBase<AppMessage> *in_queue, QueueBase<AppMessage> *out_queue);
 
-httpd_handle_t start_webserver();
-void stop_webserver(httpd_handle_t server);
+    void start();
+    void stop();
 
-void server_send_message(httpd_handle_t server, const AppMessage &message);
+    void send_message(const AppMessage &message);
 
-}
+private:
+    httpd_handle_t server = nullptr;
+
+    QueueBase<AppMessage> *in_queue;
+    QueueBase<AppMessage> *out_queue;
+
+    /*
+     * TODO espressif's http server drops some calls to the work function when
+     * there are many calls queued at once. Waiting for the previous execution to
+     * finish seems to help, but is probably not a real solution. There will be
+     * some internal functions writing to the control socket which could still
+     * reproduce the bug.
+     */
+    SemaphoreHandle_t work_semaphore;
+    friend esp_err_t websocket_get_handler(httpd_req_t *req);
+    friend void websocket_send(void *arg);
+};
+
+} // namespace shrapnel

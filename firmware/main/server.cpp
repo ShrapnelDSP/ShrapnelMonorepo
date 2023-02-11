@@ -4,61 +4,33 @@
 #include "esp_http_server.h"
 #include "esp_log.h"
 #include "messages.h"
-#include "midi_mapping_json_parser.h"
 #include "midi_mapping_json_builder.h"
+#include "midi_mapping_json_parser.h"
 #include "rapidjson/writer.h"
 #include <etl/string_stream.h>
-#include <freertos/FreeRTOS.h>
-#include <freertos/semphr.h>
 #include <rapidjson/document.h>
 
 #define MAX_CLIENTS 3
 #define TAG "server"
-#define ARRAY_LENGTH(a) (sizeof(a)/sizeof(a[0]))
+#define ARRAY_LENGTH(a) (sizeof(a) / sizeof(a[0]))
 
 namespace shrapnel {
 
-namespace {
-    QueueBase<AppMessage> *in_queue;
-    QueueBase<AppMessage> *out_queue;
-
-    /*
-     * TODO espressif's http server drops some calls to the work function when
-     * there are many calls queued at once. Waiting for the previous execution to
-     * finish seems to help, but is probably not a real solution. There will be
-     * some internal functions writing to the control socket which could still
-     * reproduce the bug.
-     */
-    SemaphoreHandle_t work_semaphore;
-}
-
-void init_webserver(
-    QueueBase<AppMessage> *a_in_queue,
-    QueueBase<AppMessage> *a_out_queue
-) {
+Server::Server(QueueBase<AppMessage> *a_in_queue,
+               QueueBase<AppMessage> *a_out_queue)
+{
     in_queue = a_in_queue;
     out_queue = a_out_queue;
     work_semaphore = xSemaphoreCreateBinary();
     assert(work_semaphore);
     xSemaphoreGive(work_semaphore);
-
 }
 
-static esp_err_t websocket_get_handler(httpd_req_t *req);
+esp_err_t websocket_get_handler(httpd_req_t *req);
 
-static const httpd_uri_t websocket = {
-    .uri = "/websocket",
-    .method = HTTP_GET,
-    .handler = websocket_get_handler,
-    .user_ctx = nullptr,
-    .is_websocket = true,
-    .handle_ws_control_frames = false,
-    .supported_subprotocol = nullptr,
-};
-
-httpd_handle_t start_webserver()
+void Server::start()
 {
-    httpd_handle_t server = nullptr;
+    httpd_handle_t new_server = nullptr;
     httpd_config_t config = HTTPD_DEFAULT_CONFIG();
     config.server_port = 8080;
     config.ctrl_port = 8081;
@@ -66,19 +38,31 @@ httpd_handle_t start_webserver()
 
     // Start the httpd server
     ESP_LOGI(TAG, "Starting server on port: '%d'", config.server_port);
-    if(httpd_start(&server, &config) == ESP_OK)
+    esp_err_t rc = httpd_start(&new_server, &config);
+    if(rc == ESP_OK)
     {
         // Set URI handlers
         ESP_LOGI(TAG, "Registering URI handlers");
-        httpd_register_uri_handler(server, &websocket);
-        return server;
-    }
 
-    ESP_LOGE(TAG, "Error starting server!");
-    return nullptr;
+        static const httpd_uri_t websocket = {
+            .uri = "/websocket",
+            .method = HTTP_GET,
+            .handler = websocket_get_handler,
+            .user_ctx = this,
+            .is_websocket = true,
+            .handle_ws_control_frames = false,
+            .supported_subprotocol = nullptr,
+        };
+        httpd_register_uri_handler(new_server, &websocket);
+        server = new_server;
+    }
+    else
+    {
+        ESP_LOGE(TAG, "Error starting server! %d %s", rc, esp_err_to_name(rc));
+    }
 }
 
-void stop_webserver(httpd_handle_t server)
+void Server::stop()
 {
     /* TODO need to stop tasks that use the web server first */
 
@@ -87,8 +71,9 @@ void stop_webserver(httpd_handle_t server)
     httpd_stop(server);
 }
 
-static esp_err_t websocket_get_handler(httpd_req_t *req)
+esp_err_t websocket_get_handler(httpd_req_t *req)
 {
+    auto self = reinterpret_cast<Server *>(req->user_ctx);
     /* Largest incoming message is a MidiMap::create::response which has a maximum size about 200 bytes */
     char json[256] = {0};
 
@@ -143,7 +128,7 @@ static esp_err_t websocket_get_handler(httpd_req_t *req)
         if(message.has_value())
         {
             auto out = AppMessage{*message, fd};
-            int queue_rc = in_queue->send(&out, pdMS_TO_TICKS(100));
+            int queue_rc = self->in_queue->send(&out, pdMS_TO_TICKS(100));
             if(queue_rc != pdPASS)
             {
                 ESP_LOGE(TAG, "in_queue message dropped");
@@ -158,7 +143,7 @@ static esp_err_t websocket_get_handler(httpd_req_t *req)
         if(message.has_value())
         {
             auto out = AppMessage{*message, fd};
-            int queue_rc = in_queue->send(&out, pdMS_TO_TICKS(100));
+            int queue_rc = self->in_queue->send(&out, pdMS_TO_TICKS(100));
             if(queue_rc != pdPASS)
             {
                 ESP_LOGE(TAG, "in_queue message dropped");
@@ -179,12 +164,12 @@ out:
     return ESP_OK;
 }
 
-static void websocket_send(void *arg)
+void websocket_send(void *arg)
 {
-    httpd_handle_t server = arg;
+    auto self = reinterpret_cast<Server *>(arg);
 
     AppMessage message;
-    int rc = out_queue->receive(&message, 0);
+    int rc = self->out_queue->receive(&message, 0);
     if(!rc)
     {
         ESP_LOGE(TAG, "%s failed to receive from queue", __FUNCTION__);
@@ -231,7 +216,14 @@ static void websocket_send(void *arg)
     int client_fds[MAX_CLIENTS];
     size_t number_of_clients = ARRAY_LENGTH(client_fds);
 
-    httpd_get_client_list((httpd_handle_t)arg, &number_of_clients, client_fds);
+    rc = httpd_get_client_list(
+        self->server, &number_of_clients, client_fds);
+    if(rc != ESP_OK)
+    {
+        ESP_LOGE(
+            TAG, "Failed to list httpd clients %d %s", rc, esp_err_to_name(rc));
+        number_of_clients = 0;
+    }
 
     ESP_LOGD(TAG, "n = %zd", number_of_clients);
 
@@ -243,7 +235,7 @@ static void websocket_send(void *arg)
 
         ESP_LOGD(TAG, "fd = %d", fd);
 
-        if(HTTPD_WS_CLIENT_WEBSOCKET != httpd_ws_get_fd_info(server, fd))
+        if(HTTPD_WS_CLIENT_WEBSOCKET != httpd_ws_get_fd_info(self->server, fd))
         {
             continue;
         }
@@ -253,28 +245,27 @@ static void websocket_send(void *arg)
             continue;
         }
 
-        rc = httpd_ws_send_frame_async(server, fd, &pkt);
+        rc = httpd_ws_send_frame_async(self->server, fd, &pkt);
         if(ESP_OK != rc)
         {
             ESP_LOGE(TAG, "failed to send to fd %d rc %d", fd, rc);
         }
     }
 
-    xSemaphoreGive(work_semaphore);
+    xSemaphoreGive(self->work_semaphore);
 }
 
-void server_send_message(httpd_handle_t server, const AppMessage &message)
+void Server::send_message(const AppMessage &message)
 {
     ESP_LOGD(TAG, "%s %s", __FUNCTION__, pcTaskGetName(nullptr));
 
-    if(errQUEUE_FULL ==
-       shrapnel::out_queue->send(&message, pdMS_TO_TICKS(100)))
+    if(errQUEUE_FULL == out_queue->send(&message, pdMS_TO_TICKS(100)))
     {
         ESP_LOGE(TAG, "Failed to send message to websocket");
         return;
     }
 
-    if(!xSemaphoreTake(shrapnel::work_semaphore, 1000 / portTICK_PERIOD_MS))
+    if(!xSemaphoreTake(work_semaphore, 1000 / portTICK_PERIOD_MS))
     {
         ESP_LOGE(TAG, "work semaphore timed out");
         return;
@@ -283,14 +274,11 @@ void server_send_message(httpd_handle_t server, const AppMessage &message)
     // XXX: server is accessed from outside the main thread here. It is
     // probably incorrect, and will break when the server is being torn down
     // concurrently to an audio event going out.
-    esp_err_t rc = httpd_queue_work(
-        server,
-        shrapnel::websocket_send,
-        server);
+    esp_err_t rc = httpd_queue_work(server, websocket_send, this);
     if(ESP_OK != rc)
     {
         ESP_LOGE(TAG, "failed to queue work for server");
     }
 }
 
-}
+} // namespace shrapnel

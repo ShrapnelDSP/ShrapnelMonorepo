@@ -233,11 +233,10 @@ static midi::MappingManager<ParameterUpdateNotifier, 10, 1>
 static EventSend event_send{};
 
 static Queue<AppMessage, QUEUE_LEN> *in_queue;
-static Queue<AppMessage, QUEUE_LEN> *out_queue;
 
 static std::mutex midi_mutex;
 
-static httpd_handle_t _server = nullptr;
+static Server *_server = nullptr;
 
 extern "C" {
 
@@ -390,10 +389,10 @@ extern "C" void app_main(void)
     in_queue = new Queue<AppMessage, QUEUE_LEN>();
     assert(in_queue);
 
-    out_queue = new Queue<AppMessage, QUEUE_LEN>();
+    auto out_queue = new Queue<AppMessage, QUEUE_LEN>();
     assert(out_queue);
 
-    init_webserver(in_queue, out_queue);
+    _server = new Server(in_queue, out_queue);
 
     audio_params = std::make_shared<AudioParameters>();
 
@@ -591,12 +590,11 @@ midi::Mapping, 10>>(document);
         {
             case wifi::UserEvent::CONNECTED:
                 ESP_LOGI(TAG, "Starting webserver");
-                _server = start_webserver();
+                _server->start();
                 break;
             case wifi::UserEvent::DISCONNECTED:
                 ESP_LOGI(TAG, "Stopping webserver");
-                stop_webserver(_server);
-                _server = nullptr;
+                _server->stop();
                 break;
             default:
                 ESP_LOGE(TAG, "Unhandled event %d", event.get_value());
@@ -837,5 +835,6 @@ void nvs_debug_print()
 
 extern "C" void audio_event_send_callback(const AppMessage &message)
 {
-    shrapnel::server_send_message(shrapnel::_server, message);
+    assert(shrapnel::_server);
+    shrapnel::_server->send_message(message);
 }
