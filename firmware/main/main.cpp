@@ -61,6 +61,7 @@
 #include "cmd_handling.h"
 #include "hardware.h"
 #include "i2s.h"
+#include "main_thread.h"
 #include "midi_protocol.h"
 #include "midi_mapping_json_parser.h"
 #include "messages.h"
@@ -82,8 +83,6 @@
 #define ARRAY_LENGTH(a) (sizeof(a)/sizeof(a[0]))
 
 using WifiQueue = shrapnel::Queue<shrapnel::wifi::InternalEvent, 3>;
-
-extern "C" void audio_event_send_callback(const AppMessage &message);
 
 namespace shrapnel {
 
@@ -108,90 +107,6 @@ namespace midi {
         return out;
     }
 }
-
-class ParameterUpdateNotifier {
-    public:
-    int update(const parameters::id_t &param, float value);
-    float get(const parameters::id_t &param);
-};
-
-class EventSend final {
-    public:
-    void send(parameters::ApiMessage message, int fd)
-    {
-        if(fd >= 0) {
-            audio_event_send_callback({message, fd});
-        } else {
-            audio_event_send_callback({message, std::nullopt});
-        }
-    }
-};
-
-template<std::size_t MAX_PARAMETERS>
-class ParameterObserver final : public parameters::ParameterObserver {
-public:
-    explicit ParameterObserver(persistence::Storage &persistence)
-        : persistence{persistence},
-          timer{"param save throttle",
-                pdMS_TO_TICKS(10'000),
-                false,
-                etl::delegate<void(void)>::create<
-                    ParameterObserver<MAX_PARAMETERS>,
-                    &ParameterObserver<MAX_PARAMETERS>::timer_callback>(*this)}
-    {
-    }
-
-    void timer_callback()
-    {
-        is_save_throttled.clear();
-        is_save_throttled.notify_all();
-    }
-
-    void notification(std::pair<const parameters::id_t &, float> parameter) override
-    {
-        auto &[id, value] = parameter;
-        ESP_LOGI(
-            TAG, "notified about parameter change %s %f", id.data(), value);
-        if (!updated_parameters.available())
-        {
-            ESP_LOGE(TAG, "no space available");
-            return;
-        }
-
-        updated_parameters[id] = value;
-
-        if(!timer.is_active())
-        {
-            timer.start(pdMS_TO_TICKS(5));
-        }
-    }
-
-    void persist_parameters()
-    {
-        for(const auto &param : updated_parameters)
-        {
-            rapidjson::Document document;
-
-            auto parameter_data = midi::to_json(document, param.second);
-            document.Swap(parameter_data);
-
-            rapidjson::StringBuffer buffer;
-            rapidjson::Writer writer{buffer};
-            document.Accept(writer);
-
-            persistence.save(param.first.data(), buffer.GetString());
-        }
-
-        updated_parameters.clear();
-    }
-
-    std::atomic_flag is_save_throttled;
-
-private:
-    persistence::Storage &persistence;
-    shrapnel::os::Timer timer;
-    etl::map<parameters::id_t, float, MAX_PARAMETERS> updated_parameters;
-};
 
 template <typename MappingManagerT>
 class MidiMappingObserver final : public midi::MappingObserver {
@@ -223,14 +138,10 @@ private:
     const MappingManagerT &mapping_manager;
 };
 
-constexpr const size_t MAX_PARAMETERS = 20;
-using AudioParameters = parameters::AudioParameters<MAX_PARAMETERS, 1>;
-
 static std::shared_ptr<AudioParameters> audio_params;
 static parameters::CommandHandling<AudioParameters, EventSend> *cmd_handling;
 static midi::MappingManager<ParameterUpdateNotifier, 10, 1>
     *midi_mapping_manager;
-static EventSend event_send{};
 
 static Queue<AppMessage, QUEUE_LEN> *in_queue;
 
@@ -246,7 +157,6 @@ static void connect_handler(void* arg, esp_event_base_t event_base,
                             int32_t event_id, void* event_data);
 static void start_mdns(void);
 static void i2c_setup(void);
-static void do_nothing(TimerHandle_t){};
 }
 
 static void disconnect_handler(void* arg, esp_event_base_t event_base,
@@ -355,25 +265,8 @@ static void failed_alloc_callback(size_t size, uint32_t caps, const char *functi
     abort();
 }
 
-int ParameterUpdateNotifier::update(const parameters::id_t &param, float value)
-{
-    auto message = AppMessage{
-        parameters::Update{
-            param,
-            value,
-        },
-        std::nullopt,
-    };
-    audio_event_send_callback(message);
-    return audio_params->update(param, value);
-}
-
-float ParameterUpdateNotifier::get(const parameters::id_t &param)
-{
-    return audio_params->get(param);
-}
-
 void nvs_debug_print();
+void debug_dump_task_list();
 
 extern "C" void app_main(void)
 {
@@ -393,6 +286,7 @@ extern "C" void app_main(void)
     assert(out_queue);
 
     _server = new Server(in_queue, out_queue);
+    assert(_server);
 
     audio_params = std::make_shared<AudioParameters>();
 
@@ -465,7 +359,7 @@ extern "C" void app_main(void)
     ParameterObserver<MAX_PARAMETERS> parameter_observer{persistence};
     audio_params->add_observer(parameter_observer);
 
-    auto parameter_notifier = std::make_shared<ParameterUpdateNotifier>();
+    auto parameter_notifier = std::make_shared<ParameterUpdateNotifier>(audio_params, *_server);
 
     [&] {
         /* TODO How to reduce the memory usage?
@@ -503,6 +397,8 @@ midi::Mapping, 10>>(document);
 
     MidiMappingObserver mapping_observer{persistence, *midi_mapping_manager};
     midi_mapping_manager->add_observer(mapping_observer);
+
+    auto event_send = EventSend(*_server);
 
     cmd_handling = new parameters::CommandHandling<AudioParameters, EventSend>(
             audio_params.get(),
@@ -668,141 +564,33 @@ midi::Mapping, 10>>(document);
 
     auto midi_decoder = new midi::Decoder(on_midi_message);
 
-#if configUSE_TRACE_FACILITY && configUSE_STATS_FORMATTING_FUNCTIONS
-    constexpr size_t characters_per_task = 40;
-    constexpr size_t approximate_task_count = 20;
-    char buffer[characters_per_task * approximate_task_count + 1] = {0};
-    vTaskList(buffer);
-    // crash if the buffer was overflowed
-    assert(buffer[sizeof(buffer) - 1] == '\0');
-    ESP_LOGI(TAG, "Task list:\n%s", buffer);
-#endif
+    debug_dump_task_list();
 
     events::input_clipped.test_and_set();
     events::output_clipped.test_and_set();
+
+    auto main_thread =
+        MainThread<MAX_PARAMETERS, QUEUE_LEN>(parameter_observer,
+                                              wifi_queue,
+                                              wifi_state_chart,
+                                              clipping_throttle_timer,
+                                              is_midi_notify_waiting,
+                                              midi_uart,
+                                              last_midi_message,
+                                              last_notified_midi_message,
+                                              midi_decoder,
+                                              in_queue,
+                                              cmd_handling,
+                                              midi_mutex,
+                                              midi_mapping_manager,
+                                              *_server);
 
     while(1)
     {
         vTaskDelay(pdMS_TO_TICKS(10));
         auto tick_count_start = xTaskGetTickCount();
 
-        if(auto byte = midi_uart->get_byte(0); byte.has_value())
-        {
-            ESP_LOGI(TAG, "midi got byte 0x%02x", *byte);
-
-            midi_decoder->decode(*byte);
-        }
-
-        if(AppMessage message; in_queue->receive(&message, 0))
-        {
-            auto fd = message.second;
-
-            std::visit([&](const auto &message){
-                using T = std::decay_t<decltype(message)>;
-
-                if constexpr(std::is_same_v<T, parameters::ApiMessage>) {
-                    if(!fd.has_value())
-                    {
-                        ESP_LOGE(TAG, "Must always have fd");
-                    }
-
-                    cmd_handling->dispatch(message, *fd);
-                } else if constexpr(std::is_same_v<T, midi::MappingApiMessage>) {
-                    std::scoped_lock lock{midi_mutex};
-
-                    auto response = std::visit([&](const auto &message) -> std::optional<midi::MappingApiMessage> {
-                        using T = std::decay_t<decltype(message)>;
-
-                        if constexpr (std::is_same_v<T, midi::GetRequest>) {
-                            auto mappings = midi_mapping_manager->get();
-                            return midi::GetResponse{mappings};
-                        } else if constexpr (std::is_same_v<T, midi::CreateRequest>) {
-                            auto rc = midi_mapping_manager->create(message.mapping);
-                            if(rc == 0)
-                            {
-                                return midi::CreateResponse{message.mapping};
-                            }
-                        } else if constexpr (std::is_same_v<T, midi::Update>) {
-                            // return code ignored, as there is no way to indicate
-                            // the error to the frontend
-                            (void)midi_mapping_manager->update(message.mapping);
-                        } else if constexpr (std::is_same_v<T, midi::Remove>) {
-                            midi_mapping_manager->remove(message.id);
-                        } else {
-                            ESP_LOGE(TAG, "Unhandled message type");
-                        }
-
-                        return std::nullopt;
-                    }, message);
-
-                    if(response.has_value())
-                    {
-                        audio_event_send_callback({*response, std::nullopt});
-                    }
-                }
-            }, message.first);
-        }
-
-        {
-            // i2s produces an event on each buffer TX/RX. We process all the
-            // events in the current iteration, so that the queue doesn't fill
-            // up.
-            i2s_event_t event;
-            while(xQueueReceive(audio::i2s_queue, &event, 0))
-            {
-                audio::log_i2s_event(event);
-            }
-        }
-
-        if(!clipping_throttle_timer.is_active())
-        {
-            if(!events::input_clipped.test_and_set())
-            {
-                ESP_LOGI(TAG, "input was clipped");
-                audio_event_send_callback(
-                    {events::InputClipped{}, std::nullopt});
-                clipping_throttle_timer.reset(pdMS_TO_TICKS(10));
-            }
-
-            if(!events::output_clipped.test_and_set())
-            {
-                ESP_LOGI(TAG, "output was clipped");
-                audio_event_send_callback(
-                    {events::OutputClipped{}, std::nullopt});
-                clipping_throttle_timer.reset(pdMS_TO_TICKS(10));
-            }
-        }
-
-        wifi::InternalEvent wifi_event;
-        while(pdPASS == wifi_queue.receive(&wifi_event, 0))
-        {
-            wifi::State state{wifi_state_chart.get_state_id()};
-            ESP_LOGI(TAG, "state: %s event: %s", state.c_str(), wifi_event.c_str());
-
-            wifi_state_chart.process_event(wifi_event);
-
-            wifi::State new_state{wifi_state_chart.get_state_id()};
-            if(new_state != state)
-            {
-                ESP_LOGI(TAG, "changed to state: %s", new_state.c_str());
-            }
-        }
-
-        if(!parameter_observer.is_save_throttled.test_and_set())
-        {
-            parameter_observer.persist_parameters();
-            ESP_LOGI(TAG, "Parameters saved to NVS");
-        }
-
-        if(!is_midi_notify_waiting.test_and_set() &&
-           last_midi_message.has_value() &&
-           last_notified_midi_message != *last_midi_message)
-        {
-            last_notified_midi_message = *last_midi_message;
-
-            audio_event_send_callback(
-                {midi::MessageReceived{*last_midi_message}, std::nullopt});
-        }
+        main_thread.loop();
 
         /* Check if the current iteration of the main loop took too long. This
          * might be caused by blocking while handling events.
@@ -818,6 +606,19 @@ midi::Mapping, 10>>(document);
     }
 }
 
+void debug_dump_task_list()
+{
+#if configUSE_TRACE_FACILITY && configUSE_STATS_FORMATTING_FUNCTIONS
+    constexpr size_t characters_per_task = 40;
+    constexpr size_t approximate_task_count = 20;
+    char buffer[characters_per_task * approximate_task_count + 1] = {0};
+    vTaskList(buffer);
+    // crash if the buffer was overflowed
+    assert(buffer[sizeof(buffer) - 1] == '\0');
+    ESP_LOGI(TAG, "Task list:\n%s", buffer);
+#endif
+}
+
 void nvs_debug_print()
 {
     nvs_iterator_t it = NULL;
@@ -831,10 +632,4 @@ void nvs_debug_print()
     nvs_release_iterator(it);
 }
 
-}
-
-extern "C" void audio_event_send_callback(const AppMessage &message)
-{
-    assert(shrapnel::_server);
-    shrapnel::_server->send_message(message);
 }
