@@ -32,10 +32,12 @@ extern "C" void timer_callback(TimerHandle_t a_timer);
 class Timer final
 {
 public:
+    using Callback = etl::delegate<void(void)>;
+
     Timer(const char *pcTimerName,
           TickType_t xTimerPeriod,
           const UBaseType_t uxAutoReload,
-          std::optional<etl::delegate<void(void)>> callback = std::nullopt);
+          std::optional<Callback> callback = std::nullopt);
 
     ~Timer();
 
@@ -65,7 +67,7 @@ public:
 private:
     friend void shrapnel::os::timer_callback(TimerHandle_t);
     TimerHandle_t timer;
-    std::optional<etl::delegate<void(void)>> callback;
+    std::optional<Callback> callback;
 };
 
 }

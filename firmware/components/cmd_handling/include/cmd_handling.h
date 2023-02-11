@@ -85,7 +85,7 @@ class CommandHandling final
      * translated to binary and sent to this object.
      */
     CommandHandling(
-            AudioParametersT *a_param,
+            std::shared_ptr<AudioParametersT> a_param,
             EventSendT &a_event) :
         param(a_param),
         event(a_event)
@@ -135,7 +135,7 @@ class CommandHandling final
         }
     }
 
-    AudioParametersT *param;
+    std::shared_ptr<AudioParametersT> param;
     EventSendT &event;
 
     static inline const char *TAG = "cmd_handling";

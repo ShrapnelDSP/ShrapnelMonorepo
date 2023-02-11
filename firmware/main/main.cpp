@@ -108,47 +108,6 @@ namespace midi {
     }
 }
 
-template <typename MappingManagerT>
-class MidiMappingObserver final : public midi::MappingObserver {
-public:
-    explicit MidiMappingObserver(persistence::Storage &persistence,
-                                 const MappingManagerT &mapping_manager)
-        : persistence{persistence}, mapping_manager{mapping_manager} {}
-
-    void notification(const midi::Mapping::id_t &) override {
-        ESP_LOGI(TAG, "Midi mapping has changed");
-        persist();
-    }
-
-private:
-    void persist() {
-        rapidjson::Document document;
-
-        auto mapping_data = midi::to_json(document, *mapping_manager.get());
-        document.Swap(mapping_data);
-
-        rapidjson::StringBuffer buffer;
-        rapidjson::Writer writer{buffer};
-        document.Accept(writer);
-
-        persistence.save("midi_mappings", buffer.GetString());
-    };
-
-    persistence::Storage &persistence;
-    const MappingManagerT &mapping_manager;
-};
-
-static std::shared_ptr<AudioParameters> audio_params;
-static parameters::CommandHandling<AudioParameters, EventSend> *cmd_handling;
-static midi::MappingManager<ParameterUpdateNotifier, 10, 1>
-    *midi_mapping_manager;
-
-static Queue<AppMessage, QUEUE_LEN> *in_queue;
-
-static std::mutex midi_mutex;
-
-static Server *_server = nullptr;
-
 extern "C" {
 
 static void disconnect_handler(void* arg, esp_event_base_t event_base,
@@ -278,136 +237,10 @@ extern "C" void app_main(void)
     ESP_ERROR_CHECK(esp_event_loop_create_default());
 
     auto persistence = persistence::EspStorage{};
-
-    in_queue = new Queue<AppMessage, QUEUE_LEN>();
-    assert(in_queue);
-
-    auto out_queue = new Queue<AppMessage, QUEUE_LEN>();
-    assert(out_queue);
-
-    _server = new Server(in_queue, out_queue);
-    assert(_server);
-
-    audio_params = std::make_shared<AudioParameters>();
-
-    auto create_and_load_parameter = [&](
-            const parameters::id_t &name,
-            float minimum,
-            float maximum,
-            float default_value){
-        std::optional<float> loaded_value;
-        etl::string<128> json_string{};
-        int rc = persistence.load(name.data(), json_string);
-        if(rc != 0)
-        {
-            ESP_LOGW(TAG, "Parameter %s failed to load", name.data());
-            goto out;
-        }
-
-        {
-            rapidjson::Document document;
-            document.Parse(json_string.data());
-
-            if(!document.HasParseError()) {
-                loaded_value = midi::from_json<float>(document);
-            } else {
-                ESP_LOGE(TAG, "document failed to parse '%s'", json_string.data());
-            }
-        }
-
-    out:
-        auto range = maximum - minimum;
-        rc = audio_params->create_and_add_parameter(
-            name,
-            minimum,
-            maximum,
-            loaded_value.has_value() ? *loaded_value * range + minimum
-                                     : default_value);
-        if(rc != 0)
-        {
-            ESP_LOGE(TAG, "Failed to create parameter %s", name.c_str());
-        }
-    };
-
-    // XXX: These are duplicated in the JUCE plugin, be sure to update both at
-    // the same time
-    create_and_load_parameter("ampGain", 0, 1, 0.5);
-    create_and_load_parameter("ampChannel", 0, 1, 0);
-    create_and_load_parameter("bass", 0, 1, 0.5);
-    create_and_load_parameter("middle", 0, 1, 0.5);
-    create_and_load_parameter("treble", 0, 1, 0.5);
-    //contour gets unstable when set to 0
-    create_and_load_parameter("contour", 0.01, 1, 0.5);
-    create_and_load_parameter("volume", -30, 0, -15);
-
-    create_and_load_parameter("noiseGateThreshold", -80, 0, -60);
-    create_and_load_parameter("noiseGateHysteresis", 0, 5, 0);
-    create_and_load_parameter("noiseGateAttack", 1, 50, 10);
-    create_and_load_parameter("noiseGateHold", 1, 250, 50);
-    create_and_load_parameter("noiseGateRelease", 1, 250, 50);
-    create_and_load_parameter("noiseGateBypass", 0, 1, 0);
-
-    create_and_load_parameter("chorusRate", 0.1, 4, 0.95);
-    create_and_load_parameter("chorusDepth", 0, 1, 0.3);
-    create_and_load_parameter("chorusMix", 0, 1, 0.8);
-    create_and_load_parameter("chorusBypass", 0, 1, 1);
-
-    create_and_load_parameter("wahPosition", 0, 1, 0.5);
-    create_and_load_parameter("wahVocal", 0, 1, 0);
-    create_and_load_parameter("wahBypass", 0, 1, 1);
-
-    ParameterObserver<MAX_PARAMETERS> parameter_observer{persistence};
-    audio_params->add_observer(parameter_observer);
-
-    auto parameter_notifier = std::make_shared<ParameterUpdateNotifier>(audio_params, *_server);
-
-    [&] {
-        /* TODO How to reduce the memory usage?
-         * - We could store each entry in the table at a different key
-         * - Use the streaming API so that the entire message does not have to
-         *   be parsed at once?
-         * - Replace etl::map with more efficient implementation
-         */
-        etl::string<1500> mapping_json;
-        persistence.load("midi_mappings", mapping_json);
-        ESP_LOGI(TAG, "saved mappings: %s", mapping_json.c_str());
-
-        rapidjson::Document document;
-        document.Parse(mapping_json.c_str());
-        auto saved_mappings = midi::from_json<etl::map<midi::Mapping::id_t,
-midi::Mapping, 10>>(document);
-
-        midi_mapping_manager =
-            saved_mappings.has_value()
-                ? new midi::MappingManager<ParameterUpdateNotifier, 10, 1>(
-                      parameter_notifier, *saved_mappings)
-                : new midi::MappingManager<ParameterUpdateNotifier, 10, 1>(
-                      parameter_notifier);
-
-        auto rc = midi_mapping_manager->create(
-            {midi::Mapping::id_t{0},
-             midi::Mapping{.midi_channel = 1,
-                           .cc_number = 7,
-                           .mode = midi::Mapping::Mode::PARAMETER,
-                           .parameter_name = "tubeScreamerTone"}});
-        if (rc != 0) {
-            ESP_LOGE(TAG, "Failed to create initial mapping");
-        }
-    }();
-
-    MidiMappingObserver mapping_observer{persistence, *midi_mapping_manager};
-    midi_mapping_manager->add_observer(mapping_observer);
-
-    auto event_send = EventSend(*_server);
-
-    cmd_handling = new parameters::CommandHandling<AudioParameters, EventSend>(
-            audio_params.get(),
-            event_send);
+    auto audio_params = std::make_shared<AudioParameters>();
 
     i2c_setup();
-
     profiling_init(DMA_BUF_SIZE, SAMPLE_RATE);
-    audio::i2s_setup(PROFILING_GPIO, audio_params.get());
 
     //dac must be powered up after the i2s clocks have stabilised
     vTaskDelay(100 / portTICK_PERIOD_MS);
@@ -468,9 +301,6 @@ midi::Mapping, 10>>(document);
     wifi_init_config_t cfg = WIFI_INIT_CONFIG_DEFAULT();
     ESP_ERROR_CHECK(esp_wifi_init(&cfg));
 
-    /* Start the mdns service */
-    start_mdns();
-
     auto wifi_queue = WifiQueue();
 
     auto wifi_send_event = [&] (wifi::InternalEvent event) {
@@ -481,16 +311,20 @@ midi::Mapping, 10>>(document);
         }
     };
 
+    auto in_queue = new Queue<AppMessage, QUEUE_LEN>;
+    auto out_queue = new Queue<AppMessage, QUEUE_LEN>;
+    auto server = new Server(in_queue, out_queue);
+
     auto app_send_event = [&] (wifi::UserEvent event) {
         switch(event)
         {
             case wifi::UserEvent::CONNECTED:
                 ESP_LOGI(TAG, "Starting webserver");
-                _server->start();
+                server->start();
                 break;
             case wifi::UserEvent::DISCONNECTED:
                 ESP_LOGI(TAG, "Stopping webserver");
-                _server->stop();
+                server->stop();
                 break;
             default:
                 ESP_LOGE(TAG, "Unhandled event %d", event.get_value());
@@ -529,61 +363,24 @@ midi::Mapping, 10>>(document);
                 wifi_start_handler,
                 &wifi_queue));
 
-    ESP_LOGI(TAG, "setup done");
-    ESP_LOGI(TAG, "stack: %d", uxTaskGetStackHighWaterMark(NULL));
-    heap_caps_print_heap_info(MALLOC_CAP_DEFAULT);
-
-    auto clipping_throttle_timer = os::Timer{
-        "clipping throttle", pdMS_TO_TICKS(1000), false};
-
-    std::atomic_flag is_midi_notify_waiting;
-    auto clear_midi_notify_waiting = [&] { is_midi_notify_waiting.clear(); };
-
-    os::Timer midi_message_notify_timer{
-        "midi notify", pdMS_TO_TICKS(100), true, clear_midi_notify_waiting};
-    midi_message_notify_timer.start(portMAX_DELAY);
-
     auto midi_uart = new midi::EspMidiUart(UART_NUM_MIDI, GPIO_NUM_MIDI);
-
-    std::optional<midi::Message> last_midi_message;
-    std::optional<midi::Message> last_notified_midi_message;
-
-    auto on_midi_message = [&] (midi::Message message) {
-        etl::string<40> buffer;
-        etl::string_stream stream{buffer};
-        stream << message;
-        ESP_LOGI(TAG, "%s", buffer.data());
-
-        last_midi_message = message;
-
-        {
-            std::scoped_lock lock{midi_mutex};
-            midi_mapping_manager->process_message(message);
-        }
-    };
-
-    auto midi_decoder = new midi::Decoder(on_midi_message);
 
     debug_dump_task_list();
 
-    events::input_clipped.test_and_set();
-    events::output_clipped.test_and_set();
-
     auto main_thread =
-        MainThread<MAX_PARAMETERS, QUEUE_LEN>(parameter_observer,
+        MainThread<MAX_PARAMETERS, QUEUE_LEN>(*server,
+                                              *in_queue,
                                               wifi_queue,
                                               wifi_state_chart,
-                                              clipping_throttle_timer,
-                                              is_midi_notify_waiting,
                                               midi_uart,
-                                              last_midi_message,
-                                              last_notified_midi_message,
-                                              midi_decoder,
-                                              in_queue,
-                                              cmd_handling,
-                                              midi_mutex,
-                                              midi_mapping_manager,
-                                              *_server);
+                                              audio_params,
+                                              persistence);
+
+    audio::i2s_setup(PROFILING_GPIO, audio_params.get());
+
+    ESP_LOGI(TAG, "setup done");
+    ESP_LOGI(TAG, "stack: %d", uxTaskGetStackHighWaterMark(NULL));
+    heap_caps_print_heap_info(MALLOC_CAP_DEFAULT);
 
     while(1)
     {
