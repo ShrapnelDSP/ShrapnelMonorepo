@@ -370,8 +370,6 @@ extern "C" void app_main(void)
     auto main_thread =
         MainThread<MAX_PARAMETERS, QUEUE_LEN>(*server,
                                               *in_queue,
-                                              wifi_queue,
-                                              wifi_state_chart,
                                               midi_uart,
                                               audio_params,
                                               persistence);
@@ -388,6 +386,23 @@ extern "C" void app_main(void)
         auto tick_count_start = xTaskGetTickCount();
 
         main_thread.loop();
+
+        // TODO this depends on ESP too much, move it out
+        wifi::InternalEvent wifi_event;
+        while(pdPASS == wifi_queue.receive(&wifi_event, 0))
+        {
+            wifi::State state{wifi_state_chart.get_state_id()};
+            ESP_LOGI(
+                TAG, "state: %s event: %s", state.c_str(), wifi_event.c_str());
+
+            wifi_state_chart.process_event(wifi_event);
+
+            wifi::State new_state{wifi_state_chart.get_state_id()};
+            if(new_state != state)
+            {
+                ESP_LOGI(TAG, "changed to state: %s", new_state.c_str());
+            }
+        }
 
         /* Check if the current iteration of the main loop took too long. This
          * might be caused by blocking while handling events.

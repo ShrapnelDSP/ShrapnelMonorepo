@@ -187,16 +187,12 @@ class MainThread
 public:
     MainThread(Server &server,
                Queue<AppMessage, QUEUE_LEN> &in_queue,
-               Queue<shrapnel::wifi::InternalEvent, 3> &wifi_queue,
-               etl::istate_chart<void> &wifi_state_chart,
                midi::MidiUartBase *midi_uart,
                std::shared_ptr<AudioParameters> audio_params,
                persistence::Storage &persistence)
         : server{server},
           in_queue{in_queue},
           parameter_observer{persistence},
-          wifi_queue{wifi_queue},
-          wifi_state_chart{wifi_state_chart},
           clipping_throttle_timer{
               "clipping throttle", pdMS_TO_TICKS(1000), false},
           midi_message_notify_timer{
@@ -447,23 +443,6 @@ public:
             }
         }
 
-        // TODO this depends on ESP too much, move it out
-        wifi::InternalEvent wifi_event;
-        while(pdPASS == wifi_queue.receive(&wifi_event, 0))
-        {
-            wifi::State state{wifi_state_chart.get_state_id()};
-            ESP_LOGI(
-                TAG, "state: %s event: %s", state.c_str(), wifi_event.c_str());
-
-            wifi_state_chart.process_event(wifi_event);
-
-            wifi::State new_state{wifi_state_chart.get_state_id()};
-            if(new_state != state)
-            {
-                ESP_LOGI(TAG, "changed to state: %s", new_state.c_str());
-            }
-        }
-
         if(!parameter_observer.is_save_throttled.test_and_set())
         {
             parameter_observer.persist_parameters();
@@ -502,8 +481,6 @@ private:
     Server &server;
     Queue<AppMessage, QUEUE_LEN> &in_queue;
     ParameterObserver<MAX_PARAMETERS> parameter_observer;
-    Queue<shrapnel::wifi::InternalEvent, 3> &wifi_queue;
-    etl::istate_chart<void> &wifi_state_chart;
     os::Timer clipping_throttle_timer;
     os::Timer midi_message_notify_timer;
     std::atomic_flag is_midi_notify_waiting;
