@@ -26,17 +26,20 @@ extern "C" void timer_callback(TimerHandle_t a_timer)
 {
     auto timer =
         reinterpret_cast<shrapnel::os::Timer *>(pvTimerGetTimerID(a_timer));
-    timer->callback();
+    (*timer->callback)();
 }
 
 Timer::Timer(const char *pcTimerName,
              TickType_t xTimerPeriod,
              const UBaseType_t uxAutoReload,
-             etl::delegate<void(void)> callback)
+             std::optional<etl::delegate<void(void)>> callback)
     : callback{callback}
 {
-    timer = xTimerCreate(
-        pcTimerName, xTimerPeriod, uxAutoReload, this, timer_callback);
+    timer = xTimerCreate(pcTimerName,
+                         xTimerPeriod,
+                         uxAutoReload,
+                         this,
+                         callback.has_value() ? timer_callback : nullptr);
 }
 
 Timer::~Timer()

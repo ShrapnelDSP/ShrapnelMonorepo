@@ -17,10 +17,11 @@
  * ShrapnelDSP. If not, see <https://www.gnu.org/licenses/>.
  */
 
+#include "etl/delegate.h"
 #include "freertos/FreeRTOS.h"
 #include "freertos/portmacro.h"
 #include "freertos/timers.h"
-#include "etl/delegate.h"
+#include <optional>
 
 namespace shrapnel::os {
 
@@ -33,7 +34,7 @@ public:
     Timer(const char *pcTimerName,
           TickType_t xTimerPeriod,
           const UBaseType_t uxAutoReload,
-          etl::delegate<void(void)> callback);
+          std::optional<etl::delegate<void(void)>> callback = std::nullopt);
 
     ~Timer();
 
@@ -63,7 +64,7 @@ public:
 private:
     friend void shrapnel::os::timer_callback(TimerHandle_t);
     TimerHandle_t timer;
-    etl::delegate<void(void)> callback;
+    std::optional<etl::delegate<void(void)>> callback;
 };
 
 }

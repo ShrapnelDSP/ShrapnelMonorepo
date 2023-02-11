@@ -637,8 +637,8 @@ midi::Mapping, 10>>(document);
     ESP_LOGI(TAG, "stack: %d", uxTaskGetStackHighWaterMark(NULL));
     heap_caps_print_heap_info(MALLOC_CAP_DEFAULT);
 
-    TimerHandle_t clipping_throttle_timer = xTimerCreate(
-        "clipping throttle", pdMS_TO_TICKS(1000), false, nullptr, do_nothing);
+    auto clipping_throttle_timer = os::Timer{
+        "clipping throttle", pdMS_TO_TICKS(1000), false};
 
     std::atomic_flag is_midi_notify_waiting;
     auto clear_midi_notify_waiting = [&] { is_midi_notify_waiting.clear(); };
@@ -754,14 +754,14 @@ midi::Mapping, 10>>(document);
             }
         }
 
-        if(!xTimerIsTimerActive(clipping_throttle_timer))
+        if(!clipping_throttle_timer.is_active())
         {
             if(!events::input_clipped.test_and_set())
             {
                 ESP_LOGI(TAG, "input was clipped");
                 audio_event_send_callback(
                     {events::InputClipped{}, std::nullopt});
-                xTimerReset(clipping_throttle_timer, pdMS_TO_TICKS(10));
+                clipping_throttle_timer.reset(pdMS_TO_TICKS(10));
             }
 
             if(!events::output_clipped.test_and_set())
@@ -769,7 +769,7 @@ midi::Mapping, 10>>(document);
                 ESP_LOGI(TAG, "output was clipped");
                 audio_event_send_callback(
                     {events::OutputClipped{}, std::nullopt});
-                xTimerReset(clipping_throttle_timer, pdMS_TO_TICKS(10));
+                clipping_throttle_timer.reset(pdMS_TO_TICKS(10));
             }
         }
 
