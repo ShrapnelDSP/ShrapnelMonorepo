@@ -21,29 +21,31 @@ constexpr const char *TAG = "main_thread";
 constexpr const size_t MAX_PARAMETERS = 20;
 
 using AudioParameters = parameters::AudioParameters<MAX_PARAMETERS, 1>;
-using SendMessageCallback = etl::delegate<void(const AppMessage&)>;
+using SendMessageCallback = etl::delegate<void(const AppMessage &)>;
 
 // TODO move all the json parser function into a json namespace
 namespace midi {
 using midi::from_json;
 
-template<> std::optional<float> from_json(const rapidjson::Value &value)
+template <>
+std::optional<float> from_json(const rapidjson::Value &value)
 {
-    if(!value.IsFloat()) {
+    if(!value.IsFloat())
+    {
         ESP_LOGE(TAG, "not float");
         return std::nullopt;
     }
     return value.GetFloat();
 }
 
-template<>
+template <>
 rapidjson::Value to_json(rapidjson::Document &document, const float &object)
 {
     rapidjson::Value out{};
     out.SetFloat(object);
     return out;
 }
-}
+} // namespace midi
 
 template <typename MappingManagerT>
 class MidiMappingObserver final : public midi::MappingObserver
@@ -206,17 +208,19 @@ public:
           midi_uart{midi_uart},
           last_midi_message{},
           last_notified_midi_message{},
-          midi_decoder{new midi::Decoder(
+          midi_decoder{std::make_unique<midi::Decoder>(
               midi::Decoder::Callback::create<MainThread,
                                               &MainThread::on_midi_message>(
                   *this))},
           midi_mutex{},
           audio_params{audio_params},
-          cmd_handling{new parameters::CommandHandling<AudioParameters>(
-              audio_params,
-              parameters::CommandHandling<AudioParameters>::SendMessageCallback::
-                  create<MainThread, &MainThread::cmd_handling_send_message>(
-                      *this))}
+          cmd_handling{
+              std::make_unique<parameters::CommandHandling<AudioParameters>>(
+                  audio_params,
+                  parameters::CommandHandling<AudioParameters>::
+                      SendMessageCallback::create<
+                          MainThread,
+                          &MainThread::cmd_handling_send_message>(*this))}
     {
         auto create_and_load_parameter = [&](const parameters::id_t &name,
                                              float minimum,
@@ -291,8 +295,8 @@ public:
 
         audio_params->add_observer(parameter_observer);
 
-        auto parameter_notifier =
-            std::make_shared<ParameterUpdateNotifier>(audio_params, send_message);
+        auto parameter_notifier = std::make_shared<ParameterUpdateNotifier>(
+            audio_params, send_message);
 
         [&]
         {
@@ -311,12 +315,12 @@ public:
             auto saved_mappings = midi::from_json<
                 etl::map<midi::Mapping::id_t, midi::Mapping, 10>>(document);
 
+            using MidiMappingType = midi::MappingManager<ParameterUpdateNotifier, 10, 1>;
             midi_mapping_manager =
                 saved_mappings.has_value()
-                    ? new midi::MappingManager<ParameterUpdateNotifier, 10, 1>(
-                          parameter_notifier, *saved_mappings)
-                    : new midi::MappingManager<ParameterUpdateNotifier, 10, 1>(
-                          parameter_notifier);
+                    ? std::make_unique<MidiMappingType>(parameter_notifier,
+                                                        *saved_mappings)
+                    : std::make_unique<MidiMappingType>(parameter_notifier);
         }();
 
         mapping_observer = std::make_unique<MidiMappingObserver<
@@ -469,7 +473,8 @@ private:
 
     void clear_midi_notify_waiting() { is_midi_notify_waiting.clear(); };
 
-    void cmd_handling_send_message(const parameters::ApiMessage &m, std::optional<int> fd)
+    void cmd_handling_send_message(const parameters::ApiMessage &m,
+                                   std::optional<int> fd)
     {
         send_message({m, fd});
     }
@@ -483,12 +488,14 @@ private:
     midi::MidiUartBase *midi_uart;
     std::optional<midi::Message> last_midi_message;
     std::optional<midi::Message> last_notified_midi_message;
-    midi::Decoder *midi_decoder;
+    std::unique_ptr<midi::Decoder> midi_decoder;
     std::mutex midi_mutex;
-    midi::MappingManager<ParameterUpdateNotifier, 10, 1> *midi_mapping_manager;
+    std::unique_ptr<midi::MappingManager<ParameterUpdateNotifier, 10, 1>>
+        midi_mapping_manager;
     std::shared_ptr<AudioParameters> audio_params;
-    parameters::CommandHandling<parameters::AudioParameters<MAX_PARAMETERS, 1>>
-        *cmd_handling;
+    std::unique_ptr<parameters::CommandHandling<
+        parameters::AudioParameters<MAX_PARAMETERS, 1>>>
+        cmd_handling;
     std::unique_ptr<MidiMappingObserver<
         midi::MappingManager<ParameterUpdateNotifier, 10, 1>>>
         mapping_observer;
