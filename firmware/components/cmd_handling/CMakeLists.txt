@@ -6,27 +6,32 @@ if(NOT DEFINED TESTING)
                            REQUIRES audio_param etl rapidjson
                            PRIV_REQUIRES audio_events compiler_warning_flags)
 else()
-    add_executable(cmd_handling_test
+    add_library(cmd_handling STATIC)
+    add_library(shrapnel::cmd_handling ALIAS cmd_handling)
+
+    target_sources(cmd_handling PRIVATE
                    src/cmd_handling.cpp
                    src/cmd_handling_json.cpp
-                   src/cmd_handling_json_builder.cpp
-                   test/test_cmd_handling.cpp
-                   )
+                   src/cmd_handling_json_builder.cpp)
 
-    target_include_directories(cmd_handling_test PRIVATE include)
+    target_include_directories(cmd_handling PUBLIC include)
 
-    target_link_libraries(cmd_handling_test PRIVATE audio_events_mock)
-    target_link_libraries(cmd_handling_test PRIVATE audio_param_mock)
-    target_link_libraries(cmd_handling_test PRIVATE esp_common)
-    target_link_libraries(cmd_handling_test PRIVATE etl)
-    target_link_libraries(cmd_handling_test PRIVATE freertos)
-    target_link_libraries(cmd_handling_test PRIVATE log)
-    target_link_libraries(cmd_handling_test PRIVATE queue_mock)
-    target_link_libraries(cmd_handling_test PRIVATE rapidjson)
-    target_link_libraries(cmd_handling_test PRIVATE task_mock)
+    target_link_libraries(cmd_handling PUBLIC shrapnel::audio_events
+            shrapnel::audio_param
+            shrapnel::esp_common
+            shrapnel::etl
+            shrapnel::freertos
+            shrapnel::log
+            shrapnel::queue
+            shrapnel::rapidjson)
 
-    target_link_libraries(cmd_handling_test PRIVATE gtest_main)
-    target_link_libraries(cmd_handling_test PRIVATE gmock)
-    target_link_libraries(cmd_handling_test PRIVATE compiler_warning_flags)
+    add_executable(cmd_handling_test
+                   test/test_cmd_handling.cpp)
+
+    target_link_libraries(cmd_handling_test PRIVATE shrapnel::cmd_handling)
+
+    target_link_libraries(cmd_handling_test PRIVATE GTest::gtest_main
+    GTest::gmock
+    shrapnel::compiler_warning_flags)
     gtest_discover_tests(cmd_handling_test)
 endif()

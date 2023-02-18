@@ -55,15 +55,15 @@ class MockAudioParameters
 class MockEventSend
 {
     public:
-    MOCK_METHOD(void, send, (const char *json, int fd));
-    MOCK_METHOD(void, send, (const char *json));
+    MOCK_METHOD(void, send, (const char *json, std::optional<int> fd));
 };
 
+// TODO need to refactor test to use this through the delegate interface
 class EventSendAdapter final {
     public:
     explicit EventSendAdapter(MockEventSend &event) : event(event) {}
 
-    void send(const shrapnel::parameters::ApiMessage &message, int fd)
+    void send(const shrapnel::parameters::ApiMessage &message, std::optional<int> fd)
     {
         rapidjson::Document document;
         auto json = to_json(document, message);
@@ -74,11 +74,6 @@ class EventSendAdapter final {
         document.Accept(writer);
 
         event.send(buffer.GetString(), fd);
-    }
-
-    void send(const shrapnel::parameters::ApiMessage &message)
-    {
-        send(message, -1);
     }
 
     private:
@@ -108,11 +103,17 @@ class MockAudioParameterFloat
 class CmdHandling : public ::testing::Test
 {
     protected:
-    CmdHandling() : cmd(&param, event_adapter) {}
+    CmdHandling() : cmd(&param,
+
+                        shrapnel::parameters::CommandHandling<MockAudioParameters>::SendMessageCallback::
+                        create<EventSendAdapter, &EventSendAdapter::send>(
+                            event_adapter))
+                            {}
 
     MockAudioParameters param;
     MockEventSend event;
     EventSendAdapter event_adapter{event};
+    shrapnel::parameters::CommandHandling<MockAudioParameters> cmd;
 
     void parseAndDispatch(const char *json, int fd) {
         rapidjson::Document document;
@@ -124,8 +125,6 @@ class CmdHandling : public ::testing::Test
 
         cmd.dispatch(*parsed_message, fd);
     }
-
-    shrapnel::parameters::CommandHandling<MockAudioParameters, EventSendAdapter> cmd;
 };
 
 TEST_F(CmdHandling, ValidMessage)
@@ -150,9 +149,9 @@ TEST_F(CmdHandling, InitialiseParameters)
     param.parameters["test1"] = std::move(parameter1);
 
     const char *expected = R"({"id":"test0","value":0.0,"messageType":"parameterUpdate"})";
-    EXPECT_CALL(event, send(StrEq(expected), -1)).Times(1);
+    EXPECT_CALL(event, send(StrEq(expected), std::nullopt)).Times(1);
     expected = R"({"id":"test1","value":1.0,"messageType":"parameterUpdate"})";
-    EXPECT_CALL(event, send(StrEq(expected), -1)).Times(1);
+    EXPECT_CALL(event, send(StrEq(expected), std::nullopt)).Times(1);
 
     parseAndDispatch(R"({"messageType": "initialiseParameters"})", 0);
 }

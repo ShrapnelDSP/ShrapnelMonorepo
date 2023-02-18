@@ -4,4 +4,10 @@ if(NOT DEFINED TESTING)
                             REQUIRES etl
                             PRIV_REQUIRES nvs_flash)
 else()
+    add_library(persistence INTERFACE)
+    add_library(shrapnel::persistence ALIAS persistence)
+
+    target_include_directories(persistence INTERFACE include)
+
+    target_link_libraries(persistence INTERFACE shrapnel::etl)
 endif()

@@ -59,26 +59,29 @@
 #include "audio_param.h"
 #include "cmd_handling_api.h"
 #include "cmd_handling_json.h"
-#include "etl/list.h"
+#include "cmd_handling_json_builder.h"
+#include "esp_err.h"
 #include "esp_log.h"
+#include "etl/list.h"
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 #include <climits>
-#include "esp_err.h"
-#include "cmd_handling_json_builder.h"
-#include <memory>
-#include <string.h>
+#include <etl/delegate.h>
 #include <iterator>
-#include <string_view>
+#include <memory>
 #include <rapidjson/stringbuffer.h>
 #include <rapidjson/writer.h>
+#include <string.h>
+#include <string_view>
 
 namespace shrapnel::parameters {
 
-template<typename AudioParametersT, typename EventSendT>
+template<typename AudioParametersT>
 class CommandHandling final
 {
     public:
+        using SendMessageCallback = etl::delegate<void(const ApiMessage&, std::optional<int>)>;
+
     /** \brief
      *
      * \param[in] a_param Data received through \ref dispatch() is
@@ -86,9 +89,9 @@ class CommandHandling final
      */
     CommandHandling(
             std::shared_ptr<AudioParametersT> a_param,
-            EventSendT &a_event) :
+            SendMessageCallback send_message) :
         param(a_param),
-        event(a_event)
+        send_message(send_message)
         {}
 
     void dispatch(const ApiMessage &message, int fd)
@@ -119,7 +122,7 @@ class CommandHandling final
             ESP_LOGE(TAG, "Failed to update parameter (%s) with value %f", message.id.data(), message.value);
         }
 
-        event.send(message, fd);
+        send_message(message, fd);
     }
 
     void initialise_parameters()
@@ -131,12 +134,12 @@ class CommandHandling final
                     .value{value->get()},
             };
 
-            event.send(message, -1);
+            send_message(message, std::nullopt);
         }
     }
 
     std::shared_ptr<AudioParametersT> param;
-    EventSendT &event;
+    SendMessageCallback send_message;
 
     static inline const char *TAG = "cmd_handling";
 };

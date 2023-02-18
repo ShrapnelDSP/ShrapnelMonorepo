@@ -1,11 +1,15 @@
 if(NOT DEFINED TESTING)
     idf_component_register(SRCS src/midi_uart.cpp src/midi.cpp
                            INCLUDE_DIRS include
-                           REQUIRES etl
-                           PRIV_REQUIRES driver compiler_warning_flags)
+                           REQUIRES driver etl
+                           PRIV_REQUIRES compiler_warning_flags)
 else()
     add_library(midi_mock INTERFACE)
+    add_library(shrapnel::midi_protocol ALIAS midi_mock)
+
     target_include_directories(midi_mock INTERFACE include)
+
+    target_link_libraries(midi_mock INTERFACE shrapnel::driver)
 
     add_executable(midi_test
                    src/midi.cpp

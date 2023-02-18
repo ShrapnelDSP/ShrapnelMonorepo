@@ -13,3 +13,6 @@
 [submodule "thirdparty/esp-idf-components/rapidjson/rapidjson"]
 	path = thirdparty/esp-idf-components/rapidjson/rapidjson
 	url = git@github.com:Tencent/rapidjson.git
+[submodule "test/support/freertos/FreeRTOS-Kernel"]
+	path = test/support/freertos/FreeRTOS-Kernel
+	url = https://github.com/FreeRTOS/FreeRTOS-Kernel

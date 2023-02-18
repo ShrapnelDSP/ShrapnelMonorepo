@@ -1,0 +1,3 @@
+add_executable(integration_test)
+target_sources(integration_test PRIVATE integration_test.cpp)
+target_link_libraries(integration_test PRIVATE shrapnel::main)

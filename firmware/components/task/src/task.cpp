@@ -17,7 +17,7 @@
  * ShrapnelDSP. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include "task.h"
+#include "task/task.h"
 
 #include <cassert>
 #include "freertos/FreeRTOS.h"

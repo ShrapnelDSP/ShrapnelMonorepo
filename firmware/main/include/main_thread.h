@@ -1,18 +1,16 @@
-// The code in this file has no dependencies on FreeRTOS or anything else in the
-// ESP32 platform
 #pragma once
 
 #include <utility>
 
 #include "audio_param.h"
+#include "cmd_handling.h"
 #include "messages.h"
 #include "midi_mapping_json_builder.h"
 #include "midi_mapping_json_parser.h"
 #include "midi_uart.h"
 #include "persistence.h"
-#include "server.h"
+#include "queue/queue.h"
 #include "timer.h"
-#include "wifi_state_machine.h"
 
 namespace shrapnel {
 
@@ -21,7 +19,10 @@ constexpr const char *TAG = "main_thread";
 }
 
 constexpr const size_t MAX_PARAMETERS = 20;
+
 using AudioParameters = parameters::AudioParameters<MAX_PARAMETERS, 1>;
+using SendMessageCallback = etl::delegate<void(const AppMessage&)>;
+
 
 template <typename MappingManagerT>
 class MidiMappingObserver final : public midi::MappingObserver
@@ -59,34 +60,13 @@ private:
     const MappingManagerT &mapping_manager;
 };
 
-class EventSend final
-{
-public:
-    explicit EventSend(Server &server) : server{server} {}
-
-    void send(parameters::ApiMessage message, int fd)
-    {
-        if(fd >= 0)
-        {
-            server.send_message({message, fd});
-        }
-        else
-        {
-            server.send_message({message, std::nullopt});
-        }
-    }
-
-private:
-    Server &server;
-};
-
 class ParameterUpdateNotifier
 {
 public:
     ParameterUpdateNotifier(std::shared_ptr<AudioParameters> audio_params,
-                            Server &server)
+                            SendMessageCallback send_message)
         : audio_params{std::move(audio_params)},
-          server{server}
+          send_message{send_message}
     {
     }
 
@@ -99,7 +79,7 @@ public:
             },
             std::nullopt,
         };
-        server.send_message(message);
+        send_message(message);
         return audio_params->update(param, value);
     }
 
@@ -110,7 +90,7 @@ public:
 
 private:
     std::shared_ptr<AudioParameters> audio_params;
-    Server &server;
+    SendMessageCallback send_message;
 };
 
 template <std::size_t MAX_PARAMETERS>
@@ -185,12 +165,12 @@ template <std::size_t MAX_PARAMETERS, std::size_t QUEUE_LEN>
 class MainThread
 {
 public:
-    MainThread(Server &server,
+    MainThread(SendMessageCallback send_message,
                Queue<AppMessage, QUEUE_LEN> &in_queue,
                midi::MidiUartBase *midi_uart,
                std::shared_ptr<AudioParameters> audio_params,
                persistence::Storage &persistence)
-        : server{server},
+        : send_message{send_message},
           in_queue{in_queue},
           parameter_observer{persistence},
           clipping_throttle_timer{
@@ -211,10 +191,11 @@ public:
                   *this))},
           midi_mutex{},
           audio_params{audio_params},
-          event_send{server},
-          cmd_handling{
-              new parameters::CommandHandling<AudioParameters, EventSend>(
-                  audio_params, event_send)}
+          cmd_handling{new parameters::CommandHandling<AudioParameters>(
+              audio_params,
+              parameters::CommandHandling<AudioParameters>::SendMessageCallback::
+                  create<MainThread, &MainThread::cmd_handling_send_message>(
+                      *this))}
     {
         auto create_and_load_parameter = [&](const parameters::id_t &name,
                                              float minimum,
@@ -290,7 +271,7 @@ public:
         audio_params->add_observer(parameter_observer);
 
         auto parameter_notifier =
-            std::make_shared<ParameterUpdateNotifier>(audio_params, server);
+            std::make_shared<ParameterUpdateNotifier>(audio_params, send_message);
 
         [&]
         {
@@ -408,7 +389,7 @@ public:
 
                         if(response.has_value())
                         {
-                            server.send_message({*response, std::nullopt});
+                            send_message({*response, std::nullopt});
                         }
                     }
                 },
@@ -431,14 +412,14 @@ public:
             if(!events::input_clipped.test_and_set())
             {
                 ESP_LOGI(TAG, "input was clipped");
-                server.send_message({events::InputClipped{}, std::nullopt});
+                send_message({events::InputClipped{}, std::nullopt});
                 clipping_throttle_timer.reset(pdMS_TO_TICKS(10));
             }
 
             if(!events::output_clipped.test_and_set())
             {
                 ESP_LOGI(TAG, "output was clipped");
-                server.send_message({events::OutputClipped{}, std::nullopt});
+                send_message({events::OutputClipped{}, std::nullopt});
                 clipping_throttle_timer.reset(pdMS_TO_TICKS(10));
             }
         }
@@ -455,7 +436,7 @@ public:
         {
             last_notified_midi_message = *last_midi_message;
 
-            server.send_message(
+            send_message(
                 {midi::MessageReceived{*last_midi_message}, std::nullopt});
         }
     }
@@ -478,7 +459,12 @@ private:
 
     void clear_midi_notify_waiting() { is_midi_notify_waiting.clear(); };
 
-    Server &server;
+    void cmd_handling_send_message(const parameters::ApiMessage &m, std::optional<int> fd)
+    {
+        send_message({m, fd});
+    }
+
+    SendMessageCallback send_message;
     Queue<AppMessage, QUEUE_LEN> &in_queue;
     ParameterObserver<MAX_PARAMETERS> parameter_observer;
     os::Timer clipping_throttle_timer;
@@ -491,9 +477,8 @@ private:
     std::mutex midi_mutex;
     midi::MappingManager<ParameterUpdateNotifier, 10, 1> *midi_mapping_manager;
     std::shared_ptr<AudioParameters> audio_params;
-    EventSend event_send;
-    parameters::CommandHandling<parameters::AudioParameters<MAX_PARAMETERS, 1>,
-                                EventSend> *cmd_handling;
+    parameters::CommandHandling<parameters::AudioParameters<MAX_PARAMETERS, 1>>
+        *cmd_handling;
     std::unique_ptr<MidiMappingObserver<
         midi::MappingManager<ParameterUpdateNotifier, 10, 1>>>
         mapping_observer;
