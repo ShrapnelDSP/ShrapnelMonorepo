@@ -396,17 +396,6 @@ public:
                 message.first);
         }
 
-        {
-            // i2s produces an event on each buffer TX/RX. We process all the
-            // events in the current iteration, so that the queue doesn't fill
-            // up.
-            i2s_event_t event;
-            while(xQueueReceive(audio::i2s_queue, &event, 0))
-            {
-                audio::log_i2s_event(event);
-            }
-        }
-
         if(!clipping_throttle_timer.is_active())
         {
             if(!events::input_clipped.test_and_set())

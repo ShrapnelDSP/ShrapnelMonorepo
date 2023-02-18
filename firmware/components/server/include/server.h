@@ -2,7 +2,7 @@
 
 #include "esp_http_server.h"
 #include "messages.h"
-#include "queue.h"
+#include "queue/queue.h"
 #include <freertos/FreeRTOS.h>
 #include <freertos/semphr.h>
 

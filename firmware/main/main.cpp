@@ -21,7 +21,7 @@
 #include <mutex>
 #include "freertos/portmacro.h"
 #include "freertos/projdefs.h"
-#include "queue.h"
+#include "queue/queue.h"
 #include "wifi_provisioning/manager.h"
 #include <etl/state_chart.h>
 #include <stdio.h>
@@ -71,7 +71,7 @@
 #include "pcm3060.h"
 #include "profiling.h"
 #include "midi_mapping_api.h"
-#include "queue.h"
+#include "queue/queue.h"
 #include "wifi_state_machine.h"
 #include "server.h"
 #include "timer.h"
@@ -392,6 +392,17 @@ extern "C" void app_main(void)
         auto tick_count_start = xTaskGetTickCount();
 
         main_thread.loop();
+
+        {
+            // i2s produces an event on each buffer TX/RX. We process all the
+            // events in the current iteration, so that the queue doesn't fill
+            // up.
+            i2s_event_t event;
+            while(xQueueReceive(audio::i2s_queue, &event, 0))
+            {
+                audio::log_i2s_event(event);
+            }
+        }
 
         wifi::InternalEvent wifi_event;
         while(pdPASS == wifi_queue.receive(&wifi_event, 0))

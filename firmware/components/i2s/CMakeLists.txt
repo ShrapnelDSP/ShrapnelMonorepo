@@ -1,3 +1,4 @@
+if(ESP_PLATFORM)
 idf_component_register(SRCS src/i2s.cpp
                        INCLUDE_DIRS include
                        REQUIRES driver
@@ -11,3 +12,4 @@ idf_component_register(SRCS src/i2s.cpp
                        compiler_warning_flags)
 
 target_compile_options(${COMPONENT_LIB} PRIVATE -Wdouble-promotion -Werror=double-promotion)
+endif()

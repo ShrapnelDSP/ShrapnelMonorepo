@@ -10,5 +10,5 @@ add_library(shrapnel::queue ALIAS queue_mock)
 
 target_include_directories(queue_mock INTERFACE include)
 
-target_link_libraries(queue_mock INTERFACE freertos)
+target_link_libraries(queue_mock INTERFACE shrapnel::freertos)
 endif()

@@ -10,5 +10,5 @@ else()
     target_include_directories(audio_events_mock INTERFACE include)
 
     target_link_libraries(audio_events_mock INTERFACE esp_common)
-    target_link_libraries(audio_events_mock INTERFACE freertos)
+    target_link_libraries(audio_events_mock INTERFACE shrapnel::freertos)
 endif()
