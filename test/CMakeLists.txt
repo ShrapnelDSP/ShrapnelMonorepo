@@ -18,6 +18,7 @@ include(GoogleTest)
 include(CTest)
 
 add_compile_definitions(TESTING)
+add_compile_definitions(LOG_DEFAULT_LEVEL=ESP_LOG_VERBOSE)
 
 # Tells the component cmake files to become test components instead of esp-idf
 # components
