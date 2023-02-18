@@ -18,8 +18,7 @@ if(ESP_PLATFORM)
                            persistence
                            pcm3060
                            server
-                           timer
-                           queue
+                           os
                            wifi
                            abstract_dsp
                            PRIV_REQUIRES compiler_warning_flags
@@ -37,7 +36,6 @@ else()
                           shrapnel::messages
                           shrapnel::midi_mapping
                           shrapnel::midi_protocol
-                          shrapnel::persistence
-                          shrapnel::queue
-                          shrapnel::timer)
+                          shrapnel::os
+                          shrapnel::persistence)
 endif()

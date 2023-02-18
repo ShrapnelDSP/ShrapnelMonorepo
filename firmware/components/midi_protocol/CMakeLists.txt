@@ -4,12 +4,17 @@ if(NOT DEFINED TESTING)
                            REQUIRES driver etl
                            PRIV_REQUIRES compiler_warning_flags)
 else()
-    add_library(midi_mock INTERFACE)
-    add_library(shrapnel::midi_protocol ALIAS midi_mock)
+    add_library(midi_protocol STATIC)
+    add_library(shrapnel::midi_protocol ALIAS midi_protocol)
 
-    target_include_directories(midi_mock INTERFACE include)
+    target_sources(midi_protocol PRIVATE src/midi.cpp)
 
-    target_link_libraries(midi_mock INTERFACE shrapnel::driver)
+    target_include_directories(midi_protocol PUBLIC include)
+
+    target_link_libraries(midi_protocol PUBLIC
+            shrapnel::driver
+            shrapnel::etl
+            shrapnel::log)
 
     add_executable(midi_test
                    src/midi.cpp

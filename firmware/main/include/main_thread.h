@@ -8,9 +8,9 @@
 #include "midi_mapping_json_builder.h"
 #include "midi_mapping_json_parser.h"
 #include "midi_uart.h"
+#include "os/queue.h"
+#include "os/timer.h"
 #include "persistence.h"
-#include "queue/queue.h"
-#include "timer.h"
 
 namespace shrapnel {
 
@@ -23,6 +23,27 @@ constexpr const size_t MAX_PARAMETERS = 20;
 using AudioParameters = parameters::AudioParameters<MAX_PARAMETERS, 1>;
 using SendMessageCallback = etl::delegate<void(const AppMessage&)>;
 
+// TODO move all the json parser function into a json namespace
+namespace midi {
+using midi::from_json;
+
+template<> std::optional<float> from_json(const rapidjson::Value &value)
+{
+    if(!value.IsFloat()) {
+        ESP_LOGE(TAG, "not float");
+        return std::nullopt;
+    }
+    return value.GetFloat();
+}
+
+template<>
+rapidjson::Value to_json(rapidjson::Document &document, const float &object)
+{
+    rapidjson::Value out{};
+    out.SetFloat(object);
+    return out;
+}
+}
 
 template <typename MappingManagerT>
 class MidiMappingObserver final : public midi::MappingObserver
@@ -402,14 +423,14 @@ public:
             {
                 ESP_LOGI(TAG, "input was clipped");
                 send_message({events::InputClipped{}, std::nullopt});
-                clipping_throttle_timer.reset(pdMS_TO_TICKS(10));
+                clipping_throttle_timer.start(pdMS_TO_TICKS(10));
             }
 
             if(!events::output_clipped.test_and_set())
             {
                 ESP_LOGI(TAG, "output was clipped");
                 send_message({events::OutputClipped{}, std::nullopt});
-                clipping_throttle_timer.reset(pdMS_TO_TICKS(10));
+                clipping_throttle_timer.start(pdMS_TO_TICKS(10));
             }
         }
 

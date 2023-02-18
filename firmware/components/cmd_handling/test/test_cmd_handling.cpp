@@ -58,7 +58,6 @@ class MockEventSend
     MOCK_METHOD(void, send, (const char *json, std::optional<int> fd));
 };
 
-// TODO need to refactor test to use this through the delegate interface
 class EventSendAdapter final {
     public:
     explicit EventSendAdapter(MockEventSend &event) : event(event) {}
@@ -102,26 +101,35 @@ class MockAudioParameterFloat
 
 class CmdHandling : public ::testing::Test
 {
-    protected:
-    CmdHandling() : cmd(param,
+protected:
+    CmdHandling()
+        : param(std::make_unique<MockAudioParameters>()),
+          cmd(param,
 
-                        shrapnel::parameters::CommandHandling<MockAudioParameters>::SendMessageCallback::
-                        create<EventSendAdapter, &EventSendAdapter::send>(
-                            event_adapter))
-                            {}
+              shrapnel::parameters::CommandHandling<MockAudioParameters>::
+                  SendMessageCallback::create<EventSendAdapter,
+                                              &EventSendAdapter::send>(
+                      event_adapter))
+    {
+    }
 
     std::shared_ptr<MockAudioParameters> param;
     MockEventSend event;
     EventSendAdapter event_adapter{event};
     shrapnel::parameters::CommandHandling<MockAudioParameters> cmd;
 
-    void parseAndDispatch(const char *json, int fd) {
+    void parseAndDispatch(const char *json, int fd)
+    {
         rapidjson::Document document;
         document.Parse(json);
-        ASSERT_FALSE(document.HasParseError()) << "Must use valid JSON for testing.";
+        ASSERT_FALSE(document.HasParseError())
+            << "Must use valid JSON for testing.";
 
-        auto parsed_message = shrapnel::parameters::from_json<shrapnel::parameters::ApiMessage>(document.GetObject());
-        ASSERT_TRUE(parsed_message.has_value()) << "Must use valid JSON for testing.";
+        auto parsed_message =
+            shrapnel::parameters::from_json<shrapnel::parameters::ApiMessage>(
+                document.GetObject());
+        ASSERT_TRUE(parsed_message.has_value())
+            << "Must use valid JSON for testing.";
 
         cmd.dispatch(*parsed_message, fd);
     }

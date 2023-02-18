@@ -21,7 +21,7 @@
 #include <mutex>
 #include "freertos/portmacro.h"
 #include "freertos/projdefs.h"
-#include "queue/queue.h"
+#include "os/queue.h"
 #include "wifi_provisioning/manager.h"
 #include <etl/state_chart.h>
 #include <stdio.h>
@@ -71,10 +71,10 @@
 #include "pcm3060.h"
 #include "profiling.h"
 #include "midi_mapping_api.h"
-#include "queue/queue.h"
+#include "os/queue.h"
 #include "wifi_state_machine.h"
 #include "server.h"
-#include "timer.h"
+#include "os/timer.h"
 
 #include "iir_concrete.h"
 
@@ -85,28 +85,6 @@
 using WifiQueue = shrapnel::Queue<shrapnel::wifi::InternalEvent, 3>;
 
 namespace shrapnel {
-
-// TODO move all the json parser function into a json namespace
-namespace midi {
-    using midi::from_json;
-
-    template<> std::optional<float> from_json(const rapidjson::Value &value)
-    {
-        if(!value.IsFloat()) {
-            ESP_LOGE(TAG, "not float");
-            return std::nullopt;
-        }
-        return value.GetFloat();
-    }
-
-    template<>
-    rapidjson::Value to_json(rapidjson::Document &document, const float &object)
-    {
-        rapidjson::Value out{};
-        out.SetFloat(object);
-        return out;
-    }
-}
 
 extern "C" {
 

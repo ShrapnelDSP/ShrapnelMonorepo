@@ -3,7 +3,7 @@ if(ESP_PLATFORM)
                            INCLUDE_DIRS include
                            REQUIRES
                            esp_http_server
-                           queue
                            messages
+                           os
                            PRIV_REQUIRES compiler_warning_flags)
 endif()

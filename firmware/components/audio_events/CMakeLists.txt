@@ -4,11 +4,14 @@ idf_component_register(SRCS "src/audio_events.cpp"
                        REQUIRES rapidjson
                        PRIV_REQUIRES compiler_warning_flags)
 else()
-    add_library(audio_events_mock INTERFACE)
-    add_library(shrapnel::audio_events ALIAS audio_events_mock)
+    add_library(audio_events STATIC)
+    add_library(shrapnel::audio_events ALIAS audio_events)
 
-    target_include_directories(audio_events_mock INTERFACE include)
+    target_sources(audio_events PRIVATE src/audio_events.cpp)
 
-    target_link_libraries(audio_events_mock INTERFACE esp_common)
-    target_link_libraries(audio_events_mock INTERFACE shrapnel::freertos)
+    target_include_directories(audio_events PUBLIC include)
+
+    target_link_libraries(audio_events
+            PUBLIC shrapnel::rapidjson
+            PRIVATE shrapnel::compiler_warning_flags)
 endif()

@@ -22,7 +22,7 @@ else()
             shrapnel::etl
             shrapnel::freertos
             shrapnel::log
-            shrapnel::queue
+            shrapnel::os
             shrapnel::rapidjson)
 
     add_executable(cmd_handling_test
