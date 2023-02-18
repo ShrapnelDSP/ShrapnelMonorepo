@@ -13,8 +13,9 @@ add_library(os STATIC)
 add_library(shrapnel::os ALIAS os)
 
 target_include_directories(os
-                           PUBLIC include
-                           PRIVATE desktop)
+        PUBLIC
+        include
+        desktop)
 
 target_sources(os
         PRIVATE

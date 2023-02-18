@@ -9,6 +9,7 @@ Timer::impl::impl(const char *pcTimerName,
                   std::optional<etl::delegate<void(void)>> callback)
     : callback(callback)
 {
+    timers.enable(true);
     id = timers.register_timer(
         Callback::create<Timer::impl, &Timer::impl::do_callback>(*this),
         xTimerPeriod,
@@ -26,6 +27,10 @@ BaseType_t Timer::impl::start(TickType_t xBlockTime)
 BaseType_t Timer::impl::stop(TickType_t xBlockTime) {
     is_running = false;
     timers.stop(id);
+}
+
+void Timer::impl::tick(uint32_t tick_count) {
+    timers.tick(tick_count);
 }
 
 etl::callback_timer_atomic<254> Timer::impl::timers;

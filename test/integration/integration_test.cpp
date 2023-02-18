@@ -4,6 +4,7 @@
 
 #include "main_thread.h"
 #include "os/timer.h"
+#include "timer_impl.h"
 
 #define QUEUE_LEN 4
 
@@ -41,11 +42,7 @@ class Integration : public ::testing::Test
 protected:
     Integration()
         : audio_params(std::make_unique<shrapnel::AudioParameters>()),
-          uut{mock_send_message.AsStdFunction(),
-              in_queue,
-              &midi_uart,
-              audio_params,
-              storage}
+          uut{send_message_fn, in_queue, &midi_uart, audio_params, storage}
     {
     }
 
@@ -56,7 +53,9 @@ protected:
                       [this](uint8_t byte) { midi_uart.buffer.push(byte); });
     }
 
-    testing::MockFunction<void(const AppMessage &)> mock_send_message;
+    testing::MockFunction<void(const AppMessage &)> send_message;
+    std::function<void(const AppMessage &)> send_message_fn =
+        send_message.AsStdFunction();
     shrapnel::Queue<AppMessage, QUEUE_LEN> in_queue;
     FakeMidiUart midi_uart;
     std::shared_ptr<shrapnel::AudioParameters> audio_params;
@@ -76,15 +75,24 @@ TEST_F(Integration, NotifiesServerAboutMidiMessages)
 
     uut.loop();
     uut.loop();
-
-    EXPECT_CALL(mock_send_message,
-                Call(AppMessage {MessageReceived{
-                    {Message{
-                        .channel{1},
-                        .parameters{Message::NoteOn{.note{0}, .velocity{1}}}}},
-                }, std::nullopt}));
     uut.loop();
 
-    shrapnel::os::Timer::impl::tick();
+    EXPECT_CALL(send_message,
+                Call(AppMessage{
+                    MessageReceived{
+                        {
+                            Message{
+                                .channel{1},
+                                .parameters{
+                                    Message::NoteOn{.note{0}, .velocity{1}},
+                                },
+                            },
+                        },
+                    },
+                    std::nullopt,
+                }));
 
+    shrapnel::os::Timer::impl::tick(pdMS_TO_TICKS(200));
+
+    uut.loop();
 }
