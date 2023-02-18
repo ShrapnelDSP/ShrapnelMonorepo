@@ -30,9 +30,11 @@ rapidjson::Value to_json(rapidjson::Document &document, const T &object);
 
 struct InputClipped
 {
+    std::strong_ordering operator<=>(const InputClipped &other) const = default;
 };
 struct OutputClipped
 {
+    std::strong_ordering operator<=>(const OutputClipped &other) const = default;
 };
 
 using ApiMessage = std::variant<InputClipped, OutputClipped>;

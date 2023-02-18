@@ -1,7 +1,9 @@
 #include "gmock/gmock.h"
 #include "gtest/gtest.h"
+#include <span>
 
 #include "main_thread.h"
+#include "os/timer.h"
 
 #define QUEUE_LEN 4
 
@@ -47,6 +49,13 @@ protected:
     {
     }
 
+    void pushMidiBytes(std::vector<uint8_t> bytes)
+    {
+        std::for_each(bytes.begin(),
+                      bytes.end(),
+                      [this](uint8_t byte) { midi_uart.buffer.push(byte); });
+    }
+
     testing::MockFunction<void(const AppMessage &)> mock_send_message;
     shrapnel::Queue<AppMessage, QUEUE_LEN> in_queue;
     FakeMidiUart midi_uart;
@@ -55,4 +64,27 @@ protected:
     shrapnel::MainThread<shrapnel::MAX_PARAMETERS, QUEUE_LEN> uut;
 };
 
-TEST_F(Integration, NotifiesServerAboutMidiMessages) {}
+TEST_F(Integration, NotifiesServerAboutMidiMessages)
+{
+    using namespace shrapnel::midi;
+
+    pushMidiBytes({
+        0x90,
+        0x00,
+        0x01,
+    });
+
+    uut.loop();
+    uut.loop();
+
+    EXPECT_CALL(mock_send_message,
+                Call(AppMessage {MessageReceived{
+                    {Message{
+                        .channel{1},
+                        .parameters{Message::NoteOn{.note{0}, .velocity{1}}}}},
+                }, std::nullopt}));
+    uut.loop();
+
+    shrapnel::os::Timer::impl::tick();
+
+}

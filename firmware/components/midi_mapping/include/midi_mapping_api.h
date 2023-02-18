@@ -27,7 +27,9 @@
 namespace shrapnel {
 namespace midi {
 
-struct GetRequest {};
+struct GetRequest {
+    std::strong_ordering operator<=>(const GetRequest &other) const = default;
+};
 
 struct GetResponse {
     const etl::imap<Mapping::id_t, Mapping> *mappings;
