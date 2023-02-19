@@ -121,7 +121,8 @@ class ParameterObserver final : public parameters::ParameterObserver
 {
 public:
     explicit ParameterObserver(persistence::Storage &persistence)
-        : persistence{persistence},
+        : is_save_throttled{true},
+          persistence{persistence},
           timer{"param save throttle",
                 pdMS_TO_TICKS(10'000),
                 false,
@@ -129,12 +130,6 @@ public:
                     ParameterObserver<MAX_PARAMETERS>,
                     &ParameterObserver<MAX_PARAMETERS>::timer_callback>(*this)}
     {
-    }
-
-    void timer_callback()
-    {
-        is_save_throttled.clear();
-        is_save_throttled.notify_all();
     }
 
     void
@@ -153,8 +148,27 @@ public:
 
         if(!timer.is_active())
         {
-            timer.start(pdMS_TO_TICKS(5));
+            if(pdPASS != timer.start(pdMS_TO_TICKS(5)))
+            {
+                ESP_LOGE(TAG, "Failed to start parameter observer timer");
+            }
         }
+    }
+
+    void loop()
+    {
+        if(!is_save_throttled.test_and_set())
+        {
+            persist_parameters();
+            ESP_LOGI(TAG, "Parameters saved to NVS");
+        }
+    }
+
+private:
+    void timer_callback()
+    {
+        is_save_throttled.clear();
+        is_save_throttled.notify_all();
     }
 
     void persist_parameters()
@@ -177,8 +191,6 @@ public:
     }
 
     std::atomic_flag is_save_throttled;
-
-private:
     persistence::Storage &persistence;
     os::Timer timer;
     etl::map<parameters::id_t, float, MAX_PARAMETERS> updated_parameters;
@@ -315,7 +327,8 @@ public:
             auto saved_mappings = midi::from_json<
                 etl::map<midi::Mapping::id_t, midi::Mapping, 10>>(document);
 
-            using MidiMappingType = midi::MappingManager<ParameterUpdateNotifier, 10, 1>;
+            using MidiMappingType =
+                midi::MappingManager<ParameterUpdateNotifier, 10, 1>;
             midi_mapping_manager =
                 saved_mappings.has_value()
                     ? std::make_unique<MidiMappingType>(parameter_notifier,
@@ -328,7 +341,11 @@ public:
             persistence, *midi_mapping_manager);
         midi_mapping_manager->add_observer(*mapping_observer);
 
-        midi_message_notify_timer.start(portMAX_DELAY);
+        BaseType_t rc = midi_message_notify_timer.start(portMAX_DELAY);
+        if(rc != pdPASS)
+        {
+            ESP_LOGE(TAG, "Failed to start midi message timer");
+        }
 
         events::input_clipped.test_and_set();
         events::output_clipped.test_and_set();
@@ -427,22 +444,28 @@ public:
             {
                 ESP_LOGI(TAG, "input was clipped");
                 send_message({events::InputClipped{}, std::nullopt});
-                clipping_throttle_timer.start(pdMS_TO_TICKS(10));
+                BaseType_t rc =
+                    clipping_throttle_timer.start(pdMS_TO_TICKS(10));
+                if(rc != pdPASS)
+                {
+                    ESP_LOGE(TAG, "Failed to start clipping throttle timer");
+                }
             }
 
             if(!events::output_clipped.test_and_set())
             {
                 ESP_LOGI(TAG, "output was clipped");
                 send_message({events::OutputClipped{}, std::nullopt});
-                clipping_throttle_timer.start(pdMS_TO_TICKS(10));
+                BaseType_t rc =
+                    clipping_throttle_timer.start(pdMS_TO_TICKS(10));
+                if(rc != pdPASS)
+                {
+                    ESP_LOGE(TAG, "Failed to start clipping throttle timer");
+                }
             }
         }
 
-        if(!parameter_observer.is_save_throttled.test_and_set())
-        {
-            parameter_observer.persist_parameters();
-            ESP_LOGI(TAG, "Parameters saved to NVS");
-        }
+        parameter_observer.loop();
 
         if(!is_midi_notify_waiting.test_and_set() &&
            last_midi_message.has_value() &&

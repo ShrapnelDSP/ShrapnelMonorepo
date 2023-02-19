@@ -65,6 +65,12 @@ etl::string_stream& operator<<(etl::string_stream&  out, const Remove& self)
     return out << "{ " << self.id << " }";
 }
 
+etl::string_stream &operator<<(etl::string_stream &out,
+                               const MessageReceived &self)
+{
+    return out << "{ " << self.message << " }";
+}
+
 etl::string_stream& operator<<(etl::string_stream&  out, const MappingApiMessage& self)
 {
 #if 1

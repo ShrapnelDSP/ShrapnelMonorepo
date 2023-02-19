@@ -16,3 +16,6 @@
 [submodule "test/support/freertos/FreeRTOS-Kernel"]
 	path = test/support/freertos/FreeRTOS-Kernel
 	url = https://github.com/Barabas5532/FreeRTOS-Kernel.git
+[submodule "test/support/midi/midifile"]
+	path = test/support/midi/midifile
+	url = https://github.com/craigsapp/midifile.git
