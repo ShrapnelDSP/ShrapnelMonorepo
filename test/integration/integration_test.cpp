@@ -2,7 +2,7 @@
 #include "gtest/gtest.h"
 #include <span>
 
-#include "MidiMessage.h"
+#include "juce_audio_basics/juce_audio_basics.h"
 #include "main_thread.h"
 #include "os/timer.h"
 #include "timer_impl.h"
@@ -68,10 +68,11 @@ protected:
     {
     }
 
-    void pushMidiBytes(std::vector<uint8_t> bytes)
+    void pushMidiMessage(const juce::MidiMessage &message)
     {
-        std::for_each(bytes.begin(),
-                      bytes.end(),
+        //const auto bytes = std::span<juce::uint8>(message.getRawData(), message.getRawDataSize());
+        std::for_each(message.getRawData(),
+                      message.getRawData() + message.getRawDataSize(),
                       [this](uint8_t byte) { midi_uart.buffer.push(byte); });
     }
 
@@ -95,9 +96,9 @@ TEST_F(Integration, NotifiesServerAboutMidiMessages)
 {
     using namespace shrapnel;
 
-    smf::MidiMessage midi{};
-    midi.makeNoteOn(0, 0, 1);
-    pushMidiBytes(midi);
+    auto note_on_message =
+        juce::MidiMessage::noteOn(1, 0, static_cast<uint8_t>(1));
+    pushMidiMessage(note_on_message);
 
     uut.loop();
     uut.loop();
@@ -185,10 +186,8 @@ TEST_F(Integration, MidiCanUpdateParameters)
     uut.loop();
 
     // When the configured MIDI message is sent
-    smf::MidiMessage midi{};
-    // TODO this library has an off by one error on the channel, let's use something else
-    midi.makeController(0, 0, 1);
-    pushMidiBytes(midi);
+    auto control_change_message = juce::MidiMessage::controllerEvent(1, 0, 0);
+    pushMidiMessage(control_change_message);
 
     uut.loop();
     uut.loop();
