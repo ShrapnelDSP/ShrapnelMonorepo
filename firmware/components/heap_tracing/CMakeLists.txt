@@ -1,4 +1,4 @@
-if(NOT DEFINED TESTING)
-    idf_component_register(INCLUDE_DIRS include
-                           REQUIRES heap)
-endif()
+add_library(heap_tracing INTERFACE)
+add_library(shrapnel::heap_tracing ALIAS heap_tracing)
+
+target_include_directories(heap_tracing INTERFACE include)

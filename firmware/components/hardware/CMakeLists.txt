@@ -1,5 +1,4 @@
-if(ESP_PLATFORM)
-idf_component_register(INCLUDE_DIRS "include"
-                       REQUIRES driver)
+add_library(hardware INTERFACE)
+add_library(shrapnel::hardware ALIAS hardware)
 
-endif()
+target_include_directories(hardware INTERFACE include)

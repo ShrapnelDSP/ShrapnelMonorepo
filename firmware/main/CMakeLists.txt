@@ -4,8 +4,6 @@ if(ESP_PLATFORM)
                            REQUIRES
                            driver
                            esp_http_server
-                           hardware
-                           heap_tracing
                            i2s
                            mdns
                            messages
@@ -26,6 +24,8 @@ if(ESP_PLATFORM)
                           shrapnel::audio_events
                           shrapnel::cmd_handling
                           shrapnel::etl
+                          shrapnel::hardware
+                          shrapnel::heap_tracing
                           PRIVATE
                           shrapnel::compiler_warning_flags)
 else()
