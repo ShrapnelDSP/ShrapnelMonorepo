@@ -48,7 +48,7 @@ class QueueBase
     virtual BaseType_t send(const T *in, TickType_t time_to_wait) = 0;
 };
 
-template <typename T, std::size_t MAX_SIZE> requires (MAX_SIZE > 0)
+template <typename T, std::size_t MAX_SIZE> requires (MAX_SIZE > 0) && (MAX_SIZE < PTRDIFF_MAX)
 class Queue final: public QueueBase<T>
 {
     using ticks = std::chrono::duration<TickType_t>;
@@ -88,8 +88,8 @@ class Queue final: public QueueBase<T>
     }
 
     private:
-    std::counting_semaphore<MAX_SIZE> used_semaphore;
-    std::counting_semaphore<MAX_SIZE> free_semaphore;
+    std::counting_semaphore<static_cast<std::ptrdiff_t>(MAX_SIZE)> used_semaphore;
+    std::counting_semaphore<static_cast<std::ptrdiff_t>(MAX_SIZE)> free_semaphore;
     etl::deque<T, MAX_SIZE> queue_storage;
     std::queue<T, etl::deque<T, MAX_SIZE>> queue;
     std::mutex mutex;

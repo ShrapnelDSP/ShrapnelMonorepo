@@ -60,7 +60,7 @@ class MockEventSend
 
 class EventSendAdapter final {
     public:
-    explicit EventSendAdapter(MockEventSend &event) : event(event) {}
+    explicit EventSendAdapter(MockEventSend &a_event) : event(a_event) {}
 
     void send(const shrapnel::parameters::ApiMessage &message, std::optional<int> fd)
     {

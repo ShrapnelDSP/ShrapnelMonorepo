@@ -1,6 +1,10 @@
 #include "os/timer.h"
+#include "freertos/FreeRTOS.h"
+#include "freertos/timers.h"
 
 namespace shrapnel::os {
+
+extern "C" void timer_callback(TimerHandle_t a_timer);
 
 struct Timer::impl
 {

@@ -26,7 +26,7 @@ BaseType_t Timer::impl::start(TickType_t xBlockTime)
 
 BaseType_t Timer::impl::stop(TickType_t xBlockTime) {
     is_running = false;
-    timers.stop(id);
+    return timers.stop(id);
 }
 
 void Timer::impl::tick(uint32_t tick_count) {

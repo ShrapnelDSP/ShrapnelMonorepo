@@ -69,10 +69,19 @@
 #include <etl/delegate.h>
 #include <iterator>
 #include <memory>
-#include <rapidjson/stringbuffer.h>
-#include <rapidjson/writer.h>
 #include <string.h>
 #include <string_view>
+
+// Disable warning inside rapidjson
+// https://github.com/Tencent/rapidjson/issues/1700
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wclass-memaccess"
+#pragma GCC diagnostic ignored "-Wzero-as-null-pointer-constant"
+#pragma GCC diagnostic ignored "-Wsign-conversion"
+#pragma GCC diagnostic ignored "-Wswitch-enum"
+#include <rapidjson/stringbuffer.h>
+#include <rapidjson/writer.h>
+#pragma GCC diagnostic pop
 
 namespace shrapnel::parameters {
 
@@ -89,28 +98,36 @@ class CommandHandling final
      */
     CommandHandling(
             std::shared_ptr<AudioParametersT> a_param,
-            SendMessageCallback send_message) :
+            SendMessageCallback a_send_message) :
         param(a_param),
-        send_message(send_message)
+        send_message(a_send_message)
         {}
 
-    void dispatch(const ApiMessage &message, int fd)
+    void dispatch(const ApiMessage &a_message, int fd)
     {
 #if !defined(TESTING)
         ESP_LOGI(TAG, "%s stack %d", __FUNCTION__, uxTaskGetStackHighWaterMark(NULL));
 #endif
 
-        std::visit([&](const auto &message) -> void {
-            using T = std::decay_t<decltype(message)>;
+        std::visit(
+            [&](const auto &message) -> void
+            {
+                using T = std::decay_t<decltype(message)>;
 
-            if constexpr (std::is_same_v<T, Update>) {
-                parameter_update(message, fd);
-            } else if constexpr (std::is_same_v<T, Initialise>) {
-                initialise_parameters();
-            } else {
-                ESP_LOGE(TAG, "Unhandled message type");
-            }
-        }, message);
+                if constexpr(std::is_same_v<T, Update>)
+                {
+                    parameter_update(message, fd);
+                }
+                else if constexpr(std::is_same_v<T, Initialise>)
+                {
+                    initialise_parameters();
+                }
+                else
+                {
+                    ESP_LOGE(TAG, "Unhandled message type");
+                }
+            },
+            a_message);
     }
 
     private:

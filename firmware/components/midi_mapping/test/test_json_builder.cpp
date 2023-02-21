@@ -27,9 +27,17 @@
 #include "midi_mapping_json_builder.h"
 #include "midi_mapping_json_parser.h"
 #include "midi_protocol.h"
+// Disable warning inside rapidjson
+// https://github.com/Tencent/rapidjson/issues/1700
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wclass-memaccess"
+#pragma GCC diagnostic ignored "-Wzero-as-null-pointer-constant"
+#pragma GCC diagnostic ignored "-Wsign-conversion"
+#pragma GCC diagnostic ignored "-Wswitch-enum"
 #include "rapidjson/document.h"
 #include "rapidjson/stringbuffer.h"
 #include "rapidjson/prettywriter.h"
+#pragma GCC diagnostic pop
 
 namespace {
 

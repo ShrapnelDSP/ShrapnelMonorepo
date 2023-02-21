@@ -39,7 +39,7 @@ std::optional<float> from_json(const rapidjson::Value &value)
 }
 
 template <>
-rapidjson::Value to_json(rapidjson::Document &document, const float &object)
+rapidjson::Value to_json(rapidjson::Document &, const float &object)
 {
     rapidjson::Value out{};
     out.SetFloat(object);
@@ -51,10 +51,10 @@ template <typename MappingManagerT>
 class MidiMappingObserver final : public midi::MappingObserver
 {
 public:
-    explicit MidiMappingObserver(persistence::Storage &persistence,
-                                 const MappingManagerT &mapping_manager)
-        : persistence{persistence},
-          mapping_manager{mapping_manager}
+    explicit MidiMappingObserver(persistence::Storage &a_persistence,
+                                 const MappingManagerT &a_mapping_manager)
+        : persistence{a_persistence},
+          mapping_manager{a_mapping_manager}
     {
     }
 
@@ -86,10 +86,10 @@ private:
 class ParameterUpdateNotifier
 {
 public:
-    ParameterUpdateNotifier(std::shared_ptr<AudioParameters> audio_params,
-                            SendMessageCallback send_message)
-        : audio_params{std::move(audio_params)},
-          send_message{send_message}
+    ParameterUpdateNotifier(std::shared_ptr<AudioParameters> a_audio_params,
+                            SendMessageCallback a_send_message)
+        : audio_params{std::move(a_audio_params)},
+          send_message{a_send_message}
     {
     }
 
@@ -120,9 +120,9 @@ template <std::size_t MAX_PARAMETERS>
 class ParameterObserver final : public parameters::ParameterObserver
 {
 public:
-    explicit ParameterObserver(persistence::Storage &persistence)
+    explicit ParameterObserver(persistence::Storage &a_persistence)
         : is_save_throttled{true},
-          persistence{persistence},
+          persistence{a_persistence},
           timer{"param save throttle",
                 pdMS_TO_TICKS(10'000),
                 false,
@@ -200,14 +200,14 @@ template <std::size_t MAX_PARAMETERS, std::size_t QUEUE_LEN>
 class MainThread
 {
 public:
-    MainThread(SendMessageCallback send_message,
-               Queue<AppMessage, QUEUE_LEN> &in_queue,
-               midi::MidiUartBase *midi_uart,
-               std::shared_ptr<AudioParameters> audio_params,
-               persistence::Storage &persistence)
-        : send_message{send_message},
-          in_queue{in_queue},
-          parameter_observer{persistence},
+    MainThread(SendMessageCallback a_send_message,
+               Queue<AppMessage, QUEUE_LEN> &a_in_queue,
+               midi::MidiUartBase *a_midi_uart,
+               std::shared_ptr<AudioParameters> a_audio_params,
+               persistence::Storage &a_persistence)
+        : send_message{a_send_message},
+          in_queue{a_in_queue},
+          parameter_observer{a_persistence},
           clipping_throttle_timer{
               "clipping throttle", pdMS_TO_TICKS(1000), false},
           midi_message_notify_timer{
@@ -217,7 +217,7 @@ public:
               os::Timer::Callback::
                   create<MainThread, &MainThread::clear_midi_notify_waiting>(
                       *this)},
-          midi_uart{midi_uart},
+          midi_uart{a_midi_uart},
           last_midi_message{},
           last_notified_midi_message{},
           midi_decoder{std::make_unique<midi::Decoder>(
@@ -225,10 +225,10 @@ public:
                                               &MainThread::on_midi_message>(
                   *this))},
           midi_mutex{},
-          audio_params{audio_params},
+          audio_params{a_audio_params},
           cmd_handling{
               std::make_unique<parameters::CommandHandling<AudioParameters>>(
-                  audio_params,
+                  a_audio_params,
                   parameters::CommandHandling<AudioParameters>::
                       SendMessageCallback::create<
                           MainThread,
@@ -241,7 +241,7 @@ public:
         {
             std::optional<float> loaded_value;
             etl::string<128> json_string{};
-            int rc = persistence.load(name.data(), json_string);
+            int rc = a_persistence.load(name.data(), json_string);
             if(rc != 0)
             {
                 ESP_LOGW(TAG, "Parameter %s failed to load", name.data());
@@ -266,7 +266,7 @@ public:
 
         out:
             auto range = maximum - minimum;
-            rc = audio_params->create_and_add_parameter(
+            rc = a_audio_params->create_and_add_parameter(
                 name,
                 minimum,
                 maximum,
@@ -305,10 +305,10 @@ public:
         create_and_load_parameter("wahVocal", 0, 1, 0);
         create_and_load_parameter("wahBypass", 0, 1, 1);
 
-        audio_params->add_observer(parameter_observer);
+        a_audio_params->add_observer(parameter_observer);
 
         auto parameter_notifier = std::make_shared<ParameterUpdateNotifier>(
-            audio_params, send_message);
+            a_audio_params, a_send_message);
 
         [&]
         {
@@ -319,7 +319,7 @@ public:
            * - Replace etl::map with more efficient implementation
            */
             etl::string<1500> mapping_json;
-            persistence.load("midi_mappings", mapping_json);
+            a_persistence.load("midi_mappings", mapping_json);
             ESP_LOGI(TAG, "saved mappings: %s", mapping_json.c_str());
 
             rapidjson::Document document;
@@ -338,7 +338,7 @@ public:
 
         mapping_observer = std::make_unique<MidiMappingObserver<
             midi::MappingManager<ParameterUpdateNotifier, 10, 1>>>(
-            persistence, *midi_mapping_manager);
+            a_persistence, *midi_mapping_manager);
         midi_mapping_manager->add_observer(*mapping_observer);
 
         BaseType_t rc = midi_message_notify_timer.start(portMAX_DELAY);
@@ -364,78 +364,8 @@ public:
         {
             auto fd = message.second;
 
-            std::visit(
-                [&](const auto &message)
-                {
-                    using T = std::decay_t<decltype(message)>;
-
-                    if constexpr(std::is_same_v<T, parameters::ApiMessage>)
-                    {
-                        if(!fd.has_value())
-                        {
-                            ESP_LOGE(TAG, "Must always have fd");
-                        }
-
-                        cmd_handling->dispatch(message, *fd);
-                    }
-                    else if constexpr(std::is_same_v<T,
-                                                     midi::MappingApiMessage>)
-                    {
-                        std::scoped_lock lock{midi_mutex};
-
-                        auto response = std::visit(
-                            [&](const auto &message)
-                                -> std::optional<midi::MappingApiMessage>
-                            {
-                                using T = std::decay_t<decltype(message)>;
-
-                                if constexpr(std::is_same_v<T,
-                                                            midi::GetRequest>)
-                                {
-                                    auto mappings = midi_mapping_manager->get();
-                                    return midi::GetResponse{mappings};
-                                }
-                                else if constexpr(std::is_same_v<
-                                                      T,
-                                                      midi::CreateRequest>)
-                                {
-                                    auto rc = midi_mapping_manager->create(
-                                        message.mapping);
-                                    if(rc == 0)
-                                    {
-                                        return midi::CreateResponse{
-                                            message.mapping};
-                                    }
-                                }
-                                else if constexpr(std::is_same_v<T,
-                                                                 midi::Update>)
-                                {
-                                    // return code ignored, as there is no way to indicate
-                                    // the error to the frontend
-                                    (void)midi_mapping_manager->update(
-                                        message.mapping);
-                                }
-                                else if constexpr(std::is_same_v<T,
-                                                                 midi::Remove>)
-                                {
-                                    midi_mapping_manager->remove(message.id);
-                                }
-                                else
-                                {
-                                    ESP_LOGE(TAG, "Unhandled message type");
-                                }
-
-                                return std::nullopt;
-                            },
-                            message);
-
-                        if(response.has_value())
-                        {
-                            send_message({*response, std::nullopt});
-                        }
-                    }
-                },
-                message.first);
+            std::visit([this, fd](const auto &m) { handle_message(m, fd); },
+                       message.first);
         }
 
         if(!clipping_throttle_timer.is_active())
@@ -479,6 +409,76 @@ public:
     }
 
 private:
+    void handle_message(const auto &app_message, std::optional<int> fd)
+    {
+        using AppMessageT = std::decay_t<decltype(app_message)>;
+
+        if constexpr(std::is_same_v<AppMessageT, parameters::ApiMessage>)
+        {
+            if(!fd.has_value())
+            {
+                ESP_LOGE(TAG, "Must always have fd");
+            }
+
+            cmd_handling->dispatch(app_message, *fd);
+        }
+        else if constexpr(std::is_same_v<AppMessageT, midi::MappingApiMessage>)
+        {
+            std::scoped_lock lock{midi_mutex};
+
+            auto response = std::visit(
+                [&](const auto &midi_mapping_message)
+                    -> std::optional<midi::MappingApiMessage>
+                {
+                    using MidiMappingMessageT =
+                        std::decay_t<decltype(midi_mapping_message)>;
+
+                    if constexpr(std::is_same_v<MidiMappingMessageT,
+                                                midi::GetRequest>)
+                    {
+                        auto mappings = midi_mapping_manager->get();
+                        return midi::GetResponse{mappings};
+                    }
+                    else if constexpr(std::is_same_v<MidiMappingMessageT,
+                                                     midi::CreateRequest>)
+                    {
+                        auto rc = midi_mapping_manager->create(
+                            midi_mapping_message.mapping);
+                        if(rc == 0)
+                        {
+                            return midi::CreateResponse{
+                                midi_mapping_message.mapping};
+                        }
+                    }
+                    else if constexpr(std::is_same_v<MidiMappingMessageT,
+                                                     midi::Update>)
+                    {
+                        // return code ignored, as there is no way
+                        // to indicate the error to the frontend
+                        (void)midi_mapping_manager->update(
+                            midi_mapping_message.mapping);
+                    }
+                    else if constexpr(std::is_same_v<MidiMappingMessageT,
+                                                     midi::Remove>)
+                    {
+                        midi_mapping_manager->remove(midi_mapping_message.id);
+                    }
+                    else
+                    {
+                        ESP_LOGE(TAG, "Unhandled message type");
+                    }
+
+                    return std::nullopt;
+                },
+                app_message);
+
+            if(response.has_value())
+            {
+                send_message({*response, std::nullopt});
+            }
+        }
+    }
+
     void on_midi_message(midi::Message message)
     {
         etl::string<40> buffer;

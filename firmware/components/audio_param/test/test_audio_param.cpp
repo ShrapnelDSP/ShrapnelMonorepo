@@ -33,7 +33,8 @@ class AudioParams : public ::testing::Test
 
     AudioParams()
     {
-        uut.create_and_add_parameter("test", 0, 10, 5);
+        int rc = uut.create_and_add_parameter("test", 0, 10, 5);
+        assert(rc == 0);
     }
 
     AudioParameters uut;
@@ -70,7 +71,7 @@ TEST_F(AudioParams, UpdateToMaximum)
 
 TEST_F(AudioParams, UpdateToHalfWithNonTrivialRange)
 {
-    uut.create_and_add_parameter("non-trivial", -1, 1, -1);
+    (void)uut.create_and_add_parameter("non-trivial", -1, 1, -1);
     uut.update("non-trivial", 0.5);
 
     ASSERT_EQ(0, *uut.get_raw_parameter("non-trivial"));
@@ -101,8 +102,8 @@ TEST_F(AudioParams, UpdateLimitEdgeCases)
 
 TEST_F(AudioParams, Iterate)
 {
-    uut.create_and_add_parameter("test1", 0, 10, 1);
-    uut.create_and_add_parameter("test2", 0, 10, 2);
+    (void)uut.create_and_add_parameter("test1", 0, 10, 1);
+    (void)uut.create_and_add_parameter("test2", 0, 10, 2);
 
     std::map<parameters::id_t, float> expected{
        {"test", 5}, // defined in test fixture
