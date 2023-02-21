@@ -1,9 +1,10 @@
 if(ESP_PLATFORM)
     idf_component_register(INCLUDE_DIRS include
                            REQUIRES
-                           audio_events
                            cmd_handling
                            midi_mapping)
+
+    target_link_libraries(${COMPONENT_LIB} INTERFACE shrapnel::audio_events)
     return()
 endif()
 
