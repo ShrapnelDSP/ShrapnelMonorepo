@@ -4,29 +4,28 @@ if(ESP_PLATFORM)
                            REQUIRES
                            driver
                            esp_http_server
-                           i2s
                            mdns
-                           messages
-                           midi_protocol
-                           midi_mapping
                            nvs_flash
-                           persistence
-                           pcm3060
-                           server
                            os
-                           wifi
-                           abstract_dsp
                            LDFRAGMENTS esp-dsp.lf
                            )
 
     target_link_libraries(${COMPONENT_LIB}
-                          PUBLIC
+                          PRIVATE
+                          shrapnel::abstract_dsp
                           shrapnel::audio_events
                           shrapnel::cmd_handling
                           shrapnel::etl
                           shrapnel::hardware
                           shrapnel::heap_tracing
-                          PRIVATE
+                          shrapnel::i2s
+                          shrapnel::messages
+                          shrapnel::midi_mapping
+                          shrapnel::midi_protocol
+                          shrapnel::pcm3060
+                          shrapnel::persistence
+                          shrapnel::server
+                          shrapnel::wifi
                           shrapnel::compiler_warning_flags)
 else()
     add_library(main INTERFACE)

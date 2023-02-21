@@ -7,7 +7,7 @@ if(NOT DEFINED TESTING)
 
 target_link_libraries(audio_events
                       PUBLIC
-                      idf::rapidjson
+                      shrapnel::rapidjson
                       PRIVATE
                       shrapnel::compiler_warning_flags)
 else()

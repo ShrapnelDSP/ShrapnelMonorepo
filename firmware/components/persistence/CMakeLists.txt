@@ -1,12 +1,15 @@
 if(NOT DEFINED TESTING)
-    idf_component_register( SRCS src/esp_persistence.cpp
-                            INCLUDE_DIRS include
-                            PRIV_REQUIRES nvs_flash)
+    add_library(persistence STATIC)
+    add_library(shrapnel::persistence ALIAS persistence)
 
-    target_link_libraries(${COMPONENT_LIB}
+    target_sources(persistence PRIVATE src/esp_persistence.cpp)
+    target_include_directories(persistence PUBLIC include)
+
+    target_link_libraries(persistence
                           PUBLIC
                           shrapnel::etl
                           PRIVATE
+                          idf::nvs_flash
                           shrapnel::compiler_warning_flags)
 else()
     add_library(persistence INTERFACE)

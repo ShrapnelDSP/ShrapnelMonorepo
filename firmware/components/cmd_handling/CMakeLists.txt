@@ -8,7 +8,7 @@ if(NOT DEFINED TESTING)
 
     target_link_libraries(cmd_handling
                           PUBLIC
-                          idf::rapidjson
+                          shrapnel::rapidjson
                           shrapnel::audio_param
                           shrapnel::etl
                           PRIVATE

@@ -6,12 +6,12 @@ if(ESP_PLATFORM)
     target_include_directories(audio PUBLIC include)
     target_link_libraries(audio
                           PUBLIC
-                          idf::gate
-                          idf::valvestate
-                          idf::wah
+                          shrapnel::valvestate
+                          shrapnel::wah
                           shrapnel::chorus
+                          shrapnel::gate
                           PRIVATE
-                          idf::abstract_dsp
+                          shrapnel::abstract_dsp
                           shrapnel::compiler_warning_flags)
 
     target_compile_options(audio PRIVATE -Wdouble-promotion -Werror=double-promotion)
