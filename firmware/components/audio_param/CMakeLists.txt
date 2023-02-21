@@ -1,9 +1,12 @@
 if(NOT DEFINED TESTING)
     idf_component_register(SRCS "src/audio_param.cpp"
-                           INCLUDE_DIRS "include"
-                           REQUIRES etl)
+                           INCLUDE_DIRS "include")
 
-    target_link_libraries(${COMPONENT_LIB} PRIVATE shrapnel::compiler_warning_flags)
+    target_link_libraries(${COMPONENT_LIB}
+                          PUBLIC
+                          shrapnel::etl
+                          PRIVATE
+                          shrapnel::compiler_warning_flags)
 else()
     add_library(audio_param STATIC)
     add_library(shrapnel::audio_param ALIAS audio_param)

@@ -6,7 +6,6 @@ if(ESP_PLATFORM)
                            cmd_handling
                            driver
                            esp_http_server
-                           etl
                            hardware
                            heap_tracing
                            i2s
@@ -24,7 +23,11 @@ if(ESP_PLATFORM)
                            LDFRAGMENTS esp-dsp.lf
                            )
 
-    target_link_libraries(${COMPONENT_LIB} PRIVATE shrapnel::compiler_warning_flags)
+    target_link_libraries(${COMPONENT_LIB}
+                          PUBLIC
+                          shrapnel::etl
+                          PRIVATE
+                          shrapnel::compiler_warning_flags)
 else()
     add_library(main INTERFACE)
     add_library(shrapnel::main ALIAS main)
