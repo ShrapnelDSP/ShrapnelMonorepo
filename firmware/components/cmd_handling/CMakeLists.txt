@@ -1,12 +1,14 @@
 if(NOT DEFINED TESTING)
-    idf_component_register(SRCS src/cmd_handling.cpp
-                                src/cmd_handling_json.cpp
-                                src/cmd_handling_json_builder.cpp
-                           INCLUDE_DIRS include
-                           REQUIRES rapidjson)
+    add_library(cmd_handling STATIC)
+    add_library(shrapnel::cmd_handling ALIAS cmd_handling)
+    target_sources(cmd_handling PRIVATE
+                   src/cmd_handling.cpp
+                   src/cmd_handling_json.cpp
+                   src/cmd_handling_json_builder.cpp)
 
-    target_link_libraries(${COMPONENT_LIB}
+    target_link_libraries(cmd_handling
                           PUBLIC
+                          idf::rapidjson
                           shrapnel::audio_param
                           shrapnel::etl
                           PRIVATE

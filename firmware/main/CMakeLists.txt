@@ -2,7 +2,6 @@ if(ESP_PLATFORM)
     idf_component_register(SRCS main.cpp
                            INCLUDE_DIRS include
                            REQUIRES
-                           cmd_handling
                            driver
                            esp_http_server
                            hardware
@@ -24,8 +23,9 @@ if(ESP_PLATFORM)
 
     target_link_libraries(${COMPONENT_LIB}
                           PUBLIC
-                          shrapnel::etl
                           shrapnel::audio_events
+                          shrapnel::cmd_handling
+                          shrapnel::etl
                           PRIVATE
                           shrapnel::compiler_warning_flags)
 else()
