@@ -4,10 +4,11 @@ if(NOT DEFINED TESTING)
                                 src/midi_mapping_json_parser.cpp
                                 src/midi_mapping_json_builder.cpp
                            INCLUDE_DIRS include
-                           REQUIRES audio_param midi_protocol rapidjson)
+                           REQUIRES midi_protocol rapidjson)
 
     target_link_libraries(${COMPONENT_LIB}
                           PUBLIC
+                          shrapnel::audio_param
                           shrapnel::etl
                           PRIVATE
                           shrapnel::compiler_warning_flags)

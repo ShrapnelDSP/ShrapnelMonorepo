@@ -3,10 +3,11 @@ if(NOT DEFINED TESTING)
                                 src/cmd_handling_json.cpp
                                 src/cmd_handling_json_builder.cpp
                            INCLUDE_DIRS include
-                           REQUIRES audio_param rapidjson)
+                           REQUIRES rapidjson)
 
     target_link_libraries(${COMPONENT_LIB}
                           PUBLIC
+                          shrapnel::audio_param
                           shrapnel::etl
                           PRIVATE
                           shrapnel::audio_events
