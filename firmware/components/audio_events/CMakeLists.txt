@@ -1,8 +1,9 @@
 if(NOT DEFINED TESTING)
 idf_component_register(SRCS "src/audio_events.cpp"
                        INCLUDE_DIRS "include"
-                       REQUIRES rapidjson
-                       PRIV_REQUIRES compiler_warning_flags)
+                       REQUIRES rapidjson)
+
+target_link_libraries(${COMPONENT_LIB} PRIVATE shrapnel::compiler_warning_flags)
 else()
     add_library(audio_events STATIC)
     add_library(shrapnel::audio_events ALIAS audio_events)

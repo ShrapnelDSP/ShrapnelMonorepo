@@ -4,6 +4,7 @@ if(ESP_PLATFORM)
                            REQUIRES
                            esp_http_server
                            messages
-                           os
-                           PRIV_REQUIRES compiler_warning_flags)
+                           os)
+
+    target_link_libraries(${COMPONENT_LIB} PRIVATE shrapnel::compiler_warning_flags)
 endif()

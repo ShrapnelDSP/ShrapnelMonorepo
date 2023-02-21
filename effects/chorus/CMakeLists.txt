@@ -1,10 +1,18 @@
 if(ESP_PLATFORM)
-idf_component_register(SRCS src/chorus.cpp
-                       INCLUDE_DIRS include
-                       REQUIRES abstract_dsp
-                       PRIV_REQUIRES compiler_warning_flags)
+add_library(chorus STATIC)
+add_library(shrapnel::chorus ALIAS chorus)
 
-target_compile_options(${COMPONENT_LIB} PRIVATE -Wdouble-promotion)
+target_sources(chorus PRIVATE src/chorus.cpp)
+target_include_directories(chorus PUBLIC include)
+
+target_link_libraries(chorus
+                      PUBLIC
+                      idf::abstract_dsp
+                      PRIVATE
+                      shrapnel::compiler_warning_flags)
+
+target_compile_options(chorus PRIVATE -Wdouble-promotion)
+
 else()
 
 add_library(chorus STATIC

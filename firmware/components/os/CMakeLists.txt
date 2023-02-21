@@ -4,8 +4,9 @@ if(ESP_PLATFORM)
             universal/timer.cpp
             INCLUDE_DIRS include
             PRIV_INCLUDE_DIRS esp32
-            REQUIRES etl
-            PRIV_REQUIRES compiler_warning_flags)
+            REQUIRES etl)
+
+    target_link_libraries(${COMPONENT_LIB} PRIVATE shrapnel::compiler_warning_flags)
     return()
 endif()
 

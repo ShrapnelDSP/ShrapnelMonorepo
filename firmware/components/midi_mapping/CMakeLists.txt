@@ -4,8 +4,9 @@ if(NOT DEFINED TESTING)
                                 src/midi_mapping_json_parser.cpp
                                 src/midi_mapping_json_builder.cpp
                            INCLUDE_DIRS include
-                           REQUIRES etl audio_param midi_protocol rapidjson
-                           PRIV_REQUIRES compiler_warning_flags)
+                           REQUIRES etl audio_param midi_protocol rapidjson)
+
+    target_link_libraries(${COMPONENT_LIB} PRIVATE shrapnel::compiler_warning_flags)
 else()
     add_library(midi_mapping STATIC)
     add_library(shrapnel::midi_mapping ALIAS midi_mapping)

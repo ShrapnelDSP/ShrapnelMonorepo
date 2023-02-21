@@ -3,8 +3,7 @@ if(ESP_PLATFORM)
                            REQUIRES
                            audio_events
                            cmd_handling
-                           midi_mapping
-                           PRIV_REQUIRES compiler_warning_flags)
+                           midi_mapping)
     return()
 endif()
 

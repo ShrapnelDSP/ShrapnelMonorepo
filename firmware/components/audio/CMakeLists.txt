@@ -3,15 +3,18 @@ if(ESP_PLATFORM)
             src/audio_processor.cpp
             INCLUDE_DIRS include
             REQUIRES
-            chorus
             gate
             valvestate
             wah
             PRIV_REQUIRES
-            abstract_dsp
-            compiler_warning_flags)
+            abstract_dsp)
 
     target_compile_options(${COMPONENT_LIB} PRIVATE -Wdouble-promotion -Werror=double-promotion)
+
+    target_link_libraries(${COMPONENT_LIB}
+                          PUBLIC shrapnel::chorus
+                          PRIVATE shrapnel::compiler_warning_flags)
+
     return()
 endif()
 

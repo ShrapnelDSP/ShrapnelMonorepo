@@ -7,10 +7,10 @@ idf_component_register(SRCS src/valvestate.cpp
                             src/input_filter.cpp
                             src/wave_shape.cpp
                        INCLUDE_DIRS include
-                       REQUIRES abstract_dsp
-                       PRIV_REQUIRES compiler_warning_flags)
+                       REQUIRES abstract_dsp)
 
 target_compile_options(${COMPONENT_LIB} PRIVATE -Wdouble-promotion)
+target_link_libraries(${COMPONENT_LIB} PRIVATE shrapnel::compiler_warning_flags)
 else()
 
 add_library(valvestate STATIC

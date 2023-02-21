@@ -1,12 +1,12 @@
 # Based on JUCE's recommended warning flags
 
+add_library(compiler_warning_flags INTERFACE)
+add_library(shrapnel::compiler_warning_flags ALIAS compiler_warning_flags)
+
 if(ESP_PLATFORM)
-idf_component_register()
 # esp-idf does not support additional flags correctly
 return()
 else()
-add_library(compiler_warning_flags INTERFACE)
-add_library(shrapnel::compiler_warning_flags ALIAS compiler_warning_flags)
 set(COMPONENT_LIB compiler_warning_flags)
 endif()
 

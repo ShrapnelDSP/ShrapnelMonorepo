@@ -8,8 +8,8 @@ idf_component_register(SRCS src/i2s.cpp
                        float_convert
                        audio_events
                        audio_param
-                       hardware
-                       compiler_warning_flags)
+                       hardware)
 
 target_compile_options(${COMPONENT_LIB} PRIVATE -Wdouble-promotion -Werror=double-promotion)
+target_link_libraries(${COMPONENT_LIB} PRIVATE shrapnel::compiler_warning_flags)
 endif()

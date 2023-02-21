@@ -1,8 +1,9 @@
 if(NOT DEFINED TESTING)
     idf_component_register(SRCS src/midi_uart.cpp src/midi.cpp
                            INCLUDE_DIRS include
-                           REQUIRES driver etl
-                           PRIV_REQUIRES compiler_warning_flags)
+                           REQUIRES driver etl)
+
+    target_link_libraries(${COMPONENT_LIB} PRIVATE shrapnel::compiler_warning_flags)
 else()
     add_library(midi_protocol STATIC)
     add_library(shrapnel::midi_protocol ALIAS midi_protocol)

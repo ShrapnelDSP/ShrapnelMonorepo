@@ -4,7 +4,9 @@ if(NOT DEFINED TESTING)
                                 src/cmd_handling_json_builder.cpp
                            INCLUDE_DIRS include
                            REQUIRES audio_param etl rapidjson
-                           PRIV_REQUIRES audio_events compiler_warning_flags)
+                           PRIV_REQUIRES audio_events)
+
+    target_link_libraries(${COMPONENT_LIB} PRIVATE shrapnel::compiler_warning_flags)
 else()
     add_library(cmd_handling STATIC)
     add_library(shrapnel::cmd_handling ALIAS cmd_handling)

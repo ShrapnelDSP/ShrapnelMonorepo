@@ -21,9 +21,10 @@ if(ESP_PLATFORM)
                            os
                            wifi
                            abstract_dsp
-                           PRIV_REQUIRES compiler_warning_flags
                            LDFRAGMENTS esp-dsp.lf
                            )
+
+    target_link_libraries(${COMPONENT_LIB} PRIVATE shrapnel::compiler_warning_flags)
 else()
     add_library(main INTERFACE)
     add_library(shrapnel::main ALIAS main)
