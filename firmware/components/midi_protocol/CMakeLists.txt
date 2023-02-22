@@ -20,9 +20,9 @@ else()
     target_include_directories(midi_protocol PUBLIC include)
 
     target_link_libraries(midi_protocol PUBLIC
-            shrapnel::driver
+            idf::driver
             shrapnel::etl
-            shrapnel::log)
+            idf::log)
 
     add_executable(midi_test
                    src/midi.cpp

@@ -47,7 +47,7 @@ else()
     target_link_libraries(midi_mapping_test
                           PRIVATE
                           shrapnel::etl
-                          shrapnel::log
+                          idf::log
                           shrapnel::midi_mapping
                           shrapnel::compiler_warning_flags
                           GTest::gtest_main

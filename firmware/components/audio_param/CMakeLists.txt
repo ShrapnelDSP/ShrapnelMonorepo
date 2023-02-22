@@ -21,7 +21,7 @@ else()
 
     target_link_libraries(audio_param PUBLIC
             shrapnel::etl
-            shrapnel::log)
+            idf::log)
 
     add_executable(audio_param_test
                    src/audio_param.cpp

@@ -30,10 +30,10 @@ else()
 
     target_link_libraries(cmd_handling PUBLIC shrapnel::audio_events
             shrapnel::audio_param
-            shrapnel::esp_common
+            idf::esp_common
             shrapnel::etl
-            shrapnel::freertos
-            shrapnel::log
+            idf::freertos
+            idf::log
             shrapnel::os
             shrapnel::rapidjson)
 

@@ -3,4 +3,4 @@ target_include_directories(freertos_config INTERFACE include)
 target_compile_definitions(freertos_config INTERFACE projCOVERAGE_TEST=0)
 
 add_subdirectory(FreeRTOS-Kernel)
-add_library(shrapnel::freertos ALIAS freertos_kernel)
+add_library(idf::freertos ALIAS freertos_kernel)
