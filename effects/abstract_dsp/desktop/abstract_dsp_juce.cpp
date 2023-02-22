@@ -18,10 +18,11 @@
  */
 
 #include "abstract_dsp.h"
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdouble-promotion"
 #include "juce_dsp/juce_dsp.h"
-#include "delayline.h"
+#pragma GCC diagnostic pop
 #include <assert.h>
-#include <memory>
 
 extern "C" {
 
