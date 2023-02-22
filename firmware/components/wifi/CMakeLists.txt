@@ -7,7 +7,7 @@ target_include_directories(wifi PUBLIC include)
 target_link_libraries(wifi
                       PUBLIC
                       idf::wifi_provisioning
-                      idf::os
+                      shrapnel::os
                       idf::nvs_flash
                       shrapnel::etl
                       PRIVATE

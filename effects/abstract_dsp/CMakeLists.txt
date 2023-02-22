@@ -25,6 +25,8 @@ if(ESP_PLATFORM)
                    esp32/abstract_dsp_esp32.c
                    esp32/profiling.c)
 
+    target_include_directories(abstract_dsp PUBLIC esp32/include)
+
     return()
 endif()
 

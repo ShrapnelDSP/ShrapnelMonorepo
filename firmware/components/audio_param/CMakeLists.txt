@@ -8,6 +8,7 @@ if(NOT DEFINED TESTING)
     target_link_libraries(audio_param
                           PUBLIC
                           shrapnel::etl
+                          idf::log
                           PRIVATE
                           shrapnel::compiler_warning_flags)
 else()

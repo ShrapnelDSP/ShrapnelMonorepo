@@ -6,7 +6,6 @@ if(ESP_PLATFORM)
                            esp_http_server
                            mdns
                            nvs_flash
-                           os
                            LDFRAGMENTS esp-dsp.lf
                            )
 
@@ -22,6 +21,7 @@ if(ESP_PLATFORM)
                           shrapnel::messages
                           shrapnel::midi_mapping
                           shrapnel::midi_protocol
+                          shrapnel::os
                           shrapnel::pcm3060
                           shrapnel::persistence
                           shrapnel::server

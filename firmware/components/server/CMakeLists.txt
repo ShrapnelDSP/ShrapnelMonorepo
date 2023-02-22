@@ -7,7 +7,7 @@ target_include_directories(server PUBLIC include)
 target_link_libraries(server
                       PUBLIC
                       idf::esp_http_server
-                      idf::os
+                      shrapnel::os
                       shrapnel::messages
                       PRIVATE
                       shrapnel::compiler_warning_flags)
