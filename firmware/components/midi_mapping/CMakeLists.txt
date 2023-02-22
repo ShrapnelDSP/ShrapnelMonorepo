@@ -1,44 +1,25 @@
-if(NOT DEFINED TESTING)
-    add_library(midi_mapping STATIC)
-    add_library(shrapnel::midi_mapping ALIAS midi_mapping)
+add_library(midi_mapping STATIC)
+add_library(shrapnel::midi_mapping ALIAS midi_mapping)
 
-    target_sources(midi_mapping
-                   PRIVATE
-                   src/midi_mapping.cpp
-                   src/midi_mapping_api.cpp
-                   src/midi_mapping_json_parser.cpp
-                   src/midi_mapping_json_builder.cpp)
+target_sources(midi_mapping
+               PRIVATE
+               src/midi_mapping.cpp
+               src/midi_mapping_api.cpp
+               src/midi_mapping_json_parser.cpp
+               src/midi_mapping_json_builder.cpp)
 
-    target_include_directories(midi_mapping PUBLIC include)
+target_include_directories(midi_mapping PUBLIC include)
 
-    target_link_libraries(midi_mapping
-                          PUBLIC
-                          shrapnel::rapidjson
-                          shrapnel::audio_param
-                          shrapnel::etl
-                          shrapnel::midi_protocol
-                          PRIVATE
-                          shrapnel::compiler_warning_flags)
-else()
-    add_library(midi_mapping STATIC)
-    add_library(shrapnel::midi_mapping ALIAS midi_mapping)
+target_link_libraries(midi_mapping
+                      PUBLIC
+                      shrapnel::audio_param
+                      shrapnel::etl
+                      shrapnel::midi_protocol
+                      shrapnel::rapidjson
+                      PRIVATE
+                      shrapnel::compiler_warning_flags)
 
-    target_sources(midi_mapping PRIVATE
-                   src/midi_mapping.cpp
-                   src/midi_mapping_api.cpp
-                   src/midi_mapping_json_parser.cpp
-                   src/midi_mapping_json_builder.cpp)
-
-    target_include_directories(midi_mapping PUBLIC include)
-
-    target_link_libraries(midi_mapping
-                          PUBLIC
-                          shrapnel::audio_param
-                          shrapnel::midi_protocol
-                          shrapnel::rapidjson
-                          PRIVATE
-                          shrapnel::compiler_warning_flags)
-
+if(DEFINED TESTING)
     add_executable(midi_mapping_test
                    test/test_midi_mapping.cpp
                    test/test_json_parser.cpp
