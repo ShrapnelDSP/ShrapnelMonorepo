@@ -24,5 +24,5 @@ target_compile_definitions(juce_modules
 
 # We also need to export the include directories for the modules
 target_include_directories(juce_modules
-    INTERFACE
+    SYSTEM INTERFACE
         $<TARGET_PROPERTY:juce_modules,INCLUDE_DIRECTORIES>)
