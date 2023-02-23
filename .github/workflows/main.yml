@@ -8,6 +8,8 @@ defaults:
     shell: bash
 
 env:
+  # disable esp-idf checking dependencies from the web, breaking the build
+  IDF_PYTHON_CHECK_CONSTRAINTS: 0
   NODE_COVERALLS_DEBUG: 0 # verbose logging for coveralls steps
   CMAKE_C_COMPILER_LAUNCHER: ccache
   CMAKE_CXX_COMPILER_LAUNCHER: ccache
