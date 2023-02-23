@@ -127,9 +127,6 @@ class App extends StatelessWidget {
             orElse: () => null,
           ),
         );
-
-    jsonWebsocket.dataStream.listen((e) => _log.info('got data: $e'));
-
   }
 
   late final RobustWebsocket websocket;
