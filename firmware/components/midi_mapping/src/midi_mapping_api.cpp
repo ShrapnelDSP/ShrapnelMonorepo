@@ -40,7 +40,7 @@ etl::string_stream& operator<<(etl::string_stream&  out, const GetRequest&) {
     return out;
 }
 
-etl::string_stream& operator<<(etl::string_stream&  out, const GetResponse&)
+etl::string_stream &operator<<(etl::string_stream &out, const GetResponse &)
 {
     return out << "{ TODO }";
 }

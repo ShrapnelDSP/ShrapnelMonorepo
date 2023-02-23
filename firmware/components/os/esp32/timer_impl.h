@@ -1,6 +1,6 @@
-#include "os/timer.h"
 #include "freertos/FreeRTOS.h"
 #include "freertos/timers.h"
+#include "os/timer.h"
 
 namespace shrapnel::os {
 
@@ -24,4 +24,4 @@ struct Timer::impl
     std::optional<Callback> callback;
 };
 
-}
+} // namespace shrapnel::os

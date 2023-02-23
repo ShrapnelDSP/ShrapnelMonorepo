@@ -27,7 +27,8 @@
 namespace shrapnel {
 namespace midi {
 
-struct GetRequest {
+struct GetRequest
+{
     std::strong_ordering operator<=>(const GetRequest &other) const = default;
 };
 

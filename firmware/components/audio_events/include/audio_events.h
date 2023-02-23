@@ -42,7 +42,8 @@ struct InputClipped
 };
 struct OutputClipped
 {
-    std::strong_ordering operator<=>(const OutputClipped &other) const = default;
+    std::strong_ordering
+    operator<=>(const OutputClipped &other) const = default;
 };
 
 using ApiMessage = std::variant<InputClipped, OutputClipped>;

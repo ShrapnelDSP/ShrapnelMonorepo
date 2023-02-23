@@ -24,14 +24,13 @@ BaseType_t Timer::impl::start(TickType_t xBlockTime)
     return timers.start(id);
 }
 
-BaseType_t Timer::impl::stop(TickType_t xBlockTime) {
+BaseType_t Timer::impl::stop(TickType_t xBlockTime)
+{
     is_running = false;
     return timers.stop(id);
 }
 
-void Timer::impl::tick(uint32_t tick_count) {
-    timers.tick(tick_count);
-}
+void Timer::impl::tick(uint32_t tick_count) { timers.tick(tick_count); }
 
 etl::callback_timer_atomic<254> Timer::impl::timers;
 

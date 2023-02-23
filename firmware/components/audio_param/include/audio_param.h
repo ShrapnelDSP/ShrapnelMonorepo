@@ -89,7 +89,11 @@ class AudioParameters final : public etl::observable<ParameterObserver, MAX_OBSE
         parameters[param]->update(value);
         this->notify_observers(std::move(std::pair{param, value}));
 
-        ESP_LOGI(TAG, "Updated %.*s to %f", (int)param.length(), param.data(), value);
+        ESP_LOGI(TAG,
+                 "Updated %.*s to %f",
+                 (int)param.length(),
+                 param.data(),
+                 value);
 
         return 0;
     }
@@ -151,8 +155,8 @@ class AudioParameters final : public etl::observable<ParameterObserver, MAX_OBSE
     }
 
     private:
-    static constexpr const char *TAG = "audio_param";
-    MapType parameters;
+        static constexpr const char *TAG = "audio_param";
+        MapType parameters;
 };
 
 }

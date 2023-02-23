@@ -216,8 +216,7 @@ void websocket_send(void *arg)
     int client_fds[MAX_CLIENTS];
     size_t number_of_clients = ARRAY_LENGTH(client_fds);
 
-    rc = httpd_get_client_list(
-        self->server, &number_of_clients, client_fds);
+    rc = httpd_get_client_list(self->server, &number_of_clients, client_fds);
     if(rc != ESP_OK)
     {
         ESP_LOGE(

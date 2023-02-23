@@ -12,9 +12,7 @@ Timer::Timer(const char *pcTimerName,
         pcTimerName, xTimerPeriod, uxAutoReload, callback);
 }
 
-Timer::~Timer()
-{
-}
+Timer::~Timer() {}
 
 BaseType_t Timer::is_active() const { return p_impl->is_active(); }
 
@@ -28,4 +26,4 @@ BaseType_t Timer::stop(TickType_t xBlockTime)
     return p_impl->stop(xBlockTime);
 }
 
-}
+} // namespace shrapnel::os

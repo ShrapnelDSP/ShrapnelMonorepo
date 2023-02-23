@@ -85,26 +85,26 @@
 
 namespace shrapnel::parameters {
 
-template<typename AudioParametersT>
+template <typename AudioParametersT>
 class CommandHandling final
 {
     public:
-        using SendMessageCallback = etl::delegate<void(const ApiMessage&, std::optional<int>)>;
+        using SendMessageCallback =
+            etl::delegate<void(const ApiMessage &, std::optional<int>)>;
 
-    /** \brief
+        /** \brief
      *
      * \param[in] a_param Data received through \ref dispatch() is
      * translated to binary and sent to this object.
      */
-    CommandHandling(
-            std::shared_ptr<AudioParametersT> a_param,
-            SendMessageCallback a_send_message) :
-        param(a_param),
-        send_message(a_send_message)
+        CommandHandling(std::shared_ptr<AudioParametersT> a_param,
+                        SendMessageCallback a_send_message)
+            : param(a_param),
+              send_message(a_send_message)
         {}
 
-    void dispatch(const ApiMessage &a_message, int fd)
-    {
+        void dispatch(const ApiMessage &a_message, int fd)
+        {
 #if !defined(TESTING)
         ESP_LOGI(TAG, "%s stack %d", __FUNCTION__, uxTaskGetStackHighWaterMark(NULL));
 #endif
@@ -128,7 +128,7 @@ class CommandHandling final
                 }
             },
             a_message);
-    }
+        }
 
     private:
     void parameter_update(const Update &message, int fd)

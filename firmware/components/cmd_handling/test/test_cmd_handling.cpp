@@ -55,25 +55,26 @@ class MockAudioParameters
 class MockEventSend
 {
     public:
-    MOCK_METHOD(void, send, (const char *json, std::optional<int> fd));
+        MOCK_METHOD(void, send, (const char *json, std::optional<int> fd));
 };
 
 class EventSendAdapter final {
     public:
-    explicit EventSendAdapter(MockEventSend &a_event) : event(a_event) {}
+        explicit EventSendAdapter(MockEventSend &a_event) : event(a_event) {}
 
-    void send(const shrapnel::parameters::ApiMessage &message, std::optional<int> fd)
-    {
-        rapidjson::Document document;
-        auto json = to_json(document, message);
-        document.Swap(json);
+        void send(const shrapnel::parameters::ApiMessage &message,
+                  std::optional<int> fd)
+        {
+            rapidjson::Document document;
+            auto json = to_json(document, message);
+            document.Swap(json);
 
-        rapidjson::StringBuffer buffer;
-        rapidjson::Writer writer{buffer};
-        document.Accept(writer);
+            rapidjson::StringBuffer buffer;
+            rapidjson::Writer writer{buffer};
+            document.Accept(writer);
 
-        event.send(buffer.GetString(), fd);
-    }
+            event.send(buffer.GetString(), fd);
+        }
 
     private:
     MockEventSend &event;
@@ -90,12 +91,9 @@ class MockAudioParameterFloat
 
     MOCK_METHOD(float, get, (), ());
 
-    float *get_raw_parameter()
-    {
-        return &value;
-    }
+    float *get_raw_parameter() { return &value; }
 
-    private:
+private:
     float value;
 };
 
@@ -157,9 +155,11 @@ TEST_F(CmdHandling, InitialiseParameters)
     param->parameters["test1"] = std::move(parameter1);
 
     const char *expected = R"({"id":"test0","value":0.0,"messageType":"parameterUpdate"})";
-    EXPECT_CALL(event, send(StrEq(expected), testing::Eq(std::nullopt))).Times(1);
+    EXPECT_CALL(event, send(StrEq(expected), testing::Eq(std::nullopt)))
+        .Times(1);
     expected = R"({"id":"test1","value":1.0,"messageType":"parameterUpdate"})";
-    EXPECT_CALL(event, send(StrEq(expected), testing::Eq(std::nullopt))).Times(1);
+    EXPECT_CALL(event, send(StrEq(expected), testing::Eq(std::nullopt)))
+        .Times(1);
 
     parseAndDispatch(R"({"messageType": "initialiseParameters"})", 0);
 }

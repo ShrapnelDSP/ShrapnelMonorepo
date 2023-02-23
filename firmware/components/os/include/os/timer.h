@@ -43,6 +43,7 @@ public:
     [[nodiscard]] BaseType_t stop(TickType_t xBlockTime);
 
     struct impl;
+
 private:
     // PImpl pattern used to abstract away the platform differences between
     // FreeRTOS used for embedded code and fake timers used for testing

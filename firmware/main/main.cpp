@@ -17,15 +17,15 @@
  * ShrapnelDSP. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include <atomic>
-#include <mutex>
 #include "freertos/portmacro.h"
 #include "freertos/projdefs.h"
 #include "os/queue.h"
 #include "wifi_provisioning/manager.h"
+#include <atomic>
 #include <etl/state_chart.h>
-#include <stdio.h>
 #include <math.h>
+#include <mutex>
+#include <stdio.h>
 #include <type_traits>
 
 #include "cmd_handling_api.h"
@@ -56,25 +56,25 @@
 #include "esp_debug_helpers.h"
 #include "mdns.h"
 
-#include "audio_param.h"
 #include "audio_events.h"
+#include "audio_param.h"
 #include "cmd_handling.h"
+#include "esp_persistence.h"
 #include "hardware.h"
 #include "i2s.h"
 #include "main_thread.h"
-#include "midi_protocol.h"
-#include "midi_mapping_json_parser.h"
 #include "messages.h"
+#include "midi_mapping_api.h"
 #include "midi_mapping_json_builder.h"
+#include "midi_mapping_json_parser.h"
+#include "midi_protocol.h"
 #include "midi_uart.h"
-#include "esp_persistence.h"
+#include "os/queue.h"
+#include "os/timer.h"
 #include "pcm3060.h"
 #include "profiling.h"
-#include "midi_mapping_api.h"
-#include "os/queue.h"
-#include "wifi_state_machine.h"
 #include "server.h"
-#include "os/timer.h"
+#include "wifi_state_machine.h"
 
 #include "iir_concrete.h"
 
@@ -345,18 +345,15 @@ extern "C" void app_main(void)
 
     debug_dump_task_list();
 
-    auto send_message = [&] (const AppMessage &message){
+    auto send_message = [&](const AppMessage &message)
+    {
         ESP_LOGE("DEBUG", "sending message");
         server->send_message(message);
         ESP_LOGE("DEBUG", "sent message");
     };
 
-    auto main_thread =
-        MainThread<MAX_PARAMETERS, QUEUE_LEN>(send_message,
-                                              *in_queue,
-                                              midi_uart,
-                                              audio_params,
-                                              persistence);
+    auto main_thread = MainThread<MAX_PARAMETERS, QUEUE_LEN>(
+        send_message, *in_queue, midi_uart, audio_params, persistence);
 
     audio::i2s_setup(PROFILING_GPIO, audio_params.get());
 
@@ -438,4 +435,4 @@ void nvs_debug_print()
     nvs_release_iterator(it);
 }
 
-}
+} // namespace shrapnel

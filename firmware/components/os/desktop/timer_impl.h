@@ -1,5 +1,5 @@
-#include "os/timer.h"
 #include "etl/callback_timer_atomic.h"
+#include "os/timer.h"
 
 namespace shrapnel::os {
 
@@ -24,8 +24,10 @@ struct Timer::impl
     static void tick(uint32_t tick_count);
 
 private:
-    void do_callback() {
-        if(callback.has_value()) (*callback)();
+    void do_callback()
+    {
+        if(callback.has_value())
+            (*callback)();
         is_running = false;
     }
 
@@ -35,4 +37,4 @@ private:
     static etl::callback_timer_atomic<254> timers;
 };
 
-}
+} // namespace shrapnel::os
