@@ -32,6 +32,10 @@ extern "C" void timer_callback(TimerHandle_t a_timer)
     (*timer->callback)();
 }
 
+// This callback does not do anything. FreeRTOS requires a callback, so we'll
+// pass them this when our user has requested no callback.
+extern "C" void null_callback(TimerHandle_t) {}
+
 Timer::impl::impl(const char *pcTimerName,
                   TickType_t xTimerPeriod,
                   const UBaseType_t uxAutoReload,
@@ -42,7 +46,7 @@ Timer::impl::impl(const char *pcTimerName,
                          xTimerPeriod,
                          uxAutoReload,
                          this,
-                         callback.has_value() ? timer_callback : nullptr);
+                         callback.has_value() ? timer_callback : null_callback);
 }
 
 Timer::impl::~impl()
