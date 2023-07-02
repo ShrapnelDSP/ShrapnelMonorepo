@@ -112,10 +112,6 @@ TEST_F(Integration, NotifiesServerAboutMidiMessages)
         juce::MidiMessage::noteOn(1, 0, static_cast<uint8_t>(1));
     pushMidiMessage(note_on_message);
 
-    uut.loop();
-    uut.loop();
-    uut.loop();
-
     shrapnel::os::Timer::impl::tick(pdMS_TO_TICKS(200));
 
     EXPECT_CALL(
@@ -196,9 +192,6 @@ TEST_F(Integration, MidiCanUpdateParameters)
     // When the configured MIDI message is sent
     auto control_change_message = juce::MidiMessage::controllerEvent(1, 0, 0);
     pushMidiMessage(control_change_message);
-
-    uut.loop();
-    uut.loop();
 
     // Then the configured parameter changes
     EXPECT_CALL(send_message,
