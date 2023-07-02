@@ -347,9 +347,7 @@ extern "C" void app_main(void)
 
     auto send_message = [&](const AppMessage &message)
     {
-        ESP_LOGE("DEBUG", "sending message");
         server->send_message(message);
-        ESP_LOGE("DEBUG", "sent message");
     };
 
     auto main_thread = MainThread<MAX_PARAMETERS, QUEUE_LEN>(
