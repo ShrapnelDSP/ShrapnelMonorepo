@@ -372,11 +372,14 @@ public:
 
     void loop()
     {
-        if(auto byte = midi_uart->get_byte(0); byte.has_value())
         {
-            ESP_LOGI(TAG, "midi got byte 0x%02x", *byte);
-
-            midi_decoder->decode(*byte);
+            auto byte = midi_uart->get_byte(0);
+            while(byte.has_value())
+            {
+                ESP_LOGI(TAG, "midi got byte 0x%02x", *byte);
+                midi_decoder->decode(*byte);
+                byte = midi_uart->get_byte(0);
+            }
         }
 
         if(AppMessage message; in_queue.receive(&message, 0))
