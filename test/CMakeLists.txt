@@ -1,4 +1,5 @@
-cmake_minimum_required(VERSION 3.14)
+cmake_minimum_required(VERSION 3.22)
+cmake_policy(VERSION 3.22)
 project (ShrapnelDSPTest LANGUAGES C CXX)
 
 # This project uses C++20 features
@@ -18,28 +19,16 @@ include(GoogleTest)
 include(CTest)
 
 add_compile_definitions(TESTING)
+add_compile_definitions(LOG_DEFAULT_LEVEL=ESP_LOG_VERBOSE)
 
 # Tells the component cmake files to become test components instead of esp-idf
 # components
 set(TESTING ON)
 
-add_subdirectory(support/log)
-add_subdirectory(support/freertos)
-add_subdirectory(support/esp_common)
-add_subdirectory(support/esp_hw_support)
-add_subdirectory(support/json)
+add_subdirectory(support)
 
 add_subdirectory(../effects/abstract_dsp/ abstract_dsp)
-add_subdirectory(../firmware/components/audio_events audio_events)
-add_subdirectory(../firmware/components/audio_param audio_param)
-add_subdirectory(../firmware/components/cmd_handling cmd_handling)
-add_subdirectory(../firmware/components/compiler_warning_flags compiler_warning_flags)
-add_subdirectory(../firmware/components/midi_mapping midi_mapping)
-add_subdirectory(../firmware/components/midi_protocol midi_protocol)
-add_subdirectory(../firmware/components/queue queue)
-add_subdirectory(../firmware/components/task task)
 add_subdirectory(../plugins/JUCE_static JUCE_static)
-add_subdirectory(../thirdparty/JUCE JUCE)
-add_subdirectory(../thirdparty/esp-idf-components/esp-dsp esp_dsp)
-add_subdirectory(../thirdparty/esp-idf-components/etl etl)
-add_subdirectory(../thirdparty/esp-idf-components/rapidjson rapidjson)
+add_subdirectory(../firmware firmware)
+add_subdirectory(../thirdparty thirdparty)
+add_subdirectory(integration)

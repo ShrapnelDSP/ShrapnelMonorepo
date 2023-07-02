@@ -19,7 +19,15 @@
 
 #pragma once
 
+// Disable warning inside rapidjson
+// https://github.com/Tencent/rapidjson/issues/1700
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wclass-memaccess"
+#pragma GCC diagnostic ignored "-Wzero-as-null-pointer-constant"
+#pragma GCC diagnostic ignored "-Wsign-conversion"
+#pragma GCC diagnostic ignored "-Wswitch-enum"
 #include "rapidjson/document.h"
+#pragma GCC diagnostic pop
 #include <atomic>
 #include <variant>
 
@@ -30,9 +38,12 @@ rapidjson::Value to_json(rapidjson::Document &document, const T &object);
 
 struct InputClipped
 {
+    std::strong_ordering operator<=>(const InputClipped &other) const = default;
 };
 struct OutputClipped
 {
+    std::strong_ordering
+    operator<=>(const OutputClipped &other) const = default;
 };
 
 using ApiMessage = std::variant<InputClipped, OutputClipped>;

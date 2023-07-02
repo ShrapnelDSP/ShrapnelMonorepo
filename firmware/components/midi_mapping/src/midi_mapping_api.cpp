@@ -40,7 +40,7 @@ etl::string_stream& operator<<(etl::string_stream&  out, const GetRequest&) {
     return out;
 }
 
-etl::string_stream& operator<<(etl::string_stream&  out, const GetResponse& self)
+etl::string_stream &operator<<(etl::string_stream &out, const GetResponse &)
 {
     return out << "{ TODO }";
 }
@@ -63,6 +63,12 @@ etl::string_stream& operator<<(etl::string_stream&  out, const Update& self)
 etl::string_stream& operator<<(etl::string_stream&  out, const Remove& self)
 {
     return out << "{ " << self.id << " }";
+}
+
+etl::string_stream &operator<<(etl::string_stream &out,
+                               const MessageReceived &self)
+{
+    return out << "{ " << self.message << " }";
 }
 
 etl::string_stream& operator<<(etl::string_stream&  out, const MappingApiMessage& self)

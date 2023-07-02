@@ -20,7 +20,16 @@
 #pragma once
 
 #include "cmd_handling_api.h"
+
+// Disable warning inside rapidjson
+// https://github.com/Tencent/rapidjson/issues/1700
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wclass-memaccess"
+#pragma GCC diagnostic ignored "-Wzero-as-null-pointer-constant"
+#pragma GCC diagnostic ignored "-Wsign-conversion"
+#pragma GCC diagnostic ignored "-Wswitch-enum"
 #include "rapidjson/document.h"
+#pragma GCC diagnostic pop
 
 namespace shrapnel::parameters {
 

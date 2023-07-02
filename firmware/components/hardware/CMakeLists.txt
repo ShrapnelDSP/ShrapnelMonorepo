@@ -1,3 +1,4 @@
-idf_component_register(INCLUDE_DIRS "include"
-                       REQUIRES driver
-                       PRIV_REQUIRES compiler_warning_flags)
+add_library(hardware INTERFACE)
+add_library(shrapnel::hardware ALIAS hardware)
+
+target_include_directories(hardware INTERFACE include)

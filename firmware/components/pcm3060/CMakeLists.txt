@@ -1,3 +1,12 @@
-idf_component_register(SRCS "pcm3060.c"
-                       INCLUDE_DIRS "include"
-                       PRIV_REQUIRES driver i2c compiler_warning_flags)
+add_library(pcm3060 STATIC)
+add_library(shrapnel::pcm3060 ALIAS pcm3060)
+
+target_sources(pcm3060 PRIVATE pcm3060.c)
+target_include_directories(pcm3060 PUBLIC include)
+
+target_link_libraries(pcm3060
+                      PUBLIC
+                      idf::driver
+                      PRIVATE
+                      shrapnel::compiler_warning_flags
+                      shrapnel::i2c)

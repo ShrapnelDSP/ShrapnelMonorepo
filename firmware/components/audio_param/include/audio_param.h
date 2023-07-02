@@ -31,8 +31,6 @@
 namespace shrapnel {
 namespace parameters {
 
-constexpr const char *TAG = "audio_param";
-
 using id_t = etl::string<32>;
 
 class AudioParameterFloat {
@@ -91,7 +89,11 @@ class AudioParameters final : public etl::observable<ParameterObserver, MAX_OBSE
         parameters[param]->update(value);
         this->notify_observers(std::move(std::pair{param, value}));
 
-        ESP_LOGI(TAG, "Updated %.*s to %f", param.length(), param.data(), value);
+        ESP_LOGI(TAG,
+                 "Updated %.*s to %f",
+                 (int)param.length(),
+                 param.data(),
+                 value);
 
         return 0;
     }
@@ -138,7 +140,7 @@ class AudioParameters final : public etl::observable<ParameterObserver, MAX_OBSE
 
         parameters[name] = std::make_unique<AudioParameterFloat>(name, minimum, maximum, default_value);
 
-        ESP_LOGI(TAG, "%d parameters are registered", parameters.size());
+        ESP_LOGI(TAG, "%zu parameters are registered", parameters.size());
         return 0;
     }
 
@@ -153,7 +155,8 @@ class AudioParameters final : public etl::observable<ParameterObserver, MAX_OBSE
     }
 
     private:
-    MapType parameters;
+        static constexpr const char *TAG = "audio_param";
+        MapType parameters;
 };
 
 }

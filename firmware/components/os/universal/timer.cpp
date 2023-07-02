@@ -17,20 +17,32 @@
  * ShrapnelDSP. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#pragma once
+#include "os/timer.h"
+#include "timer_impl.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+namespace shrapnel::os {
 
-#include <stddef.h>
-
-typedef int QueueHandle_t;
-
-QueueHandle_t xQueueCreate( size_t uxQueueLength, size_t uxItemSize );
-BaseType_t xQueueSendToBack( QueueHandle_t xQueue, void *pvItemToQueue, TickType_t xTicksToWait );
-BaseType_t xQueueReceive( QueueHandle_t xQueue, void * const pvBuffer, TickType_t xTicksToWait );
-
-#ifdef __cplusplus
+Timer::Timer(const char *pcTimerName,
+             TickType_t xTimerPeriod,
+             const UBaseType_t uxAutoReload,
+             std::optional<etl::delegate<void(void)>> callback)
+{
+    p_impl = std::make_unique<impl>(
+        pcTimerName, xTimerPeriod, uxAutoReload, callback);
 }
-#endif
+
+Timer::~Timer() {}
+
+BaseType_t Timer::is_active() const { return p_impl->is_active(); }
+
+BaseType_t Timer::start(TickType_t xBlockTime)
+{
+    return p_impl->start(xBlockTime);
+}
+
+BaseType_t Timer::stop(TickType_t xBlockTime)
+{
+    return p_impl->stop(xBlockTime);
+}
+
+} // namespace shrapnel::os

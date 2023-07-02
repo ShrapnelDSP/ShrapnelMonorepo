@@ -24,15 +24,19 @@
 
 namespace shrapnel::parameters {
 
-struct Update final {
+struct Update final
+{
     id_t id;
     float value;
 
     std::strong_ordering operator<=>(const Update &other) const = default;
 };
 
-struct Initialise final {};
+struct Initialise final
+{
+    std::strong_ordering operator<=>(const Initialise &other) const = default;
+};
 
 using ApiMessage = std::variant<Update, Initialise>;
 
-}
+} // namespace shrapnel::parameters

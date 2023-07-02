@@ -17,43 +17,30 @@
  * ShrapnelDSP. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include "task.h"
-
-#include <cassert>
 #include "freertos/FreeRTOS.h"
-#include "freertos/task.h"
+#include "freertos/timers.h"
+#include "os/timer.h"
 
-namespace shrapnel {
+namespace shrapnel::os {
 
-TaskBase::TaskBase(const char *a_name, size_t a_stack, unsigned int a_priority) :
-    name(a_name),
-    stack(a_stack),
-    priority(a_priority) {}
+extern "C" void timer_callback(TimerHandle_t a_timer);
 
-void TaskBase::task_thread(void *param)
+struct Timer::impl
 {
-    TaskBase *task = static_cast<TaskBase *>(param);
+    impl(const char *pcTimerName,
+         TickType_t xTimerPeriod,
+         UBaseType_t uxAutoReload,
+         std::optional<etl::delegate<void(void)>> callback);
 
-    task->setup();
-    while (1)
-    {
-        task->loop();
-    }
-}
+    ~impl();
 
-void TaskBase::setup(void)
-{
-}
+    [[nodiscard]] BaseType_t is_active() const;
+    BaseType_t start(TickType_t xBlockTime);
+    BaseType_t stop(TickType_t xBlockTime);
 
-void TaskBase::start(void)
-{
-    int rc = xTaskCreate(task_thread, name, stack, this, priority, &handle);
-    assert(rc == pdPASS);
-}
+    friend void shrapnel::os::timer_callback(TimerHandle_t a_timer);
+    TimerHandle_t timer;
+    std::optional<Callback> callback;
+};
 
-TaskBase::~TaskBase(void)
-{
-    vTaskDelete(handle);
-}
-
-}
+} // namespace shrapnel::os

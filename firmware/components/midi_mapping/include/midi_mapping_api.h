@@ -27,7 +27,10 @@
 namespace shrapnel {
 namespace midi {
 
-struct GetRequest {};
+struct GetRequest
+{
+    std::strong_ordering operator<=>(const GetRequest &other) const = default;
+};
 
 struct GetResponse {
     const etl::imap<Mapping::id_t, Mapping> *mappings;
@@ -60,7 +63,6 @@ struct MessageReceived {
 };
 
 using MappingApiMessage = std::variant<GetRequest, GetResponse, CreateRequest, CreateResponse, Update, Remove, MessageReceived>;
-
 
 etl::string_stream& operator<<(etl::string_stream&  out, const Mapping& self);
 etl::string_stream& operator<<(etl::string_stream&  out, const GetRequest& self);

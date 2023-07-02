@@ -20,47 +20,51 @@
 #pragma once
 
 #include "FreeRTOSConfig.h"
+#include "etl/deque.h"
 #include "freertos/FreeRTOS.h"
 #include "freertos/queue.h"
 #include <cassert>
 #include <chrono>
 #include <cstdint>
-#include "etl/deque.h"
+#include <mutex>
+#include <queue>
 #include <semaphore>
 #include <type_traits>
-#include <queue>
-#include <mutex>
 
 namespace shrapnel {
 
 template <typename T>
 class QueueBase
 {
-    public:
+public:
     using value_type = T;
 
-    QueueBase(int number_of_elements)
-    {
-        (void) number_of_elements;
-    };
+    QueueBase(int number_of_elements) { (void)number_of_elements; };
 
     virtual BaseType_t receive(T *out, TickType_t time_to_wait) = 0;
     virtual BaseType_t send(const T *in, TickType_t time_to_wait) = 0;
 };
 
-template <typename T, std::size_t MAX_SIZE> requires (MAX_SIZE > 0)
-class Queue final: public QueueBase<T>
+template <typename T, std::size_t MAX_SIZE>
+    requires(MAX_SIZE > 0) && (MAX_SIZE < PTRDIFF_MAX)
+class Queue final : public QueueBase<T>
 {
     using ticks = std::chrono::duration<TickType_t>;
 
-    public:
-    Queue() : QueueBase<T>(MAX_SIZE), used_semaphore{0}, free_semaphore{MAX_SIZE} {}
+public:
+    Queue()
+        : QueueBase<T>(MAX_SIZE),
+          used_semaphore{0},
+          free_semaphore{MAX_SIZE}
+    {
+    }
 
     [[nodiscard]] BaseType_t receive(T *out, TickType_t time_to_wait) override
     {
         // block until an item is available
         bool success = used_semaphore.try_acquire_for(ticks(time_to_wait));
-        if(!success) return errQUEUE_EMPTY;
+        if(!success)
+            return errQUEUE_EMPTY;
 
         // Receive the item
         {
@@ -76,7 +80,8 @@ class Queue final: public QueueBase<T>
     {
         // block until a space is available
         bool success = free_semaphore.try_acquire_for(ticks(time_to_wait));
-        if(!success) return errQUEUE_FULL;
+        if(!success)
+            return errQUEUE_FULL;
 
         // Add item to queue, and notify receivers
         {
@@ -87,12 +92,14 @@ class Queue final: public QueueBase<T>
         return pdPASS;
     }
 
-    private:
-    std::counting_semaphore<MAX_SIZE> used_semaphore;
-    std::counting_semaphore<MAX_SIZE> free_semaphore;
+private:
+    std::counting_semaphore<static_cast<std::ptrdiff_t>(MAX_SIZE)>
+        used_semaphore;
+    std::counting_semaphore<static_cast<std::ptrdiff_t>(MAX_SIZE)>
+        free_semaphore;
     etl::deque<T, MAX_SIZE> queue_storage;
     std::queue<T, etl::deque<T, MAX_SIZE>> queue;
     std::mutex mutex;
 };
 
-}
+} // namespace shrapnel

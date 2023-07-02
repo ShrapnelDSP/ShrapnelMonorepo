@@ -59,56 +59,76 @@
 #include "audio_param.h"
 #include "cmd_handling_api.h"
 #include "cmd_handling_json.h"
-#include "etl/list.h"
+#include "cmd_handling_json_builder.h"
+#include "esp_err.h"
 #include "esp_log.h"
+#include "etl/list.h"
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 #include <climits>
-#include "esp_err.h"
-#include "cmd_handling_json_builder.h"
+#include <etl/delegate.h>
+#include <iterator>
 #include <memory>
 #include <string.h>
-#include <iterator>
 #include <string_view>
+
+// Disable warning inside rapidjson
+// https://github.com/Tencent/rapidjson/issues/1700
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wclass-memaccess"
+#pragma GCC diagnostic ignored "-Wzero-as-null-pointer-constant"
+#pragma GCC diagnostic ignored "-Wsign-conversion"
+#pragma GCC diagnostic ignored "-Wswitch-enum"
 #include <rapidjson/stringbuffer.h>
 #include <rapidjson/writer.h>
+#pragma GCC diagnostic pop
 
 namespace shrapnel::parameters {
 
-template<typename AudioParametersT, typename EventSendT>
+template <typename AudioParametersT>
 class CommandHandling final
 {
     public:
-    /** \brief
+        using SendMessageCallback =
+            etl::delegate<void(const ApiMessage &, std::optional<int>)>;
+
+        /** \brief
      *
      * \param[in] a_param Data received through \ref dispatch() is
      * translated to binary and sent to this object.
      */
-    CommandHandling(
-            AudioParametersT *a_param,
-            EventSendT &a_event) :
-        param(a_param),
-        event(a_event)
+        CommandHandling(std::shared_ptr<AudioParametersT> a_param,
+                        SendMessageCallback a_send_message)
+            : param(a_param),
+              send_message(a_send_message)
         {}
 
-    void dispatch(const ApiMessage &message, int fd)
-    {
+        void dispatch(const ApiMessage &a_message, int fd)
+        {
 #if !defined(TESTING)
         ESP_LOGI(TAG, "%s stack %d", __FUNCTION__, uxTaskGetStackHighWaterMark(NULL));
 #endif
 
-        std::visit([&](const auto &message) -> void {
-            using T = std::decay_t<decltype(message)>;
+        std::visit(
+            [&](const auto &message) -> void
+            {
+                using T = std::decay_t<decltype(message)>;
 
-            if constexpr (std::is_same_v<T, Update>) {
-                parameter_update(message, fd);
-            } else if constexpr (std::is_same_v<T, Initialise>) {
-                initialise_parameters();
-            } else {
-                ESP_LOGE(TAG, "Unhandled message type");
-            }
-        }, message);
-    }
+                if constexpr(std::is_same_v<T, Update>)
+                {
+                    parameter_update(message, fd);
+                }
+                else if constexpr(std::is_same_v<T, Initialise>)
+                {
+                    initialise_parameters();
+                }
+                else
+                {
+                    ESP_LOGE(TAG, "Unhandled message type");
+                }
+            },
+            a_message);
+        }
 
     private:
     void parameter_update(const Update &message, int fd)
@@ -119,7 +139,7 @@ class CommandHandling final
             ESP_LOGE(TAG, "Failed to update parameter (%s) with value %f", message.id.data(), message.value);
         }
 
-        event.send(message, fd);
+        send_message(message, fd);
     }
 
     void initialise_parameters()
@@ -131,12 +151,12 @@ class CommandHandling final
                     .value{value->get()},
             };
 
-            event.send(message, -1);
+            send_message(message, std::nullopt);
         }
     }
 
-    AudioParametersT *param;
-    EventSendT &event;
+    std::shared_ptr<AudioParametersT> param;
+    SendMessageCallback send_message;
 
     static inline const char *TAG = "cmd_handling";
 };

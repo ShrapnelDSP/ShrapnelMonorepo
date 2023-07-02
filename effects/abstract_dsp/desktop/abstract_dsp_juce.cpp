@@ -19,9 +19,7 @@
 
 #include "abstract_dsp.h"
 #include "juce_dsp/juce_dsp.h"
-#include "delayline.h"
 #include <assert.h>
-#include <memory>
 
 extern "C" {
 

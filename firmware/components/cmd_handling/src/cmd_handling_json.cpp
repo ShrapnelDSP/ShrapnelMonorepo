@@ -46,8 +46,8 @@ std::optional<Update> from_json(const rapidjson::Value &json)
     };
 }
 
-template<>
-std::optional<Initialise> from_json(const rapidjson::Value &json)
+template <>
+std::optional<Initialise> from_json(const rapidjson::Value &)
 {
     return Initialise{};
 }

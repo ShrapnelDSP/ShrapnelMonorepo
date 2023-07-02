@@ -30,6 +30,7 @@ EspMidiUart::EspMidiUart(uart_port_t a_uart, gpio_num_t rx_io) : uart(a_uart) {
         .parity = UART_PARITY_DISABLE,
         .stop_bits = UART_STOP_BITS_1,
         .flow_ctrl = UART_HW_FLOWCTRL_DISABLE,
+        .rx_flow_ctrl_thresh = 0,
         .source_clk = UART_SCLK_APB,
     };
 

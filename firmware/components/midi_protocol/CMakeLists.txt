@@ -1,26 +1,34 @@
-if(NOT DEFINED TESTING)
-    idf_component_register(SRCS src/midi_uart.cpp src/midi.cpp
-                           INCLUDE_DIRS include
-                           REQUIRES etl
-                           PRIV_REQUIRES driver compiler_warning_flags)
-else()
-    add_library(midi_mock INTERFACE)
-    target_include_directories(midi_mock INTERFACE include)
+    add_library(midi_protocol STATIC)
+    add_library(shrapnel::midi_protocol ALIAS midi_protocol)
 
-    add_executable(midi_test
-                   src/midi.cpp
-                   test/midi_util.cpp
-                   test/test_midi_decoder.cpp
-                   test/test_midi_message.cpp
-                   )
+    target_sources(midi_protocol PRIVATE src/midi.cpp)
+    target_include_directories(midi_protocol PUBLIC include)
 
-    target_include_directories(midi_test PRIVATE include)
+    target_link_libraries(midi_protocol
+                          PUBLIC
+                          idf::driver
+                          idf::log
+                          shrapnel::etl
+                          PRIVATE
+                          shrapnel::compiler_warning_flags)
 
-    target_link_libraries(midi_test PRIVATE etl)
-    target_link_libraries(midi_test PRIVATE log)
+    if(ESP_PLATFORM)
+        target_sources(midi_protocol PRIVATE src/midi_uart.cpp)
+    endif()
 
-    target_link_libraries(midi_test PRIVATE gtest_main)
-    target_link_libraries(midi_test PRIVATE gmock)
-    target_link_libraries(midi_test PRIVATE compiler_warning_flags)
-    gtest_discover_tests(midi_test)
-endif()
+    if(DEFINED TESTING)
+        add_executable(midi_test
+                       test/midi_util.cpp
+                       test/test_midi_decoder.cpp
+                       test/test_midi_message.cpp)
+
+        target_include_directories(midi_test PRIVATE include)
+
+        target_link_libraries(midi_test
+                              PRIVATE
+                              midi_protocol
+                              GTest::gtest_main
+                              GTest::gmock
+                              shrapnel::compiler_warning_flags)
+        gtest_discover_tests(midi_test)
+    endif()

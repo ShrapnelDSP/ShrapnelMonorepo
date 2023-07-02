@@ -1,2 +1,4 @@
-idf_component_register(INCLUDE_DIRS "."
-                       PRIV_REQUIRES compiler_warning_flags)
+add_library(float_convert INTERFACE)
+add_library(shrapnel::float_convert ALIAS float_convert)
+
+target_include_directories(float_convert INTERFACE ".")

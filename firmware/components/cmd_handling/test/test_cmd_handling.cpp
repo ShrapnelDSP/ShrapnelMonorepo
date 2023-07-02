@@ -55,31 +55,26 @@ class MockAudioParameters
 class MockEventSend
 {
     public:
-    MOCK_METHOD(void, send, (const char *json, int fd));
-    MOCK_METHOD(void, send, (const char *json));
+        MOCK_METHOD(void, send, (const char *json, std::optional<int> fd));
 };
 
 class EventSendAdapter final {
     public:
-    explicit EventSendAdapter(MockEventSend &event) : event(event) {}
+        explicit EventSendAdapter(MockEventSend &a_event) : event(a_event) {}
 
-    void send(const shrapnel::parameters::ApiMessage &message, int fd)
-    {
-        rapidjson::Document document;
-        auto json = to_json(document, message);
-        document.Swap(json);
+        void send(const shrapnel::parameters::ApiMessage &message,
+                  std::optional<int> fd)
+        {
+            rapidjson::Document document;
+            auto json = to_json(document, message);
+            document.Swap(json);
 
-        rapidjson::StringBuffer buffer;
-        rapidjson::Writer writer{buffer};
-        document.Accept(writer);
+            rapidjson::StringBuffer buffer;
+            rapidjson::Writer writer{buffer};
+            document.Accept(writer);
 
-        event.send(buffer.GetString(), fd);
-    }
-
-    void send(const shrapnel::parameters::ApiMessage &message)
-    {
-        send(message, -1);
-    }
+            event.send(buffer.GetString(), fd);
+        }
 
     private:
     MockEventSend &event;
@@ -96,46 +91,56 @@ class MockAudioParameterFloat
 
     MOCK_METHOD(float, get, (), ());
 
-    float *get_raw_parameter(void)
-    {
-        return &value;
-    }
+    float *get_raw_parameter() { return &value; }
 
-    private:
+private:
     float value;
 };
 
 class CmdHandling : public ::testing::Test
 {
-    protected:
-    CmdHandling() : cmd(&param, event_adapter) {}
+protected:
+    CmdHandling()
+        : param(std::make_unique<MockAudioParameters>()),
+          cmd(param,
 
-    MockAudioParameters param;
+              shrapnel::parameters::CommandHandling<MockAudioParameters>::
+                  SendMessageCallback::create<EventSendAdapter,
+                                              &EventSendAdapter::send>(
+                      event_adapter))
+    {
+    }
+
+    std::shared_ptr<MockAudioParameters> param;
     MockEventSend event;
     EventSendAdapter event_adapter{event};
+    shrapnel::parameters::CommandHandling<MockAudioParameters> cmd;
 
-    void parseAndDispatch(const char *json, int fd) {
+    void parseAndDispatch(const char *json, int fd)
+    {
         rapidjson::Document document;
         document.Parse(json);
-        ASSERT_FALSE(document.HasParseError()) << "Must use valid JSON for testing.";
+        ASSERT_FALSE(document.HasParseError())
+            << "Must use valid JSON for testing.";
 
-        auto parsed_message = shrapnel::parameters::from_json<shrapnel::parameters::ApiMessage>(document.GetObject());
-        ASSERT_TRUE(parsed_message.has_value()) << "Must use valid JSON for testing.";
+        auto parsed_message =
+            shrapnel::parameters::from_json<shrapnel::parameters::ApiMessage>(
+                document.GetObject());
+        ASSERT_TRUE(parsed_message.has_value())
+            << "Must use valid JSON for testing.";
 
         cmd.dispatch(*parsed_message, fd);
     }
-
-    shrapnel::parameters::CommandHandling<MockAudioParameters, EventSendAdapter> cmd;
 };
 
 TEST_F(CmdHandling, ValidMessage)
 {
-    EXPECT_CALL(param, update(id_t("tight"), 1.0f))
+    EXPECT_CALL(*param, update(id_t("tight"), 1.0f))
         .Times(1)
         .WillRepeatedly(Return(0));
 
     const char *json = R"({"id":"tight","value":1.0,"messageType":"parameterUpdate"})";
-    EXPECT_CALL(event, send(StrEq(json), 42)).Times(1);
+    EXPECT_CALL(event, send(StrEq(json), testing::Optional(42))).Times(1);
 
     parseAndDispatch(json, 42);
 }
@@ -146,13 +151,15 @@ TEST_F(CmdHandling, InitialiseParameters)
     EXPECT_CALL(*parameter0.get(), get()).WillRepeatedly(Return(0));
     auto parameter1 = std::make_unique<MockAudioParameterFloat>("test", 0);
     EXPECT_CALL(*parameter1.get(), get()).WillRepeatedly(Return(1));
-    param.parameters["test0"] = std::move(parameter0);
-    param.parameters["test1"] = std::move(parameter1);
+    param->parameters["test0"] = std::move(parameter0);
+    param->parameters["test1"] = std::move(parameter1);
 
     const char *expected = R"({"id":"test0","value":0.0,"messageType":"parameterUpdate"})";
-    EXPECT_CALL(event, send(StrEq(expected), -1)).Times(1);
+    EXPECT_CALL(event, send(StrEq(expected), testing::Eq(std::nullopt)))
+        .Times(1);
     expected = R"({"id":"test1","value":1.0,"messageType":"parameterUpdate"})";
-    EXPECT_CALL(event, send(StrEq(expected), -1)).Times(1);
+    EXPECT_CALL(event, send(StrEq(expected), testing::Eq(std::nullopt)))
+        .Times(1);
 
     parseAndDispatch(R"({"messageType": "initialiseParameters"})", 0);
 }
