@@ -64,7 +64,6 @@ protected:
 
     void pushMidiMessage(const juce::MidiMessage &message)
     {
-        //const auto bytes = std::span<juce::uint8>(message.getRawData(), message.getRawDataSize());
         std::for_each(message.getRawData(),
                       message.getRawData() + message.getRawDataSize(),
                       [this](uint8_t byte) { midi_uart.buffer.push(byte); });
