@@ -40,12 +40,6 @@ public:
     std::queue<uint8_t> buffer;
 };
 
-// TODO should we use an API class that abstracts the details of the messages?
-// It would have the same interface as the one used in the frontend
-class WebApi
-{
-};
-
 class FakeStorage final : public shrapnel::persistence::Storage
 {
 public:
