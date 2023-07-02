@@ -122,10 +122,6 @@ TEST_F(Integration, MidiMappingCanBeCreated)
 {
     using namespace shrapnel;
 
-    // TODO: we are currently assuming these preconditions
-    // Given default value is used for the ampGain parameter
-    // And there are no midi mappings
-
     const auto mapping = std::pair<midi::Mapping::id_t, midi::Mapping>{
         {0},
         {
