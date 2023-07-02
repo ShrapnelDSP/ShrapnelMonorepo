@@ -96,9 +96,13 @@ $(document).ready(function(){initNavTree('classshrapnel_1_1ParameterUpdateNotifi
   <div class="headertitle"><div class="title">shrapnel::ParameterUpdateNotifier Class Reference</div></div>
 </div><!--header-->
 <div class="contents">
+
+<p><code>#include &lt;<a class="el" href="main__thread_8h_source.html">main_thread.h</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
+<tr class="memitem:a4ebcabb566c5899f44c35f37382e740c"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classshrapnel_1_1ParameterUpdateNotifier.html#a4ebcabb566c5899f44c35f37382e740c">ParameterUpdateNotifier</a> (std::shared_ptr&lt; <a class="el" href="namespaceshrapnel.html#aa010626969fadec55bb5ce236c9ecf20">AudioParameters</a> &gt; a_audio_params, <a class="el" href="namespaceshrapnel.html#ab2ebec6ed99b3653eb98cc08f4aba8c6">SendMessageCallback</a> a_send_message)</td></tr>
+<tr class="separator:a4ebcabb566c5899f44c35f37382e740c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a967cc4697c8d692d1c91d8295d8c1012"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classshrapnel_1_1ParameterUpdateNotifier.html#a967cc4697c8d692d1c91d8295d8c1012">update</a> (const <a class="el" href="namespaceshrapnel_1_1parameters.html#a5506267ab65b64b98595a4269027196b">parameters::id_t</a> &amp;param, float value)</td></tr>
 <tr class="separator:a967cc4697c8d692d1c91d8295d8c1012"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4ff77e5e169d2bfb4bae67bf9deb6353"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classshrapnel_1_1ParameterUpdateNotifier.html#a4ff77e5e169d2bfb4bae67bf9deb6353">get</a> (const <a class="el" href="namespaceshrapnel_1_1parameters.html#a5506267ab65b64b98595a4269027196b">parameters::id_t</a> &amp;param)</td></tr>
@@ -106,13 +110,59 @@ Public Member Functions</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock">
-<p class="definition">Definition at line <a class="el" href="main_8cpp_source.html#l00117">117</a> of file <a class="el" href="main_8cpp_source.html">main.cpp</a>.</p>
-</div><h2 class="groupheader">Member Function Documentation</h2>
+<p class="definition">Definition at line <a class="el" href="main__thread_8h_source.html#l00105">105</a> of file <a class="el" href="main__thread_8h_source.html">main_thread.h</a>.</p>
+</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a id="a4ebcabb566c5899f44c35f37382e740c" name="a4ebcabb566c5899f44c35f37382e740c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4ebcabb566c5899f44c35f37382e740c">&#9670;&nbsp;</a></span>ParameterUpdateNotifier()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">shrapnel::ParameterUpdateNotifier::ParameterUpdateNotifier </td>
+          <td>(</td>
+          <td class="paramtype">std::shared_ptr&lt; <a class="el" href="namespaceshrapnel.html#aa010626969fadec55bb5ce236c9ecf20">AudioParameters</a> &gt;&#160;</td>
+          <td class="paramname"><em>a_audio_params</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespaceshrapnel.html#ab2ebec6ed99b3653eb98cc08f4aba8c6">SendMessageCallback</a>&#160;</td>
+          <td class="paramname"><em>a_send_message</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="main__thread_8h_source.html#l00108">108</a> of file <a class="el" href="main__thread_8h_source.html">main_thread.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  110</span>        : audio_params{std::move(a_audio_params)},</div>
+<div class="line"><span class="lineno">  111</span>          send_message{a_send_message}</div>
+<div class="line"><span class="lineno">  112</span>    {</div>
+<div class="line"><span class="lineno">  113</span>    }</div>
+</div><!-- fragment -->
+</div>
+</div>
+<h2 class="groupheader">Member Function Documentation</h2>
 <a id="a4ff77e5e169d2bfb4bae67bf9deb6353" name="a4ff77e5e169d2bfb4bae67bf9deb6353"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a4ff77e5e169d2bfb4bae67bf9deb6353">&#9670;&nbsp;</a></span>get()</h2>
 
 <div class="memitem">
 <div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">float shrapnel::ParameterUpdateNotifier::get </td>
@@ -122,16 +172,18 @@ Public Member Functions</h2></td></tr>
           <td></td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="main_8cpp_source.html#l00622">622</a> of file <a class="el" href="main_8cpp_source.html">main.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  623</span>{</div>
-<div class="line"><span class="lineno">  624</span>    <span class="keywordflow">return</span> <a class="code hl_variable" href="namespaceshrapnel.html#a686cfb16562461b078165d746966c2bf">audio_params</a>-&gt;get(param);</div>
-<div class="line"><span class="lineno">  625</span>}</div>
-<div class="ttc" id="anamespaceshrapnel_html_a686cfb16562461b078165d746966c2bf"><div class="ttname"><a href="namespaceshrapnel.html#a686cfb16562461b078165d746966c2bf">shrapnel::audio_params</a></div><div class="ttdeci">static std::shared_ptr&lt; AudioParameters &gt; audio_params</div><div class="ttdef"><b>Definition:</b> <a href="main_8cpp_source.html#l00235">main.cpp:235</a></div></div>
+<p class="definition">Definition at line <a class="el" href="main__thread_8h_source.html#l00128">128</a> of file <a class="el" href="main__thread_8h_source.html">main_thread.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  129</span>    {</div>
+<div class="line"><span class="lineno">  130</span>        <span class="keywordflow">return</span> audio_params-&gt;get(param);</div>
+<div class="line"><span class="lineno">  131</span>    }</div>
 </div><!-- fragment -->
-<p class="reference">References <a class="el" href="main_8cpp_source.html#l00235">shrapnel::audio_params</a>.</p>
-
 </div>
 </div>
 <a id="a967cc4697c8d692d1c91d8295d8c1012" name="a967cc4697c8d692d1c91d8295d8c1012"></a>
@@ -139,6 +191,9 @@ Public Member Functions</h2></td></tr>
 
 <div class="memitem">
 <div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">int shrapnel::ParameterUpdateNotifier::update </td>
@@ -158,35 +213,31 @@ Public Member Functions</h2></td></tr>
           <td></td><td></td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="main_8cpp_source.html#l00609">609</a> of file <a class="el" href="main_8cpp_source.html">main.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  610</span>{</div>
-<div class="line"><span class="lineno">  611</span>    <span class="keyword">auto</span> message = <a class="code hl_typedef" href="main_8cpp.html#a4a2a8445978c00038c4b9a0d35ca7a69">AppMessage</a>{</div>
-<div class="line"><span class="lineno">  612</span>        parameters::Update{</div>
-<div class="line"><span class="lineno">  613</span>            param,</div>
-<div class="line"><span class="lineno">  614</span>            value,</div>
-<div class="line"><span class="lineno">  615</span>        },</div>
-<div class="line"><span class="lineno">  616</span>        std::nullopt,</div>
-<div class="line"><span class="lineno">  617</span>    };</div>
-<div class="line"><span class="lineno">  618</span>    <a class="code hl_function" href="main_8cpp.html#a1a66099a9e1054494d0704363a5c8666">audio_event_send_callback</a>(message);</div>
-<div class="line"><span class="lineno">  619</span>    <span class="keywordflow">return</span> <a class="code hl_variable" href="namespaceshrapnel.html#a686cfb16562461b078165d746966c2bf">audio_params</a>-&gt;update(param, value);</div>
-<div class="line"><span class="lineno">  620</span>}</div>
-<div class="ttc" id="amain_8cpp_html_a1a66099a9e1054494d0704363a5c8666"><div class="ttname"><a href="main_8cpp.html#a1a66099a9e1054494d0704363a5c8666">audio_event_send_callback</a></div><div class="ttdeci">void audio_event_send_callback(const AppMessage &amp;message)</div><div class="ttdef"><b>Definition:</b> <a href="main_8cpp_source.html#l01090">main.cpp:1090</a></div></div>
-<div class="ttc" id="amain_8cpp_html_a4a2a8445978c00038c4b9a0d35ca7a69"><div class="ttname"><a href="main_8cpp.html#a4a2a8445978c00038c4b9a0d35ca7a69">AppMessage</a></div><div class="ttdeci">std::pair&lt; ApiMessage, FileDescriptor &gt; AppMessage</div><div class="ttdef"><b>Definition:</b> <a href="main_8cpp_source.html#l00088">main.cpp:88</a></div></div>
+<p class="definition">Definition at line <a class="el" href="main__thread_8h_source.html#l00115">115</a> of file <a class="el" href="main__thread_8h_source.html">main_thread.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  116</span>    {</div>
+<div class="line"><span class="lineno">  117</span>        <span class="keyword">auto</span> message = <a class="code hl_typedef" href="messages_8h.html#a4a2a8445978c00038c4b9a0d35ca7a69">AppMessage</a>{</div>
+<div class="line"><span class="lineno">  118</span>            parameters::Update{</div>
+<div class="line"><span class="lineno">  119</span>                param,</div>
+<div class="line"><span class="lineno">  120</span>                value,</div>
+<div class="line"><span class="lineno">  121</span>            },</div>
+<div class="line"><span class="lineno">  122</span>            std::nullopt,</div>
+<div class="line"><span class="lineno">  123</span>        };</div>
+<div class="line"><span class="lineno">  124</span>        send_message(message);</div>
+<div class="line"><span class="lineno">  125</span>        <span class="keywordflow">return</span> audio_params-&gt;update(param, value);</div>
+<div class="line"><span class="lineno">  126</span>    }</div>
+<div class="ttc" id="amessages_8h_html_a4a2a8445978c00038c4b9a0d35ca7a69"><div class="ttname"><a href="messages_8h.html#a4a2a8445978c00038c4b9a0d35ca7a69">AppMessage</a></div><div class="ttdeci">std::pair&lt; ApiMessage, FileDescriptor &gt; AppMessage</div><div class="ttdef"><b>Definition:</b> <a href="messages_8h_source.html#l00032">messages.h:32</a></div></div>
 </div><!-- fragment -->
-<p class="reference">References <a class="el" href="main_8cpp_source.html#l01090">audio_event_send_callback()</a>, and <a class="el" href="main_8cpp_source.html#l00235">shrapnel::audio_params</a>.</p>
-<div class="dynheader">
-Here is the call graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="classshrapnel_1_1ParameterUpdateNotifier_a967cc4697c8d692d1c91d8295d8c1012_cgraph.svg" width="840" height="52"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
-</div>
-</div>
-
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following file:<ul>
-<li>firmware/main/<a class="el" href="main_8cpp_source.html">main.cpp</a></li>
+<li>firmware/main/include/<a class="el" href="main__thread_8h_source.html">main_thread.h</a></li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->

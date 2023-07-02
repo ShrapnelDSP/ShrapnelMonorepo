@@ -107,8 +107,31 @@ Data Structures</h2></td></tr>
 Functions</h2></td></tr>
 <tr class="memitem:ac5444bc9236d10f34f561e914756146c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceshrapnel_1_1os.html#ac5444bc9236d10f34f561e914756146c">timer_callback</a> (TimerHandle_t a_timer)</td></tr>
 <tr class="separator:ac5444bc9236d10f34f561e914756146c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9eeab315a37d981157e0fc29f635aaff"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceshrapnel_1_1os.html#a9eeab315a37d981157e0fc29f635aaff">null_callback</a> (TimerHandle_t)</td></tr>
+<tr class="separator:a9eeab315a37d981157e0fc29f635aaff"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Function Documentation</h2>
+<a id="a9eeab315a37d981157e0fc29f635aaff" name="a9eeab315a37d981157e0fc29f635aaff"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9eeab315a37d981157e0fc29f635aaff">&#9670;&nbsp;</a></span>null_callback()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void shrapnel::os::null_callback </td>
+          <td>(</td>
+          <td class="paramtype">TimerHandle_t&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="esp32_2timer__impl_8cpp_source.html#l00037">37</a> of file <a class="el" href="esp32_2timer__impl_8cpp_source.html">timer_impl.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   37</span>{}</div>
+</div><!-- fragment -->
+</div>
+</div>
 <a id="ac5444bc9236d10f34f561e914756146c" name="ac5444bc9236d10f34f561e914756146c"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ac5444bc9236d10f34f561e914756146c">&#9670;&nbsp;</a></span>timer_callback()</h2>
 
@@ -125,22 +148,14 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="timer_8cpp_source.html#l00025">25</a> of file <a class="el" href="timer_8cpp_source.html">timer.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   26</span>{</div>
-<div class="line"><span class="lineno">   27</span>    <span class="keyword">auto</span> timer =</div>
-<div class="line"><span class="lineno">   28</span>        <span class="keyword">reinterpret_cast&lt;</span><a class="code hl_class" href="classshrapnel_1_1os_1_1Timer.html">shrapnel::os::Timer</a> *<span class="keyword">&gt;</span>(pvTimerGetTimerID(a_timer));</div>
-<div class="line"><span class="lineno">   29</span>    timer-&gt;callback();</div>
-<div class="line"><span class="lineno">   30</span>}</div>
-<div class="ttc" id="aclassshrapnel_1_1os_1_1Timer_html"><div class="ttname"><a href="classshrapnel_1_1os_1_1Timer.html">shrapnel::os::Timer</a></div><div class="ttdef"><b>Definition:</b> <a href="timer_8h_source.html#l00030">timer.h:31</a></div></div>
+<p class="definition">Definition at line <a class="el" href="esp32_2timer__impl_8cpp_source.html#l00028">28</a> of file <a class="el" href="esp32_2timer__impl_8cpp_source.html">timer_impl.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   29</span>{</div>
+<div class="line"><span class="lineno">   30</span>    <span class="keyword">auto</span> timer = <span class="keyword">reinterpret_cast&lt;</span><a class="code hl_struct" href="structshrapnel_1_1os_1_1Timer_1_1impl.html">shrapnel::os::Timer::impl</a> *<span class="keyword">&gt;</span>(</div>
+<div class="line"><span class="lineno">   31</span>        pvTimerGetTimerID(a_timer));</div>
+<div class="line"><span class="lineno">   32</span>    (*timer-&gt;callback)();</div>
+<div class="line"><span class="lineno">   33</span>}</div>
+<div class="ttc" id="astructshrapnel_1_1os_1_1Timer_1_1impl_html"><div class="ttname"><a href="structshrapnel_1_1os_1_1Timer_1_1impl.html">shrapnel::os::Timer::impl</a></div><div class="ttdef"><b>Definition:</b> <a href="desktop_2timer__impl_8h_source.html#l00025">timer_impl.h:26</a></div></div>
 </div><!-- fragment -->
-<p class="reference">Referenced by <a class="el" href="timer_8cpp_source.html#l00032">shrapnel::os::Timer::Timer()</a>.</p>
-<div class="dynheader">
-Here is the caller graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="namespaceshrapnel_1_1os_ac5444bc9236d10f34f561e914756146c_icgraph.svg" width="316" height="52"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
-</div>
-</div>
-
 </div>
 </div>
 </div><!-- contents -->

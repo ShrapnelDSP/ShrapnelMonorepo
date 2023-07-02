@@ -1,7 +1,7 @@
 var namespaceshrapnel_1_1events =
 [
-    [ "InputClipped", "structshrapnel_1_1events_1_1InputClipped.html", null ],
-    [ "OutputClipped", "structshrapnel_1_1events_1_1OutputClipped.html", null ],
+    [ "InputClipped", "structshrapnel_1_1events_1_1InputClipped.html", "structshrapnel_1_1events_1_1InputClipped" ],
+    [ "OutputClipped", "structshrapnel_1_1events_1_1OutputClipped.html", "structshrapnel_1_1events_1_1OutputClipped" ],
     [ "ApiMessage", "namespaceshrapnel_1_1events.html#a8dd3c21ae53adc98fc773a8c06ce300a", null ],
     [ "to_json", "namespaceshrapnel_1_1events.html#a46d2b649bc546f06556c79536c9d13ea", null ],
     [ "to_json", "namespaceshrapnel_1_1events.html#a46d2b649bc546f06556c79536c9d13ea", null ],

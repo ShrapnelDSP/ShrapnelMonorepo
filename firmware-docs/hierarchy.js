@@ -8,7 +8,7 @@ var hierarchy =
     [ "shrapnel::AudioProcessorParameters", "structshrapnel_1_1AudioProcessorParameters.html", null ],
     [ "shrapnel::effect::Chorus", "classshrapnel_1_1effect_1_1Chorus.html", null ],
     [ "shrapnel::effect::valvestate::Clipping", "classshrapnel_1_1effect_1_1valvestate_1_1Clipping.html", null ],
-    [ "shrapnel::parameters::CommandHandling< AudioParametersT, EventSendT >", "classshrapnel_1_1parameters_1_1CommandHandling.html", null ],
+    [ "shrapnel::parameters::CommandHandling< AudioParametersT >", "classshrapnel_1_1parameters_1_1CommandHandling.html", null ],
     [ "ContourFilter", "classContourFilter.html", null ],
     [ "shrapnel::midi::Message::ControlChange", "structshrapnel_1_1midi_1_1Message_1_1ControlChange.html", null ],
     [ "shrapnel::midi::CreateRequest", "structshrapnel_1_1midi_1_1CreateRequest.html", null ],
@@ -17,7 +17,6 @@ var hierarchy =
     [ "shrapnel::dsp::DelayLine", "classshrapnel_1_1dsp_1_1DelayLine.html", null ],
     [ "dspal_delayline", "structdspal__delayline.html", null ],
     [ "EspHeapTracing< N >", "classEspHeapTracing.html", null ],
-    [ "shrapnel::EventSend", "classshrapnel_1_1EventSend.html", null ],
     [ "shrapnel::dsp::FastConvolution< N, K >", "classshrapnel_1_1dsp_1_1FastConvolution.html", null ],
     [ "shrapnel::dsp::FastFir< N, M, Convolution >", "classshrapnel_1_1dsp_1_1FastFir.html", null ],
     [ "shrapnel::dsp::FastFir< 512, 1024, shrapnel::dsp::FastConvolution< 1024, 512 > >", "classshrapnel_1_1dsp_1_1FastFir.html", null ],
@@ -29,10 +28,12 @@ var hierarchy =
       [ "shrapnel::dsp::IirFilter", "classshrapnel_1_1dsp_1_1IirFilter.html", null ],
       [ "shrapnel::dsp::IirFilter", "classshrapnel_1_1dsp_1_1IirFilter.html", null ]
     ] ],
+    [ "shrapnel::os::Timer::impl", "structshrapnel_1_1os_1_1Timer_1_1impl.html", null ],
     [ "shrapnel::parameters::Initialise", "structshrapnel_1_1parameters_1_1Initialise.html", null ],
     [ "shrapnel::events::InputClipped", "structshrapnel_1_1events_1_1InputClipped.html", null ],
     [ "shrapnel::effect::valvestate::InputFilter", "classshrapnel_1_1effect_1_1valvestate_1_1InputFilter.html", null ],
     [ "shrapnel::wifi::InternalEvent", "structshrapnel_1_1wifi_1_1InternalEvent.html", null ],
+    [ "shrapnel::MainThread< MAX_PARAMETERS, QUEUE_LEN >", "classshrapnel_1_1MainThread.html", null ],
     [ "shrapnel::midi::Mapping", "structshrapnel_1_1midi_1_1Mapping.html", null ],
     [ "midi::MappingObserver", null, [
       [ "shrapnel::MidiMappingObserver< MappingManagerT >", "classshrapnel_1_1MidiMappingObserver.html", null ]
@@ -60,13 +61,16 @@ var hierarchy =
     [ "shrapnel::QueueBase< T >", "classshrapnel_1_1QueueBase.html", [
       [ "shrapnel::Queue< T, MAX_SIZE >", "classshrapnel_1_1Queue.html", null ]
     ] ],
+    [ "shrapnel::QueueBase< AppMessage >", "classshrapnel_1_1QueueBase.html", [
+      [ "shrapnel::Queue< AppMessage, QUEUE_LEN >", "classshrapnel_1_1Queue.html", null ]
+    ] ],
     [ "shrapnel::midi::Remove", "structshrapnel_1_1midi_1_1Remove.html", null ],
     [ "ScopedHeapTracing< N >", "classScopedHeapTracing.html", null ],
+    [ "shrapnel::Server", "classshrapnel_1_1Server.html", null ],
     [ "shrapnel::wifi::State", "structshrapnel_1_1wifi_1_1State.html", null ],
     [ "shrapnel::persistence::Storage", "classshrapnel_1_1persistence_1_1Storage.html", [
       [ "shrapnel::persistence::EspStorage", "classshrapnel_1_1persistence_1_1EspStorage.html", null ]
     ] ],
-    [ "shrapnel::TaskBase", "classshrapnel_1_1TaskBase.html", null ],
     [ "shrapnel::os::Timer", "classshrapnel_1_1os_1_1Timer.html", null ],
     [ "shrapnel::midi::Update", "structshrapnel_1_1midi_1_1Update.html", null ],
     [ "shrapnel::parameters::Update", "structshrapnel_1_1parameters_1_1Update.html", null ],

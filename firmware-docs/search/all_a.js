@@ -19,8 +19,8 @@ var searchData=
   ['iir_5funiversal_2eh_16',['iir_universal.h',['../iir__universal_8h.html',1,'']]],
   ['iirfilter_17',['IirFilter',['../classshrapnel_1_1dsp_1_1IirFilter.html#a115233b4c64c2e99a41e50dae95a3f57',1,'shrapnel::dsp::IirFilter::IirFilter(void)'],['../classshrapnel_1_1dsp_1_1IirFilter.html#a115233b4c64c2e99a41e50dae95a3f57',1,'shrapnel::dsp::IirFilter::IirFilter(void)'],['../classshrapnel_1_1dsp_1_1IirFilter.html',1,'shrapnel::dsp::IirFilter']]],
   ['iirfilterbase_18',['IirFilterBase',['../classshrapnel_1_1dsp_1_1IirFilterBase.html',1,'shrapnel::dsp']]],
-  ['in_5fqueue_19',['in_queue',['../namespaceshrapnel.html#af4939089585b30c735a3fd8eeb5c4439',1,'shrapnel']]],
-  ['init_20',['INIT',['../structshrapnel_1_1wifi_1_1State.html#a0c7289235b004679b762cbd803e86e87ae557b65626b83f3ef5212345d4c66143',1,'shrapnel::wifi::State::INIT()'],['../noise__gate_8cpp.html#aa0aafed44fec19806d8f9ad834be1248a0cb1b2c6a7db1f1084886c98909a3f36',1,'INIT():&#160;noise_gate.cpp']]],
+  ['impl_19',['impl',['../structshrapnel_1_1os_1_1Timer_1_1impl.html#a25b725c126a16f0cfda1043675d85f3e',1,'shrapnel::os::Timer::impl::impl(const char *pcTimerName, TickType_t xTimerPeriod, const UBaseType_t uxAutoReload, std::optional&lt; Callback &gt; callback)'],['../structshrapnel_1_1os_1_1Timer_1_1impl.html#ae78aedc7f2d659d87bb996324b3743f0',1,'shrapnel::os::Timer::impl::impl(const char *pcTimerName, TickType_t xTimerPeriod, UBaseType_t uxAutoReload, std::optional&lt; etl::delegate&lt; void(void)&gt; &gt; callback)'],['../structshrapnel_1_1os_1_1Timer_1_1impl.html',1,'shrapnel::os::Timer::impl']]],
+  ['init_20',['INIT',['../noise__gate_8cpp.html#aa0aafed44fec19806d8f9ad834be1248a0cb1b2c6a7db1f1084886c98909a3f36',1,'INIT():&#160;noise_gate.cpp'],['../structshrapnel_1_1wifi_1_1State.html#a0c7289235b004679b762cbd803e86e87ae557b65626b83f3ef5212345d4c66143',1,'shrapnel::wifi::State::INIT()']]],
   ['initialise_21',['Initialise',['../structshrapnel_1_1parameters_1_1Initialise.html',1,'shrapnel::parameters']]],
   ['input_5fclipped_22',['input_clipped',['../namespaceshrapnel_1_1events.html#a63fd47484f0f2560469429a7b28b7a0e',1,'shrapnel::events']]],
   ['input_5ffilter_2ecpp_23',['input_filter.cpp',['../input__filter_8cpp.html',1,'']]],
@@ -30,8 +30,7 @@ var searchData=
   ['instance_27',['instance',['../classEspHeapTracing.html#af49dc8f718e254d2aa165b56a0cf640e',1,'EspHeapTracing']]],
   ['internal_5fevent_5fcallback_5ft_28',['internal_event_callback_t',['../classshrapnel_1_1wifi_1_1WifiStateMachine.html#ad5f434b37772a92b730426934f26dc6b',1,'shrapnel::wifi::WifiStateMachine']]],
   ['internalevent_29',['InternalEvent',['../structshrapnel_1_1wifi_1_1InternalEvent.html',1,'shrapnel::wifi']]],
-  ['is_5factive_30',['is_active',['../classshrapnel_1_1os_1_1Timer.html#a700eee72ff07045cfdebbef6d397668e',1,'shrapnel::os::Timer']]],
+  ['is_5factive_30',['is_active',['../structshrapnel_1_1os_1_1Timer_1_1impl.html#ac6408319748208db3d4881e0ad3d719f',1,'shrapnel::os::Timer::impl::is_active()'],['../classshrapnel_1_1os_1_1Timer.html#a700eee72ff07045cfdebbef6d397668e',1,'shrapnel::os::Timer::is_active()'],['../structshrapnel_1_1os_1_1Timer_1_1impl.html#ac6408319748208db3d4881e0ad3d719f',1,'shrapnel::os::Timer::impl::is_active()']]],
   ['is_5fnot_5fprovisioned_31',['IS_NOT_PROVISIONED',['../structshrapnel_1_1wifi_1_1InternalEvent.html#a62d199da7e8162e54b10e20b9dd35d85a16a926afb115e7b0c4c0bcc134a9e839',1,'shrapnel::wifi::InternalEvent']]],
-  ['is_5fprovisioned_32',['IS_PROVISIONED',['../structshrapnel_1_1wifi_1_1InternalEvent.html#a62d199da7e8162e54b10e20b9dd35d85ac1831f7f04ef976f23d440054517489c',1,'shrapnel::wifi::InternalEvent']]],
-  ['is_5fsave_5fthrottled_33',['is_save_throttled',['../classshrapnel_1_1ParameterObserver.html#a7e303567234b7c2e40c2841b416f9269',1,'shrapnel::ParameterObserver']]]
+  ['is_5fprovisioned_32',['IS_PROVISIONED',['../structshrapnel_1_1wifi_1_1InternalEvent.html#a62d199da7e8162e54b10e20b9dd35d85ac1831f7f04ef976f23d440054517489c',1,'shrapnel::wifi::InternalEvent']]]
 ];

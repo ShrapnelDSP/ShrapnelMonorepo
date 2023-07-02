@@ -156,17 +156,16 @@ Variables</h2></td></tr>
 <div class="line"><span class="lineno">   40</span> </div>
 <div class="line"><span class="lineno">   41</span>    <span class="keywordflow">if</span>(err != ESP_OK)</div>
 <div class="line"><span class="lineno">   42</span>    {</div>
-<div class="line"><span class="lineno">   43</span>        ESP_LOGE(<a class="code hl_variable" href="namespaceshrapnel_1_1parameters.html#a0cbbede6af96973c56e635f9a90599cd">TAG</a>, <span class="stringliteral">&quot;Write to reg 0x%02x failed&quot;</span>, reg_adr);</div>
+<div class="line"><span class="lineno">   43</span>        ESP_LOGE(TAG, <span class="stringliteral">&quot;Write to reg 0x%02x failed&quot;</span>, reg_adr);</div>
 <div class="line"><span class="lineno">   44</span>    }</div>
 <div class="line"><span class="lineno">   45</span> </div>
 <div class="line"><span class="lineno">   46</span>    <span class="keywordflow">return</span> err;</div>
 <div class="line"><span class="lineno">   47</span>}</div>
 <div class="ttc" id="ai2c_8c_html_a45e8e37789f0b27a7fe24b58795787f7"><div class="ttname"><a href="i2c_8c.html#a45e8e37789f0b27a7fe24b58795787f7">i2c_write_byte</a></div><div class="ttdeci">esp_err_t i2c_write_byte(i2c_port_t port, uint8_t slave_address, uint8_t reg_address, uint8_t data)</div><div class="ttdef"><b>Definition:</b> <a href="i2c_8c_source.html#l00025">i2c.c:25</a></div></div>
-<div class="ttc" id="anamespaceshrapnel_1_1parameters_html_a0cbbede6af96973c56e635f9a90599cd"><div class="ttname"><a href="namespaceshrapnel_1_1parameters.html#a0cbbede6af96973c56e635f9a90599cd">shrapnel::parameters::TAG</a></div><div class="ttdeci">constexpr const char * TAG</div><div class="ttdef"><b>Definition:</b> <a href="audio__param_8h_source.html#l00034">audio_param.h:34</a></div></div>
 <div class="ttc" id="apcm3060_8c_html_a71b6997ffef11829ebada7d54261e2f3"><div class="ttname"><a href="pcm3060_8c.html#a71b6997ffef11829ebada7d54261e2f3">_port</a></div><div class="ttdeci">static i2c_port_t _port</div><div class="ttdef"><b>Definition:</b> <a href="pcm3060_8c_source.html#l00029">pcm3060.c:29</a></div></div>
 <div class="ttc" id="apcm3060_8c_html_a759ea42c79be4c238e3106ea4b53c27a"><div class="ttname"><a href="pcm3060_8c.html#a759ea42c79be4c238e3106ea4b53c27a">_address</a></div><div class="ttdeci">static uint8_t _address</div><div class="ttdef"><b>Definition:</b> <a href="pcm3060_8c_source.html#l00028">pcm3060.c:28</a></div></div>
 </div><!-- fragment -->
-<p class="reference">References <a class="el" href="pcm3060_8c_source.html#l00028">_address</a>, <a class="el" href="pcm3060_8c_source.html#l00029">_port</a>, <a class="el" href="i2c_8c_source.html#l00025">i2c_write_byte()</a>, and <a class="el" href="audio__param_8h_source.html#l00034">shrapnel::parameters::TAG</a>.</p>
+<p class="reference">References <a class="el" href="pcm3060_8c_source.html#l00028">_address</a>, <a class="el" href="pcm3060_8c_source.html#l00029">_port</a>, and <a class="el" href="i2c_8c_source.html#l00025">i2c_write_byte()</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="pcm3060_8c_source.html#l00074">pcm3060_power_down()</a>, and <a class="el" href="pcm3060_8c_source.html#l00055">pcm3060_power_up()</a>.</p>
 <div class="dynheader">
@@ -261,7 +260,7 @@ Here is the caller graph for this function:</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="pcm3060_8c_source.html#l00028">_address</a>, and <a class="el" href="pcm3060_8c_source.html#l00029">_port</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="main_8cpp_source.html#l00629">shrapnel::app_main()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="main_8cpp_source.html#l00208">shrapnel::app_main()</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
@@ -350,7 +349,7 @@ Here is the call graph for this function:</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="pcm3060_8c_source.html#l00037">_i2c_write()</a>, and <a class="el" href="pcm3060_8c_source.html#l00031">_initialised()</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="main_8cpp_source.html#l00629">shrapnel::app_main()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="main_8cpp_source.html#l00208">shrapnel::app_main()</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">

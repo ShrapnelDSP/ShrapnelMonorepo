@@ -171,9 +171,7 @@ template&lt;typename T &gt; </div>
 </div><div class="memdoc">
 
 <p class="definition">Definition at line <a class="el" href="queue_8h_source.html#l00042">42</a> of file <a class="el" href="queue_8h_source.html">queue.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   43</span>    {</div>
-<div class="line"><span class="lineno">   44</span>        (void) number_of_elements;</div>
-<div class="line"><span class="lineno">   45</span>    };</div>
+<div class="fragment"><div class="line"><span class="lineno">   42</span>{ (void)number_of_elements; };</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -214,7 +212,7 @@ template&lt;typename T &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classshrapnel_1_1Queue.html#aea7063f7ef99b8b46f6ba1250012332c">shrapnel::Queue&lt; T, MAX_SIZE &gt;</a>.</p>
+<p>Implemented in <a class="el" href="classshrapnel_1_1Queue.html#aea7063f7ef99b8b46f6ba1250012332c">shrapnel::Queue&lt; AppMessage, QUEUE_LEN &gt;</a>, and <a class="el" href="classshrapnel_1_1Queue.html#aea7063f7ef99b8b46f6ba1250012332c">shrapnel::Queue&lt; T, MAX_SIZE &gt;</a>.</p>
 
 </div>
 </div>
@@ -254,12 +252,20 @@ template&lt;typename T &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classshrapnel_1_1Queue.html#a641b36d0a32ef881c94ab1395cd63818">shrapnel::Queue&lt; T, MAX_SIZE &gt;</a>.</p>
+<p>Implemented in <a class="el" href="classshrapnel_1_1Queue.html#a641b36d0a32ef881c94ab1395cd63818">shrapnel::Queue&lt; AppMessage, QUEUE_LEN &gt;</a>, and <a class="el" href="classshrapnel_1_1Queue.html#a641b36d0a32ef881c94ab1395cd63818">shrapnel::Queue&lt; T, MAX_SIZE &gt;</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="server_8cpp_source.html#l00276">shrapnel::Server::send_message()</a>.</p>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" frameborder="0" src="classshrapnel_1_1QueueBase_a7b76fee63afcc760644ab19e19f96ad2_icgraph.svg" width="354" height="52"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
+</div>
 
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following file:<ul>
-<li>firmware/components/queue/include/<a class="el" href="queue_8h_source.html">queue.h</a></li>
+<li>firmware/components/os/include/os/<a class="el" href="queue_8h_source.html">queue.h</a></li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->

@@ -8,8 +8,9 @@ var searchData=
   ['note_5fon_5',['NOTE_ON',['../namespaceshrapnel_1_1midi.html#ad87a6a7595532b38466aa350b3d4e7aeae3fb9dbaf6a8edc1be6286ae5b2e3bcf',1,'shrapnel::midi']]],
   ['noteoff_6',['NoteOff',['../structshrapnel_1_1midi_1_1Message_1_1NoteOff.html',1,'shrapnel::midi::Message']]],
   ['noteon_7',['NoteOn',['../structshrapnel_1_1midi_1_1Message_1_1NoteOn.html',1,'shrapnel::midi::Message']]],
-  ['notification_8',['notification',['../classshrapnel_1_1ParameterObserver.html#ae4271bba0d4f15608ac2cb048044251f',1,'shrapnel::ParameterObserver::notification()'],['../classshrapnel_1_1MidiMappingObserver.html#a6823a376e4f7f01e3d79b3d22ccf57c6',1,'shrapnel::MidiMappingObserver::notification()']]],
-  ['num_9',['num',['../namespacewah.html#ac0e49814eb451b1f60de1d8a809b62b0',1,'wah']]],
-  ['number_10',['number',['../structshrapnel_1_1midi_1_1Message_1_1ProgramChange.html#aa410a2e8f7c2338ad6cc7545ad5d93c8',1,'shrapnel::midi::Message::ProgramChange']]],
-  ['nvs_5fdebug_5fprint_11',['nvs_debug_print',['../namespaceshrapnel.html#a9c85fa6a77cfb97394c46cf0ebe10298',1,'shrapnel']]]
+  ['notification_8',['notification',['../classshrapnel_1_1MidiMappingObserver.html#a6823a376e4f7f01e3d79b3d22ccf57c6',1,'shrapnel::MidiMappingObserver::notification()'],['../classshrapnel_1_1ParameterObserver.html#ae4271bba0d4f15608ac2cb048044251f',1,'shrapnel::ParameterObserver::notification()']]],
+  ['null_5fcallback_9',['null_callback',['../namespaceshrapnel_1_1os.html#a9eeab315a37d981157e0fc29f635aaff',1,'shrapnel::os']]],
+  ['num_10',['num',['../namespacewah.html#ac0e49814eb451b1f60de1d8a809b62b0',1,'wah']]],
+  ['number_11',['number',['../structshrapnel_1_1midi_1_1Message_1_1ProgramChange.html#aa410a2e8f7c2338ad6cc7545ad5d93c8',1,'shrapnel::midi::Message::ProgramChange']]],
+  ['nvs_5fdebug_5fprint_12',['nvs_debug_print',['../namespaceshrapnel.html#a9c85fa6a77cfb97394c46cf0ebe10298',1,'shrapnel']]]
 ];

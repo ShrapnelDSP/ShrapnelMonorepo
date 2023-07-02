@@ -140,7 +140,7 @@ $(document).ready(function(){initNavTree('esp32_2profiling_8c_source.html',''); 
 <div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>    <a class="code hl_variable" href="esp32_2profiling_8c.html#a63433fe701b4e06f2cfdd50509e660db">sample_rate</a> = a_sample_rate;</div>
 <div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span> </div>
 <div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>    <a class="code hl_variable" href="esp32_2profiling_8c.html#a12d55287a43c286880f5a53b5433fce1">cpu_freq_mhz</a> = ets_get_cpu_frequency();</div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>    ESP_LOGI(<a class="code hl_variable" href="namespaceshrapnel_1_1parameters.html#a0cbbede6af96973c56e635f9a90599cd">TAG</a>, <span class="stringliteral">&quot;CPU frequency: %d MHz&quot;</span>, <a class="code hl_variable" href="esp32_2profiling_8c.html#a12d55287a43c286880f5a53b5433fce1">cpu_freq_mhz</a>);</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>    ESP_LOGI(TAG, <span class="stringliteral">&quot;CPU frequency: %d MHz&quot;</span>, <a class="code hl_variable" href="esp32_2profiling_8c.html#a12d55287a43c286880f5a53b5433fce1">cpu_freq_mhz</a>);</div>
 <div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>}</div>
 <div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span> </div>
 <div class="line"><a id="l00050" name="l00050"></a><span class="lineno"><a class="line" href="esp32_2profiling_8c.html#ac05fdc10ded37340f2ab202bbc184d20">   50</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="desktop_2profiling_8c.html#ac05fdc10ded37340f2ab202bbc184d20">profiling_start</a>(<span class="keywordtype">void</span>)</div>
@@ -196,7 +196,7 @@ $(document).ready(function(){initNavTree('esp32_2profiling_8c_source.html',''); 
 <div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span> </div>
 <div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>        <span class="keywordflow">if</span>(xSemaphoreTake(<a class="code hl_variable" href="esp32_2profiling_8c.html#a3b34b520123016210f0a0bb409286805">profiling_mutex</a>, 100 / portTICK_PERIOD_MS))</div>
 <div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>        {</div>
-<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>            ESP_LOGI(<a class="code hl_variable" href="namespaceshrapnel_1_1parameters.html#a0cbbede6af96973c56e635f9a90599cd">TAG</a>, <span class="stringliteral">&quot; ========= \n&quot;</span>);</div>
+<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>            ESP_LOGI(TAG, <span class="stringliteral">&quot; ========= \n&quot;</span>);</div>
 <div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span> </div>
 <div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>            int64_t total_cycles = 0;</div>
 <div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>            <span class="keywordflow">for</span>(<span class="keywordtype">int</span> i = 0; i &lt; NUMBER_OF_STAGES; i++)</div>
@@ -208,7 +208,7 @@ $(document).ready(function(){initNavTree('esp32_2profiling_8c_source.html',''); 
 <div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>                }</div>
 <div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span> </div>
 <div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>                int64_t current_stage_cycles = <a class="code hl_variable" href="esp32_2profiling_8c.html#ade2d6f84e5a6696fba128c5769eef4db">stage_cycles</a>[i] - ((i == 0) ? <a class="code hl_variable" href="esp32_2profiling_8c.html#abbb1d59d5361eaadca69523f17e12a25">start_cycles</a> : <a class="code hl_variable" href="esp32_2profiling_8c.html#ade2d6f84e5a6696fba128c5769eef4db">stage_cycles</a>[i - 1]);</div>
-<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>                ESP_LOGI(<a class="code hl_variable" href="namespaceshrapnel_1_1parameters.html#a0cbbede6af96973c56e635f9a90599cd">TAG</a>, <span class="stringliteral">&quot;Stage %3d processing took %7lld cycles %4lld us (%03.1f %%)&quot;</span>,</div>
+<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>                ESP_LOGI(TAG, <span class="stringliteral">&quot;Stage %3d processing took %7lld cycles %4lld us (%03.1f %%)&quot;</span>,</div>
 <div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>                        i,</div>
 <div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>                        current_stage_cycles,</div>
 <div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>                        <a class="code hl_function" href="esp32_2profiling_8c.html#ab43df9ddabf19beb65958fe84cac89b5">cycles_to_us</a>(current_stage_cycles),</div>
@@ -217,18 +217,18 @@ $(document).ready(function(){initNavTree('esp32_2profiling_8c_source.html',''); 
 <div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>                total_cycles += current_stage_cycles;</div>
 <div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>            }</div>
 <div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span> </div>
-<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>            ESP_LOGI(<a class="code hl_variable" href="namespaceshrapnel_1_1parameters.html#a0cbbede6af96973c56e635f9a90599cd">TAG</a>, <span class="stringliteral">&quot;Total processing took     %7lld cycles %4lld us (%03.1f %%)&quot;</span>,</div>
+<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>            ESP_LOGI(TAG, <span class="stringliteral">&quot;Total processing took     %7lld cycles %4lld us (%03.1f %%)&quot;</span>,</div>
 <div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>                    total_cycles,</div>
 <div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span>                    <a class="code hl_function" href="esp32_2profiling_8c.html#ab43df9ddabf19beb65958fe84cac89b5">cycles_to_us</a>(total_cycles),</div>
 <div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span>                    <a class="code hl_function" href="esp32_2profiling_8c.html#a96b462c18367729bd8d5e19d7d98a619">cycles_to_percent</a>(total_cycles));</div>
 <div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span> </div>
-<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>            ESP_LOGI(<a class="code hl_variable" href="namespaceshrapnel_1_1parameters.html#a0cbbede6af96973c56e635f9a90599cd">TAG</a>, <span class="stringliteral">&quot; ========= \n&quot;</span>);</div>
+<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>            ESP_LOGI(TAG, <span class="stringliteral">&quot; ========= \n&quot;</span>);</div>
 <div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span> </div>
 <div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span>            xSemaphoreGive(<a class="code hl_variable" href="esp32_2profiling_8c.html#a3b34b520123016210f0a0bb409286805">profiling_mutex</a>);</div>
 <div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span>        }</div>
 <div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span>        <span class="keywordflow">else</span></div>
 <div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span>        {</div>
-<div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span>            ESP_LOGE(<a class="code hl_variable" href="namespaceshrapnel_1_1parameters.html#a0cbbede6af96973c56e635f9a90599cd">TAG</a>, <span class="stringliteral">&quot;%s failed to take semaphore&quot;</span>, __FUNCTION__);</div>
+<div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span>            ESP_LOGE(TAG, <span class="stringliteral">&quot;%s failed to take semaphore&quot;</span>, __FUNCTION__);</div>
 <div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span>        }</div>
 <div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span>    }</div>
 <div class="line"><a id="l00138" name="l00138"></a><span class="lineno">  138</span>}</div>
@@ -246,7 +246,6 @@ $(document).ready(function(){initNavTree('esp32_2profiling_8c_source.html',''); 
 <div class="ttc" id="aesp32_2profiling_8c_html_ab43df9ddabf19beb65958fe84cac89b5"><div class="ttname"><a href="esp32_2profiling_8c.html#ab43df9ddabf19beb65958fe84cac89b5">cycles_to_us</a></div><div class="ttdeci">static int64_t cycles_to_us(int64_t cycles)</div><div class="ttdef"><b>Definition:</b> <a href="esp32_2profiling_8c_source.html#l00089">profiling.c:89</a></div></div>
 <div class="ttc" id="aesp32_2profiling_8c_html_abbb1d59d5361eaadca69523f17e12a25"><div class="ttname"><a href="esp32_2profiling_8c.html#abbb1d59d5361eaadca69523f17e12a25">start_cycles</a></div><div class="ttdeci">static uint32_t start_cycles</div><div class="ttdef"><b>Definition:</b> <a href="esp32_2profiling_8c_source.html#l00032">profiling.c:32</a></div></div>
 <div class="ttc" id="aesp32_2profiling_8c_html_ade2d6f84e5a6696fba128c5769eef4db"><div class="ttname"><a href="esp32_2profiling_8c.html#ade2d6f84e5a6696fba128c5769eef4db">stage_cycles</a></div><div class="ttdeci">static uint32_t stage_cycles[NUMBER_OF_STAGES]</div><div class="ttdef"><b>Definition:</b> <a href="esp32_2profiling_8c_source.html#l00033">profiling.c:33</a></div></div>
-<div class="ttc" id="anamespaceshrapnel_1_1parameters_html_a0cbbede6af96973c56e635f9a90599cd"><div class="ttname"><a href="namespaceshrapnel_1_1parameters.html#a0cbbede6af96973c56e635f9a90599cd">shrapnel::parameters::TAG</a></div><div class="ttdeci">constexpr const char * TAG</div><div class="ttdef"><b>Definition:</b> <a href="audio__param_8h_source.html#l00034">audio_param.h:34</a></div></div>
 <div class="ttc" id="aprofiling_8h_html"><div class="ttname"><a href="profiling_8h.html">profiling.h</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->

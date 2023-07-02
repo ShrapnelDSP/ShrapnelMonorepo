@@ -1,6 +1,6 @@
 var midi__mapping__api_8h =
 [
-    [ "shrapnel::midi::GetRequest", "structshrapnel_1_1midi_1_1GetRequest.html", null ],
+    [ "shrapnel::midi::GetRequest", "structshrapnel_1_1midi_1_1GetRequest.html", "structshrapnel_1_1midi_1_1GetRequest" ],
     [ "shrapnel::midi::GetResponse", "structshrapnel_1_1midi_1_1GetResponse.html", "structshrapnel_1_1midi_1_1GetResponse" ],
     [ "shrapnel::midi::CreateRequest", "structshrapnel_1_1midi_1_1CreateRequest.html", "structshrapnel_1_1midi_1_1CreateRequest" ],
     [ "shrapnel::midi::CreateResponse", "structshrapnel_1_1midi_1_1CreateResponse.html", "structshrapnel_1_1midi_1_1CreateResponse" ],

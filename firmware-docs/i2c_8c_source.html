@@ -163,13 +163,12 @@ $(document).ready(function(){initNavTree('i2c_8c_source.html',''); initResizable
 <div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>    (void) data;</div>
 <div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span> </div>
 <div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>    <span class="comment">/* PCM3060 datasheet has no read operation, maybe it&#39;s not supported ? */</span></div>
-<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>    ESP_LOGE(<a class="code hl_variable" href="namespaceshrapnel_1_1parameters.html#a0cbbede6af96973c56e635f9a90599cd">TAG</a>, <span class="stringliteral">&quot;Read is not implemented&quot;</span>);</div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>    ESP_LOGE(TAG, <span class="stringliteral">&quot;Read is not implemented&quot;</span>);</div>
 <div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>    <span class="keywordflow">return</span> ESP_FAIL;</div>
 <div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>}</div>
 <div class="ttc" id="ai2c_8c_html_a45e8e37789f0b27a7fe24b58795787f7"><div class="ttname"><a href="i2c_8c.html#a45e8e37789f0b27a7fe24b58795787f7">i2c_write_byte</a></div><div class="ttdeci">esp_err_t i2c_write_byte(i2c_port_t port, uint8_t slave_address, uint8_t reg_address, uint8_t data)</div><div class="ttdef"><b>Definition:</b> <a href="i2c_8c_source.html#l00025">i2c.c:25</a></div></div>
 <div class="ttc" id="ai2c_8c_html_ad8582e6632e6cf4154a23778d9ed7c3c"><div class="ttname"><a href="i2c_8c.html#ad8582e6632e6cf4154a23778d9ed7c3c">i2c_read_byte</a></div><div class="ttdeci">esp_err_t i2c_read_byte(i2c_port_t port, uint8_t slave_address, uint8_t reg_address, uint8_t *data)</div><div class="ttdef"><b>Definition:</b> <a href="i2c_8c_source.html#l00062">i2c.c:62</a></div></div>
 <div class="ttc" id="ai2c_8h_html"><div class="ttname"><a href="i2c_8h.html">i2c.h</a></div></div>
-<div class="ttc" id="anamespaceshrapnel_1_1parameters_html_a0cbbede6af96973c56e635f9a90599cd"><div class="ttname"><a href="namespaceshrapnel_1_1parameters.html#a0cbbede6af96973c56e635f9a90599cd">shrapnel::parameters::TAG</a></div><div class="ttdeci">constexpr const char * TAG</div><div class="ttdef"><b>Definition:</b> <a href="audio__param_8h_source.html#l00034">audio_param.h:34</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

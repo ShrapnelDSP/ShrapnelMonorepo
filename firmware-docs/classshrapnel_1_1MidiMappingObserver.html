@@ -96,6 +96,8 @@ $(document).ready(function(){initNavTree('classshrapnel_1_1MidiMappingObserver.h
   <div class="headertitle"><div class="title">shrapnel::MidiMappingObserver&lt; MappingManagerT &gt; Class Template Reference<span class="mlabels"><span class="mlabel">final</span></span></div></div>
 </div><!--header-->
 <div class="contents">
+
+<p><code>#include &lt;<a class="el" href="main__thread_8h_source.html">main_thread.h</a>&gt;</code></p>
 <div class="dynheader">
 Inheritance diagram for shrapnel::MidiMappingObserver&lt; MappingManagerT &gt;:</div>
 <div class="dyncontent">
@@ -111,18 +113,18 @@ Collaboration diagram for shrapnel::MidiMappingObserver&lt; MappingManagerT &gt;
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:aebd40621db4a0905667bf63bbd3719c4"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classshrapnel_1_1MidiMappingObserver.html#aebd40621db4a0905667bf63bbd3719c4">MidiMappingObserver</a> (<a class="el" href="classshrapnel_1_1persistence_1_1Storage.html">persistence::Storage</a> &amp;persistence, const MappingManagerT &amp;mapping_manager)</td></tr>
-<tr class="separator:aebd40621db4a0905667bf63bbd3719c4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a436863e63f154f047176875fe7178101"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classshrapnel_1_1MidiMappingObserver.html#a436863e63f154f047176875fe7178101">MidiMappingObserver</a> (<a class="el" href="classshrapnel_1_1persistence_1_1Storage.html">persistence::Storage</a> &amp;a_persistence, const MappingManagerT &amp;a_mapping_manager)</td></tr>
+<tr class="separator:a436863e63f154f047176875fe7178101"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6823a376e4f7f01e3d79b3d22ccf57c6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classshrapnel_1_1MidiMappingObserver.html#a6823a376e4f7f01e3d79b3d22ccf57c6">notification</a> (const <a class="el" href="structshrapnel_1_1midi_1_1Mapping.html#a212fd4d87c151bab5982bc9138990a02">midi::Mapping::id_t</a> &amp;) override</td></tr>
 <tr class="separator:a6823a376e4f7f01e3d79b3d22ccf57c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><div class="compoundTemplParams">template&lt;typename MappingManagerT&gt;<br />
 class shrapnel::MidiMappingObserver&lt; MappingManagerT &gt;</div>
-<p class="definition">Definition at line <a class="el" href="main_8cpp_source.html#l00202">202</a> of file <a class="el" href="main_8cpp_source.html">main.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="main__thread_8h_source.html#l00070">70</a> of file <a class="el" href="main__thread_8h_source.html">main_thread.h</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="aebd40621db4a0905667bf63bbd3719c4" name="aebd40621db4a0905667bf63bbd3719c4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aebd40621db4a0905667bf63bbd3719c4">&#9670;&nbsp;</a></span>MidiMappingObserver()</h2>
+<a id="a436863e63f154f047176875fe7178101" name="a436863e63f154f047176875fe7178101"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a436863e63f154f047176875fe7178101">&#9670;&nbsp;</a></span>MidiMappingObserver()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -136,13 +138,13 @@ template&lt;typename MappingManagerT &gt; </div>
           <td class="memname"><a class="el" href="classshrapnel_1_1MidiMappingObserver.html">shrapnel::MidiMappingObserver</a>&lt; MappingManagerT &gt;::MidiMappingObserver </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="classshrapnel_1_1persistence_1_1Storage.html">persistence::Storage</a> &amp;&#160;</td>
-          <td class="paramname"><em>persistence</em>, </td>
+          <td class="paramname"><em>a_persistence</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">const MappingManagerT &amp;&#160;</td>
-          <td class="paramname"><em>mapping_manager</em>&#160;</td>
+          <td class="paramname"><em>a_mapping_manager</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -157,8 +159,11 @@ template&lt;typename MappingManagerT &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="main_8cpp_source.html#l00204">204</a> of file <a class="el" href="main_8cpp_source.html">main.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  206</span>        : persistence{persistence}, mapping_manager{mapping_manager} {}</div>
+<p class="definition">Definition at line <a class="el" href="main__thread_8h_source.html#l00073">73</a> of file <a class="el" href="main__thread_8h_source.html">main_thread.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   75</span>        : persistence{a_persistence},</div>
+<div class="line"><span class="lineno">   76</span>          mapping_manager{a_mapping_manager}</div>
+<div class="line"><span class="lineno">   77</span>    {</div>
+<div class="line"><span class="lineno">   78</span>    }</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -189,19 +194,16 @@ template&lt;typename MappingManagerT &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="main_8cpp_source.html#l00208">208</a> of file <a class="el" href="main_8cpp_source.html">main.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  208</span>                                                        {</div>
-<div class="line"><span class="lineno">  209</span>        ESP_LOGI(<a class="code hl_variable" href="namespaceshrapnel_1_1parameters.html#a0cbbede6af96973c56e635f9a90599cd">TAG</a>, <span class="stringliteral">&quot;Midi mapping has changed&quot;</span>);</div>
-<div class="line"><span class="lineno">  210</span>        persist();</div>
-<div class="line"><span class="lineno">  211</span>    }</div>
-<div class="ttc" id="anamespaceshrapnel_1_1parameters_html_a0cbbede6af96973c56e635f9a90599cd"><div class="ttname"><a href="namespaceshrapnel_1_1parameters.html#a0cbbede6af96973c56e635f9a90599cd">shrapnel::parameters::TAG</a></div><div class="ttdeci">constexpr const char * TAG</div><div class="ttdef"><b>Definition:</b> <a href="audio__param_8h_source.html#l00034">audio_param.h:34</a></div></div>
+<p class="definition">Definition at line <a class="el" href="main__thread_8h_source.html#l00080">80</a> of file <a class="el" href="main__thread_8h_source.html">main_thread.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   81</span>    {</div>
+<div class="line"><span class="lineno">   82</span>        ESP_LOGI(TAG, <span class="stringliteral">&quot;Midi mapping has changed&quot;</span>);</div>
+<div class="line"><span class="lineno">   83</span>        persist();</div>
+<div class="line"><span class="lineno">   84</span>    }</div>
 </div><!-- fragment -->
-<p class="reference">References <a class="el" href="audio__param_8h_source.html#l00034">shrapnel::parameters::TAG</a>.</p>
-
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following file:<ul>
-<li>firmware/main/<a class="el" href="main_8cpp_source.html">main.cpp</a></li>
+<li>firmware/main/include/<a class="el" href="main__thread_8h_source.html">main_thread.h</a></li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->

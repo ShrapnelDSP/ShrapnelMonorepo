@@ -130,16 +130,16 @@ $(document).ready(function(){initNavTree('midi__mapping__json__parser_8cpp_sourc
 <div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span><span class="keyword">template</span>&lt;&gt;</div>
 <div class="line"><a id="l00035" name="l00035"></a><span class="lineno"><a class="line" href="namespaceshrapnel_1_1midi.html#ad51657a257c72e7075c02af7896316eb">   35</a></span>std::optional&lt;Mapping&gt; <a class="code hl_function" href="namespaceshrapnel_1_1midi.html#a7ca8b7f586d738415484d2f612a1a814">from_json</a>(<span class="keyword">const</span> rapidjson::Value &amp;json)</div>
 <div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>{</div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>    <span class="keyword">constexpr</span> <span class="keywordtype">char</span> <a class="code hl_variable" href="namespaceshrapnel_1_1parameters.html#a0cbbede6af96973c56e635f9a90599cd">TAG</a>[] = <span class="stringliteral">&quot;Mapping from_json&quot;</span>;</div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>    <span class="keyword">constexpr</span> <span class="keywordtype">char</span> TAG[] = <span class="stringliteral">&quot;Mapping from_json&quot;</span>;</div>
 <div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>    <span class="keyword">auto</span> midi_channel = json.FindMember(<span class="stringliteral">&quot;midi_channel&quot;</span>);</div>
 <div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>    <span class="keywordflow">if</span>(midi_channel == json.MemberEnd()) {</div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>        ESP_LOGE(<a class="code hl_variable" href="namespaceshrapnel_1_1parameters.html#a0cbbede6af96973c56e635f9a90599cd">TAG</a>, <span class="stringliteral">&quot;midi_channel is missing&quot;</span>);</div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>        ESP_LOGE(TAG, <span class="stringliteral">&quot;midi_channel is missing&quot;</span>);</div>
 <div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>        <span class="keywordflow">return</span> std::nullopt;</div>
 <div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>    }</div>
 <div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span> </div>
 <div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>    <span class="keyword">auto</span> cc_number = json.FindMember(<span class="stringliteral">&quot;cc_number&quot;</span>);</div>
 <div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>    <span class="keywordflow">if</span>(cc_number == json.MemberEnd()) {</div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>        ESP_LOGE(<a class="code hl_variable" href="namespaceshrapnel_1_1parameters.html#a0cbbede6af96973c56e635f9a90599cd">TAG</a>, <span class="stringliteral">&quot;cc_number is missing&quot;</span>);</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>        ESP_LOGE(TAG, <span class="stringliteral">&quot;cc_number is missing&quot;</span>);</div>
 <div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>        <span class="keywordflow">return</span> std::nullopt;</div>
 <div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>    }</div>
 <div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span> </div>
@@ -147,13 +147,13 @@ $(document).ready(function(){initNavTree('midi__mapping__json__parser_8cpp_sourc
 <div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>    <span class="keyword">auto</span> mode_json = json.FindMember(<span class="stringliteral">&quot;mode&quot;</span>);</div>
 <div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>    <span class="keywordflow">if</span>(mode_json == json.MemberEnd())</div>
 <div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>    {</div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>        ESP_LOGW(<a class="code hl_variable" href="namespaceshrapnel_1_1parameters.html#a0cbbede6af96973c56e635f9a90599cd">TAG</a>, <span class="stringliteral">&quot;mode is missing, setting it to PARAMETER&quot;</span>);</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>        ESP_LOGW(TAG, <span class="stringliteral">&quot;mode is missing, setting it to PARAMETER&quot;</span>);</div>
 <div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>    }</div>
 <div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>    <span class="keywordflow">else</span></div>
 <div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>    {</div>
 <div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>        <span class="keywordflow">if</span>(!mode_json-&gt;value.IsString())</div>
 <div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>        {</div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>            ESP_LOGE(<a class="code hl_variable" href="namespaceshrapnel_1_1parameters.html#a0cbbede6af96973c56e635f9a90599cd">TAG</a>, <span class="stringliteral">&quot;mode is not string&quot;</span>);</div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>            ESP_LOGE(TAG, <span class="stringliteral">&quot;mode is not string&quot;</span>);</div>
 <div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>            <span class="keywordflow">return</span> std::nullopt;</div>
 <div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>        }</div>
 <div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span> </div>
@@ -164,7 +164,7 @@ $(document).ready(function(){initNavTree('midi__mapping__json__parser_8cpp_sourc
 <div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span> </div>
 <div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>        <span class="keywordflow">if</span>(!lut.contains(mode_json-&gt;value.GetString()))</div>
 <div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>        {</div>
-<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>            ESP_LOGE(<a class="code hl_variable" href="namespaceshrapnel_1_1parameters.html#a0cbbede6af96973c56e635f9a90599cd">TAG</a>, <span class="stringliteral">&quot;unknown mode %s&quot;</span>, mode_json-&gt;value.GetString());</div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>            ESP_LOGE(TAG, <span class="stringliteral">&quot;unknown mode %s&quot;</span>, mode_json-&gt;value.GetString());</div>
 <div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>            <span class="keywordflow">return</span> std::nullopt;</div>
 <div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>        }</div>
 <div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>        mode = lut.at(mode_json-&gt;value.GetString());</div>
@@ -172,7 +172,7 @@ $(document).ready(function(){initNavTree('midi__mapping__json__parser_8cpp_sourc
 <div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span> </div>
 <div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>    <span class="keyword">auto</span> parameter_id = json.FindMember(<span class="stringliteral">&quot;parameter_id&quot;</span>);</div>
 <div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>    <span class="keywordflow">if</span>(parameter_id == json.MemberEnd()) {</div>
-<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>        ESP_LOGE(<a class="code hl_variable" href="namespaceshrapnel_1_1parameters.html#a0cbbede6af96973c56e635f9a90599cd">TAG</a>, <span class="stringliteral">&quot;parameter_id is missing&quot;</span>);</div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>        ESP_LOGE(TAG, <span class="stringliteral">&quot;parameter_id is missing&quot;</span>);</div>
 <div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>        <span class="keywordflow">return</span> std::nullopt;</div>
 <div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>    }</div>
 <div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span> </div>
@@ -186,11 +186,11 @@ $(document).ready(function(){initNavTree('midi__mapping__json__parser_8cpp_sourc
 <div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span><span class="keyword">template</span>&lt;&gt;</div>
 <div class="line"><a id="l00091" name="l00091"></a><span class="lineno"><a class="line" href="namespaceshrapnel_1_1midi.html#aed2b96bd6d4afdcc8507cb7b5f0ef4bc">   91</a></span>std::optional&lt;std::pair&lt;Mapping::id_t, Mapping&gt;&gt; <a class="code hl_function" href="namespaceshrapnel_1_1midi.html#a7ca8b7f586d738415484d2f612a1a814">from_json</a>(<span class="keyword">const</span> rapidjson::Value &amp;json)</div>
 <div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>{</div>
-<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>    <span class="keyword">constexpr</span> <span class="keywordtype">char</span> <a class="code hl_variable" href="namespaceshrapnel_1_1parameters.html#a0cbbede6af96973c56e635f9a90599cd">TAG</a>[] = <span class="stringliteral">&quot;pair&lt;mapping::id, mapping&gt; from_json&quot;</span>;</div>
+<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>    <span class="keyword">constexpr</span> <span class="keywordtype">char</span> TAG[] = <span class="stringliteral">&quot;pair&lt;mapping::id, mapping&gt; from_json&quot;</span>;</div>
 <div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span> </div>
 <div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>    <span class="keywordflow">if</span>(!json.IsObject())</div>
 <div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>    {</div>
-<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>        ESP_LOGE(<a class="code hl_variable" href="namespaceshrapnel_1_1parameters.html#a0cbbede6af96973c56e635f9a90599cd">TAG</a>, <span class="stringliteral">&quot;mapping is not object&quot;</span>);</div>
+<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>        ESP_LOGE(TAG, <span class="stringliteral">&quot;mapping is not object&quot;</span>);</div>
 <div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>        <span class="keywordflow">return</span> std::nullopt;</div>
 <div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>    }</div>
 <div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span> </div>
@@ -200,7 +200,7 @@ $(document).ready(function(){initNavTree('midi__mapping__json__parser_8cpp_sourc
 <div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span> </div>
 <div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>    <span class="keywordflow">if</span>(mapping_entry_member == json.GetObject().end())</div>
 <div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>    {</div>
-<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>        ESP_LOGE(<a class="code hl_variable" href="namespaceshrapnel_1_1parameters.html#a0cbbede6af96973c56e635f9a90599cd">TAG</a>, <span class="stringliteral">&quot;mapping is empty&quot;</span>);</div>
+<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>        ESP_LOGE(TAG, <span class="stringliteral">&quot;mapping is empty&quot;</span>);</div>
 <div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>        <span class="keywordflow">return</span> std::nullopt;</div>
 <div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>    }</div>
 <div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span> </div>
@@ -209,13 +209,13 @@ $(document).ready(function(){initNavTree('midi__mapping__json__parser_8cpp_sourc
 <div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span> </div>
 <div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>    <span class="keyword">auto</span> mapping = from_json&lt;Mapping&gt;(mapping_entry);</div>
 <div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>    <span class="keywordflow">if</span>(!mapping.has_value()) {</div>
-<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>        ESP_LOGE(<a class="code hl_variable" href="namespaceshrapnel_1_1parameters.html#a0cbbede6af96973c56e635f9a90599cd">TAG</a>, <span class="stringliteral">&quot;failed to get mapping&quot;</span>);</div>
+<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>        ESP_LOGE(TAG, <span class="stringliteral">&quot;failed to get mapping&quot;</span>);</div>
 <div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>        <span class="keywordflow">return</span> std::nullopt;</div>
 <div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>    }</div>
 <div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span> </div>
 <div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>    <span class="keyword">auto</span> <span class="keywordtype">id</span> = from_json&lt;Mapping::id_t&gt;(mapping_id);</div>
 <div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>    <span class="keywordflow">if</span>(!<span class="keywordtype">id</span>.has_value()) {</div>
-<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>        ESP_LOGE(<a class="code hl_variable" href="namespaceshrapnel_1_1parameters.html#a0cbbede6af96973c56e635f9a90599cd">TAG</a>, <span class="stringliteral">&quot;failed to get id&quot;</span>);</div>
+<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>        ESP_LOGE(TAG, <span class="stringliteral">&quot;failed to get id&quot;</span>);</div>
 <div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>        <span class="keywordflow">return</span> std::nullopt;</div>
 <div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>    }</div>
 <div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span> </div>
@@ -225,11 +225,11 @@ $(document).ready(function(){initNavTree('midi__mapping__json__parser_8cpp_sourc
 <div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span><span class="keyword">template</span>&lt;&gt;</div>
 <div class="line"><a id="l00130" name="l00130"></a><span class="lineno"><a class="line" href="namespaceshrapnel_1_1midi.html#adb51f16466a3fee83efae0e8a334320b">  130</a></span>std::optional&lt;CreateRequest&gt; <a class="code hl_function" href="namespaceshrapnel_1_1midi.html#a7ca8b7f586d738415484d2f612a1a814">from_json</a>(<span class="keyword">const</span> rapidjson::Value &amp;json)</div>
 <div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span>{</div>
-<div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span>    <span class="keyword">constexpr</span> <span class="keywordtype">char</span> <a class="code hl_variable" href="namespaceshrapnel_1_1parameters.html#a0cbbede6af96973c56e635f9a90599cd">TAG</a>[] = <span class="stringliteral">&quot;Update from_json&quot;</span>;</div>
+<div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span>    <span class="keyword">constexpr</span> <span class="keywordtype">char</span> TAG[] = <span class="stringliteral">&quot;Update from_json&quot;</span>;</div>
 <div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span> </div>
 <div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span>    <span class="keyword">auto</span> mapping_member = json.FindMember(<span class="stringliteral">&quot;mapping&quot;</span>);</div>
 <div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span>    <span class="keywordflow">if</span>(mapping_member == json.MemberEnd()) {</div>
-<div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span>        ESP_LOGE(<a class="code hl_variable" href="namespaceshrapnel_1_1parameters.html#a0cbbede6af96973c56e635f9a90599cd">TAG</a>, <span class="stringliteral">&quot;mapping is missing&quot;</span>);</div>
+<div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span>        ESP_LOGE(TAG, <span class="stringliteral">&quot;mapping is missing&quot;</span>);</div>
 <div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span>        <span class="keywordflow">return</span> std::nullopt;</div>
 <div class="line"><a id="l00138" name="l00138"></a><span class="lineno">  138</span>    }</div>
 <div class="line"><a id="l00139" name="l00139"></a><span class="lineno">  139</span> </div>
@@ -240,11 +240,11 @@ $(document).ready(function(){initNavTree('midi__mapping__json__parser_8cpp_sourc
 <div class="line"><a id="l00144" name="l00144"></a><span class="lineno">  144</span><span class="keyword">template</span>&lt;&gt;</div>
 <div class="line"><a id="l00145" name="l00145"></a><span class="lineno"><a class="line" href="namespaceshrapnel_1_1midi.html#aad12316a79e19947ba3d5700a466f933">  145</a></span>std::optional&lt;Update&gt; <a class="code hl_function" href="namespaceshrapnel_1_1midi.html#a7ca8b7f586d738415484d2f612a1a814">from_json</a>(<span class="keyword">const</span> rapidjson::Value &amp;json)</div>
 <div class="line"><a id="l00146" name="l00146"></a><span class="lineno">  146</span>{</div>
-<div class="line"><a id="l00147" name="l00147"></a><span class="lineno">  147</span>    <span class="keyword">constexpr</span> <span class="keywordtype">char</span> <a class="code hl_variable" href="namespaceshrapnel_1_1parameters.html#a0cbbede6af96973c56e635f9a90599cd">TAG</a>[] = <span class="stringliteral">&quot;Update from_json&quot;</span>;</div>
+<div class="line"><a id="l00147" name="l00147"></a><span class="lineno">  147</span>    <span class="keyword">constexpr</span> <span class="keywordtype">char</span> TAG[] = <span class="stringliteral">&quot;Update from_json&quot;</span>;</div>
 <div class="line"><a id="l00148" name="l00148"></a><span class="lineno">  148</span> </div>
 <div class="line"><a id="l00149" name="l00149"></a><span class="lineno">  149</span>    <span class="keyword">auto</span> mapping_member = json.FindMember(<span class="stringliteral">&quot;mapping&quot;</span>);</div>
 <div class="line"><a id="l00150" name="l00150"></a><span class="lineno">  150</span>    <span class="keywordflow">if</span>(mapping_member == json.MemberEnd()) {</div>
-<div class="line"><a id="l00151" name="l00151"></a><span class="lineno">  151</span>        ESP_LOGE(<a class="code hl_variable" href="namespaceshrapnel_1_1parameters.html#a0cbbede6af96973c56e635f9a90599cd">TAG</a>, <span class="stringliteral">&quot;mapping is missing&quot;</span>);</div>
+<div class="line"><a id="l00151" name="l00151"></a><span class="lineno">  151</span>        ESP_LOGE(TAG, <span class="stringliteral">&quot;mapping is missing&quot;</span>);</div>
 <div class="line"><a id="l00152" name="l00152"></a><span class="lineno">  152</span>        <span class="keywordflow">return</span> std::nullopt;</div>
 <div class="line"><a id="l00153" name="l00153"></a><span class="lineno">  153</span>    }</div>
 <div class="line"><a id="l00154" name="l00154"></a><span class="lineno">  154</span> </div>
@@ -254,18 +254,18 @@ $(document).ready(function(){initNavTree('midi__mapping__json__parser_8cpp_sourc
 <div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span> </div>
 <div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span><span class="keyword">template</span>&lt;&gt;</div>
 <div class="line"><a id="l00160" name="l00160"></a><span class="lineno"><a class="line" href="namespaceshrapnel_1_1midi.html#a2b9d2bc58c847f2f2289c90bf47979e6">  160</a></span>std::optional&lt;Remove&gt; <a class="code hl_function" href="namespaceshrapnel_1_1midi.html#a7ca8b7f586d738415484d2f612a1a814">from_json</a>(<span class="keyword">const</span> rapidjson::Value &amp;json) {</div>
-<div class="line"><a id="l00161" name="l00161"></a><span class="lineno">  161</span>    <span class="keyword">constexpr</span> <span class="keywordtype">char</span> <a class="code hl_variable" href="namespaceshrapnel_1_1parameters.html#a0cbbede6af96973c56e635f9a90599cd">TAG</a>[] = <span class="stringliteral">&quot;Remove from_json&quot;</span>;</div>
+<div class="line"><a id="l00161" name="l00161"></a><span class="lineno">  161</span>    <span class="keyword">constexpr</span> <span class="keywordtype">char</span> TAG[] = <span class="stringliteral">&quot;Remove from_json&quot;</span>;</div>
 <div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span> </div>
 <div class="line"><a id="l00163" name="l00163"></a><span class="lineno">  163</span>    <span class="keyword">auto</span> id_member = json.FindMember(<span class="stringliteral">&quot;id&quot;</span>);</div>
 <div class="line"><a id="l00164" name="l00164"></a><span class="lineno">  164</span>    <span class="keywordflow">if</span>(id_member == json.MemberEnd()) {</div>
-<div class="line"><a id="l00165" name="l00165"></a><span class="lineno">  165</span>        ESP_LOGE(<a class="code hl_variable" href="namespaceshrapnel_1_1parameters.html#a0cbbede6af96973c56e635f9a90599cd">TAG</a>, <span class="stringliteral">&quot;id is missing&quot;</span>);</div>
+<div class="line"><a id="l00165" name="l00165"></a><span class="lineno">  165</span>        ESP_LOGE(TAG, <span class="stringliteral">&quot;id is missing&quot;</span>);</div>
 <div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span>        <span class="keywordflow">return</span> std::nullopt;</div>
 <div class="line"><a id="l00167" name="l00167"></a><span class="lineno">  167</span>    }</div>
 <div class="line"><a id="l00168" name="l00168"></a><span class="lineno">  168</span> </div>
 <div class="line"><a id="l00169" name="l00169"></a><span class="lineno">  169</span>    <span class="keyword">auto</span> uuid = from_json&lt;Mapping::id_t&gt;(id_member-&gt;value);</div>
 <div class="line"><a id="l00170" name="l00170"></a><span class="lineno">  170</span>    <span class="keywordflow">if</span>(!uuid.has_value())</div>
 <div class="line"><a id="l00171" name="l00171"></a><span class="lineno">  171</span>    {</div>
-<div class="line"><a id="l00172" name="l00172"></a><span class="lineno">  172</span>        ESP_LOGE(<a class="code hl_variable" href="namespaceshrapnel_1_1parameters.html#a0cbbede6af96973c56e635f9a90599cd">TAG</a>, <span class="stringliteral">&quot;Failed to parse UUID&quot;</span>);</div>
+<div class="line"><a id="l00172" name="l00172"></a><span class="lineno">  172</span>        ESP_LOGE(TAG, <span class="stringliteral">&quot;Failed to parse UUID&quot;</span>);</div>
 <div class="line"><a id="l00173" name="l00173"></a><span class="lineno">  173</span>        <span class="keywordflow">return</span> std::nullopt;</div>
 <div class="line"><a id="l00174" name="l00174"></a><span class="lineno">  174</span>    }</div>
 <div class="line"><a id="l00175" name="l00175"></a><span class="lineno">  175</span> </div>
@@ -274,16 +274,16 @@ $(document).ready(function(){initNavTree('midi__mapping__json__parser_8cpp_sourc
 <div class="line"><a id="l00178" name="l00178"></a><span class="lineno">  178</span> </div>
 <div class="line"><a id="l00179" name="l00179"></a><span class="lineno">  179</span><span class="keyword">template</span>&lt;&gt;</div>
 <div class="line"><a id="l00180" name="l00180"></a><span class="lineno"><a class="line" href="namespaceshrapnel_1_1midi.html#ae251dec5b5227e127fb60ecfe722deeb">  180</a></span>std::optional&lt;MappingApiMessage&gt; <a class="code hl_function" href="namespaceshrapnel_1_1midi.html#a7ca8b7f586d738415484d2f612a1a814">from_json</a>(<span class="keyword">const</span> rapidjson::Value &amp;json) {</div>
-<div class="line"><a id="l00181" name="l00181"></a><span class="lineno">  181</span>    <span class="keyword">constexpr</span> <span class="keywordtype">char</span> <a class="code hl_variable" href="namespaceshrapnel_1_1parameters.html#a0cbbede6af96973c56e635f9a90599cd">TAG</a>[] = <span class="stringliteral">&quot;MidiApiMessage from_json&quot;</span>;</div>
+<div class="line"><a id="l00181" name="l00181"></a><span class="lineno">  181</span>    <span class="keyword">constexpr</span> <span class="keywordtype">char</span> TAG[] = <span class="stringliteral">&quot;MidiApiMessage from_json&quot;</span>;</div>
 <div class="line"><a id="l00182" name="l00182"></a><span class="lineno">  182</span> </div>
 <div class="line"><a id="l00183" name="l00183"></a><span class="lineno">  183</span>    <span class="keyword">auto</span> message_type_member = json.FindMember(<span class="stringliteral">&quot;messageType&quot;</span>);</div>
 <div class="line"><a id="l00184" name="l00184"></a><span class="lineno">  184</span>    <span class="keywordflow">if</span>(message_type_member == json.MemberEnd()) {</div>
-<div class="line"><a id="l00185" name="l00185"></a><span class="lineno">  185</span>        ESP_LOGE(<a class="code hl_variable" href="namespaceshrapnel_1_1parameters.html#a0cbbede6af96973c56e635f9a90599cd">TAG</a>, <span class="stringliteral">&quot;messageType is missing&quot;</span>);</div>
+<div class="line"><a id="l00185" name="l00185"></a><span class="lineno">  185</span>        ESP_LOGE(TAG, <span class="stringliteral">&quot;messageType is missing&quot;</span>);</div>
 <div class="line"><a id="l00186" name="l00186"></a><span class="lineno">  186</span>        <span class="keywordflow">goto</span> error;</div>
 <div class="line"><a id="l00187" name="l00187"></a><span class="lineno">  187</span>    }</div>
 <div class="line"><a id="l00188" name="l00188"></a><span class="lineno">  188</span> </div>
 <div class="line"><a id="l00189" name="l00189"></a><span class="lineno">  189</span>    <span class="keywordflow">if</span>(!message_type_member-&gt;value.IsString()) {</div>
-<div class="line"><a id="l00190" name="l00190"></a><span class="lineno">  190</span>        ESP_LOGE(<a class="code hl_variable" href="namespaceshrapnel_1_1parameters.html#a0cbbede6af96973c56e635f9a90599cd">TAG</a>, <span class="stringliteral">&quot;messageType is not string&quot;</span>);</div>
+<div class="line"><a id="l00190" name="l00190"></a><span class="lineno">  190</span>        ESP_LOGE(TAG, <span class="stringliteral">&quot;messageType is not string&quot;</span>);</div>
 <div class="line"><a id="l00191" name="l00191"></a><span class="lineno">  191</span>        <span class="keywordflow">goto</span> error;</div>
 <div class="line"><a id="l00192" name="l00192"></a><span class="lineno">  192</span>    }</div>
 <div class="line"><a id="l00193" name="l00193"></a><span class="lineno">  193</span> </div>
@@ -308,17 +308,17 @@ $(document).ready(function(){initNavTree('midi__mapping__json__parser_8cpp_sourc
 <div class="line"><a id="l00212" name="l00212"></a><span class="lineno">  212</span> </div>
 <div class="line"><a id="l00213" name="l00213"></a><span class="lineno">  213</span><span class="keyword">template</span>&lt;&gt;</div>
 <div class="line"><a id="l00214" name="l00214"></a><span class="lineno"><a class="line" href="namespaceshrapnel_1_1midi.html#afb604f5fa6a08aa90b1429d0ee975ea8">  214</a></span>std::optional&lt;Mapping::id_t&gt; <a class="code hl_function" href="namespaceshrapnel_1_1midi.html#a7ca8b7f586d738415484d2f612a1a814">from_json</a>(<span class="keyword">const</span> rapidjson::Value &amp;json) {</div>
-<div class="line"><a id="l00215" name="l00215"></a><span class="lineno">  215</span>    <span class="keyword">constexpr</span> <span class="keyword">const</span> <span class="keywordtype">char</span> *<a class="code hl_variable" href="namespaceshrapnel_1_1parameters.html#a0cbbede6af96973c56e635f9a90599cd">TAG</a> = <span class="stringliteral">&quot;Mapping::id_t from_json&quot;</span>;</div>
+<div class="line"><a id="l00215" name="l00215"></a><span class="lineno">  215</span>    <span class="keyword">constexpr</span> <span class="keyword">const</span> <span class="keywordtype">char</span> *TAG = <span class="stringliteral">&quot;Mapping::id_t from_json&quot;</span>;</div>
 <div class="line"><a id="l00216" name="l00216"></a><span class="lineno">  216</span> </div>
 <div class="line"><a id="l00217" name="l00217"></a><span class="lineno">  217</span>    <span class="keywordflow">if</span> (!json.IsString()) {</div>
-<div class="line"><a id="l00218" name="l00218"></a><span class="lineno">  218</span>        ESP_LOGE(<a class="code hl_variable" href="namespaceshrapnel_1_1parameters.html#a0cbbede6af96973c56e635f9a90599cd">TAG</a>, <span class="stringliteral">&quot;id is not string&quot;</span>);</div>
+<div class="line"><a id="l00218" name="l00218"></a><span class="lineno">  218</span>        ESP_LOGE(TAG, <span class="stringliteral">&quot;id is not string&quot;</span>);</div>
 <div class="line"><a id="l00219" name="l00219"></a><span class="lineno">  219</span>        <span class="keywordflow">return</span> std::nullopt;</div>
 <div class="line"><a id="l00220" name="l00220"></a><span class="lineno">  220</span>    }</div>
 <div class="line"><a id="l00221" name="l00221"></a><span class="lineno">  221</span> </div>
 <div class="line"><a id="l00222" name="l00222"></a><span class="lineno">  222</span>    <a class="code hl_typedef" href="structshrapnel_1_1midi_1_1Mapping.html#a212fd4d87c151bab5982bc9138990a02">Mapping::id_t</a> out;</div>
 <div class="line"><a id="l00223" name="l00223"></a><span class="lineno">  223</span>    <span class="keywordtype">int</span> rc = <a class="code hl_function" href="namespaceshrapnel_1_1midi.html#ab7031964c1f6c63ca97376295c2e6f49">parse_uuid</a>(out, json.GetString());</div>
 <div class="line"><a id="l00224" name="l00224"></a><span class="lineno">  224</span>    <span class="keywordflow">if</span>(rc != 0) {</div>
-<div class="line"><a id="l00225" name="l00225"></a><span class="lineno">  225</span>       ESP_LOGE(<a class="code hl_variable" href="namespaceshrapnel_1_1parameters.html#a0cbbede6af96973c56e635f9a90599cd">TAG</a>, <span class="stringliteral">&quot;failed to get uuid&quot;</span>);</div>
+<div class="line"><a id="l00225" name="l00225"></a><span class="lineno">  225</span>       ESP_LOGE(TAG, <span class="stringliteral">&quot;failed to get uuid&quot;</span>);</div>
 <div class="line"><a id="l00226" name="l00226"></a><span class="lineno">  226</span>        <span class="keywordflow">return</span> std::nullopt;</div>
 <div class="line"><a id="l00227" name="l00227"></a><span class="lineno">  227</span>    }</div>
 <div class="line"><a id="l00228" name="l00228"></a><span class="lineno">  228</span> </div>
@@ -328,23 +328,23 @@ $(document).ready(function(){initNavTree('midi__mapping__json__parser_8cpp_sourc
 <div class="line"><a id="l00232" name="l00232"></a><span class="lineno"><a class="line" href="namespaceshrapnel_1_1midi.html#ab7031964c1f6c63ca97376295c2e6f49">  232</a></span><span class="keyword">static</span> <span class="keywordtype">int</span> <a class="code hl_function" href="namespaceshrapnel_1_1midi.html#ab7031964c1f6c63ca97376295c2e6f49">parse_uuid</a>(<a class="code hl_typedef" href="structshrapnel_1_1midi_1_1Mapping.html#a212fd4d87c151bab5982bc9138990a02">Mapping::id_t</a> &amp;uuid, <span class="keyword">const</span> <span class="keywordtype">char</span> *<span class="keywordtype">string</span>)</div>
 <div class="line"><a id="l00233" name="l00233"></a><span class="lineno">  233</span>{</div>
 <div class="line"><a id="l00234" name="l00234"></a><span class="lineno">  234</span>    <span class="keyword">constexpr</span> std::size_t UUID_LENGTH = 36;</div>
-<div class="line"><a id="l00235" name="l00235"></a><span class="lineno">  235</span>    <span class="keyword">constexpr</span> <span class="keywordtype">char</span> <a class="code hl_variable" href="namespaceshrapnel_1_1parameters.html#a0cbbede6af96973c56e635f9a90599cd">TAG</a>[] = <span class="stringliteral">&quot;parse_uuid&quot;</span>;</div>
+<div class="line"><a id="l00235" name="l00235"></a><span class="lineno">  235</span>    <span class="keyword">constexpr</span> <span class="keywordtype">char</span> TAG[] = <span class="stringliteral">&quot;parse_uuid&quot;</span>;</div>
 <div class="line"><a id="l00236" name="l00236"></a><span class="lineno">  236</span> </div>
 <div class="line"><a id="l00237" name="l00237"></a><span class="lineno">  237</span>    <span class="keywordflow">if</span>(UUID_LENGTH != std::strlen(<span class="keywordtype">string</span>))</div>
 <div class="line"><a id="l00238" name="l00238"></a><span class="lineno">  238</span>    {</div>
-<div class="line"><a id="l00239" name="l00239"></a><span class="lineno">  239</span>        ESP_LOGE(<a class="code hl_variable" href="namespaceshrapnel_1_1parameters.html#a0cbbede6af96973c56e635f9a90599cd">TAG</a>, <span class="stringliteral">&quot;Incorrect UUID string length&quot;</span>);</div>
+<div class="line"><a id="l00239" name="l00239"></a><span class="lineno">  239</span>        ESP_LOGE(TAG, <span class="stringliteral">&quot;Incorrect UUID string length&quot;</span>);</div>
 <div class="line"><a id="l00240" name="l00240"></a><span class="lineno">  240</span>        <span class="keywordflow">return</span> -1;</div>
 <div class="line"><a id="l00241" name="l00241"></a><span class="lineno">  241</span>    }</div>
 <div class="line"><a id="l00242" name="l00242"></a><span class="lineno">  242</span> </div>
 <div class="line"><a id="l00243" name="l00243"></a><span class="lineno">  243</span>    <span class="keywordtype">size_t</span> i = 0;</div>
 <div class="line"><a id="l00244" name="l00244"></a><span class="lineno">  244</span>    <span class="keywordtype">size_t</span> j = 0;</div>
-<div class="line"><a id="l00245" name="l00245"></a><span class="lineno">  245</span>    ESP_LOGD(<a class="code hl_variable" href="namespaceshrapnel_1_1parameters.html#a0cbbede6af96973c56e635f9a90599cd">TAG</a>, <span class="stringliteral">&quot;i = %zu, j = %zu&quot;</span>, i , j);</div>
+<div class="line"><a id="l00245" name="l00245"></a><span class="lineno">  245</span>    ESP_LOGD(TAG, <span class="stringliteral">&quot;i = %zu, j = %zu&quot;</span>, i , j);</div>
 <div class="line"><a id="l00246" name="l00246"></a><span class="lineno">  246</span>    <span class="keywordflow">while</span>(i &lt; UUID_LENGTH)</div>
 <div class="line"><a id="l00247" name="l00247"></a><span class="lineno">  247</span>    {</div>
 <div class="line"><a id="l00248" name="l00248"></a><span class="lineno">  248</span>        <span class="keywordtype">char</span> digit[2];</div>
 <div class="line"><a id="l00249" name="l00249"></a><span class="lineno">  249</span>        std::memcpy(digit, &amp;<span class="keywordtype">string</span>[i], 2);</div>
 <div class="line"><a id="l00250" name="l00250"></a><span class="lineno">  250</span> </div>
-<div class="line"><a id="l00251" name="l00251"></a><span class="lineno">  251</span>        ESP_LOGD(<a class="code hl_variable" href="namespaceshrapnel_1_1parameters.html#a0cbbede6af96973c56e635f9a90599cd">TAG</a>, <span class="stringliteral">&quot;digit = %c%c&quot;</span>, digit[0] , digit[1]);</div>
+<div class="line"><a id="l00251" name="l00251"></a><span class="lineno">  251</span>        ESP_LOGD(TAG, <span class="stringliteral">&quot;digit = %c%c&quot;</span>, digit[0] , digit[1]);</div>
 <div class="line"><a id="l00252" name="l00252"></a><span class="lineno">  252</span> </div>
 <div class="line"><a id="l00253" name="l00253"></a><span class="lineno">  253</span>        <span class="comment">// TODO error on invalid characters: z, symbols etc</span></div>
 <div class="line"><a id="l00254" name="l00254"></a><span class="lineno">  254</span>        <span class="comment">//      The only valid characters are 0 to 9 and a to f.</span></div>
@@ -370,7 +370,7 @@ $(document).ready(function(){initNavTree('midi__mapping__json__parser_8cpp_sourc
 <div class="line"><a id="l00274" name="l00274"></a><span class="lineno">  274</span>        i += 2;</div>
 <div class="line"><a id="l00275" name="l00275"></a><span class="lineno">  275</span>        <span class="keywordtype">bool</span> is_separator = (i == 8) || (i == 13) || (i == 18) || (i == 23);</div>
 <div class="line"><a id="l00276" name="l00276"></a><span class="lineno">  276</span>        <span class="keywordflow">if</span>(is_separator) i++;</div>
-<div class="line"><a id="l00277" name="l00277"></a><span class="lineno">  277</span>        ESP_LOGD(<a class="code hl_variable" href="namespaceshrapnel_1_1parameters.html#a0cbbede6af96973c56e635f9a90599cd">TAG</a>, <span class="stringliteral">&quot;i = %zu, j = %zu&quot;</span>, i , j);</div>
+<div class="line"><a id="l00277" name="l00277"></a><span class="lineno">  277</span>        ESP_LOGD(TAG, <span class="stringliteral">&quot;i = %zu, j = %zu&quot;</span>, i , j);</div>
 <div class="line"><a id="l00278" name="l00278"></a><span class="lineno">  278</span>    }</div>
 <div class="line"><a id="l00279" name="l00279"></a><span class="lineno">  279</span> </div>
 <div class="line"><a id="l00280" name="l00280"></a><span class="lineno">  280</span>    <span class="keywordflow">return</span> 0;</div>
@@ -386,17 +386,16 @@ $(document).ready(function(){initNavTree('midi__mapping__json__parser_8cpp_sourc
 <div class="ttc" id="anamespaceshrapnel_1_1midi_html_ab312cca91e576cb523ac926b9584c6ca"><div class="ttname"><a href="namespaceshrapnel_1_1midi.html#ab312cca91e576cb523ac926b9584c6ca">shrapnel::midi::get_message_type&lt; CreateRequest &gt;</a></div><div class="ttdeci">constexpr const char * get_message_type&lt; CreateRequest &gt;()</div><div class="ttdef"><b>Definition:</b> <a href="midi__message__type_8h_source.html#l00043">midi_message_type.h:43</a></div></div>
 <div class="ttc" id="anamespaceshrapnel_1_1midi_html_ab7031964c1f6c63ca97376295c2e6f49"><div class="ttname"><a href="namespaceshrapnel_1_1midi.html#ab7031964c1f6c63ca97376295c2e6f49">shrapnel::midi::parse_uuid</a></div><div class="ttdeci">static int parse_uuid(Mapping::id_t &amp;uuid, const char *string)</div><div class="ttdef"><b>Definition:</b> <a href="midi__mapping__json__parser_8cpp_source.html#l00232">midi_mapping_json_parser.cpp:232</a></div></div>
 <div class="ttc" id="anamespaceshrapnel_1_1midi_html_af9d09aa6f84d609de12d075760f890f6"><div class="ttname"><a href="namespaceshrapnel_1_1midi.html#af9d09aa6f84d609de12d075760f890f6">shrapnel::midi::get_message_type&lt; Update &gt;</a></div><div class="ttdeci">constexpr const char * get_message_type&lt; Update &gt;()</div><div class="ttdef"><b>Definition:</b> <a href="midi__message__type_8h_source.html#l00055">midi_message_type.h:55</a></div></div>
-<div class="ttc" id="anamespaceshrapnel_1_1parameters_html_a0cbbede6af96973c56e635f9a90599cd"><div class="ttname"><a href="namespaceshrapnel_1_1parameters.html#a0cbbede6af96973c56e635f9a90599cd">shrapnel::parameters::TAG</a></div><div class="ttdeci">constexpr const char * TAG</div><div class="ttdef"><b>Definition:</b> <a href="audio__param_8h_source.html#l00034">audio_param.h:34</a></div></div>
-<div class="ttc" id="anamespaceshrapnel_1_1parameters_html_a5506267ab65b64b98595a4269027196b"><div class="ttname"><a href="namespaceshrapnel_1_1parameters.html#a5506267ab65b64b98595a4269027196b">shrapnel::parameters::id_t</a></div><div class="ttdeci">etl::string&lt; 32 &gt; id_t</div><div class="ttdef"><b>Definition:</b> <a href="audio__param_8h_source.html#l00036">audio_param.h:36</a></div></div>
+<div class="ttc" id="anamespaceshrapnel_1_1parameters_html_a5506267ab65b64b98595a4269027196b"><div class="ttname"><a href="namespaceshrapnel_1_1parameters.html#a5506267ab65b64b98595a4269027196b">shrapnel::parameters::id_t</a></div><div class="ttdeci">etl::string&lt; 32 &gt; id_t</div><div class="ttdef"><b>Definition:</b> <a href="audio__param_8h_source.html#l00034">audio_param.h:34</a></div></div>
 <div class="ttc" id="anamespaceshrapnel_html"><div class="ttname"><a href="namespaceshrapnel.html">shrapnel</a></div><div class="ttdef"><b>Definition:</b> <a href="audio__processor_8h_source.html#l00032">audio_processor.h:32</a></div></div>
-<div class="ttc" id="astructshrapnel_1_1midi_1_1CreateRequest_html"><div class="ttname"><a href="structshrapnel_1_1midi_1_1CreateRequest.html">shrapnel::midi::CreateRequest</a></div><div class="ttdef"><b>Definition:</b> <a href="midi__mapping__api_8h_source.html#l00037">midi_mapping_api.h:37</a></div></div>
-<div class="ttc" id="astructshrapnel_1_1midi_1_1GetRequest_html"><div class="ttname"><a href="structshrapnel_1_1midi_1_1GetRequest.html">shrapnel::midi::GetRequest</a></div><div class="ttdef"><b>Definition:</b> <a href="midi__mapping__api_8h_source.html#l00030">midi_mapping_api.h:30</a></div></div>
+<div class="ttc" id="astructshrapnel_1_1midi_1_1CreateRequest_html"><div class="ttname"><a href="structshrapnel_1_1midi_1_1CreateRequest.html">shrapnel::midi::CreateRequest</a></div><div class="ttdef"><b>Definition:</b> <a href="midi__mapping__api_8h_source.html#l00040">midi_mapping_api.h:40</a></div></div>
+<div class="ttc" id="astructshrapnel_1_1midi_1_1GetRequest_html"><div class="ttname"><a href="structshrapnel_1_1midi_1_1GetRequest.html">shrapnel::midi::GetRequest</a></div><div class="ttdef"><b>Definition:</b> <a href="midi__mapping__api_8h_source.html#l00030">midi_mapping_api.h:31</a></div></div>
 <div class="ttc" id="astructshrapnel_1_1midi_1_1Mapping_html"><div class="ttname"><a href="structshrapnel_1_1midi_1_1Mapping.html">shrapnel::midi::Mapping</a></div><div class="ttdef"><b>Definition:</b> <a href="midi__mapping_8h_source.html#l00259">midi_mapping.h:259</a></div></div>
 <div class="ttc" id="astructshrapnel_1_1midi_1_1Mapping_html_a212fd4d87c151bab5982bc9138990a02"><div class="ttname"><a href="structshrapnel_1_1midi_1_1Mapping.html#a212fd4d87c151bab5982bc9138990a02">shrapnel::midi::Mapping::id_t</a></div><div class="ttdeci">std::array&lt; uint8_t, 16 &gt; id_t</div><div class="ttdef"><b>Definition:</b> <a href="midi__mapping_8h_source.html#l00260">midi_mapping.h:260</a></div></div>
 <div class="ttc" id="astructshrapnel_1_1midi_1_1Mapping_html_a9d3978518402ec5df1963f1b8c0a7013"><div class="ttname"><a href="structshrapnel_1_1midi_1_1Mapping.html#a9d3978518402ec5df1963f1b8c0a7013">shrapnel::midi::Mapping::Mode</a></div><div class="ttdeci">Mode</div><div class="ttdef"><b>Definition:</b> <a href="midi__mapping_8h_source.html#l00262">midi_mapping.h:263</a></div></div>
 <div class="ttc" id="astructshrapnel_1_1midi_1_1Mapping_html_a9d3978518402ec5df1963f1b8c0a7013a1252c45651289c0b553a30d27bb5ae9b"><div class="ttname"><a href="structshrapnel_1_1midi_1_1Mapping.html#a9d3978518402ec5df1963f1b8c0a7013a1252c45651289c0b553a30d27bb5ae9b">shrapnel::midi::Mapping::Mode::TOGGLE</a></div><div class="ttdeci">@ TOGGLE</div></div>
 <div class="ttc" id="astructshrapnel_1_1midi_1_1Mapping_html_a9d3978518402ec5df1963f1b8c0a7013abf1d4bbf6ed8626603df4a7cac94ee8c"><div class="ttname"><a href="structshrapnel_1_1midi_1_1Mapping.html#a9d3978518402ec5df1963f1b8c0a7013abf1d4bbf6ed8626603df4a7cac94ee8c">shrapnel::midi::Mapping::Mode::PARAMETER</a></div><div class="ttdeci">@ PARAMETER</div></div>
-<div class="ttc" id="astructshrapnel_1_1midi_1_1Update_html"><div class="ttname"><a href="structshrapnel_1_1midi_1_1Update.html">shrapnel::midi::Update</a></div><div class="ttdef"><b>Definition:</b> <a href="midi__mapping__api_8h_source.html#l00047">midi_mapping_api.h:47</a></div></div>
+<div class="ttc" id="astructshrapnel_1_1midi_1_1Update_html"><div class="ttname"><a href="structshrapnel_1_1midi_1_1Update.html">shrapnel::midi::Update</a></div><div class="ttdef"><b>Definition:</b> <a href="midi__mapping__api_8h_source.html#l00050">midi_mapping_api.h:50</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

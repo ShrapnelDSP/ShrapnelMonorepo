@@ -165,7 +165,7 @@ $(document).ready(function(){initNavTree('esp__persistence_8cpp_source.html','')
 <div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span> </div>
 <div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>    <span class="keywordflow">if</span>(data.size() != required_size)</div>
 <div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>    {</div>
-<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>        ESP_LOGE(<a class="code hl_variable" href="namespaceshrapnel_1_1parameters.html#a0cbbede6af96973c56e635f9a90599cd">TAG</a>, <span class="stringliteral">&quot;string is too small, need %zu, got %zu&quot;</span>, required_size, data.size());</div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>        ESP_LOGE(TAG, <span class="stringliteral">&quot;string is too small, need %zu, got %zu&quot;</span>, required_size, data.size());</div>
 <div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>        <span class="keywordflow">return</span> -1;</div>
 <div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>    }</div>
 <div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span> </div>
@@ -182,7 +182,6 @@ $(document).ready(function(){initNavTree('esp__persistence_8cpp_source.html','')
 <div class="ttc" id="aclassshrapnel_1_1persistence_1_1EspStorage_html_a40bb12639a1720734d4f72f7fd3496ce"><div class="ttname"><a href="classshrapnel_1_1persistence_1_1EspStorage.html#a40bb12639a1720734d4f72f7fd3496ce">shrapnel::persistence::EspStorage::load</a></div><div class="ttdeci">int load(const char *key, etl::istring &amp;data) override</div><div class="ttdef"><b>Definition:</b> <a href="esp__persistence_8cpp_source.html#l00052">esp_persistence.cpp:52</a></div></div>
 <div class="ttc" id="aclassshrapnel_1_1persistence_1_1EspStorage_html_a9be73d7a1a17572e2e66d53cc20e1b17"><div class="ttname"><a href="classshrapnel_1_1persistence_1_1EspStorage.html#a9be73d7a1a17572e2e66d53cc20e1b17">shrapnel::persistence::EspStorage::save</a></div><div class="ttdeci">int save(const char *key, etl::string_view data) override</div><div class="ttdef"><b>Definition:</b> <a href="esp__persistence_8cpp_source.html#l00029">esp_persistence.cpp:29</a></div></div>
 <div class="ttc" id="aesp__persistence_8h_html"><div class="ttname"><a href="esp__persistence_8h.html">esp_persistence.h</a></div></div>
-<div class="ttc" id="anamespaceshrapnel_1_1parameters_html_a0cbbede6af96973c56e635f9a90599cd"><div class="ttname"><a href="namespaceshrapnel_1_1parameters.html#a0cbbede6af96973c56e635f9a90599cd">shrapnel::parameters::TAG</a></div><div class="ttdeci">constexpr const char * TAG</div><div class="ttdef"><b>Definition:</b> <a href="audio__param_8h_source.html#l00034">audio_param.h:34</a></div></div>
 <div class="ttc" id="anamespaceshrapnel_1_1persistence_html"><div class="ttname"><a href="namespaceshrapnel_1_1persistence.html">shrapnel::persistence</a></div><div class="ttdef"><b>Definition:</b> <a href="esp__persistence_8h_source.html#l00024">esp_persistence.h:24</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->

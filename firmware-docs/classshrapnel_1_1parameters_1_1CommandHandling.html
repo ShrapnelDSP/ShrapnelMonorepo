@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.4"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>ShrapnelDSP: shrapnel::parameters::CommandHandling&lt; AudioParametersT, EventSendT &gt; Class Template Reference</title>
+<title>ShrapnelDSP: shrapnel::parameters::CommandHandling&lt; AudioParametersT &gt; Class Template Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -92,47 +92,72 @@ $(document).ready(function(){initNavTree('classshrapnel_1_1parameters_1_1Command
 
 <div class="header">
   <div class="summary">
+<a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a>  </div>
-  <div class="headertitle"><div class="title">shrapnel::parameters::CommandHandling&lt; AudioParametersT, EventSendT &gt; Class Template Reference<span class="mlabels"><span class="mlabel">final</span></span></div></div>
+  <div class="headertitle"><div class="title">shrapnel::parameters::CommandHandling&lt; AudioParametersT &gt; Class Template Reference<span class="mlabels"><span class="mlabel">final</span></span></div></div>
 </div><!--header-->
 <div class="contents">
 
 <p><code>#include &lt;<a class="el" href="cmd__handling_8h_source.html">cmd_handling.h</a>&gt;</code></p>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-types" name="pub-types"></a>
+Public Types</h2></td></tr>
+<tr class="memitem:a74bde046f30ac45fae0e130b246d3f45"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classshrapnel_1_1parameters_1_1CommandHandling.html#a74bde046f30ac45fae0e130b246d3f45">SendMessageCallback</a> = etl::delegate&lt; void(const <a class="el" href="namespaceshrapnel_1_1parameters.html#a7d71cb4080803181d147fe9987baa52f">ApiMessage</a> &amp;, std::optional&lt; int &gt;)&gt;</td></tr>
+<tr class="separator:a74bde046f30ac45fae0e130b246d3f45"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a3832b0519c2cb468ad3d655fb62dfddf"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classshrapnel_1_1parameters_1_1CommandHandling.html#a3832b0519c2cb468ad3d655fb62dfddf">CommandHandling</a> (AudioParametersT *a_param, EventSendT &amp;a_event)</td></tr>
-<tr class="separator:a3832b0519c2cb468ad3d655fb62dfddf"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a93cdd9393a5af57df6b5359fa33e281f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classshrapnel_1_1parameters_1_1CommandHandling.html#a93cdd9393a5af57df6b5359fa33e281f">dispatch</a> (const <a class="el" href="namespaceshrapnel_1_1parameters.html#a7d71cb4080803181d147fe9987baa52f">ApiMessage</a> &amp;message, int fd)</td></tr>
-<tr class="separator:a93cdd9393a5af57df6b5359fa33e281f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a47cb76588381f02e79f92df27687a36e"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classshrapnel_1_1parameters_1_1CommandHandling.html#a47cb76588381f02e79f92df27687a36e">CommandHandling</a> (std::shared_ptr&lt; AudioParametersT &gt; a_param, <a class="el" href="classshrapnel_1_1parameters_1_1CommandHandling.html#a74bde046f30ac45fae0e130b246d3f45">SendMessageCallback</a> a_send_message)</td></tr>
+<tr class="separator:a47cb76588381f02e79f92df27687a36e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3e5546c21dba00e03718d90831a4cd56"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classshrapnel_1_1parameters_1_1CommandHandling.html#a3e5546c21dba00e03718d90831a4cd56">dispatch</a> (const <a class="el" href="namespaceshrapnel_1_1parameters.html#a7d71cb4080803181d147fe9987baa52f">ApiMessage</a> &amp;a_message, int fd)</td></tr>
+<tr class="separator:a3e5546c21dba00e03718d90831a4cd56"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><div class="compoundTemplParams">template&lt;typename AudioParametersT, typename EventSendT&gt;<br />
-class shrapnel::parameters::CommandHandling&lt; AudioParametersT, EventSendT &gt;</div>
-<p class="definition">Definition at line <a class="el" href="cmd__handling_8h_source.html#l00079">79</a> of file <a class="el" href="cmd__handling_8h_source.html">cmd_handling.h</a>.</p>
-</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="a3832b0519c2cb468ad3d655fb62dfddf" name="a3832b0519c2cb468ad3d655fb62dfddf"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3832b0519c2cb468ad3d655fb62dfddf">&#9670;&nbsp;</a></span>CommandHandling()</h2>
+<div class="textblock"><div class="compoundTemplParams">template&lt;typename AudioParametersT&gt;<br />
+class shrapnel::parameters::CommandHandling&lt; AudioParametersT &gt;</div>
+<p class="definition">Definition at line <a class="el" href="cmd__handling_8h_source.html#l00089">89</a> of file <a class="el" href="cmd__handling_8h_source.html">cmd_handling.h</a>.</p>
+</div><h2 class="groupheader">Member Typedef Documentation</h2>
+<a id="a74bde046f30ac45fae0e130b246d3f45" name="a74bde046f30ac45fae0e130b246d3f45"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a74bde046f30ac45fae0e130b246d3f45">&#9670;&nbsp;</a></span>SendMessageCallback</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename AudioParametersT , typename EventSendT &gt; </div>
+template&lt;typename AudioParametersT &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="classshrapnel_1_1parameters_1_1CommandHandling.html">shrapnel::parameters::CommandHandling</a>&lt; AudioParametersT &gt;::SendMessageCallback =  etl::delegate&lt;void(const <a class="el" href="namespaceshrapnel_1_1parameters.html#a7d71cb4080803181d147fe9987baa52f">ApiMessage</a> &amp;, std::optional&lt;int&gt;)&gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="cmd__handling_8h_source.html#l00092">92</a> of file <a class="el" href="cmd__handling_8h_source.html">cmd_handling.h</a>.</p>
+
+</div>
+</div>
+<h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a id="a47cb76588381f02e79f92df27687a36e" name="a47cb76588381f02e79f92df27687a36e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a47cb76588381f02e79f92df27687a36e">&#9670;&nbsp;</a></span>CommandHandling()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename AudioParametersT &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classshrapnel_1_1parameters_1_1CommandHandling.html">shrapnel::parameters::CommandHandling</a>&lt; AudioParametersT, EventSendT &gt;::CommandHandling </td>
+          <td class="memname"><a class="el" href="classshrapnel_1_1parameters_1_1CommandHandling.html">shrapnel::parameters::CommandHandling</a>&lt; AudioParametersT &gt;::CommandHandling </td>
           <td>(</td>
-          <td class="paramtype">AudioParametersT *&#160;</td>
+          <td class="paramtype">std::shared_ptr&lt; AudioParametersT &gt;&#160;</td>
           <td class="paramname"><em>a_param</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">EventSendT &amp;&#160;</td>
-          <td class="paramname"><em>a_event</em>&#160;</td>
+          <td class="paramtype"><a class="el" href="classshrapnel_1_1parameters_1_1CommandHandling.html#a74bde046f30ac45fae0e130b246d3f45">SendMessageCallback</a>&#160;</td>
+          <td class="paramname"><em>a_send_message</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -148,36 +173,35 @@ template&lt;typename AudioParametersT , typename EventSendT &gt; </div>
 </div><div class="memdoc">
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">a_param</td><td>Data received through <a class="el" href="classshrapnel_1_1parameters_1_1CommandHandling.html#a93cdd9393a5af57df6b5359fa33e281f">dispatch()</a> is translated to binary and sent to this object. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">a_param</td><td>Data received through <a class="el" href="classshrapnel_1_1parameters_1_1CommandHandling.html#a3e5546c21dba00e03718d90831a4cd56">dispatch()</a> is translated to binary and sent to this object. </td></tr>
   </table>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="cmd__handling_8h_source.html#l00087">87</a> of file <a class="el" href="cmd__handling_8h_source.html">cmd_handling.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   89</span>                                 :</div>
-<div class="line"><span class="lineno">   90</span>        param(a_param),</div>
-<div class="line"><span class="lineno">   91</span>        event(a_event)</div>
-<div class="line"><span class="lineno">   92</span>        {}</div>
+<p class="definition">Definition at line <a class="el" href="cmd__handling_8h_source.html#l00100">100</a> of file <a class="el" href="cmd__handling_8h_source.html">cmd_handling.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  102</span>            : param(a_param),</div>
+<div class="line"><span class="lineno">  103</span>              send_message(a_send_message)</div>
+<div class="line"><span class="lineno">  104</span>        {}</div>
 </div><!-- fragment -->
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="a93cdd9393a5af57df6b5359fa33e281f" name="a93cdd9393a5af57df6b5359fa33e281f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a93cdd9393a5af57df6b5359fa33e281f">&#9670;&nbsp;</a></span>dispatch()</h2>
+<a id="a3e5546c21dba00e03718d90831a4cd56" name="a3e5546c21dba00e03718d90831a4cd56"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3e5546c21dba00e03718d90831a4cd56">&#9670;&nbsp;</a></span>dispatch()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename AudioParametersT , typename EventSendT &gt; </div>
+template&lt;typename AudioParametersT &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">void <a class="el" href="classshrapnel_1_1parameters_1_1CommandHandling.html">shrapnel::parameters::CommandHandling</a>&lt; AudioParametersT, EventSendT &gt;::dispatch </td>
+          <td class="memname">void <a class="el" href="classshrapnel_1_1parameters_1_1CommandHandling.html">shrapnel::parameters::CommandHandling</a>&lt; AudioParametersT &gt;::dispatch </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="namespaceshrapnel_1_1parameters.html#a7d71cb4080803181d147fe9987baa52f">ApiMessage</a> &amp;&#160;</td>
-          <td class="paramname"><em>message</em>, </td>
+          <td class="paramname"><em>a_message</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -198,24 +222,32 @@ template&lt;typename AudioParametersT , typename EventSendT &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="cmd__handling_8h_source.html#l00094">94</a> of file <a class="el" href="cmd__handling_8h_source.html">cmd_handling.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   95</span>    {</div>
-<div class="line"><span class="lineno">   96</span><span class="preprocessor">#if !defined(TESTING)</span></div>
-<div class="line"><span class="lineno">   97</span>        ESP_LOGI(TAG, <span class="stringliteral">&quot;%s stack %d&quot;</span>, __FUNCTION__, uxTaskGetStackHighWaterMark(NULL));</div>
-<div class="line"><span class="lineno">   98</span><span class="preprocessor">#endif</span></div>
-<div class="line"><span class="lineno">   99</span> </div>
-<div class="line"><span class="lineno">  100</span>        std::visit([&amp;](<span class="keyword">const</span> <span class="keyword">auto</span> &amp;message) -&gt; <span class="keywordtype">void</span> {</div>
-<div class="line"><span class="lineno">  101</span>            <span class="keyword">using </span>T = std::decay_t&lt;<span class="keyword">decltype</span>(message)&gt;;</div>
-<div class="line"><span class="lineno">  102</span> </div>
-<div class="line"><span class="lineno">  103</span>            <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (std::is_same_v&lt;T, Update&gt;) {</div>
-<div class="line"><span class="lineno">  104</span>                parameter_update(message, fd);</div>
-<div class="line"><span class="lineno">  105</span>            } <span class="keywordflow">else</span> <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (std::is_same_v&lt;T, Initialise&gt;) {</div>
-<div class="line"><span class="lineno">  106</span>                initialise_parameters();</div>
-<div class="line"><span class="lineno">  107</span>            } <span class="keywordflow">else</span> {</div>
-<div class="line"><span class="lineno">  108</span>                ESP_LOGE(TAG, <span class="stringliteral">&quot;Unhandled message type&quot;</span>);</div>
-<div class="line"><span class="lineno">  109</span>            }</div>
-<div class="line"><span class="lineno">  110</span>        }, message);</div>
-<div class="line"><span class="lineno">  111</span>    }</div>
+<p class="definition">Definition at line <a class="el" href="cmd__handling_8h_source.html#l00106">106</a> of file <a class="el" href="cmd__handling_8h_source.html">cmd_handling.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  107</span>        {</div>
+<div class="line"><span class="lineno">  108</span><span class="preprocessor">#if !defined(TESTING)</span></div>
+<div class="line"><span class="lineno">  109</span>        ESP_LOGI(TAG, <span class="stringliteral">&quot;%s stack %d&quot;</span>, __FUNCTION__, uxTaskGetStackHighWaterMark(NULL));</div>
+<div class="line"><span class="lineno">  110</span><span class="preprocessor">#endif</span></div>
+<div class="line"><span class="lineno">  111</span> </div>
+<div class="line"><span class="lineno">  112</span>        std::visit(</div>
+<div class="line"><span class="lineno">  113</span>            [&amp;](<span class="keyword">const</span> <span class="keyword">auto</span> &amp;message) -&gt; <span class="keywordtype">void</span></div>
+<div class="line"><span class="lineno">  114</span>            {</div>
+<div class="line"><span class="lineno">  115</span>                <span class="keyword">using </span>T = std::decay_t&lt;<span class="keyword">decltype</span>(message)&gt;;</div>
+<div class="line"><span class="lineno">  116</span> </div>
+<div class="line"><span class="lineno">  117</span>                <span class="keywordflow">if</span> <span class="keyword">constexpr</span>(std::is_same_v&lt;T, Update&gt;)</div>
+<div class="line"><span class="lineno">  118</span>                {</div>
+<div class="line"><span class="lineno">  119</span>                    parameter_update(message, fd);</div>
+<div class="line"><span class="lineno">  120</span>                }</div>
+<div class="line"><span class="lineno">  121</span>                <span class="keywordflow">else</span> <span class="keywordflow">if</span> <span class="keyword">constexpr</span>(std::is_same_v&lt;T, Initialise&gt;)</div>
+<div class="line"><span class="lineno">  122</span>                {</div>
+<div class="line"><span class="lineno">  123</span>                    initialise_parameters();</div>
+<div class="line"><span class="lineno">  124</span>                }</div>
+<div class="line"><span class="lineno">  125</span>                <span class="keywordflow">else</span></div>
+<div class="line"><span class="lineno">  126</span>                {</div>
+<div class="line"><span class="lineno">  127</span>                    ESP_LOGE(TAG, <span class="stringliteral">&quot;Unhandled message type&quot;</span>);</div>
+<div class="line"><span class="lineno">  128</span>                }</div>
+<div class="line"><span class="lineno">  129</span>            },</div>
+<div class="line"><span class="lineno">  130</span>            a_message);</div>
+<div class="line"><span class="lineno">  131</span>        }</div>
 </div><!-- fragment -->
 </div>
 </div>

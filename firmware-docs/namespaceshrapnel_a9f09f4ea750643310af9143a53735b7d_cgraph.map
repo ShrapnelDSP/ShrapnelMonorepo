@@ -1,29 +1,22 @@
 <map id="shrapnel::app_main" name="shrapnel::app_main">
-<area shape="rect" id="node1" title=" " alt="" coords="5,531,139,557"/>
-<area shape="rect" id="node2" href="$main_8cpp.html#a1a66099a9e1054494d0704363a5c8666" title=" " alt="" coords="187,5,369,32"/>
-<area shape="rect" id="node5" href="$namespaceshrapnel.html#a4bf0b1d7c4fef2839a56059a237d1da6" title=" " alt="" coords="192,56,364,83"/>
-<area shape="rect" id="node6" href="$namespaceshrapnel.html#ae3cbca1e45f686a5790d51825e2754a2" title=" " alt="" coords="208,107,348,149"/>
-<area shape="rect" id="node7" href="$namespaceshrapnel.html#abcae6f4d21df0182843da1ec10660604" title=" " alt="" coords="208,173,348,200"/>
-<area shape="rect" id="node8" href="$namespaceshrapnel.html#a9f01b77156c5fc53346d256b9735e6f8" title=" " alt="" coords="207,225,349,266"/>
-<area shape="rect" id="node9" href="$namespaceshrapnel_1_1midi.html#afd9cfe553455ee74095653576a11d835" title=" " alt="" coords="196,291,360,317"/>
-<area shape="rect" id="node10" href="$namespaceshrapnel.html#a2b47dde02734c93bbdabfd97cb23dd2a" title=" " alt="" coords="211,341,345,368"/>
-<area shape="rect" id="node11" href="$namespaceshrapnel_1_1audio.html#a53d05b5ded7bb39aff7189392d0566c9" title=" " alt="" coords="213,393,343,434"/>
-<area shape="rect" id="node14" href="$namespaceshrapnel_1_1audio.html#a5e4994d9de1b430ad5473efe241521aa" title=" " alt="" coords="213,458,343,499"/>
-<area shape="rect" id="node15" href="$namespaceshrapnel.html#a9c85fa6a77cfb97394c46cf0ebe10298" title=" " alt="" coords="208,523,348,565"/>
-<area shape="rect" id="node16" href="$pcm3060_8c.html#ae4f3fcba29da4e434a2fb51e429c156b" title="Initialise the driver." alt="" coords="229,589,327,616"/>
-<area shape="rect" id="node17" href="$pcm3060_8c.html#a4b08ec86eb0407470554c4e5c5759521" title="perform power up sequence" alt="" coords="209,640,347,667"/>
-<area shape="rect" id="node21" href="$desktop_2profiling_8c.html#a58ceeae747d300e67b1ecf70a9b24526" title=" " alt="" coords="233,691,323,717"/>
-<area shape="rect" id="node22" href="$desktop_2profiling_8c.html#aa8ff71a343036a362fc1953d5572d0ce" title=" " alt="" coords="229,741,327,768"/>
-<area shape="rect" id="node23" href="$classshrapnel_1_1os_1_1Timer.html#a5ff1b2e05dc1558fb40ef551fc00d6a9" title=" " alt="" coords="213,793,343,834"/>
-<area shape="rect" id="node24" href="$namespaceshrapnel.html#a62ed101f04b8c40f7fdc427e6b169353" title=" " alt="" coords="207,859,349,885"/>
-<area shape="rect" id="node25" href="$namespaceshrapnel.html#a7ab448c59a74266fc5aaded062ed1961" title=" " alt="" coords="193,909,363,936"/>
-<area shape="rect" id="node26" href="$namespaceshrapnel.html#ac11c58ef0962c52aa2cbcb5885d6261a" title=" " alt="" coords="193,960,363,987"/>
-<area shape="rect" id="node27" href="$namespaceshrapnel.html#ad3636f58faa95196bef6352b331ed3da" title=" " alt="" coords="213,1011,343,1053"/>
-<area shape="rect" id="node3" href="$namespaceshrapnel.html#a9df539517dd9158cb2b42a9d9e948a73" title=" " alt="" coords="417,5,592,32"/>
-<area shape="rect" id="node4" href="$namespaceshrapnel_1_1midi.html#a3ce92c675faa537c28f3f68743f0bf16" title=" " alt="" coords="640,5,789,32"/>
-<area shape="rect" id="node12" href="$namespaceshrapnel_1_1audio.html#af73614d414adf5014704433913ee11db" title=" " alt="" coords="439,393,570,434"/>
-<area shape="rect" id="node13" href="$float__convert_8h.html#ae9b18f6b920e3401ec41278b57e6817b" title=" " alt="" coords="665,400,764,427"/>
-<area shape="rect" id="node18" href="$pcm3060_8c.html#aea1e9d4122342b16a072fc515ed9c4a2" title=" " alt="" coords="464,615,545,641"/>
-<area shape="rect" id="node20" href="$pcm3060_8c.html#a7a286e614c8a6c8e30f9408395cbd4cc" title=" " alt="" coords="463,665,546,692"/>
-<area shape="rect" id="node19" href="$i2c_8c.html#a45e8e37789f0b27a7fe24b58795787f7" title=" " alt="" coords="662,615,767,641"/>
+<area shape="rect" id="node1" title=" " alt="" coords="5,411,139,437"/>
+<area shape="rect" id="node2" href="$namespaceshrapnel.html#a4bf0b1d7c4fef2839a56059a237d1da6" title=" " alt="" coords="187,5,359,32"/>
+<area shape="rect" id="node3" href="$namespaceshrapnel.html#a37776d9dae07eb2a1568ed6eb5dd2e1f" title=" " alt="" coords="197,57,348,98"/>
+<area shape="rect" id="node4" href="$namespaceshrapnel.html#ae3cbca1e45f686a5790d51825e2754a2" title=" " alt="" coords="203,122,343,163"/>
+<area shape="rect" id="node5" href="$namespaceshrapnel.html#a9f01b77156c5fc53346d256b9735e6f8" title=" " alt="" coords="201,187,344,229"/>
+<area shape="rect" id="node6" href="$namespaceshrapnel.html#a2b47dde02734c93bbdabfd97cb23dd2a" title=" " alt="" coords="206,253,339,280"/>
+<area shape="rect" id="node7" href="$namespaceshrapnel_1_1audio.html#a53d05b5ded7bb39aff7189392d0566c9" title=" " alt="" coords="207,305,338,346"/>
+<area shape="rect" id="node10" href="$namespaceshrapnel_1_1audio.html#a5e4994d9de1b430ad5473efe241521aa" title=" " alt="" coords="207,370,338,411"/>
+<area shape="rect" id="node11" href="$namespaceshrapnel.html#a9c85fa6a77cfb97394c46cf0ebe10298" title=" " alt="" coords="203,435,343,477"/>
+<area shape="rect" id="node12" href="$pcm3060_8c.html#ae4f3fcba29da4e434a2fb51e429c156b" title="Initialise the driver." alt="" coords="223,501,322,528"/>
+<area shape="rect" id="node13" href="$pcm3060_8c.html#a4b08ec86eb0407470554c4e5c5759521" title="perform power up sequence" alt="" coords="203,552,342,579"/>
+<area shape="rect" id="node17" href="$desktop_2profiling_8c.html#a58ceeae747d300e67b1ecf70a9b24526" title=" " alt="" coords="227,603,318,629"/>
+<area shape="rect" id="node18" href="$desktop_2profiling_8c.html#aa8ff71a343036a362fc1953d5572d0ce" title=" " alt="" coords="223,653,322,680"/>
+<area shape="rect" id="node19" href="$namespaceshrapnel.html#a62ed101f04b8c40f7fdc427e6b169353" title=" " alt="" coords="201,704,344,731"/>
+<area shape="rect" id="node20" href="$namespaceshrapnel.html#ad3636f58faa95196bef6352b331ed3da" title=" " alt="" coords="208,755,337,797"/>
+<area shape="rect" id="node8" href="$namespaceshrapnel_1_1audio.html#af73614d414adf5014704433913ee11db" title=" " alt="" coords="407,305,537,346"/>
+<area shape="rect" id="node9" href="$float__convert_8h.html#ae9b18f6b920e3401ec41278b57e6817b" title=" " alt="" coords="589,312,687,339"/>
+<area shape="rect" id="node14" href="$pcm3060_8c.html#aea1e9d4122342b16a072fc515ed9c4a2" title=" " alt="" coords="431,527,513,553"/>
+<area shape="rect" id="node16" href="$pcm3060_8c.html#a7a286e614c8a6c8e30f9408395cbd4cc" title=" " alt="" coords="431,577,513,604"/>
+<area shape="rect" id="node15" href="$i2c_8c.html#a45e8e37789f0b27a7fe24b58795787f7" title=" " alt="" coords="585,527,691,553"/>
 </map>

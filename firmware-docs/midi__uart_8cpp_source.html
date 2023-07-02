@@ -126,38 +126,39 @@ $(document).ready(function(){initNavTree('midi__uart_8cpp_source.html',''); init
 <div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>        .parity = UART_PARITY_DISABLE,</div>
 <div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>        .stop_bits = UART_STOP_BITS_1,</div>
 <div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>        .flow_ctrl = UART_HW_FLOWCTRL_DISABLE,</div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>        .source_clk = UART_SCLK_APB,</div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>    };</div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span> </div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>    ESP_ERROR_CHECK(uart_set_pin(uart, UART_PIN_NO_CHANGE, rx_io, UART_PIN_NO_CHANGE, UART_PIN_NO_CHANGE));</div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span> </div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>    ESP_ERROR_CHECK(uart_param_config(uart, &amp;config));</div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span> </div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>    ESP_ERROR_CHECK(uart_driver_install(</div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>                uart,</div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>                UART_FIFO_LEN + 1,</div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>                0,</div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>        .rx_flow_ctrl_thresh = 0,</div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>        .source_clk = UART_SCLK_APB,</div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>    };</div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span> </div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>    ESP_ERROR_CHECK(uart_set_pin(uart, UART_PIN_NO_CHANGE, rx_io, UART_PIN_NO_CHANGE, UART_PIN_NO_CHANGE));</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span> </div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>    ESP_ERROR_CHECK(uart_param_config(uart, &amp;config));</div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span> </div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>    ESP_ERROR_CHECK(uart_driver_install(</div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>                uart,</div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>                UART_FIFO_LEN + 1,</div>
 <div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>                0,</div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>                NULL,</div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>                0));</div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>}</div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span> </div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno"><a class="line" href="classshrapnel_1_1midi_1_1EspMidiUart.html#a7bdbde35c68368f6e2d2156e7aebfde6">   49</a></span>std::optional&lt;uint8_t&gt; <a class="code hl_function" href="classshrapnel_1_1midi_1_1EspMidiUart.html#a7bdbde35c68368f6e2d2156e7aebfde6">EspMidiUart::get_byte</a>(TickType_t timeout) {</div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>    uint8_t out;</div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>    <span class="keywordtype">int</span> rc = uart_read_bytes(uart, &amp;out, 1, timeout);</div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>    assert((rc == 0) || (rc == 1));</div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span> </div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>    <span class="keywordflow">if</span>(rc == 0)</div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>    {</div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>        <span class="keywordflow">return</span> std::nullopt;</div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>    }</div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span> </div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>    <span class="keywordflow">return</span> out;</div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>}</div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span> </div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>}</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>                0,</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>                NULL,</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>                0));</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>}</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span> </div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno"><a class="line" href="classshrapnel_1_1midi_1_1EspMidiUart.html#a7bdbde35c68368f6e2d2156e7aebfde6">   50</a></span>std::optional&lt;uint8_t&gt; <a class="code hl_function" href="classshrapnel_1_1midi_1_1EspMidiUart.html#a7bdbde35c68368f6e2d2156e7aebfde6">EspMidiUart::get_byte</a>(TickType_t timeout) {</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>    uint8_t out;</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>    <span class="keywordtype">int</span> rc = uart_read_bytes(uart, &amp;out, 1, timeout);</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>    assert((rc == 0) || (rc == 1));</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span> </div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>    <span class="keywordflow">if</span>(rc == 0)</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>    {</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>        <span class="keywordflow">return</span> std::nullopt;</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>    }</div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span> </div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>    <span class="keywordflow">return</span> out;</div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>}</div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span> </div>
 <div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>}</div>
-<div class="ttc" id="aclassshrapnel_1_1midi_1_1EspMidiUart_html_a7bdbde35c68368f6e2d2156e7aebfde6"><div class="ttname"><a href="classshrapnel_1_1midi_1_1EspMidiUart.html#a7bdbde35c68368f6e2d2156e7aebfde6">shrapnel::midi::EspMidiUart::get_byte</a></div><div class="ttdeci">std::optional&lt; uint8_t &gt; get_byte(TickType_t timeout) override</div><div class="ttdef"><b>Definition:</b> <a href="midi__uart_8cpp_source.html#l00049">midi_uart.cpp:49</a></div></div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>}</div>
+<div class="ttc" id="aclassshrapnel_1_1midi_1_1EspMidiUart_html_a7bdbde35c68368f6e2d2156e7aebfde6"><div class="ttname"><a href="classshrapnel_1_1midi_1_1EspMidiUart.html#a7bdbde35c68368f6e2d2156e7aebfde6">shrapnel::midi::EspMidiUart::get_byte</a></div><div class="ttdeci">std::optional&lt; uint8_t &gt; get_byte(TickType_t timeout) override</div><div class="ttdef"><b>Definition:</b> <a href="midi__uart_8cpp_source.html#l00050">midi_uart.cpp:50</a></div></div>
 <div class="ttc" id="aclassshrapnel_1_1midi_1_1EspMidiUart_html_a9ac817a771cd1e8bd29b8ffa84bd9e39"><div class="ttname"><a href="classshrapnel_1_1midi_1_1EspMidiUart.html#a9ac817a771cd1e8bd29b8ffa84bd9e39">shrapnel::midi::EspMidiUart::EspMidiUart</a></div><div class="ttdeci">EspMidiUart(uart_port_t uart, gpio_num_t rx_io)</div><div class="ttdef"><b>Definition:</b> <a href="midi__uart_8cpp_source.html#l00026">midi_uart.cpp:26</a></div></div>
 <div class="ttc" id="amidi__uart_8h_html"><div class="ttname"><a href="midi__uart_8h.html">midi_uart.h</a></div></div>
 <div class="ttc" id="anamespaceshrapnel_html"><div class="ttname"><a href="namespaceshrapnel.html">shrapnel</a></div><div class="ttdef"><b>Definition:</b> <a href="audio__processor_8h_source.html#l00032">audio_processor.h:32</a></div></div>

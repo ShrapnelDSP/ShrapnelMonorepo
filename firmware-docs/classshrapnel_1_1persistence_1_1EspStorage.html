@@ -189,7 +189,7 @@ Public Member Functions</h2></td></tr>
 <div class="line"><span class="lineno">   69</span> </div>
 <div class="line"><span class="lineno">   70</span>    <span class="keywordflow">if</span>(data.size() != required_size)</div>
 <div class="line"><span class="lineno">   71</span>    {</div>
-<div class="line"><span class="lineno">   72</span>        ESP_LOGE(<a class="code hl_variable" href="namespaceshrapnel_1_1parameters.html#a0cbbede6af96973c56e635f9a90599cd">TAG</a>, <span class="stringliteral">&quot;string is too small, need %zu, got %zu&quot;</span>, required_size, data.size());</div>
+<div class="line"><span class="lineno">   72</span>        ESP_LOGE(TAG, <span class="stringliteral">&quot;string is too small, need %zu, got %zu&quot;</span>, required_size, data.size());</div>
 <div class="line"><span class="lineno">   73</span>        <span class="keywordflow">return</span> -1;</div>
 <div class="line"><span class="lineno">   74</span>    }</div>
 <div class="line"><span class="lineno">   75</span> </div>
@@ -201,10 +201,7 @@ Public Member Functions</h2></td></tr>
 <div class="line"><span class="lineno">   81</span>    nvs_close(nvs_handle);</div>
 <div class="line"><span class="lineno">   82</span>    <span class="keywordflow">return</span> rc;</div>
 <div class="line"><span class="lineno">   83</span>}</div>
-<div class="ttc" id="anamespaceshrapnel_1_1parameters_html_a0cbbede6af96973c56e635f9a90599cd"><div class="ttname"><a href="namespaceshrapnel_1_1parameters.html#a0cbbede6af96973c56e635f9a90599cd">shrapnel::parameters::TAG</a></div><div class="ttdeci">constexpr const char * TAG</div><div class="ttdef"><b>Definition:</b> <a href="audio__param_8h_source.html#l00034">audio_param.h:34</a></div></div>
 </div><!-- fragment -->
-<p class="reference">References <a class="el" href="audio__param_8h_source.html#l00034">shrapnel::parameters::TAG</a>.</p>
-
 </div>
 </div>
 <a id="a9be73d7a1a17572e2e66d53cc20e1b17" name="a9be73d7a1a17572e2e66d53cc20e1b17"></a>
