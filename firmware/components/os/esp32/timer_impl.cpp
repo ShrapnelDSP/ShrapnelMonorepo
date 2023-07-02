@@ -36,6 +36,7 @@ Timer::impl::impl(const char *pcTimerName,
                   TickType_t xTimerPeriod,
                   const UBaseType_t uxAutoReload,
                   std::optional<etl::delegate<void(void)>> callback)
+    : callback{callback}
 {
     timer = xTimerCreate(pcTimerName,
                          xTimerPeriod,
