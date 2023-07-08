@@ -26,6 +26,7 @@ import 'package:flutter_state_notifier/flutter_state_notifier.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:logging/logging.dart';
 import 'package:provider/provider.dart';
+import 'package:shrapnel/presets.dart';
 
 import 'audio_events.dart';
 import 'json_websocket.dart';
@@ -252,7 +253,74 @@ class MyHomePage extends StatelessWidget {
       ),
       body: Center(
         child: Column(
-          children: const [
+          children: [
+            StateNotifierProvider<PresetsModel, PresetsState>(
+              create: (_) {
+                return FakePresetsModel();
+              },
+              builder: (context, _) {
+                final model = context.read<PresetsModel>();
+                final state = context.watch<PresetsState>();
+
+                return Presets(
+                  createPreset: state.map(
+                    loading: (_) => null,
+                    ready: (_) => model.create,
+                  ),
+                  savePreset: state.map(
+                    loading: (_) => null,
+                    ready: (_) => model.saveChanges,
+                  ),
+                  deletePreset: state.map(
+                    loading: (_) => null,
+                    ready: (ready) => ready.canDeleteCurrent
+                        ? () => model.delete(ready.selectedPreset)
+                        : null,
+                  ),
+                  revertPreset: state.map(
+                    loading: (_) => null,
+                    ready: (ready) => () => model.select(ready.selectedPreset),
+                  ),
+                  selectPreset: state.map(
+                    loading: (_) => null,
+                    ready: (ready) => (selectedPreset) =>
+                        model.select(ready.presets.indexOf(selectedPreset)),
+                  ),
+                  selectNextPreset: state.map(
+                    loading: (value) => null,
+                    ready: (ready) {
+                      final index = ready.selectedPreset + 1;
+                      if (ready.presets.hasIndex(index)) {
+                        return () => model.select(index);
+                      }
+
+                      return null;
+                    },
+                  ),
+                  selectPreviousPreset: state.map(
+                    loading: (value) => null,
+                    ready: (ready) {
+                      final index = ready.selectedPreset - 1;
+                      if (ready.presets.hasIndex(index)) {
+                        return () => model.select(index);
+                      }
+
+                      return null;
+                    },
+                  ),
+                  undo: state.map(
+                    loading: (_) => null,
+                    ready: (ready) => ready.canUndo ? model.undo : null,
+                  ),
+                  presets: state.map(
+                      loading: (_) => null, ready: (ready) => ready.presets),
+                  selectedPreset: state.map(
+                    loading: (_) => null,
+                    ready: (ready) => ready.presets[ready.selectedPreset],
+                  ),
+                );
+              },
+            ),
             MidiLearnStatus(),
             Spacer(),
             Pedalboard(),
@@ -306,5 +374,11 @@ class ProvisioningPage extends StatelessWidget {
       ),
       body: WifiProvisioningScreen(),
     );
+  }
+}
+
+extension _HasIndexEx<T> on List<T> {
+  bool hasIndex(int index) {
+    return index >= 0 && index < length;
   }
 }
