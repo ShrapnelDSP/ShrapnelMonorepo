@@ -44,7 +44,7 @@ class Stompbox extends StatelessWidget {
   final String name;
 
   final bool full;
-  final Function() onCardTap;
+  final void Function() onCardTap;
 
   final MaterialColor primarySwatch;
 

@@ -50,6 +50,12 @@ class NoiseGate extends StatelessWidget {
             ),
             AudioParameterDoubleModel(
               groupName: _name,
+              name: 'Hold',
+              id: 'noiseGateHold',
+              parameterService: parameterService,
+            ),
+            AudioParameterDoubleModel(
+              groupName: _name,
               name: 'Hysteresis',
               id: 'noiseGateHysteresis',
               parameterService: parameterService,

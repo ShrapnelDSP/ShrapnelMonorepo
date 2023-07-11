@@ -25,6 +25,7 @@ import 'package:json_annotation/json_annotation.dart';
 import 'package:logging/logging.dart';
 import 'package:rxdart/transformers.dart';
 
+import 'midi_mapping/model/models.dart';
 import 'robust_websocket.dart';
 
 part 'parameter.g.dart';
@@ -113,12 +114,21 @@ class ParameterService extends ChangeNotifier {
 
   final sink = StreamController<String>.broadcast();
 
-  final _parameters = <AudioParameterDoubleModel>[];
+  final _parameters = <String, AudioParameterDoubleModel>{};
 
   final RobustWebsocket websocket;
 
   void registerParameter(AudioParameterDoubleModel parameter) {
-    _parameters.add(parameter);
+    assert(!_parameters.containsKey(parameter.id));
+    _parameters[parameter.id] = parameter;
+  }
+
+  AudioParameterDoubleModel getParameter(String parameterId) {
+    if (!_parameters.containsKey(parameterId)) {
+      throw StateError('Invalid parameter id: $parameterId');
+    }
+
+    return _parameters[parameterId]!;
   }
 
   void _handleIncomingEvent(dynamic event) {
@@ -139,22 +149,18 @@ class ParameterService extends ChangeNotifier {
       eventJson,
     );
 
-    // TODO use a map for the parameters for O(1) lookup here
-    for (final p in _parameters) {
-      if (p.id == parameterToUpdate.id) {
-        p.value = parameterToUpdate.value;
-        return;
-      }
+    if (_parameters.containsKey(parameterToUpdate.id)) {
+      log.warning("Couldn't find parameter with id ${parameterToUpdate.id}");
+      return;
     }
 
-    log.warning("Couldn't find parameter with id ${parameterToUpdate.id}");
+    // TODO use a map for the parameters for O(1) lookup here
+    _parameters[parameterToUpdate.id]!.value = parameterToUpdate.value;
   }
 
   Map<String, String> get parameterNames {
-    return Map.fromEntries(
-      _parameters.map(
-        (param) => MapEntry(param.id, '${param.groupName}: ${param.name}'),
-      ),
+    return _parameters.map(
+      (id, param) => MapEntry(id, '${param.groupName}: ${param.name}'),
     );
   }
 

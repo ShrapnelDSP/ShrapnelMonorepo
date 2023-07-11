@@ -26,7 +26,6 @@ import 'package:flutter_state_notifier/flutter_state_notifier.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:logging/logging.dart';
 import 'package:provider/provider.dart';
-import 'package:shrapnel/presets.dart';
 
 import 'audio_events.dart';
 import 'json_websocket.dart';
@@ -38,6 +37,9 @@ import 'midi_mapping/view/midi_learn.dart';
 import 'midi_mapping/view/midi_mapping.dart';
 import 'parameter.dart';
 import 'pedalboard.dart';
+import 'presets/model/fake.dart';
+import 'presets/model/presets.dart';
+import 'presets/view/presets.dart';
 import 'robust_websocket.dart';
 import 'util/uuid.dart';
 import 'websocket_status.dart';
@@ -256,7 +258,76 @@ class MyHomePage extends StatelessWidget {
           children: [
             StateNotifierProvider<PresetsModel, PresetsState>(
               create: (_) {
-                return FakePresetsModel();
+                return FakePresetsModel(
+                  getParametersState: () {
+                    final parameters = context.read<ParameterService>();
+                    return PresetParametersState(
+                      ampGain: parameters.getParameter('ampGain').value,
+                      ampChannel: parameters.getParameter('ampChannel').value,
+                      bass: parameters.getParameter('bass').value,
+                      middle: parameters.getParameter('middle').value,
+                      treble: parameters.getParameter('treble').value,
+                      contour: parameters.getParameter('contour').value,
+                      volume: parameters.getParameter('volume').value,
+                      noiseGateThreshold:
+                          parameters.getParameter('noiseGateThreshold').value,
+                      noiseGateHysteresis:
+                          parameters.getParameter('noiseGateHysteresis').value,
+                      noiseGateAttack:
+                          parameters.getParameter('noiseGateAttack').value,
+                      noiseGateHold:
+                          parameters.getParameter('noiseGateHold').value,
+                      noiseGateRelease:
+                          parameters.getParameter('noiseGateRelease').value,
+                      noiseGateBypass:
+                          parameters.getParameter('noiseGateBypass').value,
+                      chorusRate: parameters.getParameter('chorusRate').value,
+                      chorusDepth: parameters.getParameter('chorusDepth').value,
+                      chorusMix: parameters.getParameter('chorusMix').value,
+                      chorusBypass:
+                          parameters.getParameter('chorusBypass').value,
+                      wahPosition: parameters.getParameter('wahPosition').value,
+                      wahVocal: parameters.getParameter('wahVocal').value,
+                      wahBypass: parameters.getParameter('wahBypass').value,
+                    );
+                  },
+                  setParametersState: (state) {
+                    final parameters = context.read<ParameterService>();
+                    parameters.getParameter('ampGain').value = state.ampGain;
+                    parameters.getParameter('ampChannel').value =
+                        state.ampChannel;
+                    parameters.getParameter('bass').value = state.bass;
+                    parameters.getParameter('middle').value = state.middle;
+                    parameters.getParameter('treble').value = state.treble;
+                    parameters.getParameter('contour').value = state.contour;
+                    parameters.getParameter('volume').value = state.volume;
+                    parameters.getParameter('noiseGateThreshold').value =
+                        state.noiseGateThreshold;
+                    parameters.getParameter('noiseGateHysteresis').value =
+                        state.noiseGateHysteresis;
+                    parameters.getParameter('noiseGateAttack').value =
+                        state.noiseGateAttack;
+                    parameters.getParameter('noiseGateHold').value =
+                        state.noiseGateHold;
+                    parameters.getParameter('noiseGateRelease').value =
+                        state.noiseGateRelease;
+                    parameters.getParameter('noiseGateBypass').value =
+                        state.noiseGateBypass;
+                    parameters.getParameter('chorusRate').value =
+                        state.chorusRate;
+                    parameters.getParameter('chorusDepth').value =
+                        state.chorusDepth;
+                    parameters.getParameter('chorusMix').value =
+                        state.chorusMix;
+                    parameters.getParameter('chorusBypass').value =
+                        state.chorusBypass;
+                    parameters.getParameter('wahPosition').value =
+                        state.wahPosition;
+                    parameters.getParameter('wahVocal').value = state.wahVocal;
+                    parameters.getParameter('wahBypass').value =
+                        state.wahBypass;
+                  },
+                );
               },
               builder: (context, _) {
                 final model = context.read<PresetsModel>();
@@ -269,7 +340,8 @@ class MyHomePage extends StatelessWidget {
                   ),
                   savePreset: state.map(
                     loading: (_) => null,
-                    ready: (_) => model.saveChanges,
+                    ready: (ready) =>
+                        ready.isCurrentModified ? model.saveChanges : null,
                   ),
                   deletePreset: state.map(
                     loading: (_) => null,
@@ -313,7 +385,9 @@ class MyHomePage extends StatelessWidget {
                     ready: (ready) => ready.canUndo ? model.undo : null,
                   ),
                   presets: state.map(
-                      loading: (_) => null, ready: (ready) => ready.presets),
+                    loading: (_) => null,
+                    ready: (ready) => ready.presets,
+                  ),
                   selectedPreset: state.map(
                     loading: (_) => null,
                     ready: (ready) => ready.presets[ready.selectedPreset],
@@ -321,10 +395,10 @@ class MyHomePage extends StatelessWidget {
                 );
               },
             ),
-            MidiLearnStatus(),
-            Spacer(),
-            Pedalboard(),
-            Spacer(),
+            const MidiLearnStatus(),
+            const Spacer(),
+            const Pedalboard(),
+            const Spacer(),
           ],
         ),
       ),

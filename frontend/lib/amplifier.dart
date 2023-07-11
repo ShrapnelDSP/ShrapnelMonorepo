@@ -38,7 +38,7 @@ class Amplifier extends StatelessWidget {
   });
 
   final bool full;
-  final Function() onTap;
+  final void Function() onTap;
 
   final String name;
 

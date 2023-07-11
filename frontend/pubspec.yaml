@@ -23,7 +23,7 @@ dependencies:
   pausable_timer: ^1.0.0+6
   provider: ^6.0.0
   remove_from_coverage: ^2.0.0
-  rxdart: ^0.27.3
+  rxdart: ^0.27.7
   state_notifier: ^0.7.2+1
   uuid: ^3.0.6
   vector_math: ^2.0.0

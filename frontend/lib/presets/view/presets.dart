@@ -1,107 +1,6 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
-import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:state_notifier/state_notifier.dart';
 
-part 'presets.freezed.dart';
-
-@freezed
-class PresetState with _$PresetState {
-  factory PresetState({required String name}) = _PresetState;
-}
-
-@freezed
-class PresetsState with _$PresetsState {
-  factory PresetsState.loading() = Loading;
-
-  factory PresetsState.ready({
-    required bool isCurrentModified,
-    required bool canDeleteCurrent,
-    required bool canUndo,
-    required List<PresetState> presets,
-    required int selectedPreset,
-  }) = _PresetsState;
-
-  PresetsState._();
-
-  bool get isReady => maybeMap(ready: (_) => true, orElse: () => false);
-}
-
-abstract class PresetsModel extends StateNotifier<PresetsState> {
-  PresetsModel(super.state);
-
-  /// Creates a new preset and makes it active.
-  void create(PresetState preset);
-
-  /// Changes the active preset to a new value.
-  void select(int indexToSelect);
-
-  /// Delete a preset.
-  void delete(int indexToDelete);
-
-  /// Save changes made to the current preset.
-  void saveChanges();
-
-  /// Undo the last operation performed on a preset.
-  void undo();
-}
-
-class FakePresetsModel extends StateNotifier<PresetsState>
-    implements PresetsModel {
-  FakePresetsModel() : super(PresetsState.loading()) {
-    unawaited(
-      Future<void>.delayed(const Duration(seconds: 1))
-          .then((_) => _updateState()),
-    );
-  }
-
-  final _presets = <PresetState>[PresetState(name: 'a')];
-  int selectedPreset = 0;
-
-  void _updateState() {
-    final presetCount = _presets.length;
-    state = PresetsState.ready(
-      isCurrentModified: (presetCount & 1) != 0,
-      canDeleteCurrent: presetCount > 1,
-      presets: _presets,
-      selectedPreset: selectedPreset,
-      canUndo: false,
-    );
-  }
-
-  @override
-  void create(PresetState preset) {
-    _presets.add(preset);
-    selectedPreset = _presets.indexOf(preset);
-    _updateState();
-  }
-
-  @override
-  void select(int selected) {
-    selectedPreset = selected;
-    _updateState();
-  }
-
-  @override
-  void delete(int indexToDelete) {
-    if (indexToDelete == selectedPreset) {
-      selectedPreset--;
-      if (selectedPreset < 0) {
-        selectedPreset = 0;
-      }
-    }
-
-    _presets.removeAt(indexToDelete);
-    _updateState();
-  }
-
-  @override
-  void saveChanges() {}
-
-  @override
-  void undo() {}
-}
+import '../model/presets.dart';
 
 class Presets extends StatelessWidget {
   const Presets({
@@ -118,7 +17,7 @@ class Presets extends StatelessWidget {
     required this.selectedPreset,
   });
 
-  final void Function(PresetState)? createPreset;
+  final void Function(String name)? createPreset;
   final void Function()? savePreset;
   final void Function()? deletePreset;
   final void Function()? undo;
@@ -147,7 +46,7 @@ class Presets extends StatelessWidget {
                   },
                 );
                 if (name != null) {
-                  createPreset!(PresetState(name: name));
+                  createPreset!(name);
                 }
               },
             ),
