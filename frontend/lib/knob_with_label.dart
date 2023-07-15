@@ -36,7 +36,8 @@ class KnobWithLabel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final parameter = Provider.of<AudioParameterDoubleModel>(context);
+    final value = context.watch<double>();
+    final parameter = context.read<AudioParameterDoubleModel>();
     final learningState = context.watch<MidiLearnState>();
 
     return Column(
@@ -56,7 +57,7 @@ class KnobWithLabel extends StatelessWidget {
           child: Knob(
             key: Key('knob-${parameter.id}'),
             onChanged: isEnabled ? parameter.onUserChanged : (_) {},
-            value: parameter.value,
+            value: value,
             size: knobSize,
           ),
         ),

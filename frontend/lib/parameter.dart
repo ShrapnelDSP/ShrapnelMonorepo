@@ -23,9 +23,8 @@ import 'dart:convert';
 import 'package:flutter/widgets.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:logging/logging.dart';
-import 'package:rxdart/transformers.dart';
+import 'package:rxdart/rxdart.dart';
 
-import 'midi_mapping/model/models.dart';
 import 'robust_websocket.dart';
 
 part 'parameter.g.dart';
@@ -49,7 +48,7 @@ class AudioParameterDouble {
   final double value;
 }
 
-class AudioParameterDoubleModel extends ChangeNotifier {
+class AudioParameterDoubleModel {
   AudioParameterDoubleModel({
     required this.groupName,
     required this.name,
@@ -59,8 +58,7 @@ class AudioParameterDoubleModel extends ChangeNotifier {
     parameterService.registerParameter(this);
   }
 
-  @protected
-  double _value = 0.5;
+  final _controller = BehaviorSubject<double>.seeded(0.5);
 
   final String groupName;
   final String name;
@@ -68,20 +66,18 @@ class AudioParameterDoubleModel extends ChangeNotifier {
   final ParameterService parameterService;
 
   void onUserChanged(double value) {
-    /* setting value instead of _value to make sure listeners are notified */
-    this.value = value;
+    _controller.add(value);
     parameterService.sink.add(toJson());
   }
 
-  set value(double value) {
-    _value = value;
-    notifyListeners();
+  void setValue(double value) {
+    _controller.add(value);
   }
 
-  double get value => _value;
+  ValueStream<double> get value => _controller;
 
   String toJson() {
-    final message = AudioParameterDouble(value: value, id: id).toJson();
+    final message = AudioParameterDouble(value: value.value, id: id).toJson();
     message['messageType'] = 'parameterUpdate';
     return json.encode(message);
   }
@@ -154,8 +150,7 @@ class ParameterService extends ChangeNotifier {
       return;
     }
 
-    // TODO use a map for the parameters for O(1) lookup here
-    _parameters[parameterToUpdate.id]!.value = parameterToUpdate.value;
+    _parameters[parameterToUpdate.id]!.setValue(parameterToUpdate.value);
   }
 
   Map<String, String> get parameterNames {

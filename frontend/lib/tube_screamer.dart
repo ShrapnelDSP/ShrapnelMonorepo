@@ -23,6 +23,47 @@ import 'package:provider/provider.dart';
 import 'parameter.dart';
 import 'stompbox.dart';
 
+class TubeScreamerModel extends StompboxModel {
+  TubeScreamerModel({required ParameterService parameterService})
+      : parameters = [
+          AudioParameterDoubleModel(
+            groupName: _name,
+            name: 'DRIVE',
+            id: 'tubeScreamerDrive',
+            parameterService: parameterService,
+          ),
+          AudioParameterDoubleModel(
+            groupName: _name,
+            name: 'TONE',
+            id: 'tubeScreamerTone',
+            parameterService: parameterService,
+          ),
+          AudioParameterDoubleModel(
+            groupName: _name,
+            name: 'LEVEL',
+            id: 'tubeScreamerLevel',
+            parameterService: parameterService,
+          ),
+        ],
+        bypass = AudioParameterDoubleModel(
+          groupName: _name,
+          name: 'Bypass',
+          id: 'tubeScreamerBypass',
+          parameterService: parameterService,
+        );
+
+  static const _name = 'Tube Screamer';
+
+  @override
+  String get name => _name;
+
+  @override
+  final List<AudioParameterDoubleModel> parameters;
+
+  @override
+  AudioParameterDoubleModel bypass;
+}
+
 class TubeScreamer extends StatelessWidget {
   const TubeScreamer({
     super.key,
@@ -30,54 +71,16 @@ class TubeScreamer extends StatelessWidget {
     required this.onTap,
   });
 
-  static const _name = 'Tube Screamer';
   final bool full;
   final void Function() onTap;
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) {
-        final parameterService = Provider.of<ParameterService>(
-          context,
-          listen: false,
-        );
-
-        return StompboxModel(
-          parameters: [
-            AudioParameterDoubleModel(
-              groupName: _name,
-              name: 'DRIVE',
-              id: 'tubeScreamerDrive',
-              parameterService: parameterService,
-            ),
-            AudioParameterDoubleModel(
-              groupName: _name,
-              name: 'TONE',
-              id: 'tubeScreamerTone',
-              parameterService: parameterService,
-            ),
-            AudioParameterDoubleModel(
-              groupName: _name,
-              name: 'LEVEL',
-              id: 'tubeScreamerLevel',
-              parameterService: parameterService,
-            ),
-          ],
-          bypass: AudioParameterDoubleModel(
-            groupName: _name,
-            name: 'Bypass',
-            id: 'tubeScreamerBypass',
-            parameterService: parameterService,
-          ),
-        );
-      },
-      child: Stompbox(
-        name: _name,
-        onCardTap: onTap,
-        full: full,
-        primarySwatch: Colors.green,
-      ),
+    return Stompbox(
+      model: context.read<TubeScreamerModel>(),
+      onCardTap: onTap,
+      full: full,
+      primarySwatch: Colors.green,
     );
   }
 }

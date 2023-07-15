@@ -23,6 +23,44 @@ import 'package:provider/provider.dart';
 import 'parameter.dart';
 import 'stompbox.dart';
 
+class ChorusModel extends StompboxModel {
+  ChorusModel({required ParameterService parameterService})
+      : parameters = [
+          AudioParameterDoubleModel(
+            groupName: _name,
+            name: 'DEPTH',
+            id: 'chorusDepth',
+            parameterService: parameterService,
+          ),
+          AudioParameterDoubleModel(
+            groupName: _name,
+            name: 'MIX',
+            id: 'chorusMix',
+            parameterService: parameterService,
+          ),
+          AudioParameterDoubleModel(
+            groupName: _name,
+            name: 'RATE',
+            id: 'chorusRate',
+            parameterService: parameterService,
+          ),
+        ],
+        bypass = AudioParameterDoubleModel(
+          groupName: _name,
+          name: 'Bypass',
+          id: 'chorusBypass',
+          parameterService: parameterService,
+        );
+
+  static const _name = 'Chorus';
+  @override
+  String get name => _name;
+  @override
+  final List<AudioParameterDoubleModel> parameters;
+  @override
+  final AudioParameterDoubleModel bypass;
+}
+
 class Chorus extends StatelessWidget {
   const Chorus({
     super.key,
@@ -30,54 +68,16 @@ class Chorus extends StatelessWidget {
     required this.onTap,
   });
 
-  static const _name = 'Chorus';
   final bool full;
   final void Function() onTap;
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) {
-        final parameterService = Provider.of<ParameterService>(
-          context,
-          listen: false,
-        );
-
-        return StompboxModel(
-          parameters: [
-            AudioParameterDoubleModel(
-              groupName: _name,
-              name: 'DEPTH',
-              id: 'chorusDepth',
-              parameterService: parameterService,
-            ),
-            AudioParameterDoubleModel(
-              groupName: _name,
-              name: 'MIX',
-              id: 'chorusMix',
-              parameterService: parameterService,
-            ),
-            AudioParameterDoubleModel(
-              groupName: _name,
-              name: 'RATE',
-              id: 'chorusRate',
-              parameterService: parameterService,
-            ),
-          ],
-          bypass: AudioParameterDoubleModel(
-            groupName: _name,
-            name: 'Bypass',
-            id: 'chorusBypass',
-            parameterService: parameterService,
-          ),
-        );
-      },
-      child: Stompbox(
-        name: _name,
-        onCardTap: onTap,
-        full: full,
-        primarySwatch: Colors.blue,
-      ),
+    return Stompbox(
+      model: context.read<ChorusModel>(),
+      onCardTap: onTap,
+      full: full,
+      primarySwatch: Colors.blue,
     );
   }
 }

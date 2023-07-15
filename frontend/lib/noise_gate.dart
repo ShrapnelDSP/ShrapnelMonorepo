@@ -23,6 +23,59 @@ import 'package:provider/provider.dart';
 import 'parameter.dart';
 import 'stompbox.dart';
 
+class NoiseGateModel extends StompboxModel {
+  NoiseGateModel({required ParameterService parameterService})
+      : parameters = [
+          AudioParameterDoubleModel(
+            groupName: _name,
+            name: 'Attack',
+            id: 'noiseGateAttack',
+            parameterService: parameterService,
+          ),
+          AudioParameterDoubleModel(
+            groupName: _name,
+            name: 'Hold',
+            id: 'noiseGateHold',
+            parameterService: parameterService,
+          ),
+          AudioParameterDoubleModel(
+            groupName: _name,
+            name: 'Hysteresis',
+            id: 'noiseGateHysteresis',
+            parameterService: parameterService,
+          ),
+          AudioParameterDoubleModel(
+            groupName: _name,
+            name: 'Release',
+            id: 'noiseGateRelease',
+            parameterService: parameterService,
+          ),
+          AudioParameterDoubleModel(
+            groupName: _name,
+            name: 'Threshold',
+            id: 'noiseGateThreshold',
+            parameterService: parameterService,
+          ),
+        ],
+        bypass = AudioParameterDoubleModel(
+          groupName: _name,
+          name: 'Bypass',
+          id: 'noiseGateBypass',
+          parameterService: parameterService,
+        );
+
+  static const _name = 'Noise Gate';
+
+  @override
+  String get name => _name;
+
+  @override
+  final List<AudioParameterDoubleModel> parameters;
+
+  @override
+  AudioParameterDoubleModel bypass;
+}
+
 class NoiseGate extends StatelessWidget {
   const NoiseGate({
     super.key,
@@ -30,63 +83,16 @@ class NoiseGate extends StatelessWidget {
     required this.onTap,
   });
 
-  static const _name = 'Noise Gate';
   final bool full;
   final void Function() onTap;
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) {
-        final parameterService =
-            Provider.of<ParameterService>(context, listen: false);
-        return StompboxModel(
-          parameters: [
-            AudioParameterDoubleModel(
-              groupName: _name,
-              name: 'Attack',
-              id: 'noiseGateAttack',
-              parameterService: parameterService,
-            ),
-            AudioParameterDoubleModel(
-              groupName: _name,
-              name: 'Hold',
-              id: 'noiseGateHold',
-              parameterService: parameterService,
-            ),
-            AudioParameterDoubleModel(
-              groupName: _name,
-              name: 'Hysteresis',
-              id: 'noiseGateHysteresis',
-              parameterService: parameterService,
-            ),
-            AudioParameterDoubleModel(
-              groupName: _name,
-              name: 'Release',
-              id: 'noiseGateRelease',
-              parameterService: parameterService,
-            ),
-            AudioParameterDoubleModel(
-              groupName: _name,
-              name: 'Threshold',
-              id: 'noiseGateThreshold',
-              parameterService: parameterService,
-            ),
-          ],
-          bypass: AudioParameterDoubleModel(
-            groupName: _name,
-            name: 'Bypass',
-            id: 'noiseGateBypass',
-            parameterService: parameterService,
-          ),
-        );
-      },
-      child: Stompbox(
-        name: _name,
-        onCardTap: onTap,
-        full: full,
-        primarySwatch: Colors.red,
-      ),
+    return Stompbox(
+      model: context.read<NoiseGateModel>(),
+      onCardTap: onTap,
+      full: full,
+      primarySwatch: Colors.red,
     );
   }
 }

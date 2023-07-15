@@ -68,7 +68,4 @@ abstract class PresetsModel extends StateNotifier<PresetsState> {
 
   /// Save changes made to the current preset.
   void saveChanges();
-
-  /// Undo the last operation performed on a preset.
-  void undo();
 }

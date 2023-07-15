@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:rxdart/rxdart.dart';
 import 'package:state_notifier/state_notifier.dart';
 
 import 'presets.dart';
@@ -7,10 +8,10 @@ import 'presets.dart';
 class FakePresetsModel extends StateNotifier<PresetsState>
     implements PresetsModel {
   FakePresetsModel({
-    required PresetParametersState Function() getParametersState,
+    required ValueStream<PresetParametersState> parametersState,
     required void Function(PresetParametersState) setParametersState,
   })  : _setParametersState = setParametersState,
-        _getParametersState = getParametersState,
+        _parametersState = parametersState,
         super(PresetsState.loading()) {
     unawaited(
       Future<void>.delayed(const Duration(seconds: 2))
@@ -18,7 +19,7 @@ class FakePresetsModel extends StateNotifier<PresetsState>
     );
   }
 
-  final PresetParametersState Function() _getParametersState;
+  final ValueStream<PresetParametersState> _parametersState;
   // This is for faking only, the firmware is responsible for updating
   // parameters when a preset is loaded
   final void Function(PresetParametersState parameters) _setParametersState;
@@ -52,10 +53,12 @@ class FakePresetsModel extends StateNotifier<PresetsState>
   ];
   int selectedPreset = 0;
 
+  // TODO need to listen to parameters state
   void _updateState() {
     final presetCount = _presets.length;
     state = PresetsState.ready(
-      isCurrentModified: (presetCount & 1) != 0,
+      isCurrentModified:
+          _parametersState.value != _presets[selectedPreset].parameters,
       canDeleteCurrent: presetCount > 1,
       presets: _presets,
       selectedPreset: selectedPreset,
@@ -65,7 +68,7 @@ class FakePresetsModel extends StateNotifier<PresetsState>
 
   @override
   void create(String name) {
-    final parameters = _getParametersState();
+    final parameters = _parametersState.value;
     final preset = PresetState(name: name, parameters: parameters);
     _presets.add(preset);
     selectedPreset = _presets.indexOf(preset);
@@ -94,7 +97,4 @@ class FakePresetsModel extends StateNotifier<PresetsState>
 
   @override
   void saveChanges() {}
-
-  @override
-  void undo() {}
 }

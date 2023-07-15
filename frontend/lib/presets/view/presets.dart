@@ -8,7 +8,6 @@ class Presets extends StatelessWidget {
     required this.createPreset,
     required this.savePreset,
     required this.deletePreset,
-    required this.undo,
     required this.revertPreset,
     required this.selectPreviousPreset,
     required this.selectNextPreset,
@@ -20,7 +19,6 @@ class Presets extends StatelessWidget {
   final void Function(String name)? createPreset;
   final void Function()? savePreset;
   final void Function()? deletePreset;
-  final void Function()? undo;
   final void Function()? revertPreset;
   final void Function()? selectPreviousPreset;
   final void Function()? selectNextPreset;
@@ -59,11 +57,6 @@ class Presets extends StatelessWidget {
               icon: const Icon(Icons.delete),
               tooltip: 'Delete preset',
               onPressed: deletePreset,
-            ),
-            IconButton(
-              icon: const Icon(Icons.undo),
-              tooltip: 'Undo',
-              onPressed: undo,
             ),
             IconButton(
               icon: const Icon(Icons.restart_alt),

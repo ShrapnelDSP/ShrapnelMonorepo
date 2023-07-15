@@ -37,7 +37,7 @@ void main() {
       id: 'test',
       parameterService: parameterService,
     );
-    parameter.value = 0;
+    parameter.setValue(0);
 
     final expected = <String, dynamic>{
       'messageType': 'parameterUpdate',
@@ -61,7 +61,7 @@ void main() {
         id: 'test',
         parameterService: parameterService,
       );
-      parameter.value = 0;
+      parameter.setValue(0);
 
       verify(parameterService.sink.add(parameter.toJson()));
     },
@@ -77,7 +77,7 @@ void main() {
       id: 'test',
       parameterService: parameterService,
     );
-    parameter.value = 0;
+    parameter.setValue(0);
 
     verify(parameterService.registerParameter(parameter));
   });
