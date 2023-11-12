@@ -79,5 +79,5 @@ class HomePageObject {
   }
 
   late final _presetsPage = PresetsPageObject(tester);
-  get presetsPage => _presetsPage;
+  PresetsPageObject get presetsPage => _presetsPage;
 }

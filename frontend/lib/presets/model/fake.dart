@@ -52,7 +52,7 @@ class FakePresetsModel extends StateNotifier<PresetsState>
         wahVocal: 0,
         wahBypass: 1,
       ),
-    )
+    ),
   ];
   int selectedPreset = 0;
 

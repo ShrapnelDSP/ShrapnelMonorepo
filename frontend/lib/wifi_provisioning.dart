@@ -378,7 +378,7 @@ class _WifiScanningScreenState extends State<_WifiScanningScreen> {
                 );
               },
               child: const Text('Advanced configuration'),
-            )
+            ),
           ],
         ),
       );

@@ -18,7 +18,6 @@
  */
 
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:esp_softap_provisioning/esp_softap_provisioning.dart';
 import 'package:flutter/material.dart';
@@ -112,19 +111,14 @@ class App extends StatelessWidget {
     midiMappingService = MidiMappingService(
       websocket: jsonWebsocket,
     );
-    parameterService = ParameterService(websocket: this.websocket);
+    parameterService =
+        ParameterService(transport: ParameterClient(websocket: this.websocket));
     midiLearnService = MidiLearnService(
       mappingService: midiMappingService,
       uuid: this.uuid,
     );
 
-    // TODO would be nicer to use an interface dedicated for listening to the
-    // parameter update events. This stream has all the outgoing JSON messages.
-    parameterService.sink.stream
-        .map<dynamic>(json.decode)
-        .map((dynamic e) => e as Map<String, dynamic>)
-        .where((e) => e['messageType'] == 'parameterUpdate')
-        .map(AudioParameterDouble.fromJson)
+    parameterService.parameterUpdates
         .map((e) => e.id)
         .listen(midiLearnService.parameterUpdated);
 
@@ -330,6 +324,7 @@ class ParametersMergeStream {
 
 class MyHomePage extends StatelessWidget {
   const MyHomePage({super.key, required this.title});
+
   final String title;
 
   @override

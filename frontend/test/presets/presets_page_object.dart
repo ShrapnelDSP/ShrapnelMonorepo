@@ -8,11 +8,19 @@ class PresetsPageObject {
 
   final WidgetTester tester;
 
-  void getCurrentPresetName() => find.descendant(
-        of: find.byKey(Key('presets-current-preset-name')),
-        matching: find.byType(Text),
-      );
+  String getCurrentPresetName() => (find
+          .descendant(
+            of: find.byKey(const Key('presets-current-preset-name')),
+            matching: find.byType(Text),
+          )
+          .evaluate()
+          .single
+          .widget as Text)
+      .data!;
 
-  late ButtonPageObject saveButton =
-      ButtonPageObject(tester, key: Key("presets-save-button"));
+  late final ButtonPageObject saveButton =
+      ButtonPageObject(tester, key: const Key('presets-save-button'));
+
+  late final ButtonPageObject createButton =
+  ButtonPageObject(tester, key: const Key('presets-create-button'));
 }

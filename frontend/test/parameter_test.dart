@@ -17,7 +17,6 @@
  * ShrapnelDSP. If not, see <https://www.gnu.org/licenses/>.
  */
 
-import 'dart:convert';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
@@ -45,14 +44,19 @@ void main() {
       'id': 'test',
     };
 
-    final dynamic actual = json.decode(parameter.toJson());
+    final actual = ParameterServiceOutputMessageParameterUpdate(
+      parameter: AudioParameterDouble(
+        value: parameter.value.value,
+        id: parameter.id,
+      ),
+    ).toJson();
 
     expect(actual, expected);
   });
 
   test(
     'Notifies ParameterService onUserChanged',
-    () {
+    () async {
       final parameterService = MockParameterService();
 
       final parameter = AudioParameterDoubleModel(
@@ -61,11 +65,19 @@ void main() {
         id: 'test',
         parameterService: parameterService,
       );
-      parameter.setValue(0);
+      parameter.onUserChanged(0);
 
-      verify(parameterService.sink.add(parameter.toJson()));
+      await pumpEventQueue();
+
+      verify(
+        parameterService.parameterUpdatedByUser(
+          AudioParameterDouble(
+            value: parameter.value.value,
+            id: parameter.id,
+          ),
+        ),
+      );
     },
-    skip: 'How to use the generated fake stream to set up verify?',
   );
 
   test('Adds itself to parameter service', () {
