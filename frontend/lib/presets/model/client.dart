@@ -10,7 +10,7 @@ abstract class PresetsApiClient {
   Future<void> update(PresetState preset);
   Future<void> delete(String id);
 
-  Stream<PresetsState> get presets;
+  ValueStream<PresetsState> get presets;
 }
 
 abstract class SelectedPresetApiClient {

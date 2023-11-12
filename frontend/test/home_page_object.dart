@@ -22,9 +22,10 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:shrapnel/amplifier.dart';
 
 import 'midi_mapping/midi_mapping_page_object.dart';
+import 'presets/presets_page_object.dart';
 
 class HomePageObject {
-  const HomePageObject(this.tester);
+  HomePageObject(this.tester);
 
   final WidgetTester tester;
 
@@ -76,4 +77,7 @@ class HomePageObject {
     await tester.tap(findDuplicateMappingUndoButton());
     await tester.pumpAndSettle();
   }
+
+  late final _presetsPage = PresetsPageObject(tester);
+  get presetsPage => _presetsPage;
 }

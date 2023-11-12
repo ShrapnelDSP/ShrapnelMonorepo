@@ -17,12 +17,15 @@ class FakePresetsModel extends StateNotifier<PresetsState>
       Future<void>.delayed(const Duration(seconds: 2))
           .then((_) => _updateState()),
     );
+
+    subscription = _parametersState.listen((_) => _updateState);
   }
 
   final ValueStream<PresetParametersState> _parametersState;
   // This is for faking only, the firmware is responsible for updating
   // parameters when a preset is loaded
   final void Function(PresetParametersState parameters) _setParametersState;
+  late final StreamSubscription<PresetParametersState> subscription;
 
   final _presets = <PresetState>[
     PresetState(
@@ -34,12 +37,12 @@ class FakePresetsModel extends StateNotifier<PresetsState>
         middle: 0.5,
         treble: 0.5,
         contour: 0.5,
-        volume: -15,
-        noiseGateThreshold: -60,
+        volume: 0.5,
+        noiseGateThreshold: 0.5,
         noiseGateHysteresis: 0,
-        noiseGateAttack: 10,
-        noiseGateHold: 50,
-        noiseGateRelease: 50,
+        noiseGateAttack: 0.1,
+        noiseGateHold: 0.1,
+        noiseGateRelease: 0.1,
         noiseGateBypass: 0,
         chorusRate: 0.95,
         chorusDepth: 0.3,
@@ -53,7 +56,6 @@ class FakePresetsModel extends StateNotifier<PresetsState>
   ];
   int selectedPreset = 0;
 
-  // TODO need to listen to parameters state
   void _updateState() {
     final presetCount = _presets.length;
     state = PresetsState.ready(
@@ -97,4 +99,10 @@ class FakePresetsModel extends StateNotifier<PresetsState>
 
   @override
   void saveChanges() {}
+
+  @override
+  void dispose() {
+    super.dispose();
+    unawaited(subscription.cancel());
+  }
 }

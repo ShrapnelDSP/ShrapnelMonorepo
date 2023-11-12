@@ -145,8 +145,11 @@ class ParameterService extends ChangeNotifier {
       eventJson,
     );
 
-    if (_parameters.containsKey(parameterToUpdate.id)) {
+    if (!_parameters.containsKey(parameterToUpdate.id)) {
       log.warning("Couldn't find parameter with id ${parameterToUpdate.id}");
+      for (final id in _parameters.keys) {
+        log.warning(id);
+      }
       return;
     }
 
