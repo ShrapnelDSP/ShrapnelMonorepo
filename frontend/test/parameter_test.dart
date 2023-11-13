@@ -45,7 +45,7 @@ void main() {
     };
 
     final actual = ParameterServiceOutputMessageParameterUpdate(
-      parameter: AudioParameterDouble(
+      parameter: AudioParameterDoubleData(
         value: parameter.value.value,
         id: parameter.id,
       ),
@@ -71,7 +71,7 @@ void main() {
 
       verify(
         parameterService.parameterUpdatedByUser(
-          AudioParameterDouble(
+          AudioParameterDoubleData(
             value: parameter.value.value,
             id: parameter.id,
           ),

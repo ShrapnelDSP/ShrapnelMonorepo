@@ -44,11 +44,13 @@ import 'presets/model/fake.dart';
 import 'presets/model/presets.dart';
 import 'presets/view/presets.dart';
 import 'robust_websocket.dart';
+import 'status/data/status.dart';
+import 'status/model/websocket_status.dart';
 import 'tube_screamer.dart';
 import 'util/uuid.dart';
 import 'valvestate.dart';
 import 'wah.dart';
-import 'websocket_status.dart';
+import 'status/view/websocket_status.dart';
 import 'wifi_provisioning.dart';
 
 final _log = Logger('shrapnel.main');
@@ -67,7 +69,13 @@ String formatDateTime(DateTime t) {
 }
 
 void main() {
-  Logger.root.level = Level.INFO;
+  setupLogger(Level.INFO);
+  GoogleFonts.config.allowRuntimeFetching = false;
+  runApp(App());
+}
+
+void setupLogger(Level level) {
+  Logger.root.level = level;
   Logger.root.onRecord.listen((record) {
     debugPrint(
       '${record.level.name.padLeft("WARNING".length)} '
@@ -76,10 +84,6 @@ void main() {
       '${record.message}',
     );
   });
-
-  GoogleFonts.config.allowRuntimeFetching = false;
-
-  runApp(App());
 }
 
 class App extends StatelessWidget {
@@ -89,12 +93,14 @@ class App extends StatelessWidget {
     JsonWebsocket? jsonWebsocket,
     Uuid? uuid,
     WifiProvisioningService? provisioning,
+    ParameterRepositoryBase? parameterRepository,
+    ParameterService? parameterService,
   }) {
-    this.websocket = websocket ??
-        RobustWebsocket(
-          uri: Uri.parse('http://guitar-dsp.local:8080/websocket'),
-        );
-    jsonWebsocket ??= JsonWebsocket(websocket: this.websocket);
+    websocket ??= RobustWebsocket(
+      uri: Uri.parse('http://guitar-dsp.local:8080/websocket'),
+    );
+    _websocket = websocket;
+    jsonWebsocket ??= JsonWebsocket(websocket: websocket);
     audioClippingService = AudioClippingService(websocket: jsonWebsocket);
     this.uuid = uuid ?? Uuid();
     this.provisioning = provisioning ??
@@ -111,14 +117,19 @@ class App extends StatelessWidget {
     midiMappingService = MidiMappingService(
       websocket: jsonWebsocket,
     );
-    parameterService =
-        ParameterService(transport: ParameterClient(websocket: this.websocket));
+    this.parameterService = parameterService ??
+        ParameterService(
+          repository:
+              parameterRepository ?? ParameterRepository(websocket: jsonWebsocket),
+        );
     midiLearnService = MidiLearnService(
       mappingService: midiMappingService,
       uuid: this.uuid,
     );
 
-    parameterService.parameterUpdates
+    this
+        .parameterService
+        .parameterUpdates
         .map((e) => e.id)
         .listen(midiLearnService.parameterUpdated);
 
@@ -133,7 +144,7 @@ class App extends StatelessWidget {
         );
   }
 
-  late final RobustWebsocket websocket;
+  late final RobustWebsocket _websocket;
   late final AudioClippingService audioClippingService;
   late final Uuid uuid;
   late final WifiProvisioningService provisioning;
@@ -148,7 +159,9 @@ class App extends StatelessWidget {
         StateNotifierProvider<MidiLearnService, MidiLearnState>.value(
           value: midiLearnService,
         ),
-        ChangeNotifierProvider.value(value: websocket),
+        StateNotifierProvider<WebSocketStatusModel, WebSocketStatusData>(
+          create: (_) => WebSocketStatusModel(websocket: _websocket),
+        ),
         ChangeNotifierProvider.value(value: provisioning),
         ChangeNotifierProvider.value(
           value: parameterService,

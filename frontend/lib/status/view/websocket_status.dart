@@ -20,7 +20,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'robust_websocket.dart';
+import '../data/status.dart';
 
 class WebSocketStatus extends StatelessWidget {
   const WebSocketStatus({super.key, required this.size});
@@ -29,7 +29,7 @@ class WebSocketStatus extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isConnected = context.watch<RobustWebsocket>().isAlive;
+    final isConnected = context.watch<WebSocketStatusData>().isConnected;
 
     return Tooltip(
       message: isConnected ? 'Connected' : 'Not Connected',

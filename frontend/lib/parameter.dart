@@ -25,22 +25,24 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logging/logging.dart';
 import 'package:rxdart/rxdart.dart';
 
+import 'json_websocket.dart';
 import 'robust_websocket.dart';
 
 part 'parameter.g.dart';
+
 part 'parameter.freezed.dart';
 
 final log = Logger('shrapnel.parameter');
 
 @freezed
-class AudioParameterDouble with _$AudioParameterDouble {
-  const factory AudioParameterDouble({
+class AudioParameterDoubleData with _$AudioParameterDoubleData {
+  const factory AudioParameterDoubleData({
     required String id,
     required double value,
-  }) = _AudioParameterDouble;
+  }) = _AudioParameterDoubleData;
 
-  factory AudioParameterDouble.fromJson(Map<String, dynamic> json) =>
-      _$AudioParameterDoubleFromJson(json);
+  factory AudioParameterDoubleData.fromJson(Map<String, dynamic> json) =>
+      _$AudioParameterDoubleDataFromJson(json);
 }
 
 class AudioParameterDoubleModel {
@@ -63,7 +65,7 @@ class AudioParameterDoubleModel {
   void onUserChanged(double value) {
     _controller.add(value);
     parameterService
-        .parameterUpdatedByUser(AudioParameterDouble(value: value, id: id));
+        .parameterUpdatedByUser(AudioParameterDoubleData(value: value, id: id));
   }
 
   void setValue(double value) {
@@ -89,7 +91,7 @@ class ParameterServiceOutputMessageParameterUpdate
     extends ParameterServiceOutputMessage {
   ParameterServiceOutputMessageParameterUpdate({required this.parameter});
 
-  AudioParameterDouble parameter;
+  AudioParameterDoubleData parameter;
 
   @override
   Map<String, dynamic> toJson() {
@@ -117,20 +119,21 @@ class ParameterServiceInputMessageParameterUpdate
   ParameterServiceInputMessageParameterUpdate({required this.parameter});
 
   factory ParameterServiceInputMessageParameterUpdate.fromJson(
-      Map<String, dynamic> json,) {
+    Map<String, dynamic> json,
+  ) {
     if (json['messageType'] != 'parameterUpdate') {
       throw ArgumentError("messageType is not 'parameterUpdate'");
     }
 
     return ParameterServiceInputMessageParameterUpdate(
-      parameter: AudioParameterDouble.fromJson(json),
+      parameter: AudioParameterDoubleData.fromJson(json),
     );
   }
 
-  AudioParameterDouble parameter;
+  AudioParameterDoubleData parameter;
 }
 
-abstract class ParameterClientBase {
+abstract class ParameterRepositoryBase {
   bool get isAlive;
 
   void sendMessage(ParameterServiceOutputMessage message);
@@ -140,10 +143,10 @@ abstract class ParameterClientBase {
   Stream<void> get connectionStream;
 }
 
-class ParameterClient implements ParameterClientBase {
-  ParameterClient({required this.websocket});
+class ParameterRepository implements ParameterRepositoryBase {
+  ParameterRepository({required this.websocket});
 
-  RobustWebsocket websocket;
+  JsonWebsocket websocket;
 
   @override
   Stream<void> get connectionStream => websocket.connectionStream;
@@ -153,9 +156,7 @@ class ParameterClient implements ParameterClientBase {
 
   @override
   void sendMessage(ParameterServiceOutputMessage message) {
-    websocket.sendMessage(
-      json.encode(message.toJson()),
-    );
+    websocket.send(message.toJson());
   }
 
   @override
@@ -172,16 +173,15 @@ class ParameterClient implements ParameterClientBase {
 
             log.fine(event);
 
-            final eventJson = json.decode(event) as Map<String, dynamic>;
-            yield ParameterServiceInputMessage.fromJson(eventJson);
+            yield ParameterServiceInputMessage.fromJson(event);
           }
         }),
       );
 }
 
 class ParameterService extends ChangeNotifier {
-  ParameterService({required ParameterClientBase transport})
-      : _transport = transport {
+  ParameterService({required ParameterRepositoryBase repository})
+      : _repository = repository {
     // TODO is this adding noticable latency when adjusting parameters?
     _sink.stream
         .throttleTime(
@@ -189,14 +189,14 @@ class ParameterService extends ChangeNotifier {
           trailing: true,
           leading: false,
         )
-        .listen(_transport.sendMessage);
+        .listen(_repository.sendMessage);
 
-    _transport.stream.listen(_handleIncomingEvent);
+    _repository.stream.listen(_handleIncomingMessage);
 
-    if (_transport.isAlive) {
+    if (_repository.isAlive) {
       _requestParameterInitialisation();
     }
-    _transport.connectionStream
+    _repository.connectionStream
         .listen((_) => _requestParameterInitialisation());
   }
 
@@ -204,14 +204,15 @@ class ParameterService extends ChangeNotifier {
     _sink.add(ParameterServiceOutputMessageRequestInitialisation());
   }
 
-  final _parameterUpdatesController = StreamController<AudioParameterDouble>();
-  late final Stream<AudioParameterDouble> parameterUpdates =
+  final _parameterUpdatesController =
+      StreamController<AudioParameterDoubleData>();
+  late final Stream<AudioParameterDoubleData> parameterUpdates =
       _parameterUpdatesController.stream;
   final _sink = StreamController<ParameterServiceOutputMessage>.broadcast();
 
   final _parameters = <String, AudioParameterDoubleModel>{};
 
-  final ParameterClientBase _transport;
+  final ParameterRepositoryBase _repository;
 
   void registerParameter(AudioParameterDoubleModel parameter) {
     assert(!_parameters.containsKey(parameter.id));
@@ -226,8 +227,8 @@ class ParameterService extends ChangeNotifier {
     return _parameters[parameterId]!;
   }
 
-  void _handleIncomingEvent(ParameterServiceInputMessage event) {
-    switch (event) {
+  void _handleIncomingMessage(ParameterServiceInputMessage message) {
+    switch (message) {
       case ParameterServiceInputMessageParameterUpdate(:final parameter):
         if (!_parameters.containsKey(parameter.id)) {
           log.warning("Couldn't find parameter with id ${parameter.id}");
@@ -254,9 +255,10 @@ class ParameterService extends ChangeNotifier {
     super.dispose();
   }
 
-  void parameterUpdatedByUser(AudioParameterDouble parameter) {
+  void parameterUpdatedByUser(AudioParameterDoubleData parameter) {
     _parameterUpdatesController.add(parameter);
     _sink.add(
-        ParameterServiceOutputMessageParameterUpdate(parameter: parameter),);
+      ParameterServiceOutputMessageParameterUpdate(parameter: parameter),
+    );
   }
 }

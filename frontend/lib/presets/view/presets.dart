@@ -34,6 +34,7 @@ class Presets extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             IconButton(
+              key: const Key('presets-create-button'),
               icon: const Icon(Icons.add),
               tooltip: 'Create new preset',
               onPressed: () async {
@@ -49,6 +50,7 @@ class Presets extends StatelessWidget {
               },
             ),
             IconButton(
+              key: const Key('presets-save-button'),
               icon: const Icon(Icons.save),
               tooltip: 'Save preset',
               onPressed: savePreset,
@@ -78,6 +80,7 @@ class Presets extends StatelessWidget {
               child: ButtonTheme(
                 alignedDropdown: true,
                 child: DropdownButton<PresetState>(
+                  key: const Key('presets-current-preset-name'),
                   isExpanded: true,
                   value: selectedPreset,
                   items: presets

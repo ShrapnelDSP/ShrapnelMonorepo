@@ -29,7 +29,7 @@ class FakePresetsModel extends StateNotifier<PresetsState>
 
   final _presets = <PresetState>[
     PresetState(
-      name: 'a',
+      name: 'Default',
       parameters: PresetParametersState(
         ampGain: 0.5,
         ampChannel: 0,

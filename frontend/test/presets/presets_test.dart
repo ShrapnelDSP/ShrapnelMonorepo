@@ -14,56 +14,78 @@
 // knot restored again
 
 import 'package:flutter_test/flutter_test.dart';
+import 'package:logging/logging.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:shrapnel/audio_events.dart';
 import 'package:shrapnel/json_websocket.dart';
 import 'package:shrapnel/main.dart';
+import 'package:shrapnel/parameter.dart';
 import 'package:shrapnel/robust_websocket.dart';
 import 'package:shrapnel/util/uuid.dart';
 
 import '../home_page_object.dart';
 import 'presets_test.mocks.dart';
 
-@GenerateMocks([JsonWebsocket, Uuid])
+@GenerateMocks([Uuid])
 @GenerateNiceMocks(
-  [MockSpec<RobustWebsocket>(), MockSpec<AudioClippingService>()],
+  [
+    MockSpec<RobustWebsocket>(),
+    MockSpec<JsonWebsocket>(),
+    MockSpec<AudioClippingService>(),
+    MockSpec<ParameterRepositoryBase>()
+  ],
 )
 void main() {
+  setupLogger(Level.ALL);
+
   testWidgets('Presets test', (tester) async {
-    final page = HomePageObject(tester);
+    await tester.runAsync(() async {
+      final page = HomePageObject(tester);
 
-    final websocket = MockRobustWebsocket();
-    final api = MockJsonWebsocket();
-    when(api.dataStream).thenAnswer((_) => apiController.stream);
-    when(api.connectionStream).thenAnswer((_) => Stream.fromIterable([]));
-    when(api.isAlive).thenReturn(true);
-    final uuid = MockUuid();
+      final parameterRepository = MockParameterRepositoryBase();
+      when(parameterRepository.isAlive).thenReturn(true);
 
-    final sut = App(
-      websocket: websocket,
-      jsonWebsocket: api,
-      uuid: uuid,
-    );
+      final websocket = MockRobustWebsocket();
+      final jsonWebsocket = MockJsonWebsocket();
+      when(jsonWebsocket.dataStream).thenAnswer((_) => const Stream.empty());
+      when(jsonWebsocket.connectionStream)
+          .thenAnswer((_) => const Stream.empty());
+      when(jsonWebsocket.isAlive).thenReturn(true);
 
-    await tester.pumpWidget(sut);
+      final uuid = MockUuid();
 
-    expect(page.presetsPage.getCurrentPresetName(), 'Default');
-    expect(page.presetsPage.saveButton.isEnabled, isFalse);
+      final sut = App(
+        websocket: websocket,
+        jsonWebsocket: jsonWebsocket,
+        parameterRepository: parameterRepository,
+        uuid: uuid,
+      );
 
-    await page.dragKnob(parameterId: 'ampGain');
+      await tester.pumpWidget(sut);
+      await tester.pumpAndSettle();
+      await tester.pumpAndSettle();
+      await tester.pumpAndSettle();
+      await tester.pumpAndSettle();
+      await tester.pumpAndSettle();
 
-    expect(page.presetsPage.saveButton.isEnabled, isTrue);
-    page.presetsPage.saveButton.press();
-    expect(page.presetsPage.saveButton.isEnabled, isFalse);
+      expect(page.presetsPage.getCurrentPresetName(), 'Default');
+      expect(page.presetsPage.saveButton.isEnabled, isFalse);
 
-    // TODO check that the parameter change has been saved
+      await page.dragKnob(parameterId: 'ampGain');
 
-    await page.dragKnob(parameterId: 'ampGain');
-    expect(page.presetsPage.createButton.isEnabled, isTrue);
-    // TODO finish saving the preset
-    expect(page.presetsPage.createButton.isEnabled, isFalse);
+      expect(page.presetsPage.saveButton.isEnabled, isTrue);
+      page.presetsPage.saveButton.press();
+      expect(page.presetsPage.saveButton.isEnabled, isFalse);
 
-    // TODO reload etc.
+      // TODO check that the parameter change has been saved
+
+      await page.dragKnob(parameterId: 'ampGain');
+      expect(page.presetsPage.createButton.isEnabled, isTrue);
+      // TODO finish saving the preset
+      expect(page.presetsPage.createButton.isEnabled, isFalse);
+
+      // TODO reload etc.
+    });
   });
 }
