@@ -13,6 +13,8 @@
 // reload new preset
 // knot restored again
 
+import 'dart:async';
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:logging/logging.dart';
 import 'package:mockito/annotations.dart';
@@ -27,13 +29,15 @@ import 'package:shrapnel/util/uuid.dart';
 import '../home_page_object.dart';
 import 'presets_test.mocks.dart';
 
+final _log = Logger('presets_test');
+
 @GenerateMocks([Uuid])
 @GenerateNiceMocks(
   [
     MockSpec<RobustWebsocket>(),
     MockSpec<JsonWebsocket>(),
     MockSpec<AudioClippingService>(),
-    MockSpec<ParameterRepositoryBase>()
+    MockSpec<ParameterRepositoryBase>(),
   ],
 )
 void main() {
@@ -44,11 +48,16 @@ void main() {
       final page = HomePageObject(tester);
 
       final parameterRepository = MockParameterRepositoryBase();
+      final parameterController =
+          StreamController<ParameterServiceInputMessage>();
       when(parameterRepository.isAlive).thenReturn(true);
+      when(parameterRepository.stream)
+          .thenAnswer((_) => parameterController.stream);
 
       final websocket = MockRobustWebsocket();
       final jsonWebsocket = MockJsonWebsocket();
-      when(jsonWebsocket.dataStream).thenAnswer((_) => const Stream.empty());
+      when(jsonWebsocket.dataStream)
+          .thenAnswer((_) => StreamController<Map<String, dynamic>>().stream);
       when(jsonWebsocket.connectionStream)
           .thenAnswer((_) => const Stream.empty());
       when(jsonWebsocket.isAlive).thenReturn(true);
@@ -62,12 +71,16 @@ void main() {
         uuid: uuid,
       );
 
+      _log.info('pumping');
       await tester.pumpWidget(sut);
+      _log.info('pump done');
+      _log.info('delaying');
+      await Future<void>.delayed(const Duration(seconds: 5));
+      _log.info('delay done');
       await tester.pumpAndSettle();
-      await tester.pumpAndSettle();
-      await tester.pumpAndSettle();
-      await tester.pumpAndSettle();
-      await tester.pumpAndSettle();
+
+      verify(parameterRepository.sendMessage(ParameterServiceOutputMessageRequestInitialisation())).called(1);
+      verifyNever(parameterRepository.sendMessage(any));
 
       expect(page.presetsPage.getCurrentPresetName(), 'Default');
       expect(page.presetsPage.saveButton.isEnabled, isFalse);
@@ -86,6 +99,8 @@ void main() {
       expect(page.presetsPage.createButton.isEnabled, isFalse);
 
       // TODO reload etc.
+
+      unawaited(parameterController.close());
     });
   });
 }

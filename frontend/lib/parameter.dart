@@ -75,30 +75,19 @@ class AudioParameterDoubleModel {
   ValueStream<double> get value => _controller;
 }
 
-sealed class ParameterServiceOutputMessage {
-  Map<String, dynamic> toJson();
-}
+@Freezed(unionKey: 'messageType')
+sealed class ParameterServiceOutputMessage
+    with _$ParameterServiceOutputMessage {
+  @FreezedUnionValue('initialiseParameters')
+  factory ParameterServiceOutputMessage.requestInitialisation() =
+      ParameterServiceOutputMessageRequestInitialisation;
 
-class ParameterServiceOutputMessageRequestInitialisation
-    extends ParameterServiceOutputMessage {
-  @override
-  Map<String, dynamic> toJson() => {
-        'messageType': 'initialiseParameters',
-      };
-}
+  factory ParameterServiceOutputMessage.parameterUpdate(
+      {required String id,
+      required double value}) = ParameterServiceOutputMessageParameterUpdate;
 
-class ParameterServiceOutputMessageParameterUpdate
-    extends ParameterServiceOutputMessage {
-  ParameterServiceOutputMessageParameterUpdate({required this.parameter});
-
-  AudioParameterDoubleData parameter;
-
-  @override
-  Map<String, dynamic> toJson() {
-    final message = parameter.toJson();
-    message['messageType'] = 'parameterUpdate';
-    return message;
-  }
+  factory ParameterServiceOutputMessage.fromJson(Map<String, dynamic> json) =>
+      _$ParameterServiceOutputMessageFromJson(json);
 }
 
 sealed class ParameterServiceInputMessage {
@@ -201,7 +190,7 @@ class ParameterService extends ChangeNotifier {
   }
 
   void _requestParameterInitialisation() {
-    _sink.add(ParameterServiceOutputMessageRequestInitialisation());
+    _sink.add(ParameterServiceOutputMessage.requestInitialisation());
   }
 
   final _parameterUpdatesController =
@@ -258,7 +247,10 @@ class ParameterService extends ChangeNotifier {
   void parameterUpdatedByUser(AudioParameterDoubleData parameter) {
     _parameterUpdatesController.add(parameter);
     _sink.add(
-      ParameterServiceOutputMessageParameterUpdate(parameter: parameter),
+      ParameterServiceOutputMessage.parameterUpdate(
+        id: parameter.id,
+        value: parameter.value,
+      ),
     );
   }
 }

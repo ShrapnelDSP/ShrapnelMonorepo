@@ -1,9 +1,12 @@
 import 'dart:async';
 
+import 'package:logging/logging.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:state_notifier/state_notifier.dart';
 
 import 'presets.dart';
+
+final _log = Logger('presets_fake');
 
 class FakePresetsModel extends StateNotifier<PresetsState>
     implements PresetsModel {
@@ -13,6 +16,7 @@ class FakePresetsModel extends StateNotifier<PresetsState>
   })  : _setParametersState = setParametersState,
         _parametersState = parametersState,
         super(PresetsState.loading()) {
+    _log.finest('FakePresetsModel');
     unawaited(
       Future<void>.delayed(const Duration(seconds: 2))
           .then((_) => _updateState()),
@@ -57,6 +61,7 @@ class FakePresetsModel extends StateNotifier<PresetsState>
   int selectedPreset = 0;
 
   void _updateState() {
+    _log.finest('_updateState');
     final presetCount = _presets.length;
     state = PresetsState.ready(
       isCurrentModified:

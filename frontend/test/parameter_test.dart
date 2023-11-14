@@ -17,7 +17,6 @@
  * ShrapnelDSP. If not, see <https://www.gnu.org/licenses/>.
  */
 
-
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
@@ -27,29 +26,28 @@ import 'parameter_test.mocks.dart';
 
 @GenerateMocks([ParameterService])
 void main() {
-  test('Convert to json', () {
-    final parameterService = MockParameterService();
-
-    final parameter = AudioParameterDoubleModel(
-      groupName: 'TestGroup',
-      name: 'TestName',
-      id: 'test',
-      parameterService: parameterService,
-    );
-    parameter.setValue(0);
-
+  test('Convert parameter update to json', () {
     final expected = <String, dynamic>{
       'messageType': 'parameterUpdate',
       'value': 0.0,
       'id': 'test',
     };
 
-    final actual = ParameterServiceOutputMessageParameterUpdate(
-      parameter: AudioParameterDoubleData(
-        value: parameter.value.value,
-        id: parameter.id,
-      ),
+    final actual = ParameterServiceOutputMessage.parameterUpdate(
+      value: 0,
+      id: 'test',
     ).toJson();
+
+    expect(actual, expected);
+  });
+
+  test('Convert initialise parameters to json', () {
+    final expected = <String, dynamic>{
+      'messageType': 'initialiseParameters',
+    };
+
+    final actual =
+        ParameterServiceOutputMessage.requestInitialisation().toJson();
 
     expect(actual, expected);
   });
