@@ -1,19 +1,5 @@
-// Launch
-// Default preset visible
-// Save button disabled
-// move knob
-// Save button enabled
-// Save
-// Save grayed out
-// Move knob
-// save new preset
-// save grayed out
-// reload old preset
-// knob restored
-// reload new preset
-// knot restored again
-
 import 'dart:async';
+import 'dart:collection';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:logging/logging.dart';
@@ -31,7 +17,7 @@ import 'presets_test.mocks.dart';
 
 final _log = Logger('presets_test');
 
-@GenerateMocks([Uuid])
+@GenerateMocks([UuidService])
 @GenerateNiceMocks(
   [
     MockSpec<RobustWebsocket>(),
@@ -50,6 +36,13 @@ void main() {
       final parameterRepository = MockParameterRepositoryBase();
       final parameterController =
           StreamController<ParameterServiceInputMessage>();
+      final outputMessages = Queue<ParameterServiceOutputMessage>();
+      when(parameterRepository.sendMessage(any)).thenAnswer((realInvocation) {
+        outputMessages.add(
+          realInvocation.positionalArguments.single
+              as ParameterServiceOutputMessage,
+        );
+      });
       when(parameterRepository.isAlive).thenReturn(true);
       when(parameterRepository.stream)
           .thenAnswer((_) => parameterController.stream);
@@ -62,7 +55,7 @@ void main() {
           .thenAnswer((_) => const Stream.empty());
       when(jsonWebsocket.isAlive).thenReturn(true);
 
-      final uuid = MockUuid();
+      final uuid = MockUuidService();
 
       final sut = App(
         websocket: websocket,
@@ -79,26 +72,44 @@ void main() {
       _log.info('delay done');
       await tester.pumpAndSettle();
 
-      verify(parameterRepository.sendMessage(ParameterServiceOutputMessageRequestInitialisation())).called(1);
-      verifyNever(parameterRepository.sendMessage(any));
+      expect(
+        outputMessages.removeFirst(),
+        ParameterServiceOutputMessage.requestInitialisation(),
+      );
+      expect(outputMessages, isEmpty);
 
       expect(page.presetsPage.getCurrentPresetName(), 'Default');
       expect(page.presetsPage.saveButton.isEnabled, isFalse);
 
       await page.dragKnob(parameterId: 'ampGain');
 
+      expect(
+        outputMessages.removeFirst(),
+        isA<ParameterServiceOutputMessageParameterUpdate>()
+            .having((message) => message.id, 'id', 'ampGain'),
+      );
+      expect(outputMessages, isEmpty);
+
       expect(page.presetsPage.saveButton.isEnabled, isTrue);
+      expect(page.presetsPage.createButton.isEnabled, isTrue);
       page.presetsPage.saveButton.press();
       expect(page.presetsPage.saveButton.isEnabled, isFalse);
+      expect(page.presetsPage.createButton.isEnabled, isFalse);
 
       // TODO check that the parameter change has been saved
 
       await page.dragKnob(parameterId: 'ampGain');
+      expect(page.presetsPage.saveButton.isEnabled, isTrue);
       expect(page.presetsPage.createButton.isEnabled, isTrue);
-      // TODO finish saving the preset
+      // TODO save new preset
+      expect(page.presetsPage.saveButton.isEnabled, isFalse);
       expect(page.presetsPage.createButton.isEnabled, isFalse);
 
-      // TODO reload etc.
+      // TODO
+      // reload old preset
+      // knob restored
+      // reload new preset
+      // knob restored again
 
       unawaited(parameterController.close());
     });

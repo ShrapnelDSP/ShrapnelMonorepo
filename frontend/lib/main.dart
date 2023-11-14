@@ -40,17 +40,17 @@ import 'midi_mapping/view/midi_mapping.dart';
 import 'noise_gate.dart';
 import 'parameter.dart';
 import 'pedalboard.dart';
-import 'presets/model/fake.dart';
 import 'presets/model/presets.dart';
+import 'presets/model/presets_service.dart';
 import 'presets/view/presets.dart';
 import 'robust_websocket.dart';
 import 'status/data/status.dart';
 import 'status/model/websocket_status.dart';
+import 'status/view/websocket_status.dart';
 import 'tube_screamer.dart';
 import 'util/uuid.dart';
 import 'valvestate.dart';
 import 'wah.dart';
-import 'status/view/websocket_status.dart';
 import 'wifi_provisioning.dart';
 
 final _log = Logger('shrapnel.main');
@@ -91,7 +91,7 @@ class App extends StatelessWidget {
     super.key,
     RobustWebsocket? websocket,
     JsonWebsocket? jsonWebsocket,
-    Uuid? uuid,
+    UuidService? uuid,
     WifiProvisioningService? provisioning,
     ParameterRepositoryBase? parameterRepository,
     ParameterService? parameterService,
@@ -102,7 +102,7 @@ class App extends StatelessWidget {
     _websocket = websocket;
     jsonWebsocket ??= JsonWebsocket(websocket: websocket);
     audioClippingService = AudioClippingService(websocket: jsonWebsocket);
-    this.uuid = uuid ?? Uuid();
+    this.uuid = uuid ?? UuidService();
     this.provisioning = provisioning ??
         WifiProvisioningService(
           provisioningFactory: () {
@@ -119,8 +119,8 @@ class App extends StatelessWidget {
     );
     this.parameterService = parameterService ??
         ParameterService(
-          repository:
-              parameterRepository ?? ParameterRepository(websocket: jsonWebsocket),
+          repository: parameterRepository ??
+              ParameterRepository(websocket: jsonWebsocket),
         );
     midiLearnService = MidiLearnService(
       mappingService: midiMappingService,
@@ -146,7 +146,7 @@ class App extends StatelessWidget {
 
   late final RobustWebsocket _websocket;
   late final AudioClippingService audioClippingService;
-  late final Uuid uuid;
+  late final UuidService uuid;
   late final WifiProvisioningService provisioning;
   late final MidiLearnService midiLearnService;
   late final ParameterService parameterService;
@@ -256,7 +256,7 @@ class ParametersMergeStream {
     required this.wahBypass,
   }) {
     _controller =
-        BehaviorSubject<PresetParametersState>.seeded(getParametersState());
+        BehaviorSubject<PresetParametersData>.seeded(getParametersState());
 
     void updateState() {
       _controller.add(getParametersState());
@@ -284,7 +284,7 @@ class ParametersMergeStream {
     wahBypass.listen((_) => updateState());
   }
 
-  late final BehaviorSubject<PresetParametersState> _controller;
+  late final BehaviorSubject<PresetParametersData> _controller;
 
   final ValueStream<double> ampGain;
   final ValueStream<double> ampChannel;
@@ -307,10 +307,10 @@ class ParametersMergeStream {
   final ValueStream<double> wahVocal;
   final ValueStream<double> wahBypass;
 
-  ValueStream<PresetParametersState> get stream => _controller.stream;
+  ValueStream<PresetParametersData> get stream => _controller.stream;
 
-  PresetParametersState getParametersState() {
-    return PresetParametersState(
+  PresetParametersData getParametersState() {
+    return PresetParametersData(
       ampGain: ampGain.value,
       ampChannel: ampChannel.value,
       bass: bass.value,
@@ -398,10 +398,13 @@ class MyHomePage extends StatelessWidget {
       body: Center(
         child: Column(
           children: [
-            StateNotifierProvider<PresetsModel, PresetsState>(
+            StateNotifierProvider<PresetsServiceBase, PresetsState>(
               create: (_) {
                 final parameters = context.read<ParameterService>();
-                return FakePresetsModel(
+                return PresetsService(
+                  presetsRepository: context.read<PresetsRepositoryBase>(),
+                  selectedPresetRepository: context.read<SelectedPresetRepositoryBase>(),
+                  uuid: context.read<UuidService>(),
                   parametersState: ParametersMergeStream(
                     ampGain: parameters.getParameter('ampGain').value,
                     ampChannel: parameters.getParameter('ampChannel').value,
@@ -430,70 +433,10 @@ class MyHomePage extends StatelessWidget {
                     wahVocal: parameters.getParameter('wahVocal').value,
                     wahBypass: parameters.getParameter('wahBypass').value,
                   ).stream,
-                  setParametersState: (state) {
-                    parameters
-                        .getParameter('ampGain')
-                        .onUserChanged(state.ampGain);
-                    parameters
-                        .getParameter('ampChannel')
-                        .onUserChanged(state.ampChannel);
-                    parameters.getParameter('bass').onUserChanged(state.bass);
-                    parameters
-                        .getParameter('middle')
-                        .onUserChanged(state.middle);
-                    parameters
-                        .getParameter('treble')
-                        .onUserChanged(state.treble);
-                    parameters
-                        .getParameter('contour')
-                        .onUserChanged(state.contour);
-                    parameters
-                        .getParameter('volume')
-                        .onUserChanged(state.volume);
-                    parameters
-                        .getParameter('noiseGateThreshold')
-                        .onUserChanged(state.noiseGateThreshold);
-                    parameters
-                        .getParameter('noiseGateHysteresis')
-                        .onUserChanged(state.noiseGateHysteresis);
-                    parameters
-                        .getParameter('noiseGateAttack')
-                        .onUserChanged(state.noiseGateAttack);
-                    parameters
-                        .getParameter('noiseGateHold')
-                        .onUserChanged(state.noiseGateHold);
-                    parameters
-                        .getParameter('noiseGateRelease')
-                        .onUserChanged(state.noiseGateRelease);
-                    parameters
-                        .getParameter('noiseGateBypass')
-                        .onUserChanged(state.noiseGateBypass);
-                    parameters
-                        .getParameter('chorusRate')
-                        .onUserChanged(state.chorusRate);
-                    parameters
-                        .getParameter('chorusDepth')
-                        .onUserChanged(state.chorusDepth);
-                    parameters
-                        .getParameter('chorusMix')
-                        .onUserChanged(state.chorusMix);
-                    parameters
-                        .getParameter('chorusBypass')
-                        .onUserChanged(state.chorusBypass);
-                    parameters
-                        .getParameter('wahPosition')
-                        .onUserChanged(state.wahPosition);
-                    parameters
-                        .getParameter('wahVocal')
-                        .onUserChanged(state.wahVocal);
-                    parameters
-                        .getParameter('wahBypass')
-                        .onUserChanged(state.wahBypass);
-                  },
                 );
               },
               builder: (context, _) {
-                final model = context.read<PresetsModel>();
+                final model = context.read<PresetsServiceBase>();
                 final state = context.watch<PresetsState>();
 
                 return Presets(
@@ -520,15 +463,17 @@ class MyHomePage extends StatelessWidget {
                   ),
                   selectPreset: state.map(
                     loading: (_) => null,
-                    ready: (ready) => (selectedPreset) =>
-                        model.select(ready.presets.indexOf(selectedPreset)),
+                    ready: (ready) =>
+                        (selectedPreset) => model.select(selectedPreset.id),
                   ),
                   selectNextPreset: state.map(
                     loading: (value) => null,
                     ready: (ready) {
-                      final index = ready.selectedPreset + 1;
+                      final index = ready.presets
+                              .indexWhere((e) => e.id == ready.selectedPreset) +
+                          1;
                       if (ready.presets.hasIndex(index)) {
-                        return () => model.select(index);
+                        return () => model.select(ready.presets[index].id);
                       }
 
                       return null;
@@ -537,9 +482,11 @@ class MyHomePage extends StatelessWidget {
                   selectPreviousPreset: state.map(
                     loading: (value) => null,
                     ready: (ready) {
-                      final index = ready.selectedPreset - 1;
+                      final index = ready.presets
+                              .indexWhere((e) => e.id == ready.selectedPreset) -
+                          1;
                       if (ready.presets.hasIndex(index)) {
-                        return () => model.select(index);
+                        return () => model.select(ready.presets[index].id);
                       }
 
                       return null;
@@ -551,7 +498,8 @@ class MyHomePage extends StatelessWidget {
                   ),
                   selectedPreset: state.map(
                     loading: (_) => null,
-                    ready: (ready) => ready.presets[ready.selectedPreset],
+                    ready: (ready) => ready.presets
+                        .firstWhere((e) => e.id == ready.selectedPreset),
                   ),
                 );
               },

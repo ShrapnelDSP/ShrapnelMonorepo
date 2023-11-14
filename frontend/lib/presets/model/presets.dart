@@ -1,11 +1,12 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:state_notifier/state_notifier.dart';
+import 'package:uuid/uuid.dart';
 
 part 'presets.freezed.dart';
 
 @freezed
-class PresetParametersState with _$PresetParametersState {
-  factory PresetParametersState({
+class PresetParametersData with _$PresetParametersData {
+  factory PresetParametersData({
     required double ampGain,
     required double ampChannel,
     required double bass,
@@ -26,14 +27,15 @@ class PresetParametersState with _$PresetParametersState {
     required double wahPosition,
     required double wahVocal,
     required double wahBypass,
-  }) = _PresetParametersState;
+  }) = _PresetParametersData;
 }
 
 @freezed
 class PresetState with _$PresetState {
   factory PresetState({
+    required UuidValue id,
     required String name,
-    required PresetParametersState parameters,
+    required PresetParametersData parameters,
   }) = _PresetState;
 }
 
@@ -46,7 +48,7 @@ class PresetsState with _$PresetsState {
     required bool canDeleteCurrent,
     required bool canUndo,
     required List<PresetState> presets,
-    required int selectedPreset,
+    required UuidValue selectedPreset,
   }) = _PresetsState;
 
   PresetsState._();
@@ -54,17 +56,17 @@ class PresetsState with _$PresetsState {
   bool get isReady => maybeMap(ready: (_) => true, orElse: () => false);
 }
 
-abstract class PresetsModel extends StateNotifier<PresetsState> {
-  PresetsModel(super.state);
+abstract class PresetsServiceBase extends StateNotifier<PresetsState> {
+  PresetsServiceBase(super.state);
 
   /// Creates a new preset and makes it active.
   void create(String name);
 
   /// Changes the active preset to a new value.
-  void select(int indexToSelect);
+  void select(UuidValue id);
 
   /// Delete a preset.
-  void delete(int indexToDelete);
+  void delete(UuidValue id);
 
   /// Save changes made to the current preset.
   void saveChanges();

@@ -34,7 +34,7 @@ class MidiLearnService extends StateNotifier<MidiLearnState> {
       : super(const MidiLearnState.idle(null));
 
   final MidiMappingService mappingService;
-  final Uuid uuid;
+  final UuidService uuid;
 
   void startLearning() {
     state.maybeWhen(

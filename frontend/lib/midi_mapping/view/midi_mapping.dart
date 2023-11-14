@@ -233,7 +233,7 @@ class CreateMappingDialogState extends State<CreateMappingDialog> {
                     unawaited(
                       mappings.createMapping(
                         MidiMappingEntry(
-                          id: context.read<Uuid>().v4(),
+                          id: context.read<UuidService>().v4(),
                           mapping: MidiMapping(
                             midiChannel: channel!,
                             ccNumber: ccNumber!,

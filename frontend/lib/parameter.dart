@@ -26,7 +26,6 @@ import 'package:logging/logging.dart';
 import 'package:rxdart/rxdart.dart';
 
 import 'json_websocket.dart';
-import 'robust_websocket.dart';
 
 part 'parameter.g.dart';
 
@@ -84,7 +83,7 @@ sealed class ParameterServiceOutputMessage
 
   factory ParameterServiceOutputMessage.parameterUpdate(
       {required String id,
-      required double value}) = ParameterServiceOutputMessageParameterUpdate;
+      required double value,}) = ParameterServiceOutputMessageParameterUpdate;
 
   factory ParameterServiceOutputMessage.fromJson(Map<String, dynamic> json) =>
       _$ParameterServiceOutputMessageFromJson(json);

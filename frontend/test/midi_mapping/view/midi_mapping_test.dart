@@ -34,7 +34,7 @@ import 'package:shrapnel/util/uuid.dart';
 import '../../home_page_object.dart';
 import 'midi_mapping_test.mocks.dart';
 
-@GenerateMocks([JsonWebsocket, Uuid])
+@GenerateMocks([JsonWebsocket, UuidService])
 @GenerateNiceMocks(
   [MockSpec<RobustWebsocket>(), MockSpec<AudioClippingService>()],
 )
@@ -46,7 +46,7 @@ void main() {
     when(api.dataStream).thenAnswer((_) => apiController.stream);
     when(api.connectionStream).thenAnswer((_) => Stream.fromIterable([]));
     when(api.isAlive).thenReturn(true);
-    final uuid = MockUuid();
+    final uuid = MockUuidService();
 
     final sut = App(
       websocket: websocket,
@@ -154,7 +154,7 @@ void main() {
     when(api.dataStream).thenAnswer((_) => apiController.stream);
     when(api.connectionStream).thenAnswer((_) => Stream.fromIterable([]));
     when(api.isAlive).thenReturn(true);
-    final uuid = MockUuid();
+    final uuid = MockUuidService();
 
     final sut = App(
       websocket: websocket,
@@ -473,7 +473,7 @@ void main() {
       when(api.dataStream).thenAnswer((_) => apiController.stream);
       when(api.connectionStream).thenAnswer((_) => Stream.fromIterable([]));
       when(api.isAlive).thenReturn(true);
-      final uuid = MockUuid();
+      final uuid = MockUuidService();
 
       final sut = App(
         websocket: websocket,
@@ -606,7 +606,7 @@ void main() {
       when(api.dataStream).thenAnswer((_) => apiController.stream);
       when(api.connectionStream).thenAnswer((_) => Stream.fromIterable([]));
       when(api.isAlive).thenReturn(true);
-      final uuid = MockUuid();
+      final uuid = MockUuidService();
 
       final getRequest = json.decodeAsMap(
         '''
