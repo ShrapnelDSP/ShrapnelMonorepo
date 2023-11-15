@@ -31,7 +31,7 @@ part 'parameter.g.dart';
 
 part 'parameter.freezed.dart';
 
-final log = Logger('shrapnel.parameter');
+final _log = Logger('shrapnel.parameter');
 
 @freezed
 class AudioParameterDoubleData with _$AudioParameterDoubleData {
@@ -153,13 +153,13 @@ class ParameterRepository implements ParameterRepositoryBase {
         StreamTransformer.fromBind((input) async* {
           await for (final event in input) {
             if (event is! String) {
-              log.warning(
+              _log.warning(
                 'Dropped message with unexpected type ${json.runtimeType}',
               );
               return;
             }
 
-            log.fine(event);
+            _log.fine(event);
 
             yield ParameterServiceInputMessage.fromJson(event);
           }
@@ -189,6 +189,7 @@ class ParameterService extends ChangeNotifier {
   }
 
   void _requestParameterInitialisation() {
+    _log.info('Initialising parameters');
     _sink.add(ParameterServiceOutputMessage.requestInitialisation());
   }
 
@@ -219,9 +220,9 @@ class ParameterService extends ChangeNotifier {
     switch (message) {
       case ParameterServiceInputMessageParameterUpdate(:final parameter):
         if (!_parameters.containsKey(parameter.id)) {
-          log.warning("Couldn't find parameter with id ${parameter.id}");
+          _log.warning("Couldn't find parameter with id ${parameter.id}");
           for (final id in _parameters.keys) {
-            log.warning(id);
+            _log.warning(id);
           }
           return;
         }

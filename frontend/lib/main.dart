@@ -41,6 +41,7 @@ import 'noise_gate.dart';
 import 'parameter.dart';
 import 'pedalboard.dart';
 import 'presets/model/presets.dart';
+import 'presets/model/presets_repository.dart';
 import 'presets/model/presets_service.dart';
 import 'presets/view/presets.dart';
 import 'robust_websocket.dart';
@@ -95,6 +96,8 @@ class App extends StatelessWidget {
     WifiProvisioningService? provisioning,
     ParameterRepositoryBase? parameterRepository,
     ParameterService? parameterService,
+    PresetsRepositoryBase? presetsRepository,
+    SelectedPresetRepositoryBase? selectedPresetRepository,
   }) {
     websocket ??= RobustWebsocket(
       uri: Uri.parse('http://guitar-dsp.local:8080/websocket'),
@@ -142,6 +145,10 @@ class App extends StatelessWidget {
             orElse: () => null,
           ),
         );
+
+    this.presetsRepository = presetsRepository ?? PresetsRepository();
+    this.selectedPresetRepository =
+        selectedPresetRepository ?? SelectedPresetRepository();
   }
 
   late final RobustWebsocket _websocket;
@@ -151,6 +158,8 @@ class App extends StatelessWidget {
   late final MidiLearnService midiLearnService;
   late final ParameterService parameterService;
   late final MidiMappingService midiMappingService;
+  late final PresetsRepositoryBase presetsRepository;
+  late final SelectedPresetRepositoryBase selectedPresetRepository;
 
   @override
   Widget build(BuildContext context) {
@@ -195,6 +204,8 @@ class App extends StatelessWidget {
           create: (_) => WahModel(parameterService: parameterService),
           lazy: false,
         ),
+        Provider.value(value: presetsRepository),
+        Provider.value(value: selectedPresetRepository),
       ],
       child: const MyApp(),
     );
@@ -259,6 +270,7 @@ class ParametersMergeStream {
         BehaviorSubject<PresetParametersData>.seeded(getParametersState());
 
     void updateState() {
+      _log.finest('updateState has listener: ${_controller.hasListener}');
       _controller.add(getParametersState());
     }
 
@@ -310,7 +322,7 @@ class ParametersMergeStream {
   ValueStream<PresetParametersData> get stream => _controller.stream;
 
   PresetParametersData getParametersState() {
-    return PresetParametersData(
+    final parameters = PresetParametersData(
       ampGain: ampGain.value,
       ampChannel: ampChannel.value,
       bass: bass.value,
@@ -332,6 +344,9 @@ class ParametersMergeStream {
       wahVocal: wahVocal.value,
       wahBypass: wahBypass.value,
     );
+
+    _log.finest(parameters);
+    return parameters;
   }
 }
 
@@ -403,7 +418,8 @@ class MyHomePage extends StatelessWidget {
                 final parameters = context.read<ParameterService>();
                 return PresetsService(
                   presetsRepository: context.read<PresetsRepositoryBase>(),
-                  selectedPresetRepository: context.read<SelectedPresetRepositoryBase>(),
+                  selectedPresetRepository:
+                      context.read<SelectedPresetRepositoryBase>(),
                   uuid: context.read<UuidService>(),
                   parametersState: ParametersMergeStream(
                     ampGain: parameters.getParameter('ampGain').value,

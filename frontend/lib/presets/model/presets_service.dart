@@ -32,20 +32,6 @@ abstract class SelectedPresetRepositoryBase {
   ValueStream<UuidValue> get selectedPreset;
 }
 
-// states:
-// - initialising/loading
-// - running
-//
-// actions:
-// - start
-// - create new preset
-// - save changes to current preset
-// - load existing preset
-// - delete preset (delete selected and load the previous or next)
-// - parameters changed
-
-class _PresetsStateMachine {}
-
 class PresetsService extends StateNotifier<PresetsState>
     implements PresetsServiceBase {
   PresetsService({
@@ -56,10 +42,15 @@ class PresetsService extends StateNotifier<PresetsState>
   })  : _parametersState = parametersState,
         super(PresetsState.loading()) {
     _subscription = _parametersState.listen((_) => _updateState);
+    _presetsSubscription = presetsRepository.presets.listen((_) => _updateState);
+    _selectedPresetSubscription = selectedPresetRepository.selectedPreset.listen((_) => _updateState);
+    _updateState();
   }
 
   final ValueStream<PresetParametersData> _parametersState;
   late final StreamSubscription<PresetParametersData> _subscription;
+  late final StreamSubscription<Map<UuidValue, PresetState>> _presetsSubscription;
+  late final StreamSubscription<UuidValue> _selectedPresetSubscription;
   final PresetsRepositoryBase presetsRepository;
   final SelectedPresetRepositoryBase selectedPresetRepository;
   final UuidService uuid;
@@ -132,5 +123,7 @@ class PresetsService extends StateNotifier<PresetsState>
   void dispose() {
     super.dispose();
     unawaited(_subscription.cancel());
+    unawaited(_presetsSubscription.cancel());
+    unawaited(_selectedPresetSubscription.cancel());
   }
 }
