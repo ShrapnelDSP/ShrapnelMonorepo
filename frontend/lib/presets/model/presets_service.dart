@@ -13,9 +13,6 @@ final _log = Logger('presets_fake');
 abstract class PresetsRepositoryBase {
   Future<void> create(PresetState preset);
 
-  // No need for read, it will be done internally then subscribed. Notifications
-  // are implicit from the user's perspective.
-  // Future<void> read(String id);
   Future<void> update(PresetState preset);
 
   Future<void> delete(UuidValue id);

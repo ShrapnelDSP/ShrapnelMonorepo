@@ -125,6 +125,18 @@ void main() {
         ),
       });
       when(presetsRepository.presets).thenAnswer((_) => presetsSubject);
+      when(presetsRepository.create(any)).thenAnswer((realInvocation) async {
+        final preset = realInvocation.positionalArguments.single as PresetState;
+        presetsSubject.add({...presetsSubject.value, preset.id: preset});
+      });
+      when(presetsRepository.update(any)).thenAnswer((realInvocation) async {
+        final preset = realInvocation.positionalArguments.single as PresetState;
+        presetsSubject.add({...presetsSubject.value, preset.id: preset});
+      });
+      when(presetsRepository.delete(any)).thenAnswer((realInvocation) async {
+        final id = realInvocation.positionalArguments.single as UuidValue;
+        presetsSubject.add({...presetsSubject.value}..remove(id));
+      });
 
       final selectedPresetRepository = MockSelectedPresetRepositoryBase();
       final selectedPresetSubject = BehaviorSubject.seeded(presetId);
@@ -184,17 +196,19 @@ void main() {
       expect(page.presetsPage.saveButton.isEnabled, isTrue);
       expect(page.presetsPage.createButton.isEnabled, isTrue);
       page.presetsPage.saveButton.press();
-      expect(page.presetsPage.saveButton.isEnabled, isFalse);
-      expect(page.presetsPage.createButton.isEnabled, isFalse);
+      await tester.pumpAndSettle();
 
-      // TODO check that the parameter change has been saved
+      verify(presetsRepository.update(any)).called(1);
+
+      expect(page.presetsPage.saveButton.isEnabled, isFalse);
+      expect(page.presetsPage.createButton.isEnabled, isTrue);
 
       await page.dragKnob(parameterId: 'ampGain');
       expect(page.presetsPage.saveButton.isEnabled, isTrue);
       expect(page.presetsPage.createButton.isEnabled, isTrue);
       // TODO save new preset
       expect(page.presetsPage.saveButton.isEnabled, isFalse);
-      expect(page.presetsPage.createButton.isEnabled, isFalse);
+      expect(page.presetsPage.createButton.isEnabled, isTrue);
 
       // TODO
       // reload old preset
