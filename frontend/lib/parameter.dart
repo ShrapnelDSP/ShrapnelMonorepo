@@ -62,6 +62,7 @@ class AudioParameterDoubleModel {
   final ParameterService parameterService;
 
   void onUserChanged(double value) {
+    _log.finest('user updated parameter $id to $value');
     _controller.add(value);
     parameterService
         .parameterUpdatedByUser(AudioParameterDoubleData(value: value, id: id));
@@ -81,9 +82,10 @@ sealed class ParameterServiceOutputMessage
   factory ParameterServiceOutputMessage.requestInitialisation() =
       ParameterServiceOutputMessageRequestInitialisation;
 
-  factory ParameterServiceOutputMessage.parameterUpdate(
-      {required String id,
-      required double value,}) = ParameterServiceOutputMessageParameterUpdate;
+  factory ParameterServiceOutputMessage.parameterUpdate({
+    required String id,
+    required double value,
+  }) = ParameterServiceOutputMessageParameterUpdate;
 
   factory ParameterServiceOutputMessage.fromJson(Map<String, dynamic> json) =>
       _$ParameterServiceOutputMessageFromJson(json);

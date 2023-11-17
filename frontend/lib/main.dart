@@ -270,7 +270,6 @@ class ParametersMergeStream {
         BehaviorSubject<PresetParametersData>.seeded(getParametersState());
 
     void updateState() {
-      _log.finest('updateState has listener: ${_controller.hasListener}');
       _controller.add(getParametersState());
     }
 
@@ -345,7 +344,6 @@ class ParametersMergeStream {
       wahBypass: wahBypass.value,
     );
 
-    _log.finest(parameters);
     return parameters;
   }
 }

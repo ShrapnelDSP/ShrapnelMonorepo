@@ -168,12 +168,11 @@ void main() {
       expect(parameterMessages, isEmpty);
 
       expect(page.presetsPage.getCurrentPresetName(), 'Test Preset');
-      // TODO failing here, but it seems like the preset service listen callback
-      // is never executed in response to the ParametersMergeStream outputting
-      // parameter change events.
       expect(page.presetsPage.saveButton.isEnabled, isFalse);
 
+      await page.toggleCollapsedAmplifier();
       await page.dragKnob(parameterId: 'ampGain');
+      await Future<void>.delayed(const Duration(milliseconds: 200));
 
       expect(
         parameterMessages.removeFirst(),

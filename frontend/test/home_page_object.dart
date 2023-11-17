@@ -58,7 +58,6 @@ class HomePageObject {
     await tester.drag(
       findKnob(parameterId),
       const Offset(5 * kDragSlopDefault, 0),
-      warnIfMissed: false,
     );
     await tester.pumpAndSettle();
   }

@@ -41,9 +41,9 @@ class PresetsService extends StateNotifier<PresetsState>
     required ValueStream<PresetParametersData> parametersState,
   })  : _parametersState = parametersState,
         super(PresetsState.loading()) {
-    _subscription = _parametersState.listen((_) => _updateState);
-    _presetsSubscription = presetsRepository.presets.listen((_) => _updateState);
-    _selectedPresetSubscription = selectedPresetRepository.selectedPreset.listen((_) => _updateState);
+    _subscription = _parametersState.listen((_) => _updateState());
+    _presetsSubscription = presetsRepository.presets.listen((_) => _updateState());
+    _selectedPresetSubscription = selectedPresetRepository.selectedPreset.listen((_) => _updateState());
     _updateState();
   }
 
@@ -56,7 +56,6 @@ class PresetsService extends StateNotifier<PresetsState>
   final UuidService uuid;
 
   void _updateState() {
-    _log.finest('_updateState');
     final presets = presetsRepository.presets.valueOrNull;
     final selectedPreset = selectedPresetRepository.selectedPreset.valueOrNull;
 
