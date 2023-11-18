@@ -427,7 +427,7 @@ Variables</h2></td></tr>
 <div class="line"><span class="lineno">  402</span>        <span class="keyword">auto</span> tick_count_iteration = xTaskGetTickCount() - tick_count_start;</div>
 <div class="line"><span class="lineno">  403</span>        <span class="keywordflow">if</span>(tick_count_iteration &gt; pdMS_TO_TICKS(5))</div>
 <div class="line"><span class="lineno">  404</span>        {</div>
-<div class="line"><span class="lineno">  405</span>            ESP_LOGW(TAG, <span class="stringliteral">&quot;slow iteration: %d ms&quot;</span>, pdTICKS_TO_MS(tick_count_iteration));</div>
+<div class="line"><span class="lineno">  405</span>            ESP_LOGW(TAG, <span class="stringliteral">&quot;slow iteration: %d ms&quot;</span>, (<span class="keywordtype">int</span>)pdTICKS_TO_MS(tick_count_iteration));</div>
 <div class="line"><span class="lineno">  406</span>        }</div>
 <div class="line"><span class="lineno">  407</span>    }</div>
 <div class="line"><span class="lineno">  408</span>}</div>
@@ -692,7 +692,7 @@ Here is the caller graph for this function:</div>
 
 <p class="definition">Definition at line <a class="el" href="main_8cpp_source.html#l00198">198</a> of file <a class="el" href="main_8cpp_source.html">main.cpp</a>.</p>
 <div class="fragment"><div class="line"><span class="lineno">  199</span>{</div>
-<div class="line"><span class="lineno">  200</span>    ESP_LOGE(TAG, <span class="stringliteral">&quot;allocation failed. size=%zu caps=%08xh, function=%s&quot;</span>, size, caps, function_name);</div>
+<div class="line"><span class="lineno">  200</span>    ESP_LOGE(TAG, <span class="stringliteral">&quot;allocation failed. size=%zu caps=%08&quot;</span> PRIx32 <span class="stringliteral">&quot;h, function=%s&quot;</span>, size, caps, function_name);</div>
 <div class="line"><span class="lineno">  201</span>    heap_caps_print_heap_info(caps);</div>
 <div class="line"><span class="lineno">  202</span>    abort();</div>
 <div class="line"><span class="lineno">  203</span>}</div>

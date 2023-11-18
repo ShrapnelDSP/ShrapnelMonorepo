@@ -293,7 +293,7 @@ $(document).ready(function(){initNavTree('main_8cpp_source.html',''); initResiza
 <div class="line"><a id="l00197" name="l00197"></a><span class="lineno">  197</span> </div>
 <div class="line"><a id="l00198" name="l00198"></a><span class="lineno"><a class="line" href="namespaceshrapnel.html#a9f01b77156c5fc53346d256b9735e6f8">  198</a></span><span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code hl_function" href="namespaceshrapnel.html#a9f01b77156c5fc53346d256b9735e6f8">failed_alloc_callback</a>(<span class="keywordtype">size_t</span> size, uint32_t caps, <span class="keyword">const</span> <span class="keywordtype">char</span> *function_name)</div>
 <div class="line"><a id="l00199" name="l00199"></a><span class="lineno">  199</span>{</div>
-<div class="line"><a id="l00200" name="l00200"></a><span class="lineno">  200</span>    ESP_LOGE(TAG, <span class="stringliteral">&quot;allocation failed. size=%zu caps=%08xh, function=%s&quot;</span>, size, caps, function_name);</div>
+<div class="line"><a id="l00200" name="l00200"></a><span class="lineno">  200</span>    ESP_LOGE(TAG, <span class="stringliteral">&quot;allocation failed. size=%zu caps=%08&quot;</span> PRIx32 <span class="stringliteral">&quot;h, function=%s&quot;</span>, size, caps, function_name);</div>
 <div class="line"><a id="l00201" name="l00201"></a><span class="lineno">  201</span>    heap_caps_print_heap_info(caps);</div>
 <div class="line"><a id="l00202" name="l00202"></a><span class="lineno">  202</span>    abort();</div>
 <div class="line"><a id="l00203" name="l00203"></a><span class="lineno">  203</span>}</div>
@@ -498,7 +498,7 @@ $(document).ready(function(){initNavTree('main_8cpp_source.html',''); initResiza
 <div class="line"><a id="l00402" name="l00402"></a><span class="lineno">  402</span>        <span class="keyword">auto</span> tick_count_iteration = xTaskGetTickCount() - tick_count_start;</div>
 <div class="line"><a id="l00403" name="l00403"></a><span class="lineno">  403</span>        <span class="keywordflow">if</span>(tick_count_iteration &gt; pdMS_TO_TICKS(5))</div>
 <div class="line"><a id="l00404" name="l00404"></a><span class="lineno">  404</span>        {</div>
-<div class="line"><a id="l00405" name="l00405"></a><span class="lineno">  405</span>            ESP_LOGW(TAG, <span class="stringliteral">&quot;slow iteration: %d ms&quot;</span>, pdTICKS_TO_MS(tick_count_iteration));</div>
+<div class="line"><a id="l00405" name="l00405"></a><span class="lineno">  405</span>            ESP_LOGW(TAG, <span class="stringliteral">&quot;slow iteration: %d ms&quot;</span>, (<span class="keywordtype">int</span>)pdTICKS_TO_MS(tick_count_iteration));</div>
 <div class="line"><a id="l00406" name="l00406"></a><span class="lineno">  406</span>        }</div>
 <div class="line"><a id="l00407" name="l00407"></a><span class="lineno">  407</span>    }</div>
 <div class="line"><a id="l00408" name="l00408"></a><span class="lineno">  408</span>}</div>
