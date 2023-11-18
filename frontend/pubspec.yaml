@@ -15,7 +15,7 @@ dependencies:
       ref: shrapnel
   flutter:
     sdk: flutter
-  flutter_state_notifier: ^0.7.1
+  flutter_state_notifier: ^1.0.0
   freezed_annotation: ^2.2.0
   google_fonts: ^4.0.4
   json_annotation: ^4.8.1
@@ -24,7 +24,7 @@ dependencies:
   provider: ^6.0.0
   remove_from_coverage: ^2.0.0
   rxdart: ^0.27.3
-  state_notifier: ^0.7.2+1
+  state_notifier: ^1.0.0
   uuid: ^3.0.6
   vector_math: ^2.0.0
   web_socket_channel: ^2.1.0
