@@ -9,18 +9,13 @@ class PresetsPageObject {
 
   final WidgetTester tester;
 
+  late final ButtonPageObject saveButton =
+      ButtonPageObject(tester, key: const Key('presets-save-button'));
+
+  late final ButtonPageObject createButton =
+      ButtonPageObject(tester, key: const Key('presets-create-button'));
+
   String getCurrentPresetName() {
-    /*
-    return (find
-          .descendant(
-            of: find.byKey(const Key('presets-current-preset-name')),
-            matching: find.byType(Text),
-          )
-          .evaluate()
-          .single
-          .widget as Text)
-      .data!;
-     */
     final dropdown = find
         .byKey(const Key('presets-current-preset-name'))
         .evaluate()
@@ -29,9 +24,18 @@ class PresetsPageObject {
     return dropdown.value!.name;
   }
 
-  late final ButtonPageObject saveButton =
-      ButtonPageObject(tester, key: const Key('presets-save-button'));
+  Future<void> createPreset(String name) async {
+    createButton.press();
+    await tester.pumpAndSettle();
 
-  late final ButtonPageObject createButton =
-      ButtonPageObject(tester, key: const Key('presets-create-button'));
+    final nameField = find.byKey(const Key('presets-name-field'));
+    expect(nameField, findsOneWidget);
+
+    await tester.enterText(nameField, name);
+    final confirmButton =
+        ButtonPageObject(tester, key: const Key('presets-confirm-name-button'));
+    confirmButton.press();
+
+    await tester.pumpAndSettle();
+  }
 }

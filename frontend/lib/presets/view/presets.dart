@@ -131,6 +131,7 @@ class PresetNameDialogState extends State<PresetNameDialog> {
             mainAxisSize: MainAxisSize.min,
             children: [
               TextFormField(
+                key: const Key('presets-name-field'),
                 decoration: const InputDecoration(
                   label: Text('Name'),
                   hintText: 'New Preset',
@@ -156,6 +157,7 @@ class PresetNameDialogState extends State<PresetNameDialog> {
           child: const Text('Cancel'),
         ),
         FilledButton(
+          key: const Key('presets-confirm-name-button'),
           onPressed: () {
             final isValid = _formKey.currentState?.validate() ?? false;
             if (isValid) {

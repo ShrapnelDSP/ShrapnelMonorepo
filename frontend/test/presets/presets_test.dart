@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:collection';
+import 'dart:ui';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:logging/logging.dart';
@@ -36,6 +37,7 @@ void main() {
   setupLogger(Level.ALL);
 
   testWidgets('Presets test', (tester) async {
+    tester.view.physicalSize = const Size(4000, 3000);
     await tester.runAsync(() async {
       final page = HomePageObject(tester);
 
@@ -142,6 +144,11 @@ void main() {
       final selectedPresetSubject = BehaviorSubject.seeded(presetId);
       when(selectedPresetRepository.selectedPreset)
           .thenAnswer((_) => selectedPresetSubject);
+      when(selectedPresetRepository.selectPreset(any))
+          .thenAnswer((realInvocation) async {
+        final id = realInvocation.positionalArguments.single as UuidValue;
+        selectedPresetSubject.add(id);
+      });
 
       final websocket = MockRobustWebsocket();
       final jsonWebsocket = MockJsonWebsocket();
@@ -195,6 +202,7 @@ void main() {
 
       expect(page.presetsPage.saveButton.isEnabled, isTrue);
       expect(page.presetsPage.createButton.isEnabled, isTrue);
+
       page.presetsPage.saveButton.press();
       await tester.pumpAndSettle();
 
@@ -204,9 +212,17 @@ void main() {
       expect(page.presetsPage.createButton.isEnabled, isTrue);
 
       await page.dragKnob(parameterId: 'ampGain');
+      await Future<void>.delayed(const Duration(milliseconds: 200));
+
       expect(page.presetsPage.saveButton.isEnabled, isTrue);
       expect(page.presetsPage.createButton.isEnabled, isTrue);
-      // TODO save new preset
+
+      final newId = UuidValue('11111111-1111-1111-1111-111111111111', false);
+      when(uuid.v4Value()).thenReturn(newId);
+      await page.presetsPage.createPreset('New Preset');
+
+      verify(presetsRepository.create(any)).called(1);
+
       expect(page.presetsPage.saveButton.isEnabled, isFalse);
       expect(page.presetsPage.createButton.isEnabled, isTrue);
 
