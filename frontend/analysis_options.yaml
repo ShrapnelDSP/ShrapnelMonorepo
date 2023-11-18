@@ -79,3 +79,9 @@ linter:
     prefer_const_constructors_in_immutables: false
 
     public_member_api_docs: false
+
+    # Low value, and looks odd when an integer is mixed in with with other double literals
+    prefer_int_literals: false
+
+    # Not that much better, and there is no quick fix
+    prefer_foreach: false
