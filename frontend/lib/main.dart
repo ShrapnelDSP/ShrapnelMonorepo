@@ -250,9 +250,9 @@ class MyHomePage extends StatelessWidget {
           Container(width: 10),
         ],
       ),
-      body: Center(
+      body: const Center(
         child: Column(
-          children: const [
+          children: [
             MidiLearnStatus(),
             Spacer(),
             Pedalboard(),

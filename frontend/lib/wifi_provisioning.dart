@@ -378,7 +378,7 @@ class _WifiScanningScreenState extends State<_WifiScanningScreen> {
                 );
               },
               child: const Text('Advanced configuration'),
-            )
+            ),
           ],
         ),
       );
@@ -618,7 +618,7 @@ class WifiProvisioningService extends ChangeNotifier {
     if (state != WifiProvisioningState.initial &&
         state != WifiProvisioningState.sessionFailure &&
         state != WifiProvisioningState.failure) {
-      throw StateError('start called in unexpected state ${_state.toString()}');
+      throw StateError('start called in unexpected state $_state');
     }
 
     reset();
@@ -663,7 +663,7 @@ class WifiProvisioningService extends ChangeNotifier {
   // TODO cancel if reset is called
   Future<void> join(String? ssid, String passphrase) async {
     if (state != WifiProvisioningState.scanning) {
-      throw StateError('join called in unexpected state ${_state.toString()}');
+      throw StateError('join called in unexpected state $_state');
     }
 
     if (ssid == null) {
@@ -706,8 +706,8 @@ class WifiProvisioningService extends ChangeNotifier {
     if (!_status.isSuccess()) {
       _log.severe(
         'could not connect to provisioned access point '
-        '${_status?.state.toString()} '
-        '${_status?.failedReason?.toString()}',
+        '${_status?.state} '
+        '${_status?.failedReason}',
       );
       _state = WifiProvisioningState.failure;
       return;

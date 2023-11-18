@@ -487,10 +487,10 @@ packages:
     dependency: "direct main"
     description:
       name: pausable_timer
-      sha256: "1897e2c6a4e73b9486e4ff943bfd08585bc231400e6ae924a92f5b9fd8efc0a6"
+      sha256: "6ef1a95441ec3439de6fb63f39a011b67e693198e7dae14e20675c3c00e86074"
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.0+7"
+    version: "3.1.0+3"
   platform:
     dependency: transitive
     description:

@@ -220,7 +220,7 @@ class CreateMappingDialogState extends State<CreateMappingDialog> {
                       value: id,
                       child: Text(parameters[id]!),
                     ),
-                  )
+                  ),
                 ],
                 value: parameter,
                 onChanged: (value) => setState(() => parameter = value),
@@ -328,7 +328,7 @@ class ModeDropdown extends StatelessWidget {
             value: mode,
             child: Text(mode.uiName),
           ),
-        )
+        ),
       ],
       onChanged: onChanged,
       value: value,
@@ -357,7 +357,7 @@ class ParametersDropdown extends StatelessWidget {
             value: id,
             child: Text(parameters[id]!),
           ),
-        )
+        ),
       ],
       onChanged: onChanged,
       value: value,

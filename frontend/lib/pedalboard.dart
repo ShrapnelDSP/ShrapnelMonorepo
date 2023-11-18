@@ -62,7 +62,7 @@ class _PedalboardState extends State<Pedalboard> {
             Wah(
               onTap: () => _activateGear(GearId.wah),
               full: _activeGear == GearId.wah,
-            )
+            ),
           ],
         ),
       ],
