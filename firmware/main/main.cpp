@@ -197,7 +197,7 @@ static void i2c_setup(void)
 
 static void failed_alloc_callback(size_t size, uint32_t caps, const char *function_name)
 {
-    ESP_LOGE(TAG, "allocation failed. size=%zu caps=%08xh, function=%s", size, caps, function_name);
+    ESP_LOGE(TAG, "allocation failed. size=%zu caps=%08" PRIx32 "h, function=%s", size, caps, function_name);
     heap_caps_print_heap_info(caps);
     abort();
 }
@@ -402,7 +402,7 @@ extern "C" void app_main(void)
         auto tick_count_iteration = xTaskGetTickCount() - tick_count_start;
         if(tick_count_iteration > pdMS_TO_TICKS(5))
         {
-            ESP_LOGW(TAG, "slow iteration: %d ms", pdTICKS_TO_MS(tick_count_iteration));
+            ESP_LOGW(TAG, "slow iteration: %d ms", (int)pdTICKS_TO_MS(tick_count_iteration));
         }
     }
 }

@@ -44,8 +44,10 @@ void get_device_service_name(char *service_name, size_t max)
              eth_mac[5]);
 }
 
-void provisioning_event_handler(void* arg, esp_event_base_t event_base,
-                                       int32_t event_id, void* event_data)
+void provisioning_event_handler(void *arg,
+                                esp_event_base_t event_base,
+                                int32_t event_id,
+                                void *event_data)
 {
     assert(arg != nullptr);
     assert(event_base == WIFI_PROV_EVENT);
@@ -53,40 +55,46 @@ void provisioning_event_handler(void* arg, esp_event_base_t event_base,
     auto send_event = static_cast<
         shrapnel::wifi::WifiStateMachine::internal_event_callback_t *>(arg);
 
-    if (event_base == WIFI_PROV_EVENT) {
-        switch (event_id) {
+    if(event_base == WIFI_PROV_EVENT)
+    {
+        switch(event_id)
+        {
         case WIFI_PROV_INIT:
             ESP_LOGI(TAG, "Provisioning initialised");
             break;
         case WIFI_PROV_START:
             ESP_LOGI(TAG, "Provisioning started");
             break;
-        case WIFI_PROV_CRED_RECV: {
+        case WIFI_PROV_CRED_RECV:
+        {
             wifi_sta_config_t *wifi_sta_cfg = (wifi_sta_config_t *)event_data;
             ESP_LOGI(TAG, "Received Wi-Fi credentials");
             ESP_LOGI(TAG, "SSID:");
-            ESP_LOG_BUFFER_HEXDUMP(
-                TAG,
-                wifi_sta_cfg->ssid,
-                sizeof(wifi_sta_cfg->ssid),
-                ESP_LOG_INFO);
+            ESP_LOG_BUFFER_HEXDUMP(TAG,
+                                   wifi_sta_cfg->ssid,
+                                   sizeof(wifi_sta_cfg->ssid),
+                                   ESP_LOG_INFO);
             ESP_LOGI(TAG, "Password:");
-            ESP_LOG_BUFFER_HEXDUMP( TAG,
-                                    wifi_sta_cfg->password,
-                                    sizeof(wifi_sta_cfg->password),
-                                    ESP_LOG_INFO);
+            ESP_LOG_BUFFER_HEXDUMP(TAG,
+                                   wifi_sta_cfg->password,
+                                   sizeof(wifi_sta_cfg->password),
+                                   ESP_LOG_INFO);
             break;
         }
-        case WIFI_PROV_CRED_FAIL: {
+        case WIFI_PROV_CRED_FAIL:
+        {
             auto reason = (wifi_prov_sta_fail_reason_t *)event_data;
-            ESP_LOGE(TAG, "Provisioning failed!\n\tReason : %s",
-                     (*reason == WIFI_PROV_STA_AUTH_ERROR) ?
-                     "Wi-Fi station authentication failed" : "Wi-Fi access-point not found");
+            ESP_LOGE(TAG,
+                     "Provisioning failed!\n\tReason : %s",
+                     (*reason == WIFI_PROV_STA_AUTH_ERROR)
+                         ? "Wi-Fi station authentication failed"
+                         : "Wi-Fi access-point not found");
 
             (*send_event)(shrapnel::wifi::InternalEvent::PROVISIONING_FAILURE);
             break;
         }
-        case WIFI_PROV_CRED_SUCCESS: {
+        case WIFI_PROV_CRED_SUCCESS:
+        {
             ESP_LOGI(TAG, "Provisioning successful");
 
             (*send_event)(shrapnel::wifi::InternalEvent::PROVISIONING_SUCCESS);
@@ -103,31 +111,55 @@ void provisioning_event_handler(void* arg, esp_event_base_t event_base,
     }
 }
 
-void wifi_event_handler(void* arg, esp_event_base_t event_base,
-                               int32_t event_id, void* event_data)
+void wifi_event_handler(void *arg,
+                        esp_event_base_t event_base,
+                        int32_t event_id,
+                        void *event_data)
 {
-    (void) arg;
+    (void)arg;
 
-    if (event_base == WIFI_EVENT && event_id == WIFI_EVENT_SCAN_DONE) {
+    if(event_base == WIFI_EVENT && event_id == WIFI_EVENT_SCAN_DONE)
+    {
         ESP_LOGI(TAG, "WIFI_EVENT_SCAN_DONE");
-    } else if (event_base == WIFI_EVENT && event_id == WIFI_EVENT_STA_START) {
+    }
+    else if(event_base == WIFI_EVENT && event_id == WIFI_EVENT_STA_START)
+    {
         ESP_LOGI(TAG, "WIFI_EVENT_STA_START");
-    } else if (event_base == WIFI_EVENT && event_id == WIFI_EVENT_STA_CONNECTED) {
+    }
+    else if(event_base == WIFI_EVENT && event_id == WIFI_EVENT_STA_CONNECTED)
+    {
         ESP_LOGI(TAG, "WIFI_EVENT_STA_CONNECTED");
-    } else if (event_base == WIFI_EVENT && event_id == WIFI_EVENT_STA_DISCONNECTED) {
+    }
+    else if(event_base == WIFI_EVENT && event_id == WIFI_EVENT_STA_DISCONNECTED)
+    {
         ESP_LOGE(TAG, "WIFI_EVENT_STA_DISCONNECTED");
-    } else if (event_base == IP_EVENT && event_id == IP_EVENT_STA_GOT_IP) {
-        ip_event_got_ip_t* event = (ip_event_got_ip_t*) event_data;
-        ESP_LOGI(TAG, "Connected with IP Address:" IPSTR, IP2STR(&event->ip_info.ip));
-    } else if (event_base == WIFI_EVENT && event_id == WIFI_EVENT_AP_START) {
+    }
+    else if(event_base == IP_EVENT && event_id == IP_EVENT_STA_GOT_IP)
+    {
+        ip_event_got_ip_t *event = (ip_event_got_ip_t *)event_data;
+        ESP_LOGI(TAG,
+                 "Connected with IP Address:" IPSTR,
+                 IP2STR(&event->ip_info.ip));
+    }
+    else if(event_base == WIFI_EVENT && event_id == WIFI_EVENT_AP_START)
+    {
         ESP_LOGI(TAG, "WIFI_EVENT_AP_START");
-    } else if (event_base == WIFI_EVENT && event_id == WIFI_EVENT_AP_STOP) {
+    }
+    else if(event_base == WIFI_EVENT && event_id == WIFI_EVENT_AP_STOP)
+    {
         ESP_LOGI(TAG, "WIFI_EVENT_AP_STOP");
-    } else if (event_base == WIFI_EVENT && event_id == WIFI_EVENT_AP_STACONNECTED) {
+    }
+    else if(event_base == WIFI_EVENT && event_id == WIFI_EVENT_AP_STACONNECTED)
+    {
         ESP_LOGI(TAG, "WIFI_EVENT_AP_STACONNECTED");
-    } else if (event_base == WIFI_EVENT && event_id == WIFI_EVENT_AP_STADISCONNECTED) {
+    }
+    else if(event_base == WIFI_EVENT &&
+            event_id == WIFI_EVENT_AP_STADISCONNECTED)
+    {
         ESP_LOGE(TAG, "WIFI_EVENT_AP_STADISCONNECTED");
-    } else {
+    }
+    else
+    {
         ESP_LOGW(TAG, "Unhandled wifi event: %s %d", event_base, event_id);
     }
 }
@@ -139,12 +171,12 @@ bool is_provisioned(void)
     wifi_config_t wifi_cfg;
     ESP_ERROR_CHECK(esp_wifi_get_config(WIFI_IF_STA, &wifi_cfg));
 
-    if (wifi_cfg.sta.ssid[0] != '\0') {
+    if(wifi_cfg.sta.ssid[0] != '\0')
+    {
         provisioned = true;
     }
     return provisioned;
 }
-
 
 } // namespace
 
@@ -152,11 +184,10 @@ namespace shrapnel {
 namespace wifi {
 
 WifiStateMachine::WifiStateMachine(
-            internal_event_callback_t a_send_event_internal,
-            user_event_callback_t a_send_event_user) :
-        send_event_internal(a_send_event_internal),
-        send_event_user(a_send_event_user)
-    {};
+    internal_event_callback_t a_send_event_internal,
+    user_event_callback_t a_send_event_user)
+    : send_event_internal(a_send_event_internal),
+      send_event_user(a_send_event_user){};
 
 constexpr WifiStateMachine::transition WifiStateMachine::transition_table[]{
     // clang-format off
@@ -204,7 +235,8 @@ void WifiStateMachine::check_if_provisioned()
     ESP_LOGW(TAG, "Reseting wifi provisioning");
     is_provisioned = false;
 #endif
-    send_event_internal(is_provisioned ? InternalEvent::IS_PROVISIONED : InternalEvent::IS_NOT_PROVISIONED);
+    send_event_internal(is_provisioned ? InternalEvent::IS_PROVISIONED
+                                       : InternalEvent::IS_NOT_PROVISIONED);
 }
 
 void WifiStateMachine::start()
@@ -231,7 +263,8 @@ void WifiStateMachine::connect_to_ap()
 
 bool WifiStateMachine::is_reconnecting()
 {
-    bool is_reconnecting = (xTaskGetTickCount() - connect_start_tick_count) < CONNECT_TIMEOUT_MS;
+    bool is_reconnecting =
+        (xTaskGetTickCount() - connect_start_tick_count) < CONNECT_TIMEOUT_MS;
     if(is_reconnecting)
     {
         ESP_LOGI(TAG, "Retrying connection");
@@ -258,21 +291,14 @@ void WifiStateMachine::on_disconnected()
 void WifiStateMachine::provisioning_init()
 {
     // XXX: Make sure to deregister the handlers in the destructor
+    ESP_ERROR_CHECK(esp_event_handler_register(WIFI_PROV_EVENT,
+                                               ESP_EVENT_ANY_ID,
+                                               provisioning_event_handler,
+                                               &send_event_internal));
     ESP_ERROR_CHECK(esp_event_handler_register(
-        WIFI_PROV_EVENT,
-        ESP_EVENT_ANY_ID,
-        provisioning_event_handler,
-        &send_event_internal));
+        WIFI_EVENT, ESP_EVENT_ANY_ID, wifi_event_handler, nullptr));
     ESP_ERROR_CHECK(esp_event_handler_register(
-        WIFI_EVENT,
-        ESP_EVENT_ANY_ID,
-        wifi_event_handler,
-        nullptr));
-    ESP_ERROR_CHECK(esp_event_handler_register(
-        IP_EVENT,
-        IP_EVENT_STA_GOT_IP,
-        wifi_event_handler,
-        nullptr));
+        IP_EVENT, IP_EVENT_STA_GOT_IP, wifi_event_handler, nullptr));
 
     wifi_prov_mgr_config_t config = {
         .scheme{wifi_prov_scheme_softap},
@@ -283,21 +309,14 @@ void WifiStateMachine::provisioning_init()
     ESP_ERROR_CHECK(wifi_prov_mgr_init(config));
 }
 
-
 void WifiStateMachine::provisioning_deinit()
 {
     ESP_ERROR_CHECK(esp_event_handler_unregister(
-        WIFI_PROV_EVENT,
-        ESP_EVENT_ANY_ID,
-        provisioning_event_handler));
+        WIFI_PROV_EVENT, ESP_EVENT_ANY_ID, provisioning_event_handler));
     ESP_ERROR_CHECK(esp_event_handler_unregister(
-        WIFI_EVENT,
-        ESP_EVENT_ANY_ID,
-        wifi_event_handler));
+        WIFI_EVENT, ESP_EVENT_ANY_ID, wifi_event_handler));
     ESP_ERROR_CHECK(esp_event_handler_unregister(
-        IP_EVENT,
-        IP_EVENT_STA_GOT_IP,
-        wifi_event_handler));
+        IP_EVENT, IP_EVENT_STA_GOT_IP, wifi_event_handler));
 
     wifi_prov_mgr_deinit();
 }
@@ -310,14 +329,11 @@ void WifiStateMachine::provisioning_start()
     get_device_service_name(service_name, sizeof(service_name));
 
     wifi_prov_security_t security = WIFI_PROV_SECURITY_1;
-    constexpr std::string_view proof_of_possession{"abcd1234"};
-    wifi_prov_security1_params_t params{
-        .data{reinterpret_cast<const uint8_t *>(proof_of_possession.data())},
-        .len{proof_of_possession.size()},
-    };
+    char proof_of_possession[]{"abcd1234"};
     const char *service_key = nullptr;
 
-    ESP_ERROR_CHECK(wifi_prov_mgr_start_provisioning(security, &params, service_name, service_key));
+    ESP_ERROR_CHECK(wifi_prov_mgr_start_provisioning(
+        security, proof_of_possession, service_name, service_key));
 }
 
 void WifiStateMachine::provisioning_stop()
@@ -326,5 +342,5 @@ void WifiStateMachine::provisioning_stop()
     wifi_prov_mgr_stop_provisioning();
 }
 
-}
-}
+} // namespace wifi
+} // namespace shrapnel
