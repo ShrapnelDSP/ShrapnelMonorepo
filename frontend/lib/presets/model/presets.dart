@@ -52,8 +52,6 @@ class PresetsState with _$PresetsState {
   }) = _PresetsState;
 
   PresetsState._();
-
-  bool get isReady => maybeMap(ready: (_) => true, orElse: () => false);
 }
 
 abstract class PresetsServiceBase extends StateNotifier<PresetsState> {

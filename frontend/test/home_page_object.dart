@@ -20,6 +20,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shrapnel/amplifier.dart';
+import 'package:shrapnel/knob.dart';
 
 import 'midi_mapping/midi_mapping_page_object.dart';
 import 'presets/presets_page_object.dart';
@@ -60,6 +61,11 @@ class HomePageObject {
       const Offset(5 * kDragSlopDefault, 0),
     );
     await tester.pumpAndSettle();
+  }
+
+  double getKnobValue({required String parameterId}) {
+    final knob = findKnob(parameterId).evaluate().single.widget as Knob;
+    return knob.value;
   }
 
   Future<void> toggleCollapsedStompbox(String name) async {

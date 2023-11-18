@@ -67,6 +67,45 @@ void main() {
       final parameterController =
           StreamController<ParameterServiceInputMessage>();
       final parameterMessages = Queue<ParameterServiceOutputMessage>();
+
+      void updateParameter(String id, double value) {
+        parameterValues[id] = value;
+        parameterController.add(
+          ParameterServiceInputMessageParameterUpdate(
+            parameter: AudioParameterDoubleData(id: id, value: value),
+          ),
+        );
+      }
+
+      void loadPreset(PresetState preset) {
+        updateParameter('ampGain', preset.parameters.ampGain);
+        updateParameter('ampChannel', preset.parameters.ampChannel);
+        updateParameter('bass', preset.parameters.bass);
+        updateParameter('middle', preset.parameters.middle);
+        updateParameter('treble', preset.parameters.treble);
+        updateParameter('contour', preset.parameters.contour);
+        updateParameter('volume', preset.parameters.volume);
+        updateParameter(
+          'noiseGateThreshold',
+          preset.parameters.noiseGateThreshold,
+        );
+        updateParameter(
+          'noiseGateHysteresis',
+          preset.parameters.noiseGateHysteresis,
+        );
+        updateParameter('noiseGateAttack', preset.parameters.noiseGateAttack);
+        updateParameter('noiseGateHold', preset.parameters.noiseGateHold);
+        updateParameter('noiseGateRelease', preset.parameters.noiseGateRelease);
+        updateParameter('noiseGateBypass', preset.parameters.noiseGateBypass);
+        updateParameter('chorusRate', preset.parameters.chorusRate);
+        updateParameter('chorusDepth', preset.parameters.chorusDepth);
+        updateParameter('chorusMix', preset.parameters.chorusMix);
+        updateParameter('chorusBypass', preset.parameters.chorusBypass);
+        updateParameter('wahPosition', preset.parameters.wahPosition);
+        updateParameter('wahVocal', preset.parameters.wahVocal);
+        updateParameter('wahBypass', preset.parameters.wahBypass);
+      }
+
       when(parameterRepository.sendMessage(any)).thenAnswer((realInvocation) {
         final message = realInvocation.positionalArguments.single
             as ParameterServiceOutputMessage;
@@ -88,20 +127,21 @@ void main() {
               :final id,
               :final value
             ):
-            parameterValues[id] = value;
+            updateParameter(id, value);
         }
       });
       when(parameterRepository.isAlive).thenReturn(true);
       when(parameterRepository.stream)
           .thenAnswer((_) => parameterController.stream);
 
-      final presetId = UuidValue('00000000-0000-0000-0000-000000000000');
+      final initialPresetId = UuidValue('00000000-0000-0000-0000-000000000000');
 
       final presetsRepository = MockPresetsRepositoryBase();
+      const initialPresetName = 'Test Preset';
       final presetsSubject = BehaviorSubject.seeded(<UuidValue, PresetState>{
-        presetId: PresetState(
-          id: presetId,
-          name: 'Test Preset',
+        initialPresetId: PresetState(
+          id: initialPresetId,
+          name: initialPresetName,
           parameters: PresetParametersData(
             ampGain: 0.1,
             ampChannel: 1,
@@ -141,13 +181,15 @@ void main() {
       });
 
       final selectedPresetRepository = MockSelectedPresetRepositoryBase();
-      final selectedPresetSubject = BehaviorSubject.seeded(presetId);
+      final selectedPresetSubject = BehaviorSubject.seeded(initialPresetId);
       when(selectedPresetRepository.selectedPreset)
           .thenAnswer((_) => selectedPresetSubject);
       when(selectedPresetRepository.selectPreset(any))
           .thenAnswer((realInvocation) async {
         final id = realInvocation.positionalArguments.single as UuidValue;
         selectedPresetSubject.add(id);
+
+        loadPreset(presetsSubject.value[id]!);
       });
 
       final websocket = MockRobustWebsocket();
@@ -186,7 +228,7 @@ void main() {
       );
       expect(parameterMessages, isEmpty);
 
-      expect(page.presetsPage.getCurrentPresetName(), 'Test Preset');
+      expect(page.presetsPage.getCurrentPresetName(), initialPresetName);
       expect(page.presetsPage.saveButton.isEnabled, isFalse);
 
       await page.toggleCollapsedAmplifier();
@@ -217,20 +259,34 @@ void main() {
       expect(page.presetsPage.saveButton.isEnabled, isTrue);
       expect(page.presetsPage.createButton.isEnabled, isTrue);
 
-      final newId = UuidValue('11111111-1111-1111-1111-111111111111', false);
-      when(uuid.v4Value()).thenReturn(newId);
-      await page.presetsPage.createPreset('New Preset');
+      final newPresetId =
+          UuidValue('11111111-1111-1111-1111-111111111111', false);
+      const newPresetName = 'New Preset';
+      when(uuid.v4Value()).thenReturn(newPresetId);
+      await page.presetsPage.createPreset(newPresetName);
 
       verify(presetsRepository.create(any)).called(1);
 
       expect(page.presetsPage.saveButton.isEnabled, isFalse);
       expect(page.presetsPage.createButton.isEnabled, isTrue);
 
-      // TODO
-      // reload old preset
-      // knob restored
-      // reload new preset
-      // knob restored again
+      await page.presetsPage.selectPreset(initialPresetName);
+      expect(
+        page.getKnobValue(parameterId: 'ampGain'),
+        within(
+          distance: 0.01,
+          from: presetsSubject.value[initialPresetId]!.parameters.ampGain,
+        ),
+      );
+
+      await page.presetsPage.selectPreset(newPresetName);
+      expect(
+        page.getKnobValue(parameterId: 'ampGain'),
+        within(
+          distance: 0.01,
+          from: presetsSubject.value[newPresetId]!.parameters.ampGain,
+        ),
+      );
 
       unawaited(parameterController.close());
       unawaited(presetsSubject.close());
