@@ -20,7 +20,7 @@ env:
 jobs:
   build-firmware:
     runs-on: ubuntu-latest
-    container: barabas5532/shrapnel:6
+    container: barabas5532/shrapnel:7
     steps:
     - uses: actions/checkout@v2
       with:
@@ -47,7 +47,7 @@ jobs:
 
   build-plugins:
     runs-on: ubuntu-latest
-    container: barabas5532/shrapnel:6
+    container: barabas5532/shrapnel:7
     strategy:
       matrix:
         plugin: ["shrapnel"]
@@ -80,7 +80,7 @@ jobs:
 
   ctest:
     runs-on: ubuntu-latest
-    container: barabas5532/shrapnel:6
+    container: barabas5532/shrapnel:7
     strategy:
       matrix:
         build_type: ["Release", "Debug"]
@@ -140,7 +140,7 @@ jobs:
 
   ctest-sanitize:
     runs-on: ubuntu-latest
-    container: barabas5532/shrapnel:6
+    container: barabas5532/shrapnel:7
     strategy:
       matrix:
         build_type: ["Release", "Debug"]
