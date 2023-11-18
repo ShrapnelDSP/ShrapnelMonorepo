@@ -310,14 +310,10 @@ void WifiStateMachine::provisioning_start()
     get_device_service_name(service_name, sizeof(service_name));
 
     wifi_prov_security_t security = WIFI_PROV_SECURITY_1;
-    constexpr std::string_view proof_of_possession{"abcd1234"};
-    wifi_prov_security1_params_t params{
-        .data{reinterpret_cast<const uint8_t *>(proof_of_possession.data())},
-        .len{proof_of_possession.size()},
-    };
+    constexpr char proof_of_possession[]{"abcd1234"};
     const char *service_key = nullptr;
-
-    ESP_ERROR_CHECK(wifi_prov_mgr_start_provisioning(security, &params, service_name, service_key));
+    ESP_ERROR_CHECK(wifi_prov_mgr_start_provisioning(
+        security, &proof_of_possession, service_name, service_key));
 }
 
 void WifiStateMachine::provisioning_stop()
