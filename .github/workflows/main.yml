@@ -201,10 +201,15 @@ jobs:
         key: flutter-pub-${{ github.job }}-${{ hashFiles('**/pubspec.lock') }}
         restore-keys: |
           flutter-pub-${{ github.job }}-
-        # Maybe the cache is causing the pub get later to fail, ignore cache
+        # XXX: Maybe the cache is causing the pub get later to fail, ignore cache
         # for now to test it out
         lookup-only: true
 
+    - run: flutter pub get
+    # XXX: maybe it works after some retries?
+    - run: flutter pub get
+    - run: flutter clean
+    - run: flutter pub get
     - run: flutter pub get
 
     - name: Generate code
