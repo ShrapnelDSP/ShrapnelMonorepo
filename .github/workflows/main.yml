@@ -194,17 +194,6 @@ jobs:
         cache: true
         cache-key: ${{ github.job }}
 
-    - name: Flutter pub cache
-      uses: actions/cache@v3
-      with:
-        path: ${{ env.PUB_CACHE }}
-        key: flutter-pub-${{ github.job }}-${{ hashFiles('**/pubspec.lock') }}
-        restore-keys: |
-          flutter-pub-${{ github.job }}-
-
-    # XXX: Flutter pub get doesn't get esp_softap_provisioning dependencies for
-    #      some reason
-    - run: flutter clean
     - run: flutter pub get
 
     - name: Generate code
@@ -232,14 +221,6 @@ jobs:
         cache: true
         cache-key: ${{ github.job }}
 
-    - name: Flutter pub cache
-      uses: actions/cache@v2
-      with:
-        path: ${{ env.PUB_CACHE }}
-        key: flutter-pub-${{ github.job }}-${{ hashFiles('**/pubspec.lock') }}
-        restore-keys: |
-          flutter-pub-${{ github.job }}-
-
     - run: flutter pub get
 
     - name: Format
@@ -263,14 +244,6 @@ jobs:
         channel: ${{ env.FLUTTER_CHANNEL }}
         cache: true
         cache-key: ${{ github.job }}
-
-    - name: Flutter pub cache
-      uses: actions/cache@v2
-      with:
-        path: ${{ env.PUB_CACHE }}
-        key: flutter-pub-${{ github.job }}-${{ hashFiles('**/pubspec.lock') }}
-        restore-keys: |
-          flutter-pub-${{ github.job }}-
 
     - run: flutter pub get
 
