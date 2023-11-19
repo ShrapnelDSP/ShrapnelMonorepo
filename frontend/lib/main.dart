@@ -184,6 +184,7 @@ class MyApp extends StatelessWidget {
         textTheme: Typography().white.apply(
               fontFamily: 'Noto Sans',
             ),
+        useMaterial3: false,
       ),
       home: const MyHomePage(title: 'ShrapnelDSP'),
       debugShowCheckedModeBanner: false,
