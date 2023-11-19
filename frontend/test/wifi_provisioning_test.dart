@@ -50,7 +50,7 @@ void main() {
   late Widget sut;
   late MockProvisioning mockProvisioning;
   late RobustWebsocket websocket;
-  Function()? provisioningFactory;
+  void Function()? provisioningFactory;
   MockProvisioning provisioningFactoryWrapper() {
     provisioningFactory!.call();
     return mockProvisioning;

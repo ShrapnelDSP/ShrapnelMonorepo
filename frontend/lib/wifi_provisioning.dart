@@ -21,6 +21,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:esp_softap_provisioning/esp_softap_provisioning.dart';
+
 // ignore: implementation_imports
 import 'package:esp_softap_provisioning/src/connection_models.dart';
 import 'package:flutter/material.dart';
@@ -41,6 +42,7 @@ class _Strings {
       'your WiFi access point.';
   static const successMessage = 'The ShrapnelDSP device has connected to your '
       'network successfully.';
+
   // TODO how to add the SSID to this message?
   // https://stackoverflow.com/questions/52278035/flutter-internationalization-dynamic-strings
   // https://github.com/dart-lang/sdk/issues/1694
@@ -524,34 +526,28 @@ class WifiProvisioningScreen extends StatelessWidget {
         switch (provisioning.state) {
           case WifiProvisioningState.initial:
             child = buildInitial(context);
-            break;
           case WifiProvisioningState.connecting:
             child = buildConnecting(context);
-            break;
           case WifiProvisioningState.sessionFailure:
             child = buildSessionFailure(context);
-            break;
           case WifiProvisioningState.scanning:
             child = _WifiScanningScreen();
-            break;
           case WifiProvisioningState.testing:
             child = buildTesting(context);
-            break;
           case WifiProvisioningState.failure:
             child = buildFailure(context);
-            break;
           case WifiProvisioningState.success:
             child = buildSuccess(context);
-            break;
           default:
             child = Text(provisioning.state.toString());
             break;
         }
 
-        return WillPopScope(
-          onWillPop: () {
-            provisioning.reset();
-            return Future.value(true);
+        return PopScope(
+          onPopInvoked: (didPop) {
+            if (didPop) {
+              provisioning.reset();
+            }
           },
           child: child,
         );
@@ -590,6 +586,7 @@ class WifiProvisioningService extends ChangeNotifier {
   }
 
   List<Map<String, dynamic>>? get _accessPoints => _accessPointsPrivate;
+
   List<Map<String, dynamic>>? get accessPoints => _accessPoints;
 
   set _state(WifiProvisioningState newState) {
@@ -599,15 +596,18 @@ class WifiProvisioningService extends ChangeNotifier {
   }
 
   WifiProvisioningState get _state => _statePrivate;
+
   WifiProvisioningState get state => _state;
 
   ConnectionStatus? _statusPrivate;
+
   set _status(ConnectionStatus? newStatus) {
     _statusPrivate = newStatus;
     notifyListeners();
   }
 
   ConnectionStatus? get _status => _statusPrivate;
+
   ConnectionStatus? get status => _status;
 
   int? selectedAccessPoint;
