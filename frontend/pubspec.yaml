@@ -25,6 +25,9 @@ dependencies:
   remove_from_coverage: ^2.0.0
   rxdart: ^0.27.3
   state_notifier: ^1.0.0
+  # Not upgrading to v4 at the moment, because it makes breaking changes to UuidValue, such as
+  # removing constructor in 4.1.0, then marking the class experimental in 4.2.0. We need to either
+  # remove any usage of UuidValue, or wait until it is made stable again.
   uuid: ^3.0.6
   vector_math: ^2.0.0
   web_socket_channel: ^2.1.0
