@@ -2,4 +2,4 @@
 
 flutter test
 flutter analyze
-flutter format -o none --set-exit-if-changed lib test
+dart format -o none --set-exit-if-changed lib test

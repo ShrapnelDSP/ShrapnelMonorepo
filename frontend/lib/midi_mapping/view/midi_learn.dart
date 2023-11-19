@@ -98,7 +98,7 @@ class MidiLearnStatus extends StatelessWidget {
                 ElevatedButton(
                   onPressed: midiLearnService.cancelLearning,
                   child: const Text('Cancel'),
-                )
+                ),
             ],
           ),
         ),

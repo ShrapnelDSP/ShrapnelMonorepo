@@ -184,6 +184,7 @@ class MyApp extends StatelessWidget {
         textTheme: Typography().white.apply(
               fontFamily: 'Noto Sans',
             ),
+        useMaterial3: false,
       ),
       home: const MyHomePage(title: 'ShrapnelDSP'),
       debugShowCheckedModeBanner: false,
@@ -250,9 +251,9 @@ class MyHomePage extends StatelessWidget {
           Container(width: 10),
         ],
       ),
-      body: Center(
+      body: const Center(
         child: Column(
-          children: const [
+          children: [
             MidiLearnStatus(),
             Spacer(),
             Pedalboard(),

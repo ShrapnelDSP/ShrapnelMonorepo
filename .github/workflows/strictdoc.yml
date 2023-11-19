@@ -6,7 +6,7 @@ on:
     branches: [ master ]
 
 env:
-  FLUTTER_VERSION: '3.0.3'
+  FLUTTER_VERSION: '3.16.0'
   FLUTTER_CHANNEL: 'stable'
 
 jobs:
@@ -64,7 +64,6 @@ jobs:
         flutter-version: ${{ env.FLUTTER_VERSION }}
         channel: ${{ env.FLUTTER_CHANNEL }}
         cache: true
-        cache-key: ${{ github.job }}
 
     - name: Flutter pub cache
       uses: actions/cache@v2

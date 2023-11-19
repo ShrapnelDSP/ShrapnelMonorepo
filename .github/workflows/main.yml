@@ -14,7 +14,7 @@ env:
   CMAKE_C_COMPILER_LAUNCHER: ccache
   CMAKE_CXX_COMPILER_LAUNCHER: ccache
   CCACHE_DIR: /ccache
-  FLUTTER_VERSION: '3.3.10'
+  FLUTTER_VERSION: '3.16.0'
   FLUTTER_CHANNEL: 'stable'
 
 jobs:
@@ -192,15 +192,6 @@ jobs:
         flutter-version: ${{ env.FLUTTER_VERSION }}
         channel: ${{ env.FLUTTER_CHANNEL }}
         cache: true
-        cache-key: ${{ github.job }}
-
-    - name: Flutter pub cache
-      uses: actions/cache@v2
-      with:
-        path: ${{ env.PUB_CACHE }}
-        key: flutter-pub-${{ github.job }}-${{ hashFiles('**/pubspec.lock') }}
-        restore-keys: |
-          flutter-pub-${{ github.job }}-
 
     - run: flutter pub get
 
@@ -227,20 +218,11 @@ jobs:
         flutter-version: ${{ env.FLUTTER_VERSION }}
         channel: ${{ env.FLUTTER_CHANNEL }}
         cache: true
-        cache-key: ${{ github.job }}
-
-    - name: Flutter pub cache
-      uses: actions/cache@v2
-      with:
-        path: ${{ env.PUB_CACHE }}
-        key: flutter-pub-${{ github.job }}-${{ hashFiles('**/pubspec.lock') }}
-        restore-keys: |
-          flutter-pub-${{ github.job }}-
 
     - run: flutter pub get
 
     - name: Format
-      run: flutter format -o none --set-exit-if-changed lib test
+      run: dart format -o none --set-exit-if-changed lib test
 
   flutter-test:
     runs-on: ubuntu-latest
@@ -259,15 +241,6 @@ jobs:
         flutter-version: ${{ env.FLUTTER_VERSION }}
         channel: ${{ env.FLUTTER_CHANNEL }}
         cache: true
-        cache-key: ${{ github.job }}
-
-    - name: Flutter pub cache
-      uses: actions/cache@v2
-      with:
-        path: ${{ env.PUB_CACHE }}
-        key: flutter-pub-${{ github.job }}-${{ hashFiles('**/pubspec.lock') }}
-        restore-keys: |
-          flutter-pub-${{ github.job }}-
 
     - run: flutter pub get
 
