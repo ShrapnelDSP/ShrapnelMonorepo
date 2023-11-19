@@ -11,7 +11,7 @@
   
   <link rel="preconnect" href="https://fonts.gstatic.com">
   <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" rel="stylesheet">
   
   <link rel="stylesheet" href="../../static-assets/github.css?v1">
   <link rel="stylesheet" href="../../static-assets/styles.css?v1">
@@ -21,13 +21,12 @@
 </head>
 
 
-<body data-base-href="../../"
-      data-using-base-href="false">
+<body data-base-href="../../" data-using-base-href="false" class="light-theme">
 
 <div id="overlay-under-drawer"></div>
 
 <header id="title">
-  <button id="sidenav-left-toggle" type="button">&nbsp;</button>
+  <span id="sidenav-left-toggle" class="material-symbols-outlined" role="button" tabindex="0">menu</span>
   <ol class="breadcrumbs gt-separated dark hidden-xs">
     <li><a href="../../index.html">shrapnel</a></li>
     <li><a href="../../main/main-library.html">main</a></li>
@@ -38,18 +37,31 @@
   <form class="search navbar-right" role="search">
     <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
   </form>
+  <div class="toggle" id="theme-button">
+    <label for="theme">
+      <input type="checkbox" id="theme" value="light-theme">
+      <span id="dark-theme-button" class="material-symbols-outlined">
+        brightness_4
+      </span>
+      <span id="light-theme-button" class="material-symbols-outlined">
+        brightness_5
+      </span>
+    </label>
+  </div>
 </header>
-
 <main>
 
-
-  <div id="dartdoc-main-content" class="main-content">
+  <div
+      id="dartdoc-main-content"
+      class="main-content"
+      data-above-sidebar="main&#47;App-class-sidebar.html"
+      data-below-sidebar="">
       <div>
 <h1><span class="kind-constructor">App</span> constructor 
-    <a href="https://dart.dev/null-safety" class="feature feature-null-safety" title="Supports the null safety language feature.">Null safety</a>
 </h1></div>
 
     <section class="multi-line-signature">
+      
       <span class="name ">App</span>(<wbr><ol class="parameter-list"><li><span class="parameter" id="-param-key">{<span class="type-annotation"><a href="https://api.flutter.dev/flutter/foundation/Key-class.html">Key</a>?</span> <span class="parameter-name">key</span>, </span></li>
 <li><span class="parameter" id="-param-websocket"><span class="type-annotation"><a href="../../robust_websocket/RobustWebsocket-class.html">RobustWebsocket</a>?</span> <span class="parameter-name">websocket</span>, </span></li>
 <li><span class="parameter" id="-param-jsonWebsocket"><span class="type-annotation"><a href="../../json_websocket/JsonWebsocket-class.html">JsonWebsocket</a>?</span> <span class="parameter-name">jsonWebsocket</span>, </span></li>
@@ -64,121 +76,29 @@
     
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">App({
-  super.key,
-  RobustWebsocket? websocket,
-  JsonWebsocket? jsonWebsocket,
-  Uuid? uuid,
-  WifiProvisioningService? provisioning,
-}) {
-  this.websocket = websocket ??
-      RobustWebsocket(
-        uri: Uri.parse(&#39;http:&#47;&#47;guitar-dsp.local:8080&#47;websocket&#39;),
-      );
-  jsonWebsocket ??= JsonWebsocket(websocket: this.websocket);
-  audioClippingService = AudioClippingService(websocket: jsonWebsocket);
-  this.uuid = uuid ?? Uuid();
-  this.provisioning = provisioning ??
-      WifiProvisioningService(
-        provisioningFactory: () {
-          _log.info(&#39;Creating provisioning connection&#39;);
-          return Provisioning(
-            security: Security1(pop: &#39;abcd1234&#39;),
-            transport: TransportHTTP(&#39;guitar-dsp.local&#39;),
-          );
-        },
-      );
-
-  midiMappingService = MidiMappingService(
-    websocket: jsonWebsocket,
-  );
-  parameterService = ParameterService(websocket: this.websocket);
-  midiLearnService = MidiLearnService(
-    mappingService: midiMappingService,
-    uuid: this.uuid,
-  );
-
-  &#47;&#47; TODO would be nicer to use an interface dedicated for listening to the
-  &#47;&#47; parameter update events. This stream has all the outgoing JSON messages.
-  parameterService.sink.stream
-      .map&lt;dynamic&gt;(json.decode)
-      .map((dynamic e) =&gt; e as Map&lt;String, dynamic&gt;)
-      .where((e) =&gt; e[&#39;messageType&#39;] == &#39;parameterUpdate&#39;)
-      .map(AudioParameterDouble.fromJson)
-      .map((e) =&gt; e.id)
-      .listen(midiLearnService.parameterUpdated);
-
-  jsonWebsocket.dataStream
-      .where((e) =&gt; e[&#39;messageType&#39;] == &#39;MidiMap::midi_message_received&#39;)
-      .map(MidiApiMessage.fromJson)
-      .listen(
-        (m) =&gt; m.maybeWhen(
-          midiMessageReceived: midiLearnService.midiMessageReceived,
-          orElse: () =&gt; null,
-        ),
-      );
-}</code></pre>
+  <pre class="language-dart"><code class="language-dart">App</code></pre>
 </section>
 
 
   </div> <!-- /.main-content -->
 
   <div id="dartdoc-sidebar-left" class="sidebar sidebar-offcanvas-left">
-    <header id="header-search-sidebar" class="hidden-l">
+    <!-- The search input and breadcrumbs below are only responsively visible at low resolutions. -->
+<header id="header-search-sidebar" class="hidden-l">
   <form class="search-sidebar" role="search">
     <input type="text" id="search-sidebar" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
   </form>
 </header>
 
 <ol class="breadcrumbs gt-separated dark hidden-l" id="sidebar-nav">
-  <li><a href="../../index.html">shrapnel</a></li>
-  <li><a href="../../main/main-library.html">main</a></li>
-  <li><a href="../../main/App-class.html">App</a></li>
-  <li class="self-crumb">App constructor</li>
+    <li><a href="../../index.html">shrapnel</a></li>
+    <li><a href="../../main/main-library.html">main</a></li>
+    <li><a href="../../main/App-class.html">App</a></li>
+    <li class="self-crumb">App constructor</li>
 </ol>
 
 
     <h5>App class</h5>
-    <ol>
-
-        <li class="section-title"><a href="../../main/App-class.html#constructors">Constructors</a></li>
-          <li><a href="../../main/App/App.html">App</a></li>
-
-
-    <li class="section-title">
-      <a href="../../main/App-class.html#instance-properties">Properties</a>
-    </li>
-    <li><a href="../../main/App/audioClippingService.html">audioClippingService</a></li>
-    <li class="inherited"><a href="https://api.flutter.dev/flutter/widgets/Widget/hashCode.html">hashCode</a></li>
-    <li class="inherited"><a href="https://api.flutter.dev/flutter/widgets/Widget/key.html">key</a></li>
-    <li><a href="../../main/App/midiLearnService.html">midiLearnService</a></li>
-    <li><a href="../../main/App/midiMappingService.html">midiMappingService</a></li>
-    <li><a href="../../main/App/parameterService.html">parameterService</a></li>
-    <li><a href="../../main/App/provisioning.html">provisioning</a></li>
-    <li class="inherited"><a href="https://api.flutter.dev/flutter/dart-core/Object/runtimeType.html">runtimeType</a></li>
-    <li><a href="../../main/App/uuid.html">uuid</a></li>
-    <li><a href="../../main/App/websocket.html">websocket</a></li>
-
-    <li class="section-title"><a href="../../main/App-class.html#instance-methods">Methods</a></li>
-    <li><a href="../../main/App/build.html">build</a></li>
-    <li class="inherited"><a href="https://api.flutter.dev/flutter/widgets/StatelessWidget/createElement.html">createElement</a></li>
-    <li class="inherited"><a href="https://api.flutter.dev/flutter/foundation/DiagnosticableTree/debugDescribeChildren.html">debugDescribeChildren</a></li>
-    <li class="inherited"><a href="https://api.flutter.dev/flutter/widgets/Widget/debugFillProperties.html">debugFillProperties</a></li>
-    <li class="inherited"><a href="https://api.flutter.dev/flutter/dart-core/Object/noSuchMethod.html">noSuchMethod</a></li>
-    <li class="inherited"><a href="https://api.flutter.dev/flutter/foundation/DiagnosticableTree/toDiagnosticsNode.html">toDiagnosticsNode</a></li>
-    <li class="inherited"><a href="https://api.flutter.dev/flutter/foundation/Diagnosticable/toString.html">toString</a></li>
-    <li class="inherited"><a href="https://api.flutter.dev/flutter/foundation/DiagnosticableTree/toStringDeep.html">toStringDeep</a></li>
-    <li class="inherited"><a href="https://api.flutter.dev/flutter/foundation/DiagnosticableTree/toStringShallow.html">toStringShallow</a></li>
-    <li class="inherited"><a href="https://api.flutter.dev/flutter/widgets/Widget/toStringShort.html">toStringShort</a></li>
-
-    <li class="section-title inherited"><a href="../../main/App-class.html#operators">Operators</a></li>
-    <li class="inherited"><a href="https://api.flutter.dev/flutter/widgets/Widget/operator_equals.html">operator ==</a></li>
-
-
-
-
-</ol>
-
   </div><!--/.sidebar-offcanvas-left-->
 
   <div id="dartdoc-sidebar-right" class="sidebar sidebar-offcanvas-right">
@@ -198,7 +118,7 @@
 
 
 <script src="../../static-assets/highlight.pack.js?v1"></script>
-<script src="../../static-assets/script.js?v1"></script>
+<script src="../../static-assets/docs.dart.js"></script>
 
 
 

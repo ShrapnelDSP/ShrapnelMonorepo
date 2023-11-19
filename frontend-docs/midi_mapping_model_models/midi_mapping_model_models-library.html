@@ -11,7 +11,7 @@
   
   <link rel="preconnect" href="https://fonts.gstatic.com">
   <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" rel="stylesheet">
   
   <link rel="stylesheet" href="../static-assets/github.css?v1">
   <link rel="stylesheet" href="../static-assets/styles.css?v1">
@@ -21,13 +21,12 @@
 </head>
 
 
-<body data-base-href="../"
-      data-using-base-href="false">
+<body data-base-href="../" data-using-base-href="false" class="light-theme">
 
 <div id="overlay-under-drawer"></div>
 
 <header id="title">
-  <button id="sidenav-left-toggle" type="button">&nbsp;</button>
+  <span id="sidenav-left-toggle" class="material-symbols-outlined" role="button" tabindex="0">menu</span>
   <ol class="breadcrumbs gt-separated dark hidden-xs">
     <li><a href="../index.html">shrapnel</a></li>
     <li class="self-crumb">models library</li>
@@ -36,15 +35,28 @@
   <form class="search navbar-right" role="search">
     <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
   </form>
+  <div class="toggle" id="theme-button">
+    <label for="theme">
+      <input type="checkbox" id="theme" value="light-theme">
+      <span id="dark-theme-button" class="material-symbols-outlined">
+        brightness_4
+      </span>
+      <span id="light-theme-button" class="material-symbols-outlined">
+        brightness_5
+      </span>
+    </label>
+  </div>
 </header>
-
 <main>
 
-
-  <div id="dartdoc-main-content" class="main-content">
+  <div
+      id="dartdoc-main-content"
+      class="main-content"
+      data-above-sidebar=""
+      data-below-sidebar="midi_mapping_model_models&#47;midi_mapping_model_models-library-sidebar.html">
+      
       <div>
 <h1><span class="kind-library">models</span> library 
-    <a href="https://dart.dev/null-safety" class="feature feature-null-safety" title="Supports the null safety language feature.">Null safety</a>
  
 </h1></div>
 
@@ -115,15 +127,16 @@
   </div> <!-- /.main-content -->
 
   <div id="dartdoc-sidebar-left" class="sidebar sidebar-offcanvas-left">
-    <header id="header-search-sidebar" class="hidden-l">
+    <!-- The search input and breadcrumbs below are only responsively visible at low resolutions. -->
+<header id="header-search-sidebar" class="hidden-l">
   <form class="search-sidebar" role="search">
     <input type="text" id="search-sidebar" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
   </form>
 </header>
 
 <ol class="breadcrumbs gt-separated dark hidden-l" id="sidebar-nav">
-  <li><a href="../index.html">shrapnel</a></li>
-  <li class="self-crumb">models library</li>
+    <li><a href="../index.html">shrapnel</a></li>
+    <li class="self-crumb">models library</li>
 </ol>
 
 
@@ -143,14 +156,10 @@
       <li><a href="../midi_mapping_model_midi_learn/midi_mapping_model_midi_learn-library.html">midi_learn</a></li>
       <li><a href="../midi_mapping_view_midi_learn/midi_mapping_view_midi_learn-library.html">midi_learn</a></li>
       <li><a href="../midi_mapping_model_midi_learn_state/midi_mapping_model_midi_learn_state-library.html">midi_learn_state</a></li>
-      <li><a href="../midi_mapping_model_midi_learn_state.freezed/midi_mapping_model_midi_learn_state.freezed-library.html">midi_learn_state.freezed</a></li>
       <li><a href="../midi_mapping_view_midi_mapping/midi_mapping_view_midi_mapping-library.html">midi_mapping</a></li>
       <li><a href="../midi_mapping_model_models/midi_mapping_model_models-library.html">models</a></li>
-      <li><a href="../midi_mapping_model_models.freezed/midi_mapping_model_models.freezed-library.html">models.freezed</a></li>
-      <li><a href="../midi_mapping_model_models.g/midi_mapping_model_models.g-library.html">models.g</a></li>
       <li><a href="../noise_gate/noise_gate-library.html">noise_gate</a></li>
       <li><a href="../parameter/parameter-library.html">parameter</a></li>
-      <li><a href="../parameter.g/parameter.g-library.html">parameter.g</a></li>
       <li><a href="../pedalboard/pedalboard-library.html">pedalboard</a></li>
       <li><a href="../robust_websocket/robust_websocket-library.html">robust_websocket</a></li>
       <li><a href="../midi_mapping_model_service/midi_mapping_model_service-library.html">service</a></li>
@@ -167,24 +176,6 @@
 
   <div id="dartdoc-sidebar-right" class="sidebar sidebar-offcanvas-right">
     <h5>models library</h5>
-    <ol>
-  <li class="section-title"><a href="../midi_mapping_model_models/midi_mapping_model_models-library.html#classes">Classes</a></li>
-  <li><a href="../midi_mapping_model_models/MidiApiMessage-class.html">MidiApiMessage</a></li>
-  <li><a href="../midi_mapping_model_models/MidiMapping-class.html">MidiMapping</a></li>
-  <li><a href="../midi_mapping_model_models/MidiMappingEntry-class.html">MidiMappingEntry</a></li>
-  <li><a href="../midi_mapping_model_models/MidiMessage-class.html">MidiMessage</a></li>
-
-
-
-
-
-
-  <li class="section-title"><a href="../midi_mapping_model_models/midi_mapping_model_models-library.html#enums">Enums</a></li>
-  <li><a href="../midi_mapping_model_models/MidiMappingMode.html">MidiMappingMode</a></li>
-
-
-</ol>
-
   </div><!--/sidebar-offcanvas-right-->
 
 </main>
@@ -201,7 +192,7 @@
 
 
 <script src="../static-assets/highlight.pack.js?v1"></script>
-<script src="../static-assets/script.js?v1"></script>
+<script src="../static-assets/docs.dart.js"></script>
 
 
 
