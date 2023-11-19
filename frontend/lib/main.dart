@@ -409,7 +409,7 @@ class MyHomePage extends StatelessWidget {
           Container(width: 10),
         ],
       ),
-      body: const Center(
+      body: Center(
         child: Column(
           children: [
             StateNotifierProvider<PresetsServiceBase, PresetsState>(

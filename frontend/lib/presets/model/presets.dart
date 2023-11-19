@@ -55,7 +55,7 @@ class PresetsState with _$PresetsState {
 }
 
 abstract class PresetsServiceBase extends StateNotifier<PresetsState> {
-  PresetsServiceBase(super.state);
+  PresetsServiceBase(super._state);
 
   /// Creates a new preset and makes it active.
   void create(String name);
