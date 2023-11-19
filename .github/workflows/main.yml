@@ -242,8 +242,8 @@ jobs:
       with:
         flutter-version: ${{ env.FLUTTER_VERSION }}
         channel: ${{ env.FLUTTER_CHANNEL }}
-        cache: true
-        cache-key: ${{ github.job }}
+        # cache: true
+        # cache-key: ${{ github.job }}
 
     - run: flutter pub get
 
