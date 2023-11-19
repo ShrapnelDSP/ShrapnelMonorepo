@@ -64,7 +64,6 @@ jobs:
         flutter-version: ${{ env.FLUTTER_VERSION }}
         channel: ${{ env.FLUTTER_CHANNEL }}
         cache: true
-        cache-key: ${{ github.job }}
 
     - name: Flutter pub cache
       uses: actions/cache@v2
