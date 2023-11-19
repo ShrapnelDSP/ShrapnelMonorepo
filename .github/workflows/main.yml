@@ -195,12 +195,15 @@ jobs:
         cache-key: ${{ github.job }}
 
     - name: Flutter pub cache
-      uses: actions/cache@v2
+      uses: actions/cache@v3
       with:
         path: ${{ env.PUB_CACHE }}
         key: flutter-pub-${{ github.job }}-${{ hashFiles('**/pubspec.lock') }}
         restore-keys: |
           flutter-pub-${{ github.job }}-
+        # Maybe the cache is causing the pub get later to fail, ignore cache
+        # for now to test it out
+        lookup-only: true
 
     - run: flutter pub get
 
