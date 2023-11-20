@@ -58,10 +58,10 @@ static const ProtobufCFieldDescriptor preset_parameters__field_descriptors[20] =
     "amp_gain",
     1,
     PROTOBUF_C_LABEL_NONE,
-    PROTOBUF_C_TYPE_INT32,
+    PROTOBUF_C_TYPE_MESSAGE,
     0,   /* quantifier_offset */
     offsetof(PresetParameters, amp_gain),
-    NULL,
+    &google__protobuf__int32_value__descriptor,
     NULL,
     0,             /* flags */
     0,NULL,NULL    /* reserved1,reserved2, etc */
@@ -70,10 +70,10 @@ static const ProtobufCFieldDescriptor preset_parameters__field_descriptors[20] =
     "amp_channel",
     2,
     PROTOBUF_C_LABEL_NONE,
-    PROTOBUF_C_TYPE_INT32,
+    PROTOBUF_C_TYPE_MESSAGE,
     0,   /* quantifier_offset */
     offsetof(PresetParameters, amp_channel),
-    NULL,
+    &google__protobuf__int32_value__descriptor,
     NULL,
     0,             /* flags */
     0,NULL,NULL    /* reserved1,reserved2, etc */
@@ -82,10 +82,10 @@ static const ProtobufCFieldDescriptor preset_parameters__field_descriptors[20] =
     "bass",
     3,
     PROTOBUF_C_LABEL_NONE,
-    PROTOBUF_C_TYPE_INT32,
+    PROTOBUF_C_TYPE_MESSAGE,
     0,   /* quantifier_offset */
     offsetof(PresetParameters, bass),
-    NULL,
+    &google__protobuf__int32_value__descriptor,
     NULL,
     0,             /* flags */
     0,NULL,NULL    /* reserved1,reserved2, etc */
@@ -94,10 +94,10 @@ static const ProtobufCFieldDescriptor preset_parameters__field_descriptors[20] =
     "middle",
     4,
     PROTOBUF_C_LABEL_NONE,
-    PROTOBUF_C_TYPE_INT32,
+    PROTOBUF_C_TYPE_MESSAGE,
     0,   /* quantifier_offset */
     offsetof(PresetParameters, middle),
-    NULL,
+    &google__protobuf__int32_value__descriptor,
     NULL,
     0,             /* flags */
     0,NULL,NULL    /* reserved1,reserved2, etc */
@@ -106,10 +106,10 @@ static const ProtobufCFieldDescriptor preset_parameters__field_descriptors[20] =
     "treble",
     5,
     PROTOBUF_C_LABEL_NONE,
-    PROTOBUF_C_TYPE_INT32,
+    PROTOBUF_C_TYPE_MESSAGE,
     0,   /* quantifier_offset */
     offsetof(PresetParameters, treble),
-    NULL,
+    &google__protobuf__int32_value__descriptor,
     NULL,
     0,             /* flags */
     0,NULL,NULL    /* reserved1,reserved2, etc */
@@ -118,10 +118,10 @@ static const ProtobufCFieldDescriptor preset_parameters__field_descriptors[20] =
     "contour",
     6,
     PROTOBUF_C_LABEL_NONE,
-    PROTOBUF_C_TYPE_INT32,
+    PROTOBUF_C_TYPE_MESSAGE,
     0,   /* quantifier_offset */
     offsetof(PresetParameters, contour),
-    NULL,
+    &google__protobuf__int32_value__descriptor,
     NULL,
     0,             /* flags */
     0,NULL,NULL    /* reserved1,reserved2, etc */
@@ -130,10 +130,10 @@ static const ProtobufCFieldDescriptor preset_parameters__field_descriptors[20] =
     "volume",
     7,
     PROTOBUF_C_LABEL_NONE,
-    PROTOBUF_C_TYPE_INT32,
+    PROTOBUF_C_TYPE_MESSAGE,
     0,   /* quantifier_offset */
     offsetof(PresetParameters, volume),
-    NULL,
+    &google__protobuf__int32_value__descriptor,
     NULL,
     0,             /* flags */
     0,NULL,NULL    /* reserved1,reserved2, etc */
@@ -142,10 +142,10 @@ static const ProtobufCFieldDescriptor preset_parameters__field_descriptors[20] =
     "noise_gate_threshold",
     8,
     PROTOBUF_C_LABEL_NONE,
-    PROTOBUF_C_TYPE_INT32,
+    PROTOBUF_C_TYPE_MESSAGE,
     0,   /* quantifier_offset */
     offsetof(PresetParameters, noise_gate_threshold),
-    NULL,
+    &google__protobuf__int32_value__descriptor,
     NULL,
     0,             /* flags */
     0,NULL,NULL    /* reserved1,reserved2, etc */
@@ -154,10 +154,10 @@ static const ProtobufCFieldDescriptor preset_parameters__field_descriptors[20] =
     "noise_gate_hysteresis",
     9,
     PROTOBUF_C_LABEL_NONE,
-    PROTOBUF_C_TYPE_INT32,
+    PROTOBUF_C_TYPE_MESSAGE,
     0,   /* quantifier_offset */
     offsetof(PresetParameters, noise_gate_hysteresis),
-    NULL,
+    &google__protobuf__int32_value__descriptor,
     NULL,
     0,             /* flags */
     0,NULL,NULL    /* reserved1,reserved2, etc */
@@ -166,10 +166,10 @@ static const ProtobufCFieldDescriptor preset_parameters__field_descriptors[20] =
     "noise_gate_attack",
     10,
     PROTOBUF_C_LABEL_NONE,
-    PROTOBUF_C_TYPE_INT32,
+    PROTOBUF_C_TYPE_MESSAGE,
     0,   /* quantifier_offset */
     offsetof(PresetParameters, noise_gate_attack),
-    NULL,
+    &google__protobuf__int32_value__descriptor,
     NULL,
     0,             /* flags */
     0,NULL,NULL    /* reserved1,reserved2, etc */
@@ -178,10 +178,10 @@ static const ProtobufCFieldDescriptor preset_parameters__field_descriptors[20] =
     "noise_gate_hold",
     11,
     PROTOBUF_C_LABEL_NONE,
-    PROTOBUF_C_TYPE_INT32,
+    PROTOBUF_C_TYPE_MESSAGE,
     0,   /* quantifier_offset */
     offsetof(PresetParameters, noise_gate_hold),
-    NULL,
+    &google__protobuf__int32_value__descriptor,
     NULL,
     0,             /* flags */
     0,NULL,NULL    /* reserved1,reserved2, etc */
@@ -190,10 +190,10 @@ static const ProtobufCFieldDescriptor preset_parameters__field_descriptors[20] =
     "noise_gate_release",
     12,
     PROTOBUF_C_LABEL_NONE,
-    PROTOBUF_C_TYPE_INT32,
+    PROTOBUF_C_TYPE_MESSAGE,
     0,   /* quantifier_offset */
     offsetof(PresetParameters, noise_gate_release),
-    NULL,
+    &google__protobuf__int32_value__descriptor,
     NULL,
     0,             /* flags */
     0,NULL,NULL    /* reserved1,reserved2, etc */
@@ -202,10 +202,10 @@ static const ProtobufCFieldDescriptor preset_parameters__field_descriptors[20] =
     "noise_gate_bypass",
     13,
     PROTOBUF_C_LABEL_NONE,
-    PROTOBUF_C_TYPE_INT32,
+    PROTOBUF_C_TYPE_MESSAGE,
     0,   /* quantifier_offset */
     offsetof(PresetParameters, noise_gate_bypass),
-    NULL,
+    &google__protobuf__int32_value__descriptor,
     NULL,
     0,             /* flags */
     0,NULL,NULL    /* reserved1,reserved2, etc */
@@ -214,10 +214,10 @@ static const ProtobufCFieldDescriptor preset_parameters__field_descriptors[20] =
     "chorus_rate",
     14,
     PROTOBUF_C_LABEL_NONE,
-    PROTOBUF_C_TYPE_INT32,
+    PROTOBUF_C_TYPE_MESSAGE,
     0,   /* quantifier_offset */
     offsetof(PresetParameters, chorus_rate),
-    NULL,
+    &google__protobuf__int32_value__descriptor,
     NULL,
     0,             /* flags */
     0,NULL,NULL    /* reserved1,reserved2, etc */
@@ -226,10 +226,10 @@ static const ProtobufCFieldDescriptor preset_parameters__field_descriptors[20] =
     "chorus_depth",
     15,
     PROTOBUF_C_LABEL_NONE,
-    PROTOBUF_C_TYPE_INT32,
+    PROTOBUF_C_TYPE_MESSAGE,
     0,   /* quantifier_offset */
     offsetof(PresetParameters, chorus_depth),
-    NULL,
+    &google__protobuf__int32_value__descriptor,
     NULL,
     0,             /* flags */
     0,NULL,NULL    /* reserved1,reserved2, etc */
@@ -238,10 +238,10 @@ static const ProtobufCFieldDescriptor preset_parameters__field_descriptors[20] =
     "chorus_mix",
     16,
     PROTOBUF_C_LABEL_NONE,
-    PROTOBUF_C_TYPE_INT32,
+    PROTOBUF_C_TYPE_MESSAGE,
     0,   /* quantifier_offset */
     offsetof(PresetParameters, chorus_mix),
-    NULL,
+    &google__protobuf__int32_value__descriptor,
     NULL,
     0,             /* flags */
     0,NULL,NULL    /* reserved1,reserved2, etc */
@@ -250,10 +250,10 @@ static const ProtobufCFieldDescriptor preset_parameters__field_descriptors[20] =
     "chorus_bypass",
     17,
     PROTOBUF_C_LABEL_NONE,
-    PROTOBUF_C_TYPE_INT32,
+    PROTOBUF_C_TYPE_MESSAGE,
     0,   /* quantifier_offset */
     offsetof(PresetParameters, chorus_bypass),
-    NULL,
+    &google__protobuf__int32_value__descriptor,
     NULL,
     0,             /* flags */
     0,NULL,NULL    /* reserved1,reserved2, etc */
@@ -262,10 +262,10 @@ static const ProtobufCFieldDescriptor preset_parameters__field_descriptors[20] =
     "wah_position",
     18,
     PROTOBUF_C_LABEL_NONE,
-    PROTOBUF_C_TYPE_INT32,
+    PROTOBUF_C_TYPE_MESSAGE,
     0,   /* quantifier_offset */
     offsetof(PresetParameters, wah_position),
-    NULL,
+    &google__protobuf__int32_value__descriptor,
     NULL,
     0,             /* flags */
     0,NULL,NULL    /* reserved1,reserved2, etc */
@@ -274,10 +274,10 @@ static const ProtobufCFieldDescriptor preset_parameters__field_descriptors[20] =
     "wah_vocal",
     19,
     PROTOBUF_C_LABEL_NONE,
-    PROTOBUF_C_TYPE_INT32,
+    PROTOBUF_C_TYPE_MESSAGE,
     0,   /* quantifier_offset */
     offsetof(PresetParameters, wah_vocal),
-    NULL,
+    &google__protobuf__int32_value__descriptor,
     NULL,
     0,             /* flags */
     0,NULL,NULL    /* reserved1,reserved2, etc */
@@ -286,10 +286,10 @@ static const ProtobufCFieldDescriptor preset_parameters__field_descriptors[20] =
     "wah_bypass",
     20,
     PROTOBUF_C_LABEL_NONE,
-    PROTOBUF_C_TYPE_INT32,
+    PROTOBUF_C_TYPE_MESSAGE,
     0,   /* quantifier_offset */
     offsetof(PresetParameters, wah_bypass),
-    NULL,
+    &google__protobuf__int32_value__descriptor,
     NULL,
     0,             /* flags */
     0,NULL,NULL    /* reserved1,reserved2, etc */

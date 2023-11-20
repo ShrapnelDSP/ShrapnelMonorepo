@@ -3,4 +3,4 @@
 set -eo pipefail
 
 cd proto
-protoc --c_out=generated presets.proto
+protoc --c_out=generated wrappers.proto presets.proto 
