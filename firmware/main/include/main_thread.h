@@ -30,6 +30,7 @@
 #include "os/queue.h"
 #include "os/timer.h"
 #include "persistence.h"
+#include "preset_serialisation.h"
 
 namespace shrapnel {
 
@@ -41,33 +42,6 @@ constexpr const size_t MAX_PARAMETERS = 20;
 
 using AudioParameters = parameters::AudioParameters<MAX_PARAMETERS, 1>;
 using SendMessageCallback = etl::delegate<void(const AppMessage &)>;
-
-template <typename T>
-void serialise_parameters(T &parameters)
-{
-    rapidjson::Document document;
-
-    auto json = rapidjson::Value();
-    json.SetObject();
-
-    for(const auto &[id, value] : parameters)
-    {
-        ESP_LOGI(TAG, "parameter %s %g", id.data(), value->get());
-
-        json.AddMember(
-            rapidjson::Value(id.data(), document.GetAllocator()).Move(),
-            value->get(),
-            document.GetAllocator());
-    }
-
-    document.Swap(json);
-
-    rapidjson::StringBuffer buffer;
-    rapidjson::Writer writer{buffer};
-    document.Accept(writer);
-
-    ESP_LOGI(TAG, "document (%d/%d): %s", buffer.GetLength(), buffer.GetSize(), buffer.GetString());
-}
 
 // TODO move all the json parser function into a json namespace
 namespace midi {
