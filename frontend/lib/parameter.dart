@@ -18,7 +18,6 @@
  */
 
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:flutter/widgets.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -154,15 +153,6 @@ class ParameterRepository implements ParameterRepositoryBase {
       websocket.dataStream.transform(
         StreamTransformer.fromBind((input) async* {
           await for (final event in input) {
-            if (event is! String) {
-              _log.warning(
-                'Dropped message with unexpected type ${json.runtimeType}',
-              );
-              return;
-            }
-
-            _log.fine(event);
-
             yield ParameterServiceInputMessage.fromJson(event);
           }
         }),
