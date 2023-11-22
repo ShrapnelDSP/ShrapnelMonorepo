@@ -176,6 +176,27 @@ esp_err_t websocket_get_handler(httpd_req_t *req)
             goto out;
         }
     }
+    
+    {
+        auto message =
+            midi::from_json<presets::PresetsApiMessage>(document.GetObject());
+        if(message.has_value())
+        {
+            auto out = AppMessage{*message, fd};
+            int queue_rc = self->in_queue->send(&out, pdMS_TO_TICKS(100));
+            if(queue_rc != pdPASS)
+            {
+                ESP_LOGE(TAG, "in_queue message dropped");
+            }
+
+            etl::string<256> buffer;
+            etl::string_stream stream{buffer};
+            stream << *message;
+            ESP_LOGI(TAG, "decoded %s", buffer.data());
+
+            goto out;
+        }
+    }
 
 out:
     ESP_LOGI(
