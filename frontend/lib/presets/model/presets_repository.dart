@@ -8,7 +8,9 @@ import 'presets_client.dart';
 import 'presets_service.dart';
 
 class PresetsRepository implements PresetsRepositoryBase {
-  PresetsRepository({required this.client});
+  PresetsRepository({required this.client}) {
+    unawaited(client.initialise());
+  }
 
   PresetsClient client;
 
@@ -45,16 +47,4 @@ class PresetsRepository implements PresetsRepositoryBase {
     client.dispose();
     unawaited(_presets.close());
   }
-}
-
-class SelectedPresetRepository implements SelectedPresetRepositoryBase {
-  @override
-  Future<void> selectPreset(UuidValue presetId) {
-    // TODO: implement load
-    throw UnimplementedError();
-  }
-
-  @override
-  // TODO: implement selectedPreset
-  ValueStream<UuidValue> get selectedPreset => throw UnimplementedError();
 }

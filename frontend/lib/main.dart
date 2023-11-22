@@ -44,6 +44,8 @@ import 'presets/model/presets.dart';
 import 'presets/model/presets_client.dart' as presets_client;
 import 'presets/model/presets_repository.dart';
 import 'presets/model/presets_service.dart';
+import 'presets/model/selected_preset_client.dart';
+import 'presets/model/selected_preset_repository.dart';
 import 'presets/view/presets.dart';
 import 'robust_websocket.dart';
 import 'status/data/status.dart';
@@ -150,11 +152,16 @@ class App extends StatelessWidget {
     this.presetsRepository = presetsRepository ??
         PresetsRepository(
           client: presets_client.PresetsClient(
-            transport: presets_client.PresetsTransport(websocket: jsonWebsocket),
+            transport:
+                presets_client.PresetsTransport(websocket: jsonWebsocket),
           ),
         );
-    this.selectedPresetRepository =
-        selectedPresetRepository ?? SelectedPresetRepository();
+    this.selectedPresetRepository = selectedPresetRepository ??
+        SelectedPresetRepository(
+          client: SelectedPresetClient(
+            transport: SelectedPresetTransport(websocket: jsonWebsocket),
+          ),
+        );
   }
 
   late final RobustWebsocket _websocket;

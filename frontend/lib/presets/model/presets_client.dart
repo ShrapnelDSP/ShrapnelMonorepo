@@ -2,13 +2,16 @@ import 'dart:async';
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logging/logging.dart';
+import 'package:rxdart/rxdart.dart';
 import 'package:uuid/uuid.dart';
 
+import '../../core/message_transport.dart';
 import '../../json_websocket.dart';
 
 import 'presets.dart' as presets;
 
 part 'presets_client.freezed.dart';
+
 part 'presets_client.g.dart';
 
 final _log = Logger('presets_client');
@@ -109,7 +112,8 @@ class PresetsMessage with _$PresetsMessage {
       _$PresetsMessageFromJson(json);
 }
 
-class PresetsTransport {
+class PresetsTransport
+    implements MessageTransport<PresetsMessage, PresetsMessage> {
   PresetsTransport({required this.websocket}) {
     _controller.stream.listen((message) {
       websocket.send(message.toJson());
@@ -118,8 +122,10 @@ class PresetsTransport {
 
   final _controller = StreamController<PresetsMessage>();
 
+  @override
   StreamSink<PresetsMessage> get sink => _controller.sink;
 
+  @override
   Stream<PresetsMessage> get stream => websocket.dataStream.transform(
         StreamTransformer.fromBind((jsonStream) async* {
           await for (final message in jsonStream) {
@@ -130,6 +136,7 @@ class PresetsTransport {
 
   JsonWebsocket websocket;
 
+  @override
   void dispose() {
     unawaited(_controller.close());
   }
@@ -138,7 +145,7 @@ class PresetsTransport {
 class PresetsClient {
   PresetsClient({required this.transport});
 
-  PresetsTransport transport;
+  MessageTransport<PresetsMessage, PresetsMessage> transport;
 
   /// Firmware will reply by sending a preset update message for every preset
   /// that already exists.
@@ -147,8 +154,7 @@ class PresetsClient {
   }
 
   Stream<presets.PresetState> get presetUpdates => transport.stream
-      .where((message) => message is PresetsMessageNotify)
-      .cast<PresetsMessageNotify>()
+      .whereType<PresetsMessageNotify>()
       .map(
         (event) => presets.PresetState(
           id: UuidValue(event.preset.id),
