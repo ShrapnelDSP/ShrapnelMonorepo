@@ -41,6 +41,7 @@ import 'noise_gate.dart';
 import 'parameter.dart';
 import 'pedalboard.dart';
 import 'presets/model/presets.dart';
+import 'presets/model/presets_client.dart' as presets_client;
 import 'presets/model/presets_repository.dart';
 import 'presets/model/presets_service.dart';
 import 'presets/view/presets.dart';
@@ -95,8 +96,8 @@ class App extends StatelessWidget {
     UuidService? uuid,
     WifiProvisioningService? provisioning,
     ParameterRepositoryBase? parameterRepository,
-    ParameterService? parameterService,
     PresetsRepositoryBase? presetsRepository,
+    ParameterService? parameterService,
     SelectedPresetRepositoryBase? selectedPresetRepository,
   }) {
     websocket ??= RobustWebsocket(
@@ -146,7 +147,12 @@ class App extends StatelessWidget {
           ),
         );
 
-    this.presetsRepository = presetsRepository ?? PresetsRepository();
+    this.presetsRepository = presetsRepository ??
+        PresetsRepository(
+          client: presets_client.PresetsClient(
+            transport: presets_client.PresetsTransport(websocket: jsonWebsocket),
+          ),
+        );
     this.selectedPresetRepository =
         selectedPresetRepository ?? SelectedPresetRepository();
   }

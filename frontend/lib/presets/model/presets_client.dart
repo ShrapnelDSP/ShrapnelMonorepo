@@ -9,6 +9,7 @@ import '../../json_websocket.dart';
 import 'presets.dart' as presets;
 
 part 'presets_client.freezed.dart';
+part 'presets_client.g.dart';
 
 final _log = Logger('presets_client');
 
@@ -84,9 +85,10 @@ class PresetData with _$PresetData {
 
   static PresetData fromPresetState(presets.PresetState presetState) {
     return PresetData(
-        id: presetState.id.uuid,
-        name: presetState.name,
-        parameters: PresetParametersData.fromData(presetState.parameters));
+      id: presetState.id.uuid,
+      name: presetState.name,
+      parameters: PresetParametersData.fromData(presetState.parameters),
+    );
   }
 }
 
