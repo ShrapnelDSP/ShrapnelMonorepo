@@ -1,5 +1,4 @@
 // TODO
-// define structs corresponding to the messages defined in Dart
 // JSON encoders
 // JSON decoders
 
