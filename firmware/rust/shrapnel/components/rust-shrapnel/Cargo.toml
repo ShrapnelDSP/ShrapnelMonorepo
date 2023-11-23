@@ -1,0 +1,17 @@
+[package]
+name = "rust-shrapnel"
+version = "0.1.0"
+authors = ["Barabas Raffai <barabas.raffai@gmail.com>"]
+edition = "2021"
+resolver = "2"
+rust-version = "1.71"
+
+[lib]
+crate-type = ["staticlib"]
+
+[profile.release]
+opt-level = "s"
+
+[profile.dev]
+debug = true # Symbols are nice and they don't increase the size on Flash
+opt-level = "z"
