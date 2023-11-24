@@ -18,6 +18,7 @@
  */
 
 #include "server.h"
+#include "../../presets/include/presets_api.h"
 #include "cmd_handling_json.h"
 #include "cmd_handling_json_builder.h"
 #include "esp_http_server.h"
@@ -176,7 +177,8 @@ esp_err_t websocket_get_handler(httpd_req_t *req)
             goto out;
         }
     }
-    
+
+#if 0
     {
         auto message =
             midi::from_json<presets::PresetsApiMessage>(document.GetObject());
@@ -197,6 +199,7 @@ esp_err_t websocket_get_handler(httpd_req_t *req)
             goto out;
         }
     }
+#endif
 
 out:
     ESP_LOGI(

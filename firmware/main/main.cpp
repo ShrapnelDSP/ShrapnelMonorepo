@@ -205,8 +205,13 @@ static void failed_alloc_callback(size_t size, uint32_t caps, const char *functi
 void nvs_debug_print();
 void debug_dump_task_list();
 
+extern "C" int rust_main(void);
+
 extern "C" void app_main(void)
 {
+    int result = rust_main();
+    printf("Rust returned code: %d\n", result);
+    
     ESP_ERROR_CHECK(heap_caps_register_failed_alloc_callback(failed_alloc_callback));
 
     ESP_ERROR_CHECK(nvs_flash_init());

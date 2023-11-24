@@ -7,4 +7,4 @@ target_sources(presets
                src/presets_json_builder.cpp)
 target_include_directories(presets PUBLIC proto/generated include)
 
-target_link_libraries(presets PUBLIC idf::protobuf-c shrapnel::rapidjson)
+target_link_libraries(presets PUBLIC idf::protobuf-c shrapnel::rapidjson shrapnel::etl)

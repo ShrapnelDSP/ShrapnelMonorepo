@@ -43,6 +43,7 @@ if (ESP_PLATFORM)
     add_subdirectory(components/presets)
     add_subdirectory(components/server)
     add_subdirectory(components/wifi)
+    add_subdirectory(rust/shrapnel)
 
     return()
 endif()
