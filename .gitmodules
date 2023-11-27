@@ -19,3 +19,6 @@
 [submodule "test/support/protobuf-c/protobuf-c"]
 	path = test/support/protobuf-c/protobuf-c
 	url = https://github.com/protobuf-c/protobuf-c.git
+[submodule "thirdparty/esp-idf-components/cppcodec"]
+	path = thirdparty/esp-idf-components/cppcodec
+	url = https://github.com/tplgy/cppcodec.git

@@ -8,10 +8,11 @@ target_sources(presets
                src/selected_preset_json_builder.cpp)
 target_include_directories(presets PUBLIC proto/generated include)
 
-target_link_libraries(presets PUBLIC idf::protobuf-c shrapnel::rapidjson shrapnel::etl shrapnel::uuid)
+target_link_libraries(presets PUBLIC idf::log idf::protobuf-c shrapnel::rapidjson shrapnel::etl shrapnel::uuid cppcodec)
 
 if(DEFINED TESTING)
     add_executable(presets_test
+                   test/presets_json_builder.cpp
                    test/selected_preset_json_builder.cpp)
 
     target_include_directories(presets_test PRIVATE include)

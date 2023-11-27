@@ -16,26 +16,26 @@ namespace shrapnel::presets {
 
 struct ParametersData
 {
-    float ampGain;
-    float ampChannel;
+    float amp_gain;
+    float amp_channel;
     float bass;
     float middle;
     float treble;
     float contour;
     float volume;
-    float noiseGateThreshold;
-    float noiseGateHysteresis;
-    float noiseGateAttack;
-    float noiseGateHold;
-    float noiseGateRelease;
-    float noiseGateBypass;
-    float chorusRate;
-    float chorusDepth;
-    float chorusMix;
-    float chorusBypass;
-    float wahPosition;
-    float wahVocal;
-    float wahBypass;
+    float noise_gate_threshold;
+    float noise_gate_hysteresis;
+    float noise_gate_attack;
+    float noise_gate_hold;
+    float noise_gate_release;
+    float noise_gate_bypass;
+    float chorus_rate;
+    float chorus_depth;
+    float chorus_mix;
+    float chorus_bypass;
+    float wah_position;
+    float wah_vocal;
+    float wah_bypass;
 
     std::strong_ordering
     operator<=>(const ParametersData &other) const = default;
