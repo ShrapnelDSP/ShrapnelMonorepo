@@ -3,10 +3,21 @@
 //mod selected_preset {
 
 use serde::Deserialize;
-use serde::Serialize;
+// use serde::Serialize;
+
+// Can't use serde(tag = "messageType") because it uses deserialize_any, which
+// is not supported by serde_json_core deserializer.
+
+// maybe need fake C++ style std::variant over enum to easily add the
+// "messageType" field
+struct Read {}
+struct Write<'a> {
+    id: &'a str,
+}
 
 /// Messages that can be received through the Websocket connection.
-#[derive(Serialize, Deserialize, Debug, PartialEq)]
+#[derive(Deserialize, Debug, PartialEq)]
+#[serde(tag = "messageType")]
 pub enum InputMessage<'a> {
     /// The client wants to get the current value of the selected preset
     Read {},
@@ -22,15 +33,27 @@ pub enum OutputMessage<'a> {
 
 #[cfg(test)]
 mod tests {
-    use serde_json_core::de::from_str;
     use crate::selected_preset_api::InputMessage;
+    use serde_json_core::de::from_str;
 
     #[test]
-    fn deseriaise_input_message() {
-        let message = serde_json_core::ser::to_string::<InputMessage, 100>(&InputMessage::Read {});
-        // FIXME: this is not the format expected by Dart, it wants a
-        // "messageType": "Read" or similar name. The name of the field is
-        // configurable per type. The rest of the fields are at the top level.
-        assert_eq!(from_str::<InputMessage>(r#"{"Read" : {}}"#), Ok((InputMessage::Read {}, 13)));
+    fn deseriaise_input_read_message() {
+        assert_eq!(
+            from_str::<InputMessage>(r#"{"messageType" : "Read"}"#),
+            Ok((InputMessage::Read {}, 13))
+        );
+    }
+
+    #[test]
+    fn deseriaise_input_write_message() {
+        assert_eq!(
+            from_str::<InputMessage>(
+                r#"{
+        "messageType" : "Write",
+        "id": "test",
+        }"#
+            ),
+            Ok((InputMessage::Write { id: "test" }, 13))
+        );
     }
 }
