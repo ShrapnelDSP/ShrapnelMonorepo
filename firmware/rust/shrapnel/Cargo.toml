@@ -17,5 +17,6 @@ debug = true # Symbols are nice and they don't increase the size on Flash
 opt-level = "z"
 
 [dependencies]
+heapless = "0.8.0"
 serde = { version = "1.0", features = ["derive"] }
 serde-json-core = "0.5.1"
