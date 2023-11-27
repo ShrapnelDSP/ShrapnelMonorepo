@@ -1,8 +1,7 @@
 #pragma once
 
 #include <cstdint>
-#include <etl/array.h>
 
 namespace shrapnel::presets {
-using id_t = etl::array<uint8_t, 16>;
+using id_t = std::array<uint8_t, 16>;
 }

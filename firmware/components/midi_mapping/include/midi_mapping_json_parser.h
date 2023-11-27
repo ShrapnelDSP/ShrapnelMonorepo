@@ -94,7 +94,7 @@ std::optional<MapType> from_json(const rapidjson::Value &json) {
             return std::nullopt;
         }
 
-        auto id = from_json<Mapping::id_t>(entry.name);
+        auto id = uuid::from_json<Mapping::id_t>(entry.name);
         if(!id.has_value())
         {
             ESP_LOGE(TAG, "failed to get uuid");

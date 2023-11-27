@@ -4,8 +4,11 @@
 #include <variant>
 
 #include "presets.h"
+#include "uuid.h"
 
-namespace shrapnel::presets {
+namespace shrapnel::selected_preset {
+
+using shrapnel::uuid::uuid_t;
 
 struct Read
 {
@@ -13,12 +16,12 @@ struct Read
 
 struct Notify
 {
-    id_t selectedPresetId;
+    uuid_t selectedPresetId;
 };
 
 struct Write
 {
-    id_t selectedPresetId;
+    uuid_t selectedPresetId;
 };
 
 using SelectedPresetApiMessage = std::variant<Read, Notify, Write>;
