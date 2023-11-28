@@ -5,8 +5,8 @@ import 'package:shrapnel/presets/model/presets_client.dart';
 import 'package:uuid/uuid.dart';
 
 void main() {
-  test('PresetParametersData to JSON', () {
-    final input = PresetsMessage.notify(
+  test('PresetsMessage.notify to JSON', () {
+    final reference = PresetsMessage.notify(
       PresetData(
         id: UuidValue("00000000-0000-0000-0000-000000000000"),
         name: 'test',
@@ -35,7 +35,7 @@ void main() {
       ),
     );
 
-    final reference = json.decode('''
+    final jsonMessage = json.decode('''
     {
         "messageType": "Presets::notify",
         "preset": {
@@ -43,8 +43,8 @@ void main() {
         "name": "test",
         "parameters": "CAEQAhgDIAQoBTAGOAdACEgJUApYC2AMaA1wDngPgAEQiAERkAESmAEToAEU"
         }
-    }''');
+    }''') as Map<String, dynamic>;
 
-    expect(input.toJson(), reference);
+    expect(PresetsMessage.fromJson(jsonMessage), reference);
   });
 }

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logging/logging.dart';
@@ -8,6 +9,7 @@ import 'package:uuid/uuid.dart';
 import '../../core/message_transport.dart';
 import '../../core/uuid_json_converter.dart';
 import '../../json_websocket.dart';
+import '../proto/generated/presets.pb.dart' as pb;
 
 import 'presets.dart' as presets;
 
@@ -16,6 +18,44 @@ part 'presets_client.freezed.dart';
 part 'presets_client.g.dart';
 
 final _log = Logger('presets_client');
+
+class _PresetParametersJsonConverter
+    implements JsonConverter<PresetParametersData, String> {
+  const _PresetParametersJsonConverter();
+
+  @override
+  PresetParametersData fromJson(String json) {
+    final parameters = pb.PresetParameters.fromBuffer(base64Decode(json));
+    return PresetParametersData(
+      ampGain: parameters.ampGain / 1000,
+      ampChannel: parameters.ampChannel / 1000,
+      bass: parameters.bass / 1000,
+      middle: parameters.middle / 1000,
+      treble: parameters.treble / 1000,
+      contour: parameters.contour / 1000,
+      volume: parameters.volume / 1000,
+      noiseGateThreshold: parameters.noiseGateThreshold / 1000,
+      noiseGateHysteresis: parameters.noiseGateHysteresis / 1000,
+      noiseGateAttack: parameters.noiseGateAttack / 1000,
+      noiseGateHold: parameters.noiseGateHold / 1000,
+      noiseGateRelease: parameters.noiseGateRelease / 1000,
+      noiseGateBypass: parameters.noiseGateBypass / 1000,
+      chorusRate: parameters.chorusRate / 1000,
+      chorusDepth: parameters.chorusDepth / 1000,
+      chorusMix: parameters.chorusMix / 1000,
+      chorusBypass: parameters.chorusBypass / 1000,
+      wahPosition: parameters.wahPosition / 1000,
+      wahVocal: parameters.wahVocal / 1000,
+      wahBypass: parameters.wahBypass / 1000,
+    );
+  }
+
+  @override
+  String toJson(PresetParametersData object) {
+    // TODO: implement toJson
+    throw UnimplementedError();
+  }
+}
 
 @freezed
 class PresetParametersData with _$PresetParametersData {
@@ -41,12 +81,6 @@ class PresetParametersData with _$PresetParametersData {
     required double wahVocal,
     required double wahBypass,
   }) = _PresetParametersData;
-
-  // FIXME: this probably needs to be encoded to protobuf to save size
-  // Maybe add it to the JSON as base64 encoded binary that can be decoded to
-  // protobuf.
-  factory PresetParametersData.fromJson(Map<String, dynamic> json) =>
-      _$PresetParametersDataFromJson(json);
 
   static PresetParametersData fromData(
     presets.PresetParametersData parameters,
@@ -79,6 +113,7 @@ class PresetParametersData with _$PresetParametersData {
 @freezed
 class PresetData with _$PresetData {
   @UuidJsonConverter()
+  @_PresetParametersJsonConverter()
   factory PresetData({
     required UuidValue id,
     required String name,
