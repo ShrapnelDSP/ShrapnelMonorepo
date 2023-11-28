@@ -5,35 +5,22 @@ import 'package:rxdart/rxdart.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../core/message_transport.dart';
+import '../../core/uuid_json_converter.dart';
 import '../../json_websocket.dart';
 
 part 'selected_preset_client.freezed.dart';
 
 part 'selected_preset_client.g.dart';
 
-class _UuidConverter implements JsonConverter<UuidValue, String> {
-  const _UuidConverter();
-
-  @override
-  UuidValue fromJson(String json) {
-    return UuidValue(json);
-  }
-
-  @override
-  String toJson(UuidValue object) {
-    return object.uuid;
-  }
-}
-
 @freezed
 sealed class SelectedPresetMessage with _$SelectedPresetMessage {
   factory SelectedPresetMessage.read() = ReadSelectedPresetMessage;
 
-  @_UuidConverter()
+  @UuidJsonConverter()
   factory SelectedPresetMessage.notify({required UuidValue selectedPresetId}) =
       NotifySelectedPresetMessage;
 
-  @_UuidConverter()
+  @UuidJsonConverter()
   factory SelectedPresetMessage.write({required UuidValue selectedPresetId}) =
       WriteSelectedPresetMessage;
 

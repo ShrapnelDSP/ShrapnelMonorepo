@@ -6,6 +6,7 @@ import 'package:rxdart/rxdart.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../core/message_transport.dart';
+import '../../core/uuid_json_converter.dart';
 import '../../json_websocket.dart';
 
 import 'presets.dart' as presets;
@@ -77,8 +78,9 @@ class PresetParametersData with _$PresetParametersData {
 
 @freezed
 class PresetData with _$PresetData {
+  @UuidJsonConverter()
   factory PresetData({
-    required String id,
+    required UuidValue id,
     required String name,
     required PresetParametersData parameters,
   }) = _PresetData;
@@ -88,25 +90,31 @@ class PresetData with _$PresetData {
 
   static PresetData fromPresetState(presets.PresetState presetState) {
     return PresetData(
-      id: presetState.id.uuid,
+      id: presetState.id,
       name: presetState.name,
       parameters: PresetParametersData.fromData(presetState.parameters),
     );
   }
 }
 
-@freezed
+@Freezed(unionKey: 'messageType')
 class PresetsMessage with _$PresetsMessage {
+  @FreezedUnionValue('Presets::initialise')
   factory PresetsMessage.initialise() = PresetsMessageInitialise;
 
   // FIXME: also notify about presets being deleted?
+  @FreezedUnionValue('Presets::notify')
   factory PresetsMessage.notify(PresetData preset) = PresetsMessageNotify;
 
+  @FreezedUnionValue('Presets::create')
   factory PresetsMessage.create(PresetData preset) = PresetsMessageCreate;
 
+  @FreezedUnionValue('Presets::update')
   factory PresetsMessage.update(PresetData preset) = PresetsMessageUpdate;
 
-  factory PresetsMessage.delete(String id) = PresetsMessageDelete;
+  @UuidJsonConverter()
+  @FreezedUnionValue('Presets::delete')
+  factory PresetsMessage.delete(UuidValue id) = PresetsMessageDelete;
 
   factory PresetsMessage.fromJson(Map<String, dynamic> json) =>
       _$PresetsMessageFromJson(json);
@@ -153,36 +161,36 @@ class PresetsClient {
     transport.sink.add(PresetsMessage.initialise());
   }
 
-  Stream<presets.PresetState> get presetUpdates => transport.stream
-      .whereType<PresetsMessageNotify>()
-      .map(
-        (event) => presets.PresetState(
-          id: UuidValue(event.preset.id),
-          name: event.preset.name,
-          parameters: presets.PresetParametersData(
-            ampChannel: event.preset.parameters.ampChannel,
-            ampGain: event.preset.parameters.ampGain,
-            bass: event.preset.parameters.bass,
-            chorusBypass: event.preset.parameters.chorusBypass,
-            chorusDepth: event.preset.parameters.chorusDepth,
-            chorusMix: event.preset.parameters.chorusMix,
-            chorusRate: event.preset.parameters.chorusRate,
-            contour: event.preset.parameters.contour,
-            middle: event.preset.parameters.middle,
-            noiseGateAttack: event.preset.parameters.noiseGateAttack,
-            noiseGateBypass: event.preset.parameters.noiseGateBypass,
-            noiseGateHold: event.preset.parameters.noiseGateHold,
-            noiseGateHysteresis: event.preset.parameters.noiseGateHysteresis,
-            noiseGateRelease: event.preset.parameters.noiseGateRelease,
-            noiseGateThreshold: event.preset.parameters.noiseGateThreshold,
-            treble: event.preset.parameters.treble,
-            volume: event.preset.parameters.volume,
-            wahBypass: event.preset.parameters.wahBypass,
-            wahPosition: event.preset.parameters.wahPosition,
-            wahVocal: event.preset.parameters.wahVocal,
-          ),
-        ),
-      );
+  Stream<presets.PresetState> get presetUpdates =>
+      transport.stream.whereType<PresetsMessageNotify>().map(
+            (event) => presets.PresetState(
+              id: event.preset.id,
+              name: event.preset.name,
+              parameters: presets.PresetParametersData(
+                ampChannel: event.preset.parameters.ampChannel,
+                ampGain: event.preset.parameters.ampGain,
+                bass: event.preset.parameters.bass,
+                chorusBypass: event.preset.parameters.chorusBypass,
+                chorusDepth: event.preset.parameters.chorusDepth,
+                chorusMix: event.preset.parameters.chorusMix,
+                chorusRate: event.preset.parameters.chorusRate,
+                contour: event.preset.parameters.contour,
+                middle: event.preset.parameters.middle,
+                noiseGateAttack: event.preset.parameters.noiseGateAttack,
+                noiseGateBypass: event.preset.parameters.noiseGateBypass,
+                noiseGateHold: event.preset.parameters.noiseGateHold,
+                noiseGateHysteresis:
+                    event.preset.parameters.noiseGateHysteresis,
+                noiseGateRelease: event.preset.parameters.noiseGateRelease,
+                noiseGateThreshold: event.preset.parameters.noiseGateThreshold,
+                treble: event.preset.parameters.treble,
+                volume: event.preset.parameters.volume,
+                wahBypass: event.preset.parameters.wahBypass,
+                wahPosition: event.preset.parameters.wahPosition,
+                wahVocal: event.preset.parameters.wahVocal,
+              ),
+            ),
+          );
 
   Future<void> create(presets.PresetState preset) async {
     transport.sink
@@ -190,7 +198,7 @@ class PresetsClient {
   }
 
   Future<void> delete(UuidValue id) async {
-    transport.sink.add(PresetsMessage.delete(id.uuid));
+    transport.sink.add(PresetsMessage.delete(id));
   }
 
   Future<void> update(presets.PresetState preset) async {
