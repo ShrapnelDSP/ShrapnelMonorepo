@@ -15,4 +15,3 @@ class UuidJsonConverter implements JsonConverter<UuidValue, String> {
     return object.uuid;
   }
 }
-

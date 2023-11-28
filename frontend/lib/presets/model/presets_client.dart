@@ -17,6 +17,7 @@ part 'presets_client.freezed.dart';
 
 part 'presets_client.g.dart';
 
+// ignore: unused_element
 final _log = Logger('presets_client');
 
 class _PresetParametersJsonConverter
@@ -103,6 +104,7 @@ class PresetParametersData with _$PresetParametersData {
     required double wahBypass,
   }) = _PresetParametersData;
 
+  // ignore: prefer_constructors_over_static_methods
   static PresetParametersData fromData(
     presets.PresetParametersData parameters,
   ) {
@@ -144,6 +146,7 @@ class PresetData with _$PresetData {
   factory PresetData.fromJson(Map<String, dynamic> json) =>
       _$PresetDataFromJson(json);
 
+  // ignore: prefer_constructors_over_static_methods
   static PresetData fromPresetState(presets.PresetState presetState) {
     return PresetData(
       id: presetState.id,

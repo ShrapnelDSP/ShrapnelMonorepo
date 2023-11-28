@@ -9,7 +9,7 @@ void main() {
   test('PresetsMessage.notify from JSON', () {
     final reference = PresetsMessage.notify(
       PresetData(
-        id: UuidValue("00000000-0000-0000-0000-000000000000"),
+        id: UuidValue('00000000-0000-0000-0000-000000000000'),
         name: 'test',
         parameters: PresetParametersData(
           ampGain: 0.001,
@@ -64,7 +64,7 @@ void main() {
   test('PresetsMessage.create to JSON', () {
     final message = PresetsMessage.create(
       PresetData(
-        id: UuidValue("00000000-0000-0000-0000-000000000000"),
+        id: UuidValue('00000000-0000-0000-0000-000000000000'),
         name: 'test',
         parameters: PresetParametersData(
           ampGain: 0.001,
@@ -108,7 +108,7 @@ void main() {
   test('PresetsMessage.update to JSON', () {
     final message = PresetsMessage.update(
       PresetData(
-        id: UuidValue("00000000-0000-0000-0000-000000000000"),
+        id: UuidValue('00000000-0000-0000-0000-000000000000'),
         name: 'test',
         parameters: PresetParametersData(
           ampGain: 0.001,

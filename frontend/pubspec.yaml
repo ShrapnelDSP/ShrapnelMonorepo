@@ -21,6 +21,7 @@ dependencies:
   json_annotation: ^4.8.1
   logging: ^1.0.2
   pausable_timer: ^3.1.0+3
+  protobuf: ^3.1.0
   provider: ^6.0.0
   remove_from_coverage: ^2.0.0
   rxdart: ^0.27.7
