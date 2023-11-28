@@ -75,6 +75,8 @@ struct Update
 struct Delete
 {
     id_t id;
+
+    std::strong_ordering operator<=>(const Delete &other) const = default;
 };
 
 using PresetsApiMessage =

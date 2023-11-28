@@ -1,5 +1,5 @@
 #include "selected_preset_json_builder.h"
-#include "message_type.h"
+#include "selected_preset_message_type.h"
 
 namespace shrapnel::selected_preset {
 

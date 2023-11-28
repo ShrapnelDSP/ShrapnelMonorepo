@@ -5,6 +5,7 @@ target_sources(presets
                PRIVATE
                proto/generated/presets.pb-c.c
                src/presets_json_builder.cpp
+               src/presets_json_parser.cpp
                src/selected_preset_json_builder.cpp
                src/selected_preset_json_parser.cpp)
 target_include_directories(presets PUBLIC proto/generated include)
@@ -22,6 +23,7 @@ target_link_libraries(presets
 if(DEFINED TESTING)
     add_executable(presets_test
                    test/presets_json_builder.cpp
+                   test/presets_json_parser.cpp
                    test/selected_preset_json_builder.cpp
                    test/selected_preset_json_parser.cpp)
 

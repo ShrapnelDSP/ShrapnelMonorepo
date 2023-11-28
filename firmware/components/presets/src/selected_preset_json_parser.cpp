@@ -1,6 +1,6 @@
 #include "selected_preset_json_parser.h"
 #include "esp_log.h"
-#include "message_type.h"
+#include "selected_preset_message_type.h"
 #include <etl/map.h>
 
 namespace shrapnel::selected_preset {
@@ -14,19 +14,19 @@ std::optional<Read> from_json(const rapidjson::Value &json)
 template <>
 std::optional<Write> from_json(const rapidjson::Value &json)
 {
-    auto id = json.FindMember("selectedPreset");
-    if(id == json.MemberEnd())
+    auto id_json = json.FindMember("selectedPreset");
+    if(id_json == json.MemberEnd())
     {
         return std::nullopt;
     }
 
-    auto uuid = uuid::from_json<uuid::uuid_t>(id->value);
-    if(!uuid.has_value())
+    auto id = uuid::from_json<uuid::uuid_t>(id_json->value);
+    if(!id.has_value())
     {
         return std::nullopt;
     }
 
-    return Write{.selectedPresetId{*uuid}};
+    return Write{.selectedPresetId{*id}};
 }
 
 template <>
