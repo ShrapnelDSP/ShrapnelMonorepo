@@ -1,7 +1,3 @@
-// TODO
-// JSON encoders
-// JSON decoders
-
 #pragma once
 
 #include <cstdint>
@@ -52,21 +48,28 @@ struct PresetData
 
 struct Initialise
 {
+    std::strong_ordering operator<=>(const Initialise &other) const = default;
 };
 
 struct Notify
 {
     PresetData preset;
+
+    std::strong_ordering operator<=>(const Notify &other) const = default;
 };
 
 struct Create
 {
     PresetData preset;
+
+    std::strong_ordering operator<=>(const Create &other) const = default;
 };
 
 struct Update
 {
     PresetData preset;
+
+    std::strong_ordering operator<=>(const Update &other) const = default;
 };
 
 struct Delete

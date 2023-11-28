@@ -1,4 +1,5 @@
 #include "selected_preset_json_builder.h"
+#include "message_type.h"
 
 namespace shrapnel::selected_preset {
 
@@ -15,7 +16,32 @@ rapidjson::Value to_json(rapidjson::Document &document, const Notify &object)
     json.AddMember("selectedPreset",
                    uuid::to_json(document, object.selectedPresetId),
                    document.GetAllocator());
-    
+
+    return json;
+}
+
+template <>
+rapidjson::Value to_json(rapidjson::Document &document,
+                         const SelectedPresetApiMessage &object)
+{
+    rapidjson::Value json;
+
+    auto visitor = [&](const auto &message)
+    {
+        using T = std::decay_t<decltype(message)>;
+
+        if constexpr(std::is_same_v<T, Notify>)
+        {
+            json = to_json(document, message);
+        }
+
+        json.AddMember("messageType",
+                       rapidjson::StringRef(get_message_type<T>()),
+                       document.GetAllocator());
+    };
+
+    std::visit(visitor, object);
+
     return json;
 }
 

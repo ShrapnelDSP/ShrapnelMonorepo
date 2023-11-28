@@ -8,26 +8,23 @@
 #pragma GCC diagnostic ignored "-Wsign-conversion"
 #pragma GCC diagnostic ignored "-Wswitch-enum"
 #include "rapidjson/document.h"
-#include "rapidjson/writer.h"
 #pragma GCC diagnostic pop
 
 #include "selected_preset_api.h"
+#include <optional>
 
 namespace shrapnel::selected_preset {
 
-/** Convert \p object to a JSON value
- *
- * \note The \p document must not by modified by this function. It is only
- *       passed in so that its allocator member can be accessed.
- */
 template <typename T>
-rapidjson::Value to_json(rapidjson::Document &document, const T &object);
+std::optional<T> from_json(const rapidjson::Value &);
 
 template <>
-rapidjson::Value to_json(rapidjson::Document &document, const Notify &object);
+std::optional<Read> from_json(const rapidjson::Value &json);
 
 template <>
-rapidjson::Value to_json(rapidjson::Document &document,
-                         const SelectedPresetApiMessage &object);
+std::optional<Write> from_json(const rapidjson::Value &json);
+
+template <>
+std::optional<SelectedPresetApiMessage> from_json(const rapidjson::Value &json);
 
 } // namespace shrapnel::selected_preset
