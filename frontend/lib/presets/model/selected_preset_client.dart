@@ -12,16 +12,19 @@ part 'selected_preset_client.freezed.dart';
 
 part 'selected_preset_client.g.dart';
 
-@freezed
+@Freezed(unionKey: 'messageType')
 sealed class SelectedPresetMessage with _$SelectedPresetMessage {
+  @FreezedUnionValue('SelectedPreset::read')
   factory SelectedPresetMessage.read() = ReadSelectedPresetMessage;
 
   @UuidJsonConverter()
-  factory SelectedPresetMessage.notify({required UuidValue selectedPresetId}) =
+  @FreezedUnionValue('SelectedPreset::notify')
+  factory SelectedPresetMessage.notify({required UuidValue selectedPreset}) =
       NotifySelectedPresetMessage;
 
   @UuidJsonConverter()
-  factory SelectedPresetMessage.write({required UuidValue selectedPresetId}) =
+  @FreezedUnionValue('SelectedPreset::write')
+  factory SelectedPresetMessage.write({required UuidValue selectedPreset}) =
       WriteSelectedPresetMessage;
 
   factory SelectedPresetMessage.fromJson(Map<String, dynamic> json) =>
@@ -69,9 +72,9 @@ class SelectedPresetClient {
 
   Stream<UuidValue> get selectedPreset => transport.stream
       .whereType<NotifySelectedPresetMessage>()
-      .map((event) => event.selectedPresetId);
+      .map((event) => event.selectedPreset);
 
   Future<void> selectPreset(UuidValue presetId) async {
-    transport.sink.add(SelectedPresetMessage.write(selectedPresetId: presetId));
+    transport.sink.add(SelectedPresetMessage.write(selectedPreset: presetId));
   }
 }

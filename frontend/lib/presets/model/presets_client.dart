@@ -52,8 +52,29 @@ class _PresetParametersJsonConverter
 
   @override
   String toJson(PresetParametersData object) {
-    // TODO: implement toJson
-    throw UnimplementedError();
+    final parameters = pb.PresetParameters(
+      ampGain: (object.ampGain * 1000).round(),
+      ampChannel: (object.ampChannel * 1000).round(),
+      bass: (object.bass * 1000).round(),
+      middle: (object.middle * 1000).round(),
+      treble: (object.treble * 1000).round(),
+      contour: (object.contour * 1000).round(),
+      volume: (object.volume * 1000).round(),
+      noiseGateThreshold: (object.noiseGateThreshold * 1000).round(),
+      noiseGateHysteresis: (object.noiseGateHysteresis * 1000).round(),
+      noiseGateAttack: (object.noiseGateAttack * 1000).round(),
+      noiseGateHold: (object.noiseGateHold * 1000).round(),
+      noiseGateRelease: (object.noiseGateRelease * 1000).round(),
+      noiseGateBypass: (object.noiseGateBypass * 1000).round(),
+      chorusRate: (object.chorusRate * 1000).round(),
+      chorusDepth: (object.chorusDepth * 1000).round(),
+      chorusMix: (object.chorusMix * 1000).round(),
+      chorusBypass: (object.chorusBypass * 1000).round(),
+      wahPosition: (object.wahPosition * 1000).round(),
+      wahVocal: (object.wahVocal * 1000).round(),
+      wahBypass: (object.wahBypass * 1000).round(),
+    );
+    return base64Encode(parameters.writeToBuffer());
   }
 }
 
