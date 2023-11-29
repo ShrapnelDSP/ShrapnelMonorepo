@@ -7,7 +7,9 @@ target_sources(presets
                src/presets_json_builder.cpp
                src/presets_json_parser.cpp
                src/selected_preset_json_builder.cpp
-               src/selected_preset_json_parser.cpp)
+               src/selected_preset_json_parser.cpp
+               src/presets_to_string.cpp
+               src/selected_preset_to_string.cpp)
 target_include_directories(presets PUBLIC proto/generated include)
 
 target_link_libraries(presets

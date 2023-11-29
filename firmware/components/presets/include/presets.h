@@ -1,7 +1,8 @@
 #pragma once
 
 #include <cstdint>
+#include "uuid.h"
 
 namespace shrapnel::presets {
-using id_t = std::array<uint8_t, 16>;
+using id_t = uuid::uuid_t;
 }

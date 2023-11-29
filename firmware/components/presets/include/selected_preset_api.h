@@ -35,5 +35,7 @@ using SelectedPresetApiMessage = std::variant<Read, Notify, Write>;
 etl::string_stream &operator<<(etl::string_stream &out, const Read &self);
 etl::string_stream &operator<<(etl::string_stream &out, const Notify &self);
 etl::string_stream &operator<<(etl::string_stream &out, const Write &self);
+etl::string_stream &operator<<(etl::string_stream &out,
+                               const SelectedPresetApiMessage &self);
 
 } // namespace shrapnel::selected_preset

@@ -49,30 +49,36 @@ std::string normalise_json(const std::string &json)
 
 TEST(SelectedPresetJsonBuilder, Notify)
 {
-    Notify input{.selectedPresetId{uuid::uuid_t{
-        0,
-        1,
-        2,
-        3,
-        4,
-        5,
-        6,
-        7,
-        8,
-        9,
-        10,
-        11,
-        12,
-        13,
-        14,
-        15,
-    }}};
+    SelectedPresetApiMessage input{
+        Notify{
+            .selectedPresetId{
+                uuid::uuid_t{
+                    0,
+                    1,
+                    2,
+                    3,
+                    4,
+                    5,
+                    6,
+                    7,
+                    8,
+                    9,
+                    10,
+                    11,
+                    12,
+                    13,
+                    14,
+                    15,
+                },
+            },
+        },
+    };
 
     rapidjson::Document document;
 
     auto reference = normalise_json(R"({
-          "messageType": "SelectedPreset::notify",
-          "selectedPreset": "00010203-0405-0607-0809-0a0b0c0d0e0f"
+          "selectedPreset": "00010203-0405-0607-0809-0a0b0c0d0e0f",
+          "messageType": "SelectedPreset::notify"
         })");
 
     EXPECT_THAT(write_json(input), reference);

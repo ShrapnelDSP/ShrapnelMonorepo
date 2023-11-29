@@ -1,5 +1,6 @@
 #include "presets_json_builder.h"
 #include "presets.pb-c.h"
+#include "presets_message_type.h"
 #include "uuid.h"
 #include <cppcodec/base64_default_rfc4648.hpp>
 #include <esp_log.h>
@@ -87,12 +88,33 @@ rapidjson::Value to_json(rapidjson::Document &document, const Notify &object)
     rapidjson::Value json;
     json.SetObject();
 
-    json.AddMember("messageType",
-                   rapidjson::StringRef("Presets::notify"),
-                   document.GetAllocator());
-
     json.AddMember(
         "preset", to_json(document, object.preset), document.GetAllocator());
+
+    return json;
+}
+
+template <>
+rapidjson::Value to_json(rapidjson::Document &document,
+                         const PresetsApiMessage &object)
+{
+    rapidjson::Value json;
+
+    auto visitor = [&](const auto &message)
+    {
+        using T = std::decay_t<decltype(message)>;
+
+        if constexpr(std::is_same_v<T, Notify>)
+        {
+            json = to_json(document, message);
+        }
+
+        json.AddMember("messageType",
+                       rapidjson::StringRef(get_message_type<T>()),
+                       document.GetAllocator());
+    };
+
+    std::visit(visitor, object);
 
     return json;
 }

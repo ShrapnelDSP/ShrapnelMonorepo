@@ -90,5 +90,7 @@ etl::string_stream &operator<<(etl::string_stream &out, const Notify &self);
 etl::string_stream &operator<<(etl::string_stream &out, const Create &self);
 etl::string_stream &operator<<(etl::string_stream &out, const Update &self);
 etl::string_stream &operator<<(etl::string_stream &out, const Delete &self);
+etl::string_stream &operator<<(etl::string_stream &out,
+                               const PresetsApiMessage &self);
 
 } // namespace shrapnel::presets

@@ -9,10 +9,6 @@ rapidjson::Value to_json(rapidjson::Document &document, const Notify &object)
     rapidjson::Value json;
     json.SetObject();
 
-    json.AddMember("messageType",
-                   rapidjson::StringRef("SelectedPreset::notify"),
-                   document.GetAllocator());
-
     json.AddMember("selectedPreset",
                    uuid::to_json(document, object.selectedPresetId),
                    document.GetAllocator());

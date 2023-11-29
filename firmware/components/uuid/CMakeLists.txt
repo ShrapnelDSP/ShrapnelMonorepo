@@ -8,4 +8,6 @@ target_sources(shrapnel_uuid PRIVATE src/uuid_json.cpp)
 target_link_libraries(shrapnel_uuid
                       PRIVATE
                       idf::log
-                      shrapnel::compiler_warning_flags)
+                      shrapnel::compiler_warning_flags
+                      PUBLIC
+                      shrapnel::rapidjson)

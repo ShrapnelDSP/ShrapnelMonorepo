@@ -153,7 +153,11 @@ class ParameterRepository implements ParameterRepositoryBase {
       websocket.dataStream.transform(
         StreamTransformer.fromBind((input) async* {
           await for (final event in input) {
-            yield ParameterServiceInputMessage.fromJson(event);
+            try {
+              yield ParameterServiceInputMessage.fromJson(event);
+            } catch (_) {
+              // ignore
+            }
           }
         }),
       );

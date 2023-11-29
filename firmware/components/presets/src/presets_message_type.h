@@ -39,6 +39,12 @@ constexpr const char *get_message_type<Create>()
 }
 
 template<>
+constexpr const char *get_message_type<Notify>()
+{
+    return "Presets::notify";
+}
+
+template<>
 constexpr const char *get_message_type<Update>()
 {
     return "Presets::update";

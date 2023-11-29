@@ -48,7 +48,11 @@ class SelectedPresetTransport
   Stream<SelectedPresetMessage> get stream => websocket.dataStream.transform(
         StreamTransformer.fromBind((jsonStream) async* {
           await for (final message in jsonStream) {
-            yield SelectedPresetMessage.fromJson(message);
+            try {
+              yield SelectedPresetMessage.fromJson(message);
+            } catch (_) {
+              // ignore
+            }
           }
         }),
       );

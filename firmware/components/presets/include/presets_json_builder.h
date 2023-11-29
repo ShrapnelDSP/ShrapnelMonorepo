@@ -53,4 +53,7 @@ rapidjson::Value to_json(rapidjson::Document &document,
 template <>
 rapidjson::Value to_json(rapidjson::Document &document, const Notify &object);
 
+template <>
+rapidjson::Value to_json(rapidjson::Document &document, const PresetsApiMessage &object);
+
 } // namespace shrapnel::presets

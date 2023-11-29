@@ -25,6 +25,10 @@
 #include "messages.h"
 #include "midi_mapping_json_builder.h"
 #include "midi_mapping_json_parser.h"
+#include "presets_json_builder.h"
+#include "presets_json_parser.h"
+#include "selected_preset_json_builder.h"
+#include "selected_preset_json_parser.h"
 #include "rapidjson/writer.h"
 #include <etl/string_stream.h>
 #include <rapidjson/document.h>
@@ -179,7 +183,28 @@ esp_err_t websocket_get_handler(httpd_req_t *req)
     
     {
         auto message =
-            midi::from_json<presets::PresetsApiMessage>(document.GetObject());
+            presets::from_json<presets::PresetsApiMessage>(document.GetObject());
+        if(message.has_value())
+        {
+            auto out = AppMessage{*message, fd};
+            int queue_rc = self->in_queue->send(&out, pdMS_TO_TICKS(100));
+            if(queue_rc != pdPASS)
+            {
+                ESP_LOGE(TAG, "in_queue message dropped");
+            }
+
+            etl::string<256> buffer;
+            etl::string_stream stream{buffer};
+            stream << *message;
+            ESP_LOGI(TAG, "decoded %s", buffer.data());
+
+            goto out;
+        }
+    }
+
+    {
+        auto message =
+            selected_preset::from_json<selected_preset::SelectedPresetApiMessage>(document.GetObject());
         if(message.has_value())
         {
             auto out = AppMessage{*message, fd};
