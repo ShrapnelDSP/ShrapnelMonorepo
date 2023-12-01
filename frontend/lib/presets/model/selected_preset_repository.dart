@@ -9,10 +9,9 @@ import 'selected_preset_client.dart';
 class SelectedPresetRepository implements SelectedPresetRepositoryBase {
   SelectedPresetRepository({required this.client}) {
     unawaited(_subject.addStream(client.selectedPreset));
-    // FIXME: initialise needs to run whenever we become connected, not in the
-    // constructor. It could stay in the constructor as long as a new instance
-    // of this is created every time we reconnect.
-    client.initialise();
+    client.connectionStream.listen((_) {
+      unawaited(client.initialise());
+    });
   }
 
   SelectedPresetClient client;

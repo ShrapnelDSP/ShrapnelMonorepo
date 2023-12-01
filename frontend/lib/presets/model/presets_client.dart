@@ -201,6 +201,9 @@ class PresetsTransport
         }),
       );
 
+  @override
+  Stream<void> get connectionStream => websocket.connectionStream;
+
   JsonWebsocket websocket;
 
   @override
@@ -210,18 +213,20 @@ class PresetsTransport
 }
 
 class PresetsClient {
-  PresetsClient({required this.transport});
+  PresetsClient(
+      {required MessageTransport<PresetsMessage, PresetsMessage> transport,})
+      : _transport = transport;
 
-  MessageTransport<PresetsMessage, PresetsMessage> transport;
+  final MessageTransport<PresetsMessage, PresetsMessage> _transport;
 
   /// Firmware will reply by sending a preset update message for every preset
   /// that already exists.
   Future<void> initialise() async {
-    transport.sink.add(PresetsMessage.initialise());
+    _transport.sink.add(PresetsMessage.initialise());
   }
 
   Stream<presets.PresetState> get presetUpdates =>
-      transport.stream.whereType<PresetsMessageNotify>().map(
+      _transport.stream.whereType<PresetsMessageNotify>().map(
             (event) => presets.PresetState(
               id: event.preset.id,
               name: event.preset.name,
@@ -252,20 +257,22 @@ class PresetsClient {
           );
 
   Future<void> create(presets.PresetState preset) async {
-    transport.sink
+    _transport.sink
         .add(PresetsMessage.create(PresetData.fromPresetState(preset)));
   }
 
   Future<void> delete(UuidValue id) async {
-    transport.sink.add(PresetsMessage.delete(id));
+    _transport.sink.add(PresetsMessage.delete(id));
   }
 
   Future<void> update(presets.PresetState preset) async {
-    transport.sink
+    _transport.sink
         .add(PresetsMessage.update(PresetData.fromPresetState(preset)));
   }
 
+  Stream<void> get connectionStream => _transport.connectionStream;
+
   void dispose() {
-    transport.dispose();
+    _transport.dispose();
   }
 }

@@ -9,7 +9,9 @@ import 'presets_service.dart';
 
 class PresetsRepository implements PresetsRepositoryBase {
   PresetsRepository({required this.client}) {
-    unawaited(client.initialise());
+    client.connectionStream.listen((_) {
+      unawaited(client.initialise());
+    });
   }
 
   PresetsClient client;

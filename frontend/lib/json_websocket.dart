@@ -33,6 +33,7 @@ class JsonWebsocket {
         (dynamic event) => json.decode(event as String) as Map<String, dynamic>,
       );
 
+  /// A null is emitted every time a connection is successfully created
   Stream<void> get connectionStream => _websocket.connectionStream;
 
   bool get isAlive => _websocket.isAlive;

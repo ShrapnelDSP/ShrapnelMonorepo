@@ -17,6 +17,7 @@
  * ShrapnelDSP. If not, see <https://www.gnu.org/licenses/>.
  */
 
+// #define LOG_LOCAL_LEVEL ESP_LOG_VERBOSE
 #include "server.h"
 #include "cmd_handling_json.h"
 #include "cmd_handling_json_builder.h"
@@ -53,6 +54,8 @@ esp_err_t websocket_get_handler(httpd_req_t *req);
 
 void Server::start()
 {
+    esp_log_level_set(TAG, ESP_LOG_VERBOSE);
+    
     httpd_handle_t new_server = nullptr;
     httpd_config_t config = HTTPD_DEFAULT_CONFIG();
     config.server_port = 8080;
@@ -196,7 +199,7 @@ esp_err_t websocket_get_handler(httpd_req_t *req)
             etl::string<256> buffer;
             etl::string_stream stream{buffer};
             stream << *message;
-            ESP_LOGI(TAG, "decoded %s", buffer.data());
+            ESP_LOGI(TAG, "decoded PresetsApiMessage %s", buffer.data());
 
             goto out;
         }
@@ -217,7 +220,7 @@ esp_err_t websocket_get_handler(httpd_req_t *req)
             etl::string<256> buffer;
             etl::string_stream stream{buffer};
             stream << *message;
-            ESP_LOGI(TAG, "decoded %s", buffer.data());
+            ESP_LOGI(TAG, "decoded SelectedPresetApiMessage %s", buffer.data());
 
             goto out;
         }

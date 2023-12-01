@@ -8,6 +8,9 @@ abstract class MessageTransport<T1, T2> {
   /// Messages from the other side of the connection will appear in this stream.
   Stream<T2> get stream;
 
+  /// A null is emitted every time a connection is successfully created
+  Stream<void> get connectionStream;
+
   /// Must be called to clean up resource after the transport is no longer in
   /// use.
   void dispose();

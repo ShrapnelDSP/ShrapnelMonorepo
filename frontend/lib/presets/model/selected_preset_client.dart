@@ -57,6 +57,9 @@ class SelectedPresetTransport
         }),
       );
 
+  @override
+  Stream<void> get connectionStream => websocket.connectionStream;
+
   JsonWebsocket websocket;
 
   @override
@@ -66,19 +69,25 @@ class SelectedPresetTransport
 }
 
 class SelectedPresetClient {
-  SelectedPresetClient({required this.transport});
+  SelectedPresetClient({
+    required MessageTransport<SelectedPresetMessage, SelectedPresetMessage>
+        transport,
+  }) : _transport = transport;
 
-  MessageTransport<SelectedPresetMessage, SelectedPresetMessage> transport;
+  final MessageTransport<SelectedPresetMessage, SelectedPresetMessage>
+      _transport;
 
-  void initialise() {
-    transport.sink.add(SelectedPresetMessage.read());
+  Future<void> initialise() async {
+    _transport.sink.add(SelectedPresetMessage.read());
   }
 
-  Stream<UuidValue> get selectedPreset => transport.stream
+  Stream<UuidValue> get selectedPreset => _transport.stream
       .whereType<NotifySelectedPresetMessage>()
       .map((event) => event.selectedPreset);
 
   Future<void> selectPreset(UuidValue presetId) async {
-    transport.sink.add(SelectedPresetMessage.write(selectedPreset: presetId));
+    _transport.sink.add(SelectedPresetMessage.write(selectedPreset: presetId));
   }
+
+  Stream<void> get connectionStream => _transport.connectionStream;
 }
