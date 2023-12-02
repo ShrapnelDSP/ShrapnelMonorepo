@@ -25,6 +25,7 @@ if(ESP_PLATFORM)
                           shrapnel::pcm3060
                           shrapnel::persistence
                           shrapnel::presets
+                          shrapnel::presets_storage
                           shrapnel::server
                           shrapnel::wifi
                           shrapnel::compiler_warning_flags)

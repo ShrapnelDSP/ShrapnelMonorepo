@@ -76,6 +76,7 @@
 #include "server.h"
 #include "wifi_state_machine.h"
 
+#include "presets_storage.h"
 #include "iir_concrete.h"
 
 #define TAG "main"
@@ -423,6 +424,7 @@ void debug_dump_task_list()
 
 void nvs_debug_print()
 {
+    ESP_LOGI(TAG, "dumping NVS using C interface");
     nvs_iterator_t it = NULL;
     esp_err_t res = nvs_entry_find("nvs", "persistence", NVS_TYPE_ANY, &it);
     while(res == ESP_OK) {
@@ -432,6 +434,12 @@ void nvs_debug_print()
         res = nvs_entry_next(&it);
     }
     nvs_release_iterator(it);
+    
+    ESP_LOGI(TAG, "dumping NVS using C++ abstraction");
+    auto storage = presets_storage::Storage("nvs", "persistence");
+    for(const auto& info : storage ) {
+        ESP_LOGI(TAG, "key '%s', type '%d'", info.key, info.type);
+    }
 }
 
 } // namespace shrapnel
