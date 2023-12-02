@@ -19,6 +19,7 @@ target_link_libraries(presets
                       shrapnel::rapidjson
                       shrapnel::etl
                       shrapnel::uuid
+                      shrapnel::presets_storage
                       PRIVATE
                       cppcodec)
 

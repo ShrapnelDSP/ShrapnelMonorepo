@@ -327,7 +327,15 @@ public:
 
         a_audio_params->add_observer(parameter_observer);
 
-        serialise_parameters(*a_audio_params);
+        {
+            uint8_t buffer[100];
+            auto data = std::span<uint8_t, std::dynamic_extent>(buffer);
+            auto test = presets::serialise_live_parameters(*a_audio_params);
+            int rc = presets::serialise_parameters(test, data);
+            assert(rc == 0);
+            ESP_LOG_BUFFER_HEX(TAG, data.data(), data.size());
+            ESP_LOGI(TAG, "Packed size: %zu", data.size());
+        }
 
         auto parameter_notifier = std::make_shared<ParameterUpdateNotifier>(
             a_audio_params, a_send_message);

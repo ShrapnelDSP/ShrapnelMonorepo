@@ -436,7 +436,7 @@ void nvs_debug_print()
     nvs_release_iterator(it);
     
     ESP_LOGI(TAG, "dumping NVS using C++ abstraction");
-    auto storage = presets_storage::Storage("nvs", "persistence");
+    auto storage = presets_storage::Storage();
     for(const auto& info : storage ) {
         ESP_LOGI(TAG, "key '%s', type '%d'", info.key, info.type);
     }

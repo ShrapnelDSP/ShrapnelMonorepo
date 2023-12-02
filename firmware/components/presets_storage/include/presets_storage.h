@@ -13,11 +13,7 @@ namespace shrapnel::presets_storage {
 class Storage
 {
 public:
-    Storage(const char *part_name, const char *namespace_name)
-        : part_name(part_name),
-          namespace_name(namespace_name)
-    {
-    }
+    Storage() {}
 
     struct Iterator
     {
@@ -39,8 +35,19 @@ public:
               namespace_name(namespace_name),
               type(type)
         {
-            ESP_ERROR_CHECK(
-                nvs_entry_find(part_name, namespace_name, type, &self));
+            int rc = nvs_entry_find(part_name, namespace_name, type, &self);
+            if(rc == ESP_ERR_NVS_NOT_FOUND)
+            {
+                assert(self == nullptr);
+            }
+            else if(rc != ESP_OK)
+            {
+                assert(self == nullptr);
+                ESP_LOGE(TAG,
+                         "nvs_entry_find failed: %d %s",
+                         rc,
+                         esp_err_to_name(rc));
+            }
         }
         ~Iterator() { nvs_release_iterator(self); }
 
@@ -49,8 +56,23 @@ public:
               namespace_name(other.namespace_name),
               type(other.type)
         {
-            ESP_ERROR_CHECK(
-                nvs_entry_find(part_name, namespace_name, type, &self));
+            int rc = nvs_entry_find(part_name, namespace_name, type, &self);
+
+            if(rc == ESP_ERR_NVS_NOT_FOUND)
+            {
+                assert(self == nullptr);
+                return;
+            }
+            else if(rc != ESP_OK)
+            {
+                assert(self == nullptr);
+                ESP_LOGE(TAG,
+                         "nvs_entry_find failed: %d %s",
+                         rc,
+                         esp_err_to_name(rc));
+                return;
+            }
+
             for(i = 0; i < other.i; i++)
             {
                 ESP_ERROR_CHECK(nvs_entry_next(&self));
@@ -148,7 +170,7 @@ public:
             else if(rc != ESP_OK)
             {
                 ESP_LOGE(TAG,
-                         "nvs_entry_next falied: %d %s",
+                         "nvs_entry_next failed: %d %s",
                          rc,
                          esp_err_to_name(rc));
             }
@@ -162,17 +184,90 @@ public:
     };
 
     /// \return  non-zero on error
-    // virtual int save(const char *key, std::span<uint8_t> data) = 0;
+    int save(const char *key, std::span<uint8_t> data)
+    {
+        nvs_handle_t nvs_handle;
+        esp_err_t err;
+        int rc = -1;
+
+        etl::string<15> truncated_key{key};
+
+        ESP_ERROR_CHECK_WITHOUT_ABORT(
+            err = nvs_open(namespace_name, NVS_READWRITE, &nvs_handle));
+        if(err != ESP_OK)
+            goto out;
+
+        ESP_ERROR_CHECK_WITHOUT_ABORT(
+            err = nvs_set_blob(
+                nvs_handle, truncated_key.data(), data.data(), data.size()));
+        if(err != ESP_OK)
+            goto out;
+
+        ESP_ERROR_CHECK_WITHOUT_ABORT(err = nvs_commit(nvs_handle));
+        if(err != ESP_OK)
+            goto out;
+
+        rc = 0;
+
+    out:
+        nvs_close(nvs_handle);
+        return rc;
+    };
+
     /// \return  non-zero on error
-    // virtual int load(const char *key, std::span<uint8_t> &data) = 0;
+    int load(const char *key,
+             const std::span<uint8_t> &buffer,
+             std::span<uint8_t> &data_out)
+    {
+        nvs_handle_t nvs_handle;
+        esp_err_t err;
+        std::size_t required_size = 0;
+        int rc = -1;
+
+        etl::string<15> truncated_key{key};
+
+        ESP_ERROR_CHECK_WITHOUT_ABORT(
+            err = nvs_open(namespace_name, NVS_READONLY, &nvs_handle));
+        if(err != ESP_OK)
+            goto out;
+
+        // query the required size
+        ESP_ERROR_CHECK_WITHOUT_ABORT(
+            err = nvs_get_blob(
+                nvs_handle, truncated_key.data(), nullptr, &required_size));
+        if(err != ESP_OK)
+            goto out;
+
+        if(required_size > buffer.size())
+        {
+            ESP_LOGE(TAG,
+                     "Not enough space in the output buffer. Need %zu, got %zu",
+                     required_size,
+                     buffer.size());
+            goto out;
+        }
+
+        ESP_ERROR_CHECK_WITHOUT_ABORT(err = nvs_get_blob(nvs_handle,
+                                                         truncated_key.data(),
+                                                         buffer.data(),
+                                                         &required_size));
+        if(err != ESP_OK)
+            goto out;
+
+        data_out = buffer.subspan(0, required_size);
+        rc = 0;
+    out:
+        nvs_close(nvs_handle);
+        return rc;
+    };
 
     Iterator begin() { return {part_name, namespace_name, NVS_TYPE_ANY}; }
 
     Iterator end() { return Iterator(); }
 
 private:
-    const char *part_name;
-    const char *namespace_name;
+    static constexpr char part_name[] = "nvs";
+    static constexpr char namespace_name[] = "presets";
     static constexpr char TAG[] = "presets_storage";
 };
 
