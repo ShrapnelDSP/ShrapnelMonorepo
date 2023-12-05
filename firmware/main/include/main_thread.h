@@ -330,8 +330,15 @@ public:
         {
             uint8_t buffer[100];
             auto data = std::span<uint8_t, std::dynamic_extent>(buffer);
-            auto test = presets::serialise_live_parameters(*a_audio_params);
-            int rc = presets::serialise_parameters(test, data);
+            int rc = presets::serialise_preset(
+                {
+                    .id{0},
+                    .name{"Demo Preset"},
+                    .parameters{
+                        presets::serialise_live_parameters(*a_audio_params),
+                    },
+                },
+                data);
             assert(rc == 0);
             ESP_LOG_BUFFER_HEX(TAG, data.data(), data.size());
             ESP_LOGI(TAG, "Packed size: %zu", data.size());

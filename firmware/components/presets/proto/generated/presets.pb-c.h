@@ -16,6 +16,7 @@ PROTOBUF_C__BEGIN_DECLS
 
 
 typedef struct PresetParameters PresetParameters;
+typedef struct Preset Preset;
 
 
 /* --- enums --- */
@@ -52,6 +53,27 @@ struct  PresetParameters
 , 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
 
 
+struct  Preset
+{
+  ProtobufCMessage base;
+  /*
+   * A UUID to identify the preset
+   */
+  ProtobufCBinaryData id;
+  /*
+   * The name given by the user to the preset
+   */
+  char *name;
+  /*
+   * The parameter values for this preset
+   */
+  PresetParameters *parameters;
+};
+#define PRESET__INIT \
+ { PROTOBUF_C_MESSAGE_INIT (&preset__descriptor) \
+, {0,NULL}, (char *)protobuf_c_empty_string, NULL }
+
+
 /* PresetParameters methods */
 void   preset_parameters__init
                      (PresetParameters         *message);
@@ -71,10 +93,32 @@ PresetParameters *
 void   preset_parameters__free_unpacked
                      (PresetParameters *message,
                       ProtobufCAllocator *allocator);
+/* Preset methods */
+void   preset__init
+                     (Preset         *message);
+size_t preset__get_packed_size
+                     (const Preset   *message);
+size_t preset__pack
+                     (const Preset   *message,
+                      uint8_t             *out);
+size_t preset__pack_to_buffer
+                     (const Preset   *message,
+                      ProtobufCBuffer     *buffer);
+Preset *
+       preset__unpack
+                     (ProtobufCAllocator  *allocator,
+                      size_t               len,
+                      const uint8_t       *data);
+void   preset__free_unpacked
+                     (Preset *message,
+                      ProtobufCAllocator *allocator);
 /* --- per-message closures --- */
 
 typedef void (*PresetParameters_Closure)
                  (const PresetParameters *message,
+                  void *closure_data);
+typedef void (*Preset_Closure)
+                 (const Preset *message,
                   void *closure_data);
 
 /* --- services --- */
@@ -83,6 +127,7 @@ typedef void (*PresetParameters_Closure)
 /* --- descriptors --- */
 
 extern const ProtobufCMessageDescriptor preset_parameters__descriptor;
+extern const ProtobufCMessageDescriptor preset__descriptor;
 
 PROTOBUF_C__END_DECLS
 

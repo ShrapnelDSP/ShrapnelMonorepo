@@ -1,5 +1,6 @@
 #include "presets_api.h"
 #include "presets_storage.h"
+#include "preset_serialisation.h"
 
 namespace shrapnel::presets {
 
@@ -8,9 +9,12 @@ class PresetsManager
 public:
     [[nodiscard]] int create(const PresetData &preset)
     {
+        std::array<uint8_t, 100> buffer;
+        auto data = std::span<uint8_t, std::dynamic_extent>(buffer);
         
-        
-        storage.save();
+        serialise_preset();
+       
+        storage.save(preset.id, );
         return 0;
     }
 

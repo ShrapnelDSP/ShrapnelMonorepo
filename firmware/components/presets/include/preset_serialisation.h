@@ -72,4 +72,57 @@ inline int serialise_parameters(const ParametersData &parameters, std::span<uint
     return 0;
 }
 
+inline int serialise_preset(const PresetData &preset,
+                            std::span<uint8_t> &buffer)
+{
+    struct PresetParameters parameters_proto = PRESET_PARAMETERS__INIT;
+    preset_parameters__init(&parameters_proto);
+
+    parameters_proto.amp_gain = preset.parameters.amp_gain * 1000;
+    parameters_proto.amp_channel = preset.parameters.amp_channel * 1000;
+    parameters_proto.bass = preset.parameters.bass * 1000;
+    parameters_proto.middle = preset.parameters.middle * 1000;
+    parameters_proto.treble = preset.parameters.treble * 1000;
+    parameters_proto.contour = preset.parameters.contour * 1000;
+    parameters_proto.volume = preset.parameters.volume * 1000;
+    parameters_proto.noise_gate_threshold =
+        preset.parameters.noise_gate_threshold * 1000;
+    parameters_proto.noise_gate_hysteresis =
+        preset.parameters.noise_gate_hysteresis * 1000;
+    parameters_proto.noise_gate_attack =
+        preset.parameters.noise_gate_attack * 1000;
+    parameters_proto.noise_gate_hold = preset.parameters.noise_gate_hold * 1000;
+    parameters_proto.noise_gate_release =
+        preset.parameters.noise_gate_release * 1000;
+    parameters_proto.noise_gate_bypass =
+        preset.parameters.noise_gate_bypass * 1000;
+    parameters_proto.chorus_rate = preset.parameters.chorus_rate * 1000;
+    parameters_proto.chorus_depth = preset.parameters.chorus_depth * 1000;
+    parameters_proto.chorus_mix = preset.parameters.chorus_mix * 1000;
+    parameters_proto.chorus_bypass = preset.parameters.chorus_bypass * 1000;
+    parameters_proto.wah_position = preset.parameters.wah_position * 1000;
+    parameters_proto.wah_vocal = preset.parameters.wah_vocal * 1000;
+    parameters_proto.wah_bypass = preset.parameters.wah_bypass * 1000;
+
+    struct Preset preset_proto = PRESET__INIT;
+    preset__init(&preset_proto);
+
+    preset_proto.id = (ProtobufCBinaryData){
+        .len = preset.id.size(),
+        .data = const_cast<uint8_t *>(preset.id.data()),
+    };
+    preset_proto.name = const_cast<char *>(preset.name.c_str());
+    preset_proto.parameters = &parameters_proto;
+
+    auto packed_size = preset__get_packed_size(&preset_proto);
+    if(packed_size > buffer.size())
+    {
+        return -1;
+    }
+
+    preset__pack(&preset_proto, buffer.data());
+    buffer = buffer.subspan(0, packed_size);
+    return 0;
+}
+
 } // namespace shrapnel::presets

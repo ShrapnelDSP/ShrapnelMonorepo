@@ -22,3 +22,12 @@ message PresetParameters {
   int32 wah_vocal = 19;
   int32 wah_bypass = 20;
 }
+
+message Preset {
+  // A UUID to identify the preset
+  bytes id = 1;
+  // The name given by the user to the preset
+  string name = 2;
+  // The parameter values for this preset
+  PresetParameters parameters = 3;
+}
