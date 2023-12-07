@@ -13,8 +13,6 @@ namespace shrapnel::presets_storage {
 class Storage
 {
 public:
-    Storage() {}
-
     struct Iterator
     {
         using difference_type = int;
@@ -184,13 +182,11 @@ public:
     };
 
     /// \return  non-zero on error
-    int save(const char *key, std::span<uint8_t> data)
+    int save(const etl::string<15> &key, std::span<uint8_t> data)
     {
         nvs_handle_t nvs_handle;
         esp_err_t err;
         int rc = -1;
-
-        etl::string<15> truncated_key{key};
 
         ESP_ERROR_CHECK_WITHOUT_ABORT(
             err = nvs_open(namespace_name, NVS_READWRITE, &nvs_handle));
@@ -198,8 +194,8 @@ public:
             goto out;
 
         ESP_ERROR_CHECK_WITHOUT_ABORT(
-            err = nvs_set_blob(
-                nvs_handle, truncated_key.data(), data.data(), data.size()));
+            err =
+                nvs_set_blob(nvs_handle, key.data(), data.data(), data.size()));
         if(err != ESP_OK)
             goto out;
 
@@ -215,16 +211,13 @@ public:
     };
 
     /// \return  non-zero on error
-    int load(const char *key,
-             const std::span<uint8_t> &buffer,
-             std::span<uint8_t> &data_out)
+    int load(const etl::string<15> &key,
+             std::span<uint8_t> &buffer)
     {
         nvs_handle_t nvs_handle;
         esp_err_t err;
         std::size_t required_size = 0;
         int rc = -1;
-
-        etl::string<15> truncated_key{key};
 
         ESP_ERROR_CHECK_WITHOUT_ABORT(
             err = nvs_open(namespace_name, NVS_READONLY, &nvs_handle));
@@ -233,8 +226,8 @@ public:
 
         // query the required size
         ESP_ERROR_CHECK_WITHOUT_ABORT(
-            err = nvs_get_blob(
-                nvs_handle, truncated_key.data(), nullptr, &required_size));
+            err =
+                nvs_get_blob(nvs_handle, key.data(), nullptr, &required_size));
         if(err != ESP_OK)
             goto out;
 
@@ -247,15 +240,42 @@ public:
             goto out;
         }
 
-        ESP_ERROR_CHECK_WITHOUT_ABORT(err = nvs_get_blob(nvs_handle,
-                                                         truncated_key.data(),
-                                                         buffer.data(),
-                                                         &required_size));
+        ESP_ERROR_CHECK_WITHOUT_ABORT(
+            err = nvs_get_blob(
+                nvs_handle, key.data(), buffer.data(), &required_size));
         if(err != ESP_OK)
             goto out;
 
-        data_out = buffer.subspan(0, required_size);
+        buffer = buffer.subspan(0, required_size);
         rc = 0;
+    out:
+        nvs_close(nvs_handle);
+        return rc;
+    };
+
+    /// \return  non-zero on error
+    int remove(const etl::string<15> &key)
+    {
+        nvs_handle_t nvs_handle;
+        esp_err_t err;
+        int rc = -1;
+
+        ESP_ERROR_CHECK_WITHOUT_ABORT(
+            err = nvs_open(namespace_name, NVS_READWRITE, &nvs_handle));
+        if(err != ESP_OK)
+            goto out;
+
+        ESP_ERROR_CHECK_WITHOUT_ABORT(
+            err = nvs_erase_key(nvs_handle, key.data()));
+        if(err != ESP_OK)
+            goto out;
+
+        ESP_ERROR_CHECK_WITHOUT_ABORT(err = nvs_commit(nvs_handle));
+        if(err != ESP_OK)
+            goto out;
+
+        rc = 0;
+
     out:
         nvs_close(nvs_handle);
         return rc;
