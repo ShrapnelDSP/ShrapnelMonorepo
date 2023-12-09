@@ -1,10 +1,11 @@
 #include "preset_serialisation.h"
 #include "presets_api.h"
 #include "presets_storage.h"
+#include <etl/delegate.h>
+#include <memory>
 
 namespace shrapnel::presets {
 
-// FIXME: create, update, delete should notify listeners
 class PresetsManager
 {
 public:
@@ -13,13 +14,15 @@ public:
     [[nodiscard]] int update(id_t id, const PresetData &preset);
     void remove(id_t id);
 
+    void for_each(etl::delegate<void(id_t, const PresetData &)> callback);
+
 private:
     static inline etl::string<15> id_to_key(id_t id)
     {
         char hex[9];
         int rc = snprintf(hex, sizeof hex, "%08" PRIx32, id);
         assert(rc == 9);
-        return etl::string<15>(hex, 9);
+        return {hex, 9};
     };
 
     static inline id_t key_to_id(const etl::string<15> &key)
@@ -30,7 +33,7 @@ private:
         return id;
     };
 
-    presets_storage::Storage storage;
+    std::unique_ptr<presets_storage::Storage> storage;
 };
 
 } // namespace shrapnel::presets

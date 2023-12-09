@@ -531,23 +531,61 @@ private:
                     if constexpr(std::is_same_v<PresetsMessageT,
                                                 presets::Initialise>)
                     {
-                        // FIXME: make presets manager iterable
+                        // FIXME: is the server running in a background thread?
+                        // If not, then this will fill up the message queue
+                        // without giving the server a chance to run.
+                        // 
+                        // The parameter initialisation is done the same way, so
+                        // maybe this is fine?
+                        presets_manager->for_each(
+                            [this](presets::id_t id,
+                                   const presets::PresetData &preset)
+                            {
+                                send_message({presets::Update{
+                                                  .id = id,
+                                                  .preset = preset,
+                                              },
+                                              std::nullopt});
+                            });
                     }
                     else if constexpr(std::is_same_v<PresetsMessageT,
                                                      presets::Create>)
                     {
-                        presets_manager->create(presets_message.preset);
+                        presets::id_t id;
+                        int rc =
+                            presets_manager->create(presets_message.preset, id);
+                        if(rc != 0)
+                        {
+                            ESP_LOGE(TAG, "Failed to create preset");
+                            return std::nullopt;
+                        }
+                        return (presets::Notify){
+                            .id{id},
+                            .preset{presets_message.preset},
+                        };
                     }
                     else if constexpr(std::is_same_v<PresetsMessageT,
                                                      presets::Update>)
                     {
-                        presets_manager->update(presets_message.id,
-                                                presets_message.preset);
+                        int rc = presets_manager->update(
+                            presets_message.id, presets_message.preset);
+                        if(rc != 0)
+                        {
+                            ESP_LOGE(TAG, "Failed to update preset");
+                            return std::nullopt;
+                        }
+
+                        return (presets::Notify){
+                            .id{presets_message.id},
+                            .preset{presets_message.preset},
+                        };
                     }
                     else if constexpr(std::is_same_v<PresetsMessageT,
                                                      presets::Delete>)
                     {
                         presets_manager->remove(presets_message.id);
+                        // FIXME: add message for notifying about deletion to
+                        // the API.
                     }
                     else
                     {
