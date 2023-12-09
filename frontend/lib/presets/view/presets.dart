@@ -22,9 +22,9 @@ class Presets extends StatelessWidget {
   final void Function()? revertPreset;
   final void Function()? selectPreviousPreset;
   final void Function()? selectNextPreset;
-  final void Function(PresetState preset)? selectPreset;
-  final List<PresetState>? presets;
-  final PresetState? selectedPreset;
+  final void Function(PresetRecord preset)? selectPreset;
+  final List<PresetRecord>? presets;
+  final PresetRecord? selectedPreset;
 
   @override
   Widget build(BuildContext context) {
@@ -79,7 +79,7 @@ class Presets extends StatelessWidget {
               width: 150,
               child: ButtonTheme(
                 alignedDropdown: true,
-                child: DropdownButton<PresetState>(
+                child: DropdownButton<PresetRecord>(
                   key: const Key('presets-current-preset-name'),
                   isExpanded: true,
                   value: selectedPreset,
@@ -87,7 +87,7 @@ class Presets extends StatelessWidget {
                       ?.map(
                         (e) => DropdownMenuItem(
                           value: e,
-                          child: Text(e.name),
+                          child: Text(e.preset.name),
                         ),
                       )
                       .toList(),

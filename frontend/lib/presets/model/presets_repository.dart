@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:rxdart/rxdart.dart';
-import 'package:uuid/uuid.dart';
 
 import 'presets.dart';
 import 'presets_client.dart';
@@ -17,7 +16,7 @@ class PresetsRepository implements PresetsRepositoryBase {
   PresetsClient client;
 
   @override
-  Future<void> create(PresetState preset) async {
+  Future<PresetRecord> create(PresetState preset) async {
     await client.create(preset);
 
     final newValue = _presets.value..[preset.id] = preset;
@@ -25,20 +24,20 @@ class PresetsRepository implements PresetsRepositoryBase {
   }
 
   @override
-  Future<void> delete(UuidValue id) async {
+  Future<void> delete(int id) async {
     await client.delete(id);
 
     final newValue = _presets.value..remove(id);
     _presets.add(newValue);
   }
 
-  final _presets = BehaviorSubject.seeded(<UuidValue, PresetState>{});
+  final _presets = BehaviorSubject.seeded(<int, PresetRecord>{});
 
   @override
-  ValueStream<Map<UuidValue, PresetState>> get presets => _presets;
+  ValueStream<Map<int, PresetRecord>> get presets => _presets;
 
   @override
-  Future<void> update(PresetState preset) async {
+  Future<void> update(PresetRecord preset) async {
     await client.update(preset);
 
     final newValue = _presets.value..[preset.id] = preset;

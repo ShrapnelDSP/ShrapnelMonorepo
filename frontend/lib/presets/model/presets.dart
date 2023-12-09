@@ -1,6 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:state_notifier/state_notifier.dart';
-import 'package:uuid/uuid.dart';
 
 part 'presets.freezed.dart';
 
@@ -31,9 +30,16 @@ class PresetParametersData with _$PresetParametersData {
 }
 
 @freezed
+class PresetRecord with _$PresetRecord {
+  factory PresetRecord({
+    required int id,
+    required PresetState preset,
+  }) = _PresetRecord;
+}
+
+@freezed
 class PresetState with _$PresetState {
   factory PresetState({
-    required UuidValue id,
     required String name,
     required PresetParametersData parameters,
   }) = _PresetState;
@@ -47,8 +53,8 @@ class PresetsState with _$PresetsState {
     required bool isCurrentModified,
     required bool canDeleteCurrent,
     required bool canUndo,
-    required List<PresetState> presets,
-    required UuidValue selectedPreset,
+    required List<PresetRecord> presets,
+    required int selectedPreset,
   }) = _PresetsState;
 
   PresetsState._();
@@ -61,10 +67,10 @@ abstract class PresetsServiceBase extends StateNotifier<PresetsState> {
   void create(String name);
 
   /// Changes the active preset to a new value.
-  void select(UuidValue id);
+  void select(int id);
 
   /// Delete a preset.
-  void delete(UuidValue id);
+  void delete(int id);
 
   /// Save changes made to the current preset.
   void saveChanges();

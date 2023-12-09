@@ -3,13 +3,12 @@ import 'dart:convert';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shrapnel/presets/model/presets_client.dart';
 import 'package:shrapnel/presets/model/selected_preset_client.dart';
-import 'package:uuid/uuid.dart';
 
 void main() {
   test('PresetsMessage.notify from JSON', () {
     final reference = PresetsMessage.notify(
+      42,
       PresetData(
-        id: UuidValue('00000000-0000-0000-0000-000000000000'),
         name: 'test',
         parameters: PresetParametersData(
           ampGain: 0.001,
@@ -39,8 +38,8 @@ void main() {
     final jsonMessage = json.decode('''
     {
         "messageType": "Presets::notify",
+        "id": 42,
         "preset": {
-        "id": "00000000-0000-0000-0000-000000000000",
         "name": "test",
         "parameters": "CAEQAhgDIAQoBTAGOAdACEgJUApYC2AMaA1wDngPgAEQiAERkAESmAEToAEU"
         }
@@ -64,7 +63,6 @@ void main() {
   test('PresetsMessage.create to JSON', () {
     final message = PresetsMessage.create(
       PresetData(
-        id: UuidValue('00000000-0000-0000-0000-000000000000'),
         name: 'test',
         parameters: PresetParametersData(
           ampGain: 0.001,
@@ -95,7 +93,6 @@ void main() {
     {
       "messageType": "Presets::create",
       "preset": {
-        "id": "00000000-0000-0000-0000-000000000000",
         "name": "test",
         "parameters": "CAEQAhgDIAQoBTAGOAdACEgJUApYC2AMaA1wDngPgAEQiAERkAESmAEToAEU"
       }
@@ -107,8 +104,8 @@ void main() {
 
   test('PresetsMessage.update to JSON', () {
     final message = PresetsMessage.update(
+      42,
       PresetData(
-        id: UuidValue('00000000-0000-0000-0000-000000000000'),
         name: 'test',
         parameters: PresetParametersData(
           ampGain: 0.001,
@@ -138,8 +135,8 @@ void main() {
     final reference = json.decode('''
     {
       "messageType": "Presets::update",
+      "id": 42,
       "preset": {
-        "id": "00000000-0000-0000-0000-000000000000",
         "name": "test",
         "parameters": "CAEQAhgDIAQoBTAGOAdACEgJUApYC2AMaA1wDngPgAEQiAERkAESmAEToAEU"
       }
@@ -150,14 +147,12 @@ void main() {
   });
 
   test('SelectedPresetMessage.notify from JSON', () {
-    final reference = SelectedPresetMessage.notify(
-      selectedPreset: UuidValue('00000000-0000-0000-0000-000000000000'),
-    );
+    final reference = SelectedPresetMessage.notify(selectedPreset: 42);
 
     final jsonMessage = json.decode('''
     {
       "messageType": "SelectedPreset::notify",
-      "selectedPreset": "00000000-0000-0000-0000-000000000000"
+      "selectedPreset": 42
     }
     ''') as Map<String, dynamic>;
 
@@ -177,14 +172,12 @@ void main() {
   });
 
   test('SelectedPresetMessage.write from JSON', () {
-    final message = SelectedPresetMessage.write(
-      selectedPreset: UuidValue('00000000-0000-0000-0000-000000000000'),
-    );
+    final message = SelectedPresetMessage.write(selectedPreset: 42);
 
     final reference = json.decode('''
     {
       "messageType": "SelectedPreset::write",
-      "selectedPreset": "00000000-0000-0000-0000-000000000000"
+      "selectedPreset": 42
     }
     ''') as Map<String, dynamic>;
 

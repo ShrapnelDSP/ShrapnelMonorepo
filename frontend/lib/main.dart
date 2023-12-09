@@ -432,7 +432,6 @@ class MyHomePage extends StatelessWidget {
                   presetsRepository: context.read<PresetsRepositoryBase>(),
                   selectedPresetRepository:
                       context.read<SelectedPresetRepositoryBase>(),
-                  uuid: context.read<UuidService>(),
                   parametersState: ParametersMergeStream(
                     ampGain: parameters.getParameter('ampGain').value,
                     ampChannel: parameters.getParameter('ampChannel').value,

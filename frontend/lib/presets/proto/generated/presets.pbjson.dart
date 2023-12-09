@@ -24,12 +24,42 @@ const PresetParameters$json = {
     {'1': 'treble', '3': 5, '4': 1, '5': 5, '10': 'treble'},
     {'1': 'contour', '3': 6, '4': 1, '5': 5, '10': 'contour'},
     {'1': 'volume', '3': 7, '4': 1, '5': 5, '10': 'volume'},
-    {'1': 'noise_gate_threshold', '3': 8, '4': 1, '5': 5, '10': 'noiseGateThreshold'},
-    {'1': 'noise_gate_hysteresis', '3': 9, '4': 1, '5': 5, '10': 'noiseGateHysteresis'},
-    {'1': 'noise_gate_attack', '3': 10, '4': 1, '5': 5, '10': 'noiseGateAttack'},
+    {
+      '1': 'noise_gate_threshold',
+      '3': 8,
+      '4': 1,
+      '5': 5,
+      '10': 'noiseGateThreshold'
+    },
+    {
+      '1': 'noise_gate_hysteresis',
+      '3': 9,
+      '4': 1,
+      '5': 5,
+      '10': 'noiseGateHysteresis'
+    },
+    {
+      '1': 'noise_gate_attack',
+      '3': 10,
+      '4': 1,
+      '5': 5,
+      '10': 'noiseGateAttack'
+    },
     {'1': 'noise_gate_hold', '3': 11, '4': 1, '5': 5, '10': 'noiseGateHold'},
-    {'1': 'noise_gate_release', '3': 12, '4': 1, '5': 5, '10': 'noiseGateRelease'},
-    {'1': 'noise_gate_bypass', '3': 13, '4': 1, '5': 5, '10': 'noiseGateBypass'},
+    {
+      '1': 'noise_gate_release',
+      '3': 12,
+      '4': 1,
+      '5': 5,
+      '10': 'noiseGateRelease'
+    },
+    {
+      '1': 'noise_gate_bypass',
+      '3': 13,
+      '4': 1,
+      '5': 5,
+      '10': 'noiseGateBypass'
+    },
     {'1': 'chorus_rate', '3': 14, '4': 1, '5': 5, '10': 'chorusRate'},
     {'1': 'chorus_depth', '3': 15, '4': 1, '5': 5, '10': 'chorusDepth'},
     {'1': 'chorus_mix', '3': 16, '4': 1, '5': 5, '10': 'chorusMix'},
@@ -56,3 +86,37 @@ final $typed_data.Uint8List presetParametersDescriptor = $convert.base64Decode(
     'oMd2FoX3Bvc2l0aW9uGBIgASgFUgt3YWhQb3NpdGlvbhIbCgl3YWhfdm9jYWwYEyABKAVSCHdh'
     'aFZvY2FsEh0KCndhaF9ieXBhc3MYFCABKAVSCXdhaEJ5cGFzcw==');
 
+@$core.Deprecated('Use presetRecordDescriptor instead')
+const PresetRecord$json = {
+  '1': 'PresetRecord',
+  '2': [
+    {'1': 'id', '3': 1, '4': 1, '5': 13, '10': 'id'},
+    {'1': 'preset', '3': 2, '4': 1, '5': 11, '6': '.Preset', '10': 'preset'},
+  ],
+};
+
+/// Descriptor for `PresetRecord`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List presetRecordDescriptor = $convert.base64Decode(
+    'CgxQcmVzZXRSZWNvcmQSDgoCaWQYASABKA1SAmlkEh8KBnByZXNldBgCIAEoCzIHLlByZXNldF'
+    'IGcHJlc2V0');
+
+@$core.Deprecated('Use presetDescriptor instead')
+const Preset$json = {
+  '1': 'Preset',
+  '2': [
+    {'1': 'name', '3': 1, '4': 1, '5': 9, '10': 'name'},
+    {
+      '1': 'parameters',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6': '.PresetParameters',
+      '10': 'parameters'
+    },
+  ],
+};
+
+/// Descriptor for `Preset`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List presetDescriptor = $convert.base64Decode(
+    'CgZQcmVzZXQSEgoEbmFtZRgBIAEoCVIEbmFtZRIxCgpwYXJhbWV0ZXJzGAIgASgLMhEuUHJlc2'
+    'V0UGFyYW1ldGVyc1IKcGFyYW1ldGVycw==');

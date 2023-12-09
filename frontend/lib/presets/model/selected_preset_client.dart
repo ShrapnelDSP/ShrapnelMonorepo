@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:rxdart/rxdart.dart';
-import 'package:uuid/uuid.dart';
 
 import '../../core/message_transport.dart';
 import '../../core/uuid_json_converter.dart';
@@ -19,12 +18,12 @@ sealed class SelectedPresetMessage with _$SelectedPresetMessage {
 
   @UuidJsonConverter()
   @FreezedUnionValue('SelectedPreset::notify')
-  factory SelectedPresetMessage.notify({required UuidValue selectedPreset}) =
+  factory SelectedPresetMessage.notify({required int selectedPreset}) =
       NotifySelectedPresetMessage;
 
   @UuidJsonConverter()
   @FreezedUnionValue('SelectedPreset::write')
-  factory SelectedPresetMessage.write({required UuidValue selectedPreset}) =
+  factory SelectedPresetMessage.write({required int selectedPreset}) =
       WriteSelectedPresetMessage;
 
   factory SelectedPresetMessage.fromJson(Map<String, dynamic> json) =>
@@ -81,11 +80,11 @@ class SelectedPresetClient {
     _transport.sink.add(SelectedPresetMessage.read());
   }
 
-  Stream<UuidValue> get selectedPreset => _transport.stream
+  Stream<int> get selectedPreset => _transport.stream
       .whereType<NotifySelectedPresetMessage>()
       .map((event) => event.selectedPreset);
 
-  Future<void> selectPreset(UuidValue presetId) async {
+  Future<void> selectPreset(int presetId) async {
     _transport.sink.add(SelectedPresetMessage.write(selectedPreset: presetId));
   }
 

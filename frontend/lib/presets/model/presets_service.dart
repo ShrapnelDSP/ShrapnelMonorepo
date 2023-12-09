@@ -3,30 +3,28 @@ import 'dart:async';
 import 'package:logging/logging.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:state_notifier/state_notifier.dart';
-import 'package:uuid/uuid.dart';
 
-import '../../util/uuid.dart';
 import 'presets.dart';
 
 final _log = Logger('presets_fake');
 
 abstract class PresetsRepositoryBase {
-  Future<void> create(PresetState preset);
+  Future<PresetRecord> create(PresetState preset);
 
-  Future<void> update(PresetState preset);
+  Future<void> update(PresetRecord preset);
 
-  Future<void> delete(UuidValue id);
+  Future<void> delete(int id);
 
-  ValueStream<Map<UuidValue, PresetState>> get presets;
+  ValueStream<Map<int, PresetRecord>> get presets;
 }
 
 abstract class SelectedPresetRepositoryBase {
   /// Load an existing preset.
   ///
   /// [id] must be the ID of one of the existing presets.
-  Future<void> selectPreset(UuidValue id);
+  Future<void> selectPreset(int id);
 
-  ValueStream<UuidValue> get selectedPreset;
+  ValueStream<int> get selectedPreset;
 }
 
 class PresetsService extends StateNotifier<PresetsState>
@@ -34,23 +32,23 @@ class PresetsService extends StateNotifier<PresetsState>
   PresetsService({
     required this.presetsRepository,
     required this.selectedPresetRepository,
-    required this.uuid,
     required ValueStream<PresetParametersData> parametersState,
   })  : _parametersState = parametersState,
         super(PresetsState.loading()) {
     _subscription = _parametersState.listen((_) => _updateState());
-    _presetsSubscription = presetsRepository.presets.listen((_) => _updateState());
-    _selectedPresetSubscription = selectedPresetRepository.selectedPreset.listen((_) => _updateState());
+    _presetsSubscription =
+        presetsRepository.presets.listen((_) => _updateState());
+    _selectedPresetSubscription =
+        selectedPresetRepository.selectedPreset.listen((_) => _updateState());
     _updateState();
   }
 
   final ValueStream<PresetParametersData> _parametersState;
   late final StreamSubscription<PresetParametersData> _subscription;
-  late final StreamSubscription<Map<UuidValue, PresetState>> _presetsSubscription;
-  late final StreamSubscription<UuidValue> _selectedPresetSubscription;
+  late final StreamSubscription<Map<int, PresetRecord>> _presetsSubscription;
+  late final StreamSubscription<int> _selectedPresetSubscription;
   final PresetsRepositoryBase presetsRepository;
   final SelectedPresetRepositoryBase selectedPresetRepository;
-  final UuidService uuid;
 
   void _updateState() {
     final presets = presetsRepository.presets.valueOrNull;
@@ -61,10 +59,10 @@ class PresetsService extends StateNotifier<PresetsState>
     } else {
       final presetCount = presets.length;
       final sortedPresets = presets.values.toList()
-        ..sort((a, b) => a.name.compareTo(b.name));
+        ..sort((a, b) => a.preset.name.compareTo(b.preset.name));
       state = PresetsState.ready(
-        isCurrentModified:
-            _parametersState.value != presets[selectedPreset]?.parameters,
+        isCurrentModified: _parametersState.value !=
+            presets[selectedPreset]?.preset.parameters,
         canDeleteCurrent: presetCount > 1,
         presets: sortedPresets,
         selectedPreset: selectedPreset,
@@ -75,20 +73,19 @@ class PresetsService extends StateNotifier<PresetsState>
 
   @override
   Future<void> create(String name) async {
-    final id = uuid.v4Value();
-    await presetsRepository.create(
-      PresetState(id: id, name: name, parameters: _parametersState.value),
+    final record = await presetsRepository.create(
+      PresetState(name: name, parameters: _parametersState.value),
     );
+    await selectedPresetRepository.selectPreset(record.id);
+  }
+
+  @override
+  Future<void> select(int id) async {
     await selectedPresetRepository.selectPreset(id);
   }
 
   @override
-  Future<void> select(UuidValue id) async {
-    await selectedPresetRepository.selectPreset(id);
-  }
-
-  @override
-  Future<void> delete(UuidValue id) async {
+  Future<void> delete(int id) async {
     await presetsRepository.delete(id);
   }
 
@@ -107,10 +104,10 @@ class PresetsService extends StateNotifier<PresetsState>
     }
 
     await presetsRepository.update(
-      PresetState(
-        id: currentPresetId,
-        name: currentPreset.name,
-        parameters: _parametersState.value,
+      currentPreset.copyWith(
+        preset: currentPreset.preset.copyWith(
+          parameters: _parametersState.value,
+        ),
       ),
     );
   }

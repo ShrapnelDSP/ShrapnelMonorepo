@@ -14,15 +14,12 @@ import 'package:shrapnel/parameter.dart';
 import 'package:shrapnel/presets/model/presets.dart';
 import 'package:shrapnel/presets/model/presets_service.dart';
 import 'package:shrapnel/robust_websocket.dart';
-import 'package:shrapnel/util/uuid.dart';
-import 'package:uuid/uuid.dart';
 
 import '../home_page_object.dart';
 import 'presets_test.mocks.dart';
 
 final _log = Logger('presets_test');
 
-@GenerateMocks([UuidService])
 @GenerateNiceMocks(
   [
     MockSpec<RobustWebsocket>(),
@@ -134,49 +131,52 @@ void main() {
       when(parameterRepository.stream)
           .thenAnswer((_) => parameterController.stream);
 
-      final initialPresetId = UuidValue('00000000-0000-0000-0000-000000000000');
+      const initialPresetId = 0;
 
       final presetsRepository = MockPresetsRepositoryBase();
       const initialPresetName = 'Test Preset';
-      final presetsSubject = BehaviorSubject.seeded(<UuidValue, PresetState>{
-        initialPresetId: PresetState(
+      final presetsSubject = BehaviorSubject.seeded(<int, PresetRecord>{
+        initialPresetId: PresetRecord(
           id: initialPresetId,
-          name: initialPresetName,
-          parameters: PresetParametersData(
-            ampGain: 0.1,
-            ampChannel: 1,
-            bass: 0.2,
-            middle: 0.3,
-            treble: 0.4,
-            contour: 0.6,
-            volume: 0.7,
-            noiseGateThreshold: 0.8,
-            noiseGateHysteresis: 0.9,
-            noiseGateAttack: 1.0,
-            noiseGateHold: 0.1,
-            noiseGateRelease: 0.2,
-            noiseGateBypass: 0.3,
-            chorusRate: 0.4,
-            chorusDepth: 0.6,
-            chorusMix: 0.7,
-            chorusBypass: 0.8,
-            wahPosition: 0.9,
-            wahVocal: 1.0,
-            wahBypass: 0.1,
+          preset: PresetState(
+            name: initialPresetName,
+            parameters: PresetParametersData(
+              ampGain: 0.1,
+              ampChannel: 1,
+              bass: 0.2,
+              middle: 0.3,
+              treble: 0.4,
+              contour: 0.6,
+              volume: 0.7,
+              noiseGateThreshold: 0.8,
+              noiseGateHysteresis: 0.9,
+              noiseGateAttack: 1.0,
+              noiseGateHold: 0.1,
+              noiseGateRelease: 0.2,
+              noiseGateBypass: 0.3,
+              chorusRate: 0.4,
+              chorusDepth: 0.6,
+              chorusMix: 0.7,
+              chorusBypass: 0.8,
+              wahPosition: 0.9,
+              wahVocal: 1.0,
+              wahBypass: 0.1,
+            ),
           ),
         ),
       });
       when(presetsRepository.presets).thenAnswer((_) => presetsSubject);
       when(presetsRepository.create(any)).thenAnswer((realInvocation) async {
         final preset = realInvocation.positionalArguments.single as PresetState;
+        // FIXME: implement fake incrementing id
         presetsSubject.add({...presetsSubject.value, preset.id: preset});
       });
       when(presetsRepository.update(any)).thenAnswer((realInvocation) async {
-        final preset = realInvocation.positionalArguments.single as PresetState;
+        final preset = realInvocation.positionalArguments.single as PresetRecord;
         presetsSubject.add({...presetsSubject.value, preset.id: preset});
       });
       when(presetsRepository.delete(any)).thenAnswer((realInvocation) async {
-        final id = realInvocation.positionalArguments.single as UuidValue;
+        final id = realInvocation.positionalArguments.single as int;
         presetsSubject.add({...presetsSubject.value}..remove(id));
       });
 
@@ -186,10 +186,10 @@ void main() {
           .thenAnswer((_) => selectedPresetSubject);
       when(selectedPresetRepository.selectPreset(any))
           .thenAnswer((realInvocation) async {
-        final id = realInvocation.positionalArguments.single as UuidValue;
+        final id = realInvocation.positionalArguments.single as int;
         selectedPresetSubject.add(id);
 
-        loadPreset(presetsSubject.value[id]!);
+        loadPreset(presetsSubject.value[id]!.preset);
       });
 
       final websocket = MockRobustWebsocket();
@@ -200,13 +200,10 @@ void main() {
           .thenAnswer((_) => const Stream.empty());
       when(jsonWebsocket.isAlive).thenReturn(true);
 
-      final uuid = MockUuidService();
-
       final sut = App(
         websocket: websocket,
         jsonWebsocket: jsonWebsocket,
         parameterRepository: parameterRepository,
-        uuid: uuid,
         presetsRepository: presetsRepository,
         selectedPresetRepository: selectedPresetRepository,
       );
@@ -259,10 +256,7 @@ void main() {
       expect(page.presetsPage.saveButton.isEnabled, isTrue);
       expect(page.presetsPage.createButton.isEnabled, isTrue);
 
-      final newPresetId =
-          UuidValue('11111111-1111-1111-1111-111111111111', false);
       const newPresetName = 'New Preset';
-      when(uuid.v4Value()).thenReturn(newPresetId);
       await page.presetsPage.createPreset(newPresetName);
 
       verify(presetsRepository.create(any)).called(1);
@@ -275,7 +269,7 @@ void main() {
         page.getKnobValue(parameterId: 'ampGain'),
         within(
           distance: 0.01,
-          from: presetsSubject.value[initialPresetId]!.parameters.ampGain,
+          from: presetsSubject.value[initialPresetId]!.preset.parameters.ampGain,
         ),
       );
 
@@ -284,7 +278,7 @@ void main() {
         page.getKnobValue(parameterId: 'ampGain'),
         within(
           distance: 0.01,
-          from: presetsSubject.value[newPresetId]!.parameters.ampGain,
+          from: presetsSubject.value[newPresetId]!.preset.parameters.ampGain,
         ),
       );
 
