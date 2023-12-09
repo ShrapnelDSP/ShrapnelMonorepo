@@ -4,6 +4,7 @@
 
 namespace shrapnel::presets {
 
+// FIXME: create, update, delete should notify listeners
 class PresetsManager
 {
 public:

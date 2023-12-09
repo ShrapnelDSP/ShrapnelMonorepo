@@ -31,6 +31,7 @@
 #include "os/timer.h"
 #include "persistence.h"
 #include "preset_serialisation.h"
+#include "presets_manager.h"
 
 namespace shrapnel {
 
@@ -252,7 +253,8 @@ public:
                   parameters::CommandHandling<AudioParameters>::
                       SendMessageCallback::create<
                           MainThread,
-                          &MainThread::cmd_handling_send_message>(*this))}
+                          &MainThread::cmd_handling_send_message>(*this))},
+          presets_manager{std::make_unique<presets::PresetsManager>()}
     {
         auto create_and_load_parameter = [&](const parameters::id_t &name,
                                              float minimum,
@@ -516,6 +518,55 @@ private:
                 send_message({*response, std::nullopt});
             }
         }
+        else if constexpr(std::is_same_v<AppMessageT,
+                                         presets::PresetsApiMessage>)
+        {
+            auto response = std::visit(
+                [&](const auto &presets_message)
+                    -> std::optional<presets::PresetsApiMessage>
+                {
+                    using PresetsMessageT =
+                        std::decay_t<decltype(presets_message)>;
+
+                    if constexpr(std::is_same_v<PresetsMessageT,
+                                                presets::Initialise>)
+                    {
+                        // FIXME: make presets manager iterable
+                    }
+                    else if constexpr(std::is_same_v<PresetsMessageT,
+                                                     presets::Create>)
+                    {
+                        presets_manager->create(presets_message.preset);
+                    }
+                    else if constexpr(std::is_same_v<PresetsMessageT,
+                                                     presets::Update>)
+                    {
+                        presets_manager->update(presets_message.id,
+                                                presets_message.preset);
+                    }
+                    else if constexpr(std::is_same_v<PresetsMessageT,
+                                                     presets::Delete>)
+                    {
+                        presets_manager->remove(presets_message.id);
+                    }
+                    else
+                    {
+                        ESP_LOGE(TAG, "Unhandled message type");
+                    }
+
+                    return std::nullopt;
+                },
+                app_message);
+
+            if(response.has_value())
+            {
+                send_message({*response, std::nullopt});
+            }
+        }
+        else if constexpr(std::is_same_v<AppMessageT,
+                                         presets::PresetsApiMessage>)
+        {
+        }
     }
 
     void on_midi_message(midi::Message message)
@@ -561,6 +612,7 @@ private:
     std::unique_ptr<MidiMappingObserver<
         midi::MappingManager<ParameterUpdateNotifier, 10, 1>>>
         mapping_observer;
+    std::unique_ptr<presets::PresetsManager> presets_manager;
 };
 
 } // namespace shrapnel
