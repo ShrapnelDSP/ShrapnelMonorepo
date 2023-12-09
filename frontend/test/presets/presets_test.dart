@@ -132,6 +132,7 @@ void main() {
           .thenAnswer((_) => parameterController.stream);
 
       const initialPresetId = 0;
+      var lastPresetId = initialPresetId;
 
       final presetsRepository = MockPresetsRepositoryBase();
       const initialPresetName = 'Test Preset';
@@ -168,11 +169,18 @@ void main() {
       when(presetsRepository.presets).thenAnswer((_) => presetsSubject);
       when(presetsRepository.create(any)).thenAnswer((realInvocation) async {
         final preset = realInvocation.positionalArguments.single as PresetState;
-        // FIXME: implement fake incrementing id
-        presetsSubject.add({...presetsSubject.value, preset.id: preset});
+        lastPresetId += 1;
+        final record = PresetRecord(id: lastPresetId, preset: preset);
+        presetsSubject.add({
+          ...presetsSubject.value,
+          lastPresetId: record,
+        });
+
+        return record;
       });
       when(presetsRepository.update(any)).thenAnswer((realInvocation) async {
-        final preset = realInvocation.positionalArguments.single as PresetRecord;
+        final preset =
+            realInvocation.positionalArguments.single as PresetRecord;
         presetsSubject.add({...presetsSubject.value, preset.id: preset});
       });
       when(presetsRepository.delete(any)).thenAnswer((realInvocation) async {
@@ -269,7 +277,8 @@ void main() {
         page.getKnobValue(parameterId: 'ampGain'),
         within(
           distance: 0.01,
-          from: presetsSubject.value[initialPresetId]!.preset.parameters.ampGain,
+          from:
+              presetsSubject.value[initialPresetId]!.preset.parameters.ampGain,
         ),
       );
 
@@ -278,7 +287,7 @@ void main() {
         page.getKnobValue(parameterId: 'ampGain'),
         within(
           distance: 0.01,
-          from: presetsSubject.value[newPresetId]!.preset.parameters.ampGain,
+          from: presetsSubject.value[lastPresetId]!.preset.parameters.ampGain,
         ),
       );
 

@@ -16,7 +16,7 @@ class PresetsPageObject {
       ButtonPageObject(tester, key: const Key('presets-create-button'));
 
   String getCurrentPresetName() {
-    return _dropdown.value!.name;
+    return _dropdown.value!.preset.name;
   }
 
   Future<void> createPreset(String name) async {
@@ -41,12 +41,12 @@ class PresetsPageObject {
     await tester.pumpAndSettle();
   }
 
-  DropdownButton<PresetState> get _dropdown {
+  DropdownButton<PresetRecord> get _dropdown {
     return find
         .byKey(const Key('presets-current-preset-name'))
         .evaluate()
         .single
-        .widget as DropdownButton<PresetState>;
+        .widget as DropdownButton<PresetRecord>;
   }
 
 }

@@ -19,8 +19,17 @@ class PresetsRepository implements PresetsRepositoryBase {
   Future<PresetRecord> create(PresetState preset) async {
     await client.create(preset);
 
-    final newValue = _presets.value..[preset.id] = preset;
+    // FIXME: find a more robust solution to linking up responses to requests.
+    // possibly a lower layer protocol that includes request ID for every
+    // request, that's also included in the responses
+    final record = await client.presetUpdates
+        .firstWhere((element) => element.preset == preset)
+        .timeout(const Duration(seconds: 1));
+
+    final newValue = _presets.value..[record.id] = record;
     _presets.add(newValue);
+
+    return record;
   }
 
   @override
