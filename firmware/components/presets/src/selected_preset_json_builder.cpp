@@ -9,9 +9,8 @@ rapidjson::Value to_json(rapidjson::Document &document, const Notify &object)
     rapidjson::Value json;
     json.SetObject();
 
-    json.AddMember("selectedPreset",
-                   uuid::to_json(document, object.selectedPresetId),
-                   document.GetAllocator());
+    json.AddMember<unsigned int>(
+        "selectedPreset", object.selectedPresetId, document.GetAllocator());
 
     return json;
 }

@@ -15,7 +15,7 @@ rapidjson::Value to_json(rapidjson::Document &document,
 {
     uint8_t buffer[100] = {};
     auto data = std::span<uint8_t, std::dynamic_extent>(buffer);
-   
+
     int rc = serialise_parameters(object, data);
     if(rc != 0)
     {
@@ -46,8 +46,6 @@ rapidjson::Value to_json(rapidjson::Document &document,
     rapidjson::Value json;
     json.SetObject();
 
-    json.AddMember(
-        "id", uuid::to_json(document, object.id), document.GetAllocator());
     rapidjson::Value name{object.name.c_str(), document.GetAllocator()};
     json.AddMember("name", name, document.GetAllocator());
     json.AddMember("parameters",
@@ -63,6 +61,7 @@ rapidjson::Value to_json(rapidjson::Document &document, const Notify &object)
     rapidjson::Value json;
     json.SetObject();
 
+    json.AddMember<unsigned int>("id", object.id, document.GetAllocator());
     json.AddMember(
         "preset", to_json(document, object.preset), document.GetAllocator());
 

@@ -332,7 +332,6 @@ public:
             auto data = std::span<uint8_t, std::dynamic_extent>(buffer);
             int rc = presets::serialise_preset(
                 {
-                    .id{0},
                     .name{"Demo Preset"},
                     .parameters{
                         presets::serialise_live_parameters(*a_audio_params),

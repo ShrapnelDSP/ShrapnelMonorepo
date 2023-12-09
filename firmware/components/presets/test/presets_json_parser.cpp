@@ -55,7 +55,6 @@ TEST(PresetsJsonParser, Create)
     auto json = R"({
       "messageType": "Presets::create",
       "preset": {
-        "id": "00010203-0405-0607-0809-0a0b0c0d0e0f",
         "name": "test_preset",
         "parameters": "CAEQAhgDIAQoBTAGOAdACEgJUApYC2AMaA1wDngPgAEQiAERkAESmAEToAEU"
       }
@@ -69,7 +68,6 @@ TEST(PresetsJsonParser, Create)
     {
         Create expected{
             .preset{
-                .id{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15},
                 .name{"test_preset"},
                 .parameters{
                     .amp_gain{0.001},
@@ -109,7 +107,6 @@ TEST(PresetsJsonParser, CreateTruncatesLongName)
     auto json = R"({
       "messageType": "Presets::create",
       "preset": {
-        "id": "00010203-0405-0607-0809-0a0b0c0d0e0f",
         "name": "1234567890123456789012345678901234567890",
         "parameters": "CAEQAhgDIAQoBTAGOAdACEgJUApYC2AMaA1wDngPgAEQiAERkAESmAEToAEU"
       }
@@ -123,7 +120,6 @@ TEST(PresetsJsonParser, CreateTruncatesLongName)
     {
         Create expected{
             .preset{
-                .id{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15},
                 .name{"12345678901234567890123456789012"},
                 .parameters{
                     .amp_gain{0.001},
@@ -163,7 +159,6 @@ TEST(PresetsJsonParser, CreateWithCorruptedProtoThrows)
     auto json = R"({
       "messageType": "Presets::create",
       "preset": {
-        "id": "00010203-0405-0607-0809-0a0b0c0d0e0f",
         "name": "1234567890123456789012345678901234567890",
         "parameters": "bad"
       }
@@ -174,28 +169,12 @@ TEST(PresetsJsonParser, CreateWithCorruptedProtoThrows)
     EXPECT_THROW(parse_json(json), std::exception);
 }
 
-// FIXME: this is causing memory corruption at the moment
-TEST(PresetsJsonParser, DISABLED_CreateWithCorruptedUuid)
-{
-    auto json = R"({
-      "messageType": "Presets::create",
-      "preset": {
-        "id": "1234",
-        "name": "1234567890123456789012345678901234567890",
-        "parameters": "CAEQAhgDIAQoBTAGOAdACEgJUApYC2AMaA1wDngPgAEQiAERkAESmAEToAEU"
-      }
-    })";
-
-    auto result = parse_json(json);
-    EXPECT_THAT(result.has_value(), false);
-}
-
 TEST(PresetsJsonParser, Update)
 {
     auto json = R"({
       "messageType": "Presets::update",
+      "id": 42,
       "preset": {
-        "id": "00010203-0405-0607-0809-0a0b0c0d0e0f",
         "name": "test_preset",
         "parameters": "CAEQAhgDIAQoBTAGOAdACEgJUApYC2AMaA1wDngPgAEQiAERkAESmAEToAEU"
       }
@@ -208,8 +187,8 @@ TEST(PresetsJsonParser, Update)
     if(auto message = std::get_if<Update>(&(*result)))
     {
         Update expected{
+            .id{42},
             .preset{
-                .id{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15},
                 .name{"test_preset"},
                 .parameters{
                     .amp_gain{0.001},

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "presets.pb-c.h"
+#include "presets_api.h"
 #include <esp_log.h>
 #include <span>
 
@@ -35,7 +36,8 @@ ParametersData serialise_live_parameters(T &parameters_service)
     return parameters;
 }
 
-inline int serialise_parameters(const ParametersData &parameters, std::span<uint8_t> &buffer)
+inline int serialise_parameters(const ParametersData &parameters,
+                                std::span<uint8_t> &buffer)
 {
     struct PresetParameters preset = PRESET_PARAMETERS__INIT;
     preset_parameters__init(&preset);
@@ -107,10 +109,6 @@ inline int serialise_preset(const PresetData &preset,
     struct Preset preset_proto = PRESET__INIT;
     preset__init(&preset_proto);
 
-    preset_proto.id = (ProtobufCBinaryData){
-        .len = preset.id.size(),
-        .data = const_cast<uint8_t *>(preset.id.data()),
-    };
     preset_proto.name = const_cast<char *>(preset.name.c_str());
     preset_proto.parameters = &parameters_proto;
 

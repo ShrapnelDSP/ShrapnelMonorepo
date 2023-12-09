@@ -20,13 +20,12 @@ std::optional<Write> from_json(const rapidjson::Value &json)
         return std::nullopt;
     }
 
-    auto id = uuid::from_json<uuid::uuid_t>(id_json->value);
-    if(!id.has_value())
+    if(!id_json->value.IsUint())
     {
         return std::nullopt;
     }
 
-    return Write{.selectedPresetId{*id}};
+    return Write{.selectedPresetId{id_json->value.GetUint()}};
 }
 
 template <>

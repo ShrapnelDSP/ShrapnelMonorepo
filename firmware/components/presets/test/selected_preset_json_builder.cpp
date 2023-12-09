@@ -51,33 +51,14 @@ TEST(SelectedPresetJsonBuilder, Notify)
 {
     SelectedPresetApiMessage input{
         Notify{
-            .selectedPresetId{
-                uuid::uuid_t{
-                    0,
-                    1,
-                    2,
-                    3,
-                    4,
-                    5,
-                    6,
-                    7,
-                    8,
-                    9,
-                    10,
-                    11,
-                    12,
-                    13,
-                    14,
-                    15,
-                },
-            },
+            .selectedPresetId{42},
         },
     };
 
     rapidjson::Document document;
 
     auto reference = normalise_json(R"({
-          "selectedPreset": "00010203-0405-0607-0809-0a0b0c0d0e0f",
+          "selectedPreset": 42,
           "messageType": "SelectedPreset::notify"
         })");
 

@@ -16,6 +16,7 @@ PROTOBUF_C__BEGIN_DECLS
 
 
 typedef struct PresetParameters PresetParameters;
+typedef struct PresetRecord PresetRecord;
 typedef struct Preset Preset;
 
 
@@ -53,13 +54,23 @@ struct  PresetParameters
 , 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
 
 
-struct  Preset
+struct  PresetRecord
 {
   ProtobufCMessage base;
   /*
-   * A UUID to identify the preset
+   * A number used to identify the preset
    */
-  ProtobufCBinaryData id;
+  uint32_t id;
+  Preset *preset;
+};
+#define PRESET_RECORD__INIT \
+ { PROTOBUF_C_MESSAGE_INIT (&preset_record__descriptor) \
+, 0, NULL }
+
+
+struct  Preset
+{
+  ProtobufCMessage base;
   /*
    * The name given by the user to the preset
    */
@@ -71,7 +82,7 @@ struct  Preset
 };
 #define PRESET__INIT \
  { PROTOBUF_C_MESSAGE_INIT (&preset__descriptor) \
-, {0,NULL}, (char *)protobuf_c_empty_string, NULL }
+, (char *)protobuf_c_empty_string, NULL }
 
 
 /* PresetParameters methods */
@@ -92,6 +103,25 @@ PresetParameters *
                       const uint8_t       *data);
 void   preset_parameters__free_unpacked
                      (PresetParameters *message,
+                      ProtobufCAllocator *allocator);
+/* PresetRecord methods */
+void   preset_record__init
+                     (PresetRecord         *message);
+size_t preset_record__get_packed_size
+                     (const PresetRecord   *message);
+size_t preset_record__pack
+                     (const PresetRecord   *message,
+                      uint8_t             *out);
+size_t preset_record__pack_to_buffer
+                     (const PresetRecord   *message,
+                      ProtobufCBuffer     *buffer);
+PresetRecord *
+       preset_record__unpack
+                     (ProtobufCAllocator  *allocator,
+                      size_t               len,
+                      const uint8_t       *data);
+void   preset_record__free_unpacked
+                     (PresetRecord *message,
                       ProtobufCAllocator *allocator);
 /* Preset methods */
 void   preset__init
@@ -117,6 +147,9 @@ void   preset__free_unpacked
 typedef void (*PresetParameters_Closure)
                  (const PresetParameters *message,
                   void *closure_data);
+typedef void (*PresetRecord_Closure)
+                 (const PresetRecord *message,
+                  void *closure_data);
 typedef void (*Preset_Closure)
                  (const Preset *message,
                   void *closure_data);
@@ -127,6 +160,7 @@ typedef void (*Preset_Closure)
 /* --- descriptors --- */
 
 extern const ProtobufCMessageDescriptor preset_parameters__descriptor;
+extern const ProtobufCMessageDescriptor preset_record__descriptor;
 extern const ProtobufCMessageDescriptor preset__descriptor;
 
 PROTOBUF_C__END_DECLS

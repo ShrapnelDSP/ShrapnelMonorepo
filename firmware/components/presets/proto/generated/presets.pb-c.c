@@ -52,6 +52,51 @@ void   preset_parameters__free_unpacked
   assert(message->base.descriptor == &preset_parameters__descriptor);
   protobuf_c_message_free_unpacked ((ProtobufCMessage*)message, allocator);
 }
+void   preset_record__init
+                     (PresetRecord         *message)
+{
+  static const PresetRecord init_value = PRESET_RECORD__INIT;
+  *message = init_value;
+}
+size_t preset_record__get_packed_size
+                     (const PresetRecord *message)
+{
+  assert(message->base.descriptor == &preset_record__descriptor);
+  return protobuf_c_message_get_packed_size ((const ProtobufCMessage*)(message));
+}
+size_t preset_record__pack
+                     (const PresetRecord *message,
+                      uint8_t       *out)
+{
+  assert(message->base.descriptor == &preset_record__descriptor);
+  return protobuf_c_message_pack ((const ProtobufCMessage*)message, out);
+}
+size_t preset_record__pack_to_buffer
+                     (const PresetRecord *message,
+                      ProtobufCBuffer *buffer)
+{
+  assert(message->base.descriptor == &preset_record__descriptor);
+  return protobuf_c_message_pack_to_buffer ((const ProtobufCMessage*)message, buffer);
+}
+PresetRecord *
+       preset_record__unpack
+                     (ProtobufCAllocator  *allocator,
+                      size_t               len,
+                      const uint8_t       *data)
+{
+  return (PresetRecord *)
+     protobuf_c_message_unpack (&preset_record__descriptor,
+                                allocator, len, data);
+}
+void   preset_record__free_unpacked
+                     (PresetRecord *message,
+                      ProtobufCAllocator *allocator)
+{
+  if(!message)
+    return;
+  assert(message->base.descriptor == &preset_record__descriptor);
+  protobuf_c_message_free_unpacked ((ProtobufCMessage*)message, allocator);
+}
 void   preset__init
                      (Preset         *message)
 {
@@ -382,23 +427,62 @@ const ProtobufCMessageDescriptor preset_parameters__descriptor =
   (ProtobufCMessageInit) preset_parameters__init,
   NULL,NULL,NULL    /* reserved[123] */
 };
-static const ProtobufCFieldDescriptor preset__field_descriptors[3] =
+static const ProtobufCFieldDescriptor preset_record__field_descriptors[2] =
 {
   {
     "id",
     1,
     PROTOBUF_C_LABEL_NONE,
-    PROTOBUF_C_TYPE_BYTES,
+    PROTOBUF_C_TYPE_UINT32,
     0,   /* quantifier_offset */
-    offsetof(Preset, id),
+    offsetof(PresetRecord, id),
     NULL,
     NULL,
     0,             /* flags */
     0,NULL,NULL    /* reserved1,reserved2, etc */
   },
   {
-    "name",
+    "preset",
     2,
+    PROTOBUF_C_LABEL_NONE,
+    PROTOBUF_C_TYPE_MESSAGE,
+    0,   /* quantifier_offset */
+    offsetof(PresetRecord, preset),
+    &preset__descriptor,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+};
+static const unsigned preset_record__field_indices_by_name[] = {
+  0,   /* field[0] = id */
+  1,   /* field[1] = preset */
+};
+static const ProtobufCIntRange preset_record__number_ranges[1 + 1] =
+{
+  { 1, 0 },
+  { 0, 2 }
+};
+const ProtobufCMessageDescriptor preset_record__descriptor =
+{
+  PROTOBUF_C__MESSAGE_DESCRIPTOR_MAGIC,
+  "PresetRecord",
+  "PresetRecord",
+  "PresetRecord",
+  "",
+  sizeof(PresetRecord),
+  2,
+  preset_record__field_descriptors,
+  preset_record__field_indices_by_name,
+  1,  preset_record__number_ranges,
+  (ProtobufCMessageInit) preset_record__init,
+  NULL,NULL,NULL    /* reserved[123] */
+};
+static const ProtobufCFieldDescriptor preset__field_descriptors[2] =
+{
+  {
+    "name",
+    1,
     PROTOBUF_C_LABEL_NONE,
     PROTOBUF_C_TYPE_STRING,
     0,   /* quantifier_offset */
@@ -410,7 +494,7 @@ static const ProtobufCFieldDescriptor preset__field_descriptors[3] =
   },
   {
     "parameters",
-    3,
+    2,
     PROTOBUF_C_LABEL_NONE,
     PROTOBUF_C_TYPE_MESSAGE,
     0,   /* quantifier_offset */
@@ -422,14 +506,13 @@ static const ProtobufCFieldDescriptor preset__field_descriptors[3] =
   },
 };
 static const unsigned preset__field_indices_by_name[] = {
-  0,   /* field[0] = id */
-  1,   /* field[1] = name */
-  2,   /* field[2] = parameters */
+  0,   /* field[0] = name */
+  1,   /* field[1] = parameters */
 };
 static const ProtobufCIntRange preset__number_ranges[1 + 1] =
 {
   { 1, 0 },
-  { 0, 3 }
+  { 0, 2 }
 };
 const ProtobufCMessageDescriptor preset__descriptor =
 {
@@ -439,7 +522,7 @@ const ProtobufCMessageDescriptor preset__descriptor =
   "Preset",
   "",
   sizeof(Preset),
-  3,
+  2,
   preset__field_descriptors,
   preset__field_indices_by_name,
   1,  preset__number_ranges,

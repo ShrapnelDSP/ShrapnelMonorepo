@@ -4,5 +4,5 @@
 #include "uuid.h"
 
 namespace shrapnel::presets {
-using id_t = uuid::uuid_t;
+using id_t = uint32_t;
 }

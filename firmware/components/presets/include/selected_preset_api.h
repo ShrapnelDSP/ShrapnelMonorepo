@@ -8,24 +8,21 @@
 
 namespace shrapnel::selected_preset {
 
-using shrapnel::uuid::uuid_t;
-
 struct Read
 {
-
     std::strong_ordering operator<=>(const Read &other) const = default;
 };
 
 struct Notify
 {
-    uuid_t selectedPresetId;
+    presets::id_t selectedPresetId;
 
     std::strong_ordering operator<=>(const Notify &other) const = default;
 };
 
 struct Write
 {
-    uuid_t selectedPresetId;
+    presets::id_t selectedPresetId;
 
     std::strong_ordering operator<=>(const Write &other) const = default;
 };

@@ -180,6 +180,11 @@ public:
         int i = 0;
         nvs_iterator_t self = nullptr;
     };
+    
+    int create(std::span<uint8_t> data, etl::string<15> &key_out) {
+        // FIXME
+        assert(false);
+    }
 
     /// \return  non-zero on error
     int save(const etl::string<15> &key, std::span<uint8_t> data)

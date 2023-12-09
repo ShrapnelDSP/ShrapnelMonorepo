@@ -7,42 +7,28 @@ namespace shrapnel::presets {
 class PresetsManager
 {
 public:
-    [[nodiscard]] int create(const PresetData &preset)
-    {
-        std::array<uint8_t, 100> buffer;
-        auto data = std::span<uint8_t, std::dynamic_extent>(buffer);
-
-        int rc = serialise_preset(preset, data);
-        if(rc != 0)
-        {
-            return -1;
-        }
-
-        storage.save(id_to_key(preset.id), data);
-        return 0;
-    }
-    
-    [[nodiscard]] PresetData read(const id_t id) {
-        std::array<uint8_t, 100> buffer;
-        auto data = std::span<uint8_t, std::dynamic_extent>(buffer);
-        storage.load(id_to_key(id), data);
-    }
-
-    [[nodiscard]] int update(const PresetData &preset) {
-        return create(preset);
-    }
-
-    void remove(const id_t &id) {
-        storage.remove(id_to_key(id));
-    }
+    [[nodiscard]] int create(const PresetData &preset, id_t &id_out);
+    [[nodiscard]] std::optional<PresetData> read(id_t id);
+    [[nodiscard]] int update(id_t id, const PresetData &preset);
+    void remove(id_t id);
 
 private:
-    static etl::string<15> id_to_key(const id_t &id) {
-        // FIXME how do we convert a UUID to a 15 character string?
-        // can't just take the UUID, key is a null terminated string, can't
-        // have 0 in the middle
+    static inline etl::string<15> id_to_key(id_t id)
+    {
+        char hex[9];
+        int rc = snprintf(hex, sizeof hex, "%08" PRIx32, id);
+        assert(rc == 9);
+        return etl::string<15>(hex, 9);
     };
-    
+
+    static inline id_t key_to_id(const etl::string<15> &key)
+    {
+        id_t id;
+        int rc = sscanf(key.c_str(), "%08" PRIx32, &id);
+        assert(rc == 1);
+        return id;
+    };
+
     presets_storage::Storage storage;
 };
 

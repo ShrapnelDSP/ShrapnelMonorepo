@@ -11,8 +11,8 @@ etl::string_stream &operator<<(etl::string_stream &out,
 
 etl::string_stream &operator<<(etl::string_stream &out, const PresetData &self)
 {
-    return out << "{ id=" << self.id << " name=" << self.name
-               << "parameters=" << self.parameters << " }";
+    return out << "{ name=" << self.name << "parameters=" << self.parameters
+               << " }";
 }
 
 etl::string_stream &operator<<(etl::string_stream &out, const Initialise &self)
@@ -22,7 +22,7 @@ etl::string_stream &operator<<(etl::string_stream &out, const Initialise &self)
 
 etl::string_stream &operator<<(etl::string_stream &out, const Notify &self)
 {
-    return out << "{ preset=" << self.preset << " }";
+    return out << "{ id=" << self.id << " preset=" << self.preset << " }";
 }
 
 etl::string_stream &operator<<(etl::string_stream &out, const Create &self)
@@ -32,7 +32,7 @@ etl::string_stream &operator<<(etl::string_stream &out, const Create &self)
 
 etl::string_stream &operator<<(etl::string_stream &out, const Update &self)
 {
-    return out << "{ preset=" << self.preset << " }";
+    return out << "{ id= " << self.id << " preset=" << self.preset << " }";
 }
 
 etl::string_stream &operator<<(etl::string_stream &out, const Delete &self)

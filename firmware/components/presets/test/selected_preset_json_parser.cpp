@@ -54,7 +54,7 @@ TEST(SelectedPresetJsonParser, Write)
 {
     auto json = R"({
       "messageType": "SelectedPreset::write",
-      "selectedPreset": "00010203-0405-0607-0809-0a0b0c0d0e0f"
+      "selectedPreset": 42
     })";
 
     auto result = parse_json(json);
@@ -64,10 +64,7 @@ TEST(SelectedPresetJsonParser, Write)
     if(auto message = std::get_if<Write>(&(*result)))
     {
         Write expected{
-            .selectedPresetId{
-                presets::id_t{
-                    0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15},
-            },
+            .selectedPresetId{42},
         };
 
         EXPECT_THAT(*message, expected);

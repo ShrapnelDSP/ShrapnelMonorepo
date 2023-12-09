@@ -39,7 +39,6 @@ struct ParametersData
 
 struct PresetData
 {
-    id_t id;
     etl::string<32> name;
     ParametersData parameters;
 
@@ -53,6 +52,7 @@ struct Initialise
 
 struct Notify
 {
+    id_t id;
     PresetData preset;
 
     std::strong_ordering operator<=>(const Notify &other) const = default;
@@ -67,6 +67,7 @@ struct Create
 
 struct Update
 {
+    id_t id;
     PresetData preset;
 
     std::strong_ordering operator<=>(const Update &other) const = default;

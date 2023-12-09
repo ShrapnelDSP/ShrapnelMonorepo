@@ -63,13 +63,6 @@ std::optional<ParametersData> from_json(const rapidjson::Value &json)
 template <>
 std::optional<PresetData> from_json(const rapidjson::Value &json)
 {
-    auto id_json = json.FindMember("id");
-    if(id_json == json.MemberEnd())
-        return std::nullopt;
-    auto id = uuid::from_json<uuid::uuid_t>(id_json->value);
-    if(!id.has_value())
-        return std::nullopt;
-
     auto name = json.FindMember("name");
     if(name == json.MemberEnd() || !name->value.IsString())
         return std::nullopt;
@@ -82,7 +75,6 @@ std::optional<PresetData> from_json(const rapidjson::Value &json)
         return std::nullopt;
 
     return {{
-        .id{*id},
         .name{name->value.GetString()},
         .parameters{*parameters},
     }};
@@ -100,7 +92,10 @@ std::optional<Create> from_json(const rapidjson::Value &json)
     auto preset_json = json.FindMember("preset");
     if(preset_json == json.MemberEnd())
         return std::nullopt;
+
     auto preset = from_json<PresetData>(preset_json->value);
+    if(!preset.has_value())
+        return std::nullopt;
 
     return {{.preset = *preset}};
 }
@@ -108,12 +103,20 @@ std::optional<Create> from_json(const rapidjson::Value &json)
 template <>
 std::optional<Update> from_json(const rapidjson::Value &json)
 {
+    auto id_json = json.FindMember("id");
+    if(id_json == json.MemberEnd())
+        return std::nullopt;
+    if(!id_json->value.IsUint())
+        return std::nullopt;
+
     auto preset_json = json.FindMember("preset");
     if(preset_json == json.MemberEnd())
         return std::nullopt;
     auto preset = from_json<PresetData>(preset_json->value);
+    if(!preset.has_value())
+        return std::nullopt;
 
-    return {{.preset = *preset}};
+    return {{.id{id_json->value.GetUint()}, .preset = *preset}};
 }
 
 template <>
@@ -125,13 +128,12 @@ std::optional<Delete> from_json(const rapidjson::Value &json)
         return std::nullopt;
     }
 
-    auto id = uuid::from_json<uuid::uuid_t>(id_json->value);
-    if(!id.has_value())
+    if(!id_json->value.IsUint())
     {
         return std::nullopt;
     }
 
-    return {{.id{*id}}};
+    return {{.id{id_json->value.GetUint()}}};
 }
 
 template <>

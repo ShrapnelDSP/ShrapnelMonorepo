@@ -51,8 +51,8 @@ TEST(PresetsJsonBuilder, Notify)
 {
     PresetsApiMessage input{
         Notify{
+            .id{42},
             .preset{
-                .id{1, 2, 3},
                 .name{"test"},
                 .parameters{
                     .amp_gain{0.001},
@@ -83,8 +83,8 @@ TEST(PresetsJsonBuilder, Notify)
     rapidjson::Document document;
 
     auto reference = normalise_json(R"({
+          "id": 42,
           "preset": {
-            "id": "01020300-0000-0000-0000-000000000000",
             "name": "test",
             "parameters": "CAEQAhgDIAQoBTAGOAdACEgJUApYC2AMaA1wDngPgAEQiAERkAESmAEToAEU"
           },

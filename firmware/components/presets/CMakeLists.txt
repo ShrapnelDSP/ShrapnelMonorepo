@@ -4,11 +4,12 @@ add_library(shrapnel::presets ALIAS presets)
 target_sources(presets
                PRIVATE
                proto/generated/presets.pb-c.c
+               src/preset_manager.cpp
                src/presets_json_builder.cpp
                src/presets_json_parser.cpp
+               src/presets_to_string.cpp
                src/selected_preset_json_builder.cpp
                src/selected_preset_json_parser.cpp
-               src/presets_to_string.cpp
                src/selected_preset_to_string.cpp)
 target_include_directories(presets PUBLIC proto/generated include)
 
