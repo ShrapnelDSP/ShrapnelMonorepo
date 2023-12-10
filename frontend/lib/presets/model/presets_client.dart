@@ -157,7 +157,6 @@ class PresetsMessage with _$PresetsMessage {
   @FreezedUnionValue('Presets::initialise')
   factory PresetsMessage.initialise() = PresetsMessageInitialise;
 
-  // FIXME: also notify about presets being deleted?
   @FreezedUnionValue('Presets::notify')
   factory PresetsMessage.notify(int id, PresetData preset) =
       PresetsMessageNotify;

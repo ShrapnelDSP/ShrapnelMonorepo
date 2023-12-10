@@ -53,8 +53,6 @@ class PresetsState with _$PresetsState {
     required bool isCurrentModified,
     required bool canUndo,
     required List<PresetRecord> presets,
-    // FIXME use some class that is able to tell the difference between loading
-    // and loaded, but not set
     required int? selectedPreset,
   }) = _PresetsState;
 
