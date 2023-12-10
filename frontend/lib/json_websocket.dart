@@ -24,7 +24,7 @@ import 'package:logging/logging.dart';
 import 'core/stream_extensions.dart';
 import 'robust_websocket.dart';
 
-final _log = Logger('json_websocket')..level = Level.ALL;
+final _log = Logger('json_websocket');
 
 class JsonWebsocket {
   JsonWebsocket({

@@ -13,7 +13,7 @@ part 'selected_preset_client.freezed.dart';
 
 part 'selected_preset_client.g.dart';
 
-final _log = Logger('selected_preset_client')..level = Level.ALL;
+final _log = Logger('selected_preset_client');
 
 @Freezed(unionKey: 'messageType')
 sealed class SelectedPresetMessage with _$SelectedPresetMessage {
