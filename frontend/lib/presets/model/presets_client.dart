@@ -6,6 +6,7 @@ import 'package:logging/logging.dart';
 import 'package:rxdart/rxdart.dart';
 
 import '../../core/message_transport.dart';
+import '../../core/stream_extensions.dart';
 import '../../json_websocket.dart';
 import '../proto/generated/presets.pb.dart' as pb;
 
@@ -16,7 +17,7 @@ part 'presets_client.freezed.dart';
 part 'presets_client.g.dart';
 
 // ignore: unused_element
-final _log = Logger('presets_client');
+final _log = Logger('presets_client')..level = Level.ALL;
 
 class _PresetParametersJsonConverter
     implements JsonConverter<PresetParametersData, String> {
@@ -178,9 +179,9 @@ class PresetsMessage with _$PresetsMessage {
 class PresetsTransport
     implements MessageTransport<PresetsMessage, PresetsMessage> {
   PresetsTransport({required this.websocket}) {
-    _controller.stream.listen((message) {
-      websocket.send(message.toJson());
-    });
+    _controller.stream
+        .logFinest(_log, (event) => 'send message: $event')
+        .listen((message) => websocket.send(message.toJson()));
   }
 
   final _controller = StreamController<PresetsMessage>();
@@ -189,12 +190,19 @@ class PresetsTransport
   StreamSink<PresetsMessage> get sink => _controller.sink;
 
   @override
-  Stream<PresetsMessage> get stream => websocket.dataStream.transform(
+  late final Stream<PresetsMessage> stream = websocket.dataStream.transform(
         StreamTransformer.fromBind((jsonStream) async* {
           await for (final message in jsonStream) {
-            yield PresetsMessage.fromJson(message);
+            try {
+              yield PresetsMessage.fromJson(message);
+            } catch (_) {
+              // ignore
+            }
           }
         }),
+      ).logFinest(
+        _log,
+        (event) => 'receive message: $event',
       );
 
   @override
@@ -221,7 +229,7 @@ class PresetsClient {
     _transport.sink.add(PresetsMessage.initialise());
   }
 
-  Stream<presets.PresetRecord> get presetUpdates => _transport.stream
+  late final Stream<presets.PresetRecord> presetUpdates = _transport.stream
       .whereType<PresetsMessageNotify>()
       .map(
         (event) => presets.PresetRecord(

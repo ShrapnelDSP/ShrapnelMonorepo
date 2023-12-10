@@ -1,15 +1,19 @@
 import 'dart:async';
 
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:logging/logging.dart';
 import 'package:rxdart/rxdart.dart';
 
 import '../../core/message_transport.dart';
+import '../../core/stream_extensions.dart';
 import '../../core/uuid_json_converter.dart';
 import '../../json_websocket.dart';
 
 part 'selected_preset_client.freezed.dart';
 
 part 'selected_preset_client.g.dart';
+
+final _log = Logger('selected_preset_client')..level = Level.ALL;
 
 @Freezed(unionKey: 'messageType')
 sealed class SelectedPresetMessage with _$SelectedPresetMessage {
@@ -33,9 +37,9 @@ sealed class SelectedPresetMessage with _$SelectedPresetMessage {
 class SelectedPresetTransport
     implements MessageTransport<SelectedPresetMessage, SelectedPresetMessage> {
   SelectedPresetTransport({required this.websocket}) {
-    _controller.stream.listen((message) {
-      websocket.send(message.toJson());
-    });
+    _controller.stream
+        .logFinest(_log, (event) => 'send message: $event')
+        .listen((message) => websocket.send(message.toJson()));
   }
 
   final _controller = StreamController<SelectedPresetMessage>();
@@ -44,7 +48,7 @@ class SelectedPresetTransport
   StreamSink<SelectedPresetMessage> get sink => _controller;
 
   @override
-  Stream<SelectedPresetMessage> get stream => websocket.dataStream.transform(
+  late final stream = websocket.dataStream.transform(
         StreamTransformer.fromBind((jsonStream) async* {
           await for (final message in jsonStream) {
             try {
@@ -54,7 +58,7 @@ class SelectedPresetTransport
             }
           }
         }),
-      );
+      ).logFinest(_log, (event) => 'received message: $event');
 
   @override
   Stream<void> get connectionStream => websocket.connectionStream;

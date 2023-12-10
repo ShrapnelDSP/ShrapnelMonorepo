@@ -72,7 +72,7 @@ template <typename MappingManagerT>
 class MidiMappingObserver final : public midi::MappingObserver
 {
 public:
-    explicit MidiMappingObserver(persistence::Storage &a_persistence,
+    explicit MidiMappingObserver(std::shared_ptr<persistence::Storage> a_persistence,
                                  const MappingManagerT &a_mapping_manager)
         : persistence{a_persistence},
           mapping_manager{a_mapping_manager}
@@ -97,10 +97,10 @@ private:
         rapidjson::Writer writer{buffer};
         document.Accept(writer);
 
-        persistence.save("midi_mappings", buffer.GetString());
+        persistence->save("midi_mappings", buffer.GetString());
     };
 
-    persistence::Storage &persistence;
+    std::shared_ptr<persistence::Storage> persistence;
     const MappingManagerT &mapping_manager;
 };
 
@@ -141,7 +141,7 @@ template <std::size_t MAX_PARAMETERS>
 class ParameterObserver final : public parameters::ParameterObserver
 {
 public:
-    explicit ParameterObserver(persistence::Storage &a_persistence)
+    explicit ParameterObserver(std::shared_ptr<persistence::Storage> a_persistence)
         : is_save_throttled{true},
           persistence{a_persistence},
           timer{"param save throttle",
@@ -205,14 +205,14 @@ private:
             rapidjson::Writer writer{buffer};
             document.Accept(writer);
 
-            persistence.save(param.first.data(), buffer.GetString());
+            persistence->save(param.first.data(), buffer.GetString());
         }
 
         updated_parameters.clear();
     }
 
     std::atomic_flag is_save_throttled;
-    persistence::Storage &persistence;
+    std::shared_ptr<persistence::Storage> persistence;
     os::Timer timer;
     etl::map<parameters::id_t, float, MAX_PARAMETERS> updated_parameters;
 };
@@ -225,7 +225,7 @@ public:
                Queue<AppMessage, QUEUE_LEN> &a_in_queue,
                midi::MidiUartBase *a_midi_uart,
                std::shared_ptr<AudioParameters> a_audio_params,
-               persistence::Storage &a_persistence)
+               std::shared_ptr<persistence::Storage> a_persistence)
         : send_message{a_send_message},
           in_queue{a_in_queue},
           parameter_observer{a_persistence},
@@ -263,7 +263,7 @@ public:
         {
             std::optional<float> loaded_value;
             etl::string<128> json_string{};
-            int rc = a_persistence.load(name.data(), json_string);
+            int rc = a_persistence->load(name.data(), json_string);
             if(rc != 0)
             {
                 ESP_LOGW(TAG, "Parameter %s failed to load", name.data());
@@ -330,6 +330,7 @@ public:
         a_audio_params->add_observer(parameter_observer);
 
         // FIXME: remove this fake initial preset
+#if 0
         {
             int rc = presets_manager->update(
                 0,
@@ -341,6 +342,7 @@ public:
                 });
             assert(rc == 0);
         }
+#endif
 
         auto parameter_notifier = std::make_shared<ParameterUpdateNotifier>(
             a_audio_params, a_send_message);
@@ -354,7 +356,7 @@ public:
            * - Replace etl::map with more efficient implementation
            */
             etl::string<1500> mapping_json;
-            a_persistence.load("midi_mappings", mapping_json);
+            a_persistence->load("midi_mappings", mapping_json);
             ESP_LOGI(TAG, "saved mappings: %s", mapping_json.c_str());
 
             rapidjson::Document document;
@@ -598,10 +600,48 @@ private:
                 send_message({*response, std::nullopt});
             }
         }
-        else if constexpr(std::is_same_v<AppMessageT,
-                                         presets::PresetsApiMessage>)
+        else if constexpr(std::is_same_v<
+                              AppMessageT,
+                              selected_preset::SelectedPresetApiMessage>)
         {
+            auto response = std::visit(
+                [this](const auto &message)
+                    -> std::optional<selected_preset::SelectedPresetApiMessage>
+                { return handle_selected_preset_message(message); },
+                app_message);
+
+            if(response.has_value())
+            {
+                send_message({*response, std::nullopt});
+            }
         }
+    }
+
+    std::optional<selected_preset::SelectedPresetApiMessage>
+    handle_selected_preset_message(selected_preset::Read read)
+    {
+        // FIXME: fake implementation for now
+        return selected_preset::Notify{
+            .selectedPresetId = 0,
+        };
+    }
+
+    std::optional<selected_preset::SelectedPresetApiMessage>
+    handle_selected_preset_message(selected_preset::Notify notify)
+    {
+        ESP_LOGW(TAG,
+                 "Ignored selected preset notify message, the frontend is"
+                 "not supposed to send this");
+        return std::nullopt;
+    }
+
+    std::optional<selected_preset::SelectedPresetApiMessage>
+    handle_selected_preset_message(selected_preset::Write write)
+    {
+        // FIXME: fake implementation for now
+        return selected_preset::Notify{
+            .selectedPresetId = write.selectedPresetId,
+        };
     }
 
     void on_midi_message(midi::Message message)

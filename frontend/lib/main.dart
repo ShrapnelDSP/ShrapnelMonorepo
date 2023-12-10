@@ -79,6 +79,7 @@ void main() {
 }
 
 void setupLogger(Level level) {
+  hierarchicalLoggingEnabled = true;
   Logger.root.level = level;
   Logger.root.onRecord.listen((record) {
     debugPrint(
@@ -526,7 +527,9 @@ class MyHomePage extends StatelessWidget {
                   selectedPreset: state.map(
                     loading: (_) => null,
                     ready: (ready) => ready.presets
-                        .firstWhere((e) => e.id == ready.selectedPreset),
+                        .cast<PresetRecord?>()
+                        .firstWhere((e) => e!.id == ready.selectedPreset,
+                            orElse: () => null),
                   ),
                 );
               },

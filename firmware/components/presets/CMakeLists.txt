@@ -10,6 +10,7 @@ target_sources(presets
                src/presets_to_string.cpp
                src/selected_preset_json_builder.cpp
                src/selected_preset_json_parser.cpp
+               src/selected_preset_manager.cpp
                src/selected_preset_to_string.cpp)
 target_include_directories(presets PUBLIC proto/generated include)
 
@@ -17,10 +18,11 @@ target_link_libraries(presets
                       PUBLIC
                       idf::log
                       idf::protobuf-c
-                      shrapnel::rapidjson
                       shrapnel::etl
-                      shrapnel::uuid
+                      shrapnel::persistence
                       shrapnel::presets_storage
+                      shrapnel::rapidjson
+                      shrapnel::uuid
                       PRIVATE
                       cppcodec)
 

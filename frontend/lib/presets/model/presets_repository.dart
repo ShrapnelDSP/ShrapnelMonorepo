@@ -8,6 +8,7 @@ import 'presets_service.dart';
 
 class PresetsRepository implements PresetsRepositoryBase {
   PresetsRepository({required this.client}) {
+    client.presetUpdates.listen(_handleNotification);
     client.connectionStream.listen((_) {
       unawaited(client.initialise());
     });
@@ -51,6 +52,10 @@ class PresetsRepository implements PresetsRepositoryBase {
 
     final newValue = _presets.value..[preset.id] = preset;
     _presets.add(newValue);
+  }
+
+  void _handleNotification(PresetRecord preset) {
+    _presets.add(_presets.value..[preset.id] = preset);
   }
 
   void dispose() {

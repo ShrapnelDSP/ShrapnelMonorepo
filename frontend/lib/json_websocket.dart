@@ -19,7 +19,12 @@
 
 import 'dart:convert';
 
+import 'package:logging/logging.dart';
+
+import 'core/stream_extensions.dart';
 import 'robust_websocket.dart';
+
+final _log = Logger('json_websocket')..level = Level.ALL;
 
 class JsonWebsocket {
   JsonWebsocket({
@@ -29,12 +34,17 @@ class JsonWebsocket {
   final RobustWebsocket _websocket;
 
   /// The stream of incoming messages
-  Stream<Map<String, dynamic>> get dataStream => _websocket.dataStream.map(
+  late final Stream<Map<String, dynamic>> dataStream = _websocket.dataStream
+      .map(
         (dynamic event) => json.decode(event as String) as Map<String, dynamic>,
+      )
+      .logFinest(
+        _log,
+        (event) => 'received: $event',
       );
 
   /// A null is emitted every time a connection is successfully created
-  Stream<void> get connectionStream => _websocket.connectionStream;
+  late final Stream<void> connectionStream = _websocket.connectionStream;
 
   bool get isAlive => _websocket.isAlive;
 

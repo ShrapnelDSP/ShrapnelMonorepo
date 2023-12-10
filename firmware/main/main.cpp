@@ -215,7 +215,7 @@ extern "C" void app_main(void)
     ESP_ERROR_CHECK(esp_netif_init());
     ESP_ERROR_CHECK(esp_event_loop_create_default());
 
-    auto persistence = persistence::EspStorage{};
+    auto persistence = std::make_shared<persistence::EspStorage>();
     auto audio_params = std::make_shared<AudioParameters>();
 
     i2c_setup();
