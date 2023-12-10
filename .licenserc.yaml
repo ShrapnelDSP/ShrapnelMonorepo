@@ -32,6 +32,12 @@ header:
     - '**/thirdparty/**'
     - '**/*.g.dart'
     - '**/*.mocks.dart'
+    - '**/*.pb.c'
+    - '**/*.pbenum.c'
+    - '**/*.pbjson.c'
+    - '**/*.pbserver.c'
+    - '**/*.pb-c.c'
+    - '**/*.pb-h.c'
     - 'frontend/.dart_tool/**'
     - 'frontend/linux/flutter/**'
       # Test support files are usually derivatives of third-party library code,
