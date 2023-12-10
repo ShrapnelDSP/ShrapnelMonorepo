@@ -48,5 +48,4 @@ class PresetsPageObject {
         .single
         .widget as DropdownButton<PresetRecord>;
   }
-
 }

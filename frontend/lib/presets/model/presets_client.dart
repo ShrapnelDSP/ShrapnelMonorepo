@@ -190,19 +190,19 @@ class PresetsTransport
 
   @override
   late final Stream<PresetsMessage> stream = websocket.dataStream.transform(
-        StreamTransformer.fromBind((jsonStream) async* {
-          await for (final message in jsonStream) {
-            try {
-              yield PresetsMessage.fromJson(message);
-            } catch (_) {
-              // ignore
-            }
-          }
-        }),
-      ).logFinest(
-        _log,
-        (event) => 'receive message: $event',
-      );
+    StreamTransformer.fromBind((jsonStream) async* {
+      await for (final message in jsonStream) {
+        try {
+          yield PresetsMessage.fromJson(message);
+        } catch (_) {
+          // ignore
+        }
+      }
+    }),
+  ).logFinest(
+    _log,
+    (event) => 'receive message: $event',
+  );
 
   @override
   Stream<void> get connectionStream => websocket.connectionStream;
