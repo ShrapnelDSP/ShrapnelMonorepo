@@ -90,6 +90,7 @@ sealed class ParameterServiceOutputMessage
       _$ParameterServiceOutputMessageFromJson(json);
 }
 
+// @Freezed(unionKey: 'messageType')
 sealed class ParameterServiceInputMessage {
   ParameterServiceInputMessage();
 
