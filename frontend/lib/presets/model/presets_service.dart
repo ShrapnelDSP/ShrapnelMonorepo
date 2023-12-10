@@ -54,16 +54,15 @@ class PresetsService extends StateNotifier<PresetsState>
     final presets = presetsRepository.presets.valueOrNull;
     final selectedPreset = selectedPresetRepository.selectedPreset.valueOrNull;
 
-    if (selectedPreset == null || presets == null) {
+    if (presets == null) {
       state = PresetsState.loading();
     } else {
-      final presetCount = presets.length;
       final sortedPresets = presets.values.toList()
         ..sort((a, b) => a.preset.name.compareTo(b.preset.name));
       state = PresetsState.ready(
-        isCurrentModified: _parametersState.value !=
-            presets[selectedPreset]?.preset.parameters,
-        canDeleteCurrent: presetCount > 1,
+        isCurrentModified: selectedPreset != null &&
+            _parametersState.value !=
+                presets[selectedPreset]?.preset.parameters,
         presets: sortedPresets,
         selectedPreset: selectedPreset,
         canUndo: false,

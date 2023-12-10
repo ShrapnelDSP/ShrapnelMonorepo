@@ -32,6 +32,7 @@
 #include "persistence.h"
 #include "preset_serialisation.h"
 #include "presets_manager.h"
+#include "selected_preset_manager.h"
 
 namespace shrapnel {
 
@@ -72,8 +73,9 @@ template <typename MappingManagerT>
 class MidiMappingObserver final : public midi::MappingObserver
 {
 public:
-    explicit MidiMappingObserver(std::shared_ptr<persistence::Storage> a_persistence,
-                                 const MappingManagerT &a_mapping_manager)
+    explicit MidiMappingObserver(
+        std::shared_ptr<persistence::Storage> a_persistence,
+        const MappingManagerT &a_mapping_manager)
         : persistence{a_persistence},
           mapping_manager{a_mapping_manager}
     {
@@ -141,7 +143,8 @@ template <std::size_t MAX_PARAMETERS>
 class ParameterObserver final : public parameters::ParameterObserver
 {
 public:
-    explicit ParameterObserver(std::shared_ptr<persistence::Storage> a_persistence)
+    explicit ParameterObserver(
+        std::shared_ptr<persistence::Storage> a_persistence)
         : is_save_throttled{true},
           persistence{a_persistence},
           timer{"param save throttle",
@@ -254,7 +257,10 @@ public:
                       SendMessageCallback::create<
                           MainThread,
                           &MainThread::cmd_handling_send_message>(*this))},
-          presets_manager{std::make_unique<presets::PresetsManager>()}
+          presets_manager{std::make_unique<presets::PresetsManager>()},
+          selected_preset_manager{
+              std::make_unique<selected_preset::SelectedPresetManager>(
+                  a_persistence)}
     {
         auto create_and_load_parameter = [&](const parameters::id_t &name,
                                              float minimum,
@@ -344,7 +350,7 @@ public:
         }
 #endif
 
-        auto parameter_notifier = std::make_shared<ParameterUpdateNotifier>(
+        parameter_notifier = std::make_shared<ParameterUpdateNotifier>(
             a_audio_params, a_send_message);
 
         [&]
@@ -620,10 +626,14 @@ private:
     std::optional<selected_preset::SelectedPresetApiMessage>
     handle_selected_preset_message(selected_preset::Read read)
     {
-        // FIXME: fake implementation for now
-        return selected_preset::Notify{
-            .selectedPresetId = 0,
-        };
+        presets::id_t id;
+        int rc = selected_preset_manager->get(id);
+        if(rc != 0)
+        {
+            return std::nullopt;
+        }
+
+        return selected_preset::Notify{.selectedPresetId = id};
     }
 
     std::optional<selected_preset::SelectedPresetApiMessage>
@@ -638,7 +648,22 @@ private:
     std::optional<selected_preset::SelectedPresetApiMessage>
     handle_selected_preset_message(selected_preset::Write write)
     {
-        // FIXME: fake implementation for now
+        int rc = selected_preset_manager->set(write.selectedPresetId);
+        if(rc != 0)
+        {
+            return std::nullopt;
+        }
+
+        // FIXME: load the preset from storage, then set all the parameter
+        // values from the preset.
+        auto preset = presets_manager->read(write.selectedPresetId);
+        if(!preset.has_value())
+        {
+            return std::nullopt;
+        }
+       
+        deserialise_live_parameters(*parameter_notifier, preset->parameters);
+
         return selected_preset::Notify{
             .selectedPresetId = write.selectedPresetId,
         };
@@ -688,6 +713,9 @@ private:
         midi::MappingManager<ParameterUpdateNotifier, 10, 1>>>
         mapping_observer;
     std::unique_ptr<presets::PresetsManager> presets_manager;
+    std::unique_ptr<selected_preset::SelectedPresetManager>
+        selected_preset_manager;
+    std::shared_ptr<ParameterUpdateNotifier> parameter_notifier;
 };
 
 } // namespace shrapnel

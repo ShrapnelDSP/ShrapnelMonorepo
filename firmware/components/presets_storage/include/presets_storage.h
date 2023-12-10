@@ -12,7 +12,7 @@ inline etl::string<15> id_to_key(id_t id)
     int rc = snprintf(hex, sizeof hex, "%08" PRIx32, id);
     assert(rc == 8);
     return {hex, 9};
-};
+}
 
 inline id_t key_to_id(const etl::string<15> &key)
 {
@@ -20,7 +20,7 @@ inline id_t key_to_id(const etl::string<15> &key)
     int rc = sscanf(key.c_str(), "%08" PRIx32, &id);
     assert(rc == 1);
     return id;
-};
+}
 } // namespace
 
 namespace shrapnel::presets_storage {
@@ -42,7 +42,7 @@ public:
         Iterator()
             : part_name(nullptr),
               namespace_name(nullptr),
-              type(NVS_TYPE_ANY)
+              type(NVS_TYPE_BLOB)
         {
         }
 
@@ -345,7 +345,7 @@ public:
         return rc;
     };
 
-    Iterator begin() { return {part_name, namespace_name, NVS_TYPE_ANY}; }
+    Iterator begin() { return {part_name, namespace_name, NVS_TYPE_BLOB}; }
 
     Iterator end() { return Iterator(); }
 

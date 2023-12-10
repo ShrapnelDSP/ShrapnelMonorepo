@@ -51,10 +51,11 @@ class PresetsState with _$PresetsState {
 
   factory PresetsState.ready({
     required bool isCurrentModified,
-    required bool canDeleteCurrent,
     required bool canUndo,
     required List<PresetRecord> presets,
-    required int selectedPreset,
+    // FIXME use some class that is able to tell the difference between loading
+    // and loaded, but not set
+    required int? selectedPreset,
   }) = _PresetsState;
 
   PresetsState._();

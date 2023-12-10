@@ -479,15 +479,17 @@ class MyHomePage extends StatelessWidget {
                   ),
                   deletePreset: state.map(
                     loading: (_) => null,
-                    ready: (ready) => ready.canDeleteCurrent
-                        ? () => model.delete(ready.selectedPreset)
-                        : null,
+                    ready: (ready) => switch (ready.selectedPreset) {
+                      null => null,
+                      final int id => () => model.delete(id),
+                    },
                   ),
                   revertPreset: state.map(
                     loading: (_) => null,
-                    ready: (ready) => ready.isCurrentModified
-                        ? () => model.select(ready.selectedPreset)
-                        : null,
+                    ready: (ready) => switch (ready.selectedPreset) {
+                      null => null,
+                      final int id => () => model.select(id),
+                    },
                   ),
                   selectPreset: state.map(
                     loading: (_) => null,
@@ -526,10 +528,11 @@ class MyHomePage extends StatelessWidget {
                   ),
                   selectedPreset: state.map(
                     loading: (_) => null,
-                    ready: (ready) => ready.presets
-                        .cast<PresetRecord?>()
-                        .firstWhere((e) => e!.id == ready.selectedPreset,
-                            orElse: () => null),
+                    ready: (ready) =>
+                        ready.presets.cast<PresetRecord?>().firstWhere(
+                              (e) => e!.id == ready.selectedPreset,
+                              orElse: () => null,
+                            ),
                   ),
                 );
               },

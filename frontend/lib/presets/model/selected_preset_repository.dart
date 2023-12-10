@@ -18,7 +18,7 @@ class SelectedPresetRepository implements SelectedPresetRepositoryBase {
 
   @override
   Future<void> selectPreset(int presetId) async {
-    _subject.value = presetId;
+    // FIXME: perform an optimistic update here
     return client.selectPreset(presetId);
   }
 

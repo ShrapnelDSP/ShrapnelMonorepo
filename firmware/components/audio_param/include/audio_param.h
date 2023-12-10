@@ -77,7 +77,7 @@ class AudioParameters final : public etl::observable<ParameterObserver, MAX_OBSE
      *
      * \return 0 on success
      */
-    int update(const id_t &param, float value)
+    [[nodiscard]] int update(const id_t &param, float value)
     {
         auto element = parameters.find(param);
 

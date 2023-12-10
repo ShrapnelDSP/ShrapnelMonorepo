@@ -36,6 +36,32 @@ ParametersData serialise_live_parameters(T &parameters_service)
     return parameters;
 }
 
+template <typename T>
+void deserialise_live_parameters(T &parameters_service,
+                                 shrapnel::presets::ParametersData parameters)
+{
+    parameters_service.update("ampGain", parameters.amp_gain);
+    parameters_service.update("ampChannel", parameters.amp_channel);
+    parameters_service.update("bass", parameters.bass);
+    parameters_service.update("middle", parameters.middle);
+    parameters_service.update("treble", parameters.treble);
+    parameters_service.update("contour", parameters.contour);
+    parameters_service.update("volume", parameters.volume);
+    parameters_service.update("noiseGateThreshold", parameters.noise_gate_threshold);
+    parameters_service.update("noiseGateHysteresis", parameters.noise_gate_hysteresis);
+    parameters_service.update("noiseGateAttack", parameters.noise_gate_attack);
+    parameters_service.update("noiseGateHold", parameters.noise_gate_hold);
+    parameters_service.update("noiseGateRelease", parameters.noise_gate_release);
+    parameters_service.update("noiseGateBypass", parameters.noise_gate_bypass);
+    parameters_service.update("chorusRate", parameters.chorus_rate);
+    parameters_service.update("chorusDepth", parameters.chorus_depth);
+    parameters_service.update("chorusMix", parameters.chorus_mix);
+    parameters_service.update("chorusBypass", parameters.chorus_bypass);
+    parameters_service.update("wahPosition", parameters.wah_position);
+    parameters_service.update("wahVocal", parameters.wah_vocal);
+    parameters_service.update("wahBypass", parameters.wah_bypass);
+}
+
 inline int serialise_parameters(const ParametersData &parameters,
                                 std::span<uint8_t> &buffer)
 {

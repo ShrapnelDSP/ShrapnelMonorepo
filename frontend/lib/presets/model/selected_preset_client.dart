@@ -36,10 +36,10 @@ sealed class SelectedPresetMessage with _$SelectedPresetMessage {
 
 class SelectedPresetTransport
     implements MessageTransport<SelectedPresetMessage, SelectedPresetMessage> {
-  SelectedPresetTransport({required this.websocket}) {
+  SelectedPresetTransport({required JsonWebsocket websocket}) : _websocket = websocket {
     _controller.stream
         .logFinest(_log, (event) => 'send message: $event')
-        .listen((message) => websocket.send(message.toJson()));
+        .listen((message) => _websocket.send(message.toJson()));
   }
 
   final _controller = StreamController<SelectedPresetMessage>();
@@ -48,7 +48,7 @@ class SelectedPresetTransport
   StreamSink<SelectedPresetMessage> get sink => _controller;
 
   @override
-  late final stream = websocket.dataStream.transform(
+  late final stream = _websocket.dataStream.transform(
         StreamTransformer.fromBind((jsonStream) async* {
           await for (final message in jsonStream) {
             try {
@@ -61,9 +61,9 @@ class SelectedPresetTransport
       ).logFinest(_log, (event) => 'received message: $event');
 
   @override
-  Stream<void> get connectionStream => websocket.connectionStream;
+  Stream<void> get connectionStream => _websocket.connectionStream;
 
-  JsonWebsocket websocket;
+  final JsonWebsocket _websocket;
 
   @override
   void dispose() {

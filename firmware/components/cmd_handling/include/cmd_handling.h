@@ -139,6 +139,7 @@ class CommandHandling final
             ESP_LOGE(TAG, "Failed to update parameter (%s) with value %f", message.id.data(), message.value);
         }
 
+        // FIXME: send these
         send_message(message, fd);
     }
 
