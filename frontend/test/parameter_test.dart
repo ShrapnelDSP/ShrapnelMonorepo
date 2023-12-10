@@ -43,7 +43,8 @@ void main() {
 
   test('Parameter update from json', () {
     final expected = ParameterServiceInputMessageParameterUpdate(
-      parameter: const AudioParameterDoubleData(id: 'test', value: 0.0),
+      id: 'test',
+      value: 0.0,
     );
 
     final actual = ParameterServiceInputMessage.fromJson(<String, dynamic>{
@@ -52,12 +53,7 @@ void main() {
       'id': 'test',
     });
 
-    expect(actual, isA<ParameterServiceInputMessageParameterUpdate>());
-    expect((actual as ParameterServiceInputMessageParameterUpdate).parameter.id,
-        expected.parameter.id);
-    expect(
-        actual.parameter.value,
-        expected.parameter.value);
+    expect(actual, expected);
   });
 
   test('Convert initialise parameters to json', () {

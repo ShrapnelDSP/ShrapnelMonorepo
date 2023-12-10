@@ -68,9 +68,7 @@ void main() {
       void updateParameter(String id, double value) {
         parameterValues[id] = value;
         parameterController.add(
-          ParameterServiceInputMessageParameterUpdate(
-            parameter: AudioParameterDoubleData(id: id, value: value),
-          ),
+          ParameterServiceInputMessageParameterUpdate(id: id, value: value),
         );
       }
 
@@ -113,10 +111,8 @@ void main() {
             for (final entry in parameterValues.entries) {
               parameterController.add(
                 ParameterServiceInputMessageParameterUpdate(
-                  parameter: AudioParameterDoubleData(
-                    id: entry.key,
-                    value: entry.value,
-                  ),
+                  id: entry.key,
+                  value: entry.value,
                 ),
               );
             }

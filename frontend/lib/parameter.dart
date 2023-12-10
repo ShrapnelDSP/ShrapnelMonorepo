@@ -90,37 +90,15 @@ sealed class ParameterServiceOutputMessage
       _$ParameterServiceOutputMessageFromJson(json);
 }
 
-// @Freezed(unionKey: 'messageType')
-sealed class ParameterServiceInputMessage {
-  ParameterServiceInputMessage();
+@Freezed(unionKey: 'messageType')
+sealed class ParameterServiceInputMessage with _$ParameterServiceInputMessage {
+  factory ParameterServiceInputMessage.parameterUpdate({
+    required String id,
+    required double value,
+  }) = ParameterServiceInputMessageParameterUpdate;
 
-  factory ParameterServiceInputMessage.fromJson(Map<String, dynamic> json) {
-    final messageType = json['messageType'];
-    return switch (messageType) {
-      'parameterUpdate' =>
-        ParameterServiceInputMessageParameterUpdate.fromJson(json),
-      _ => throw ArgumentError("messageType '$messageType' is not known"),
-    };
-  }
-}
-
-class ParameterServiceInputMessageParameterUpdate
-    extends ParameterServiceInputMessage {
-  ParameterServiceInputMessageParameterUpdate({required this.parameter});
-
-  factory ParameterServiceInputMessageParameterUpdate.fromJson(
-    Map<String, dynamic> json,
-  ) {
-    if (json['messageType'] != 'parameterUpdate') {
-      throw ArgumentError("messageType is not 'parameterUpdate'");
-    }
-
-    return ParameterServiceInputMessageParameterUpdate(
-      parameter: AudioParameterDoubleData.fromJson(json),
-    );
-  }
-
-  AudioParameterDoubleData parameter;
+  factory ParameterServiceInputMessage.fromJson(Map<String, dynamic> json) =>
+      _$ParameterServiceInputMessageFromJson(json);
 }
 
 abstract class ParameterRepositoryBase {
@@ -215,16 +193,16 @@ class ParameterService extends ChangeNotifier {
 
   void _handleIncomingMessage(ParameterServiceInputMessage message) {
     switch (message) {
-      case ParameterServiceInputMessageParameterUpdate(:final parameter):
-        if (!_parameters.containsKey(parameter.id)) {
-          _log.warning("Couldn't find parameter with id ${parameter.id}");
+      case ParameterServiceInputMessageParameterUpdate(:final id, :final value):
+        if (!_parameters.containsKey(id)) {
+          _log.warning("Couldn't find parameter with id $id");
           for (final id in _parameters.keys) {
             _log.warning(id);
           }
           return;
         }
 
-        _parameters[parameter.id]!.setValue(parameter.value);
+        _parameters[id]!.setValue(value);
     }
   }
 
