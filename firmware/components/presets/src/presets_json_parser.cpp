@@ -122,16 +122,12 @@ std::optional<Update> from_json(const rapidjson::Value &json)
 template <>
 std::optional<Delete> from_json(const rapidjson::Value &json)
 {
-    auto id_json = json.FindMember("selectedPreset");
+    auto id_json = json.FindMember("id");
     if(id_json == json.MemberEnd())
-    {
         return std::nullopt;
-    }
 
     if(!id_json->value.IsUint())
-    {
         return std::nullopt;
-    }
 
     return {{.id{id_json->value.GetUint()}}};
 }

@@ -67,8 +67,16 @@ public:
                 ((const char *key), (etl::string_view data)),
                 (override));
     MOCK_METHOD(int,
+                save,
+                ((const char *key), (uint32_t data)),
+                (override));
+    MOCK_METHOD(int,
                 load,
                 ((const char *key), (etl::istring & data)),
+                (override));
+    MOCK_METHOD(int,
+                load,
+                ((const char *key), (uint32_t & data)),
                 (override));
 };
 
@@ -77,6 +85,7 @@ class Integration : public ::testing::Test
 protected:
     Integration()
         : audio_params(std::make_unique<shrapnel::AudioParameters>()),
+          storage{std::make_shared<FakeStorage>()},
           uut{send_message_fn, in_queue, &midi_uart, audio_params, storage}
     {
     }
@@ -100,7 +109,7 @@ protected:
     shrapnel::Queue<AppMessage, QUEUE_LEN> in_queue;
     FakeMidiUart midi_uart;
     std::shared_ptr<shrapnel::AudioParameters> audio_params;
-    FakeStorage storage;
+    std::shared_ptr<FakeStorage> storage;
     shrapnel::MainThread<shrapnel::MAX_PARAMETERS, QUEUE_LEN> uut;
 };
 
