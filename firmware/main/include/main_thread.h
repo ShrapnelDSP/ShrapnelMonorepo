@@ -335,21 +335,6 @@ public:
 
         a_audio_params->add_observer(parameter_observer);
 
-        // FIXME: remove this fake initial preset
-#if 0
-        {
-            int rc = presets_manager->update(
-                0,
-                {
-                    .name{"Demo Preset"},
-                    .parameters{
-                        presets::serialise_live_parameters(*a_audio_params),
-                    },
-                });
-            assert(rc == 0);
-        }
-#endif
-
         parameter_notifier = std::make_shared<ParameterUpdateNotifier>(
             a_audio_params, a_send_message);
 
@@ -536,12 +521,6 @@ private:
                     if constexpr(std::is_same_v<PresetsMessageT,
                                                 presets::Initialise>)
                     {
-                        // FIXME: is the server running in a background thread?
-                        // If not, then this will fill up the message queue
-                        // without giving the server a chance to run.
-                        //
-                        // The parameter initialisation is done the same way, so
-                        // maybe this is fine?
                         presets_manager->for_each(
                             [this](presets::id_t id,
                                    const presets::PresetData &preset)
@@ -594,8 +573,6 @@ private:
                             ESP_LOGE(TAG, "Failed to remove preset");
                             return std::nullopt;
                         }
-                        // FIXME: add message for notifying about deletion to
-                        // the API.
                     }
                     else
                     {
@@ -659,8 +636,6 @@ private:
             return std::nullopt;
         }
 
-        // FIXME: load the preset from storage, then set all the parameter
-        // values from the preset.
         auto preset = presets_manager->read(write.selectedPresetId);
         if(!preset.has_value())
         {
