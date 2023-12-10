@@ -329,20 +329,17 @@ public:
 
         a_audio_params->add_observer(parameter_observer);
 
+        // FIXME: remove this fake initial preset
         {
-            uint8_t buffer[100];
-            auto data = std::span<uint8_t, std::dynamic_extent>(buffer);
-            int rc = presets::serialise_preset(
+            int rc = presets_manager->update(
+                0,
                 {
                     .name{"Demo Preset"},
                     .parameters{
                         presets::serialise_live_parameters(*a_audio_params),
                     },
-                },
-                data);
+                });
             assert(rc == 0);
-            ESP_LOG_BUFFER_HEX(TAG, data.data(), data.size());
-            ESP_LOGI(TAG, "Packed size: %zu", data.size());
         }
 
         auto parameter_notifier = std::make_shared<ParameterUpdateNotifier>(
@@ -534,14 +531,14 @@ private:
                         // FIXME: is the server running in a background thread?
                         // If not, then this will fill up the message queue
                         // without giving the server a chance to run.
-                        // 
+                        //
                         // The parameter initialisation is done the same way, so
                         // maybe this is fine?
                         presets_manager->for_each(
                             [this](presets::id_t id,
                                    const presets::PresetData &preset)
                             {
-                                send_message({presets::Update{
+                                send_message({presets::Notify{
                                                   .id = id,
                                                   .preset = preset,
                                               },
@@ -575,7 +572,7 @@ private:
                             return std::nullopt;
                         }
 
-                        return (presets::Notify){
+                        return presets::Notify{
                             .id{presets_message.id},
                             .preset{presets_message.preset},
                         };

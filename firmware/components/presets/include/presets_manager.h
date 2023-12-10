@@ -17,22 +17,6 @@ public:
     void for_each(etl::delegate<void(id_t, const PresetData &)> callback);
 
 private:
-    static inline etl::string<15> id_to_key(id_t id)
-    {
-        char hex[9];
-        int rc = snprintf(hex, sizeof hex, "%08" PRIx32, id);
-        assert(rc == 9);
-        return {hex, 9};
-    };
-
-    static inline id_t key_to_id(const etl::string<15> &key)
-    {
-        id_t id;
-        int rc = sscanf(key.c_str(), "%08" PRIx32, &id);
-        assert(rc == 1);
-        return id;
-    };
-
     std::unique_ptr<presets_storage::Storage> storage;
 };
 

@@ -15,8 +15,7 @@ int PresetsManager::create(const PresetData &preset, id_t &id_out)
         return -1;
     }
 
-    etl::string<15> key_string;
-    rc = storage->create(data, key_string);
+    rc = storage->create(data, id_out);
     if(rc != 0)
     {
         return -1;
@@ -29,14 +28,20 @@ std::optional<PresetData> PresetsManager::read(id_t id)
 {
     std::array<uint8_t, 100> buffer;
     auto data = std::span<uint8_t, std::dynamic_extent>(buffer);
-    int rc = storage->load(id_to_key(id), data);
+    int rc = storage->load(id, data);
     if(rc != 0)
     {
         return std::nullopt;
     }
 
-    // FIXME: deserialise
-    assert(false);
+    PresetData preset;
+    rc = deserialise_preset(data, preset);
+    if(rc != 0)
+    {
+        return std::nullopt;
+    }
+    
+    return preset;
 }
 
 int PresetsManager::update(id_t id, const PresetData &preset)
@@ -50,7 +55,7 @@ int PresetsManager::update(id_t id, const PresetData &preset)
         return -1;
     }
 
-    rc = storage->save(id_to_key(id), data);
+    rc = storage->save(id, data);
     if(rc != 0)
     {
         return -1;
@@ -59,7 +64,7 @@ int PresetsManager::update(id_t id, const PresetData &preset)
     return 0;
 }
 
-void PresetsManager::remove(id_t id) { storage->remove(id_to_key(id)); }
+void PresetsManager::remove(id_t id) { storage->remove(id); }
 
 void PresetsManager::for_each(
     etl::delegate<void(id_t, const PresetData &)> callback)
@@ -77,4 +82,4 @@ void PresetsManager::for_each(
     }
 }
 
-} // namespace 
+} // namespace shrapnel::presets

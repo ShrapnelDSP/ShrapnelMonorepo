@@ -123,4 +123,48 @@ inline int serialise_preset(const PresetData &preset,
     return 0;
 }
 
+inline int deserialise_preset(const std::span<uint8_t> &buffer,
+                              PresetData &preset)
+{
+    auto unpacked = preset__unpack(nullptr, buffer.size(), buffer.data());
+    if(unpacked == nullptr)
+    {
+        return -1;
+    }
+
+    preset = PresetData{
+        .name{unpacked->name},
+        .parameters{
+            .amp_gain = unpacked->parameters->amp_gain / 1000.f,
+            .amp_channel = unpacked->parameters->amp_channel / 1000.f,
+            .bass = unpacked->parameters->bass / 1000.f,
+            .middle = unpacked->parameters->middle / 1000.f,
+            .treble = unpacked->parameters->treble / 1000.f,
+            .contour = unpacked->parameters->contour / 1000.f,
+            .volume = unpacked->parameters->volume / 1000.f,
+            .noise_gate_threshold =
+                unpacked->parameters->noise_gate_threshold / 1000.f,
+            .noise_gate_hysteresis =
+                unpacked->parameters->noise_gate_hysteresis / 1000.f,
+            .noise_gate_attack =
+                unpacked->parameters->noise_gate_attack / 1000.f,
+            .noise_gate_hold = unpacked->parameters->noise_gate_hold / 1000.f,
+            .noise_gate_release =
+                unpacked->parameters->noise_gate_release / 1000.f,
+            .noise_gate_bypass =
+                unpacked->parameters->noise_gate_bypass / 1000.f,
+            .chorus_rate = unpacked->parameters->chorus_rate / 1000.f,
+            .chorus_depth = unpacked->parameters->chorus_depth / 1000.f,
+            .chorus_mix = unpacked->parameters->chorus_mix / 1000.f,
+            .chorus_bypass = unpacked->parameters->chorus_bypass / 1000.f,
+            .wah_position = unpacked->parameters->wah_position / 1000.f,
+            .wah_vocal = unpacked->parameters->wah_vocal / 1000.f,
+            .wah_bypass = unpacked->parameters->wah_bypass / 1000.f,
+        },
+    };
+
+    preset__free_unpacked(unpacked, nullptr);
+    return 0;
+}
+
 } // namespace shrapnel::presets

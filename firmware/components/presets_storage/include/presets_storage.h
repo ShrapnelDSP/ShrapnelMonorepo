@@ -5,6 +5,24 @@
 #include <span>
 #include <string_view>
 
+namespace {
+inline etl::string<15> id_to_key(id_t id)
+{
+    char hex[9];
+    int rc = snprintf(hex, sizeof hex, "%08" PRIx32, id);
+    assert(rc == 8);
+    return {hex, 9};
+};
+
+inline id_t key_to_id(const etl::string<15> &key)
+{
+    id_t id;
+    int rc = sscanf(key.c_str(), "%08" PRIx32, &id);
+    assert(rc == 1);
+    return id;
+};
+} // namespace
+
 namespace shrapnel::presets_storage {
 
 /** Interface for storing persistent data
@@ -182,14 +200,53 @@ public:
         int i = 0;
         nvs_iterator_t self = nullptr;
     };
-    
-    int create(std::span<uint8_t> data, etl::string<15> &key_out) {
-        // FIXME
-        assert(false);
+
+    int create(std::span<uint8_t> data, presets::id_t &id_out)
+    {
+        nvs_handle_t nvs_handle;
+        esp_err_t err;
+        int rc = -1;
+
+        // start at 0 in case last ID has not been saved to NVS
+        uint32_t id = 0;
+
+        ESP_ERROR_CHECK_WITHOUT_ABORT(
+            err = nvs_open(namespace_name, NVS_READWRITE, &nvs_handle));
+        if(err != ESP_OK)
+            goto out;
+
+        ESP_ERROR_CHECK_WITHOUT_ABORT(
+            err = nvs_get_u32(nvs_handle, last_id_name, &id));
+        if(err != ESP_OK && err != ESP_ERR_NVS_NOT_FOUND)
+            goto out;
+
+        id++;
+        id_out = id;
+
+        ESP_ERROR_CHECK_WITHOUT_ABORT(
+            err = nvs_set_blob(
+                nvs_handle, id_to_key(id).c_str(), data.data(), data.size()));
+        if(err != ESP_OK)
+            goto out;
+
+        ESP_ERROR_CHECK_WITHOUT_ABORT(
+            err = nvs_set_u32(nvs_handle, last_id_name, id));
+        if(err != ESP_OK && err != ESP_ERR_NVS_NOT_FOUND)
+            goto out;
+
+        ESP_ERROR_CHECK_WITHOUT_ABORT(err = nvs_commit(nvs_handle));
+        if(err != ESP_OK)
+            goto out;
+
+        rc = 0;
+
+    out:
+        nvs_close(nvs_handle);
+        return rc;
     }
 
     /// \return  non-zero on error
-    int save(const etl::string<15> &key, std::span<uint8_t> data)
+    int save(presets::id_t id, std::span<uint8_t> data)
     {
         nvs_handle_t nvs_handle;
         esp_err_t err;
@@ -201,8 +258,8 @@ public:
             goto out;
 
         ESP_ERROR_CHECK_WITHOUT_ABORT(
-            err =
-                nvs_set_blob(nvs_handle, key.data(), data.data(), data.size()));
+            err = nvs_set_blob(
+                nvs_handle, id_to_key(id).c_str(), data.data(), data.size()));
         if(err != ESP_OK)
             goto out;
 
@@ -218,8 +275,7 @@ public:
     };
 
     /// \return  non-zero on error
-    int load(const etl::string<15> &key,
-             std::span<uint8_t> &buffer)
+    int load(presets::id_t id, std::span<uint8_t> &buffer)
     {
         nvs_handle_t nvs_handle;
         esp_err_t err;
@@ -233,8 +289,8 @@ public:
 
         // query the required size
         ESP_ERROR_CHECK_WITHOUT_ABORT(
-            err =
-                nvs_get_blob(nvs_handle, key.data(), nullptr, &required_size));
+            err = nvs_get_blob(
+                nvs_handle, id_to_key(id).c_str(), nullptr, &required_size));
         if(err != ESP_OK)
             goto out;
 
@@ -247,9 +303,10 @@ public:
             goto out;
         }
 
-        ESP_ERROR_CHECK_WITHOUT_ABORT(
-            err = nvs_get_blob(
-                nvs_handle, key.data(), buffer.data(), &required_size));
+        ESP_ERROR_CHECK_WITHOUT_ABORT(err = nvs_get_blob(nvs_handle,
+                                                         id_to_key(id).c_str(),
+                                                         buffer.data(),
+                                                         &required_size));
         if(err != ESP_OK)
             goto out;
 
@@ -261,7 +318,7 @@ public:
     };
 
     /// \return  non-zero on error
-    int remove(const etl::string<15> &key)
+    int remove(presets::id_t id)
     {
         nvs_handle_t nvs_handle;
         esp_err_t err;
@@ -273,7 +330,7 @@ public:
             goto out;
 
         ESP_ERROR_CHECK_WITHOUT_ABORT(
-            err = nvs_erase_key(nvs_handle, key.data()));
+            err = nvs_erase_key(nvs_handle, id_to_key(id).c_str()));
         if(err != ESP_OK)
             goto out;
 
@@ -295,6 +352,7 @@ public:
 private:
     static constexpr char part_name[] = "nvs";
     static constexpr char namespace_name[] = "presets";
+    static constexpr char last_id_name[] = "last_id";
     static constexpr char TAG[] = "presets_storage";
 };
 
