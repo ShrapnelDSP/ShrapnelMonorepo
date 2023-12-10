@@ -588,7 +588,12 @@ private:
                     else if constexpr(std::is_same_v<PresetsMessageT,
                                                      presets::Delete>)
                     {
-                        presets_manager->remove(presets_message.id);
+                        int rc = presets_manager->remove(presets_message.id);
+                        if(rc != 0)
+                        {
+                            ESP_LOGE(TAG, "Failed to remove preset");
+                            return std::nullopt;
+                        }
                         // FIXME: add message for notifying about deletion to
                         // the API.
                     }

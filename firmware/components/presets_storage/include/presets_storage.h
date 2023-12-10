@@ -201,7 +201,7 @@ public:
         nvs_iterator_t self = nullptr;
     };
 
-    int create(std::span<uint8_t> data, presets::id_t &id_out)
+    [[nodiscard]] int create(std::span<uint8_t> data, presets::id_t &id_out)
     {
         nvs_handle_t nvs_handle;
         esp_err_t err;
@@ -246,7 +246,7 @@ public:
     }
 
     /// \return  non-zero on error
-    int save(presets::id_t id, std::span<uint8_t> data)
+    [[nodiscard]] int save(presets::id_t id, std::span<uint8_t> data)
     {
         nvs_handle_t nvs_handle;
         esp_err_t err;
@@ -275,7 +275,7 @@ public:
     };
 
     /// \return  non-zero on error
-    int load(presets::id_t id, std::span<uint8_t> &buffer)
+    [[nodiscard]] int load(presets::id_t id, std::span<uint8_t> &buffer)
     {
         nvs_handle_t nvs_handle;
         esp_err_t err;
@@ -318,7 +318,7 @@ public:
     };
 
     /// \return  non-zero on error
-    int remove(presets::id_t id)
+    [[nodiscard]] int remove(presets::id_t id)
     {
         nvs_handle_t nvs_handle;
         esp_err_t err;

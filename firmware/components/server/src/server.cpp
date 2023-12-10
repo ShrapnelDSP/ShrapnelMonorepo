@@ -17,7 +17,7 @@
  * ShrapnelDSP. If not, see <https://www.gnu.org/licenses/>.
  */
 
-// #define LOG_LOCAL_LEVEL ESP_LOG_VERBOSE
+#define LOG_LOCAL_LEVEL ESP_LOG_VERBOSE
 #include "server.h"
 #include "cmd_handling_json.h"
 #include "cmd_handling_json_builder.h"
@@ -61,6 +61,7 @@ void Server::start()
     config.server_port = 8080;
     config.ctrl_port = 8081;
     config.max_open_sockets = MAX_CLIENTS;
+    config.stack_size = 5000;
 
     // Start the httpd server
     ESP_LOGI(TAG, "Starting server on port: '%d'", config.server_port);
@@ -139,7 +140,7 @@ esp_err_t websocket_get_handler(httpd_req_t *req)
     ESP_LOG_BUFFER_HEXDUMP(TAG, json, sizeof(json), ESP_LOG_VERBOSE);
 
     int fd = httpd_req_to_sockfd(req);
-
+    
     rapidjson::Document document;
     document.Parse(json);
     if(document.HasParseError())

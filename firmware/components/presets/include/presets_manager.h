@@ -12,7 +12,7 @@ public:
     [[nodiscard]] int create(const PresetData &preset, id_t &id_out);
     [[nodiscard]] std::optional<PresetData> read(id_t id);
     [[nodiscard]] int update(id_t id, const PresetData &preset);
-    void remove(id_t id);
+    [[nodiscard]] int remove(id_t id);
 
     void for_each(etl::delegate<void(id_t, const PresetData &)> callback);
 

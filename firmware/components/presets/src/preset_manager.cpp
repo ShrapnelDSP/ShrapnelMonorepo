@@ -40,7 +40,7 @@ std::optional<PresetData> PresetsManager::read(id_t id)
     {
         return std::nullopt;
     }
-    
+
     return preset;
 }
 
@@ -64,7 +64,16 @@ int PresetsManager::update(id_t id, const PresetData &preset)
     return 0;
 }
 
-void PresetsManager::remove(id_t id) { storage->remove(id); }
+int PresetsManager::remove(id_t id)
+{
+    int rc = storage->remove(id);
+    if(rc != 0)
+    {
+        return -1;
+    }
+
+    return 0;
+}
 
 void PresetsManager::for_each(
     etl::delegate<void(id_t, const PresetData &)> callback)

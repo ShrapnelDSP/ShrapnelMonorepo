@@ -223,4 +223,24 @@ TEST(PresetsJsonParser, Update)
     }
 }
 
+TEST(PresetsJsonParser, Delete)
+{
+    auto json = R"({"id":1,"messageType":"Presets::delete"})";
+
+    auto result = parse_json(json);
+    EXPECT_THAT(result.has_value(), true);
+    EXPECT_THAT(std::holds_alternative<Delete>(*result), true);
+
+    if(auto message = std::get_if<Delete>(&(*result)))
+    {
+        Delete expected{.id{1}};
+
+        EXPECT_THAT(*message, expected);
+    }
+    else
+    {
+        assert(false);
+    }
+}
+
 } // namespace
