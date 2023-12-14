@@ -278,7 +278,7 @@ class PresetsClient {
             ),
           ),
         ),
-      );
+      ).asBroadcastStream();
 
   Future<void> create(presets.PresetState preset) async {
     _transport.sink

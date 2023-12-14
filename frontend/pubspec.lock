@@ -182,7 +182,7 @@ packages:
     description:
       path: "."
       ref: shrapnel
-      resolved-ref: "6f5fe7e369e1e373ea70330cc9f0da1d53dcf82c"
+      resolved-ref: f4d5fc671568f50753fc90c3e9b99bc2165c6a39
       url: "https://github.com/ShrapnelDSP/esp_softap_provisioning.git"
     source: git
     version: "1.0.1"

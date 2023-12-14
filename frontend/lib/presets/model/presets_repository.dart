@@ -19,6 +19,7 @@
 
 import 'dart:async';
 
+import 'package:logging/logging.dart';
 import 'package:rxdart/rxdart.dart';
 
 import 'presets.dart';
@@ -40,7 +41,10 @@ class PresetsRepository implements PresetsRepositoryBase {
     await client.create(preset);
 
     final record = await client.presetUpdates
-        .firstWhere((element) => element.preset == preset)
+        // Don't check equality of the parameter values, they will have rounding
+        // errors after roundtrip through the firmware, instead just check the
+        // name.
+        .firstWhere((element) => element.preset.name == preset.name)
         .timeout(const Duration(seconds: 1));
 
     final newValue = _presets.value..[record.id] = record;
