@@ -28,6 +28,80 @@
 
 #define QUEUE_LEN 4
 
+extern "C" {
+
+__attribute__((__noreturn__)) void
+_esp_error_check_failed(esp_err_t rc,
+                        const char *file,
+                        int line,
+                        const char *function,
+                        const char *expression)
+
+{
+    assert(false);
+}
+
+void _esp_error_check_failed_without_abort(esp_err_t rc,
+                                           const char *file,
+                                           int line,
+                                           const char *function,
+                                           const char *expression){};
+
+esp_err_t
+nvs_entry_find(const char *, const char *, nvs_type_t, nvs_iterator_t *)
+{
+    assert(false);
+}
+
+void nvs_release_iterator(nvs_iterator_t) { assert(false); }
+
+esp_err_t nvs_entry_info(const nvs_iterator_t, nvs_entry_info_t *)
+{
+    assert(false);
+}
+
+esp_err_t nvs_entry_next(nvs_iterator_t *iterator) { assert(false); }
+
+esp_err_t nvs_open(const char *namespace_name,
+                   nvs_open_mode_t open_mode,
+                   nvs_handle_t *out_handle)
+{
+    assert(false);
+}
+
+esp_err_t nvs_set_blob(nvs_handle_t handle,
+                       const char *key,
+                       const void *value,
+                       size_t length)
+{
+    assert(false);
+}
+
+esp_err_t nvs_get_blob(nvs_handle_t handle,
+                       const char *key,
+                       void *out_value,
+                       size_t *length)
+{
+    assert(false);
+}
+
+esp_err_t nvs_set_u32(nvs_handle_t handle, const char *key, uint32_t value)
+{
+    assert(false);
+}
+
+esp_err_t nvs_get_u32(nvs_handle_t handle, const char *key, uint32_t *out_value)
+{
+    assert(false);
+}
+
+esp_err_t nvs_commit(nvs_handle_t handle) { assert(false); }
+
+void nvs_close(nvs_handle_t handle) { assert(false); }
+
+esp_err_t nvs_erase_key(nvs_handle_t handle, const char *key) { assert(false); }
+}
+
 namespace shrapnel::midi {
 
 template <typename T>
@@ -66,18 +140,12 @@ public:
                 save,
                 ((const char *key), (etl::string_view data)),
                 (override));
-    MOCK_METHOD(int,
-                save,
-                ((const char *key), (uint32_t data)),
-                (override));
+    MOCK_METHOD(int, save, ((const char *key), (uint32_t data)), (override));
     MOCK_METHOD(int,
                 load,
                 ((const char *key), (etl::istring & data)),
                 (override));
-    MOCK_METHOD(int,
-                load,
-                ((const char *key), (uint32_t & data)),
-                (override));
+    MOCK_METHOD(int, load, ((const char *key), (uint32_t & data)), (override));
 };
 
 class Integration : public ::testing::Test
