@@ -154,7 +154,7 @@ TEST(PresetsJsonParser, CreateTruncatesLongName)
     }
 }
 
-TEST(PresetsJsonParser, CreateWithCorruptedProtoThrows)
+TEST(PresetsJsonParser, CreateWithCorruptedProtoFailsGracefully)
 {
     auto json = R"({
       "messageType": "Presets::create",
@@ -164,9 +164,7 @@ TEST(PresetsJsonParser, CreateWithCorruptedProtoThrows)
       }
     })";
 
-    // FIXME: production code is running with no exceptions, this should return
-    // a std::nullopt instead.
-    EXPECT_THROW(parse_json(json), std::exception);
+    EXPECT_THAT(parse_json(json).has_value(), false);
 }
 
 TEST(PresetsJsonParser, Update)

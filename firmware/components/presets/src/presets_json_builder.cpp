@@ -50,8 +50,16 @@ rapidjson::Value to_json(rapidjson::Document &document,
         return {/* null */};
     }
 
-    base64_codec::encode(
-        base64_buffer.data(), base64_buffer.size(), data.data(), data.size());
+    auto error = base64_codec::encode(base64_buffer.data(),
+                                      base64_buffer.size(),
+                                      data.data(),
+                                      data.size(),
+                                      encoded_size);
+
+    if(!std::holds_alternative<std::monostate>(error))
+    {
+        return {/* null */};
+    }
 
     auto json = rapidjson::Value{};
     json.SetString(base64_buffer.data(), encoded_size, document.GetAllocator());

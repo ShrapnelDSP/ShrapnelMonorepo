@@ -21,4 +21,4 @@
 	url = https://github.com/protobuf-c/protobuf-c.git
 [submodule "thirdparty/esp-idf-components/cppcodec"]
 	path = thirdparty/esp-idf-components/cppcodec
-	url = https://github.com/tplgy/cppcodec.git
+	url = https://github.com/ShrapnelDSP/cppcodec.git

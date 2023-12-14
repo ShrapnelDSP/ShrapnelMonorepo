@@ -543,7 +543,7 @@ private:
                             ESP_LOGE(TAG, "Failed to create preset");
                             return std::nullopt;
                         }
-                        return (presets::Notify){
+                        return presets::Notify{
                             .id{id},
                             .preset{presets_message.preset},
                         };
@@ -606,7 +606,7 @@ private:
     }
 
     std::optional<selected_preset::SelectedPresetApiMessage>
-    handle_selected_preset_message(selected_preset::Read read)
+    handle_selected_preset_message(selected_preset::Read)
     {
         presets::id_t id;
         int rc = selected_preset_manager->get(id);
@@ -619,7 +619,7 @@ private:
     }
 
     std::optional<selected_preset::SelectedPresetApiMessage>
-    handle_selected_preset_message(selected_preset::Notify notify)
+    handle_selected_preset_message(selected_preset::Notify)
     {
         ESP_LOGW(TAG,
                  "Ignored selected preset notify message, the frontend is"

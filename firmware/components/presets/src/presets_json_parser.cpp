@@ -42,8 +42,17 @@ std::optional<ParametersData> from_json(const rapidjson::Value &json)
         return std::nullopt;
     }
 
-    size_t decoded_size = base64_codec::decode(
-        buffer.data(), buffer.size(), json.GetString(), json.GetStringLength());
+    size_t decoded_size = 0;
+    auto error = base64_codec::decode(buffer.data(),
+                                      buffer.size(),
+                                      json.GetString(),
+                                      json.GetStringLength(),
+                                      decoded_size);
+                                     
+    if(!std::holds_alternative<std::monostate>(error))
+    {
+        return std::nullopt;
+    }
 
     auto unpacked =
         preset_parameters__unpack(nullptr, decoded_size, buffer.data());
