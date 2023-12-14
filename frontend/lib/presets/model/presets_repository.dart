@@ -19,7 +19,6 @@
 
 import 'dart:async';
 
-import 'package:logging/logging.dart';
 import 'package:rxdart/rxdart.dart';
 
 import 'presets.dart';
