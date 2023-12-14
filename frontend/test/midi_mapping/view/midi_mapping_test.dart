@@ -94,7 +94,7 @@ void main() {
           "123": {
             "midi_channel": 1,
             "cc_number": 2,
-            "parameter_id": "noiseGateRelease",
+            "parameter_id": "chorusDepth",
             "mode": "parameter"
           }
         }
@@ -113,7 +113,7 @@ void main() {
                 "123": {
                   "midi_channel": 1,
                   "cc_number": 2,
-                  "parameter_id": "noiseGateRelease",
+                  "parameter_id": "chorusDepth",
                   "mode": "parameter"
                 }
               }
@@ -135,7 +135,7 @@ void main() {
     // it actually works during the test. This is more likely if something is
     // picked from the top of the list. When changing the parameter name, make
     // sure that the parameter ID in the stub is also updated.
-    await midiMappingCreatePage.selectParameter('Noise Gate: Release');
+    await midiMappingCreatePage.selectParameter('Chorus: DEPTH');
     await midiMappingCreatePage.submitCreateDialog();
 
     verify(api.send(createRequest));
@@ -203,7 +203,7 @@ void main() {
             "midi_channel": 1,
             "cc_number": 2,
             "mode": "parameter",
-            "parameter_id": "noiseGateRelease"
+            "parameter_id": "chorusDepth"
           }
         }
       }
@@ -221,7 +221,7 @@ void main() {
     // it actually works during the test. This is more likely if something is
     // picked from the top of the list. When changing the parameter name, make
     // sure that the parameter ID in the stub is also updated.
-    await midiMappingCreatePage.selectParameter('Noise Gate: Release');
+    await midiMappingCreatePage.selectParameter('Chorus: DEPTH');
     await midiMappingCreatePage.submitCreateDialog();
 
     verify(api.send(createRequest));
