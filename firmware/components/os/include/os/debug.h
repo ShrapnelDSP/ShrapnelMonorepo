@@ -17,31 +17,6 @@
  * ShrapnelDSP. If not, see <https://www.gnu.org/licenses/>.
  */
 
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+#pragma once
 
-import 'robust_websocket.dart';
-
-class WebSocketStatus extends StatelessWidget {
-  const WebSocketStatus({super.key, required this.size});
-
-  final double size;
-
-  @override
-  Widget build(BuildContext context) {
-    final isConnected = context.watch<RobustWebsocket>().isAlive;
-
-    return Tooltip(
-      message: isConnected ? 'Connected' : 'Not Connected',
-      waitDuration: const Duration(milliseconds: 500),
-      child: Container(
-        width: size,
-        height: size,
-        decoration: BoxDecoration(
-          color: isConnected ? Colors.green : Colors.red,
-          shape: BoxShape.circle,
-        ),
-      ),
-    );
-  }
-}
+void debug_dump_task_list();

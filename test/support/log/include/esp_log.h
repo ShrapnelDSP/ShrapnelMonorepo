@@ -79,6 +79,8 @@ uint32_t esp_log_timestamp(void);
 void esp_log_write(esp_log_level_t level, const char* tag, const char* format, ...) __attribute__ ((format (printf, 3, 4)));
 
 #define ESP_LOG_BUFFER_HEX_LEVEL( tag, buffer, buff_len, level )
+#define ESP_LOG_BUFFER_HEX(tag, buffer, buff_len)                              \
+    ESP_LOG_BUFFER_HEX_LEVEL(tag, buffer, buff_len, ESP_LOG_INFO)
 
 #ifdef __cplusplus
 }

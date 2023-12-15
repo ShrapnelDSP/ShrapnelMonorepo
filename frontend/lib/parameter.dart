@@ -18,37 +18,32 @@
  */
 
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:flutter/widgets.dart';
-import 'package:json_annotation/json_annotation.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logging/logging.dart';
-import 'package:rxdart/transformers.dart';
+import 'package:rxdart/rxdart.dart';
 
-import 'robust_websocket.dart';
+import 'json_websocket.dart';
 
 part 'parameter.g.dart';
 
-final log = Logger('shrapnel.parameter');
+part 'parameter.freezed.dart';
 
-// TODO do some testing on this, should fail to create when either field is
-// missing, wrong data type etc.
-@JsonSerializable()
-class AudioParameterDouble {
-  AudioParameterDouble({
-    required this.value,
-    required this.id,
-  });
+final _log = Logger('shrapnel.parameter');
 
-  factory AudioParameterDouble.fromJson(Map<String, dynamic> json) =>
-      _$AudioParameterDoubleFromJson(json);
-  Map<String, dynamic> toJson() => _$AudioParameterDoubleToJson(this);
+@freezed
+class AudioParameterDoubleData with _$AudioParameterDoubleData {
+  const factory AudioParameterDoubleData({
+    required String id,
+    required double value,
+  }) = _AudioParameterDoubleData;
 
-  final String id;
-  final double value;
+  factory AudioParameterDoubleData.fromJson(Map<String, dynamic> json) =>
+      _$AudioParameterDoubleDataFromJson(json);
 }
 
-class AudioParameterDoubleModel extends ChangeNotifier {
+class AudioParameterDoubleModel {
   AudioParameterDoubleModel({
     required this.groupName,
     required this.name,
@@ -58,8 +53,7 @@ class AudioParameterDoubleModel extends ChangeNotifier {
     parameterService.registerParameter(this);
   }
 
-  @protected
-  double _value = 0.5;
+  final _controller = BehaviorSubject<double>.seeded(0.5);
 
   final String groupName;
   final String name;
@@ -67,100 +61,171 @@ class AudioParameterDoubleModel extends ChangeNotifier {
   final ParameterService parameterService;
 
   void onUserChanged(double value) {
-    /* setting value instead of _value to make sure listeners are notified */
-    this.value = value;
-    parameterService.sink.add(toJson());
+    _log.finest('user updated parameter $id to $value');
+    _controller.add(value);
+    parameterService
+        .parameterUpdatedByUser(AudioParameterDoubleData(value: value, id: id));
   }
 
-  set value(double value) {
-    _value = value;
-    notifyListeners();
+  void setValue(double value) {
+    _controller.add(value);
   }
 
-  double get value => _value;
+  ValueStream<double> get value => _controller;
+}
 
-  String toJson() {
-    final message = AudioParameterDouble(value: value, id: id).toJson();
-    message['messageType'] = 'parameterUpdate';
-    return json.encode(message);
+@Freezed(unionKey: 'messageType')
+sealed class ParameterServiceOutputMessage
+    with _$ParameterServiceOutputMessage {
+  @FreezedUnionValue('initialiseParameters')
+  factory ParameterServiceOutputMessage.requestInitialisation() =
+      ParameterServiceOutputMessageRequestInitialisation;
+
+  factory ParameterServiceOutputMessage.parameterUpdate({
+    required String id,
+    required double value,
+  }) = ParameterServiceOutputMessageParameterUpdate;
+
+  factory ParameterServiceOutputMessage.fromJson(Map<String, dynamic> json) =>
+      _$ParameterServiceOutputMessageFromJson(json);
+}
+
+@Freezed(unionKey: 'messageType')
+sealed class ParameterServiceInputMessage with _$ParameterServiceInputMessage {
+  factory ParameterServiceInputMessage.parameterUpdate({
+    required String id,
+    required double value,
+  }) = ParameterServiceInputMessageParameterUpdate;
+
+  factory ParameterServiceInputMessage.fromJson(Map<String, dynamic> json) =>
+      _$ParameterServiceInputMessageFromJson(json);
+}
+
+abstract class ParameterRepositoryBase {
+  bool get isAlive;
+
+  void sendMessage(ParameterServiceOutputMessage message);
+
+  Stream<ParameterServiceInputMessage> get stream;
+
+  Stream<void> get connectionStream;
+}
+
+class ParameterRepository implements ParameterRepositoryBase {
+  ParameterRepository({required this.websocket});
+
+  JsonWebsocket websocket;
+
+  @override
+  Stream<void> get connectionStream => websocket.connectionStream;
+
+  @override
+  bool get isAlive => websocket.isAlive;
+
+  @override
+  void sendMessage(ParameterServiceOutputMessage message) {
+    websocket.send(message.toJson());
   }
+
+  @override
+  Stream<ParameterServiceInputMessage> get stream =>
+      websocket.dataStream.transform(
+        StreamTransformer.fromBind((input) async* {
+          await for (final event in input) {
+            try {
+              yield ParameterServiceInputMessage.fromJson(event);
+            } catch (_) {
+              // ignore
+            }
+          }
+        }),
+      );
 }
 
 class ParameterService extends ChangeNotifier {
-  ParameterService({required this.websocket}) {
+  ParameterService({required ParameterRepositoryBase repository})
+      : _repository = repository {
     // TODO is this adding noticable latency when adjusting parameters?
-    sink.stream
+    _sink.stream
         .throttleTime(
           const Duration(milliseconds: 100),
           trailing: true,
           leading: false,
         )
-        .listen(websocket.sendMessage);
+        .listen(_repository.sendMessage);
 
-    websocket.dataStream.listen(_handleIncomingEvent);
+    _repository.stream.listen(_handleIncomingMessage);
 
-    if (websocket.isAlive) {
+    if (_repository.isAlive) {
       _requestParameterInitialisation();
     }
-    websocket.connectionStream.listen((_) => _requestParameterInitialisation());
+    _repository.connectionStream
+        .listen((_) => _requestParameterInitialisation());
   }
 
   void _requestParameterInitialisation() {
-    final message = <String, dynamic>{};
-    message['messageType'] = 'initialiseParameters';
-    sink.add(json.encode(message));
+    _log.info('Initialising parameters');
+    _sink.add(ParameterServiceOutputMessage.requestInitialisation());
   }
 
-  final sink = StreamController<String>.broadcast();
+  final _parameterUpdatesController =
+      StreamController<AudioParameterDoubleData>();
+  late final Stream<AudioParameterDoubleData> parameterUpdates =
+      _parameterUpdatesController.stream;
+  final _sink = StreamController<ParameterServiceOutputMessage>.broadcast();
 
-  final _parameters = <AudioParameterDoubleModel>[];
+  final _parameters = <String, AudioParameterDoubleModel>{};
 
-  final RobustWebsocket websocket;
+  final ParameterRepositoryBase _repository;
 
   void registerParameter(AudioParameterDoubleModel parameter) {
-    _parameters.add(parameter);
+    assert(!_parameters.containsKey(parameter.id));
+    _parameters[parameter.id] = parameter;
   }
 
-  void _handleIncomingEvent(dynamic event) {
-    if (event is! String) {
-      log.warning('Dropped message with unexpected type ${json.runtimeType}');
-      return;
+  AudioParameterDoubleModel getParameter(String parameterId) {
+    if (!_parameters.containsKey(parameterId)) {
+      throw StateError('Invalid parameter id: $parameterId');
     }
 
-    log.fine(event);
+    return _parameters[parameterId]!;
+  }
 
-    final eventJson = json.decode(event) as Map<String, dynamic>;
+  void _handleIncomingMessage(ParameterServiceInputMessage message) {
+    switch (message) {
+      case ParameterServiceInputMessageParameterUpdate(:final id, :final value):
+        if (!_parameters.containsKey(id)) {
+          _log.warning("Couldn't find parameter with id $id");
+          for (final id in _parameters.keys) {
+            _log.warning(id);
+          }
+          return;
+        }
 
-    if (eventJson['messageType'] != 'parameterUpdate') {
-      return;
+        _parameters[id]!.setValue(value);
     }
-
-    final parameterToUpdate = AudioParameterDouble.fromJson(
-      eventJson,
-    );
-
-    // TODO use a map for the parameters for O(1) lookup here
-    for (final p in _parameters) {
-      if (p.id == parameterToUpdate.id) {
-        p.value = parameterToUpdate.value;
-        return;
-      }
-    }
-
-    log.warning("Couldn't find parameter with id ${parameterToUpdate.id}");
   }
 
   Map<String, String> get parameterNames {
-    return Map.fromEntries(
-      _parameters.map(
-        (param) => MapEntry(param.id, '${param.groupName}: ${param.name}'),
-      ),
+    return _parameters.map(
+      (id, param) => MapEntry(id, '${param.groupName}: ${param.name}'),
     );
   }
 
   @override
   void dispose() {
-    unawaited(sink.close());
+    unawaited(_sink.close());
+    unawaited(_parameterUpdatesController.close());
     super.dispose();
+  }
+
+  void parameterUpdatedByUser(AudioParameterDoubleData parameter) {
+    _parameterUpdatesController.add(parameter);
+    _sink.add(
+      ParameterServiceOutputMessage.parameterUpdate(
+        id: parameter.id,
+        value: parameter.value,
+      ),
+    );
   }
 }

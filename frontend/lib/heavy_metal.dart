@@ -23,6 +23,53 @@ import 'package:provider/provider.dart';
 import 'parameter.dart';
 import 'stompbox.dart';
 
+class HeavyMetalModel extends StompboxModel {
+  HeavyMetalModel({required ParameterService parameterService})
+      : parameters = [
+          AudioParameterDoubleModel(
+            groupName: _name,
+            name: 'LEVEL',
+            id: 'heavyMetalLevel',
+            parameterService: parameterService,
+          ),
+          AudioParameterDoubleModel(
+            groupName: _name,
+            name: 'LOW',
+            id: 'heavyMetalLow',
+            parameterService: parameterService,
+          ),
+          AudioParameterDoubleModel(
+            groupName: _name,
+            name: 'HIGH',
+            id: 'heavyMetalHigh',
+            parameterService: parameterService,
+          ),
+          AudioParameterDoubleModel(
+            groupName: _name,
+            name: 'DISTORTION',
+            id: 'heavyMetalDistortion',
+            parameterService: parameterService,
+          ),
+        ],
+        bypass = AudioParameterDoubleModel(
+          groupName: _name,
+          name: 'Bypass',
+          id: 'heavyMetalBypass',
+          parameterService: parameterService,
+        );
+
+  static const _name = 'Heavy Metal';
+
+  @override
+  String get name => _name;
+
+  @override
+  final List<AudioParameterDoubleModel> parameters;
+
+  @override
+  AudioParameterDoubleModel bypass;
+}
+
 class HeavyMetal extends StatelessWidget {
   const HeavyMetal({
     super.key,
@@ -30,61 +77,16 @@ class HeavyMetal extends StatelessWidget {
     required this.onTap,
   });
 
-  static const _name = 'Heavy Metal';
-
   final bool full;
   final void Function() onTap;
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (BuildContext context) {
-        final parameterService = Provider.of<ParameterService>(
-          context,
-          listen: false,
-        );
-
-        return StompboxModel(
-          parameters: [
-            AudioParameterDoubleModel(
-              groupName: _name,
-              name: 'LEVEL',
-              id: 'heavyMetalLevel',
-              parameterService: parameterService,
-            ),
-            AudioParameterDoubleModel(
-              groupName: _name,
-              name: 'LOW',
-              id: 'heavyMetalLow',
-              parameterService: parameterService,
-            ),
-            AudioParameterDoubleModel(
-              groupName: _name,
-              name: 'HIGH',
-              id: 'heavyMetalHigh',
-              parameterService: parameterService,
-            ),
-            AudioParameterDoubleModel(
-              groupName: _name,
-              name: 'DISTORTION',
-              id: 'heavyMetalDistortion',
-              parameterService: parameterService,
-            ),
-          ],
-          bypass: AudioParameterDoubleModel(
-            groupName: _name,
-            name: 'Bypass',
-            id: 'heavyMetalBypass',
-            parameterService: parameterService,
-          ),
-        );
-      },
-      child: Stompbox(
-        name: _name,
-        onCardTap: onTap,
-        full: full,
-        primarySwatch: Colors.deepOrange,
-      ),
+    return Stompbox(
+      model: context.read<HeavyMetalModel>(),
+      onCardTap: onTap,
+      full: full,
+      primarySwatch: Colors.deepOrange,
     );
   }
 }

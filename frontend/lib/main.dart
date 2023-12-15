@@ -18,7 +18,6 @@
  */
 
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:esp_softap_provisioning/esp_softap_provisioning.dart';
 import 'package:flutter/material.dart';
@@ -26,8 +25,11 @@ import 'package:flutter_state_notifier/flutter_state_notifier.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:logging/logging.dart';
 import 'package:provider/provider.dart';
+import 'package:rxdart/rxdart.dart';
 
 import 'audio_events.dart';
+import 'chorus.dart';
+import 'heavy_metal.dart';
 import 'json_websocket.dart';
 import 'midi_mapping/model/midi_learn.dart';
 import 'midi_mapping/model/midi_learn_state.dart';
@@ -35,11 +37,24 @@ import 'midi_mapping/model/models.dart';
 import 'midi_mapping/model/service.dart';
 import 'midi_mapping/view/midi_learn.dart';
 import 'midi_mapping/view/midi_mapping.dart';
+import 'noise_gate.dart';
 import 'parameter.dart';
 import 'pedalboard.dart';
+import 'presets/model/presets.dart';
+import 'presets/model/presets_client.dart' as presets_client;
+import 'presets/model/presets_repository.dart';
+import 'presets/model/presets_service.dart';
+import 'presets/model/selected_preset_client.dart';
+import 'presets/model/selected_preset_repository.dart';
+import 'presets/view/presets.dart';
 import 'robust_websocket.dart';
+import 'status/data/status.dart';
+import 'status/model/websocket_status.dart';
+import 'status/view/websocket_status.dart';
+import 'tube_screamer.dart';
 import 'util/uuid.dart';
-import 'websocket_status.dart';
+import 'valvestate.dart';
+import 'wah.dart';
 import 'wifi_provisioning.dart';
 
 final _log = Logger('shrapnel.main');
@@ -58,7 +73,14 @@ String formatDateTime(DateTime t) {
 }
 
 void main() {
-  Logger.root.level = Level.INFO;
+  setupLogger(Level.INFO);
+  GoogleFonts.config.allowRuntimeFetching = false;
+  runApp(App());
+}
+
+void setupLogger(Level level) {
+  hierarchicalLoggingEnabled = true;
+  Logger.root.level = level;
   Logger.root.onRecord.listen((record) {
     debugPrint(
       '${record.level.name.padLeft("WARNING".length)} '
@@ -67,10 +89,6 @@ void main() {
       '${record.message}',
     );
   });
-
-  GoogleFonts.config.allowRuntimeFetching = false;
-
-  runApp(App());
 }
 
 class App extends StatelessWidget {
@@ -78,16 +96,20 @@ class App extends StatelessWidget {
     super.key,
     RobustWebsocket? websocket,
     JsonWebsocket? jsonWebsocket,
-    Uuid? uuid,
+    UuidService? uuid,
     WifiProvisioningService? provisioning,
+    ParameterRepositoryBase? parameterRepository,
+    PresetsRepositoryBase? presetsRepository,
+    ParameterService? parameterService,
+    SelectedPresetRepositoryBase? selectedPresetRepository,
   }) {
-    this.websocket = websocket ??
-        RobustWebsocket(
-          uri: Uri.parse('http://guitar-dsp.local:8080/websocket'),
-        );
-    jsonWebsocket ??= JsonWebsocket(websocket: this.websocket);
+    websocket ??= RobustWebsocket(
+      uri: Uri.parse('http://guitar-dsp.local:8080/websocket'),
+    );
+    _websocket = websocket;
+    jsonWebsocket ??= JsonWebsocket(websocket: websocket);
     audioClippingService = AudioClippingService(websocket: jsonWebsocket);
-    this.uuid = uuid ?? Uuid();
+    this.uuid = uuid ?? UuidService();
     this.provisioning = provisioning ??
         WifiProvisioningService(
           provisioningFactory: () {
@@ -102,19 +124,19 @@ class App extends StatelessWidget {
     midiMappingService = MidiMappingService(
       websocket: jsonWebsocket,
     );
-    parameterService = ParameterService(websocket: this.websocket);
+    this.parameterService = parameterService ??
+        ParameterService(
+          repository: parameterRepository ??
+              ParameterRepository(websocket: jsonWebsocket),
+        );
     midiLearnService = MidiLearnService(
       mappingService: midiMappingService,
       uuid: this.uuid,
     );
 
-    // TODO would be nicer to use an interface dedicated for listening to the
-    // parameter update events. This stream has all the outgoing JSON messages.
-    parameterService.sink.stream
-        .map<dynamic>(json.decode)
-        .map((dynamic e) => e as Map<String, dynamic>)
-        .where((e) => e['messageType'] == 'parameterUpdate')
-        .map(AudioParameterDouble.fromJson)
+    this
+        .parameterService
+        .parameterUpdates
         .map((e) => e.id)
         .listen(midiLearnService.parameterUpdated);
 
@@ -127,15 +149,31 @@ class App extends StatelessWidget {
             orElse: () => null,
           ),
         );
+
+    this.presetsRepository = presetsRepository ??
+        PresetsRepository(
+          client: presets_client.PresetsClient(
+            transport:
+                presets_client.PresetsTransport(websocket: jsonWebsocket),
+          ),
+        );
+    this.selectedPresetRepository = selectedPresetRepository ??
+        SelectedPresetRepository(
+          client: SelectedPresetClient(
+            transport: SelectedPresetTransport(websocket: jsonWebsocket),
+          ),
+        );
   }
 
-  late final RobustWebsocket websocket;
+  late final RobustWebsocket _websocket;
   late final AudioClippingService audioClippingService;
-  late final Uuid uuid;
+  late final UuidService uuid;
   late final WifiProvisioningService provisioning;
   late final MidiLearnService midiLearnService;
   late final ParameterService parameterService;
   late final MidiMappingService midiMappingService;
+  late final PresetsRepositoryBase presetsRepository;
+  late final SelectedPresetRepositoryBase selectedPresetRepository;
 
   @override
   Widget build(BuildContext context) {
@@ -144,7 +182,9 @@ class App extends StatelessWidget {
         StateNotifierProvider<MidiLearnService, MidiLearnState>.value(
           value: midiLearnService,
         ),
-        ChangeNotifierProvider.value(value: websocket),
+        StateNotifierProvider<WebSocketStatusModel, WebSocketStatusData>(
+          create: (_) => WebSocketStatusModel(websocket: _websocket),
+        ),
         ChangeNotifierProvider.value(value: provisioning),
         ChangeNotifierProvider.value(
           value: parameterService,
@@ -154,6 +194,32 @@ class App extends StatelessWidget {
         ),
         ChangeNotifierProvider.value(value: uuid),
         ChangeNotifierProvider.value(value: audioClippingService),
+        Provider(
+          create: (_) => ChorusModel(parameterService: parameterService),
+          lazy: false,
+        ),
+        Provider(
+          create: (_) => HeavyMetalModel(parameterService: parameterService),
+          lazy: false,
+        ),
+        Provider(
+          create: (_) => NoiseGateModel(parameterService: parameterService),
+          lazy: false,
+        ),
+        Provider(
+          create: (_) => TubeScreamerModel(parameterService: parameterService),
+          lazy: false,
+        ),
+        Provider(
+          create: (_) => ValvestateModel(parameterService: parameterService),
+          lazy: false,
+        ),
+        Provider(
+          create: (_) => WahModel(parameterService: parameterService),
+          lazy: false,
+        ),
+        Provider.value(value: presetsRepository),
+        Provider.value(value: selectedPresetRepository),
       ],
       child: const MyApp(),
     );
@@ -192,8 +258,114 @@ class MyApp extends StatelessWidget {
   }
 }
 
+class ParametersMergeStream {
+  ParametersMergeStream({
+    required this.ampGain,
+    required this.ampChannel,
+    required this.bass,
+    required this.middle,
+    required this.treble,
+    required this.contour,
+    required this.volume,
+    required this.noiseGateThreshold,
+    required this.noiseGateHysteresis,
+    required this.noiseGateAttack,
+    required this.noiseGateHold,
+    required this.noiseGateRelease,
+    required this.noiseGateBypass,
+    required this.chorusRate,
+    required this.chorusDepth,
+    required this.chorusMix,
+    required this.chorusBypass,
+    required this.wahPosition,
+    required this.wahVocal,
+    required this.wahBypass,
+  }) {
+    _controller =
+        BehaviorSubject<PresetParametersData>.seeded(getParametersState());
+
+    void updateState() {
+      _controller.add(getParametersState());
+    }
+
+    ampGain.listen((_) => updateState());
+    ampChannel.listen((_) => updateState());
+    bass.listen((_) => updateState());
+    middle.listen((_) => updateState());
+    treble.listen((_) => updateState());
+    contour.listen((_) => updateState());
+    volume.listen((_) => updateState());
+    noiseGateThreshold.listen((_) => updateState());
+    noiseGateHysteresis.listen((_) => updateState());
+    noiseGateAttack.listen((_) => updateState());
+    noiseGateHold.listen((_) => updateState());
+    noiseGateRelease.listen((_) => updateState());
+    noiseGateBypass.listen((_) => updateState());
+    chorusRate.listen((_) => updateState());
+    chorusDepth.listen((_) => updateState());
+    chorusMix.listen((_) => updateState());
+    chorusBypass.listen((_) => updateState());
+    wahPosition.listen((_) => updateState());
+    wahVocal.listen((_) => updateState());
+    wahBypass.listen((_) => updateState());
+  }
+
+  late final BehaviorSubject<PresetParametersData> _controller;
+
+  final ValueStream<double> ampGain;
+  final ValueStream<double> ampChannel;
+  final ValueStream<double> bass;
+  final ValueStream<double> middle;
+  final ValueStream<double> treble;
+  final ValueStream<double> contour;
+  final ValueStream<double> volume;
+  final ValueStream<double> noiseGateThreshold;
+  final ValueStream<double> noiseGateHysteresis;
+  final ValueStream<double> noiseGateAttack;
+  final ValueStream<double> noiseGateHold;
+  final ValueStream<double> noiseGateRelease;
+  final ValueStream<double> noiseGateBypass;
+  final ValueStream<double> chorusRate;
+  final ValueStream<double> chorusDepth;
+  final ValueStream<double> chorusMix;
+  final ValueStream<double> chorusBypass;
+  final ValueStream<double> wahPosition;
+  final ValueStream<double> wahVocal;
+  final ValueStream<double> wahBypass;
+
+  ValueStream<PresetParametersData> get stream => _controller.stream;
+
+  PresetParametersData getParametersState() {
+    final parameters = PresetParametersData(
+      ampGain: ampGain.value,
+      ampChannel: ampChannel.value,
+      bass: bass.value,
+      middle: middle.value,
+      treble: treble.value,
+      contour: contour.value,
+      volume: volume.value,
+      noiseGateThreshold: noiseGateThreshold.value,
+      noiseGateHysteresis: noiseGateHysteresis.value,
+      noiseGateAttack: noiseGateAttack.value,
+      noiseGateHold: noiseGateHold.value,
+      noiseGateRelease: noiseGateRelease.value,
+      noiseGateBypass: noiseGateBypass.value,
+      chorusRate: chorusRate.value,
+      chorusDepth: chorusDepth.value,
+      chorusMix: chorusMix.value,
+      chorusBypass: chorusBypass.value,
+      wahPosition: wahPosition.value,
+      wahVocal: wahVocal.value,
+      wahBypass: wahBypass.value,
+    );
+
+    return parameters;
+  }
+}
+
 class MyHomePage extends StatelessWidget {
   const MyHomePage({super.key, required this.title});
+
   final String title;
 
   @override
@@ -251,13 +423,124 @@ class MyHomePage extends StatelessWidget {
           Container(width: 10),
         ],
       ),
-      body: const Center(
+      body: Center(
         child: Column(
           children: [
-            MidiLearnStatus(),
-            Spacer(),
-            Pedalboard(),
-            Spacer(),
+            StateNotifierProvider<PresetsServiceBase, PresetsState>(
+              create: (_) {
+                final parameters = context.read<ParameterService>();
+                return PresetsService(
+                  presetsRepository: context.read<PresetsRepositoryBase>(),
+                  selectedPresetRepository:
+                      context.read<SelectedPresetRepositoryBase>(),
+                  parametersState: ParametersMergeStream(
+                    ampGain: parameters.getParameter('ampGain').value,
+                    ampChannel: parameters.getParameter('ampChannel').value,
+                    bass: parameters.getParameter('bass').value,
+                    middle: parameters.getParameter('middle').value,
+                    treble: parameters.getParameter('treble').value,
+                    contour: parameters.getParameter('contour').value,
+                    volume: parameters.getParameter('volume').value,
+                    noiseGateThreshold:
+                        parameters.getParameter('noiseGateThreshold').value,
+                    noiseGateHysteresis:
+                        parameters.getParameter('noiseGateHysteresis').value,
+                    noiseGateAttack:
+                        parameters.getParameter('noiseGateAttack').value,
+                    noiseGateHold:
+                        parameters.getParameter('noiseGateHold').value,
+                    noiseGateRelease:
+                        parameters.getParameter('noiseGateRelease').value,
+                    noiseGateBypass:
+                        parameters.getParameter('noiseGateBypass').value,
+                    chorusRate: parameters.getParameter('chorusRate').value,
+                    chorusDepth: parameters.getParameter('chorusDepth').value,
+                    chorusMix: parameters.getParameter('chorusMix').value,
+                    chorusBypass: parameters.getParameter('chorusBypass').value,
+                    wahPosition: parameters.getParameter('wahPosition').value,
+                    wahVocal: parameters.getParameter('wahVocal').value,
+                    wahBypass: parameters.getParameter('wahBypass').value,
+                  ).stream,
+                );
+              },
+              builder: (context, _) {
+                final model = context.read<PresetsServiceBase>();
+                final state = context.watch<PresetsState>();
+
+                return Presets(
+                  createPreset: state.map(
+                    loading: (_) => null,
+                    ready: (_) => model.create,
+                  ),
+                  savePreset: state.map(
+                    loading: (_) => null,
+                    ready: (ready) =>
+                        ready.isCurrentModified ? model.saveChanges : null,
+                  ),
+                  deletePreset: state.map(
+                    loading: (_) => null,
+                    ready: (ready) => switch (ready.selectedPreset) {
+                      null => null,
+                      final int id => () => model.delete(id),
+                    },
+                  ),
+                  revertPreset: state.map(
+                    loading: (_) => null,
+                    ready: (ready) => switch (ready.selectedPreset) {
+                      null => null,
+                      final int id => () => model.select(id),
+                    },
+                  ),
+                  selectPreset: state.map(
+                    loading: (_) => null,
+                    ready: (ready) =>
+                        (selectedPreset) => model.select(selectedPreset.id),
+                  ),
+                  selectNextPreset: state.map(
+                    loading: (value) => null,
+                    ready: (ready) {
+                      final index = ready.presets
+                              .indexWhere((e) => e.id == ready.selectedPreset) +
+                          1;
+                      if (ready.presets.hasIndex(index)) {
+                        return () => model.select(ready.presets[index].id);
+                      }
+
+                      return null;
+                    },
+                  ),
+                  selectPreviousPreset: state.map(
+                    loading: (value) => null,
+                    ready: (ready) {
+                      final index = ready.presets
+                              .indexWhere((e) => e.id == ready.selectedPreset) -
+                          1;
+                      if (ready.presets.hasIndex(index)) {
+                        return () => model.select(ready.presets[index].id);
+                      }
+
+                      return null;
+                    },
+                  ),
+                  presets: state.map(
+                    loading: (_) => null,
+                    ready: (ready) => ready.presets,
+                  ),
+                  selectedPreset: state.map(
+                    loading: (_) => null,
+                    ready: (ready) =>
+                        ready.presets.cast<PresetRecord?>().firstWhere(
+                              (e) => e!.id == ready.selectedPreset,
+                              orElse: () => null,
+                            ),
+                  ),
+                );
+              },
+            ),
+            const MidiLearnStatus(),
+            const Spacer(),
+            const Pedalboard(),
+            const Spacer(),
           ],
         ),
       ),
@@ -307,5 +590,11 @@ class ProvisioningPage extends StatelessWidget {
       ),
       body: WifiProvisioningScreen(),
     );
+  }
+}
+
+extension _HasIndexEx<T> on List<T> {
+  bool hasIndex(int index) {
+    return index >= 0 && index < length;
   }
 }

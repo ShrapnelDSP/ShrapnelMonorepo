@@ -7,4 +7,5 @@ target_link_libraries(messages
         INTERFACE
         shrapnel::audio_events
         shrapnel::cmd_handling
-        shrapnel::midi_mapping)
+        shrapnel::midi_mapping
+        shrapnel::presets)

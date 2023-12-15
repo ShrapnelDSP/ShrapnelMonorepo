@@ -17,6 +17,7 @@
  * ShrapnelDSP. If not, see <https://www.gnu.org/licenses/>.
  */
 
+// #define LOG_LOCAL_LEVEL ESP_LOG_VERBOSE
 #include "server.h"
 #include "cmd_handling_json.h"
 #include "cmd_handling_json_builder.h"
@@ -25,7 +26,12 @@
 #include "messages.h"
 #include "midi_mapping_json_builder.h"
 #include "midi_mapping_json_parser.h"
+#include "os/debug.h"
+#include "presets_json_builder.h"
+#include "presets_json_parser.h"
 #include "rapidjson/writer.h"
+#include "selected_preset_json_builder.h"
+#include "selected_preset_json_parser.h"
 #include <etl/string_stream.h>
 #include <rapidjson/document.h>
 
@@ -49,11 +55,14 @@ esp_err_t websocket_get_handler(httpd_req_t *req);
 
 void Server::start()
 {
+    esp_log_level_set(TAG, ESP_LOG_VERBOSE);
+
     httpd_handle_t new_server = nullptr;
     httpd_config_t config = HTTPD_DEFAULT_CONFIG();
     config.server_port = 8080;
     config.ctrl_port = 8081;
     config.max_open_sockets = MAX_CLIENTS;
+    config.stack_size = 5000;
 
     // Start the httpd server
     ESP_LOGI(TAG, "Starting server on port: '%d'", config.server_port);
@@ -108,6 +117,7 @@ esp_err_t websocket_get_handler(httpd_req_t *req)
     {
         ESP_LOGI(TAG, "Got websocket upgrade request");
         heap_caps_print_heap_info(MALLOC_CAP_DEFAULT);
+        debug_dump_task_list();
         return ESP_OK;
     }
 
@@ -172,6 +182,48 @@ esp_err_t websocket_get_handler(httpd_req_t *req)
             etl::string_stream stream{buffer};
             stream << *message;
             ESP_LOGI(TAG, "decoded %s", buffer.data());
+
+            goto out;
+        }
+    }
+
+    {
+        auto message = presets::from_json<presets::PresetsApiMessage>(
+            document.GetObject());
+        if(message.has_value())
+        {
+            auto out = AppMessage{*message, fd};
+            int queue_rc = self->in_queue->send(&out, pdMS_TO_TICKS(100));
+            if(queue_rc != pdPASS)
+            {
+                ESP_LOGE(TAG, "in_queue message dropped");
+            }
+
+            etl::string<256> buffer;
+            etl::string_stream stream{buffer};
+            stream << *message;
+            ESP_LOGI(TAG, "decoded PresetsApiMessage %s", buffer.data());
+
+            goto out;
+        }
+    }
+
+    {
+        auto message = selected_preset::from_json<
+            selected_preset::SelectedPresetApiMessage>(document.GetObject());
+        if(message.has_value())
+        {
+            auto out = AppMessage{*message, fd};
+            int queue_rc = self->in_queue->send(&out, pdMS_TO_TICKS(100));
+            if(queue_rc != pdPASS)
+            {
+                ESP_LOGE(TAG, "in_queue message dropped");
+            }
+
+            etl::string<256> buffer;
+            etl::string_stream stream{buffer};
+            stream << *message;
+            ESP_LOGI(TAG, "decoded SelectedPresetApiMessage %s", buffer.data());
 
             goto out;
         }

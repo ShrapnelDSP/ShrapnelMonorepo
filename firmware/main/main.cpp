@@ -69,14 +69,14 @@
 #include "midi_mapping_json_parser.h"
 #include "midi_protocol.h"
 #include "midi_uart.h"
+#include "os/debug.h"
 #include "os/queue.h"
 #include "os/timer.h"
 #include "pcm3060.h"
+#include "presets_storage.h"
 #include "profiling.h"
 #include "server.h"
 #include "wifi_state_machine.h"
-
-#include "iir_concrete.h"
 
 #define TAG "main"
 #define QUEUE_LEN 4
@@ -203,7 +203,6 @@ static void failed_alloc_callback(size_t size, uint32_t caps, const char *functi
 }
 
 void nvs_debug_print();
-void debug_dump_task_list();
 
 extern "C" void app_main(void)
 {
@@ -214,7 +213,7 @@ extern "C" void app_main(void)
     ESP_ERROR_CHECK(esp_netif_init());
     ESP_ERROR_CHECK(esp_event_loop_create_default());
 
-    auto persistence = persistence::EspStorage{};
+    auto persistence = std::make_shared<persistence::EspStorage>();
     auto audio_params = std::make_shared<AudioParameters>();
 
     i2c_setup();
@@ -278,6 +277,7 @@ extern "C" void app_main(void)
     esp_netif_create_default_wifi_ap();
     wifi_init_config_t cfg = WIFI_INIT_CONFIG_DEFAULT();
     ESP_ERROR_CHECK(esp_wifi_init(&cfg));
+    ESP_ERROR_CHECK(esp_wifi_set_ps(WIFI_PS_NONE));
 
     auto wifi_queue = WifiQueue();
 
@@ -407,21 +407,9 @@ extern "C" void app_main(void)
     }
 }
 
-void debug_dump_task_list()
-{
-#if configUSE_TRACE_FACILITY && configUSE_STATS_FORMATTING_FUNCTIONS
-    constexpr size_t characters_per_task = 40;
-    constexpr size_t approximate_task_count = 20;
-    char buffer[characters_per_task * approximate_task_count + 1] = {0};
-    vTaskList(buffer);
-    // crash if the buffer was overflowed
-    assert(buffer[sizeof(buffer) - 1] == '\0');
-    ESP_LOGI(TAG, "Task list:\n%s", buffer);
-#endif
-}
-
 void nvs_debug_print()
 {
+    ESP_LOGI(TAG, "dumping NVS using C interface");
     nvs_iterator_t it = NULL;
     esp_err_t res = nvs_entry_find("nvs", "persistence", NVS_TYPE_ANY, &it);
     while(res == ESP_OK) {
@@ -431,6 +419,12 @@ void nvs_debug_print()
         res = nvs_entry_next(&it);
     }
     nvs_release_iterator(it);
+    
+    ESP_LOGI(TAG, "dumping NVS using C++ abstraction");
+    auto storage = presets_storage::Storage();
+    for(const auto& info : storage ) {
+        ESP_LOGI(TAG, "key '%s', type '%d'", info.key, info.type);
+    }
 }
 
 } // namespace shrapnel

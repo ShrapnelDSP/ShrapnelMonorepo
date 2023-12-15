@@ -252,12 +252,13 @@
 
 #include "audio_param.h"
 #include "midi_protocol.h"
+#include "uuid.h"
 
 namespace shrapnel {
 namespace midi {
 
 struct Mapping {
-    using id_t = std::array<uint8_t, 16>;
+    using id_t = uuid::uuid_t;
 
     enum class Mode
     {

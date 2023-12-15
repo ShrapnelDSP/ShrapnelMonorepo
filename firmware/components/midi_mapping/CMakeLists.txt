@@ -15,6 +15,7 @@ target_link_libraries(midi_mapping
                       shrapnel::audio_param
                       shrapnel::etl
                       shrapnel::midi_protocol
+                      shrapnel::uuid
                       shrapnel::rapidjson
                       PRIVATE
                       shrapnel::compiler_warning_flags)

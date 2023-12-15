@@ -3,5 +3,8 @@
   <component name="VcsDirectoryMappings">
     <mapping directory="$PROJECT_DIR$/.." vcs="Git" />
     <mapping directory="$PROJECT_DIR$/support/freertos/FreeRTOS-Kernel" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/support/freertos/FreeRTOS-Kernel/portable/ThirdParty/Community-Supported-Ports" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/support/freertos/FreeRTOS-Kernel/portable/ThirdParty/Partner-Supported-Ports" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/support/protobuf-c/protobuf-c" vcs="Git" />
   </component>
 </project>

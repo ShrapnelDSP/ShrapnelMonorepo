@@ -26,7 +26,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:logging/logging.dart';
 
-final log = Logger('shrapnel.robust_websocket');
+final _log = Logger('shrapnel.robust_websocket');
 
 /// Auto-reconnecting websocket client
 class RobustWebsocket extends ChangeNotifier {
@@ -35,8 +35,8 @@ class RobustWebsocket extends ChangeNotifier {
   }
 
   Future<void> _reconnect() async {
-    log.warning('websocket close code ${_ws!.closeCode}');
-    log.warning('websocket close reason ${_ws!.closeReason}');
+    _log.warning('websocket close code ${_ws!.closeCode}');
+    _log.warning('websocket close reason ${_ws!.closeReason}');
 
     isAlive = false;
     notifyListeners();
@@ -62,7 +62,7 @@ class RobustWebsocket extends ChangeNotifier {
   WebSocket? _ws;
 
   Future<void> _connect() async {
-    log.info('Connecting to server...');
+    _log.info('Connecting to server...');
 
     // We are passing the sink over to the WebSocket client, and closing it in
     // dispose. It might be incorrect if we call dispose before the socket is
@@ -91,13 +91,13 @@ class RobustWebsocket extends ChangeNotifier {
         final response = await request.close();
         socket = await response.detachSocket();
       } catch (err) {
-        log.warning('Failed to connect to server, retrying...');
-        log.warning('$err');
+        _log.warning('Failed to connect to server, retrying...');
+        _log.warning('$err');
         await Future<void>.delayed(const Duration(seconds: 1));
       }
     }
 
-    log.info('Connected to server');
+    _log.info('Connected to server');
 
     isAlive = true;
     notifyListeners();
@@ -107,7 +107,7 @@ class RobustWebsocket extends ChangeNotifier {
     _ws!.listen(
       _dataController.add,
       onError: (Object e) {
-        log.warning('websocket error: $e');
+        _log.warning('websocket error: $e');
       },
       onDone: _reconnect,
     );

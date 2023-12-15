@@ -24,6 +24,7 @@ if(ESP_PLATFORM)
                           shrapnel::os
                           shrapnel::pcm3060
                           shrapnel::persistence
+                          shrapnel::presets
                           shrapnel::server
                           shrapnel::wifi
                           shrapnel::compiler_warning_flags)
@@ -40,5 +41,6 @@ else()
                           shrapnel::midi_mapping
                           shrapnel::midi_protocol
                           shrapnel::os
-                          shrapnel::persistence)
+                          shrapnel::persistence
+                          shrapnel::presets)
 endif()

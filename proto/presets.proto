@@ -1,0 +1,37 @@
+syntax = "proto3";
+
+message PresetParameters {
+  int32 amp_gain = 1;
+  int32 amp_channel = 2;
+  int32 bass = 3;
+  int32 middle = 4;
+  int32 treble = 5;
+  int32 contour = 6;
+  int32 volume = 7;
+  int32 noise_gate_threshold = 8;
+  int32 noise_gate_hysteresis = 9;
+  int32 noise_gate_attack = 10;
+  int32 noise_gate_hold = 11;
+  int32 noise_gate_release = 12;
+  int32 noise_gate_bypass = 13;
+  int32 chorus_rate = 14;
+  int32 chorus_depth = 15;
+  int32 chorus_mix = 16;
+  int32 chorus_bypass = 17;
+  int32 wah_position = 18;
+  int32 wah_vocal = 19;
+  int32 wah_bypass = 20;
+}
+
+message PresetRecord {
+  // A number used to identify the preset
+  uint32 id = 1;
+  Preset preset = 2;
+}
+
+message Preset {
+  // The name given by the user to the preset
+  string name = 1;
+  // The parameter values for this preset
+  PresetParameters parameters = 2;
+}

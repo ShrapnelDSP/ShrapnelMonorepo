@@ -23,6 +23,41 @@ import 'package:provider/provider.dart';
 import 'parameter.dart';
 import 'stompbox.dart';
 
+class WahModel extends StompboxModel {
+  WahModel({required ParameterService parameterService})
+      : parameters = [
+          AudioParameterDoubleModel(
+            groupName: _name,
+            name: 'Position',
+            id: 'wahPosition',
+            parameterService: parameterService,
+          ),
+          AudioParameterDoubleModel(
+            groupName: _name,
+            name: 'Vocal',
+            id: 'wahVocal',
+            parameterService: parameterService,
+          ),
+        ],
+        bypass = AudioParameterDoubleModel(
+          groupName: _name,
+          name: 'Bypass',
+          id: 'wahBypass',
+          parameterService: parameterService,
+        );
+
+  static const _name = 'Wah';
+
+  @override
+  String get name => _name;
+
+  @override
+  final AudioParameterDoubleModel bypass;
+
+  @override
+  List<AudioParameterDoubleModel> parameters;
+}
+
 class Wah extends StatelessWidget {
   const Wah({
     super.key,
@@ -30,48 +65,16 @@ class Wah extends StatelessWidget {
     required this.onTap,
   });
 
-  static const _name = 'Wah';
   final bool full;
   final void Function() onTap;
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) {
-        final parameterService = Provider.of<ParameterService>(
-          context,
-          listen: false,
-        );
-
-        return StompboxModel(
-          parameters: [
-            AudioParameterDoubleModel(
-              groupName: _name,
-              name: 'Position',
-              id: 'wahPosition',
-              parameterService: parameterService,
-            ),
-            AudioParameterDoubleModel(
-              groupName: _name,
-              name: 'Vocal',
-              id: 'wahVocal',
-              parameterService: parameterService,
-            ),
-          ],
-          bypass: AudioParameterDoubleModel(
-            groupName: _name,
-            name: 'Bypass',
-            id: 'wahBypass',
-            parameterService: parameterService,
-          ),
-        );
-      },
-      child: Stompbox(
-        name: _name,
-        onCardTap: onTap,
-        full: full,
-        primarySwatch: Colors.purple,
-      ),
+    return Stompbox(
+      model: context.read<WahModel>(),
+      onCardTap: onTap,
+      full: full,
+      primarySwatch: Colors.purple,
     );
   }
 }

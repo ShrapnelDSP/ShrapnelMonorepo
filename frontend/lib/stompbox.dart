@@ -20,36 +20,35 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'amplifier.dart';
 import 'knob_with_label.dart';
 import 'midi_mapping/model/midi_learn_state.dart';
 import 'parameter.dart';
 import 'util/conditional_parent.dart';
 
-class StompboxModel extends ChangeNotifier {
-  StompboxModel({required this.parameters, required this.bypass});
-
-  List<AudioParameterDoubleModel> parameters;
-  AudioParameterDoubleModel bypass;
+abstract class StompboxModel {
+  String get name;
+  List<AudioParameterDoubleModel> get parameters;
+  AudioParameterDoubleModel get bypass;
 }
 
 class Stompbox extends StatelessWidget {
   const Stompbox({
     super.key,
-    required this.name,
+    required this.model,
     required this.full,
     required this.onCardTap,
     required this.primarySwatch,
   });
 
-  final String name;
-
   final bool full;
   final void Function() onCardTap;
+  final StompboxModel model;
 
   final MaterialColor primarySwatch;
 
   List<Widget> knobs(BuildContext context, double scaleFactor) {
-    final parameters = Provider.of<StompboxModel>(context).parameters;
+    final parameters = model.parameters;
 
     return List<Widget>.generate(
       (parameters.length + 1) ~/ 2,
@@ -58,8 +57,7 @@ class Stompbox extends StatelessWidget {
           children: List<Widget>.generate(
             2 * i + 1 >= parameters.length ? 1 : 2,
             (j) {
-              return ChangeNotifierProvider.value(
-                value: parameters[2 * i + j],
+              return parameters[2 * i + j].provider(
                 child: Expanded(
                   child: Padding(
                     padding: EdgeInsets.only(bottom: scaleFactor * 3),
@@ -82,6 +80,7 @@ class Stompbox extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final scaleFactor = full ? 3.0 : 1.0;
+    final name = model.name;
 
     return Theme(
       data: Theme.of(context).copyWith(
@@ -117,8 +116,7 @@ class Stompbox extends StatelessWidget {
                         ),
                       ),
                     ),
-                    ChangeNotifierProvider.value(
-                      value: context.watch<StompboxModel>().bypass,
+                    model.bypass.provider(
                       child: _BypassButton(
                         size: scaleFactor * 23,
                         isEnabled: full,
@@ -143,14 +141,15 @@ class _BypassButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bypass = context.watch<AudioParameterDoubleModel>();
+    final value = context.watch<double>();
+    final bypass = context.read<AudioParameterDoubleModel>();
     final learningState = context.watch<MidiLearnState>();
 
     return ConditionalParent(
       condition: isEnabled,
       builder: (child) => GestureDetector(
         onTap: () {
-          bypass.onUserChanged((bypass.value > 0.5) ? 0 : 1);
+          bypass.onUserChanged((value > 0.5) ? 0 : 1);
         },
         child: child,
       ),
@@ -182,7 +181,7 @@ class _BypassButton extends StatelessWidget {
                   width: size * 0.8,
                   height: size * 0.8,
                   decoration: BoxDecoration(
-                    color: bypass.value > 0.5
+                    color: value > 0.5
                         ? Theme.of(context).colorScheme.surface
                         : Theme.of(context).colorScheme.primary,
                     shape: BoxShape.circle,

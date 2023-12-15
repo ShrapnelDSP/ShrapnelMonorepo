@@ -23,6 +23,61 @@ import 'package:provider/provider.dart';
 import 'amplifier.dart';
 import 'parameter.dart';
 
+class ValvestateModel extends AmplifierModel {
+  ValvestateModel({required ParameterService parameterService})
+      : parameters = [
+          AudioParameterDoubleModel(
+            groupName: _name,
+            name: 'OD1/OD2',
+            id: 'ampChannel',
+            parameterService: parameterService,
+          ),
+          AudioParameterDoubleModel(
+            groupName: _name,
+            name: 'Gain',
+            id: 'ampGain',
+            parameterService: parameterService,
+          ),
+          AudioParameterDoubleModel(
+            groupName: _name,
+            name: 'Bass',
+            id: 'bass',
+            parameterService: parameterService,
+          ),
+          AudioParameterDoubleModel(
+            groupName: _name,
+            name: 'Middle',
+            id: 'middle',
+            parameterService: parameterService,
+          ),
+          AudioParameterDoubleModel(
+            groupName: _name,
+            name: 'Treble',
+            id: 'treble',
+            parameterService: parameterService,
+          ),
+          AudioParameterDoubleModel(
+            groupName: _name,
+            name: 'Contour',
+            id: 'contour',
+            parameterService: parameterService,
+          ),
+          AudioParameterDoubleModel(
+            groupName: _name,
+            name: 'Volume',
+            id: 'volume',
+            parameterService: parameterService,
+          ),
+        ];
+
+  static const _name = 'Valvestate';
+
+  @override
+  String get name => _name;
+  @override
+  final List<AudioParameterDoubleModel> parameters;
+}
+
 class Valvestate extends StatelessWidget {
   const Valvestate({
     super.key,
@@ -30,69 +85,15 @@ class Valvestate extends StatelessWidget {
     required this.onTap,
   });
 
-  static const _name = 'Valvestate';
   final bool full;
   final void Function() onTap;
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) {
-        final parameterService =
-            Provider.of<ParameterService>(context, listen: false);
-
-        return AmplifierModel(
-          parameters: [
-            AudioParameterDoubleModel(
-              groupName: _name,
-              name: 'OD1/OD2',
-              id: 'ampChannel',
-              parameterService: parameterService,
-            ),
-            AudioParameterDoubleModel(
-              groupName: _name,
-              name: 'Gain',
-              id: 'ampGain',
-              parameterService: parameterService,
-            ),
-            AudioParameterDoubleModel(
-              groupName: _name,
-              name: 'Bass',
-              id: 'bass',
-              parameterService: parameterService,
-            ),
-            AudioParameterDoubleModel(
-              groupName: _name,
-              name: 'Middle',
-              id: 'middle',
-              parameterService: parameterService,
-            ),
-            AudioParameterDoubleModel(
-              groupName: _name,
-              name: 'Treble',
-              id: 'treble',
-              parameterService: parameterService,
-            ),
-            AudioParameterDoubleModel(
-              groupName: _name,
-              name: 'Contour',
-              id: 'contour',
-              parameterService: parameterService,
-            ),
-            AudioParameterDoubleModel(
-              groupName: _name,
-              name: 'Volume',
-              id: 'volume',
-              parameterService: parameterService,
-            ),
-          ],
-        );
-      },
-      child: Amplifier(
-        name: _name,
-        onTap: onTap,
-        full: full,
-      ),
+    return Amplifier(
+      model: context.read<ValvestateModel>(),
+      onTap: onTap,
+      full: full,
     );
   }
 }

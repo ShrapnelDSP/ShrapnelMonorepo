@@ -23,8 +23,6 @@
 namespace shrapnel {
 namespace midi {
 
-static int parse_uuid(Mapping::id_t &uuid, const char *string);
-
 template<>
 std::optional<GetRequest> from_json(const rapidjson::Value &)
 {
@@ -117,7 +115,7 @@ std::optional<std::pair<Mapping::id_t, Mapping>> from_json(const rapidjson::Valu
         return std::nullopt;
     }
 
-    auto id = from_json<Mapping::id_t>(mapping_id);
+    auto id = uuid::from_json<Mapping::id_t>(mapping_id);
     if(!id.has_value()) {
         ESP_LOGE(TAG, "failed to get id");
         return std::nullopt;
@@ -166,7 +164,7 @@ std::optional<Remove> from_json(const rapidjson::Value &json) {
         return std::nullopt;
     }
 
-    auto uuid = from_json<Mapping::id_t>(id_member->value);
+    auto uuid = uuid::from_json<Mapping::id_t>(id_member->value);
     if(!uuid.has_value())
     {
         ESP_LOGE(TAG, "Failed to parse UUID");
@@ -208,76 +206,6 @@ std::optional<MappingApiMessage> from_json(const rapidjson::Value &json) {
 
 error:
     return std::nullopt;
-}
-
-template<>
-std::optional<Mapping::id_t> from_json(const rapidjson::Value &json) {
-    constexpr const char *TAG = "Mapping::id_t from_json";
-
-    if (!json.IsString()) {
-        ESP_LOGE(TAG, "id is not string");
-        return std::nullopt;
-    }
-
-    Mapping::id_t out;
-    int rc = parse_uuid(out, json.GetString());
-    if(rc != 0) {
-       ESP_LOGE(TAG, "failed to get uuid");
-        return std::nullopt;
-    }
-
-    return out;
-}
-
-static int parse_uuid(Mapping::id_t &uuid, const char *string)
-{
-    constexpr std::size_t UUID_LENGTH = 36;
-    constexpr char TAG[] = "parse_uuid";
-
-    if(UUID_LENGTH != std::strlen(string))
-    {
-        ESP_LOGE(TAG, "Incorrect UUID string length");
-        return -1;
-    }
-
-    size_t i = 0;
-    size_t j = 0;
-    ESP_LOGD(TAG, "i = %zu, j = %zu", i , j);
-    while(i < UUID_LENGTH)
-    {
-        char digit[2];
-        std::memcpy(digit, &string[i], 2);
-
-        ESP_LOGD(TAG, "digit = %c%c", digit[0] , digit[1]);
-
-        // TODO error on invalid characters: z, symbols etc
-        //      The only valid characters are 0 to 9 and a to f.
-        //
-        //      Handle uppercase as well. It is required when a string UUID
-        //      is an input as per RFC 4122 Section 3
-        //      https://tools.ietf.org/html/rfc4122#section-3
-        auto get_value = [&] (char hex) -> uint8_t {
-            if(hex >= 'a')
-            {
-                return hex - 'a' + 10;
-            }
-            else
-            {
-                return hex - '0';
-            }
-        };
-
-        uuid[j] = get_value(digit[0]) << 4 | get_value(digit[1]);
-
-        j++;
-
-        i += 2;
-        bool is_separator = (i == 8) || (i == 13) || (i == 18) || (i == 23);
-        if(is_separator) i++;
-        ESP_LOGD(TAG, "i = %zu, j = %zu", i , j);
-    }
-
-    return 0;
 }
 
 }

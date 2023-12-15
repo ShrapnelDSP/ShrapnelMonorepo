@@ -41,13 +41,13 @@ import 'package:shrapnel/noise_gate.dart';
 import 'package:shrapnel/parameter.dart';
 import 'package:shrapnel/pedalboard.dart';
 import 'package:shrapnel/robust_websocket.dart';
+import 'package:shrapnel/status/view/websocket_status.dart';
 import 'package:shrapnel/stompbox.dart';
 import 'package:shrapnel/tube_screamer.dart';
 import 'package:shrapnel/util/conditional_parent.dart';
 import 'package:shrapnel/util/uuid.dart';
 import 'package:shrapnel/valvestate.dart';
 import 'package:shrapnel/wah.dart';
-import 'package:shrapnel/websocket_status.dart';
 import 'package:shrapnel/wifi_provisioning.dart';
 
 void main() {}

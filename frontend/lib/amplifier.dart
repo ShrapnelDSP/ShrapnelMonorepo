@@ -19,37 +19,35 @@
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:rxdart/rxdart.dart';
 
 import 'knob_with_label.dart';
 import 'parameter.dart';
 
-class AmplifierModel extends ChangeNotifier {
-  AmplifierModel({required this.parameters});
-
-  List<AudioParameterDoubleModel> parameters;
+abstract class AmplifierModel {
+  String get name;
+  List<AudioParameterDoubleModel> get parameters;
 }
 
 class Amplifier extends StatelessWidget {
   const Amplifier({
     super.key,
-    required this.name,
+    required this.model,
     required this.onTap,
     required this.full,
   });
 
+  final AmplifierModel model;
   final bool full;
   final void Function() onTap;
 
-  final String name;
-
   List<Widget> knobs(BuildContext context, double scaleFactor) {
     final knobs = <Widget>[];
-    final parameters = Provider.of<AmplifierModel>(context).parameters;
+    final parameters = model.parameters;
 
     for (var i = 0; i < parameters.length; i++) {
       knobs.add(
-        ChangeNotifierProvider.value(
-          value: parameters[i],
+        parameters[i].provider(
           child: KnobWithLabel(
             isEnabled: full,
             knobSize: scaleFactor * 25,
@@ -78,6 +76,49 @@ class Amplifier extends StatelessWidget {
             children: knobs(context, scaleFactor),
           ),
         ),
+      ),
+    );
+  }
+}
+
+extension ProviderEx<T> on ValueStream<T> {
+  Widget provider({
+    Key? key,
+    ErrorBuilder<T>? catchError,
+    UpdateShouldNotify<T>? updateShouldNotify,
+    bool? lazy,
+    TransitionBuilder? builder,
+    Widget? child,
+  }) {
+    return StreamProvider<T>.value(
+      key: key,
+      value: this,
+      initialData: value,
+      updateShouldNotify: updateShouldNotify,
+      lazy: lazy,
+      builder: builder,
+      child: child,
+    );
+  }
+}
+
+extension ParameterProviderEx on AudioParameterDoubleModel {
+  Widget provider({
+    Key? key,
+    ErrorBuilder<double>? catchError,
+    UpdateShouldNotify<double>? updateShouldNotify,
+    bool? lazy,
+    TransitionBuilder? builder,
+    Widget? child,
+  }) {
+    return Provider.value(
+      value: this,
+      child: value.provider(
+        key: key,
+        updateShouldNotify: updateShouldNotify,
+        lazy: lazy,
+        builder: builder,
+        child: child,
       ),
     );
   }

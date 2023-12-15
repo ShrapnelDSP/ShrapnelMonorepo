@@ -20,11 +20,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shrapnel/amplifier.dart';
+import 'package:shrapnel/knob.dart';
 
 import 'midi_mapping/midi_mapping_page_object.dart';
+import 'presets/presets_page_object.dart';
 
 class HomePageObject {
-  const HomePageObject(this.tester);
+  HomePageObject(this.tester);
 
   final WidgetTester tester;
 
@@ -57,9 +59,13 @@ class HomePageObject {
     await tester.drag(
       findKnob(parameterId),
       const Offset(5 * kDragSlopDefault, 0),
-      warnIfMissed: false,
     );
     await tester.pumpAndSettle();
+  }
+
+  double getKnobValue({required String parameterId}) {
+    final knob = findKnob(parameterId).evaluate().single.widget as Knob;
+    return knob.value;
   }
 
   Future<void> toggleCollapsedStompbox(String name) async {
@@ -76,4 +82,7 @@ class HomePageObject {
     await tester.tap(findDuplicateMappingUndoButton());
     await tester.pumpAndSettle();
   }
+
+  late final _presetsPage = PresetsPageObject(tester);
+  PresetsPageObject get presetsPage => _presetsPage;
 }
