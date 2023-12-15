@@ -194,7 +194,6 @@ jobs:
         cache: true
 
     - run: flutter pub get
-    - run: flutter pub get
 
     - name: Generate code
       run: flutter pub run build_runner build
@@ -221,7 +220,6 @@ jobs:
         cache: true
 
     - run: flutter pub get
-    - run: flutter pub get
 
     - name: Format
       run: dart format -o none --set-exit-if-changed lib test
@@ -244,7 +242,6 @@ jobs:
         channel: ${{ env.FLUTTER_CHANNEL }}
         cache: true
 
-    - run: flutter pub get
     - run: flutter pub get
 
     - name: Generate code
