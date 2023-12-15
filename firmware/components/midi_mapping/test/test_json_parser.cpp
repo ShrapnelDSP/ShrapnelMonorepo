@@ -36,6 +36,15 @@ std::ostream& operator <<(std::ostream& out, const CreateRequest& message)
     return out << buffer.data();
 }
 
+std::ostream& operator <<(std::ostream& out, const Mapping& message)
+{
+    etl::string<128> buffer;
+    etl::string_stream stream{buffer};
+    stream << message;
+
+    return out << buffer.data();
+}
+
 }
 }
 
@@ -126,6 +135,27 @@ TEST_F(MappingApiMessageTest, MappingBackwardCompatibilityMissingMode)
 
     EXPECT_THAT(*result, expected);
 }
+
+TEST_F(MappingApiMessageTest, MappingButtonMode)
+{
+    auto json = R"({
+        "midi_channel": 1,
+        "cc_number": 2,
+        "mode": "button",
+        "preset_id": 42
+      })";
+
+    rapidjson::Document document;
+    document.Parse(json);
+    EXPECT_FALSE(document.HasParseError());
+    auto result = from_json<Mapping>(document);
+    EXPECT_THAT(result.has_value(), true);
+
+    Mapping expected{1, 2, Mapping::Mode::BUTTON, std::nullopt, 42};
+
+    EXPECT_THAT(*result, expected);
+}
+
 
 TEST_F(MappingApiMessageTest, CreateRequest)
 {

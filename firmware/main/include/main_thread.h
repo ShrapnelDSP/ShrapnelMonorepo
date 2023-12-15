@@ -228,7 +228,10 @@ public:
                Queue<AppMessage, QUEUE_LEN> &a_in_queue,
                midi::MidiUartBase *a_midi_uart,
                std::shared_ptr<AudioParameters> a_audio_params,
-               std::shared_ptr<persistence::Storage> a_persistence)
+               std::shared_ptr<persistence::Storage> a_persistence,
+               std::shared_ptr<presets::PresetsManager> a_presets_manager,
+               std::shared_ptr<selected_preset::SelectedPresetManager>
+                   a_selected_preset_manager)
         : send_message{a_send_message},
           in_queue{a_in_queue},
           parameter_observer{a_persistence},
@@ -257,10 +260,8 @@ public:
                       SendMessageCallback::create<
                           MainThread,
                           &MainThread::cmd_handling_send_message>(*this))},
-          presets_manager{std::make_unique<presets::PresetsManager>()},
-          selected_preset_manager{
-              std::make_unique<selected_preset::SelectedPresetManager>(
-                  a_persistence)}
+          presets_manager{std::move(a_presets_manager)},
+          selected_preset_manager{std::move(a_selected_preset_manager)}
     {
         auto create_and_load_parameter = [&](const parameters::id_t &name,
                                              float minimum,
@@ -360,8 +361,13 @@ public:
             midi_mapping_manager =
                 saved_mappings.has_value()
                     ? std::make_unique<MidiMappingType>(parameter_notifier,
-                                                        *saved_mappings)
-                    : std::make_unique<MidiMappingType>(parameter_notifier);
+                                                        *saved_mappings,
+                                                        presets_manager,
+                                                        selected_preset_manager)
+                    : std::make_unique<MidiMappingType>(
+                          parameter_notifier,
+                          presets_manager,
+                          selected_preset_manager);
         }();
 
         mapping_observer = std::make_unique<MidiMappingObserver<
@@ -641,7 +647,7 @@ private:
         {
             return std::nullopt;
         }
-       
+
         deserialise_live_parameters(*parameter_notifier, preset->parameters);
 
         return selected_preset::Notify{
@@ -692,8 +698,8 @@ private:
     std::unique_ptr<MidiMappingObserver<
         midi::MappingManager<ParameterUpdateNotifier, 10, 1>>>
         mapping_observer;
-    std::unique_ptr<presets::PresetsManager> presets_manager;
-    std::unique_ptr<selected_preset::SelectedPresetManager>
+    std::shared_ptr<presets::PresetsManager> presets_manager;
+    std::shared_ptr<selected_preset::SelectedPresetManager>
         selected_preset_manager;
     std::shared_ptr<ParameterUpdateNotifier> parameter_notifier;
 };

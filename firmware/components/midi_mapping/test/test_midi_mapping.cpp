@@ -207,12 +207,12 @@ TEST(MidiMappingPod, ToString)
 {
     Mapping mapping{1, 2, Mapping::Mode::PARAMETER, parameters::id_t("test")};
 
-    etl::string<64> buffer;
+    etl::string<128> buffer;
     etl::string_stream stream{buffer};
     stream << mapping;
 
     EXPECT_THAT(std::string(buffer.data()),
-                "{ channel 1 cc number 2 mode parameter name test }");
+                "{ channel 1 cc number 2 mode parameter name optional with value test preset optional with no value }");
 }
 
 }

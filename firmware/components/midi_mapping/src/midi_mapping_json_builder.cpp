@@ -102,14 +102,31 @@ rapidjson::Value to_json(rapidjson::Document &document, const Mapping &object)
     json.AddMember("cc_number", cc_number, document.GetAllocator());
 
     rapidjson::Value mode;
-    mode.SetString(object.mode == Mapping::Mode::TOGGLE ? "toggle"
-                                                        : "parameter",
-                   document.GetAllocator());
+    switch(object.mode)
+    {
+    case Mapping::Mode::PARAMETER:
+        mode.SetString(rapidjson::StringRef("parameter"));
+        break;
+    case Mapping::Mode::TOGGLE:
+        mode.SetString(rapidjson::StringRef("toggle"));
+        break;
+    case Mapping::Mode::BUTTON:
+        mode.SetString(rapidjson::StringRef("button"));
+        break;
+    }
     json.AddMember("mode", mode, document.GetAllocator());
 
-    rapidjson::Value parameter_id;
-    parameter_id.SetString(object.parameter_name.data(), object.parameter_name.size(), document.GetAllocator());
-    json.AddMember("parameter_id", parameter_id, document.GetAllocator());
+    if(object.parameter_name.has_value())
+    {
+        rapidjson::Value parameter_id;
+        parameter_id.SetString(object.parameter_name->data(), object.parameter_name->size(), document.GetAllocator());
+        json.AddMember("parameter_id", parameter_id, document.GetAllocator());
+    }
+
+    if(object.preset_id.has_value())
+    {
+        json.AddMember<unsigned int>("preset_id", *object.preset_id, document.GetAllocator());
+    }
 
     return json;
 }

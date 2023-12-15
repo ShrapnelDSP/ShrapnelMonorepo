@@ -215,6 +215,8 @@ extern "C" void app_main(void)
 
     auto persistence = std::make_shared<persistence::EspStorage>();
     auto audio_params = std::make_shared<AudioParameters>();
+    auto presets_manager = std::make_shared<presets::PresetsManager>();
+    auto selected_preset_manager = std::make_shared<selected_preset::SelectedPresetManager>(persistence);
 
     i2c_setup();
     profiling_init(DMA_BUF_SIZE, SAMPLE_RATE);
@@ -350,8 +352,14 @@ extern "C" void app_main(void)
         server->send_message(message);
     };
 
-    auto main_thread = MainThread<MAX_PARAMETERS, QUEUE_LEN>(
-        send_message, *in_queue, midi_uart, audio_params, persistence);
+    auto main_thread =
+        MainThread<MAX_PARAMETERS, QUEUE_LEN>(send_message,
+                                              *in_queue,
+                                              midi_uart,
+                                              audio_params,
+                                              persistence,
+                                              presets_manager,
+                                              selected_preset_manager);
 
     audio::i2s_setup(PROFILING_GPIO, audio_params.get());
 

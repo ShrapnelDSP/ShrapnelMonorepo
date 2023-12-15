@@ -156,9 +156,11 @@ TEST(MappingJsonBuilder, VariantCreateResponse)
 
 TEST(MappingJsonBuilder, VariantGetResponse)
 {
-    etl::map<Mapping::id_t, Mapping, 2> mapping{
+    etl::map<Mapping::id_t, Mapping, 3> mapping{
         {Mapping::id_t{0}, Mapping{1, 2, Mapping::Mode::PARAMETER, "foo"}},
-        {Mapping::id_t{1}, Mapping{3, 4, Mapping::Mode::TOGGLE, "bar"}}};
+        {Mapping::id_t{1}, Mapping{3, 4, Mapping::Mode::TOGGLE, "bar"}},
+        {Mapping::id_t{2}, Mapping{5, 6, Mapping::Mode::BUTTON, std::nullopt, 42}},
+        };
 
     MappingApiMessage input{
         GetResponse{&mapping}
@@ -177,6 +179,12 @@ TEST(MappingJsonBuilder, VariantGetResponse)
               "cc_number": 4,
               "mode": "toggle",
               "parameter_id": "bar"
+            },
+            "02000000-0000-0000-0000-000000000000": {
+              "midi_channel": 5,
+              "cc_number": 6,
+              "mode": "button",
+              "preset_id": 42
             }
           },
           "messageType": "MidiMap::get::response"

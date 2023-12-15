@@ -59,9 +59,10 @@ std::optional<Mapping> from_json(const rapidjson::Value &json)
             return std::nullopt;
         }
 
-        static const etl::map<etl::string_view, Mapping::Mode, 2> lut{
+        static const etl::map<etl::string_view, Mapping::Mode, 3> lut{
             {"parameter", Mapping::Mode::PARAMETER},
             {"toggle", Mapping::Mode::TOGGLE},
+            {"button", Mapping::Mode::BUTTON},
         };
 
         if(!lut.contains(mode_json->value.GetString()))
@@ -72,17 +73,26 @@ std::optional<Mapping> from_json(const rapidjson::Value &json)
         mode = lut.at(mode_json->value.GetString());
     }
 
-    auto parameter_id = json.FindMember("parameter_id");
-    if(parameter_id == json.MemberEnd()) {
-        ESP_LOGE(TAG, "parameter_id is missing");
-        return std::nullopt;
+    auto parameter_id_json = json.FindMember("parameter_id");
+    std::optional<parameters::id_t> parameter_id;
+    if(parameter_id_json != json.MemberEnd()) {
+        parameter_id = parameter_id_json->value.GetString();
+    }
+
+    auto preset_id_json = json.FindMember("preset_id");
+    std::optional<int> preset_id;
+    if(preset_id_json != json.MemberEnd()) {
+        preset_id = preset_id_json->value.GetInt();
     }
 
     // TODO range check before narrowing conversion to uint8_t
-    return Mapping{static_cast<uint8_t>(midi_channel->value.GetInt()),
-                   static_cast<uint8_t>(cc_number->value.GetInt()),
-                   mode,
-                   parameters::id_t(parameter_id->value.GetString())};
+    return Mapping{
+        static_cast<uint8_t>(midi_channel->value.GetInt()),
+        static_cast<uint8_t>(cc_number->value.GetInt()),
+        mode,
+        parameter_id,
+        preset_id,
+    };
 }
 
 template<>

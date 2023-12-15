@@ -248,14 +248,17 @@
 
 #include <array>
 #include <cstdint>
+#include <utility>
 #include <esp_log.h>
 
 #include "audio_param.h"
 #include "midi_protocol.h"
+#include "presets.h"
+#include "presets_manager.h"
+#include "selected_preset_manager.h"
 #include "uuid.h"
 
-namespace shrapnel {
-namespace midi {
+namespace shrapnel::midi {
 
 struct Mapping {
     using id_t = uuid::uuid_t;
@@ -264,12 +267,14 @@ struct Mapping {
     {
         PARAMETER,
         TOGGLE,
+        BUTTON,
     };
 
     uint8_t midi_channel;
     uint8_t cc_number;
     Mode mode;
-    parameters::id_t parameter_name;
+    std::optional<parameters::id_t> parameter_name;
+    std::optional<presets::id_t> preset_id;
 
     std::strong_ordering operator<=>(const Mapping &other) const = default;
 };
@@ -281,10 +286,30 @@ class MappingManager final : public etl::observable<MappingObserver, MAX_OBSERVE
     public:
     using MapType = etl::map<Mapping::id_t, Mapping, MAX_MAPPINGS>;
 
-    explicit MappingManager(std::shared_ptr<AudioParametersT> a_parameters) : parameters{a_parameters} {}
-    MappingManager(std::shared_ptr<AudioParametersT> a_parameters, MapType initial_mappings) : parameters{a_parameters}, mappings{initial_mappings} {}
+        MappingManager(
+            std::shared_ptr<AudioParametersT> a_parameters,
+            std::shared_ptr<presets::PresetsManager> a_presets_manager,
+            std::shared_ptr<selected_preset::SelectedPresetManager>
+                a_selected_preset_manager)
+            : parameters{std::move(a_parameters)},
+              presets_manager{std::move(a_presets_manager)},
+              selected_preset_manager{std::move(a_selected_preset_manager)}
+        {
+        }
+        MappingManager(
+            std::shared_ptr<AudioParametersT> a_parameters,
+            MapType initial_mappings,
+            std::shared_ptr<presets::PresetsManager> a_presets_manager,
+            std::shared_ptr<selected_preset::SelectedPresetManager>
+                a_selected_preset_manager)
+            : parameters{std::move(a_parameters)},
+              presets_manager{std::move(a_presets_manager)},
+              selected_preset_manager{std::move(a_selected_preset_manager)},
+              mappings{initial_mappings}
+        {
+        }
 
-    [[nodiscard]] const etl::imap<Mapping::id_t, Mapping> *get() const {
+        [[nodiscard]] const etl::imap<Mapping::id_t, Mapping> *get() const {
         return &mappings;
     }
     /// \return non-zero on failure
@@ -339,30 +364,68 @@ class MappingManager final : public etl::observable<MappingObserver, MAX_OBSERVE
             switch(mapping.mode)
             {
             case Mapping::Mode::PARAMETER:
-                parameters->update(mapping.parameter_name,
+                parameters->update(*mapping.parameter_name,
                                    cc_params->value / float(CC_VALUE_MAX));
                 break;
             case Mapping::Mode::TOGGLE:
+            {
                 if(cc_params->value == 0)
                 {
                     continue;
                 }
 
-                auto old_value = parameters->get(mapping.parameter_name);
+                auto old_value = parameters->get(*mapping.parameter_name);
 
-                parameters->update(mapping.parameter_name,
+                parameters->update(*mapping.parameter_name,
                                    old_value < 0.5f ? 1.f : 0.f);
                 break;
+            }
+            case Mapping::Mode::BUTTON:
+            {
+                if(cc_params->value != 0x7F)
+                {
+                    continue;
+                }
+
+                // FIXME: this is duplicated from the main_thread.h.
+                // - Create some internal app events that are decoupled from the
+                //   API.
+                // - Make the API write message emit an select preset event
+                // - Emit the select preset event here
+                //
+                // Or maybe:
+                //
+                // Make the selected preset manager a notifier. Call set on it
+                // from here and from main, causing it to notify. When it
+                // notifies, then a preset loader reads the preset and updates
+                // parameters.
+                int rc = selected_preset_manager->set(*mapping.preset_id);
+                if(rc != 0)
+                {
+                    continue;
+                }
+
+                auto preset = presets_manager->read(*mapping.preset_id);
+                if(!preset.has_value())
+                {
+                    continue;
+                }
+
+                deserialise_live_parameters(*parameters, preset->parameters);
+                break;
+            }
             }
         }
     };
 
     private:
     std::shared_ptr<AudioParametersT> parameters;
+    std::shared_ptr<presets::PresetsManager> presets_manager;
+    std::shared_ptr<selected_preset::SelectedPresetManager>
+        selected_preset_manager;
     MapType mappings;
 
     static constexpr char TAG[] = "midi_mapping";
 };
 
-}
 }

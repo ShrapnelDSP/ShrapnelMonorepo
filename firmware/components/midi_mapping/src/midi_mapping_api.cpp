@@ -31,6 +31,7 @@ etl::string_stream& operator<<(etl::string_stream&  out, const Mapping& self) {
     out << " mode "
         << (self.mode == Mapping::Mode::TOGGLE ? "toggle" : "parameter");
     out << " name " << self.parameter_name;
+    out << " preset " << self.preset_id;
     out << " }";
     return out;
 }
