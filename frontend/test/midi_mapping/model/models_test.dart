@@ -39,6 +39,12 @@ void main() {
           "cc_number": 4,
           "mode": "toggle",
           "parameter_id": "tone"
+        },
+        "3": {
+          "midi_channel": 5,
+          "cc_number": 6,
+          "mode": "button",
+          "preset_id": 42 
         }
       }
     }''';
@@ -54,6 +60,11 @@ void main() {
           midiChannel: 3,
           ccNumber: 4,
           parameterId: 'tone',
+        ),
+        '3': MidiMapping.button(
+          midiChannel: 5,
+          ccNumber: 6,
+          presetId: 42,
         ),
       },
     );
@@ -79,6 +90,12 @@ void main() {
           "cc_number": 4,
           "mode": "toggle",
           "parameter_id": "tone"
+        },
+        "3": {
+          "midi_channel": 5,
+          "cc_number": 6,
+          "mode": "button",
+          "preset_id": 42 
         }
       }
     }''';
@@ -94,6 +111,11 @@ void main() {
           midiChannel: 3,
           ccNumber: 4,
           parameterId: 'tone',
+        ),
+        '3': MidiMapping.button(
+          midiChannel: 5,
+          ccNumber: 6,
+          presetId: 42,
         ),
       },
     );

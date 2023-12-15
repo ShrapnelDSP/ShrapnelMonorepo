@@ -112,17 +112,18 @@ class MidiMappingDto with _$MidiMappingDto {
     return MidiMappingDto(
       midiChannel: json['midi_channel'] as int,
       ccNumber: json['cc_number'] as int,
-      parameterId: json['parameter_id'] as String,
+      parameterId: json['parameter_id'] as String?,
       mode: mode,
-      presetId: null,
+      presetId: json['preset_id'] as int?,
     );
   }
 
   Map<String, dynamic> toJson() => <String, dynamic>{
         'midi_channel': midiChannel,
         'cc_number': ccNumber,
-        'parameter_id': parameterId,
+        if (parameterId != null) 'parameter_id': parameterId,
         'mode': mode.apiName,
+        if (presetId != null) 'preset_id': presetId,
       };
 }
 
