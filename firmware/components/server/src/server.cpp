@@ -26,11 +26,12 @@
 #include "messages.h"
 #include "midi_mapping_json_builder.h"
 #include "midi_mapping_json_parser.h"
+#include "os/debug.h"
 #include "presets_json_builder.h"
 #include "presets_json_parser.h"
+#include "rapidjson/writer.h"
 #include "selected_preset_json_builder.h"
 #include "selected_preset_json_parser.h"
-#include "rapidjson/writer.h"
 #include <etl/string_stream.h>
 #include <rapidjson/document.h>
 
@@ -55,7 +56,7 @@ esp_err_t websocket_get_handler(httpd_req_t *req);
 void Server::start()
 {
     esp_log_level_set(TAG, ESP_LOG_VERBOSE);
-    
+
     httpd_handle_t new_server = nullptr;
     httpd_config_t config = HTTPD_DEFAULT_CONFIG();
     config.server_port = 8080;
@@ -116,6 +117,7 @@ esp_err_t websocket_get_handler(httpd_req_t *req)
     {
         ESP_LOGI(TAG, "Got websocket upgrade request");
         heap_caps_print_heap_info(MALLOC_CAP_DEFAULT);
+        debug_dump_task_list();
         return ESP_OK;
     }
 
@@ -140,7 +142,7 @@ esp_err_t websocket_get_handler(httpd_req_t *req)
     ESP_LOG_BUFFER_HEXDUMP(TAG, json, sizeof(json), ESP_LOG_VERBOSE);
 
     int fd = httpd_req_to_sockfd(req);
-    
+
     rapidjson::Document document;
     document.Parse(json);
     if(document.HasParseError())
@@ -184,10 +186,10 @@ esp_err_t websocket_get_handler(httpd_req_t *req)
             goto out;
         }
     }
-    
+
     {
-        auto message =
-            presets::from_json<presets::PresetsApiMessage>(document.GetObject());
+        auto message = presets::from_json<presets::PresetsApiMessage>(
+            document.GetObject());
         if(message.has_value())
         {
             auto out = AppMessage{*message, fd};
@@ -207,8 +209,8 @@ esp_err_t websocket_get_handler(httpd_req_t *req)
     }
 
     {
-        auto message =
-            selected_preset::from_json<selected_preset::SelectedPresetApiMessage>(document.GetObject());
+        auto message = selected_preset::from_json<
+            selected_preset::SelectedPresetApiMessage>(document.GetObject());
         if(message.has_value())
         {
             auto out = AppMessage{*message, fd};

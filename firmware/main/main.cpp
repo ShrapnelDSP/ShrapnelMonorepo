@@ -69,15 +69,14 @@
 #include "midi_mapping_json_parser.h"
 #include "midi_protocol.h"
 #include "midi_uart.h"
+#include "os/debug.h"
 #include "os/queue.h"
 #include "os/timer.h"
 #include "pcm3060.h"
+#include "presets_storage.h"
 #include "profiling.h"
 #include "server.h"
 #include "wifi_state_machine.h"
-
-#include "presets_storage.h"
-#include "iir_concrete.h"
 
 #define TAG "main"
 #define QUEUE_LEN 4
@@ -204,7 +203,6 @@ static void failed_alloc_callback(size_t size, uint32_t caps, const char *functi
 }
 
 void nvs_debug_print();
-void debug_dump_task_list();
 
 extern "C" void app_main(void)
 {
@@ -407,19 +405,6 @@ extern "C" void app_main(void)
             ESP_LOGW(TAG, "slow iteration: %d ms", (int)pdTICKS_TO_MS(tick_count_iteration));
         }
     }
-}
-
-void debug_dump_task_list()
-{
-#if configUSE_TRACE_FACILITY && configUSE_STATS_FORMATTING_FUNCTIONS
-    constexpr size_t characters_per_task = 40;
-    constexpr size_t approximate_task_count = 20;
-    char buffer[characters_per_task * approximate_task_count + 1] = {0};
-    vTaskList(buffer);
-    // crash if the buffer was overflowed
-    assert(buffer[sizeof(buffer) - 1] == '\0');
-    ESP_LOGI(TAG, "Task list:\n%s", buffer);
-#endif
 }
 
 void nvs_debug_print()
