@@ -23,9 +23,12 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../parameter.dart';
+import '../../presets/model/presets.dart';
 import '../../util/uuid.dart';
 import '../model/models.dart';
 import '../model/service.dart';
+
+const _requiredValueString = 'A value must be selected';
 
 class MidiMappingPage extends StatelessWidget {
   const MidiMappingPage({super.key});
@@ -47,7 +50,7 @@ class MidiMappingPage extends StatelessWidget {
               DataColumn(label: Text('MIDI channel')),
               DataColumn(label: Text('CC number')),
               DataColumn(label: Text('Mode')),
-              DataColumn(label: Text('Parameter')),
+              DataColumn(label: Text('Target')),
               DataColumn(label: Text('Delete')),
             ],
             rows: midiMappingService.mappings.entries.map(
@@ -85,23 +88,52 @@ class MidiMappingPage extends StatelessWidget {
                       ModeDropdown(
                         key: Key('${mapping.id}-mode-dropdown'),
                         value: mapping.mapping.mode,
+                        onChanged: null,
+                        // FIXME: if the change is trivial (i.e. knob to toggle),
+                        // then make the change, otherwise, pop up an edit dialog
+                        // with the new mode an existing parameter filled in
+                        /*
                         onChanged: (value) => unawaited(
                           midiMappingService.updateMapping(
                             mapping.copyWith.mapping(mode: value!),
                           ),
                         ),
+                         */
                       ),
                     ),
                     DataCell(
-                      ParametersDropdown(
-                        key: Key('${mapping.id}-parameter-id-dropdown'),
-                        value: mapping.mapping.parameterId,
-                        onChanged: (value) => unawaited(
-                          midiMappingService.updateMapping(
-                            mapping.copyWith.mapping(parameterId: value!),
+                      switch (mapping.mapping) {
+                        final MidiMappingToggle midiMapping =>
+                          ParametersDropdown(
+                            key: Key('${mapping.id}-parameter-id-dropdown'),
+                            value: midiMapping.parameterId,
+                            onChanged: (value) => unawaited(
+                              midiMappingService.updateMapping(
+                                mapping.copyWith(
+                                  mapping: midiMapping.copyWith(
+                                    parameterId: value!,
+                                  ),
+                                ),
+                              ),
+                            ),
                           ),
-                        ),
-                      ),
+                        final MidiMappingParameter midiMapping =>
+                          ParametersDropdown(
+                            key: Key('${mapping.id}-parameter-id-dropdown'),
+                            value: midiMapping.parameterId,
+                            onChanged: (value) => unawaited(
+                              midiMappingService.updateMapping(
+                                mapping.copyWith(
+                                  mapping: midiMapping.copyWith(
+                                    parameterId: value!,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        // FIXME: Show a preset dropdown
+                        MidiMappingButton() => const SizedBox.shrink(),
+                      },
                     ),
                     DataCell(
                       IconButton(
@@ -146,11 +178,13 @@ class CreateMappingDialogState extends State<CreateMappingDialog> {
   int? channel;
   int? ccNumber;
   MidiMappingMode? mode;
-  String? parameter;
+  int? presetId;
+  String? parameterId;
 
   @override
   Widget build(BuildContext context) {
     final parameters = context.read<ParameterService>().parameterNames;
+    final presets = context.watch<PresetsState>();
     final mappings = context.read<MidiMappingService>();
 
     return Dialog(
@@ -222,9 +256,55 @@ class CreateMappingDialogState extends State<CreateMappingDialog> {
                     ),
                   ),
                 ],
-                value: parameter,
-                onChanged: (value) => setState(() => parameter = value),
-                validator: validateIsNotNull,
+                value: parameterId,
+                onChanged: switch (mode) {
+                  MidiMappingMode.toggle ||
+                  MidiMappingMode.parameter =>
+                    (value) => setState(() => parameterId = value),
+                  null || MidiMappingMode.button => null,
+                },
+                validator: (v) {
+                  return switch (mode) {
+                    null || MidiMappingMode.button => null,
+                    MidiMappingMode.toggle ||
+                    MidiMappingMode.parameter =>
+                      v == null ? _requiredValueString : null,
+                  };
+                },
+              ),
+              DropdownButtonFormField<int>(
+                decoration: const InputDecoration(
+                  label: Text('Preset'),
+                ),
+                items: switch (presets) {
+                  LoadingPresetsState() => null,
+                  ReadyPresetsState(:final presets) => presets.map(
+                      (e) => DropdownMenuItem(
+                        value: e.id,
+                        child: Text(e.preset.name),
+                      ),
+                    ),
+                }
+                    ?.toList(),
+                value: presetId,
+                onChanged: switch (mode) {
+                  null ||
+                  MidiMappingMode.toggle ||
+                  MidiMappingMode.parameter =>
+                    null,
+                  MidiMappingMode.button => (value) =>
+                      setState(() => presetId = value),
+                },
+                validator: (v) {
+                  return switch (mode) {
+                    null ||
+                    MidiMappingMode.toggle ||
+                    MidiMappingMode.parameter =>
+                      null,
+                    MidiMappingMode.button =>
+                      v == null ? _requiredValueString : null,
+                  };
+                },
               ),
               ElevatedButton(
                 onPressed: () {
@@ -234,12 +314,25 @@ class CreateMappingDialogState extends State<CreateMappingDialog> {
                       mappings.createMapping(
                         MidiMappingEntry(
                           id: context.read<UuidService>().v4(),
-                          mapping: MidiMapping(
-                            midiChannel: channel!,
-                            ccNumber: ccNumber!,
-                            parameterId: parameter!,
-                            mode: mode!,
-                          ),
+                          mapping: switch (mode) {
+                            null =>
+                              throw StateError('Mode has not been selected'),
+                            MidiMappingMode.toggle => MidiMapping.toggle(
+                                midiChannel: channel!,
+                                ccNumber: ccNumber!,
+                                parameterId: parameterId!,
+                              ),
+                            MidiMappingMode.parameter => MidiMapping.parameter(
+                                midiChannel: channel!,
+                                ccNumber: ccNumber!,
+                                parameterId: parameterId!,
+                              ),
+                            MidiMappingMode.button => MidiMapping.button(
+                                midiChannel: channel!,
+                                ccNumber: ccNumber!,
+                                presetId: presetId!,
+                              ),
+                          },
                         ),
                       ),
                     );
@@ -256,7 +349,7 @@ class CreateMappingDialogState extends State<CreateMappingDialog> {
 
   String? validateIsNotNull<T>(T? value) {
     if (value == null) {
-      return 'A value must be selected';
+      return _requiredValueString;
     }
 
     return null;
@@ -317,7 +410,7 @@ class ModeDropdown extends StatelessWidget {
   });
 
   final MidiMappingMode value;
-  final void Function(MidiMappingMode?) onChanged;
+  final void Function(MidiMappingMode?)? onChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -363,4 +456,12 @@ class ParametersDropdown extends StatelessWidget {
       value: value,
     );
   }
+}
+
+extension on MidiMapping {
+  MidiMappingMode get mode => switch (this) {
+        MidiMappingToggle() => MidiMappingMode.toggle,
+        MidiMappingParameter() => MidiMappingMode.parameter,
+        MidiMappingButton() => MidiMappingMode.button,
+      };
 }

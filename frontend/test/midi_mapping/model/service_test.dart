@@ -73,10 +73,9 @@ void main() {
       await uut.getMapping();
       verify(fakeWebsocket.send(requestJson));
       expect(uut.mappings, {
-        '123': const MidiMapping(
+        '123': const MidiMapping.parameter(
           midiChannel: 1,
           ccNumber: 2,
-          mode: MidiMappingMode.parameter,
           parameterId: 'gain',
         ),
       });
@@ -173,10 +172,9 @@ void main() {
       await uut.createMapping(
         const MidiMappingEntry(
           id: '123',
-          mapping: MidiMapping(
+          mapping: MidiMapping.parameter(
             midiChannel: 1,
             ccNumber: 2,
-            mode: MidiMappingMode.parameter,
             parameterId: 'gain',
           ),
         ),
@@ -211,10 +209,9 @@ void main() {
       final result = uut.createMapping(
         const MidiMappingEntry(
           id: '123',
-          mapping: MidiMapping(
+          mapping: MidiMapping.parameter(
             midiChannel: 1,
             ccNumber: 2,
-            mode: MidiMappingMode.parameter,
             parameterId: 'gain',
           ),
         ),

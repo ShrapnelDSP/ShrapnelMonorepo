@@ -45,16 +45,14 @@ void main() {
 
     const message = MidiApiMessage.getResponse(
       mappings: {
-        '1': MidiMapping(
+        '1': MidiMapping.parameter(
           midiChannel: 1,
           ccNumber: 2,
-          mode: MidiMappingMode.parameter,
           parameterId: 'gain',
         ),
-        '2': MidiMapping(
+        '2': MidiMapping.toggle(
           midiChannel: 3,
           ccNumber: 4,
-          mode: MidiMappingMode.toggle,
           parameterId: 'tone',
         ),
       },
@@ -87,16 +85,14 @@ void main() {
 
     const expected = MidiApiMessage.getResponse(
       mappings: {
-        '1': MidiMapping(
+        '1': MidiMapping.parameter(
           midiChannel: 1,
           ccNumber: 2,
-          mode: MidiMappingMode.parameter,
           parameterId: 'gain',
         ),
-        '2': MidiMapping(
+        '2': MidiMapping.toggle(
           midiChannel: 3,
           ccNumber: 4,
-          mode: MidiMappingMode.toggle,
           parameterId: 'tone',
         ),
       },
@@ -160,10 +156,9 @@ void main() {
     const request = MidiApiMessage.createRequest(
       mapping: MidiMappingEntry(
         id: '123',
-        mapping: MidiMapping(
+        mapping: MidiMapping.parameter(
           midiChannel: 1,
           ccNumber: 2,
-          mode: MidiMappingMode.parameter,
           parameterId: 'gain',
         ),
       ),
@@ -192,10 +187,9 @@ void main() {
 
       const entry = MidiMappingEntry(
         id: '123',
-        mapping: MidiMapping(
+        mapping: MidiMapping.parameter(
           midiChannel: 1,
           ccNumber: 2,
-          mode: MidiMappingMode.parameter,
           parameterId: 'gain',
         ),
       );
@@ -241,15 +235,17 @@ void main() {
           "parameter_id": "gain"
         }''';
 
-    const expected = MidiMapping(
+    const expected = MidiMappingDto(
       midiChannel: 1,
       ccNumber: 2,
-      mode: MidiMappingMode.parameter, // missing mode is replaced by default
+      mode: MidiMappingMode.parameter,
+      // missing mode is replaced by default
       parameterId: 'gain',
+      presetId: null,
     );
 
     expect(
-      MidiMapping.fromJson(
+      MidiMappingDto.fromJson(
         json.decode(message) as Map<String, dynamic>,
       ),
       expected,

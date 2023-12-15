@@ -220,6 +220,43 @@ class App extends StatelessWidget {
         ),
         Provider.value(value: presetsRepository),
         Provider.value(value: selectedPresetRepository),
+        StateNotifierProvider<PresetsServiceBase, PresetsState>(
+          create: (_) {
+            return PresetsService(
+              presetsRepository: presetsRepository,
+              selectedPresetRepository: selectedPresetRepository,
+              parametersState: ParametersMergeStream(
+                ampGain: parameterService.getParameter('ampGain').value,
+                ampChannel: parameterService.getParameter('ampChannel').value,
+                bass: parameterService.getParameter('bass').value,
+                middle: parameterService.getParameter('middle').value,
+                treble: parameterService.getParameter('treble').value,
+                contour: parameterService.getParameter('contour').value,
+                volume: parameterService.getParameter('volume').value,
+                noiseGateThreshold:
+                    parameterService.getParameter('noiseGateThreshold').value,
+                noiseGateHysteresis:
+                    parameterService.getParameter('noiseGateHysteresis').value,
+                noiseGateAttack:
+                    parameterService.getParameter('noiseGateAttack').value,
+                noiseGateHold:
+                    parameterService.getParameter('noiseGateHold').value,
+                noiseGateRelease:
+                    parameterService.getParameter('noiseGateRelease').value,
+                noiseGateBypass:
+                    parameterService.getParameter('noiseGateBypass').value,
+                chorusRate: parameterService.getParameter('chorusRate').value,
+                chorusDepth: parameterService.getParameter('chorusDepth').value,
+                chorusMix: parameterService.getParameter('chorusMix').value,
+                chorusBypass:
+                    parameterService.getParameter('chorusBypass').value,
+                wahPosition: parameterService.getParameter('wahPosition').value,
+                wahVocal: parameterService.getParameter('wahVocal').value,
+                wahBypass: parameterService.getParameter('wahBypass').value,
+              ).stream,
+            );
+          },
+        ),
       ],
       child: const MyApp(),
     );
@@ -426,44 +463,8 @@ class MyHomePage extends StatelessWidget {
       body: Center(
         child: Column(
           children: [
-            StateNotifierProvider<PresetsServiceBase, PresetsState>(
-              create: (_) {
-                final parameters = context.read<ParameterService>();
-                return PresetsService(
-                  presetsRepository: context.read<PresetsRepositoryBase>(),
-                  selectedPresetRepository:
-                      context.read<SelectedPresetRepositoryBase>(),
-                  parametersState: ParametersMergeStream(
-                    ampGain: parameters.getParameter('ampGain').value,
-                    ampChannel: parameters.getParameter('ampChannel').value,
-                    bass: parameters.getParameter('bass').value,
-                    middle: parameters.getParameter('middle').value,
-                    treble: parameters.getParameter('treble').value,
-                    contour: parameters.getParameter('contour').value,
-                    volume: parameters.getParameter('volume').value,
-                    noiseGateThreshold:
-                        parameters.getParameter('noiseGateThreshold').value,
-                    noiseGateHysteresis:
-                        parameters.getParameter('noiseGateHysteresis').value,
-                    noiseGateAttack:
-                        parameters.getParameter('noiseGateAttack').value,
-                    noiseGateHold:
-                        parameters.getParameter('noiseGateHold').value,
-                    noiseGateRelease:
-                        parameters.getParameter('noiseGateRelease').value,
-                    noiseGateBypass:
-                        parameters.getParameter('noiseGateBypass').value,
-                    chorusRate: parameters.getParameter('chorusRate').value,
-                    chorusDepth: parameters.getParameter('chorusDepth').value,
-                    chorusMix: parameters.getParameter('chorusMix').value,
-                    chorusBypass: parameters.getParameter('chorusBypass').value,
-                    wahPosition: parameters.getParameter('wahPosition').value,
-                    wahVocal: parameters.getParameter('wahVocal').value,
-                    wahBypass: parameters.getParameter('wahBypass').value,
-                  ).stream,
-                );
-              },
-              builder: (context, _) {
+            Builder(
+              builder: (context) {
                 final model = context.read<PresetsServiceBase>();
                 final state = context.watch<PresetsState>();
 
