@@ -112,8 +112,12 @@ Inheritance diagram for shrapnel::persistence::Storage:</div>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a6fcbb724924e65cc514c55d0a5286e34"><td class="memItemLeft" align="right" valign="top">virtual int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classshrapnel_1_1persistence_1_1Storage.html#a6fcbb724924e65cc514c55d0a5286e34">save</a> (const char *key, etl::string_view data)=0</td></tr>
 <tr class="separator:a6fcbb724924e65cc514c55d0a5286e34"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac4e08a47b74145147481a7e0d10cb485"><td class="memItemLeft" align="right" valign="top">virtual int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classshrapnel_1_1persistence_1_1Storage.html#ac4e08a47b74145147481a7e0d10cb485">save</a> (const char *key, uint32_t data)=0</td></tr>
+<tr class="separator:ac4e08a47b74145147481a7e0d10cb485"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a236cc0ae092063d4f83de52f88123756"><td class="memItemLeft" align="right" valign="top">virtual int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classshrapnel_1_1persistence_1_1Storage.html#a236cc0ae092063d4f83de52f88123756">load</a> (const char *key, etl::istring &amp;data)=0</td></tr>
 <tr class="separator:a236cc0ae092063d4f83de52f88123756"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a86eb5a2da3fd0101a45899e2e1dc2cba"><td class="memItemLeft" align="right" valign="top">virtual int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classshrapnel_1_1persistence_1_1Storage.html#a86eb5a2da3fd0101a45899e2e1dc2cba">load</a> (const char *key, uint32_t &amp;data)=0</td></tr>
+<tr class="separator:a86eb5a2da3fd0101a45899e2e1dc2cba"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p >Interface for storing persistent data. </p>
@@ -122,7 +126,7 @@ Public Member Functions</h2></td></tr>
 <p class="definition">Definition at line <a class="el" href="persistence_8h_source.html#l00032">32</a> of file <a class="el" href="persistence_8h_source.html">persistence.h</a>.</p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
 <a id="a236cc0ae092063d4f83de52f88123756" name="a236cc0ae092063d4f83de52f88123756"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a236cc0ae092063d4f83de52f88123756">&#9670;&nbsp;</a></span>load()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a236cc0ae092063d4f83de52f88123756">&#9670;&nbsp;</a></span>load() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -158,18 +162,48 @@ Public Member Functions</h2></td></tr>
 
 <p>Implemented in <a class="el" href="classshrapnel_1_1persistence_1_1EspStorage.html#a40bb12639a1720734d4f72f7fd3496ce">shrapnel::persistence::EspStorage</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="main__thread_8h_source.html#l00222">shrapnel::MainThread&lt; MAX_PARAMETERS, QUEUE_LEN &gt;::MainThread()</a>.</p>
-<div class="dynheader">
-Here is the caller graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="classshrapnel_1_1persistence_1_1Storage_a236cc0ae092063d4f83de52f88123756_icgraph.svg" width="348" height="52"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
 </div>
 </div>
+<a id="a86eb5a2da3fd0101a45899e2e1dc2cba" name="a86eb5a2da3fd0101a45899e2e1dc2cba"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a86eb5a2da3fd0101a45899e2e1dc2cba">&#9670;&nbsp;</a></span>load() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual int shrapnel::persistence::Storage::load </td>
+          <td>(</td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>key</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint32_t &amp;&#160;</td>
+          <td class="paramname"><em>data</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Implemented in <a class="el" href="classshrapnel_1_1persistence_1_1EspStorage.html#a480810337a7323ac874296e7c102ec62">shrapnel::persistence::EspStorage</a>.</p>
 
 </div>
 </div>
 <a id="a6fcbb724924e65cc514c55d0a5286e34" name="a6fcbb724924e65cc514c55d0a5286e34"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6fcbb724924e65cc514c55d0a5286e34">&#9670;&nbsp;</a></span>save()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a6fcbb724924e65cc514c55d0a5286e34">&#9670;&nbsp;</a></span>save() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -204,6 +238,44 @@ Here is the caller graph for this function:</div>
 <dl class="section return"><dt>Returns</dt><dd>non-zero on error </dd></dl>
 
 <p>Implemented in <a class="el" href="classshrapnel_1_1persistence_1_1EspStorage.html#a9be73d7a1a17572e2e66d53cc20e1b17">shrapnel::persistence::EspStorage</a>.</p>
+
+</div>
+</div>
+<a id="ac4e08a47b74145147481a7e0d10cb485" name="ac4e08a47b74145147481a7e0d10cb485"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac4e08a47b74145147481a7e0d10cb485">&#9670;&nbsp;</a></span>save() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual int shrapnel::persistence::Storage::save </td>
+          <td>(</td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>key</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint32_t&#160;</td>
+          <td class="paramname"><em>data</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Implemented in <a class="el" href="classshrapnel_1_1persistence_1_1EspStorage.html#a899abd3db2801be1197111efa6401058">shrapnel::persistence::EspStorage</a>.</p>
 
 </div>
 </div>

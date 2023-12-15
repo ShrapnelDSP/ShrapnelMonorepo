@@ -78,7 +78,7 @@
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
   <pre class="language-dart"><code class="language-dart">List&lt;Widget&gt; knobs(BuildContext context, double scaleFactor) {
-  final parameters = Provider.of&lt;StompboxModel&gt;(context).parameters;
+  final parameters = model.parameters;
 
   return List&lt;Widget&gt;.generate(
     (parameters.length + 1) ~&#47; 2,
@@ -87,8 +87,7 @@
         children: List&lt;Widget&gt;.generate(
           2 * i + 1 &gt;= parameters.length ? 1 : 2,
           (j) {
-            return ChangeNotifierProvider.value(
-              value: parameters[2 * i + j],
+            return parameters[2 * i + j].provider(
               child: Expanded(
                 child: Padding(
                   padding: EdgeInsets.only(bottom: scaleFactor * 3),

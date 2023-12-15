@@ -123,7 +123,9 @@ Widget build(BuildContext context) {
       StateNotifierProvider&lt;MidiLearnService, MidiLearnState&gt;.value(
         value: midiLearnService,
       ),
-      ChangeNotifierProvider.value(value: websocket),
+      StateNotifierProvider&lt;WebSocketStatusModel, WebSocketStatusData&gt;(
+        create: (_) =&gt; WebSocketStatusModel(websocket: _websocket),
+      ),
       ChangeNotifierProvider.value(value: provisioning),
       ChangeNotifierProvider.value(
         value: parameterService,
@@ -133,6 +135,32 @@ Widget build(BuildContext context) {
       ),
       ChangeNotifierProvider.value(value: uuid),
       ChangeNotifierProvider.value(value: audioClippingService),
+      Provider(
+        create: (_) =&gt; ChorusModel(parameterService: parameterService),
+        lazy: false,
+      ),
+      Provider(
+        create: (_) =&gt; HeavyMetalModel(parameterService: parameterService),
+        lazy: false,
+      ),
+      Provider(
+        create: (_) =&gt; NoiseGateModel(parameterService: parameterService),
+        lazy: false,
+      ),
+      Provider(
+        create: (_) =&gt; TubeScreamerModel(parameterService: parameterService),
+        lazy: false,
+      ),
+      Provider(
+        create: (_) =&gt; ValvestateModel(parameterService: parameterService),
+        lazy: false,
+      ),
+      Provider(
+        create: (_) =&gt; WahModel(parameterService: parameterService),
+        lazy: false,
+      ),
+      Provider.value(value: presetsRepository),
+      Provider.value(value: selectedPresetRepository),
     ],
     child: const MyApp(),
   );

@@ -15,6 +15,9 @@ var dir_a7f1045ea2c2de513e4829d3edd7d5b7 =
     [ "os", "dir_a87011361cfcfda094e536367881e980.html", "dir_a87011361cfcfda094e536367881e980" ],
     [ "pcm3060", "dir_c1c5afbf6fd0e83fe1f64646bc68e58a.html", "dir_c1c5afbf6fd0e83fe1f64646bc68e58a" ],
     [ "persistence", "dir_52df58315dc5bb3976de569ae1e31514.html", "dir_52df58315dc5bb3976de569ae1e31514" ],
+    [ "presets", "dir_d11a0030e9674cd32427c8a99eca17a2.html", "dir_d11a0030e9674cd32427c8a99eca17a2" ],
+    [ "presets_storage", "dir_c2a1ab6c4b7e3d3cd31fe1fcc29f684b.html", "dir_c2a1ab6c4b7e3d3cd31fe1fcc29f684b" ],
     [ "server", "dir_8b7068667f68f3032df270856c1c7ecf.html", "dir_8b7068667f68f3032df270856c1c7ecf" ],
+    [ "uuid", "dir_b76c7945cb7e2d3b00ca58ac8b2ec8e7.html", "dir_b76c7945cb7e2d3b00ca58ac8b2ec8e7" ],
     [ "wifi", "dir_3346a8df6e368028a871d14a77a10ee3.html", "dir_3346a8df6e368028a871d14a77a10ee3" ]
 ];

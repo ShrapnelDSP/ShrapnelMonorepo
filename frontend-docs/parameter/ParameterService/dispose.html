@@ -91,7 +91,8 @@ listeners or not immediately before disposal.</p>
   <h2><span>Implementation</span></h2>
   <pre class="language-dart"><code class="language-dart">@override
 void dispose() {
-  unawaited(sink.close());
+  unawaited(_sink.close());
+  unawaited(_parameterUpdatesController.close());
   super.dispose();
 }</code></pre>
 </section>

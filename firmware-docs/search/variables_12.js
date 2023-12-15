@@ -1,7 +1,7 @@
 var searchData=
 [
-  ['w_0',['w',['../namespacewah-smoothing.html#a24cc59349b6a672ab63165ee8aef23e3',1,'wah-smoothing.w()'],['../namespacewah.html#aece5625f189dd251e004b29ecdcd4820',1,'wah.w()']]],
-  ['wah_1',['wah',['../structshrapnel_1_1AudioProcessorParameters.html#a4280d242bf860476723385ac37892f9c',1,'shrapnel::AudioProcessorParameters']]],
-  ['which_2',['which',['../namespacewah-smoothing.html#adabcb72ed8b7c7ff923553fc311a1ba7',1,'wah-smoothing.which()'],['../namespacewah.html#ad29683ed0c05889a3c0bb8defa205d5d',1,'wah.which()']]],
-  ['worn_3',['worN',['../namespacewah-smoothing.html#a7197fc547190bc4b369f552d97a8abde',1,'wah-smoothing.worN()'],['../namespacewah.html#a645f5a27fb4d52852c227e07eca94e57',1,'wah.worN()']]]
+  ['value_0',['value',['../structshrapnel_1_1parameters_1_1Update.html#a4e6b9e60fd8c7c94769b080cd0137dae',1,'shrapnel::parameters::Update::value()'],['../structshrapnel_1_1midi_1_1Message_1_1ControlChange.html#a2615450c8f2f31fc8c4298f8363d076c',1,'shrapnel::midi::Message::ControlChange::value()']]],
+  ['velocity_1',['velocity',['../structshrapnel_1_1midi_1_1Message_1_1NoteOn.html#a3377e69df50e588b93683fd3c3aa8a43',1,'shrapnel::midi::Message::NoteOn::velocity()'],['../structshrapnel_1_1midi_1_1Message_1_1NoteOff.html#a854bc5ff80d66e047c66678ca281df8d',1,'shrapnel::midi::Message::NoteOff::velocity()']]],
+  ['vocal_2',['vocal',['../structshrapnel_1_1AudioProcessorParameters.html#a01c7b16f5f94cc85804344fc4086f40d',1,'shrapnel::AudioProcessorParameters']]],
+  ['volume_3',['volume',['../structshrapnel_1_1AudioProcessorParameters.html#a1a4680847e8471c1e439ee679cf95e94',1,'shrapnel::AudioProcessorParameters::volume()'],['../structshrapnel_1_1presets_1_1ParametersData.html#aec514abaf05dfdea8a2fd831a8099669',1,'shrapnel::presets::ParametersData::volume()'],['../structPresetParameters.html#ac2e7c001fd4661caf65f55636adb6557',1,'PresetParameters::volume()']]]
 ];

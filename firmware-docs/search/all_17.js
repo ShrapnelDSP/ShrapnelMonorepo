@@ -1,6 +1,28 @@
 var searchData=
 [
-  ['_7eimpl_0',['~impl',['../structshrapnel_1_1os_1_1Timer_1_1impl.html#a6d078044e7c838ea67e6c39749ff8126',1,'shrapnel::os::Timer::impl']]],
-  ['_7escopedheaptracing_1',['~ScopedHeapTracing',['../classScopedHeapTracing.html#a1ff6c1df63e3c78583fab6e5fd444fcf',1,'ScopedHeapTracing']]],
-  ['_7etimer_2',['~Timer',['../classshrapnel_1_1os_1_1Timer.html#aae01c2a94f5aaf8d76f00149ec30bd94',1,'shrapnel::os::Timer']]]
+  ['w_0',['w',['../namespacewah.html#aece5625f189dd251e004b29ecdcd4820',1,'wah.w()'],['../namespacewah-smoothing.html#a24cc59349b6a672ab63165ee8aef23e3',1,'wah-smoothing.w()']]],
+  ['wah_1',['Wah',['../classshrapnel_1_1effect_1_1Wah.html',1,'shrapnel::effect']]],
+  ['wah_2',['wah',['../namespacewah.html',1,'wah'],['../structshrapnel_1_1AudioProcessorParameters.html#a4280d242bf860476723385ac37892f9c',1,'shrapnel::AudioProcessorParameters::wah()']]],
+  ['wah_2dsmoothing_3',['wah-smoothing',['../namespacewah-smoothing.html',1,'']]],
+  ['wah_2dsmoothing_2epy_4',['wah-smoothing.py',['../wah-smoothing_8py.html',1,'']]],
+  ['wah_2ecpp_5',['wah.cpp',['../wah_8cpp.html',1,'']]],
+  ['wah_2eh_6',['wah.h',['../wah_8h.html',1,'']]],
+  ['wah_2epy_7',['wah.py',['../wah_8py.html',1,'']]],
+  ['wah_5fbypass_8',['wah_bypass',['../structshrapnel_1_1presets_1_1ParametersData.html#aec901698ef5e572f027e5d1345cc439f',1,'shrapnel::presets::ParametersData::wah_bypass()'],['../structPresetParameters.html#a5efc4af27c48f96895889be7d3871547',1,'PresetParameters::wah_bypass()']]],
+  ['wah_5fposition_9',['wah_position',['../structshrapnel_1_1presets_1_1ParametersData.html#ade6bdee279b63bfd1a37356011a9222d',1,'shrapnel::presets::ParametersData::wah_position()'],['../structPresetParameters.html#a98ee871c6803c969c2c559841af845bc',1,'PresetParameters::wah_position()']]],
+  ['wah_5fvocal_10',['wah_vocal',['../structshrapnel_1_1presets_1_1ParametersData.html#a4ff4dab5810834672b4008f778b437f7',1,'shrapnel::presets::ParametersData::wah_vocal()'],['../structPresetParameters.html#a8dd3eaf63646100c4501ae29a56ecf06',1,'PresetParameters::wah_vocal()']]],
+  ['wave_5fshape_2ecpp_11',['wave_shape.cpp',['../wave__shape_8cpp.html',1,'']]],
+  ['wave_5fshape_2eh_12',['wave_shape.h',['../wave__shape_8h.html',1,'']]],
+  ['waveshape_13',['waveshape',['../wave__shape_8cpp.html#a737ee48b7321d3c9c5fb0c49bc6f14af',1,'waveshape(float input):&#160;wave_shape.cpp'],['../wave__shape_8h.html#a737ee48b7321d3c9c5fb0c49bc6f14af',1,'waveshape(float input):&#160;wave_shape.cpp']]],
+  ['websocket_5fget_5fhandler_14',['websocket_get_handler',['../namespaceshrapnel.html#ac1819cdcad7de98b5f1f782f2ae274aa',1,'shrapnel::websocket_get_handler()'],['../classshrapnel_1_1Server.html#a322f92848a14c649c5972a2635da0216',1,'shrapnel::Server::websocket_get_handler()']]],
+  ['websocket_5fsend_15',['websocket_send',['../classshrapnel_1_1Server.html#a7d5f2b08d65e01145c14a68597bd7642',1,'shrapnel::Server::websocket_send()'],['../namespaceshrapnel.html#a6c3fffa5d51d9eb65d0b9f4402eaa640',1,'shrapnel::websocket_send()']]],
+  ['websockets_20json_20api_16',['websockets JSON API',['../ws_api.html',1,'']]],
+  ['which_17',['which',['../namespacewah-smoothing.html#adabcb72ed8b7c7ff923553fc311a1ba7',1,'wah-smoothing.which()'],['../namespacewah.html#ad29683ed0c05889a3c0bb8defa205d5d',1,'wah.which()']]],
+  ['wifi_5fstart_5fhandler_18',['wifi_start_handler',['../namespaceshrapnel.html#ad3636f58faa95196bef6352b331ed3da',1,'shrapnel']]],
+  ['wifi_5fstate_5fmachine_2ecpp_19',['wifi_state_machine.cpp',['../wifi__state__machine_8cpp.html',1,'']]],
+  ['wifi_5fstate_5fmachine_2eh_20',['wifi_state_machine.h',['../wifi__state__machine_8h.html',1,'']]],
+  ['wifiqueue_21',['WifiQueue',['../main_8cpp.html#a69811aaa1a7fd4891677577d309248e6',1,'main.cpp']]],
+  ['wifistatemachine_22',['WifiStateMachine',['../classshrapnel_1_1wifi_1_1WifiStateMachine.html',1,'shrapnel::wifi::WifiStateMachine'],['../classshrapnel_1_1wifi_1_1WifiStateMachine.html#a9d36086194c4a0efa52d6953f08012b0',1,'shrapnel::wifi::WifiStateMachine::WifiStateMachine()']]],
+  ['worn_23',['worN',['../namespacewah-smoothing.html#a7197fc547190bc4b369f552d97a8abde',1,'wah-smoothing.worN()'],['../namespacewah.html#a645f5a27fb4d52852c227e07eca94e57',1,'wah.worN()']]],
+  ['write_24',['Write',['../structshrapnel_1_1selected__preset_1_1Write.html',1,'shrapnel::selected_preset']]]
 ];

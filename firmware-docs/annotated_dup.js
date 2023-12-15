@@ -54,6 +54,25 @@ var annotated_dup =
         [ "EspStorage", "classshrapnel_1_1persistence_1_1EspStorage.html", "classshrapnel_1_1persistence_1_1EspStorage" ],
         [ "Storage", "classshrapnel_1_1persistence_1_1Storage.html", "classshrapnel_1_1persistence_1_1Storage" ]
       ] ],
+      [ "presets", "namespaceshrapnel_1_1presets.html", [
+        [ "Create", "structshrapnel_1_1presets_1_1Create.html", "structshrapnel_1_1presets_1_1Create" ],
+        [ "Delete", "structshrapnel_1_1presets_1_1Delete.html", "structshrapnel_1_1presets_1_1Delete" ],
+        [ "Initialise", "structshrapnel_1_1presets_1_1Initialise.html", "structshrapnel_1_1presets_1_1Initialise" ],
+        [ "Notify", "structshrapnel_1_1presets_1_1Notify.html", "structshrapnel_1_1presets_1_1Notify" ],
+        [ "ParametersData", "structshrapnel_1_1presets_1_1ParametersData.html", "structshrapnel_1_1presets_1_1ParametersData" ],
+        [ "PresetData", "structshrapnel_1_1presets_1_1PresetData.html", "structshrapnel_1_1presets_1_1PresetData" ],
+        [ "PresetsManager", "classshrapnel_1_1presets_1_1PresetsManager.html", "classshrapnel_1_1presets_1_1PresetsManager" ],
+        [ "Update", "structshrapnel_1_1presets_1_1Update.html", "structshrapnel_1_1presets_1_1Update" ]
+      ] ],
+      [ "presets_storage", "namespaceshrapnel_1_1presets__storage.html", [
+        [ "Storage", "classshrapnel_1_1presets__storage_1_1Storage.html", "classshrapnel_1_1presets__storage_1_1Storage" ]
+      ] ],
+      [ "selected_preset", "namespaceshrapnel_1_1selected__preset.html", [
+        [ "Notify", "structshrapnel_1_1selected__preset_1_1Notify.html", "structshrapnel_1_1selected__preset_1_1Notify" ],
+        [ "Read", "structshrapnel_1_1selected__preset_1_1Read.html", "structshrapnel_1_1selected__preset_1_1Read" ],
+        [ "SelectedPresetManager", "classshrapnel_1_1selected__preset_1_1SelectedPresetManager.html", "classshrapnel_1_1selected__preset_1_1SelectedPresetManager" ],
+        [ "Write", "structshrapnel_1_1selected__preset_1_1Write.html", "structshrapnel_1_1selected__preset_1_1Write" ]
+      ] ],
       [ "wifi", "namespaceshrapnel_1_1wifi.html", [
         [ "InternalEvent", "structshrapnel_1_1wifi_1_1InternalEvent.html", "structshrapnel_1_1wifi_1_1InternalEvent" ],
         [ "State", "structshrapnel_1_1wifi_1_1State.html", "structshrapnel_1_1wifi_1_1State" ],
@@ -73,5 +92,8 @@ var annotated_dup =
     [ "ContourFilter", "classContourFilter.html", "classContourFilter" ],
     [ "dspal_delayline", "structdspal__delayline.html", "structdspal__delayline" ],
     [ "EspHeapTracing", "classEspHeapTracing.html", "classEspHeapTracing" ],
+    [ "Preset", "structPreset.html", "structPreset" ],
+    [ "PresetParameters", "structPresetParameters.html", "structPresetParameters" ],
+    [ "PresetRecord", "structPresetRecord.html", "structPresetRecord" ],
     [ "ScopedHeapTracing", "classScopedHeapTracing.html", "classScopedHeapTracing" ]
 ];

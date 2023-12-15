@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['end_0',['end',['../classshrapnel_1_1parameters_1_1AudioParameters.html#a2549b1be6902bddab6426205ef503abd',1,'shrapnel::parameters::AudioParameters']]],
+  ['end_0',['end',['../classshrapnel_1_1parameters_1_1AudioParameters.html#a2549b1be6902bddab6426205ef503abd',1,'shrapnel::parameters::AudioParameters::end()'],['../classshrapnel_1_1presets__storage_1_1Storage.html#aab044be0fe1c46fefb32da3aa37e2c89',1,'shrapnel::presets_storage::Storage::end()']]],
   ['enum_5ftype_1',['enum_type',['../structshrapnel_1_1wifi_1_1InternalEvent.html#a62d199da7e8162e54b10e20b9dd35d85',1,'shrapnel::wifi::InternalEvent::enum_type()'],['../structshrapnel_1_1wifi_1_1UserEvent.html#a3bd73e2ca995e803711916a975b0a73d',1,'shrapnel::wifi::UserEvent::enum_type()'],['../structshrapnel_1_1wifi_1_1State.html#a0c7289235b004679b762cbd803e86e87',1,'shrapnel::wifi::State::enum_type()']]],
   ['envelope_5fdetect_5ffilter_2',['envelope_detect_filter',['../noise__gate_8cpp.html#a2cde47bbb67cca771c1c5fb4e34af190',1,'noise_gate.cpp']]],
   ['esp_5fpersistence_2ecpp_3',['esp_persistence.cpp',['../esp__persistence_8cpp.html',1,'']]],

@@ -188,7 +188,7 @@ $(document).ready(function(){initNavTree('midi__mapping__json__parser_8h_source.
 <div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>            <span class="keywordflow">return</span> std::nullopt;</div>
 <div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>        }</div>
 <div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span> </div>
-<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>        <span class="keyword">auto</span> <span class="keywordtype">id</span> = from_json&lt;Mapping::id_t&gt;(entry.name);</div>
+<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>        <span class="keyword">auto</span> <span class="keywordtype">id</span> = uuid::from_json&lt;Mapping::id_t&gt;(entry.name);</div>
 <div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>        <span class="keywordflow">if</span>(!<span class="keywordtype">id</span>.has_value())</div>
 <div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>        {</div>
 <div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>            ESP_LOGE(TAG, <span class="stringliteral">&quot;failed to get uuid&quot;</span>);</div>

@@ -78,10 +78,8 @@
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
   <pre class="language-dart"><code class="language-dart">Map&lt;String, String&gt; get parameterNames {
-  return Map.fromEntries(
-    _parameters.map(
-      (param) =&gt; MapEntry(param.id, &#39;${param.groupName}: ${param.name}&#39;),
-    ),
+  return _parameters.map(
+    (id, param) =&gt; MapEntry(id, &#39;${param.groupName}: ${param.name}&#39;),
   );
 }</code></pre>
 </section>

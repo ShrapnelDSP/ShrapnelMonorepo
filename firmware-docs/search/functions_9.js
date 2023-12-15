@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['load_0',['load',['../classshrapnel_1_1persistence_1_1EspStorage.html#a40bb12639a1720734d4f72f7fd3496ce',1,'shrapnel::persistence::EspStorage::load()'],['../classshrapnel_1_1persistence_1_1Storage.html#a236cc0ae092063d4f83de52f88123756',1,'shrapnel::persistence::Storage::load()']]],
+  ['load_0',['load',['../classshrapnel_1_1persistence_1_1EspStorage.html#a40bb12639a1720734d4f72f7fd3496ce',1,'shrapnel::persistence::EspStorage::load(const char *key, etl::istring &amp;data) override'],['../classshrapnel_1_1persistence_1_1EspStorage.html#a480810337a7323ac874296e7c102ec62',1,'shrapnel::persistence::EspStorage::load(const char *key, uint32_t &amp;data) override'],['../classshrapnel_1_1persistence_1_1Storage.html#a236cc0ae092063d4f83de52f88123756',1,'shrapnel::persistence::Storage::load(const char *key, etl::istring &amp;data)=0'],['../classshrapnel_1_1persistence_1_1Storage.html#a86eb5a2da3fd0101a45899e2e1dc2cba',1,'shrapnel::persistence::Storage::load(const char *key, uint32_t &amp;data)=0'],['../classshrapnel_1_1presets__storage_1_1Storage.html#a14bf5ca474e03763e781ba64dd3a80bc',1,'shrapnel::presets_storage::Storage::load()']]],
   ['log_5fi2s_5fevent_1',['log_i2s_event',['../namespaceshrapnel_1_1audio.html#a5e4994d9de1b430ad5473efe241521aa',1,'shrapnel::audio']]],
   ['loop_2',['loop',['../classshrapnel_1_1ParameterObserver.html#ac9b0e5a42ca8e0ac30be871959087523',1,'shrapnel::ParameterObserver::loop()'],['../classshrapnel_1_1MainThread.html#a3fbd4e3d302b729138881a88c7aafd76',1,'shrapnel::MainThread::loop()']]]
 ];

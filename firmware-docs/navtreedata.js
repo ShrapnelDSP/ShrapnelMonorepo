@@ -47,7 +47,7 @@ var NAVTREE =
       [ "Class Hierarchy", "hierarchy.html", "hierarchy" ],
       [ "Data Fields", "functions.html", [
         [ "All", "functions.html", "functions_dup" ],
-        [ "Functions", "functions_func.html", null ],
+        [ "Functions", "functions_func.html", "functions_func" ],
         [ "Variables", "functions_vars.html", null ],
         [ "Typedefs", "functions_type.html", null ],
         [ "Enumerations", "functions_enum.html", null ],
@@ -73,10 +73,12 @@ var NAVTREEINDEX =
 [
 "abstract__dsp_8h.html",
 "classshrapnel_1_1effect_1_1valvestate_1_1GainControl.html#a21755e85c7ea233796c12d6c485f4b75",
-"dir_72db400127cf97d4af416f2921f3c668.html",
-"midi__mapping__json__parser_8h.html#a2b9d2bc58c847f2f2289c90bf47979e6",
-"server_8cpp.html#a6c3fffa5d51d9eb65d0b9f4402eaa640",
-"structshrapnel_1_1wifi_1_1State.html#a0c7289235b004679b762cbd803e86e87ae557b65626b83f3ef5212345d4c66143"
+"delayline__c_8cpp_source.html",
+"main__thread_8h.html#a8e904f36f88c1590c804e27965f26c16",
+"namespaceshrapnel_1_1presets.html#a75e708300407ec5152444a3fb4c5a578",
+"presets__json__parser_8h.html#ae2f6ec717e4558978d11ca1ddba9019f",
+"structshrapnel_1_1midi_1_1Message_1_1NoteOn.html#a3377e69df50e588b93683fd3c3aa8a43",
+"structshrapnel_1_1wifi_1_1UserEvent.html#a3bd73e2ca995e803711916a975b0a73d"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

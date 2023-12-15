@@ -3,7 +3,6 @@ var main_8cpp =
     [ "WifiQueue", "main_8cpp.html#a69811aaa1a7fd4891677577d309248e6", null ],
     [ "app_main", "main_8cpp.html#a9f09f4ea750643310af9143a53735b7d", null ],
     [ "connect_handler", "main_8cpp.html#a4bf0b1d7c4fef2839a56059a237d1da6", null ],
-    [ "debug_dump_task_list", "main_8cpp.html#a37776d9dae07eb2a1568ed6eb5dd2e1f", null ],
     [ "disconnect_handler", "main_8cpp.html#ae3cbca1e45f686a5790d51825e2754a2", null ],
     [ "failed_alloc_callback", "main_8cpp.html#a9f01b77156c5fc53346d256b9735e6f8", null ],
     [ "i2c_setup", "main_8cpp.html#a2b47dde02734c93bbdabfd97cb23dd2a", null ],

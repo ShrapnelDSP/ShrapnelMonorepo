@@ -114,7 +114,7 @@ Collaboration diagram for shrapnel::midi::MappingManager&lt; AudioParametersT, M
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-types" name="pub-types"></a>
 Public Types</h2></td></tr>
-<tr class="memitem:a52c3eefd35b18584ae6ee72124aa805e"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classshrapnel_1_1midi_1_1MappingManager.html#a52c3eefd35b18584ae6ee72124aa805e">MapType</a> = etl::map&lt; <a class="el" href="structshrapnel_1_1midi_1_1Mapping.html#a212fd4d87c151bab5982bc9138990a02">Mapping::id_t</a>, <a class="el" href="structshrapnel_1_1midi_1_1Mapping.html">Mapping</a>, MAX_MAPPINGS &gt;</td></tr>
+<tr class="memitem:a52c3eefd35b18584ae6ee72124aa805e"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classshrapnel_1_1midi_1_1MappingManager.html#a52c3eefd35b18584ae6ee72124aa805e">MapType</a> = etl::map&lt; <a class="el" href="structshrapnel_1_1midi_1_1Mapping.html#abe3b4d173f67972bb2cd835c2a439d99">Mapping::id_t</a>, <a class="el" href="structshrapnel_1_1midi_1_1Mapping.html">Mapping</a>, MAX_MAPPINGS &gt;</td></tr>
 <tr class="separator:a52c3eefd35b18584ae6ee72124aa805e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
@@ -123,13 +123,13 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a533672d97031598ca7788856f0d679fd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad97299849ae37fdfb78884412b8126c5"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classshrapnel_1_1midi_1_1MappingManager.html#ad97299849ae37fdfb78884412b8126c5">MappingManager</a> (std::shared_ptr&lt; AudioParametersT &gt; a_parameters, <a class="el" href="classshrapnel_1_1midi_1_1MappingManager.html#a52c3eefd35b18584ae6ee72124aa805e">MapType</a> initial_mappings)</td></tr>
 <tr class="separator:ad97299849ae37fdfb78884412b8126c5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7087692921b992e7a13da2d7499865a9"><td class="memItemLeft" align="right" valign="top">const etl::imap&lt; <a class="el" href="structshrapnel_1_1midi_1_1Mapping.html#a212fd4d87c151bab5982bc9138990a02">Mapping::id_t</a>, <a class="el" href="structshrapnel_1_1midi_1_1Mapping.html">Mapping</a> &gt; *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classshrapnel_1_1midi_1_1MappingManager.html#a7087692921b992e7a13da2d7499865a9">get</a> () const</td></tr>
+<tr class="memitem:a7087692921b992e7a13da2d7499865a9"><td class="memItemLeft" align="right" valign="top">const etl::imap&lt; <a class="el" href="structshrapnel_1_1midi_1_1Mapping.html#abe3b4d173f67972bb2cd835c2a439d99">Mapping::id_t</a>, <a class="el" href="structshrapnel_1_1midi_1_1Mapping.html">Mapping</a> &gt; *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classshrapnel_1_1midi_1_1MappingManager.html#a7087692921b992e7a13da2d7499865a9">get</a> () const</td></tr>
 <tr class="separator:a7087692921b992e7a13da2d7499865a9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8879cdea1876e9d2227aed10bf7daae2"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classshrapnel_1_1midi_1_1MappingManager.html#a8879cdea1876e9d2227aed10bf7daae2">create</a> (const std::pair&lt; const <a class="el" href="structshrapnel_1_1midi_1_1Mapping.html#a212fd4d87c151bab5982bc9138990a02">Mapping::id_t</a>, <a class="el" href="structshrapnel_1_1midi_1_1Mapping.html">Mapping</a> &gt; &amp;mapping)</td></tr>
+<tr class="memitem:a8879cdea1876e9d2227aed10bf7daae2"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classshrapnel_1_1midi_1_1MappingManager.html#a8879cdea1876e9d2227aed10bf7daae2">create</a> (const std::pair&lt; const <a class="el" href="structshrapnel_1_1midi_1_1Mapping.html#abe3b4d173f67972bb2cd835c2a439d99">Mapping::id_t</a>, <a class="el" href="structshrapnel_1_1midi_1_1Mapping.html">Mapping</a> &gt; &amp;mapping)</td></tr>
 <tr class="separator:a8879cdea1876e9d2227aed10bf7daae2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8faaecc25616ec5ded042a51160d8f50"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classshrapnel_1_1midi_1_1MappingManager.html#a8faaecc25616ec5ded042a51160d8f50">update</a> (const std::pair&lt; const <a class="el" href="structshrapnel_1_1midi_1_1Mapping.html#a212fd4d87c151bab5982bc9138990a02">Mapping::id_t</a>, <a class="el" href="structshrapnel_1_1midi_1_1Mapping.html">Mapping</a> &gt; &amp;mapping)</td></tr>
+<tr class="memitem:a8faaecc25616ec5ded042a51160d8f50"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classshrapnel_1_1midi_1_1MappingManager.html#a8faaecc25616ec5ded042a51160d8f50">update</a> (const std::pair&lt; const <a class="el" href="structshrapnel_1_1midi_1_1Mapping.html#abe3b4d173f67972bb2cd835c2a439d99">Mapping::id_t</a>, <a class="el" href="structshrapnel_1_1midi_1_1Mapping.html">Mapping</a> &gt; &amp;mapping)</td></tr>
 <tr class="separator:a8faaecc25616ec5ded042a51160d8f50"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa1026b08a8010e60a9d5b3d417d381a2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classshrapnel_1_1midi_1_1MappingManager.html#aa1026b08a8010e60a9d5b3d417d381a2">remove</a> (const <a class="el" href="structshrapnel_1_1midi_1_1Mapping.html#a212fd4d87c151bab5982bc9138990a02">Mapping::id_t</a> &amp;id)</td></tr>
+<tr class="memitem:aa1026b08a8010e60a9d5b3d417d381a2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classshrapnel_1_1midi_1_1MappingManager.html#aa1026b08a8010e60a9d5b3d417d381a2">remove</a> (const <a class="el" href="structshrapnel_1_1midi_1_1Mapping.html#abe3b4d173f67972bb2cd835c2a439d99">Mapping::id_t</a> &amp;id)</td></tr>
 <tr class="separator:aa1026b08a8010e60a9d5b3d417d381a2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac6f275b3280f5f57d8612d40e7d86141"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classshrapnel_1_1midi_1_1MappingManager.html#ac6f275b3280f5f57d8612d40e7d86141">process_message</a> (<a class="el" href="structshrapnel_1_1midi_1_1Message.html">Message</a> message) const</td></tr>
 <tr class="memdesc:ac6f275b3280f5f57d8612d40e7d86141"><td class="mdescLeft">&#160;</td><td class="mdescRight">React to a MIDI message by updating an audio parameter if there is a mapping registered.  <a href="classshrapnel_1_1midi_1_1MappingManager.html#ac6f275b3280f5f57d8612d40e7d86141">More...</a><br /></td></tr>
@@ -138,7 +138,7 @@ Public Member Functions</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><div class="compoundTemplParams">template&lt;typename AudioParametersT, std::size_t MAX_MAPPINGS, std::size_t MAX_OBSERVERS&gt;<br />
 class shrapnel::midi::MappingManager&lt; AudioParametersT, MAX_MAPPINGS, MAX_OBSERVERS &gt;</div>
-<p class="definition">Definition at line <a class="el" href="midi__mapping_8h_source.html#l00279">279</a> of file <a class="el" href="midi__mapping_8h_source.html">midi_mapping.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="midi__mapping_8h_source.html#l00280">280</a> of file <a class="el" href="midi__mapping_8h_source.html">midi_mapping.h</a>.</p>
 </div><h2 class="groupheader">Member Typedef Documentation</h2>
 <a id="a52c3eefd35b18584ae6ee72124aa805e" name="a52c3eefd35b18584ae6ee72124aa805e"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a52c3eefd35b18584ae6ee72124aa805e">&#9670;&nbsp;</a></span>MapType</h2>
@@ -149,12 +149,12 @@ class shrapnel::midi::MappingManager&lt; AudioParametersT, MAX_MAPPINGS, MAX_OBS
 template&lt;typename AudioParametersT , std::size_t MAX_MAPPINGS, std::size_t MAX_OBSERVERS&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">using <a class="el" href="classshrapnel_1_1midi_1_1MappingManager.html">shrapnel::midi::MappingManager</a>&lt; AudioParametersT, MAX_MAPPINGS, MAX_OBSERVERS &gt;::MapType =  etl::map&lt;<a class="el" href="structshrapnel_1_1midi_1_1Mapping.html#a212fd4d87c151bab5982bc9138990a02">Mapping::id_t</a>, <a class="el" href="structshrapnel_1_1midi_1_1Mapping.html">Mapping</a>, MAX_MAPPINGS&gt;</td>
+          <td class="memname">using <a class="el" href="classshrapnel_1_1midi_1_1MappingManager.html">shrapnel::midi::MappingManager</a>&lt; AudioParametersT, MAX_MAPPINGS, MAX_OBSERVERS &gt;::MapType =  etl::map&lt;<a class="el" href="structshrapnel_1_1midi_1_1Mapping.html#abe3b4d173f67972bb2cd835c2a439d99">Mapping::id_t</a>, <a class="el" href="structshrapnel_1_1midi_1_1Mapping.html">Mapping</a>, MAX_MAPPINGS&gt;</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="midi__mapping_8h_source.html#l00281">281</a> of file <a class="el" href="midi__mapping_8h_source.html">midi_mapping.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="midi__mapping_8h_source.html#l00282">282</a> of file <a class="el" href="midi__mapping_8h_source.html">midi_mapping.h</a>.</p>
 
 </div>
 </div>
@@ -185,8 +185,8 @@ template&lt;typename AudioParametersT , std::size_t MAX_MAPPINGS, std::size_t MA
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="midi__mapping_8h_source.html#l00283">283</a> of file <a class="el" href="midi__mapping_8h_source.html">midi_mapping.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  283</span>: parameters{a_parameters} {}</div>
+<p class="definition">Definition at line <a class="el" href="midi__mapping_8h_source.html#l00284">284</a> of file <a class="el" href="midi__mapping_8h_source.html">midi_mapping.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  284</span>: parameters{a_parameters} {}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -226,8 +226,8 @@ template&lt;typename AudioParametersT , std::size_t MAX_MAPPINGS, std::size_t MA
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="midi__mapping_8h_source.html#l00284">284</a> of file <a class="el" href="midi__mapping_8h_source.html">midi_mapping.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  284</span>: parameters{a_parameters}, mappings{initial_mappings} {}</div>
+<p class="definition">Definition at line <a class="el" href="midi__mapping_8h_source.html#l00285">285</a> of file <a class="el" href="midi__mapping_8h_source.html">midi_mapping.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  285</span>: parameters{a_parameters}, mappings{initial_mappings} {}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -246,7 +246,7 @@ template&lt;typename AudioParametersT , std::size_t MAX_MAPPINGS, std::size_t MA
         <tr>
           <td class="memname">int <a class="el" href="classshrapnel_1_1midi_1_1MappingManager.html">shrapnel::midi::MappingManager</a>&lt; AudioParametersT, MAX_MAPPINGS, MAX_OBSERVERS &gt;::create </td>
           <td>(</td>
-          <td class="paramtype">const std::pair&lt; const <a class="el" href="structshrapnel_1_1midi_1_1Mapping.html#a212fd4d87c151bab5982bc9138990a02">Mapping::id_t</a>, <a class="el" href="structshrapnel_1_1midi_1_1Mapping.html">Mapping</a> &gt; &amp;&#160;</td>
+          <td class="paramtype">const std::pair&lt; const <a class="el" href="structshrapnel_1_1midi_1_1Mapping.html#abe3b4d173f67972bb2cd835c2a439d99">Mapping::id_t</a>, <a class="el" href="structshrapnel_1_1midi_1_1Mapping.html">Mapping</a> &gt; &amp;&#160;</td>
           <td class="paramname"><em>mapping</em></td><td>)</td>
           <td></td>
         </tr>
@@ -259,17 +259,17 @@ template&lt;typename AudioParametersT , std::size_t MAX_MAPPINGS, std::size_t MA
 </div><div class="memdoc">
 <dl class="section return"><dt>Returns</dt><dd>non-zero on failure </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="midi__mapping_8h_source.html#l00290">290</a> of file <a class="el" href="midi__mapping_8h_source.html">midi_mapping.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  290</span>                                                                                 {</div>
-<div class="line"><span class="lineno">  291</span>        <span class="keywordflow">if</span>(mappings.full()) {</div>
-<div class="line"><span class="lineno">  292</span>            ESP_LOGE(TAG, <span class="stringliteral">&quot;Failed to create new midi mapping, map is full&quot;</span>);</div>
-<div class="line"><span class="lineno">  293</span>            <span class="keywordflow">return</span> -1;</div>
-<div class="line"><span class="lineno">  294</span>        }</div>
-<div class="line"><span class="lineno">  295</span> </div>
-<div class="line"><span class="lineno">  296</span>        mappings.insert(mapping);</div>
-<div class="line"><span class="lineno">  297</span>        this-&gt;notify_observers(mapping.first);</div>
-<div class="line"><span class="lineno">  298</span>        <span class="keywordflow">return</span> 0;</div>
-<div class="line"><span class="lineno">  299</span>    }</div>
+<p class="definition">Definition at line <a class="el" href="midi__mapping_8h_source.html#l00291">291</a> of file <a class="el" href="midi__mapping_8h_source.html">midi_mapping.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  291</span>                                                                                 {</div>
+<div class="line"><span class="lineno">  292</span>        <span class="keywordflow">if</span>(mappings.full()) {</div>
+<div class="line"><span class="lineno">  293</span>            ESP_LOGE(TAG, <span class="stringliteral">&quot;Failed to create new midi mapping, map is full&quot;</span>);</div>
+<div class="line"><span class="lineno">  294</span>            <span class="keywordflow">return</span> -1;</div>
+<div class="line"><span class="lineno">  295</span>        }</div>
+<div class="line"><span class="lineno">  296</span> </div>
+<div class="line"><span class="lineno">  297</span>        mappings.insert(mapping);</div>
+<div class="line"><span class="lineno">  298</span>        this-&gt;notify_observers(mapping.first);</div>
+<div class="line"><span class="lineno">  299</span>        <span class="keywordflow">return</span> 0;</div>
+<div class="line"><span class="lineno">  300</span>    }</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -285,7 +285,7 @@ template&lt;typename AudioParametersT , std::size_t MAX_MAPPINGS, std::size_t MA
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">const etl::imap&lt; <a class="el" href="structshrapnel_1_1midi_1_1Mapping.html#a212fd4d87c151bab5982bc9138990a02">Mapping::id_t</a>, <a class="el" href="structshrapnel_1_1midi_1_1Mapping.html">Mapping</a> &gt; * <a class="el" href="classshrapnel_1_1midi_1_1MappingManager.html">shrapnel::midi::MappingManager</a>&lt; AudioParametersT, MAX_MAPPINGS, MAX_OBSERVERS &gt;::get </td>
+          <td class="memname">const etl::imap&lt; <a class="el" href="structshrapnel_1_1midi_1_1Mapping.html#abe3b4d173f67972bb2cd835c2a439d99">Mapping::id_t</a>, <a class="el" href="structshrapnel_1_1midi_1_1Mapping.html">Mapping</a> &gt; * <a class="el" href="classshrapnel_1_1midi_1_1MappingManager.html">shrapnel::midi::MappingManager</a>&lt; AudioParametersT, MAX_MAPPINGS, MAX_OBSERVERS &gt;::get </td>
           <td>(</td>
           <td class="paramtype">void&#160;</td>
           <td class="paramname"></td><td>)</td>
@@ -299,10 +299,10 @@ template&lt;typename AudioParametersT , std::size_t MAX_MAPPINGS, std::size_t MA
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="midi__mapping_8h_source.html#l00286">286</a> of file <a class="el" href="midi__mapping_8h_source.html">midi_mapping.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  286</span>                                                                   {</div>
-<div class="line"><span class="lineno">  287</span>        <span class="keywordflow">return</span> &amp;mappings;</div>
-<div class="line"><span class="lineno">  288</span>    }</div>
+<p class="definition">Definition at line <a class="el" href="midi__mapping_8h_source.html#l00287">287</a> of file <a class="el" href="midi__mapping_8h_source.html">midi_mapping.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  287</span>                                                                   {</div>
+<div class="line"><span class="lineno">  288</span>        <span class="keywordflow">return</span> &amp;mappings;</div>
+<div class="line"><span class="lineno">  289</span>    }</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -334,43 +334,43 @@ template&lt;typename AudioParametersT , std::size_t MAX_MAPPINGS, std::size_t MA
 
 <p>React to a MIDI message by updating an audio parameter if there is a mapping registered. </p>
 
-<p class="definition">Definition at line <a class="el" href="midi__mapping_8h_source.html#l00322">322</a> of file <a class="el" href="midi__mapping_8h_source.html">midi_mapping.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  322</span>                                                {</div>
-<div class="line"><span class="lineno">  323</span>        <span class="keyword">auto</span> cc_params = get_if&lt;Message::ControlChange&gt;(&amp;message.parameters);</div>
-<div class="line"><span class="lineno">  324</span>        <span class="keywordflow">if</span>(!cc_params) <span class="keywordflow">return</span>;</div>
-<div class="line"><span class="lineno">  325</span> </div>
-<div class="line"><span class="lineno">  326</span>        <span class="keywordflow">for</span>(<span class="keyword">const</span> <span class="keyword">auto</span> &amp;[_, mapping] : mappings)</div>
-<div class="line"><span class="lineno">  327</span>        {</div>
-<div class="line"><span class="lineno">  328</span>            <span class="keywordflow">if</span>(mapping.midi_channel != message.channel)</div>
-<div class="line"><span class="lineno">  329</span>            {</div>
-<div class="line"><span class="lineno">  330</span>                <span class="keywordflow">continue</span>;</div>
-<div class="line"><span class="lineno">  331</span>            }</div>
-<div class="line"><span class="lineno">  332</span> </div>
-<div class="line"><span class="lineno">  333</span>            <span class="keywordflow">if</span>(mapping.cc_number != cc_params-&gt;control)</div>
-<div class="line"><span class="lineno">  334</span>            {</div>
-<div class="line"><span class="lineno">  335</span>                <span class="keywordflow">continue</span>;</div>
-<div class="line"><span class="lineno">  336</span>            }</div>
-<div class="line"><span class="lineno">  337</span> </div>
-<div class="line"><span class="lineno">  338</span>            <span class="keywordflow">switch</span>(mapping.mode)</div>
-<div class="line"><span class="lineno">  339</span>            {</div>
-<div class="line"><span class="lineno">  340</span>            <span class="keywordflow">case</span> <a class="code hl_enumvalue" href="structshrapnel_1_1midi_1_1Mapping.html#a9d3978518402ec5df1963f1b8c0a7013abf1d4bbf6ed8626603df4a7cac94ee8c">Mapping::Mode::PARAMETER</a>:</div>
-<div class="line"><span class="lineno">  341</span>                parameters-&gt;update(mapping.parameter_name,</div>
-<div class="line"><span class="lineno">  342</span>                                   cc_params-&gt;value / <span class="keywordtype">float</span>(<a class="code hl_variable" href="namespaceshrapnel_1_1midi.html#a8305176202c7655644708a6d70914ed2">CC_VALUE_MAX</a>));</div>
-<div class="line"><span class="lineno">  343</span>                <span class="keywordflow">break</span>;</div>
-<div class="line"><span class="lineno">  344</span>            <span class="keywordflow">case</span> <a class="code hl_enumvalue" href="structshrapnel_1_1midi_1_1Mapping.html#a9d3978518402ec5df1963f1b8c0a7013a1252c45651289c0b553a30d27bb5ae9b">Mapping::Mode::TOGGLE</a>:</div>
-<div class="line"><span class="lineno">  345</span>                <span class="keywordflow">if</span>(cc_params-&gt;value == 0)</div>
-<div class="line"><span class="lineno">  346</span>                {</div>
-<div class="line"><span class="lineno">  347</span>                    <span class="keywordflow">continue</span>;</div>
-<div class="line"><span class="lineno">  348</span>                }</div>
-<div class="line"><span class="lineno">  349</span> </div>
-<div class="line"><span class="lineno">  350</span>                <span class="keyword">auto</span> old_value = parameters-&gt;get(mapping.parameter_name);</div>
-<div class="line"><span class="lineno">  351</span> </div>
-<div class="line"><span class="lineno">  352</span>                parameters-&gt;update(mapping.parameter_name,</div>
-<div class="line"><span class="lineno">  353</span>                                   old_value &lt; 0.5f ? 1.f : 0.f);</div>
-<div class="line"><span class="lineno">  354</span>                <span class="keywordflow">break</span>;</div>
-<div class="line"><span class="lineno">  355</span>            }</div>
-<div class="line"><span class="lineno">  356</span>        }</div>
-<div class="line"><span class="lineno">  357</span>    };</div>
+<p class="definition">Definition at line <a class="el" href="midi__mapping_8h_source.html#l00323">323</a> of file <a class="el" href="midi__mapping_8h_source.html">midi_mapping.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  323</span>                                                {</div>
+<div class="line"><span class="lineno">  324</span>        <span class="keyword">auto</span> cc_params = get_if&lt;Message::ControlChange&gt;(&amp;message.parameters);</div>
+<div class="line"><span class="lineno">  325</span>        <span class="keywordflow">if</span>(!cc_params) <span class="keywordflow">return</span>;</div>
+<div class="line"><span class="lineno">  326</span> </div>
+<div class="line"><span class="lineno">  327</span>        <span class="keywordflow">for</span>(<span class="keyword">const</span> <span class="keyword">auto</span> &amp;[_, mapping] : mappings)</div>
+<div class="line"><span class="lineno">  328</span>        {</div>
+<div class="line"><span class="lineno">  329</span>            <span class="keywordflow">if</span>(mapping.midi_channel != message.channel)</div>
+<div class="line"><span class="lineno">  330</span>            {</div>
+<div class="line"><span class="lineno">  331</span>                <span class="keywordflow">continue</span>;</div>
+<div class="line"><span class="lineno">  332</span>            }</div>
+<div class="line"><span class="lineno">  333</span> </div>
+<div class="line"><span class="lineno">  334</span>            <span class="keywordflow">if</span>(mapping.cc_number != cc_params-&gt;control)</div>
+<div class="line"><span class="lineno">  335</span>            {</div>
+<div class="line"><span class="lineno">  336</span>                <span class="keywordflow">continue</span>;</div>
+<div class="line"><span class="lineno">  337</span>            }</div>
+<div class="line"><span class="lineno">  338</span> </div>
+<div class="line"><span class="lineno">  339</span>            <span class="keywordflow">switch</span>(mapping.mode)</div>
+<div class="line"><span class="lineno">  340</span>            {</div>
+<div class="line"><span class="lineno">  341</span>            <span class="keywordflow">case</span> <a class="code hl_enumvalue" href="structshrapnel_1_1midi_1_1Mapping.html#a9d3978518402ec5df1963f1b8c0a7013abf1d4bbf6ed8626603df4a7cac94ee8c">Mapping::Mode::PARAMETER</a>:</div>
+<div class="line"><span class="lineno">  342</span>                parameters-&gt;update(mapping.parameter_name,</div>
+<div class="line"><span class="lineno">  343</span>                                   cc_params-&gt;value / <span class="keywordtype">float</span>(<a class="code hl_variable" href="namespaceshrapnel_1_1midi.html#a8305176202c7655644708a6d70914ed2">CC_VALUE_MAX</a>));</div>
+<div class="line"><span class="lineno">  344</span>                <span class="keywordflow">break</span>;</div>
+<div class="line"><span class="lineno">  345</span>            <span class="keywordflow">case</span> <a class="code hl_enumvalue" href="structshrapnel_1_1midi_1_1Mapping.html#a9d3978518402ec5df1963f1b8c0a7013a1252c45651289c0b553a30d27bb5ae9b">Mapping::Mode::TOGGLE</a>:</div>
+<div class="line"><span class="lineno">  346</span>                <span class="keywordflow">if</span>(cc_params-&gt;value == 0)</div>
+<div class="line"><span class="lineno">  347</span>                {</div>
+<div class="line"><span class="lineno">  348</span>                    <span class="keywordflow">continue</span>;</div>
+<div class="line"><span class="lineno">  349</span>                }</div>
+<div class="line"><span class="lineno">  350</span> </div>
+<div class="line"><span class="lineno">  351</span>                <span class="keyword">auto</span> old_value = parameters-&gt;get(mapping.parameter_name);</div>
+<div class="line"><span class="lineno">  352</span> </div>
+<div class="line"><span class="lineno">  353</span>                parameters-&gt;update(mapping.parameter_name,</div>
+<div class="line"><span class="lineno">  354</span>                                   old_value &lt; 0.5f ? 1.f : 0.f);</div>
+<div class="line"><span class="lineno">  355</span>                <span class="keywordflow">break</span>;</div>
+<div class="line"><span class="lineno">  356</span>            }</div>
+<div class="line"><span class="lineno">  357</span>        }</div>
+<div class="line"><span class="lineno">  358</span>    };</div>
 <div class="ttc" id="anamespaceshrapnel_1_1midi_html_a8305176202c7655644708a6d70914ed2"><div class="ttname"><a href="namespaceshrapnel_1_1midi.html#a8305176202c7655644708a6d70914ed2">shrapnel::midi::CC_VALUE_MAX</a></div><div class="ttdeci">int constexpr CC_VALUE_MAX</div><div class="ttdef"><b>Definition:</b> <a href="midi__protocol_8h_source.html#l00031">midi_protocol.h:31</a></div></div>
 <div class="ttc" id="astructshrapnel_1_1midi_1_1Mapping_html_a9d3978518402ec5df1963f1b8c0a7013a1252c45651289c0b553a30d27bb5ae9b"><div class="ttname"><a href="structshrapnel_1_1midi_1_1Mapping.html#a9d3978518402ec5df1963f1b8c0a7013a1252c45651289c0b553a30d27bb5ae9b">shrapnel::midi::Mapping::Mode::TOGGLE</a></div><div class="ttdeci">@ TOGGLE</div></div>
 <div class="ttc" id="astructshrapnel_1_1midi_1_1Mapping_html_a9d3978518402ec5df1963f1b8c0a7013abf1d4bbf6ed8626603df4a7cac94ee8c"><div class="ttname"><a href="structshrapnel_1_1midi_1_1Mapping.html#a9d3978518402ec5df1963f1b8c0a7013abf1d4bbf6ed8626603df4a7cac94ee8c">shrapnel::midi::Mapping::Mode::PARAMETER</a></div><div class="ttdeci">@ PARAMETER</div></div>
@@ -393,7 +393,7 @@ template&lt;typename AudioParametersT , std::size_t MAX_MAPPINGS, std::size_t MA
         <tr>
           <td class="memname">void <a class="el" href="classshrapnel_1_1midi_1_1MappingManager.html">shrapnel::midi::MappingManager</a>&lt; AudioParametersT, MAX_MAPPINGS, MAX_OBSERVERS &gt;::remove </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="structshrapnel_1_1midi_1_1Mapping.html#a212fd4d87c151bab5982bc9138990a02">Mapping::id_t</a> &amp;&#160;</td>
+          <td class="paramtype">const <a class="el" href="structshrapnel_1_1midi_1_1Mapping.html#abe3b4d173f67972bb2cd835c2a439d99">Mapping::id_t</a> &amp;&#160;</td>
           <td class="paramname"><em>id</em></td><td>)</td>
           <td></td>
         </tr>
@@ -405,11 +405,11 @@ template&lt;typename AudioParametersT , std::size_t MAX_MAPPINGS, std::size_t MA
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="midi__mapping_8h_source.html#l00314">314</a> of file <a class="el" href="midi__mapping_8h_source.html">midi_mapping.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  314</span>                                       {</div>
-<div class="line"><span class="lineno">  315</span>        mappings.erase(<span class="keywordtype">id</span>);</div>
-<div class="line"><span class="lineno">  316</span>        this-&gt;notify_observers(<span class="keywordtype">id</span>);</div>
-<div class="line"><span class="lineno">  317</span>    }</div>
+<p class="definition">Definition at line <a class="el" href="midi__mapping_8h_source.html#l00315">315</a> of file <a class="el" href="midi__mapping_8h_source.html">midi_mapping.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  315</span>                                       {</div>
+<div class="line"><span class="lineno">  316</span>        mappings.erase(<span class="keywordtype">id</span>);</div>
+<div class="line"><span class="lineno">  317</span>        this-&gt;notify_observers(<span class="keywordtype">id</span>);</div>
+<div class="line"><span class="lineno">  318</span>    }</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -427,7 +427,7 @@ template&lt;typename AudioParametersT , std::size_t MAX_MAPPINGS, std::size_t MA
         <tr>
           <td class="memname">int <a class="el" href="classshrapnel_1_1midi_1_1MappingManager.html">shrapnel::midi::MappingManager</a>&lt; AudioParametersT, MAX_MAPPINGS, MAX_OBSERVERS &gt;::update </td>
           <td>(</td>
-          <td class="paramtype">const std::pair&lt; const <a class="el" href="structshrapnel_1_1midi_1_1Mapping.html#a212fd4d87c151bab5982bc9138990a02">Mapping::id_t</a>, <a class="el" href="structshrapnel_1_1midi_1_1Mapping.html">Mapping</a> &gt; &amp;&#160;</td>
+          <td class="paramtype">const std::pair&lt; const <a class="el" href="structshrapnel_1_1midi_1_1Mapping.html#abe3b4d173f67972bb2cd835c2a439d99">Mapping::id_t</a>, <a class="el" href="structshrapnel_1_1midi_1_1Mapping.html">Mapping</a> &gt; &amp;&#160;</td>
           <td class="paramname"><em>mapping</em></td><td>)</td>
           <td></td>
         </tr>
@@ -440,20 +440,20 @@ template&lt;typename AudioParametersT , std::size_t MAX_MAPPINGS, std::size_t MA
 </div><div class="memdoc">
 <dl class="section return"><dt>Returns</dt><dd>non-zero on failure </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="midi__mapping_8h_source.html#l00301">301</a> of file <a class="el" href="midi__mapping_8h_source.html">midi_mapping.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  301</span>                                                                                 {</div>
-<div class="line"><span class="lineno">  302</span>        <span class="keywordflow">if</span>(!mappings.contains(mapping.first))</div>
-<div class="line"><span class="lineno">  303</span>        {</div>
-<div class="line"><span class="lineno">  304</span>            ESP_LOGE(TAG, <span class="stringliteral">&quot;Does not contain key&quot;</span>);</div>
-<div class="line"><span class="lineno">  305</span>            ESP_LOG_BUFFER_HEX_LEVEL(TAG, mapping.first.data(), mapping.first.size(), ESP_LOG_ERROR);</div>
-<div class="line"><span class="lineno">  306</span>            <span class="keywordflow">return</span> -1;</div>
-<div class="line"><span class="lineno">  307</span>        }</div>
-<div class="line"><span class="lineno">  308</span> </div>
-<div class="line"><span class="lineno">  309</span>        mappings.erase(mapping.first);</div>
-<div class="line"><span class="lineno">  310</span>        mappings.insert(mapping);</div>
-<div class="line"><span class="lineno">  311</span>        this-&gt;notify_observers(mapping.first);</div>
-<div class="line"><span class="lineno">  312</span>        <span class="keywordflow">return</span> 0;</div>
-<div class="line"><span class="lineno">  313</span>    }</div>
+<p class="definition">Definition at line <a class="el" href="midi__mapping_8h_source.html#l00302">302</a> of file <a class="el" href="midi__mapping_8h_source.html">midi_mapping.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  302</span>                                                                                 {</div>
+<div class="line"><span class="lineno">  303</span>        <span class="keywordflow">if</span>(!mappings.contains(mapping.first))</div>
+<div class="line"><span class="lineno">  304</span>        {</div>
+<div class="line"><span class="lineno">  305</span>            ESP_LOGE(TAG, <span class="stringliteral">&quot;Does not contain key&quot;</span>);</div>
+<div class="line"><span class="lineno">  306</span>            ESP_LOG_BUFFER_HEX_LEVEL(TAG, mapping.first.data(), mapping.first.size(), ESP_LOG_ERROR);</div>
+<div class="line"><span class="lineno">  307</span>            <span class="keywordflow">return</span> -1;</div>
+<div class="line"><span class="lineno">  308</span>        }</div>
+<div class="line"><span class="lineno">  309</span> </div>
+<div class="line"><span class="lineno">  310</span>        mappings.erase(mapping.first);</div>
+<div class="line"><span class="lineno">  311</span>        mappings.insert(mapping);</div>
+<div class="line"><span class="lineno">  312</span>        this-&gt;notify_observers(mapping.first);</div>
+<div class="line"><span class="lineno">  313</span>        <span class="keywordflow">return</span> 0;</div>
+<div class="line"><span class="lineno">  314</span>    }</div>
 </div><!-- fragment -->
 </div>
 </div>

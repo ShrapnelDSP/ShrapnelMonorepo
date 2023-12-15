@@ -118,48 +118,11 @@ and</li>
   <h2><span>Implementation</span></h2>
   <pre class="language-dart"><code class="language-dart">@override
 Widget build(BuildContext context) {
-  return ChangeNotifierProvider(
-    create: (context) {
-      final parameterService = Provider.of&lt;ParameterService&gt;(
-        context,
-        listen: false,
-      );
-
-      return StompboxModel(
-        parameters: [
-          AudioParameterDoubleModel(
-            groupName: _name,
-            name: &#39;DRIVE&#39;,
-            id: &#39;tubeScreamerDrive&#39;,
-            parameterService: parameterService,
-          ),
-          AudioParameterDoubleModel(
-            groupName: _name,
-            name: &#39;TONE&#39;,
-            id: &#39;tubeScreamerTone&#39;,
-            parameterService: parameterService,
-          ),
-          AudioParameterDoubleModel(
-            groupName: _name,
-            name: &#39;LEVEL&#39;,
-            id: &#39;tubeScreamerLevel&#39;,
-            parameterService: parameterService,
-          ),
-        ],
-        bypass: AudioParameterDoubleModel(
-          groupName: _name,
-          name: &#39;Bypass&#39;,
-          id: &#39;tubeScreamerBypass&#39;,
-          parameterService: parameterService,
-        ),
-      );
-    },
-    child: Stompbox(
-      name: _name,
-      onCardTap: onTap,
-      full: full,
-      primarySwatch: Colors.green,
-    ),
+  return Stompbox(
+    model: context.read&lt;TubeScreamerModel&gt;(),
+    onCardTap: onTap,
+    full: full,
+    primarySwatch: Colors.green,
   );
 }</code></pre>
 </section>

@@ -118,63 +118,10 @@ and</li>
   <h2><span>Implementation</span></h2>
   <pre class="language-dart"><code class="language-dart">@override
 Widget build(BuildContext context) {
-  return ChangeNotifierProvider(
-    create: (context) {
-      final parameterService =
-          Provider.of&lt;ParameterService&gt;(context, listen: false);
-
-      return AmplifierModel(
-        parameters: [
-          AudioParameterDoubleModel(
-            groupName: _name,
-            name: &#39;OD1&#47;OD2&#39;,
-            id: &#39;ampChannel&#39;,
-            parameterService: parameterService,
-          ),
-          AudioParameterDoubleModel(
-            groupName: _name,
-            name: &#39;Gain&#39;,
-            id: &#39;ampGain&#39;,
-            parameterService: parameterService,
-          ),
-          AudioParameterDoubleModel(
-            groupName: _name,
-            name: &#39;Bass&#39;,
-            id: &#39;bass&#39;,
-            parameterService: parameterService,
-          ),
-          AudioParameterDoubleModel(
-            groupName: _name,
-            name: &#39;Middle&#39;,
-            id: &#39;middle&#39;,
-            parameterService: parameterService,
-          ),
-          AudioParameterDoubleModel(
-            groupName: _name,
-            name: &#39;Treble&#39;,
-            id: &#39;treble&#39;,
-            parameterService: parameterService,
-          ),
-          AudioParameterDoubleModel(
-            groupName: _name,
-            name: &#39;Contour&#39;,
-            id: &#39;contour&#39;,
-            parameterService: parameterService,
-          ),
-          AudioParameterDoubleModel(
-            groupName: _name,
-            name: &#39;Volume&#39;,
-            id: &#39;volume&#39;,
-            parameterService: parameterService,
-          ),
-        ],
-      );
-    },
-    child: Amplifier(
-      name: _name,
-      onTap: onTap,
-      full: full,
-    ),
+  return Amplifier(
+    model: context.read&lt;ValvestateModel&gt;(),
+    onTap: onTap,
+    full: full,
   );
 }</code></pre>
 </section>

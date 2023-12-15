@@ -79,12 +79,11 @@
   <h2><span>Implementation</span></h2>
   <pre class="language-dart"><code class="language-dart">List&lt;Widget&gt; knobs(BuildContext context, double scaleFactor) {
   final knobs = &lt;Widget&gt;[];
-  final parameters = Provider.of&lt;AmplifierModel&gt;(context).parameters;
+  final parameters = model.parameters;
 
   for (var i = 0; i &lt; parameters.length; i++) {
     knobs.add(
-      ChangeNotifierProvider.value(
-        value: parameters[i],
+      parameters[i].provider(
         child: KnobWithLabel(
           isEnabled: full,
           knobSize: scaleFactor * 25,

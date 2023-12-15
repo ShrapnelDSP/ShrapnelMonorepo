@@ -77,9 +77,10 @@
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
   <pre class="language-dart"><code class="language-dart">void onUserChanged(double value) {
-  &#47;* setting value instead of _value to make sure listeners are notified *&#47;
-  this.value = value;
-  parameterService.sink.add(toJson());
+  _log.finest(&#39;user updated parameter $id to $value&#39;);
+  _controller.add(value);
+  parameterService
+      .parameterUpdatedByUser(AudioParameterDoubleData(value: value, id: id));
 }</code></pre>
 </section>
 

@@ -118,7 +118,8 @@ and</li>
   <h2><span>Implementation</span></h2>
   <pre class="language-dart"><code class="language-dart">@override
 Widget build(BuildContext context) {
-  final parameter = Provider.of&lt;AudioParameterDoubleModel&gt;(context);
+  final value = context.watch&lt;double&gt;();
+  final parameter = context.read&lt;AudioParameterDoubleModel&gt;();
   final learningState = context.watch&lt;MidiLearnState&gt;();
 
   return Column(
@@ -138,7 +139,7 @@ Widget build(BuildContext context) {
         child: Knob(
           key: Key(&#39;knob-${parameter.id}&#39;),
           onChanged: isEnabled ? parameter.onUserChanged : (_) {},
-          value: parameter.value,
+          value: value,
           size: knobSize,
         ),
       ),

@@ -268,7 +268,7 @@ Widget build(BuildContext context) {
                   unawaited(
                     mappings.createMapping(
                       MidiMappingEntry(
-                        id: context.read&lt;Uuid&gt;().v4(),
+                        id: context.read&lt;UuidService&gt;().v4(),
                         mapping: MidiMapping(
                           midiChannel: channel!,
                           ccNumber: ccNumber!,

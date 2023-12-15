@@ -60,31 +60,29 @@
 <h1><span class="kind-property">dataStream</span> property 
 </h1></div>
 
+        <section class="multi-line-signature">
+          
+          <a href="https://api.flutter.dev/flutter/dart-async/Stream-class.html">Stream</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/dart-core/Map-class.html">Map</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span>, <span class="type-parameter">dynamic</span>&gt;</span></span>&gt;</span>
+          <span class="name ">dataStream</span>
+          <div class="features"><span class="feature">late</span><span class="feature">final</span></div>
 
+        </section>
         
-<section id="getter">
-
-<section class="multi-line-signature">
-  
-  <span class="returntype"><a href="https://api.flutter.dev/flutter/dart-async/Stream-class.html">Stream</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/dart-core/Map-class.html">Map</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span>, <span class="type-parameter">dynamic</span>&gt;</span></span>&gt;</span></span>
-  <span class="name ">dataStream</span>
-  
-
-</section>
-
-
 <section class="desc markdown">
   <p>The stream of incoming messages</p>
 </section>
 
-
+        
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">Stream&lt;Map&lt;String, dynamic&gt;&gt; get dataStream =&gt; _websocket.dataStream.map(
+  <pre class="language-dart"><code class="language-dart">late final Stream&lt;Map&lt;String, dynamic&gt;&gt; dataStream = _websocket.dataStream
+    .map(
       (dynamic event) =&gt; json.decode(event as String) as Map&lt;String, dynamic&gt;,
+    )
+    .logFinest(
+      _log,
+      (event) =&gt; &#39;received: $event&#39;,
     );</code></pre>
-</section>
-
 </section>
 
 

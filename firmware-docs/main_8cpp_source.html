@@ -165,14 +165,14 @@ $(document).ready(function(){initNavTree('main_8cpp_source.html',''); initResiza
 <div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span><span class="preprocessor">#include &quot;<a class="code" href="midi__mapping__json__parser_8h.html">midi_mapping_json_parser.h</a>&quot;</span></div>
 <div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span><span class="preprocessor">#include &quot;<a class="code" href="midi__protocol_8h.html">midi_protocol.h</a>&quot;</span></div>
 <div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span><span class="preprocessor">#include &quot;<a class="code" href="midi__uart_8h.html">midi_uart.h</a>&quot;</span></div>
-<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span><span class="preprocessor">#include &quot;<a class="code" href="queue_8h.html">os/queue.h</a>&quot;</span></div>
-<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span><span class="preprocessor">#include &quot;<a class="code" href="timer_8h.html">os/timer.h</a>&quot;</span></div>
-<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span><span class="preprocessor">#include &quot;<a class="code" href="pcm3060_8h.html">pcm3060.h</a>&quot;</span></div>
-<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span><span class="preprocessor">#include &quot;<a class="code" href="profiling_8h.html">profiling.h</a>&quot;</span></div>
-<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span><span class="preprocessor">#include &quot;<a class="code" href="server_8h.html">server.h</a>&quot;</span></div>
-<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span><span class="preprocessor">#include &quot;<a class="code" href="wifi__state__machine_8h.html">wifi_state_machine.h</a>&quot;</span></div>
-<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span> </div>
-<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span><span class="preprocessor">#include &quot;iir_concrete.h&quot;</span></div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span><span class="preprocessor">#include &quot;<a class="code" href="debug_8h.html">os/debug.h</a>&quot;</span></div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span><span class="preprocessor">#include &quot;<a class="code" href="queue_8h.html">os/queue.h</a>&quot;</span></div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span><span class="preprocessor">#include &quot;<a class="code" href="timer_8h.html">os/timer.h</a>&quot;</span></div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span><span class="preprocessor">#include &quot;<a class="code" href="pcm3060_8h.html">pcm3060.h</a>&quot;</span></div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span><span class="preprocessor">#include &quot;<a class="code" href="presets__storage_8h.html">presets_storage.h</a>&quot;</span></div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span><span class="preprocessor">#include &quot;<a class="code" href="profiling_8h.html">profiling.h</a>&quot;</span></div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span><span class="preprocessor">#include &quot;<a class="code" href="server_8h.html">server.h</a>&quot;</span></div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span><span class="preprocessor">#include &quot;<a class="code" href="wifi__state__machine_8h.html">wifi_state_machine.h</a>&quot;</span></div>
 <div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span> </div>
 <div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span><span class="preprocessor">#define TAG &quot;main&quot;</span></div>
 <div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span><span class="preprocessor">#define QUEUE_LEN 4</span></div>
@@ -299,81 +299,81 @@ $(document).ready(function(){initNavTree('main_8cpp_source.html',''); initResiza
 <div class="line"><a id="l00203" name="l00203"></a><span class="lineno">  203</span>}</div>
 <div class="line"><a id="l00204" name="l00204"></a><span class="lineno">  204</span> </div>
 <div class="line"><a id="l00205" name="l00205"></a><span class="lineno">  205</span><span class="keywordtype">void</span> <a class="code hl_function" href="namespaceshrapnel.html#a9c85fa6a77cfb97394c46cf0ebe10298">nvs_debug_print</a>();</div>
-<div class="line"><a id="l00206" name="l00206"></a><span class="lineno">  206</span><span class="keywordtype">void</span> <a class="code hl_function" href="namespaceshrapnel.html#a37776d9dae07eb2a1568ed6eb5dd2e1f">debug_dump_task_list</a>();</div>
-<div class="line"><a id="l00207" name="l00207"></a><span class="lineno">  207</span> </div>
-<div class="line"><a id="l00208" name="l00208"></a><span class="lineno"><a class="line" href="namespaceshrapnel.html#a9f09f4ea750643310af9143a53735b7d">  208</a></span><span class="keyword">extern</span> <span class="stringliteral">&quot;C&quot;</span> <span class="keywordtype">void</span> <a class="code hl_function" href="namespaceshrapnel.html#a9f09f4ea750643310af9143a53735b7d">app_main</a>(<span class="keywordtype">void</span>)</div>
-<div class="line"><a id="l00209" name="l00209"></a><span class="lineno">  209</span>{</div>
-<div class="line"><a id="l00210" name="l00210"></a><span class="lineno">  210</span>    ESP_ERROR_CHECK(heap_caps_register_failed_alloc_callback(<a class="code hl_function" href="namespaceshrapnel.html#a9f01b77156c5fc53346d256b9735e6f8">failed_alloc_callback</a>));</div>
-<div class="line"><a id="l00211" name="l00211"></a><span class="lineno">  211</span> </div>
-<div class="line"><a id="l00212" name="l00212"></a><span class="lineno">  212</span>    ESP_ERROR_CHECK(nvs_flash_init());</div>
-<div class="line"><a id="l00213" name="l00213"></a><span class="lineno">  213</span>    <a class="code hl_function" href="namespaceshrapnel.html#a9c85fa6a77cfb97394c46cf0ebe10298">nvs_debug_print</a>();</div>
-<div class="line"><a id="l00214" name="l00214"></a><span class="lineno">  214</span>    ESP_ERROR_CHECK(esp_netif_init());</div>
-<div class="line"><a id="l00215" name="l00215"></a><span class="lineno">  215</span>    ESP_ERROR_CHECK(esp_event_loop_create_default());</div>
-<div class="line"><a id="l00216" name="l00216"></a><span class="lineno">  216</span> </div>
-<div class="line"><a id="l00217" name="l00217"></a><span class="lineno">  217</span>    <span class="keyword">auto</span> persistence = <a class="code hl_class" href="classshrapnel_1_1persistence_1_1EspStorage.html">persistence::EspStorage</a>{};</div>
-<div class="line"><a id="l00218" name="l00218"></a><span class="lineno">  218</span>    <span class="keyword">auto</span> audio_params = std::make_shared&lt;AudioParameters&gt;();</div>
-<div class="line"><a id="l00219" name="l00219"></a><span class="lineno">  219</span> </div>
-<div class="line"><a id="l00220" name="l00220"></a><span class="lineno">  220</span>    <a class="code hl_function" href="namespaceshrapnel.html#a2b47dde02734c93bbdabfd97cb23dd2a">i2c_setup</a>();</div>
-<div class="line"><a id="l00221" name="l00221"></a><span class="lineno">  221</span>    <a class="code hl_function" href="desktop_2profiling_8c.html#a58ceeae747d300e67b1ecf70a9b24526">profiling_init</a>(DMA_BUF_SIZE, SAMPLE_RATE);</div>
-<div class="line"><a id="l00222" name="l00222"></a><span class="lineno">  222</span> </div>
-<div class="line"><a id="l00223" name="l00223"></a><span class="lineno">  223</span>    <span class="comment">//dac must be powered up after the i2s clocks have stabilised</span></div>
-<div class="line"><a id="l00224" name="l00224"></a><span class="lineno">  224</span>    vTaskDelay(100 / portTICK_PERIOD_MS);</div>
-<div class="line"><a id="l00225" name="l00225"></a><span class="lineno">  225</span> </div>
-<div class="line"><a id="l00226" name="l00226"></a><span class="lineno">  226</span><span class="preprocessor">#if HARDWARE == HW_PCB_REV1</span></div>
-<div class="line"><a id="l00227" name="l00227"></a><span class="lineno">  227</span>    gpio_config_t io_conf = {</div>
-<div class="line"><a id="l00228" name="l00228"></a><span class="lineno">  228</span>        .pin_bit_mask = 1ULL &lt;&lt; GPIO_CODEC_NRESET,</div>
-<div class="line"><a id="l00229" name="l00229"></a><span class="lineno">  229</span>        .mode = GPIO_MODE_OUTPUT,</div>
-<div class="line"><a id="l00230" name="l00230"></a><span class="lineno">  230</span>        .pull_up_en = GPIO_PULLUP_DISABLE,</div>
-<div class="line"><a id="l00231" name="l00231"></a><span class="lineno">  231</span>        .pull_down_en = GPIO_PULLDOWN_DISABLE,</div>
-<div class="line"><a id="l00232" name="l00232"></a><span class="lineno">  232</span>        .intr_type = GPIO_INTR_DISABLE,</div>
-<div class="line"><a id="l00233" name="l00233"></a><span class="lineno">  233</span>    };</div>
-<div class="line"><a id="l00234" name="l00234"></a><span class="lineno">  234</span> </div>
-<div class="line"><a id="l00235" name="l00235"></a><span class="lineno">  235</span>    esp_err_t rc = gpio_set_level(GPIO_CODEC_NRESET, 0);</div>
-<div class="line"><a id="l00236" name="l00236"></a><span class="lineno">  236</span>    <span class="keywordflow">if</span>(rc != ESP_OK)</div>
-<div class="line"><a id="l00237" name="l00237"></a><span class="lineno">  237</span>    {</div>
-<div class="line"><a id="l00238" name="l00238"></a><span class="lineno">  238</span>        ESP_LOGE(TAG, <span class="stringliteral">&quot;gpio_set_level failed %d, %s&quot;</span>, rc, esp_err_to_name(rc));</div>
-<div class="line"><a id="l00239" name="l00239"></a><span class="lineno">  239</span>    }</div>
-<div class="line"><a id="l00240" name="l00240"></a><span class="lineno">  240</span> </div>
-<div class="line"><a id="l00241" name="l00241"></a><span class="lineno">  241</span>    rc = gpio_config(&amp;io_conf);</div>
-<div class="line"><a id="l00242" name="l00242"></a><span class="lineno">  242</span>    <span class="keywordflow">if</span>(rc != ESP_OK)</div>
-<div class="line"><a id="l00243" name="l00243"></a><span class="lineno">  243</span>    {</div>
-<div class="line"><a id="l00244" name="l00244"></a><span class="lineno">  244</span>        ESP_LOGE(TAG, <span class="stringliteral">&quot;gpio_config failed %d, %s&quot;</span>, rc, esp_err_to_name(rc));</div>
-<div class="line"><a id="l00245" name="l00245"></a><span class="lineno">  245</span>    }</div>
-<div class="line"><a id="l00246" name="l00246"></a><span class="lineno">  246</span> </div>
-<div class="line"><a id="l00247" name="l00247"></a><span class="lineno">  247</span>    vTaskDelay(5 / portTICK_PERIOD_MS);</div>
-<div class="line"><a id="l00248" name="l00248"></a><span class="lineno">  248</span> </div>
-<div class="line"><a id="l00249" name="l00249"></a><span class="lineno">  249</span>    rc = gpio_set_level(GPIO_CODEC_NRESET, 1);</div>
-<div class="line"><a id="l00250" name="l00250"></a><span class="lineno">  250</span>    <span class="keywordflow">if</span>(rc != ESP_OK)</div>
-<div class="line"><a id="l00251" name="l00251"></a><span class="lineno">  251</span>    {</div>
-<div class="line"><a id="l00252" name="l00252"></a><span class="lineno">  252</span>        ESP_LOGE(TAG, <span class="stringliteral">&quot;gpio_set_level failed %d, %s&quot;</span>, rc, esp_err_to_name(rc));</div>
-<div class="line"><a id="l00253" name="l00253"></a><span class="lineno">  253</span>    }</div>
-<div class="line"><a id="l00254" name="l00254"></a><span class="lineno">  254</span> </div>
-<div class="line"><a id="l00255" name="l00255"></a><span class="lineno">  255</span>    vTaskDelay(5 / portTICK_PERIOD_MS);</div>
-<div class="line"><a id="l00256" name="l00256"></a><span class="lineno">  256</span> </div>
-<div class="line"><a id="l00257" name="l00257"></a><span class="lineno">  257</span><span class="preprocessor">#endif</span></div>
-<div class="line"><a id="l00258" name="l00258"></a><span class="lineno">  258</span> </div>
-<div class="line"><a id="l00259" name="l00259"></a><span class="lineno">  259</span>    <a class="code hl_function" href="pcm3060_8h.html#ae4f3fcba29da4e434a2fb51e429c156b">pcm3060_init</a>(I2C_NUM, 0);</div>
-<div class="line"><a id="l00260" name="l00260"></a><span class="lineno">  260</span>    rc = <a class="code hl_function" href="pcm3060_8h.html#a4b08ec86eb0407470554c4e5c5759521">pcm3060_power_up</a>();</div>
-<div class="line"><a id="l00261" name="l00261"></a><span class="lineno">  261</span>    <span class="keywordflow">if</span>(rc != ESP_OK)</div>
-<div class="line"><a id="l00262" name="l00262"></a><span class="lineno">  262</span>    {</div>
-<div class="line"><a id="l00263" name="l00263"></a><span class="lineno">  263</span>        ESP_LOGE(TAG, <span class="stringliteral">&quot;pcm3060 power up failed&quot;</span>);</div>
-<div class="line"><a id="l00264" name="l00264"></a><span class="lineno">  264</span>    }</div>
-<div class="line"><a id="l00265" name="l00265"></a><span class="lineno">  265</span> </div>
-<div class="line"><a id="l00266" name="l00266"></a><span class="lineno">  266</span>    <span class="comment">/* Start the mdns service */</span></div>
-<div class="line"><a id="l00267" name="l00267"></a><span class="lineno">  267</span>    <a class="code hl_function" href="namespaceshrapnel.html#a62ed101f04b8c40f7fdc427e6b169353">start_mdns</a>();</div>
-<div class="line"><a id="l00268" name="l00268"></a><span class="lineno">  268</span> </div>
-<div class="line"><a id="l00269" name="l00269"></a><span class="lineno">  269</span><span class="preprocessor">#if 0</span></div>
-<div class="line"><a id="l00270" name="l00270"></a><span class="lineno">  270</span>    rc = xTaskCreate(<a class="code hl_function" href="desktop_2profiling_8c.html#aa8ff71a343036a362fc1953d5572d0ce">profiling_task</a>, <span class="stringliteral">&quot;i2s profiling&quot;</span>, 2000, NULL, tskIDLE_PRIORITY + 2, NULL);</div>
-<div class="line"><a id="l00271" name="l00271"></a><span class="lineno">  271</span>    <span class="keywordflow">if</span>(rc != pdPASS)</div>
-<div class="line"><a id="l00272" name="l00272"></a><span class="lineno">  272</span>    {</div>
-<div class="line"><a id="l00273" name="l00273"></a><span class="lineno">  273</span>        ESP_LOGE(TAG, <span class="stringliteral">&quot;Profiling task create failed %d&quot;</span>, rc);</div>
-<div class="line"><a id="l00274" name="l00274"></a><span class="lineno">  274</span>    }</div>
-<div class="line"><a id="l00275" name="l00275"></a><span class="lineno">  275</span><span class="preprocessor">#endif</span></div>
-<div class="line"><a id="l00276" name="l00276"></a><span class="lineno">  276</span> </div>
-<div class="line"><a id="l00277" name="l00277"></a><span class="lineno">  277</span>    esp_netif_create_default_wifi_sta();</div>
-<div class="line"><a id="l00278" name="l00278"></a><span class="lineno">  278</span>    esp_netif_create_default_wifi_ap();</div>
-<div class="line"><a id="l00279" name="l00279"></a><span class="lineno">  279</span>    wifi_init_config_t cfg = WIFI_INIT_CONFIG_DEFAULT();</div>
-<div class="line"><a id="l00280" name="l00280"></a><span class="lineno">  280</span>    ESP_ERROR_CHECK(esp_wifi_init(&amp;cfg));</div>
+<div class="line"><a id="l00206" name="l00206"></a><span class="lineno">  206</span> </div>
+<div class="line"><a id="l00207" name="l00207"></a><span class="lineno"><a class="line" href="namespaceshrapnel.html#a9f09f4ea750643310af9143a53735b7d">  207</a></span><span class="keyword">extern</span> <span class="stringliteral">&quot;C&quot;</span> <span class="keywordtype">void</span> <a class="code hl_function" href="namespaceshrapnel.html#a9f09f4ea750643310af9143a53735b7d">app_main</a>(<span class="keywordtype">void</span>)</div>
+<div class="line"><a id="l00208" name="l00208"></a><span class="lineno">  208</span>{</div>
+<div class="line"><a id="l00209" name="l00209"></a><span class="lineno">  209</span>    ESP_ERROR_CHECK(heap_caps_register_failed_alloc_callback(<a class="code hl_function" href="namespaceshrapnel.html#a9f01b77156c5fc53346d256b9735e6f8">failed_alloc_callback</a>));</div>
+<div class="line"><a id="l00210" name="l00210"></a><span class="lineno">  210</span> </div>
+<div class="line"><a id="l00211" name="l00211"></a><span class="lineno">  211</span>    ESP_ERROR_CHECK(nvs_flash_init());</div>
+<div class="line"><a id="l00212" name="l00212"></a><span class="lineno">  212</span>    <a class="code hl_function" href="namespaceshrapnel.html#a9c85fa6a77cfb97394c46cf0ebe10298">nvs_debug_print</a>();</div>
+<div class="line"><a id="l00213" name="l00213"></a><span class="lineno">  213</span>    ESP_ERROR_CHECK(esp_netif_init());</div>
+<div class="line"><a id="l00214" name="l00214"></a><span class="lineno">  214</span>    ESP_ERROR_CHECK(esp_event_loop_create_default());</div>
+<div class="line"><a id="l00215" name="l00215"></a><span class="lineno">  215</span> </div>
+<div class="line"><a id="l00216" name="l00216"></a><span class="lineno">  216</span>    <span class="keyword">auto</span> persistence = std::make_shared&lt;persistence::EspStorage&gt;();</div>
+<div class="line"><a id="l00217" name="l00217"></a><span class="lineno">  217</span>    <span class="keyword">auto</span> audio_params = std::make_shared&lt;AudioParameters&gt;();</div>
+<div class="line"><a id="l00218" name="l00218"></a><span class="lineno">  218</span> </div>
+<div class="line"><a id="l00219" name="l00219"></a><span class="lineno">  219</span>    <a class="code hl_function" href="namespaceshrapnel.html#a2b47dde02734c93bbdabfd97cb23dd2a">i2c_setup</a>();</div>
+<div class="line"><a id="l00220" name="l00220"></a><span class="lineno">  220</span>    <a class="code hl_function" href="desktop_2profiling_8c.html#a58ceeae747d300e67b1ecf70a9b24526">profiling_init</a>(DMA_BUF_SIZE, SAMPLE_RATE);</div>
+<div class="line"><a id="l00221" name="l00221"></a><span class="lineno">  221</span> </div>
+<div class="line"><a id="l00222" name="l00222"></a><span class="lineno">  222</span>    <span class="comment">//dac must be powered up after the i2s clocks have stabilised</span></div>
+<div class="line"><a id="l00223" name="l00223"></a><span class="lineno">  223</span>    vTaskDelay(100 / portTICK_PERIOD_MS);</div>
+<div class="line"><a id="l00224" name="l00224"></a><span class="lineno">  224</span> </div>
+<div class="line"><a id="l00225" name="l00225"></a><span class="lineno">  225</span><span class="preprocessor">#if HARDWARE == HW_PCB_REV1</span></div>
+<div class="line"><a id="l00226" name="l00226"></a><span class="lineno">  226</span>    gpio_config_t io_conf = {</div>
+<div class="line"><a id="l00227" name="l00227"></a><span class="lineno">  227</span>        .pin_bit_mask = 1ULL &lt;&lt; GPIO_CODEC_NRESET,</div>
+<div class="line"><a id="l00228" name="l00228"></a><span class="lineno">  228</span>        .mode = GPIO_MODE_OUTPUT,</div>
+<div class="line"><a id="l00229" name="l00229"></a><span class="lineno">  229</span>        .pull_up_en = GPIO_PULLUP_DISABLE,</div>
+<div class="line"><a id="l00230" name="l00230"></a><span class="lineno">  230</span>        .pull_down_en = GPIO_PULLDOWN_DISABLE,</div>
+<div class="line"><a id="l00231" name="l00231"></a><span class="lineno">  231</span>        .intr_type = GPIO_INTR_DISABLE,</div>
+<div class="line"><a id="l00232" name="l00232"></a><span class="lineno">  232</span>    };</div>
+<div class="line"><a id="l00233" name="l00233"></a><span class="lineno">  233</span> </div>
+<div class="line"><a id="l00234" name="l00234"></a><span class="lineno">  234</span>    esp_err_t rc = gpio_set_level(GPIO_CODEC_NRESET, 0);</div>
+<div class="line"><a id="l00235" name="l00235"></a><span class="lineno">  235</span>    <span class="keywordflow">if</span>(rc != ESP_OK)</div>
+<div class="line"><a id="l00236" name="l00236"></a><span class="lineno">  236</span>    {</div>
+<div class="line"><a id="l00237" name="l00237"></a><span class="lineno">  237</span>        ESP_LOGE(TAG, <span class="stringliteral">&quot;gpio_set_level failed %d, %s&quot;</span>, rc, esp_err_to_name(rc));</div>
+<div class="line"><a id="l00238" name="l00238"></a><span class="lineno">  238</span>    }</div>
+<div class="line"><a id="l00239" name="l00239"></a><span class="lineno">  239</span> </div>
+<div class="line"><a id="l00240" name="l00240"></a><span class="lineno">  240</span>    rc = gpio_config(&amp;io_conf);</div>
+<div class="line"><a id="l00241" name="l00241"></a><span class="lineno">  241</span>    <span class="keywordflow">if</span>(rc != ESP_OK)</div>
+<div class="line"><a id="l00242" name="l00242"></a><span class="lineno">  242</span>    {</div>
+<div class="line"><a id="l00243" name="l00243"></a><span class="lineno">  243</span>        ESP_LOGE(TAG, <span class="stringliteral">&quot;gpio_config failed %d, %s&quot;</span>, rc, esp_err_to_name(rc));</div>
+<div class="line"><a id="l00244" name="l00244"></a><span class="lineno">  244</span>    }</div>
+<div class="line"><a id="l00245" name="l00245"></a><span class="lineno">  245</span> </div>
+<div class="line"><a id="l00246" name="l00246"></a><span class="lineno">  246</span>    vTaskDelay(5 / portTICK_PERIOD_MS);</div>
+<div class="line"><a id="l00247" name="l00247"></a><span class="lineno">  247</span> </div>
+<div class="line"><a id="l00248" name="l00248"></a><span class="lineno">  248</span>    rc = gpio_set_level(GPIO_CODEC_NRESET, 1);</div>
+<div class="line"><a id="l00249" name="l00249"></a><span class="lineno">  249</span>    <span class="keywordflow">if</span>(rc != ESP_OK)</div>
+<div class="line"><a id="l00250" name="l00250"></a><span class="lineno">  250</span>    {</div>
+<div class="line"><a id="l00251" name="l00251"></a><span class="lineno">  251</span>        ESP_LOGE(TAG, <span class="stringliteral">&quot;gpio_set_level failed %d, %s&quot;</span>, rc, esp_err_to_name(rc));</div>
+<div class="line"><a id="l00252" name="l00252"></a><span class="lineno">  252</span>    }</div>
+<div class="line"><a id="l00253" name="l00253"></a><span class="lineno">  253</span> </div>
+<div class="line"><a id="l00254" name="l00254"></a><span class="lineno">  254</span>    vTaskDelay(5 / portTICK_PERIOD_MS);</div>
+<div class="line"><a id="l00255" name="l00255"></a><span class="lineno">  255</span> </div>
+<div class="line"><a id="l00256" name="l00256"></a><span class="lineno">  256</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00257" name="l00257"></a><span class="lineno">  257</span> </div>
+<div class="line"><a id="l00258" name="l00258"></a><span class="lineno">  258</span>    <a class="code hl_function" href="pcm3060_8h.html#ae4f3fcba29da4e434a2fb51e429c156b">pcm3060_init</a>(I2C_NUM, 0);</div>
+<div class="line"><a id="l00259" name="l00259"></a><span class="lineno">  259</span>    rc = <a class="code hl_function" href="pcm3060_8h.html#a4b08ec86eb0407470554c4e5c5759521">pcm3060_power_up</a>();</div>
+<div class="line"><a id="l00260" name="l00260"></a><span class="lineno">  260</span>    <span class="keywordflow">if</span>(rc != ESP_OK)</div>
+<div class="line"><a id="l00261" name="l00261"></a><span class="lineno">  261</span>    {</div>
+<div class="line"><a id="l00262" name="l00262"></a><span class="lineno">  262</span>        ESP_LOGE(TAG, <span class="stringliteral">&quot;pcm3060 power up failed&quot;</span>);</div>
+<div class="line"><a id="l00263" name="l00263"></a><span class="lineno">  263</span>    }</div>
+<div class="line"><a id="l00264" name="l00264"></a><span class="lineno">  264</span> </div>
+<div class="line"><a id="l00265" name="l00265"></a><span class="lineno">  265</span>    <span class="comment">/* Start the mdns service */</span></div>
+<div class="line"><a id="l00266" name="l00266"></a><span class="lineno">  266</span>    <a class="code hl_function" href="namespaceshrapnel.html#a62ed101f04b8c40f7fdc427e6b169353">start_mdns</a>();</div>
+<div class="line"><a id="l00267" name="l00267"></a><span class="lineno">  267</span> </div>
+<div class="line"><a id="l00268" name="l00268"></a><span class="lineno">  268</span><span class="preprocessor">#if 0</span></div>
+<div class="line"><a id="l00269" name="l00269"></a><span class="lineno">  269</span>    rc = xTaskCreate(<a class="code hl_function" href="desktop_2profiling_8c.html#aa8ff71a343036a362fc1953d5572d0ce">profiling_task</a>, <span class="stringliteral">&quot;i2s profiling&quot;</span>, 2000, NULL, tskIDLE_PRIORITY + 2, NULL);</div>
+<div class="line"><a id="l00270" name="l00270"></a><span class="lineno">  270</span>    <span class="keywordflow">if</span>(rc != pdPASS)</div>
+<div class="line"><a id="l00271" name="l00271"></a><span class="lineno">  271</span>    {</div>
+<div class="line"><a id="l00272" name="l00272"></a><span class="lineno">  272</span>        ESP_LOGE(TAG, <span class="stringliteral">&quot;Profiling task create failed %d&quot;</span>, rc);</div>
+<div class="line"><a id="l00273" name="l00273"></a><span class="lineno">  273</span>    }</div>
+<div class="line"><a id="l00274" name="l00274"></a><span class="lineno">  274</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00275" name="l00275"></a><span class="lineno">  275</span> </div>
+<div class="line"><a id="l00276" name="l00276"></a><span class="lineno">  276</span>    esp_netif_create_default_wifi_sta();</div>
+<div class="line"><a id="l00277" name="l00277"></a><span class="lineno">  277</span>    esp_netif_create_default_wifi_ap();</div>
+<div class="line"><a id="l00278" name="l00278"></a><span class="lineno">  278</span>    wifi_init_config_t cfg = WIFI_INIT_CONFIG_DEFAULT();</div>
+<div class="line"><a id="l00279" name="l00279"></a><span class="lineno">  279</span>    ESP_ERROR_CHECK(esp_wifi_init(&amp;cfg));</div>
+<div class="line"><a id="l00280" name="l00280"></a><span class="lineno">  280</span>    ESP_ERROR_CHECK(esp_wifi_set_ps(WIFI_PS_NONE));</div>
 <div class="line"><a id="l00281" name="l00281"></a><span class="lineno">  281</span> </div>
 <div class="line"><a id="l00282" name="l00282"></a><span class="lineno">  282</span>    <span class="keyword">auto</span> wifi_queue = <a class="code hl_typedef" href="main_8cpp.html#a69811aaa1a7fd4891677577d309248e6">WifiQueue</a>();</div>
 <div class="line"><a id="l00283" name="l00283"></a><span class="lineno">  283</span> </div>
@@ -439,7 +439,7 @@ $(document).ready(function(){initNavTree('main_8cpp_source.html',''); initResiza
 <div class="line"><a id="l00343" name="l00343"></a><span class="lineno">  343</span> </div>
 <div class="line"><a id="l00344" name="l00344"></a><span class="lineno">  344</span>    <span class="keyword">auto</span> midi_uart = <span class="keyword">new</span> <a class="code hl_class" href="classshrapnel_1_1midi_1_1EspMidiUart.html">midi::EspMidiUart</a>(UART_NUM_MIDI, GPIO_NUM_MIDI);</div>
 <div class="line"><a id="l00345" name="l00345"></a><span class="lineno">  345</span> </div>
-<div class="line"><a id="l00346" name="l00346"></a><span class="lineno">  346</span>    <a class="code hl_function" href="namespaceshrapnel.html#a37776d9dae07eb2a1568ed6eb5dd2e1f">debug_dump_task_list</a>();</div>
+<div class="line"><a id="l00346" name="l00346"></a><span class="lineno">  346</span>    <a class="code hl_function" href="debug_8cpp.html#a17e92714f3dc502fe3bae30fd4201a57">debug_dump_task_list</a>();</div>
 <div class="line"><a id="l00347" name="l00347"></a><span class="lineno">  347</span> </div>
 <div class="line"><a id="l00348" name="l00348"></a><span class="lineno">  348</span>    <span class="keyword">auto</span> send_message = [&amp;](<span class="keyword">const</span> <a class="code hl_typedef" href="messages_8h.html#a4a2a8445978c00038c4b9a0d35ca7a69">AppMessage</a> &amp;message)</div>
 <div class="line"><a id="l00349" name="l00349"></a><span class="lineno">  349</span>    {</div>
@@ -503,45 +503,41 @@ $(document).ready(function(){initNavTree('main_8cpp_source.html',''); initResiza
 <div class="line"><a id="l00407" name="l00407"></a><span class="lineno">  407</span>    }</div>
 <div class="line"><a id="l00408" name="l00408"></a><span class="lineno">  408</span>}</div>
 <div class="line"><a id="l00409" name="l00409"></a><span class="lineno">  409</span> </div>
-<div class="line"><a id="l00410" name="l00410"></a><span class="lineno"><a class="line" href="namespaceshrapnel.html#a37776d9dae07eb2a1568ed6eb5dd2e1f">  410</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="namespaceshrapnel.html#a37776d9dae07eb2a1568ed6eb5dd2e1f">debug_dump_task_list</a>()</div>
+<div class="line"><a id="l00410" name="l00410"></a><span class="lineno"><a class="line" href="namespaceshrapnel.html#a9c85fa6a77cfb97394c46cf0ebe10298">  410</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="namespaceshrapnel.html#a9c85fa6a77cfb97394c46cf0ebe10298">nvs_debug_print</a>()</div>
 <div class="line"><a id="l00411" name="l00411"></a><span class="lineno">  411</span>{</div>
-<div class="line"><a id="l00412" name="l00412"></a><span class="lineno">  412</span><span class="preprocessor">#if configUSE_TRACE_FACILITY &amp;&amp; configUSE_STATS_FORMATTING_FUNCTIONS</span></div>
-<div class="line"><a id="l00413" name="l00413"></a><span class="lineno">  413</span>    <span class="keyword">constexpr</span> <span class="keywordtype">size_t</span> characters_per_task = 40;</div>
-<div class="line"><a id="l00414" name="l00414"></a><span class="lineno">  414</span>    <span class="keyword">constexpr</span> <span class="keywordtype">size_t</span> approximate_task_count = 20;</div>
-<div class="line"><a id="l00415" name="l00415"></a><span class="lineno">  415</span>    <span class="keywordtype">char</span> buffer[characters_per_task * approximate_task_count + 1] = {0};</div>
-<div class="line"><a id="l00416" name="l00416"></a><span class="lineno">  416</span>    vTaskList(buffer);</div>
-<div class="line"><a id="l00417" name="l00417"></a><span class="lineno">  417</span>    <span class="comment">// crash if the buffer was overflowed</span></div>
-<div class="line"><a id="l00418" name="l00418"></a><span class="lineno">  418</span>    assert(buffer[<span class="keyword">sizeof</span>(buffer) - 1] == <span class="charliteral">&#39;\0&#39;</span>);</div>
-<div class="line"><a id="l00419" name="l00419"></a><span class="lineno">  419</span>    ESP_LOGI(TAG, <span class="stringliteral">&quot;Task list:\n%s&quot;</span>, buffer);</div>
-<div class="line"><a id="l00420" name="l00420"></a><span class="lineno">  420</span><span class="preprocessor">#endif</span></div>
-<div class="line"><a id="l00421" name="l00421"></a><span class="lineno">  421</span>}</div>
-<div class="line"><a id="l00422" name="l00422"></a><span class="lineno">  422</span> </div>
-<div class="line"><a id="l00423" name="l00423"></a><span class="lineno"><a class="line" href="namespaceshrapnel.html#a9c85fa6a77cfb97394c46cf0ebe10298">  423</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="namespaceshrapnel.html#a9c85fa6a77cfb97394c46cf0ebe10298">nvs_debug_print</a>()</div>
-<div class="line"><a id="l00424" name="l00424"></a><span class="lineno">  424</span>{</div>
-<div class="line"><a id="l00425" name="l00425"></a><span class="lineno">  425</span>    nvs_iterator_t it = NULL;</div>
-<div class="line"><a id="l00426" name="l00426"></a><span class="lineno">  426</span>    esp_err_t res = nvs_entry_find(<span class="stringliteral">&quot;nvs&quot;</span>, <span class="stringliteral">&quot;persistence&quot;</span>, NVS_TYPE_ANY, &amp;it);</div>
-<div class="line"><a id="l00427" name="l00427"></a><span class="lineno">  427</span>    <span class="keywordflow">while</span>(res == ESP_OK) {</div>
-<div class="line"><a id="l00428" name="l00428"></a><span class="lineno">  428</span>        nvs_entry_info_t info;</div>
-<div class="line"><a id="l00429" name="l00429"></a><span class="lineno">  429</span>        nvs_entry_info(it, &amp;info); <span class="comment">// Can omit error check if parameters are guaranteed to be non-NULL</span></div>
-<div class="line"><a id="l00430" name="l00430"></a><span class="lineno">  430</span>        ESP_LOGI(TAG, <span class="stringliteral">&quot;key &#39;%s&#39;, type &#39;%d&#39;&quot;</span>, info.key, info.type);</div>
-<div class="line"><a id="l00431" name="l00431"></a><span class="lineno">  431</span>        res = nvs_entry_next(&amp;it);</div>
-<div class="line"><a id="l00432" name="l00432"></a><span class="lineno">  432</span>    }</div>
-<div class="line"><a id="l00433" name="l00433"></a><span class="lineno">  433</span>    nvs_release_iterator(it);</div>
-<div class="line"><a id="l00434" name="l00434"></a><span class="lineno">  434</span>}</div>
-<div class="line"><a id="l00435" name="l00435"></a><span class="lineno">  435</span> </div>
-<div class="line"><a id="l00436" name="l00436"></a><span class="lineno">  436</span>} <span class="comment">// namespace shrapnel</span></div>
+<div class="line"><a id="l00412" name="l00412"></a><span class="lineno">  412</span>    ESP_LOGI(TAG, <span class="stringliteral">&quot;dumping NVS using C interface&quot;</span>);</div>
+<div class="line"><a id="l00413" name="l00413"></a><span class="lineno">  413</span>    nvs_iterator_t it = NULL;</div>
+<div class="line"><a id="l00414" name="l00414"></a><span class="lineno">  414</span>    esp_err_t res = nvs_entry_find(<span class="stringliteral">&quot;nvs&quot;</span>, <span class="stringliteral">&quot;persistence&quot;</span>, NVS_TYPE_ANY, &amp;it);</div>
+<div class="line"><a id="l00415" name="l00415"></a><span class="lineno">  415</span>    <span class="keywordflow">while</span>(res == ESP_OK) {</div>
+<div class="line"><a id="l00416" name="l00416"></a><span class="lineno">  416</span>        nvs_entry_info_t info;</div>
+<div class="line"><a id="l00417" name="l00417"></a><span class="lineno">  417</span>        nvs_entry_info(it, &amp;info); <span class="comment">// Can omit error check if parameters are guaranteed to be non-NULL</span></div>
+<div class="line"><a id="l00418" name="l00418"></a><span class="lineno">  418</span>        ESP_LOGI(TAG, <span class="stringliteral">&quot;key &#39;%s&#39;, type &#39;%d&#39;&quot;</span>, info.key, info.type);</div>
+<div class="line"><a id="l00419" name="l00419"></a><span class="lineno">  419</span>        res = nvs_entry_next(&amp;it);</div>
+<div class="line"><a id="l00420" name="l00420"></a><span class="lineno">  420</span>    }</div>
+<div class="line"><a id="l00421" name="l00421"></a><span class="lineno">  421</span>    nvs_release_iterator(it);</div>
+<div class="line"><a id="l00422" name="l00422"></a><span class="lineno">  422</span>    </div>
+<div class="line"><a id="l00423" name="l00423"></a><span class="lineno">  423</span>    ESP_LOGI(TAG, <span class="stringliteral">&quot;dumping NVS using C++ abstraction&quot;</span>);</div>
+<div class="line"><a id="l00424" name="l00424"></a><span class="lineno">  424</span>    <span class="keyword">auto</span> storage = <a class="code hl_class" href="classshrapnel_1_1presets__storage_1_1Storage.html">presets_storage::Storage</a>();</div>
+<div class="line"><a id="l00425" name="l00425"></a><span class="lineno">  425</span>    <span class="keywordflow">for</span>(<span class="keyword">const</span> <span class="keyword">auto</span>&amp; info : storage ) {</div>
+<div class="line"><a id="l00426" name="l00426"></a><span class="lineno">  426</span>        ESP_LOGI(TAG, <span class="stringliteral">&quot;key &#39;%s&#39;, type &#39;%d&#39;&quot;</span>, info.key, info.type);</div>
+<div class="line"><a id="l00427" name="l00427"></a><span class="lineno">  427</span>    }</div>
+<div class="line"><a id="l00428" name="l00428"></a><span class="lineno">  428</span>}</div>
+<div class="line"><a id="l00429" name="l00429"></a><span class="lineno">  429</span> </div>
+<div class="line"><a id="l00430" name="l00430"></a><span class="lineno">  430</span>} <span class="comment">// namespace shrapnel</span></div>
 <div class="ttc" id="aaudio__events_8h_html"><div class="ttname"><a href="audio__events_8h.html">audio_events.h</a></div></div>
 <div class="ttc" id="aaudio__param_8h_html"><div class="ttname"><a href="audio__param_8h.html">audio_param.h</a></div></div>
-<div class="ttc" id="aclassshrapnel_1_1MainThread_html"><div class="ttname"><a href="classshrapnel_1_1MainThread.html">shrapnel::MainThread</a></div><div class="ttdef"><b>Definition:</b> <a href="main__thread_8h_source.html#l00219">main_thread.h:220</a></div></div>
+<div class="ttc" id="aclassshrapnel_1_1MainThread_html"><div class="ttname"><a href="classshrapnel_1_1MainThread.html">shrapnel::MainThread</a></div><div class="ttdef"><b>Definition:</b> <a href="main__thread_8h_source.html#l00224">main_thread.h:225</a></div></div>
 <div class="ttc" id="aclassshrapnel_1_1Queue_html"><div class="ttname"><a href="classshrapnel_1_1Queue.html">shrapnel::Queue</a></div><div class="ttdef"><b>Definition:</b> <a href="queue_8h_source.html#l00050">queue.h:51</a></div></div>
 <div class="ttc" id="aclassshrapnel_1_1Server_html"><div class="ttname"><a href="classshrapnel_1_1Server.html">shrapnel::Server</a></div><div class="ttdef"><b>Definition:</b> <a href="server_8h_source.html#l00030">server.h:31</a></div></div>
 <div class="ttc" id="aclassshrapnel_1_1midi_1_1EspMidiUart_html"><div class="ttname"><a href="classshrapnel_1_1midi_1_1EspMidiUart.html">shrapnel::midi::EspMidiUart</a></div><div class="ttdef"><b>Definition:</b> <a href="midi__uart_8h_source.html#l00037">midi_uart.h:37</a></div></div>
-<div class="ttc" id="aclassshrapnel_1_1persistence_1_1EspStorage_html"><div class="ttname"><a href="classshrapnel_1_1persistence_1_1EspStorage.html">shrapnel::persistence::EspStorage</a></div><div class="ttdoc">Persistent storage implemented using ESP32 nvs component.</div><div class="ttdef"><b>Definition:</b> <a href="esp__persistence_8h_source.html#l00030">esp_persistence.h:30</a></div></div>
+<div class="ttc" id="aclassshrapnel_1_1presets__storage_1_1Storage_html"><div class="ttname"><a href="classshrapnel_1_1presets__storage_1_1Storage.html">shrapnel::presets_storage::Storage</a></div><div class="ttdoc">Interface for storing persistent data.</div><div class="ttdef"><b>Definition:</b> <a href="presets__storage_8h_source.html#l00052">presets_storage.h:53</a></div></div>
 <div class="ttc" id="aclassshrapnel_1_1wifi_1_1WifiStateMachine_html"><div class="ttname"><a href="classshrapnel_1_1wifi_1_1WifiStateMachine.html">shrapnel::wifi::WifiStateMachine</a></div><div class="ttdef"><b>Definition:</b> <a href="wifi__state__machine_8h_source.html#l00118">wifi_state_machine.h:118</a></div></div>
 <div class="ttc" id="aclassshrapnel_1_1wifi_1_1WifiStateMachine_html_a45fa4c2f5bfd4399d1419b3681e75656"><div class="ttname"><a href="classshrapnel_1_1wifi_1_1WifiStateMachine.html#a45fa4c2f5bfd4399d1419b3681e75656">shrapnel::wifi::WifiStateMachine::state_table</a></div><div class="ttdeci">static const state state_table[7]</div><div class="ttdef"><b>Definition:</b> <a href="wifi__state__machine_8h_source.html#l00132">wifi_state_machine.h:132</a></div></div>
 <div class="ttc" id="aclassshrapnel_1_1wifi_1_1WifiStateMachine_html_a86185bd538ac8cb096a0e3d7fd1f217a"><div class="ttname"><a href="classshrapnel_1_1wifi_1_1WifiStateMachine.html#a86185bd538ac8cb096a0e3d7fd1f217a">shrapnel::wifi::WifiStateMachine::transition_table</a></div><div class="ttdeci">static const transition transition_table[12]</div><div class="ttdef"><b>Definition:</b> <a href="wifi__state__machine_8h_source.html#l00131">wifi_state_machine.h:131</a></div></div>
 <div class="ttc" id="acmd__handling_8h_html"><div class="ttname"><a href="cmd__handling_8h.html">cmd_handling.h</a></div></div>
 <div class="ttc" id="acmd__handling__api_8h_html"><div class="ttname"><a href="cmd__handling__api_8h.html">cmd_handling_api.h</a></div></div>
+<div class="ttc" id="adebug_8cpp_html_a17e92714f3dc502fe3bae30fd4201a57"><div class="ttname"><a href="debug_8cpp.html#a17e92714f3dc502fe3bae30fd4201a57">debug_dump_task_list</a></div><div class="ttdeci">void debug_dump_task_list()</div><div class="ttdef"><b>Definition:</b> <a href="debug_8cpp_source.html#l00026">debug.cpp:26</a></div></div>
+<div class="ttc" id="adebug_8h_html"><div class="ttname"><a href="debug_8h.html">debug.h</a></div></div>
 <div class="ttc" id="adesktop_2profiling_8c_html_a58ceeae747d300e67b1ecf70a9b24526"><div class="ttname"><a href="desktop_2profiling_8c.html#a58ceeae747d300e67b1ecf70a9b24526">profiling_init</a></div><div class="ttdeci">void profiling_init(size_t buffer_size, float sample_rate)</div><div class="ttdef"><b>Definition:</b> <a href="desktop_2profiling_8c_source.html#l00022">profiling.c:22</a></div></div>
 <div class="ttc" id="adesktop_2profiling_8c_html_aa8ff71a343036a362fc1953d5572d0ce"><div class="ttname"><a href="desktop_2profiling_8c.html#aa8ff71a343036a362fc1953d5572d0ce">profiling_task</a></div><div class="ttdeci">void profiling_task(void *param)</div><div class="ttdef"><b>Definition:</b> <a href="desktop_2profiling_8c_source.html#l00032">profiling.c:32</a></div></div>
 <div class="ttc" id="aesp__persistence_8h_html"><div class="ttname"><a href="esp__persistence_8h.html">esp_persistence.h</a></div></div>
@@ -550,7 +546,7 @@ $(document).ready(function(){initNavTree('main_8cpp_source.html',''); initResiza
 <div class="ttc" id="amain_8cpp_html_a69811aaa1a7fd4891677577d309248e6"><div class="ttname"><a href="main_8cpp.html#a69811aaa1a7fd4891677577d309248e6">WifiQueue</a></div><div class="ttdeci">shrapnel::Queue&lt; shrapnel::wifi::InternalEvent, 3 &gt; WifiQueue</div><div class="ttdef"><b>Definition:</b> <a href="main_8cpp_source.html#l00085">main.cpp:85</a></div></div>
 <div class="ttc" id="amain__thread_8h_html"><div class="ttname"><a href="main__thread_8h.html">main_thread.h</a></div></div>
 <div class="ttc" id="amessages_8h_html"><div class="ttname"><a href="messages_8h.html">messages.h</a></div></div>
-<div class="ttc" id="amessages_8h_html_a4a2a8445978c00038c4b9a0d35ca7a69"><div class="ttname"><a href="messages_8h.html#a4a2a8445978c00038c4b9a0d35ca7a69">AppMessage</a></div><div class="ttdeci">std::pair&lt; ApiMessage, FileDescriptor &gt; AppMessage</div><div class="ttdef"><b>Definition:</b> <a href="messages_8h_source.html#l00032">messages.h:32</a></div></div>
+<div class="ttc" id="amessages_8h_html_a4a2a8445978c00038c4b9a0d35ca7a69"><div class="ttname"><a href="messages_8h.html#a4a2a8445978c00038c4b9a0d35ca7a69">AppMessage</a></div><div class="ttdeci">std::pair&lt; ApiMessage, FileDescriptor &gt; AppMessage</div><div class="ttdef"><b>Definition:</b> <a href="messages_8h_source.html#l00037">messages.h:37</a></div></div>
 <div class="ttc" id="amidi__mapping_8h_html"><div class="ttname"><a href="midi__mapping_8h.html">midi_mapping.h</a></div><div class="ttdoc">Mapping MIDI commands to audio parameter changes.</div></div>
 <div class="ttc" id="amidi__mapping__api_8h_html"><div class="ttname"><a href="midi__mapping__api_8h.html">midi_mapping_api.h</a></div></div>
 <div class="ttc" id="amidi__mapping__json__builder_8h_html"><div class="ttname"><a href="midi__mapping__json__builder_8h.html">midi_mapping_json_builder.h</a></div></div>
@@ -562,18 +558,18 @@ $(document).ready(function(){initNavTree('main_8cpp_source.html',''); initResiza
 <div class="ttc" id="anamespaceshrapnel_1_1audio_html_ab7793cdc1c2c73fcdcba8fea2f35c9c8"><div class="ttname"><a href="namespaceshrapnel_1_1audio.html#ab7793cdc1c2c73fcdcba8fea2f35c9c8">shrapnel::audio::i2s_queue</a></div><div class="ttdeci">QueueHandle_t i2s_queue</div><div class="ttdef"><b>Definition:</b> <a href="i2s_8cpp_source.html#l00052">i2s.cpp:52</a></div></div>
 <div class="ttc" id="anamespaceshrapnel_html"><div class="ttname"><a href="namespaceshrapnel.html">shrapnel</a></div><div class="ttdef"><b>Definition:</b> <a href="audio__processor_8h_source.html#l00032">audio_processor.h:32</a></div></div>
 <div class="ttc" id="anamespaceshrapnel_html_a2b47dde02734c93bbdabfd97cb23dd2a"><div class="ttname"><a href="namespaceshrapnel.html#a2b47dde02734c93bbdabfd97cb23dd2a">shrapnel::i2c_setup</a></div><div class="ttdeci">static void i2c_setup(void)</div><div class="ttdef"><b>Definition:</b> <a href="main_8cpp_source.html#l00180">main.cpp:180</a></div></div>
-<div class="ttc" id="anamespaceshrapnel_html_a37776d9dae07eb2a1568ed6eb5dd2e1f"><div class="ttname"><a href="namespaceshrapnel.html#a37776d9dae07eb2a1568ed6eb5dd2e1f">shrapnel::debug_dump_task_list</a></div><div class="ttdeci">void debug_dump_task_list()</div><div class="ttdef"><b>Definition:</b> <a href="main_8cpp_source.html#l00410">main.cpp:410</a></div></div>
 <div class="ttc" id="anamespaceshrapnel_html_a4bf0b1d7c4fef2839a56059a237d1da6"><div class="ttname"><a href="namespaceshrapnel.html#a4bf0b1d7c4fef2839a56059a237d1da6">shrapnel::connect_handler</a></div><div class="ttdeci">static void connect_handler(void *arg, esp_event_base_t event_base, int32_t event_id, void *event_data)</div><div class="ttdef"><b>Definition:</b> <a href="main_8cpp_source.html#l00116">main.cpp:116</a></div></div>
 <div class="ttc" id="anamespaceshrapnel_html_a62ed101f04b8c40f7fdc427e6b169353"><div class="ttname"><a href="namespaceshrapnel.html#a62ed101f04b8c40f7fdc427e6b169353">shrapnel::start_mdns</a></div><div class="ttdeci">static void start_mdns(void)</div><div class="ttdef"><b>Definition:</b> <a href="main_8cpp_source.html#l00149">main.cpp:149</a></div></div>
-<div class="ttc" id="anamespaceshrapnel_html_a9c85fa6a77cfb97394c46cf0ebe10298"><div class="ttname"><a href="namespaceshrapnel.html#a9c85fa6a77cfb97394c46cf0ebe10298">shrapnel::nvs_debug_print</a></div><div class="ttdeci">void nvs_debug_print()</div><div class="ttdef"><b>Definition:</b> <a href="main_8cpp_source.html#l00423">main.cpp:423</a></div></div>
+<div class="ttc" id="anamespaceshrapnel_html_a9c85fa6a77cfb97394c46cf0ebe10298"><div class="ttname"><a href="namespaceshrapnel.html#a9c85fa6a77cfb97394c46cf0ebe10298">shrapnel::nvs_debug_print</a></div><div class="ttdeci">void nvs_debug_print()</div><div class="ttdef"><b>Definition:</b> <a href="main_8cpp_source.html#l00410">main.cpp:410</a></div></div>
 <div class="ttc" id="anamespaceshrapnel_html_a9f01b77156c5fc53346d256b9735e6f8"><div class="ttname"><a href="namespaceshrapnel.html#a9f01b77156c5fc53346d256b9735e6f8">shrapnel::failed_alloc_callback</a></div><div class="ttdeci">static void failed_alloc_callback(size_t size, uint32_t caps, const char *function_name)</div><div class="ttdef"><b>Definition:</b> <a href="main_8cpp_source.html#l00198">main.cpp:198</a></div></div>
-<div class="ttc" id="anamespaceshrapnel_html_a9f09f4ea750643310af9143a53735b7d"><div class="ttname"><a href="namespaceshrapnel.html#a9f09f4ea750643310af9143a53735b7d">shrapnel::app_main</a></div><div class="ttdeci">void app_main(void)</div><div class="ttdef"><b>Definition:</b> <a href="main_8cpp_source.html#l00208">main.cpp:208</a></div></div>
+<div class="ttc" id="anamespaceshrapnel_html_a9f09f4ea750643310af9143a53735b7d"><div class="ttname"><a href="namespaceshrapnel.html#a9f09f4ea750643310af9143a53735b7d">shrapnel::app_main</a></div><div class="ttdeci">void app_main(void)</div><div class="ttdef"><b>Definition:</b> <a href="main_8cpp_source.html#l00207">main.cpp:207</a></div></div>
 <div class="ttc" id="anamespaceshrapnel_html_ad3636f58faa95196bef6352b331ed3da"><div class="ttname"><a href="namespaceshrapnel.html#ad3636f58faa95196bef6352b331ed3da">shrapnel::wifi_start_handler</a></div><div class="ttdeci">static void wifi_start_handler(void *arg, esp_event_base_t event_base, int32_t event_id, void *event_data)</div><div class="ttdef"><b>Definition:</b> <a href="main_8cpp_source.html#l00133">main.cpp:133</a></div></div>
 <div class="ttc" id="anamespaceshrapnel_html_ae3cbca1e45f686a5790d51825e2754a2"><div class="ttname"><a href="namespaceshrapnel.html#ae3cbca1e45f686a5790d51825e2754a2">shrapnel::disconnect_handler</a></div><div class="ttdeci">static void disconnect_handler(void *arg, esp_event_base_t event_base, int32_t event_id, void *event_data)</div><div class="ttdef"><b>Definition:</b> <a href="main_8cpp_source.html#l00099">main.cpp:99</a></div></div>
 <div class="ttc" id="anoise__gate_8cpp_html_a499e7824037af983d0524a98081e7f0b"><div class="ttname"><a href="noise__gate_8cpp.html#a499e7824037af983d0524a98081e7f0b">state</a></div><div class="ttdeci">static state_t state</div><div class="ttdef"><b>Definition:</b> <a href="noise__gate_8cpp_source.html#l00033">noise_gate.cpp:33</a></div></div>
 <div class="ttc" id="apcm3060_8h_html"><div class="ttname"><a href="pcm3060_8h.html">pcm3060.h</a></div></div>
 <div class="ttc" id="apcm3060_8h_html_a4b08ec86eb0407470554c4e5c5759521"><div class="ttname"><a href="pcm3060_8h.html#a4b08ec86eb0407470554c4e5c5759521">pcm3060_power_up</a></div><div class="ttdeci">esp_err_t pcm3060_power_up(void)</div><div class="ttdoc">perform power up sequence</div><div class="ttdef"><b>Definition:</b> <a href="pcm3060_8c_source.html#l00055">pcm3060.c:55</a></div></div>
 <div class="ttc" id="apcm3060_8h_html_ae4f3fcba29da4e434a2fb51e429c156b"><div class="ttname"><a href="pcm3060_8h.html#ae4f3fcba29da4e434a2fb51e429c156b">pcm3060_init</a></div><div class="ttdeci">void pcm3060_init(i2c_port_t port, bool adr)</div><div class="ttdoc">Initialise the driver.</div><div class="ttdef"><b>Definition:</b> <a href="pcm3060_8c_source.html#l00049">pcm3060.c:49</a></div></div>
+<div class="ttc" id="apresets__storage_8h_html"><div class="ttname"><a href="presets__storage_8h.html">presets_storage.h</a></div></div>
 <div class="ttc" id="aprofiling_8h_html"><div class="ttname"><a href="profiling_8h.html">profiling.h</a></div></div>
 <div class="ttc" id="aqueue_8h_html"><div class="ttname"><a href="queue_8h.html">queue.h</a></div></div>
 <div class="ttc" id="aserver_8h_html"><div class="ttname"><a href="server_8h.html">server.h</a></div></div>

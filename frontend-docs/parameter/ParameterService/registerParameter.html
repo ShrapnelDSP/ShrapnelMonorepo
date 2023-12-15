@@ -77,7 +77,8 @@
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
   <pre class="language-dart"><code class="language-dart">void registerParameter(AudioParameterDoubleModel parameter) {
-  _parameters.add(parameter);
+  assert(!_parameters.containsKey(parameter.id));
+  _parameters[parameter.id] = parameter;
 }</code></pre>
 </section>
 

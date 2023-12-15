@@ -119,6 +119,7 @@ and</li>
   <pre class="language-dart"><code class="language-dart">@override
 Widget build(BuildContext context) {
   final scaleFactor = full ? 3.0 : 1.0;
+  final name = model.name;
 
   return Theme(
     data: Theme.of(context).copyWith(
@@ -154,8 +155,7 @@ Widget build(BuildContext context) {
                       ),
                     ),
                   ),
-                  ChangeNotifierProvider.value(
-                    value: context.watch&lt;StompboxModel&gt;().bypass,
+                  model.bypass.provider(
                     child: _BypassButton(
                       size: scaleFactor * 23,
                       isEnabled: full,

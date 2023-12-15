@@ -76,18 +76,8 @@
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
   <pre class="language-dart"><code class="language-dart">void main() {
-  Logger.root.level = Level.INFO;
-  Logger.root.onRecord.listen((record) {
-    debugPrint(
-      &#39;${record.level.name.padLeft(&quot;WARNING&quot;.length)} &#39;
-      &#39;${formatDateTime(record.time)} &#39;
-      &#39;${record.loggerName}: &#39;
-      &#39;${record.message}&#39;,
-    );
-  });
-
+  setupLogger(Level.INFO);
   GoogleFonts.config.allowRuntimeFetching = false;
-
   runApp(App());
 }</code></pre>
 </section>

@@ -110,7 +110,7 @@ Public Member Functions</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock">
-<p class="definition">Definition at line <a class="el" href="main__thread_8h_source.html#l00105">105</a> of file <a class="el" href="main__thread_8h_source.html">main_thread.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="main__thread_8h_source.html#l00109">109</a> of file <a class="el" href="main__thread_8h_source.html">main_thread.h</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a4ebcabb566c5899f44c35f37382e740c" name="a4ebcabb566c5899f44c35f37382e740c"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a4ebcabb566c5899f44c35f37382e740c">&#9670;&nbsp;</a></span>ParameterUpdateNotifier()</h2>
@@ -146,11 +146,11 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="main__thread_8h_source.html#l00108">108</a> of file <a class="el" href="main__thread_8h_source.html">main_thread.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  110</span>        : audio_params{std::move(a_audio_params)},</div>
-<div class="line"><span class="lineno">  111</span>          send_message{a_send_message}</div>
-<div class="line"><span class="lineno">  112</span>    {</div>
-<div class="line"><span class="lineno">  113</span>    }</div>
+<p class="definition">Definition at line <a class="el" href="main__thread_8h_source.html#l00112">112</a> of file <a class="el" href="main__thread_8h_source.html">main_thread.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  114</span>        : audio_params{std::move(a_audio_params)},</div>
+<div class="line"><span class="lineno">  115</span>          send_message{a_send_message}</div>
+<div class="line"><span class="lineno">  116</span>    {</div>
+<div class="line"><span class="lineno">  117</span>    }</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -179,10 +179,10 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="main__thread_8h_source.html#l00128">128</a> of file <a class="el" href="main__thread_8h_source.html">main_thread.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  129</span>    {</div>
-<div class="line"><span class="lineno">  130</span>        <span class="keywordflow">return</span> audio_params-&gt;get(param);</div>
-<div class="line"><span class="lineno">  131</span>    }</div>
+<p class="definition">Definition at line <a class="el" href="main__thread_8h_source.html#l00132">132</a> of file <a class="el" href="main__thread_8h_source.html">main_thread.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  133</span>    {</div>
+<div class="line"><span class="lineno">  134</span>        <span class="keywordflow">return</span> audio_params-&gt;get(param);</div>
+<div class="line"><span class="lineno">  135</span>    }</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -220,19 +220,19 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="main__thread_8h_source.html#l00115">115</a> of file <a class="el" href="main__thread_8h_source.html">main_thread.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  116</span>    {</div>
-<div class="line"><span class="lineno">  117</span>        <span class="keyword">auto</span> message = <a class="code hl_typedef" href="messages_8h.html#a4a2a8445978c00038c4b9a0d35ca7a69">AppMessage</a>{</div>
-<div class="line"><span class="lineno">  118</span>            parameters::Update{</div>
-<div class="line"><span class="lineno">  119</span>                param,</div>
-<div class="line"><span class="lineno">  120</span>                value,</div>
-<div class="line"><span class="lineno">  121</span>            },</div>
-<div class="line"><span class="lineno">  122</span>            std::nullopt,</div>
-<div class="line"><span class="lineno">  123</span>        };</div>
-<div class="line"><span class="lineno">  124</span>        send_message(message);</div>
-<div class="line"><span class="lineno">  125</span>        <span class="keywordflow">return</span> audio_params-&gt;update(param, value);</div>
-<div class="line"><span class="lineno">  126</span>    }</div>
-<div class="ttc" id="amessages_8h_html_a4a2a8445978c00038c4b9a0d35ca7a69"><div class="ttname"><a href="messages_8h.html#a4a2a8445978c00038c4b9a0d35ca7a69">AppMessage</a></div><div class="ttdeci">std::pair&lt; ApiMessage, FileDescriptor &gt; AppMessage</div><div class="ttdef"><b>Definition:</b> <a href="messages_8h_source.html#l00032">messages.h:32</a></div></div>
+<p class="definition">Definition at line <a class="el" href="main__thread_8h_source.html#l00119">119</a> of file <a class="el" href="main__thread_8h_source.html">main_thread.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  120</span>    {</div>
+<div class="line"><span class="lineno">  121</span>        <span class="keyword">auto</span> message = <a class="code hl_typedef" href="messages_8h.html#a4a2a8445978c00038c4b9a0d35ca7a69">AppMessage</a>{</div>
+<div class="line"><span class="lineno">  122</span>            parameters::Update{</div>
+<div class="line"><span class="lineno">  123</span>                param,</div>
+<div class="line"><span class="lineno">  124</span>                value,</div>
+<div class="line"><span class="lineno">  125</span>            },</div>
+<div class="line"><span class="lineno">  126</span>            std::nullopt,</div>
+<div class="line"><span class="lineno">  127</span>        };</div>
+<div class="line"><span class="lineno">  128</span>        send_message(message);</div>
+<div class="line"><span class="lineno">  129</span>        <span class="keywordflow">return</span> audio_params-&gt;update(param, value);</div>
+<div class="line"><span class="lineno">  130</span>    }</div>
+<div class="ttc" id="amessages_8h_html_a4a2a8445978c00038c4b9a0d35ca7a69"><div class="ttname"><a href="messages_8h.html#a4a2a8445978c00038c4b9a0d35ca7a69">AppMessage</a></div><div class="ttdeci">std::pair&lt; ApiMessage, FileDescriptor &gt; AppMessage</div><div class="ttdef"><b>Definition:</b> <a href="messages_8h_source.html#l00037">messages.h:37</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>

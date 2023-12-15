@@ -118,51 +118,11 @@ and</li>
   <h2><span>Implementation</span></h2>
   <pre class="language-dart"><code class="language-dart">@override
 Widget build(BuildContext context) {
-  return ChangeNotifierProvider(
-    create: (context) {
-      final parameterService =
-          Provider.of&lt;ParameterService&gt;(context, listen: false);
-      return StompboxModel(
-        parameters: [
-          AudioParameterDoubleModel(
-            groupName: _name,
-            name: &#39;Attack&#39;,
-            id: &#39;noiseGateAttack&#39;,
-            parameterService: parameterService,
-          ),
-          AudioParameterDoubleModel(
-            groupName: _name,
-            name: &#39;Hysteresis&#39;,
-            id: &#39;noiseGateHysteresis&#39;,
-            parameterService: parameterService,
-          ),
-          AudioParameterDoubleModel(
-            groupName: _name,
-            name: &#39;Release&#39;,
-            id: &#39;noiseGateRelease&#39;,
-            parameterService: parameterService,
-          ),
-          AudioParameterDoubleModel(
-            groupName: _name,
-            name: &#39;Threshold&#39;,
-            id: &#39;noiseGateThreshold&#39;,
-            parameterService: parameterService,
-          ),
-        ],
-        bypass: AudioParameterDoubleModel(
-          groupName: _name,
-          name: &#39;Bypass&#39;,
-          id: &#39;noiseGateBypass&#39;,
-          parameterService: parameterService,
-        ),
-      );
-    },
-    child: Stompbox(
-      name: _name,
-      onCardTap: onTap,
-      full: full,
-      primarySwatch: Colors.red,
-    ),
+  return Stompbox(
+    model: context.read&lt;NoiseGateModel&gt;(),
+    onCardTap: onTap,
+    full: full,
+    primarySwatch: Colors.red,
   );
 }</code></pre>
 </section>

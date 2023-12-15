@@ -66,19 +66,15 @@
     <section>
       <dl class="dl-horizontal">
         
-  <dt>Inheritance</dt>
-  <dd>
-    <ul class="gt-separated dark clazz-relationships">
-      <li><a href="https://api.flutter.dev/flutter/dart-core/Object-class.html">Object</a></li>
-        <li><a href="https://api.flutter.dev/flutter/foundation/ChangeNotifier-class.html">ChangeNotifier</a></li>
-      <li>AudioParameterDoubleModel</li>
-    </ul>
-  </dd>
 
         
         
 
 
+        <dt>Available Extensions</dt>
+        <dd><ul class="comma-separated clazz-relationships">
+          <li><a href="../amplifier/ParameterProviderEx.html">ParameterProviderEx</a></li>
+        </ul></dd>
 
         
 
@@ -122,17 +118,6 @@
 </dt>
 <dd class="inherited">
   The hash code for this object.
-  <div class="features"><span class="feature">no setter</span><span class="feature">inherited</span></div>
-
-</dd>
-
-        <dt id="hasListeners" class="property inherited">
-  <span class="name"><a href="https://api.flutter.dev/flutter/foundation/ChangeNotifier/hasListeners.html">hasListeners</a></span>
-  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> 
-
-</dt>
-<dd class="inherited">
-  Whether any listeners are currently registered.
   <div class="features"><span class="feature">no setter</span><span class="feature">inherited</span></div>
 
 </dd>
@@ -183,12 +168,12 @@
 
         <dt id="value" class="property">
   <span class="name"><a href="../parameter/AudioParameterDoubleModel/value.html">value</a></span>
-  <span class="signature">&#8596; <a href="https://api.flutter.dev/flutter/dart-core/double-class.html">double</a></span> 
+  <span class="signature">&#8594; <a href="https://pub.dev/documentation/rxdart/0.27.7/rx/ValueStream-class.html">ValueStream</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/dart-core/double-class.html">double</a></span>&gt;</span></span> 
 
 </dt>
 <dd>
   
-  <div class="features"><span class="feature">getter/setter pair</span></div>
+  <div class="features"><span class="feature">no setter</span></div>
 
 </dd>
 
@@ -201,34 +186,6 @@
       id="instance-methods">
     <h2>Methods</h2>
     <dl class="callables">
-        <dt id="addListener" class="callable inherited">
-  <span class="name"><a href="https://api.flutter.dev/flutter/foundation/ChangeNotifier/addListener.html">addListener</a></span><span class="signature">(<wbr><span class="parameter" id="addListener-param-listener"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-ui/VoidCallback.html">VoidCallback</a></span> <span class="parameter-name">listener</span></span>)
-    <span class="returntype parameter">&#8594; void</span>
-  </span>
-  
-
-</dt>
-<dd class="inherited">
-  Register a closure to be called when the object changes.
-  <div class="features"><span class="feature">inherited</span></div>
-
-</dd>
-
-        <dt id="dispose" class="callable inherited">
-  <span class="name"><a href="https://api.flutter.dev/flutter/foundation/ChangeNotifier/dispose.html">dispose</a></span><span class="signature">(<wbr>)
-    <span class="returntype parameter">&#8594; void</span>
-  </span>
-  
-
-</dt>
-<dd class="inherited">
-  Discards any resources used by the object. After this is called, the
-object is not in a usable state and should be discarded (calls to
-<a href="https://api.flutter.dev/flutter/foundation/ChangeNotifier/addListener.html">addListener</a> will throw after the object is disposed).
-  <div class="features"><span class="feature">inherited</span></div>
-
-</dd>
-
         <dt id="noSuchMethod" class="callable inherited">
   <span class="name"><a href="https://api.flutter.dev/flutter/dart-core/Object/noSuchMethod.html">noSuchMethod</a></span><span class="signature">(<wbr><span class="parameter" id="noSuchMethod-param-invocation"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/Invocation-class.html">Invocation</a></span> <span class="parameter-name">invocation</span></span>)
     <span class="returntype parameter">&#8594; dynamic</span>
@@ -238,19 +195,6 @@ object is not in a usable state and should be discarded (calls to
 </dt>
 <dd class="inherited">
   Invoked when a nonexistent method or property is accessed.
-  <div class="features"><span class="feature">inherited</span></div>
-
-</dd>
-
-        <dt id="notifyListeners" class="callable inherited">
-  <span class="name"><a href="https://api.flutter.dev/flutter/foundation/ChangeNotifier/notifyListeners.html">notifyListeners</a></span><span class="signature">(<wbr>)
-    <span class="returntype parameter">&#8594; void</span>
-  </span>
-  
-
-</dt>
-<dd class="inherited">
-  Call all the registered listeners.
   <div class="features"><span class="feature">inherited</span></div>
 
 </dd>
@@ -268,23 +212,9 @@ object is not in a usable state and should be discarded (calls to
 
 </dd>
 
-        <dt id="removeListener" class="callable inherited">
-  <span class="name"><a href="https://api.flutter.dev/flutter/foundation/ChangeNotifier/removeListener.html">removeListener</a></span><span class="signature">(<wbr><span class="parameter" id="removeListener-param-listener"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-ui/VoidCallback.html">VoidCallback</a></span> <span class="parameter-name">listener</span></span>)
+        <dt id="setValue" class="callable">
+  <span class="name"><a href="../parameter/AudioParameterDoubleModel/setValue.html">setValue</a></span><span class="signature">(<wbr><span class="parameter" id="setValue-param-value"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/double-class.html">double</a></span> <span class="parameter-name">value</span></span>)
     <span class="returntype parameter">&#8594; void</span>
-  </span>
-  
-
-</dt>
-<dd class="inherited">
-  Remove a previously registered closure from the list of closures that are
-notified when the object changes.
-  <div class="features"><span class="feature">inherited</span></div>
-
-</dd>
-
-        <dt id="toJson" class="callable">
-  <span class="name"><a href="../parameter/AudioParameterDoubleModel/toJson.html">toJson</a></span><span class="signature">(<wbr>)
-    <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span>
   </span>
   
 

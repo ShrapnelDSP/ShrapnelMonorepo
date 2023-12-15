@@ -1,4 +1,5 @@
 <map id="shrapnel::midi::to_json" name="shrapnel::midi::to_json">
-<area shape="rect" id="node1" title=" " alt="" coords="5,5,155,32"/>
+<area shape="rect" id="node1" title=" " alt="" coords="5,31,155,57"/>
 <area shape="rect" id="node2" href="$namespaceshrapnel_1_1midi.html#a745f9f03858045cdfabbd014152fbc15" title="Convert object to a JSON value." alt="" coords="203,5,352,32"/>
+<area shape="rect" id="node3" href="$namespaceshrapnel_1_1uuid.html#ab9bfaff8aa05f007c175be136c85739a" title=" " alt="" coords="203,56,352,83"/>
 </map>
