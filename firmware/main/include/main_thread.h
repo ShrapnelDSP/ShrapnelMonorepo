@@ -365,7 +365,7 @@ public:
         }();
 
         midi_message_handler =
-            std::make_shared<midi::MessageHandler<ParameterUpdateNotifier,
+            std::make_shared<MidiMessageHandler<ParameterUpdateNotifier,
                 MidiMappingManager>>(
                 parameter_notifier,
                 midi_mapping_manager,
@@ -693,7 +693,7 @@ private:
     std::mutex midi_mutex;
     std::shared_ptr<MidiMappingManager> midi_mapping_manager;
     std::shared_ptr<
-        midi::MessageHandler<ParameterUpdateNotifier, MidiMappingManager>>
+        MidiMessageHandler<ParameterUpdateNotifier, MidiMappingManager>>
         midi_message_handler;
     std::shared_ptr<AudioParameters> audio_params;
     std::unique_ptr<parameters::CommandHandling<

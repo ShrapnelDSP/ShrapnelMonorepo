@@ -22,17 +22,16 @@
 #include "midi_mapping.h"
 #include "midi_protocol.h"
 
-namespace shrapnel::midi {
+namespace shrapnel {
 
 template <typename AudioParametersT, typename MappingManagerT>
-class MessageHandler
+class MidiMessageHandler
 {
 public:
-    /* TODO: notify about preset changes here
     using SendMessageCallback =
         etl::delegate<void(const ApiMessage &, std::optional<int>)>;
-    */
-    MessageHandler(std::shared_ptr<AudioParametersT> a_parameters,
+
+    MidiMessageHandler(std::shared_ptr<AudioParametersT> a_parameters,
                    std::shared_ptr<MappingManagerT> a_mapping_manager,
                    std::shared_ptr<presets::PresetsManager> a_presets_manager,
                    std::shared_ptr<selected_preset::SelectedPresetManager>
@@ -47,9 +46,9 @@ public:
     /** React to a MIDI message by updating an audio parameter if there is a
      * mapping registered
      */
-    void process_message(Message message) const
+    void process_message(midi::Message message) const
     {
-        auto cc_params = get_if<Message::ControlChange>(&message.parameters);
+        auto cc_params = get_if<midi::Message::ControlChange>(&message.parameters);
         if(!cc_params)
             return;
 
@@ -67,11 +66,11 @@ public:
 
             switch(mapping.mode)
             {
-            case Mapping::Mode::PARAMETER:
+            case midi::Mapping::Mode::PARAMETER:
                 parameters->update(*mapping.parameter_name,
-                                   cc_params->value / float(CC_VALUE_MAX));
+                                   cc_params->value / float(midi::CC_VALUE_MAX));
                 break;
-            case Mapping::Mode::TOGGLE:
+            case midi::Mapping::Mode::TOGGLE:
             {
                 if(cc_params->value == 0)
                 {
@@ -84,25 +83,14 @@ public:
                                    old_value < 0.5f ? 1.f : 0.f);
                 break;
             }
-            case Mapping::Mode::BUTTON:
+            case midi::Mapping::Mode::BUTTON:
             {
-                if(cc_params->value != 0x7F)
+                // A button sends the maximum value when it becomes pressed.
+                if(cc_params->value != midi::CC_VALUE_MAX)
                 {
                     continue;
                 }
 
-                // FIXME: this is duplicated from the main_thread.h.
-                // - Create some internal app events that are decoupled from the
-                //   API.
-                // - Make the API write message emit an select preset event
-                // - Emit the select preset event here
-                //
-                // Or maybe:
-                //
-                // Make the selected preset manager a notifier. Call set on it
-                // from here and from main, causing it to notify. When it
-                // notifies, then a preset loader reads the preset and updates
-                // parameters.
                 int rc = selected_preset_manager->set(*mapping.preset_id);
                 if(rc != 0)
                 {
@@ -128,6 +116,7 @@ private:
     std::shared_ptr<presets::PresetsManager> presets_manager;
     std::shared_ptr<selected_preset::SelectedPresetManager>
         selected_preset_manager;
+    SendMessageCallback send_message;
 };
 
 } // namespace shrapnel::midi
