@@ -162,9 +162,10 @@ class MidiMappingPage extends StatelessWidget {
                       switch (mapping.mapping) {
                         final MidiMappingToggle midiMapping => Row(
                             children: [
-                              Text('Parameter:',
-                                  style:
-                                      Theme.of(context).textTheme.titleMedium),
+                              Text(
+                                'Parameter:',
+                                style: Theme.of(context).textTheme.titleMedium,
+                              ),
                               const SizedBox(width: 8),
                               ParametersDropdown(
                                 key: Key('${mapping.id}-parameter-id-dropdown'),
@@ -183,9 +184,10 @@ class MidiMappingPage extends StatelessWidget {
                           ),
                         final MidiMappingParameter midiMapping => Row(
                             children: [
-                              Text('Parameter:',
-                                  style:
-                                      Theme.of(context).textTheme.titleMedium),
+                              Text(
+                                'Parameter:',
+                                style: Theme.of(context).textTheme.titleMedium,
+                              ),
                               const SizedBox(width: 8),
                               ParametersDropdown(
                                 key: Key('${mapping.id}-parameter-id-dropdown'),
@@ -204,9 +206,10 @@ class MidiMappingPage extends StatelessWidget {
                           ),
                         final MidiMappingButton midiMapping => Row(
                             children: [
-                              Text('Preset:',
-                                  style:
-                                      Theme.of(context).textTheme.titleMedium),
+                              Text(
+                                'Preset:',
+                                style: Theme.of(context).textTheme.titleMedium,
+                              ),
                               const SizedBox(width: 8),
                               PresetsDropdown(
                                 key: Key('${mapping.id}-preset-id-dropdown'),
