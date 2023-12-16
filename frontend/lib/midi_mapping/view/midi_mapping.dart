@@ -145,7 +145,15 @@ class MidiMappingPage extends StatelessWidget {
                               ),
                             );
                           } else {
-                            // FIXME: show a dialog to edit the mapping
+                            unawaited(
+                              showDialog<void>(
+                                context: context,
+                                builder: (context) => EditMappingDialog(
+                                  mapping: mapping,
+                                  mode: value,
+                                ),
+                              ),
+                            );
                           }
                         },
                       ),
@@ -281,7 +289,7 @@ class CreateMappingDialogState extends State<CreateMappingDialog> {
               Padding(
                 padding: const EdgeInsets.all(8),
                 child: Text(
-                  'Create a new MIDI mapping',
+                  'Create MIDI mapping',
                   style: Theme.of(context).textTheme.titleLarge,
                 ),
               ),
@@ -421,6 +429,243 @@ class CreateMappingDialogState extends State<CreateMappingDialog> {
                   }
                 },
                 child: const Text('Create'),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  String? validateIsNotNull<T>(T? value) {
+    if (value == null) {
+      return _requiredValueString;
+    }
+
+    return null;
+  }
+}
+
+class EditMappingDialog extends StatefulWidget {
+  const EditMappingDialog({
+    super.key,
+    required this.mapping,
+    this.channel,
+    this.ccNumber,
+    this.mode,
+    this.presetId,
+    this.parameterId,
+  });
+
+  final MidiMappingEntry mapping;
+
+  final int? channel;
+  final int? ccNumber;
+  final MidiMappingMode? mode;
+  final int? presetId;
+  final String? parameterId;
+
+  @override
+  State<StatefulWidget> createState() {
+    return EditMappingDialogState();
+  }
+}
+
+class EditMappingDialogState extends State<EditMappingDialog> {
+  final _formKey = GlobalKey<FormState>();
+  int? channel;
+  int? ccNumber;
+  MidiMappingMode? mode;
+  int? presetId;
+  String? parameterId;
+
+  @override
+  void initState() {
+    super.initState();
+
+    // Let the widget specify an override for some settings, e.g. in case the
+    // dialog is shown in response to the user adjusting a dropdown and
+    // selecting something that requires more setup.
+    channel = widget.channel;
+    ccNumber = widget.ccNumber;
+    mode = widget.mode;
+    presetId = widget.presetId;
+    parameterId = widget.parameterId;
+
+    // If no overrides were specified, copy the data from the existing mapping.
+    channel ??= widget.mapping.mapping.midiChannel;
+    ccNumber ??= widget.mapping.mapping.ccNumber;
+    mode ??= widget.mapping.mapping.mode;
+    presetId ??= switch (widget.mapping.mapping) {
+      MidiMappingToggle() => null,
+      MidiMappingParameter() => null,
+      MidiMappingButton(:final presetId) => presetId,
+    };
+    parameterId ??= switch (widget.mapping.mapping) {
+      MidiMappingToggle(:final parameterId) => parameterId,
+      MidiMappingParameter(:final parameterId) => parameterId,
+      MidiMappingButton() => null,
+    };
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final parameters = context.read<ParameterService>().parameterNames;
+    final presets = context.watch<PresetsState>();
+    final mappings = context.read<MidiMappingService>();
+
+    return Dialog(
+      child: Padding(
+        padding: const EdgeInsets.all(8),
+        child: Form(
+          key: _formKey,
+          child: Wrap(
+            alignment: WrapAlignment.center,
+            runSpacing: 8,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8),
+                child: Text(
+                  'Edit MIDI mapping',
+                  style: Theme.of(context).textTheme.titleLarge,
+                ),
+              ),
+              DropdownButtonFormField<int>(
+                decoration: const InputDecoration(
+                  label: Text('MIDI channel'),
+                ),
+                items: List<DropdownMenuItem<int>>.generate(
+                  16,
+                  (i) =>
+                      DropdownMenuItem(value: i + 1, child: Text('${i + 1}')),
+                ),
+                value: channel,
+                onChanged: (value) => setState(() => channel = value),
+                validator: validateIsNotNull,
+              ),
+              DropdownButtonFormField<int>(
+                decoration: const InputDecoration(
+                  label: Text('CC number'),
+                ),
+                items: List<DropdownMenuItem<int>>.generate(
+                  16,
+                  (i) =>
+                      DropdownMenuItem(value: i + 1, child: Text('${i + 1}')),
+                ),
+                value: ccNumber,
+                onChanged: (value) => setState(() => ccNumber = value),
+                validator: validateIsNotNull,
+              ),
+              DropdownButtonFormField<MidiMappingMode>(
+                decoration: const InputDecoration(
+                  label: Text('Mode'),
+                ),
+                items: List<DropdownMenuItem<MidiMappingMode>>.generate(
+                  MidiMappingMode.values.length,
+                  (i) => DropdownMenuItem(
+                    value: MidiMappingMode.values[i],
+                    child: Text(MidiMappingMode.values[i].uiName),
+                  ),
+                ),
+                value: mode,
+                onChanged: (value) => setState(() => mode = value),
+                validator: validateIsNotNull,
+              ),
+              DropdownButtonFormField<String>(
+                decoration: const InputDecoration(
+                  label: Text('Parameter'),
+                ),
+                items: [
+                  ...parameters.keys.map(
+                    (id) => DropdownMenuItem(
+                      value: id,
+                      child: Text(parameters[id]!),
+                    ),
+                  ),
+                ],
+                value: parameterId,
+                onChanged: switch (mode) {
+                  MidiMappingMode.toggle ||
+                  MidiMappingMode.parameter =>
+                    (value) => setState(() => parameterId = value),
+                  null || MidiMappingMode.button => null,
+                },
+                validator: (v) {
+                  return switch (mode) {
+                    null || MidiMappingMode.button => null,
+                    MidiMappingMode.toggle ||
+                    MidiMappingMode.parameter =>
+                      v == null ? _requiredValueString : null,
+                  };
+                },
+              ),
+              DropdownButtonFormField<int>(
+                decoration: const InputDecoration(
+                  label: Text('Preset'),
+                ),
+                items: switch (presets) {
+                  LoadingPresetsState() => null,
+                  ReadyPresetsState(:final presets) => presets.map(
+                      (e) => DropdownMenuItem(
+                        value: e.id,
+                        child: Text(e.preset.name),
+                      ),
+                    ),
+                }
+                    ?.toList(),
+                value: presetId,
+                onChanged: switch (mode) {
+                  null ||
+                  MidiMappingMode.toggle ||
+                  MidiMappingMode.parameter =>
+                    null,
+                  MidiMappingMode.button => (value) =>
+                      setState(() => presetId = value),
+                },
+                validator: (v) {
+                  return switch (mode) {
+                    null ||
+                    MidiMappingMode.toggle ||
+                    MidiMappingMode.parameter =>
+                      null,
+                    MidiMappingMode.button =>
+                      v == null ? _requiredValueString : null,
+                  };
+                },
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  if (_formKey.currentState!.validate()) {
+                    Navigator.pop(context);
+                    unawaited(
+                      mappings.updateMapping(
+                        MidiMappingEntry(
+                          id: widget.mapping.id,
+                          mapping: switch (mode) {
+                            null =>
+                              throw StateError('Mode has not been selected'),
+                            MidiMappingMode.toggle => MidiMapping.toggle(
+                                midiChannel: channel!,
+                                ccNumber: ccNumber!,
+                                parameterId: parameterId!,
+                              ),
+                            MidiMappingMode.parameter => MidiMapping.parameter(
+                                midiChannel: channel!,
+                                ccNumber: ccNumber!,
+                                parameterId: parameterId!,
+                              ),
+                            MidiMappingMode.button => MidiMapping.button(
+                                midiChannel: channel!,
+                                ccNumber: ccNumber!,
+                                presetId: presetId!,
+                              ),
+                          },
+                        ),
+                      ),
+                    );
+                  }
+                },
+                child: const Text('Update'),
               ),
             ],
           ),
