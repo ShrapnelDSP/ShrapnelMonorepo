@@ -34,24 +34,15 @@ using ::testing::FloatEq;
 using ::testing::Not;
 using ::testing::Return;
 
-class MockAudioParameters
-{
-    public:
-    MOCK_METHOD(int, update, (id_t param, float value), ());
-    MOCK_METHOD(float, get, (const id_t &param), ());
-};
-
-class MidiMapping : public ::testing::Test
+class MidiHandling : public ::testing::Test
 {
     protected:
+        MidiHandling() : sut() {}
 
-    MidiMapping() : sut(parameters_mock) {}
-
-    std::shared_ptr<MockAudioParameters> parameters_mock = std::make_shared<MockAudioParameters>();
-    MappingManager<MockAudioParameters, 2, 1> sut;
+    MappingManager<2, 1> sut;
 };
 
-TEST_F(MidiMapping, Create)
+TEST_F(MidiHandling, Create)
 {
     EXPECT_THAT(sut.get()->size(), 0);
     EXPECT_THAT(sut.create({{1}, {1, 2, Mapping::Mode::PARAMETER, "gain"}}), 0);
@@ -63,82 +54,7 @@ TEST_F(MidiMapping, Create)
                 Not(0));
 }
 
-TEST_F(MidiMapping, ProcessParameter)
-{
-    EXPECT_EQ(0, sut.create({{1}, {1, 2, Mapping::Mode::PARAMETER, "gain"}}));
-
-    EXPECT_CALL(*parameters_mock, update(id_t("gain"), 0.f));
-    sut.process_message({
-        .channel{1},
-        .parameters{
-            Message::ControlChange{.control = 2, .value = 0}
-        },
-    });
-
-    EXPECT_CALL(*parameters_mock, update(id_t("gain"), 1.f));
-    sut.process_message({
-        .channel{1},
-        .parameters{
-            Message::ControlChange{.control = 2, .value = CC_VALUE_MAX}
-        },
-    });
-
-    EXPECT_CALL(*parameters_mock, update).Times(0);
-    sut.process_message({
-        .channel{99},
-        .parameters{
-            Message::ControlChange{.control = 2, .value = 0}
-        },
-    });
-
-    sut.process_message({
-        .channel{1},
-        .parameters{
-            Message::ControlChange{.control = 99, .value = 0}
-        },
-    });
-}
-
-TEST_F(MidiMapping, ProcessToggle)
-{
-    auto process_message_with_value = [&](uint8_t value)
-    {
-        sut.process_message({
-            .channel{1},
-            .parameters{Message::ControlChange{.control = 2, .value = value}},
-        });
-    };
-
-    EXPECT_EQ(0, sut.create({{1}, {1, 2, Mapping::Mode::TOGGLE, "bypass"}}));
-
-    EXPECT_CALL(*parameters_mock, get(id_t{"bypass"}))
-        .WillRepeatedly(Return(0.f));
-    {
-        ::testing::InSequence seq;
-
-        // update is called for every event with non-zero value
-        // mock always returns 0, so call should be with 1 always
-        EXPECT_CALL(*parameters_mock, update(id_t("bypass"), FloatEq(1.f)))
-            .Times(2);
-        EXPECT_CALL(*parameters_mock, update).Times(0);
-    }
-
-    process_message_with_value(0);
-    process_message_with_value(1);
-    process_message_with_value(2);
-
-    sut.process_message({
-        .channel{99},
-        .parameters{Message::ControlChange{.control = 2, .value = 1}},
-    });
-
-    sut.process_message({
-        .channel{1},
-        .parameters{Message::ControlChange{.control = 99, .value = 1}},
-    });
-}
-
-TEST_F(MidiMapping, Update)
+TEST_F(MidiHandling, Update)
 {
     EXPECT_EQ(0, sut.create({{1}, {1, 2, Mapping::Mode::PARAMETER, "gain"}}));
 
@@ -152,32 +68,18 @@ TEST_F(MidiMapping, Update)
 
     EXPECT_THAT(sut.update({{1}, {5, 6, Mapping::Mode::PARAMETER, "tone"}}), 0);
     EXPECT_THAT(sut.get()->size(), 2);
-
-    EXPECT_CALL(*parameters_mock, update).Times(0);
-    sut.process_message({
-        .channel{1},
-        .parameters{
-            Message::ControlChange{.control = 2, .value = 0}
-        },
-    });
-
-    EXPECT_CALL(*parameters_mock, update(id_t("tone"), 0));
-    sut.process_message({
-        .channel{5},
-        .parameters{
-            Message::ControlChange{.control = 6, .value = 0}
-        },
-    });
+    
+    // TODO should we verify iteration here or something?
 }
 
-TEST_F(MidiMapping, Remove)
+TEST_F(MidiHandling, Remove)
 {
     EXPECT_EQ(0, sut.create({{1}, {1, 2, Mapping::Mode::PARAMETER, "gain"}}));
     sut.remove({1});
     EXPECT_THAT(sut.get()->size(), 0);
 }
 
-TEST_F(MidiMapping, Notifications)
+TEST_F(MidiHandling, Notifications)
 {
     class Observer final : public midi::MappingObserver {
     public:

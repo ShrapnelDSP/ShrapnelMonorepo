@@ -19,8 +19,11 @@
 
 #pragma once
 
+#include "etl/delegate.h"
 #include "midi_mapping.h"
 #include "midi_protocol.h"
+#include "presets_manager.h"
+#include "selected_preset_manager.h"
 
 namespace shrapnel {
 
@@ -111,8 +114,9 @@ public:
                 deserialise_live_parameters(*parameters, preset->parameters);
 
                 send_message({selected_preset::Notify{
-                    .selectedPresetId = id,
-                }, std::nullopt});
+                                  .selectedPresetId = id,
+                              },
+                              std::nullopt});
                 break;
             }
             }

@@ -39,6 +39,7 @@ else()
                           shrapnel::cmd_handling
                           shrapnel::etl
                           shrapnel::messages
+                          shrapnel::midi_handling
                           shrapnel::midi_mapping
                           shrapnel::midi_protocol
                           shrapnel::os
