@@ -1,0 +1,4 @@
+add_library(shrapnel_midi_handling INTERFACE)
+add_library(shrapnel::midi_handling ALIAS shrapnel_midi_handling)
+
+target_include_directories(shrapnel_midi_handling INTERFACE include)

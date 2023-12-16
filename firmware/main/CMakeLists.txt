@@ -19,6 +19,7 @@ if(ESP_PLATFORM)
                           shrapnel::heap_tracing
                           shrapnel::i2s
                           shrapnel::messages
+                          shrapnel::midi_handling
                           shrapnel::midi_mapping
                           shrapnel::midi_protocol
                           shrapnel::os

@@ -281,37 +281,22 @@ struct Mapping {
 
 using MappingObserver = etl::observer<const Mapping::id_t&>;
 
-template<typename AudioParametersT, std::size_t MAX_MAPPINGS, std::size_t MAX_OBSERVERS>
+template<std::size_t MAX_MAPPINGS, std::size_t MAX_OBSERVERS>
 class MappingManager final : public etl::observable<MappingObserver, MAX_OBSERVERS> {
     public:
     using MapType = etl::map<Mapping::id_t, Mapping, MAX_MAPPINGS>;
 
-        MappingManager(
-            std::shared_ptr<AudioParametersT> a_parameters,
-            std::shared_ptr<presets::PresetsManager> a_presets_manager,
-            std::shared_ptr<selected_preset::SelectedPresetManager>
-                a_selected_preset_manager)
-            : parameters{std::move(a_parameters)},
-              presets_manager{std::move(a_presets_manager)},
-              selected_preset_manager{std::move(a_selected_preset_manager)}
-        {
-        }
-        MappingManager(
-            std::shared_ptr<AudioParametersT> a_parameters,
-            MapType initial_mappings,
-            std::shared_ptr<presets::PresetsManager> a_presets_manager,
-            std::shared_ptr<selected_preset::SelectedPresetManager>
-                a_selected_preset_manager)
-            : parameters{std::move(a_parameters)},
-              presets_manager{std::move(a_presets_manager)},
-              selected_preset_manager{std::move(a_selected_preset_manager)},
-              mappings{initial_mappings}
-        {
-        }
+    MappingManager() = default;
+    explicit MappingManager(MapType initial_mappings)
+        : mappings{initial_mappings}
+    {
+    }
 
-        [[nodiscard]] const etl::imap<Mapping::id_t, Mapping> *get() const {
+    [[nodiscard]] const etl::imap<Mapping::id_t, Mapping> *get() const
+    {
         return &mappings;
     }
+    
     /// \return non-zero on failure
     [[nodiscard]] int create(const std::pair<const Mapping::id_t, Mapping> &mapping) {
         if(mappings.full()) {
@@ -342,87 +327,17 @@ class MappingManager final : public etl::observable<MappingObserver, MAX_OBSERVE
         this->notify_observers(id);
     }
 
-    /** React to a MIDI message by updating an audio parameter if there is a
-     * mapping registered
-     */
-    void process_message(Message message) const {
-        auto cc_params = get_if<Message::ControlChange>(&message.parameters);
-        if(!cc_params) return;
+    MapType::iterator begin()
+    {
+        return mappings.begin();
+    }
 
-        for(const auto &[_, mapping] : mappings)
-        {
-            if(mapping.midi_channel != message.channel)
-            {
-                continue;
-            }
-
-            if(mapping.cc_number != cc_params->control)
-            {
-                continue;
-            }
-
-            switch(mapping.mode)
-            {
-            case Mapping::Mode::PARAMETER:
-                parameters->update(*mapping.parameter_name,
-                                   cc_params->value / float(CC_VALUE_MAX));
-                break;
-            case Mapping::Mode::TOGGLE:
-            {
-                if(cc_params->value == 0)
-                {
-                    continue;
-                }
-
-                auto old_value = parameters->get(*mapping.parameter_name);
-
-                parameters->update(*mapping.parameter_name,
-                                   old_value < 0.5f ? 1.f : 0.f);
-                break;
-            }
-            case Mapping::Mode::BUTTON:
-            {
-                if(cc_params->value != 0x7F)
-                {
-                    continue;
-                }
-
-                // FIXME: this is duplicated from the main_thread.h.
-                // - Create some internal app events that are decoupled from the
-                //   API.
-                // - Make the API write message emit an select preset event
-                // - Emit the select preset event here
-                //
-                // Or maybe:
-                //
-                // Make the selected preset manager a notifier. Call set on it
-                // from here and from main, causing it to notify. When it
-                // notifies, then a preset loader reads the preset and updates
-                // parameters.
-                int rc = selected_preset_manager->set(*mapping.preset_id);
-                if(rc != 0)
-                {
-                    continue;
-                }
-
-                auto preset = presets_manager->read(*mapping.preset_id);
-                if(!preset.has_value())
-                {
-                    continue;
-                }
-
-                deserialise_live_parameters(*parameters, preset->parameters);
-                break;
-            }
-            }
-        }
-    };
+    MapType::iterator end()
+    {
+        return mappings.end();
+    }
 
     private:
-    std::shared_ptr<AudioParametersT> parameters;
-    std::shared_ptr<presets::PresetsManager> presets_manager;
-    std::shared_ptr<selected_preset::SelectedPresetManager>
-        selected_preset_manager;
     MapType mappings;
 
     static constexpr char TAG[] = "midi_mapping";

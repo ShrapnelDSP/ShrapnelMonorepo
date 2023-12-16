@@ -24,6 +24,7 @@
 #include "audio_param.h"
 #include "cmd_handling.h"
 #include "messages.h"
+#include "midi_handling.h"
 #include "midi_mapping_json_builder.h"
 #include "midi_mapping_json_parser.h"
 #include "midi_uart.h"
@@ -44,6 +45,7 @@ constexpr const size_t MAX_PARAMETERS = 20;
 
 using AudioParameters = parameters::AudioParameters<MAX_PARAMETERS, 1>;
 using SendMessageCallback = etl::delegate<void(const AppMessage &)>;
+using MidiMappingManager = midi::MappingManager<10, 1>;
 
 // TODO move all the json parser function into a json namespace
 namespace midi {
@@ -356,23 +358,23 @@ public:
             auto saved_mappings = midi::from_json<
                 etl::map<midi::Mapping::id_t, midi::Mapping, 10>>(document);
 
-            using MidiMappingType =
-                midi::MappingManager<ParameterUpdateNotifier, 10, 1>;
             midi_mapping_manager =
                 saved_mappings.has_value()
-                    ? std::make_unique<MidiMappingType>(parameter_notifier,
-                                                        *saved_mappings,
-                                                        presets_manager,
-                                                        selected_preset_manager)
-                    : std::make_unique<MidiMappingType>(
-                          parameter_notifier,
-                          presets_manager,
-                          selected_preset_manager);
+                    ? std::make_unique<MidiMappingManager>(*saved_mappings)
+                    : std::make_unique<MidiMappingManager>();
         }();
 
-        mapping_observer = std::make_unique<MidiMappingObserver<
-            midi::MappingManager<ParameterUpdateNotifier, 10, 1>>>(
-            a_persistence, *midi_mapping_manager);
+        midi_message_handler =
+            std::make_shared<midi::MessageHandler<ParameterUpdateNotifier,
+                MidiMappingManager>>(
+                parameter_notifier,
+                midi_mapping_manager,
+                presets_manager,
+                selected_preset_manager);
+
+        mapping_observer =
+            std::make_unique<MidiMappingObserver<MidiMappingManager>>(
+                a_persistence, *midi_mapping_manager);
         midi_mapping_manager->add_observer(*mapping_observer);
 
         BaseType_t rc = midi_message_notify_timer.start(portMAX_DELAY);
@@ -666,7 +668,7 @@ private:
 
         {
             std::scoped_lock lock{midi_mutex};
-            midi_mapping_manager->process_message(message);
+            midi_message_handler->process_message(message);
         }
     };
 
@@ -689,15 +691,15 @@ private:
     std::optional<midi::Message> last_notified_midi_message;
     std::unique_ptr<midi::Decoder> midi_decoder;
     std::mutex midi_mutex;
-    std::unique_ptr<midi::MappingManager<ParameterUpdateNotifier, 10, 1>>
-        midi_mapping_manager;
+    std::shared_ptr<MidiMappingManager> midi_mapping_manager;
+    std::shared_ptr<
+        midi::MessageHandler<ParameterUpdateNotifier, MidiMappingManager>>
+        midi_message_handler;
     std::shared_ptr<AudioParameters> audio_params;
     std::unique_ptr<parameters::CommandHandling<
         parameters::AudioParameters<MAX_PARAMETERS, 1>>>
         cmd_handling;
-    std::unique_ptr<MidiMappingObserver<
-        midi::MappingManager<ParameterUpdateNotifier, 10, 1>>>
-        mapping_observer;
+    std::unique_ptr<MidiMappingObserver<MidiMappingManager>> mapping_observer;
     std::shared_ptr<presets::PresetsManager> presets_manager;
     std::shared_ptr<selected_preset::SelectedPresetManager>
         selected_preset_manager;
