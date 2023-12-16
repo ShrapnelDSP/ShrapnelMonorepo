@@ -131,8 +131,19 @@ class MidiMappingPage extends StatelessWidget {
                               ),
                             ),
                           ),
-                        // FIXME: Show a preset dropdown
-                        MidiMappingButton() => const SizedBox.shrink(),
+                        final MidiMappingButton midiMapping => PresetsDropdown(
+                            key: Key('${mapping.id}-preset-id-dropdown'),
+                            value: midiMapping.presetId,
+                            onChanged: (value) => unawaited(
+                              midiMappingService.updateMapping(
+                                mapping.copyWith(
+                                  mapping: midiMapping.copyWith(
+                                    presetId: value!,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
                       },
                     ),
                     DataCell(
@@ -449,6 +460,44 @@ class ParametersDropdown extends StatelessWidget {
           (id) => DropdownMenuItem(
             value: id,
             child: Text(parameters[id]!),
+          ),
+        ),
+      ],
+      onChanged: onChanged,
+      value: value,
+    );
+  }
+}
+
+class PresetsDropdown extends StatelessWidget {
+  const PresetsDropdown({
+    required this.value,
+    required this.onChanged,
+    super.key,
+  });
+
+  final int value;
+  final void Function(int?) onChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    final presets = switch (context.watch<PresetsState>()) {
+      ReadyPresetsState(:final presets) => presets,
+      LoadingPresetsState() => <PresetRecord>[],
+    }
+        .map((e) => (e.id, e.preset.name))
+        .toList();
+
+    if (presets.every((element) => element.$1 != value)) {
+      presets.add((value, '<unknown>'));
+    }
+
+    return DropdownButton<int>(
+      items: [
+        ...presets.map(
+          (preset) => DropdownMenuItem(
+            value: preset.$1,
+            child: Text(preset.$2),
           ),
         ),
       ],
