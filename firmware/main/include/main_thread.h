@@ -370,7 +370,8 @@ public:
                 parameter_notifier,
                 midi_mapping_manager,
                 presets_manager,
-                selected_preset_manager);
+                selected_preset_manager,
+                send_message);
 
         mapping_observer =
             std::make_unique<MidiMappingObserver<MidiMappingManager>>(
@@ -638,13 +639,14 @@ private:
     std::optional<selected_preset::SelectedPresetApiMessage>
     handle_selected_preset_message(selected_preset::Write write)
     {
-        int rc = selected_preset_manager->set(write.selectedPresetId);
+        presets::id_t id = write.selectedPresetId;
+        int rc = selected_preset_manager->set(id);
         if(rc != 0)
         {
             return std::nullopt;
         }
 
-        auto preset = presets_manager->read(write.selectedPresetId);
+        auto preset = presets_manager->read(id);
         if(!preset.has_value())
         {
             return std::nullopt;

@@ -28,18 +28,20 @@ template <typename AudioParametersT, typename MappingManagerT>
 class MidiMessageHandler
 {
 public:
-    using SendMessageCallback =
-        etl::delegate<void(const ApiMessage &, std::optional<int>)>;
+    using SendMessageCallback = etl::delegate<void(const AppMessage &)>;
 
-    MidiMessageHandler(std::shared_ptr<AudioParametersT> a_parameters,
-                   std::shared_ptr<MappingManagerT> a_mapping_manager,
-                   std::shared_ptr<presets::PresetsManager> a_presets_manager,
-                   std::shared_ptr<selected_preset::SelectedPresetManager>
-                       a_selected_preset_manager)
+    MidiMessageHandler(
+        std::shared_ptr<AudioParametersT> a_parameters,
+        std::shared_ptr<MappingManagerT> a_mapping_manager,
+        std::shared_ptr<presets::PresetsManager> a_presets_manager,
+        std::shared_ptr<selected_preset::SelectedPresetManager>
+            a_selected_preset_manager,
+        SendMessageCallback a_send_message)
         : parameters{std::move(a_parameters)},
           mapping_manager{std::move(a_mapping_manager)},
           presets_manager{std::move(a_presets_manager)},
-          selected_preset_manager{std::move(a_selected_preset_manager)}
+          selected_preset_manager{std::move(a_selected_preset_manager)},
+          send_message{a_send_message}
     {
     }
 
@@ -48,7 +50,8 @@ public:
      */
     void process_message(midi::Message message) const
     {
-        auto cc_params = get_if<midi::Message::ControlChange>(&message.parameters);
+        auto cc_params =
+            get_if<midi::Message::ControlChange>(&message.parameters);
         if(!cc_params)
             return;
 
@@ -68,7 +71,8 @@ public:
             {
             case midi::Mapping::Mode::PARAMETER:
                 parameters->update(*mapping.parameter_name,
-                                   cc_params->value / float(midi::CC_VALUE_MAX));
+                                   cc_params->value /
+                                       float(midi::CC_VALUE_MAX));
                 break;
             case midi::Mapping::Mode::TOGGLE:
             {
@@ -91,19 +95,24 @@ public:
                     continue;
                 }
 
-                int rc = selected_preset_manager->set(*mapping.preset_id);
+                auto id = *mapping.preset_id;
+                int rc = selected_preset_manager->set(id);
                 if(rc != 0)
                 {
                     continue;
                 }
 
-                auto preset = presets_manager->read(*mapping.preset_id);
+                auto preset = presets_manager->read(id);
                 if(!preset.has_value())
                 {
                     continue;
                 }
 
                 deserialise_live_parameters(*parameters, preset->parameters);
+
+                send_message({selected_preset::Notify{
+                    .selectedPresetId = id,
+                }, std::nullopt});
                 break;
             }
             }
@@ -119,4 +128,4 @@ private:
     SendMessageCallback send_message;
 };
 
-} // namespace shrapnel::midi
+} // namespace shrapnel
