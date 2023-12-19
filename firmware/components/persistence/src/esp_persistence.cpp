@@ -26,6 +26,33 @@
 
 namespace shrapnel::persistence {
 
+int EspStorage::save(const char *key, std::span<uint8_t> data)
+{
+    nvs_handle_t nvs_handle;
+    esp_err_t err;
+    int rc = -1;
+
+    ESP_ERROR_CHECK_WITHOUT_ABORT(
+        err = nvs_open(STORAGE_NAMESPACE, NVS_READWRITE, &nvs_handle));
+    if(err != ESP_OK)
+        goto out;
+
+    ESP_ERROR_CHECK_WITHOUT_ABORT(
+        err = nvs_set_blob(nvs_handle, key, data.data(), data.size()));
+    if(err != ESP_OK)
+        goto out;
+
+    ESP_ERROR_CHECK_WITHOUT_ABORT(err = nvs_commit(nvs_handle));
+    if(err != ESP_OK)
+        goto out;
+
+    rc = 0;
+
+out:
+    nvs_close(nvs_handle);
+    return rc;
+}
+
 int EspStorage::save(const char *key, etl::string_view data)
 {
     nvs_handle_t nvs_handle;
@@ -80,6 +107,76 @@ int EspStorage::save(const char *key, uint32_t data)
 
     rc = 0;
 
+out:
+    nvs_close(nvs_handle);
+    return rc;
+}
+
+int EspStorage::save(const char *key, float data)
+{
+    nvs_handle_t nvs_handle;
+    esp_err_t err;
+    int rc = -1;
+
+    etl::string<15> truncated_key{key};
+
+    ESP_ERROR_CHECK_WITHOUT_ABORT(
+        err = nvs_open(STORAGE_NAMESPACE, NVS_READWRITE, &nvs_handle));
+    if(err != ESP_OK)
+        goto out;
+
+    uint32_t value;
+    memcpy(&value, &data, sizeof value);
+    ESP_ERROR_CHECK_WITHOUT_ABORT(
+        err = nvs_set_u32(nvs_handle, truncated_key.data(), value));
+    if(err != ESP_OK)
+        goto out;
+
+    ESP_ERROR_CHECK_WITHOUT_ABORT(err = nvs_commit(nvs_handle));
+    if(err != ESP_OK)
+        goto out;
+
+    rc = 0;
+
+    out:
+    nvs_close(nvs_handle);
+    return rc;
+}
+
+int EspStorage::load(const char *key, std::span<uint8_t> &buffer)
+{
+    nvs_handle_t nvs_handle;
+    esp_err_t err;
+    std::size_t required_size = 0;
+    int rc = -1;
+
+    ESP_ERROR_CHECK_WITHOUT_ABORT(
+        err = nvs_open(STORAGE_NAMESPACE, NVS_READONLY, &nvs_handle));
+    if(err != ESP_OK)
+        goto out;
+
+    // query the required size
+    ESP_ERROR_CHECK_WITHOUT_ABORT(
+        err = nvs_get_blob(nvs_handle, key, nullptr, &required_size));
+    if(err != ESP_OK)
+        goto out;
+
+    if(required_size > buffer.size())
+    {
+        ESP_LOGE(TAG,
+                 "Not enough space in the output buffer. Need %zu, got %zu",
+                 required_size,
+                 buffer.size());
+        goto out;
+    }
+
+    ESP_ERROR_CHECK_WITHOUT_ABORT(
+        err = nvs_get_blob(nvs_handle, key, buffer.data(), &required_size));
+    if(err != ESP_OK)
+        goto out;
+
+    buffer = buffer.subspan(0, required_size);
+    rc = 0;
 out:
     nvs_close(nvs_handle);
     return rc;
@@ -150,6 +247,33 @@ int EspStorage::load(const char *key, uint32_t &data)
 
     rc = 0;
 out:
+    nvs_close(nvs_handle);
+    return rc;
+}
+
+int EspStorage::load(const char *key, float &data)
+{
+    nvs_handle_t nvs_handle;
+    esp_err_t err;
+    int rc = -1;
+
+    etl::string<15> truncated_key{key};
+
+    ESP_ERROR_CHECK_WITHOUT_ABORT(
+        err = nvs_open(STORAGE_NAMESPACE, NVS_READONLY, &nvs_handle));
+    if(err != ESP_OK)
+        goto out;
+
+    uint32_t value;
+    ESP_ERROR_CHECK_WITHOUT_ABORT(
+        err = nvs_get_u32(nvs_handle, truncated_key.data(), &value));
+    if(err != ESP_OK)
+        goto out;
+
+    memcpy(&data, &value, sizeof value);
+
+    rc = 0;
+    out:
     nvs_close(nvs_handle);
     return rc;
 }

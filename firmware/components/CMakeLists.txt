@@ -1,6 +1,7 @@
 if(ESP_PLATFORM)
     return()
 endif()
+add_subdirectory(api)
 add_subdirectory(audio_events)
 add_subdirectory(audio_param)
 add_subdirectory(cmd_handling)

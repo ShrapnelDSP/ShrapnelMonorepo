@@ -55,48 +55,9 @@
 
 #define TAG "audio_events"
 
-namespace {
-
-template <typename T>
-constexpr const char *get_message_type();
-
-template <>
-constexpr const char *get_message_type<shrapnel::events::InputClipped>()
-{
-    return "Event::input_clipped";
-}
-
-template <>
-constexpr const char *get_message_type<shrapnel::events::OutputClipped>()
-{
-    return "Event::output_clipped";
-}
-
-} // namespace
-
 namespace shrapnel::events {
 
 std::atomic_flag input_clipped;
 std::atomic_flag output_clipped;
-
-template <>
-rapidjson::Value to_json(rapidjson::Document &document,
-                         const ApiMessage &object)
-{
-    rapidjson::Value json;
-    json.SetObject();
-
-    auto visitor = [&](const auto &message)
-    {
-        using T = std::decay_t<decltype(message)>;
-        json.AddMember("messageType",
-                       rapidjson::StringRef(get_message_type<T>()),
-                       document.GetAllocator());
-    };
-
-    std::visit(visitor, object);
-
-    return json;
-}
 
 } // namespace shrapnel::events

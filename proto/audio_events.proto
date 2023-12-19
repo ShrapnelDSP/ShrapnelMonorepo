@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package shrapnel.audio_events;
+
+message InputClipped {};
+message OutputClipped {};
+
+message Message {
+  oneof event {
+    InputClipped input_clipped = 1;
+    OutputClipped output_clipped = 2;
+  }
+}

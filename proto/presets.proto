@@ -1,5 +1,7 @@
 syntax = "proto3";
 
+package shrapnel.presets;
+
 message PresetParameters {
   int32 amp_gain = 1;
   int32 amp_channel = 2;
@@ -23,15 +25,44 @@ message PresetParameters {
   int32 wah_bypass = 20;
 }
 
+message Preset {
+  // The name given by the user to the preset
+  string name = 1;
+  // The parameter values for this preset
+  PresetParameters parameters = 2;
+}
+
 message PresetRecord {
   // A number used to identify the preset
   uint32 id = 1;
   Preset preset = 2;
 }
 
-message Preset {
-  // The name given by the user to the preset
-  string name = 1;
-  // The parameter values for this preset
-  PresetParameters parameters = 2;
+message Initialise {}
+
+message Notify {
+  uint32 id = 1;
+  Preset preset = 2;
+}
+
+message Create {
+  Preset preset = 1;
+}
+
+message Update {
+  PresetRecord preset = 1;
+}
+
+message Remove {
+  uint32 id = 1;
+}
+
+message Message {
+  oneof message {
+    Initialise initialise = 1;
+    Notify notify = 2;
+    Create create = 3;
+    Update update = 4;
+    Remove remove = 5;
+  }
 }

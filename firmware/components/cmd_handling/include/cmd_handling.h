@@ -58,8 +58,6 @@
 
 #include "audio_param.h"
 #include "cmd_handling_api.h"
-#include "cmd_handling_json.h"
-#include "cmd_handling_json_builder.h"
 #include "esp_err.h"
 #include "esp_log.h"
 #include "etl/list.h"
@@ -71,17 +69,6 @@
 #include <memory>
 #include <string.h>
 #include <string_view>
-
-// Disable warning inside rapidjson
-// https://github.com/Tencent/rapidjson/issues/1700
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wclass-memaccess"
-#pragma GCC diagnostic ignored "-Wzero-as-null-pointer-constant"
-#pragma GCC diagnostic ignored "-Wsign-conversion"
-#pragma GCC diagnostic ignored "-Wswitch-enum"
-#include <rapidjson/stringbuffer.h>
-#include <rapidjson/writer.h>
-#pragma GCC diagnostic pop
 
 namespace shrapnel::parameters {
 

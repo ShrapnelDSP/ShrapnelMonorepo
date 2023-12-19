@@ -19,21 +19,11 @@
 
 // #define LOG_LOCAL_LEVEL ESP_LOG_VERBOSE
 #include "server.h"
-#include "cmd_handling_json.h"
-#include "cmd_handling_json_builder.h"
 #include "esp_http_server.h"
 #include "esp_log.h"
 #include "messages.h"
-#include "midi_mapping_json_builder.h"
-#include "midi_mapping_json_parser.h"
 #include "os/debug.h"
-#include "presets_json_builder.h"
-#include "presets_json_parser.h"
-#include "rapidjson/writer.h"
-#include "selected_preset_json_builder.h"
-#include "selected_preset_json_parser.h"
 #include <etl/string_stream.h>
-#include <rapidjson/document.h>
 
 #define MAX_CLIENTS 3
 #define TAG "server"
@@ -102,14 +92,13 @@ void Server::stop()
 esp_err_t websocket_get_handler(httpd_req_t *req)
 {
     auto self = reinterpret_cast<Server *>(req->user_ctx);
-    /* Largest incoming message is a MidiMap::create::response which has a maximum size about 200 bytes */
-    char json[256] = {0};
+    std::array<uint8_t, 256> buffer_data = {0};
 
     httpd_ws_frame_t pkt = {
         .final = false,
         .fragmented = false,
-        .type = HTTPD_WS_TYPE_TEXT,
-        .payload = reinterpret_cast<uint8_t *>(json),
+        .type = HTTPD_WS_TYPE_BINARY,
+        .payload = buffer_data.data(),
         .len = 0,
     };
 
@@ -121,7 +110,7 @@ esp_err_t websocket_get_handler(httpd_req_t *req)
         return ESP_OK;
     }
 
-    esp_err_t rc = httpd_ws_recv_frame(req, &pkt, sizeof(json));
+    esp_err_t rc = httpd_ws_recv_frame(req, &pkt, buffer_data.size());
     if(rc != ESP_OK)
     {
         ESP_LOGE(TAG, "websocket parse failed");
@@ -130,30 +119,24 @@ esp_err_t websocket_get_handler(httpd_req_t *req)
 
     /* We should never see any of these packets */
     assert(pkt.type != HTTPD_WS_TYPE_CONTINUE);
-    assert(pkt.type != HTTPD_WS_TYPE_BINARY);
+    assert(pkt.type != HTTPD_WS_TYPE_TEXT);
     assert(pkt.type != HTTPD_WS_TYPE_CLOSE);
     assert(pkt.type != HTTPD_WS_TYPE_PING);
     assert(pkt.type != HTTPD_WS_TYPE_PONG);
     assert(pkt.final);
     assert(!pkt.fragmented);
-    assert(pkt.len <= sizeof(json));
+    assert(pkt.len <= buffer_data.size());
 
     ESP_LOGD(TAG, "%s len = %zd", __FUNCTION__, pkt.len);
-    ESP_LOG_BUFFER_HEXDUMP(TAG, json, sizeof(json), ESP_LOG_VERBOSE);
+    ESP_LOG_BUFFER_HEX_LEVEL(TAG, buffer_data.data(), buffer_data.size(), ESP_LOG_VERBOSE);
 
     int fd = httpd_req_to_sockfd(req);
-
-    rapidjson::Document document;
-    document.Parse(json);
-    if(document.HasParseError())
-    {
-        ESP_LOGE(TAG, "Failed to parse incoming JSON");
-        return ESP_FAIL;
-    }
-
+    
+    auto buffer = std::span<uint8_t>(buffer_data.data(), pkt.len);
+    
     {
         auto message =
-            parameters::from_json<parameters::ApiMessage>(document.GetObject());
+            api::from_bytes<parameters::ApiMessage>(buffer);
         if(message.has_value())
         {
             auto out = AppMessage{*message, fd};
@@ -168,7 +151,7 @@ esp_err_t websocket_get_handler(httpd_req_t *req)
 
     {
         auto message =
-            midi::from_json<midi::MappingApiMessage>(document.GetObject());
+            api::from_bytes<midi::MappingApiMessage>(buffer);
         if(message.has_value())
         {
             auto out = AppMessage{*message, fd};
@@ -188,8 +171,7 @@ esp_err_t websocket_get_handler(httpd_req_t *req)
     }
 
     {
-        auto message = presets::from_json<presets::PresetsApiMessage>(
-            document.GetObject());
+        auto message = api::from_bytes<presets::PresetsApiMessage>(buffer);
         if(message.has_value())
         {
             auto out = AppMessage{*message, fd};
@@ -209,8 +191,8 @@ esp_err_t websocket_get_handler(httpd_req_t *req)
     }
 
     {
-        auto message = selected_preset::from_json<
-            selected_preset::SelectedPresetApiMessage>(document.GetObject());
+        auto message =
+            api::from_bytes<selected_preset::SelectedPresetApiMessage>(buffer);
         if(message.has_value())
         {
             auto out = AppMessage{*message, fd};
@@ -256,32 +238,22 @@ void websocket_send(void *arg)
         ESP_LOGD(TAG, "%s source fd = %d", __FUNCTION__, *message.second);
     }
 
-    rapidjson::Document document;
-
-    auto json = std::visit([&](const auto &message) -> rapidjson::Value
-                           { return to_json(document, message); },
+    std::array<uint8_t, 256> memory{};
+    auto buffer = std::span<uint8_t, 256>{memory};
+    auto encoded = std::visit([&](const auto &message) 
+                           { return api::to_bytes(message, buffer); },
                            message.first);
+   // FIXME: handle error
 
-    rapidjson::GenericStringBuffer<rapidjson::UTF8<>,
-                                   rapidjson::MemoryPoolAllocator<>>
-        buffer;
-    rapidjson::Writer writer{buffer};
-    json.Swap(document);
-    document.Accept(writer);
-
-    const char *payload = buffer.GetString();
-    std::size_t payload_len = strlen(payload);
-
-    ESP_LOGD(TAG, "%s len = %zd", __FUNCTION__, payload_len);
-    ESP_LOG_BUFFER_HEXDUMP(TAG, payload, payload_len, ESP_LOG_VERBOSE);
+    ESP_LOGD(TAG, "%s len = %zd", __FUNCTION__, encoded->size());
+    ESP_LOG_BUFFER_HEX_LEVEL(TAG, memory.data(), memory.size(), ESP_LOG_VERBOSE);
 
     httpd_ws_frame_t pkt = {
         .final = false,
         .fragmented = false,
-        .type = HTTPD_WS_TYPE_TEXT,
-        // XXX: casting away const, but esp-idf does not modify the buffer
-        .payload = reinterpret_cast<uint8_t *>(const_cast<char *>(payload)),
-        .len = payload_len,
+        .type = HTTPD_WS_TYPE_BINARY,
+        .payload = encoded->data(),
+        .len = encoded->size(),
     };
 
     int client_fds[MAX_CLIENTS];

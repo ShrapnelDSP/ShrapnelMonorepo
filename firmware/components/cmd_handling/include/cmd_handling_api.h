@@ -19,6 +19,7 @@
 
 #pragma once
 
+#include "api.h"
 #include "audio_param.h"
 #include <variant>
 
@@ -40,3 +41,14 @@ struct Initialise final
 using ApiMessage = std::variant<Update, Initialise>;
 
 } // namespace shrapnel::parameters
+
+namespace shrapnel::api {
+
+std::optional<std::span<uint8_t>>
+to_bytes(const parameters::ApiMessage &message, std::span<uint8_t> buffer);
+
+template<>
+std::optional<parameters::ApiMessage>
+from_bytes(std::span<const uint8_t> buffer);
+
+}

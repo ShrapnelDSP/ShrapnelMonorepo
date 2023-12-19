@@ -6,6 +6,6 @@ target_include_directories(audio_events PUBLIC include)
 
 target_link_libraries(audio_events
                       PUBLIC
-                      shrapnel::rapidjson
+                      shrapnel::api
                       PRIVATE
                       shrapnel::compiler_warning_flags)

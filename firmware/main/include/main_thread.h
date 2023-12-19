@@ -24,8 +24,7 @@
 #include "audio_param.h"
 #include "cmd_handling.h"
 #include "messages.h"
-#include "midi_mapping_json_builder.h"
-#include "midi_mapping_json_parser.h"
+#include "midi_mapping.pb.h"
 #include "midi_uart.h"
 #include "os/queue.h"
 #include "os/timer.h"
@@ -44,30 +43,6 @@ constexpr const size_t MAX_PARAMETERS = 20;
 
 using AudioParameters = parameters::AudioParameters<MAX_PARAMETERS, 1>;
 using SendMessageCallback = etl::delegate<void(const AppMessage &)>;
-
-// TODO move all the json parser function into a json namespace
-namespace midi {
-using midi::from_json;
-
-template <>
-std::optional<float> from_json(const rapidjson::Value &value)
-{
-    if(!value.IsFloat())
-    {
-        ESP_LOGE(TAG, "not float");
-        return std::nullopt;
-    }
-    return value.GetFloat();
-}
-
-template <>
-rapidjson::Value to_json(rapidjson::Document &, const float &object)
-{
-    rapidjson::Value out{};
-    out.SetFloat(object);
-    return out;
-}
-} // namespace midi
 
 template <typename MappingManagerT>
 class MidiMappingObserver final : public midi::MappingObserver
@@ -90,16 +65,25 @@ public:
 private:
     void persist()
     {
-        rapidjson::Document document;
+        std::array<uint8_t, 256> memory{};
+        auto buffer = std::span{memory};
 
-        auto mapping_data = midi::to_json(document, *mapping_manager.get());
-        document.Swap(mapping_data);
+        auto mappings = mapping_manager.get();
+        auto proto = api::to_proto<shrapnel_midi_mapping_MappingList>(
+            etl::map<midi::Mapping::id_t, midi::Mapping, 10>(
+                {mappings->begin(), mappings->end()}));
 
-        rapidjson::StringBuffer buffer;
-        rapidjson::Writer writer{buffer};
-        document.Accept(writer);
+        auto result_buffer = api::to_bytes(proto, buffer);
+        if(!result_buffer.has_value()) {
+            ESP_LOGE(TAG, "failed to serialise midi mappings");
+            return;
+        }
 
-        persistence->save("midi_mappings", buffer.GetString());
+        int rc = persistence->save("midi_mappings", *result_buffer);
+        if(rc != 0)
+        {
+            ESP_LOGE(TAG, "failed to persist midi mappings");
+        }
     };
 
     std::shared_ptr<persistence::Storage> persistence;
@@ -199,16 +183,7 @@ private:
     {
         for(const auto &param : updated_parameters)
         {
-            rapidjson::Document document;
-
-            auto parameter_data = midi::to_json(document, param.second);
-            document.Swap(parameter_data);
-
-            rapidjson::StringBuffer buffer;
-            rapidjson::Writer writer{buffer};
-            document.Accept(writer);
-
-            persistence->save(param.first.data(), buffer.GetString());
+            persistence->save(param.first.data(), param.second);
         }
 
         updated_parameters.clear();
@@ -268,30 +243,15 @@ public:
                                              float default_value)
         {
             std::optional<float> loaded_value;
-            etl::string<128> json_string{};
-            int rc = a_persistence->load(name.data(), json_string);
+            float value;
+            int rc = a_persistence->load(name.data(), value);
             if(rc != 0)
             {
                 ESP_LOGW(TAG, "Parameter %s failed to load", name.data());
                 goto out;
             }
 
-            {
-                rapidjson::Document document;
-                document.Parse(json_string.data());
-
-                if(!document.HasParseError())
-                {
-                    loaded_value = midi::from_json<float>(document);
-                }
-                else
-                {
-                    ESP_LOGE(TAG,
-                             "document failed to parse '%s'",
-                             json_string.data());
-                }
-            }
-
+            loaded_value = value;
         out:
             auto range = maximum - minimum;
             rc = a_audio_params->create_and_add_parameter(
@@ -342,18 +302,29 @@ public:
         {
             /* TODO How to reduce the memory usage?
            * - We could store each entry in the table at a different key
-           * - Use the streaming API so that the entire message does not have to
-           *   be parsed at once?
            * - Replace etl::map with more efficient implementation
            */
-            etl::string<1500> mapping_json;
-            a_persistence->load("midi_mappings", mapping_json);
-            ESP_LOGI(TAG, "saved mappings: %s", mapping_json.c_str());
+            std::optional<etl::map<midi::Mapping::id_t, midi::Mapping, 10>>
+                saved_mappings;
 
-            rapidjson::Document document;
-            document.Parse(mapping_json.c_str());
-            auto saved_mappings = midi::from_json<
-                etl::map<midi::Mapping::id_t, midi::Mapping, 10>>(document);
+            std::array<uint8_t, 1024> memory{};
+            auto buffer = std::span<uint8_t>{memory};
+
+            int rc = a_persistence->load("midi_mappings", buffer);
+            if(rc != 0)
+            {
+                ESP_LOGE(TAG, "failed to load midi mappings");
+            }
+            else
+            {
+                auto mapping_proto = api::from_bytes(buffer);
+                if(mapping_proto.has_value())
+                {
+                    saved_mappings = api::from_proto<
+                        etl::map<midi::Mapping::id_t, midi::Mapping, 10>>(
+                        mapping_proto);
+                }
+            }
 
             using MidiMappingType =
                 midi::MappingManager<ParameterUpdateNotifier, 10, 1>;
@@ -468,7 +439,7 @@ private:
                                                 midi::GetRequest>)
                     {
                         auto mappings = midi_mapping_manager->get();
-                        return midi::GetResponse{mappings};
+                        return midi::GetResponse{{mappings->begin(), mappings->end()}};
                     }
                     else if constexpr(std::is_same_v<MidiMappingMessageT,
                                                      midi::CreateRequest>)
@@ -641,7 +612,7 @@ private:
         {
             return std::nullopt;
         }
-       
+
         deserialise_live_parameters(*parameter_notifier, preset->parameters);
 
         return selected_preset::Notify{

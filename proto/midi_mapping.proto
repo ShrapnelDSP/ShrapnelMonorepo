@@ -1,0 +1,95 @@
+syntax = "proto3";
+
+import 'uuid.proto';
+
+package shrapnel.midi_mapping;
+
+message Mapping {
+  enum Mode {
+    parameter = 0;
+    toggle = 1;
+  }
+
+  uint32 midi_channel = 1;
+  uint32 cc_number = 2;
+  Mode mode = 3;
+  string parameterName = 4;
+}
+
+message MidiMessage {
+  message NoteOn {
+    uint32 note = 1;
+    uint32 velocity = 2;
+  }
+
+  message NoteOff {
+    uint32 note = 1;
+    uint32 velocity = 2;
+  }
+
+  message ControlChange {
+    uint32 control = 1;
+    uint32 value = 2;
+  }
+  
+  message ProgramChange {
+    uint32 number = 1;
+  }
+  
+  // The MIDI channel where the message was received
+  uint32 channel = 1;
+  oneof parameters {
+    NoteOn note_on = 2;
+    NoteOff note_off = 3;
+    ControlChange control_change = 4;
+    ProgramChange program_change = 5;
+  }
+}
+
+message MappingRecord {
+  uuid.Uuid id = 1;
+  Mapping mapping = 2;
+}
+
+// A list of all mappings used by the firmware to persist the mappings.
+message MappingList {
+  repeated MappingRecord mappings = 1;
+}
+
+message GetRequest {};
+
+message GetResponse {
+  MappingList mappings = 1;
+};
+
+message CreateRequest {
+  MappingRecord mapping = 1;
+};
+
+message CreateResponse {
+  MappingRecord mapping = 1;
+};
+
+message Update {
+  MappingRecord mapping = 1;
+};
+
+message Remove {
+  uuid.Uuid id = 1;
+};
+
+message MessageReceived {
+  MidiMessage received_message = 1;
+};
+
+message Message {
+  oneof message {
+    GetRequest get_request = 1;
+    GetResponse get_response = 2;
+    CreateRequest create_request = 3;
+    CreateResponse create_response = 4;
+    Update update = 5;
+    Remove remove = 6;
+    MessageReceived message_received = 7;
+  }
+}

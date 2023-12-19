@@ -19,22 +19,12 @@
 
 #pragma once
 
-// Disable warning inside rapidjson
-// https://github.com/Tencent/rapidjson/issues/1700
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wclass-memaccess"
-#pragma GCC diagnostic ignored "-Wzero-as-null-pointer-constant"
-#pragma GCC diagnostic ignored "-Wsign-conversion"
-#pragma GCC diagnostic ignored "-Wswitch-enum"
-#include "rapidjson/document.h"
-#pragma GCC diagnostic pop
+#include "api.h"
+
 #include <atomic>
 #include <variant>
 
 namespace shrapnel::events {
-
-template <typename T>
-rapidjson::Value to_json(rapidjson::Document &document, const T &object);
 
 struct InputClipped
 {
@@ -51,8 +41,13 @@ using ApiMessage = std::variant<InputClipped, OutputClipped>;
 extern std::atomic_flag input_clipped;
 extern std::atomic_flag output_clipped;
 
-template <>
-rapidjson::Value to_json(rapidjson::Document &document,
-                         const ApiMessage &object);
-
 } // namespace shrapnel::events
+
+namespace shrapnel::api {
+
+std::optional<std::span<uint8_t>> to_bytes(const events::ApiMessage &message,
+                                           std::span<uint8_t> buffer);
+
+std::optional<events::ApiMessage> from_bytes(std::span<const uint8_t> buffer);
+
+}

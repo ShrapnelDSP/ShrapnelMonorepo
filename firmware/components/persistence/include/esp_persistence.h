@@ -29,10 +29,15 @@ namespace shrapnel::persistence {
  */
 class EspStorage final : public Storage {
 public:
+    [[nodiscard]] int save(const char *key, std::span<uint8_t> data) override;
     [[nodiscard]] int save(const char *key, etl::string_view data) override;
     [[nodiscard]] int save(const char *key, uint32_t data) override;
+    [[nodiscard]] virtual int save(const char *key, float data) override;
+
+    [[nodiscard]] int load(const char *key, std::span<uint8_t> &data) override;
     [[nodiscard]] int load(const char *key, etl::istring &data) override;
     [[nodiscard]] int load(const char *key, uint32_t &data) override;
+    [[nodiscard]] int load(const char *key, float &data) override;
 };
 
 }

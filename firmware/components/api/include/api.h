@@ -19,24 +19,26 @@
 
 #pragma once
 
-#include "cmd_handling_api.h"
+#include <cstdint>
+#include <optional>
+#include <span>
 
-// Disable warning inside rapidjson
-// https://github.com/Tencent/rapidjson/issues/1700
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wclass-memaccess"
-#pragma GCC diagnostic ignored "-Wzero-as-null-pointer-constant"
-#pragma GCC diagnostic ignored "-Wsign-conversion"
-#pragma GCC diagnostic ignored "-Wswitch-enum"
-#include "rapidjson/document.h"
-#pragma GCC diagnostic pop
+namespace shrapnel::api {
 
-namespace shrapnel::parameters {
+/// Convert a message to bytes to be sent over the network to the frontend
+template <typename T>
+std::optional<std::span<uint8_t>> to_bytes(const T &message, std::span<uint8_t> buffer);
 
-template<typename T>
-rapidjson::Value to_json(rapidjson::Document &document, const T &object);
+/// Parse a message from bytes received from the frontend
+template <typename T>
+std::optional<T> from_bytes(std::span<const uint8_t> buffer);
 
-template<>
-rapidjson::Value to_json(rapidjson::Document &document, const Update &object);
+/// Convert a message from proto struct
+template <typename ProtoT, typename T>
+std::optional<ProtoT> to_proto(const T &message);
+
+/// Convert a message to proto struct
+template <typename T, typename ProtoT>
+std::optional<T> from_proto(const ProtoT &message);
 
 }

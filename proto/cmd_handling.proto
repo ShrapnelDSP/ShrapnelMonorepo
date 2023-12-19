@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package shrapnel.cmd_handling;
+
+message Update {
+  string id = 1;
+  float value = 2;
+}
+
+message Initialise {}
+
+message Message {
+  oneof message {
+    Update update = 1;
+    Initialise initialise = 2;
+  }
+}

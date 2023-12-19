@@ -31,7 +31,6 @@
 #include "cmd_handling_api.h"
 #include "esp_heap_caps.h"
 #include "midi_mapping.h"
-#include "rapidjson/writer.h"
 #include "esp_log.h"
 #include "freertos/projdefs.h"
 
@@ -65,8 +64,6 @@
 #include "main_thread.h"
 #include "messages.h"
 #include "midi_mapping_api.h"
-#include "midi_mapping_json_builder.h"
-#include "midi_mapping_json_parser.h"
 #include "midi_protocol.h"
 #include "midi_uart.h"
 #include "os/debug.h"

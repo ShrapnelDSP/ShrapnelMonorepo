@@ -4,8 +4,7 @@ add_library(shrapnel::cmd_handling ALIAS cmd_handling)
 target_sources(cmd_handling
                PRIVATE
                src/cmd_handling.cpp
-               src/cmd_handling_json.cpp
-               src/cmd_handling_json_builder.cpp)
+               src/cmd_handling_api.cpp)
 
 target_include_directories(cmd_handling PUBLIC include)
 
@@ -14,7 +13,6 @@ target_link_libraries(cmd_handling
                       idf::esp_common
                       idf::log
                       idf::freertos
-                      shrapnel::rapidjson
                       shrapnel::audio_param
                       shrapnel::etl
                       PRIVATE
