@@ -274,7 +274,7 @@ to_proto(const std::pair<midi::Mapping::id_t, midi::Mapping> &message)
 {
     shrapnel_midi_mapping_MappingRecord out =
         shrapnel_midi_mapping_MappingRecord_init_zero;
-    auto mapping = from_proto<shrapnel_midi_mapping_Mapping>(message.second);
+    auto mapping = to_proto<shrapnel_midi_mapping_Mapping>(message.second);
     if(!mapping.has_value())
     {
         return std::nullopt;
@@ -351,7 +351,6 @@ from_proto(const shrapnel_midi_mapping_MappingList &message)
     for(size_t i = 0; i < message.mappings_count; i++)
     {
         auto &proto_mapping = message.mappings[i];
-        // FIXME: move to uuid implementation: midi::Mapping::id_t id{std::to_array(proto_mapping.id.value)};
         auto id = from_proto<midi::Mapping::id_t>(proto_mapping.id);
         if(!id.has_value())
         {

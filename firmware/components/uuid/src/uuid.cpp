@@ -17,24 +17,24 @@
  * ShrapnelDSP. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#pragma once
-
-#include "api.h"
-#include "uuid.pb.h"
-#include <array>
-#include <cstdint>
-#include <optional>
-
-namespace shrapnel::uuid {
-using uuid_t = std::array<uint8_t, 16>;
-} // namespace shrapnel::uuid
+#include "uuid.h"
 
 namespace shrapnel::api {
 
 template <>
-std::optional<shrapnel_uuid_Uuid> to_proto(const uuid::uuid_t &message);
+std::optional<shrapnel_uuid_Uuid> to_proto(const uuid::uuid_t &message)
+{
+    shrapnel_uuid_Uuid out = shrapnel_uuid_Uuid_init_zero;
+
+    std::copy(std::begin(message), std::end(message), std::begin(out.value));
+
+    return out;
+}
 
 template <>
-std::optional<uuid::uuid_t> from_proto(const shrapnel_uuid_Uuid &message);
+std::optional<uuid::uuid_t> from_proto(const shrapnel_uuid_Uuid &message)
+{
+    return std::to_array(message.value);
+}
 
 } // namespace shrapnel::api

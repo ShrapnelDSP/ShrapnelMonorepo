@@ -95,7 +95,7 @@ inline int serialise_preset(const PresetData &preset,
         return -1;
     }
 
-    auto result_buffer = api::to_bytes(proto, buffer);
+    auto result_buffer = api::to_bytes(*proto, buffer);
     if(!result_buffer.has_value())
     {
         return -1;

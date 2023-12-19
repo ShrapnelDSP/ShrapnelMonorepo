@@ -1,3 +1,5 @@
+include(../../../thirdparty/esp-idf-components/nanopb/nanopb-generate-cpp.cmake)
+
 add_library(midi_mapping STATIC)
 add_library(shrapnel::midi_mapping ALIAS midi_mapping)
 

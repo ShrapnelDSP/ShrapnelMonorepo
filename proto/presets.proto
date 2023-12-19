@@ -41,8 +41,7 @@ message PresetRecord {
 message Initialise {}
 
 message Notify {
-  uint32 id = 1;
-  Preset preset = 2;
+  PresetRecord preset = 1;
 }
 
 message Create {
