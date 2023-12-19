@@ -199,6 +199,38 @@ std::optional<midi::Message>
 from_proto(const shrapnel_midi_mapping_MidiMessage &message);
 
 template <>
+std::optional<shrapnel_midi_mapping_MidiMessage_NoteOn >
+to_proto(const midi::Message::NoteOn &message);
+
+template <>
+std::optional<midi::Message::NoteOn>
+from_proto(const shrapnel_midi_mapping_MidiMessage_NoteOn &message);
+
+template <>
+std::optional<shrapnel_midi_mapping_MidiMessage_NoteOff >
+to_proto(const midi::Message::NoteOff &message);
+
+template <>
+std::optional<midi::Message::NoteOff>
+from_proto(const shrapnel_midi_mapping_MidiMessage_NoteOff &message);
+
+template <>
+std::optional<shrapnel_midi_mapping_MidiMessage_ControlChange >
+to_proto(const midi::Message::ControlChange &message);
+
+template <>
+std::optional<midi::Message::ControlChange>
+from_proto(const shrapnel_midi_mapping_MidiMessage_ControlChange &message);
+
+template <>
+std::optional<shrapnel_midi_mapping_MidiMessage_ProgramChange >
+to_proto(const midi::Message::ProgramChange &message);
+
+template <>
+std::optional<midi::Message::ProgramChange>
+from_proto(const shrapnel_midi_mapping_MidiMessage_ProgramChange &message);
+
+template <>
 std::optional<shrapnel_midi_mapping_MessageReceived>
 to_proto(const midi::MessageReceived &message);
 
