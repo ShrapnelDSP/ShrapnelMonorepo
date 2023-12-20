@@ -17,9 +17,6 @@
  * ShrapnelDSP. If not, see <https://www.gnu.org/licenses/>.
  */
 
-// ignore_for_file: invalid_annotation_target
-// freezed and JsonKey generate this warning when used together correctly
-
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'models.freezed.dart';
@@ -48,10 +45,10 @@ class MidiApiMessage with _$MidiApiMessage {
 @freezed
 class MidiMapping with _$MidiMapping {
   const factory MidiMapping({
-    @JsonKey(name: 'midi_channel') required int midiChannel,
-    @JsonKey(name: 'cc_number') required int ccNumber,
-    @JsonKey(name: 'parameter_id') required String parameterId,
-    @JsonKey(name: 'mode') required MidiMappingMode mode,
+    required int midiChannel,
+    required int ccNumber,
+    required String parameterId,
+    required MidiMappingMode mode,
   }) = _MidiMapping;
 
   const MidiMapping._();

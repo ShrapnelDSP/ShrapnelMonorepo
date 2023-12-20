@@ -79,7 +79,7 @@ class ApiWebsocket {
 
   bool get isAlive => _websocket.isAlive;
 
-  void send(ApiMessage json) {
+  void send(ApiMessage message) {
     throw UnimplementedError('API encoding');
     // _websocket.sendMessage(jsonEncode(json));
   }
