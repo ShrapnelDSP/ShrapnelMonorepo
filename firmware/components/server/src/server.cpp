@@ -133,85 +133,18 @@ esp_err_t websocket_get_handler(httpd_req_t *req)
     int fd = httpd_req_to_sockfd(req);
     
     auto buffer = std::span<uint8_t>(buffer_data.data(), pkt.len);
-    
+
+    auto message = api::from_bytes<ApiMessage>(buffer);
+    if(message.has_value())
     {
-        auto message =
-            api::from_bytes<parameters::ApiMessage>(buffer);
-        if(message.has_value())
+        auto out = AppMessage{*message, fd};
+        int queue_rc = self->in_queue->send(&out, pdMS_TO_TICKS(100));
+        if(queue_rc != pdPASS)
         {
-            auto out = AppMessage{*message, fd};
-            int queue_rc = self->in_queue->send(&out, pdMS_TO_TICKS(100));
-            if(queue_rc != pdPASS)
-            {
-                ESP_LOGE(TAG, "in_queue message dropped");
-            }
-            goto out;
+            ESP_LOGE(TAG, "in_queue message dropped");
         }
     }
 
-    {
-        auto message =
-            api::from_bytes<midi::MappingApiMessage>(buffer);
-        if(message.has_value())
-        {
-            auto out = AppMessage{*message, fd};
-            int queue_rc = self->in_queue->send(&out, pdMS_TO_TICKS(100));
-            if(queue_rc != pdPASS)
-            {
-                ESP_LOGE(TAG, "in_queue message dropped");
-            }
-
-            etl::string<256> buffer;
-            etl::string_stream stream{buffer};
-            stream << *message;
-            ESP_LOGI(TAG, "decoded %s", buffer.data());
-
-            goto out;
-        }
-    }
-
-    {
-        auto message = api::from_bytes<presets::PresetsApiMessage>(buffer);
-        if(message.has_value())
-        {
-            auto out = AppMessage{*message, fd};
-            int queue_rc = self->in_queue->send(&out, pdMS_TO_TICKS(100));
-            if(queue_rc != pdPASS)
-            {
-                ESP_LOGE(TAG, "in_queue message dropped");
-            }
-
-            etl::string<256> buffer;
-            etl::string_stream stream{buffer};
-            stream << *message;
-            ESP_LOGI(TAG, "decoded PresetsApiMessage %s", buffer.data());
-
-            goto out;
-        }
-    }
-
-    {
-        auto message =
-            api::from_bytes<selected_preset::SelectedPresetApiMessage>(buffer);
-        if(message.has_value())
-        {
-            auto out = AppMessage{*message, fd};
-            int queue_rc = self->in_queue->send(&out, pdMS_TO_TICKS(100));
-            if(queue_rc != pdPASS)
-            {
-                ESP_LOGE(TAG, "in_queue message dropped");
-            }
-
-            etl::string<256> buffer;
-            etl::string_stream stream{buffer};
-            stream << *message;
-            ESP_LOGI(TAG, "decoded SelectedPresetApiMessage %s", buffer.data());
-
-            goto out;
-        }
-    }
-
-out:
     ESP_LOGI(
         TAG, "%s stack %d", __FUNCTION__, uxTaskGetStackHighWaterMark(nullptr));
     return ESP_OK;
@@ -240,10 +173,8 @@ void websocket_send(void *arg)
 
     std::array<uint8_t, 256> memory{};
     auto buffer = std::span<uint8_t, 256>{memory};
-    auto encoded = std::visit([&](const auto &message) 
-                           { return api::to_bytes(message, buffer); },
-                           message.first);
-   // FIXME: handle error
+    auto encoded = api::to_bytes(message.first, buffer);
+    // FIXME: handle error
 
     ESP_LOGD(TAG, "%s len = %zd", __FUNCTION__, encoded->size());
     ESP_LOG_BUFFER_HEX_LEVEL(TAG, memory.data(), memory.size(), ESP_LOG_VERBOSE);

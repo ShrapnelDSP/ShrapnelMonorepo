@@ -20,6 +20,7 @@
 #pragma once
 
 #include "api.h"
+#include "audio_events.pb.h"
 
 #include <atomic>
 #include <variant>
@@ -45,9 +46,12 @@ extern std::atomic_flag output_clipped;
 
 namespace shrapnel::api {
 
-std::optional<std::span<uint8_t>> to_bytes(const events::ApiMessage &message,
-                                           std::span<uint8_t> buffer);
+template <>
+std::optional<shrapnel_audio_events_Message>
+to_proto(const events::ApiMessage &message);
 
-std::optional<events::ApiMessage> from_bytes(std::span<const uint8_t> buffer);
+template <>
+std::optional<events::ApiMessage>
+from_proto(const shrapnel_audio_events_Message &message);
 
-}
+} // namespace shrapnel::api

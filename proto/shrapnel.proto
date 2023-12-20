@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package shrapnel.messages;
+
+import "audio_events.proto";
+import "cmd_handling.proto";
+import "midi_mapping.proto";
+import "presets.proto";
+import "selected_preset.proto";
+
+message Message {
+  oneof message {
+    audio_events.Message audio_event = 1;
+    cmd_handling.Message command = 2;
+    midi_mapping.Message midi_mapping = 3;
+    presets.Message preset = 4;
+    selected_preset.Message selected_preset = 5;
+  }
+}

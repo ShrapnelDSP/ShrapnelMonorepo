@@ -317,12 +317,12 @@ public:
             }
             else
             {
-                auto mapping_proto = api::from_bytes(buffer);
+                auto mapping_proto = api::from_bytes<shrapnel_midi_mapping_MappingList>(buffer);
                 if(mapping_proto.has_value())
                 {
                     saved_mappings = api::from_proto<
                         etl::map<midi::Mapping::id_t, midi::Mapping, 10>>(
-                        mapping_proto);
+                        *mapping_proto);
                 }
             }
 

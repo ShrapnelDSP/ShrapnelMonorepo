@@ -21,6 +21,7 @@
 
 #include "api.h"
 #include "audio_param.h"
+#include "cmd_handling.pb.h"
 #include <variant>
 
 namespace shrapnel::parameters {
@@ -44,11 +45,12 @@ using ApiMessage = std::variant<Update, Initialise>;
 
 namespace shrapnel::api {
 
-std::optional<std::span<uint8_t>>
-to_bytes(const parameters::ApiMessage &message, std::span<uint8_t> buffer);
+template <>
+std::optional<shrapnel_cmd_handling_Message>
+to_proto(const parameters::ApiMessage &message);
 
-template<>
+template <>
 std::optional<parameters::ApiMessage>
-from_bytes(std::span<const uint8_t> buffer);
+from_proto(const shrapnel_cmd_handling_Message &message);
 
-}
+} // namespace shrapnel::api

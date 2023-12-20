@@ -4,7 +4,9 @@ add_library(presets STATIC)
 add_library(shrapnel::presets ALIAS presets)
 
 set(NANOPB_GENERATE_CPP_APPEND_PATH ON)
-nanopb_generate_cpp(PROTO_SRCS PROTO_HDRS ../../../proto/presets.proto)
+nanopb_generate_cpp(PROTO_SRCS PROTO_HDRS
+                    ../../../proto/presets.proto
+                    ../../../proto/selected_preset.proto)
 
 target_sources(presets
                PRIVATE
