@@ -21,9 +21,53 @@ import 'dart:async';
 import 'dart:collection';
 
 import 'package:flutter/material.dart';
+import 'package:logging/logging.dart';
+import 'package:rxdart/rxdart.dart';
 
-import '../../json_websocket.dart';
+import '../../api/api_websocket.dart';
+import '../../core/message_transport.dart';
+import '../../core/stream_extensions.dart';
 import '../model/models.dart';
+
+final _log = Logger('midi_mapping_service');
+
+class MidiMappingTransport
+    implements MessageTransport<MidiApiMessage, MidiApiMessage> {
+  MidiMappingTransport({required this.websocket}) {
+    _controller.stream
+        .logFinest(_log, (event) => 'send message: $event')
+        .listen(
+          (message) => websocket.send(ApiMessage.midiMapping(message: message)),
+        );
+  }
+
+  final _controller = StreamController<MidiApiMessage>();
+
+  @override
+  StreamSink<MidiApiMessage> get sink => _controller.sink;
+
+  @override
+  late final Stream<MidiApiMessage> stream = websocket.stream
+      .whereType<ApiMessageMidiMapping>()
+      .map((event) => event.message)
+      .logFinest(
+        _log,
+        (event) => 'receive message: $event',
+      );
+
+  @override
+  Stream<void> get connectionStream => websocket.connectionStream;
+
+  ApiWebsocket websocket;
+
+  @override
+  void dispose() {
+    unawaited(_controller.close());
+  }
+
+  @override
+  bool get isAlive => websocket.isAlive;
+}
 
 class MidiMappingService extends ChangeNotifier {
   MidiMappingService({
@@ -51,15 +95,12 @@ class MidiMappingService extends ChangeNotifier {
   /// If there is an error, the mapping is removed.
   UnmodifiableMapView<String, MidiMapping> get mappings => _mappingsView;
 
-  JsonWebsocket websocket;
+  MessageTransport<MidiApiMessage, MidiApiMessage> websocket;
 
   Future<void> getMapping() async {
     const message = MidiApiMessage.getRequest();
 
-    final response = websocket.dataStream
-        .map(
-          MidiApiMessage.fromJson,
-        )
+    final response = websocket.stream
         .where((event) => event is GetResponse)
         .map((event) => event as GetResponse)
         .map((event) => event.mappings)
@@ -68,7 +109,7 @@ class MidiMappingService extends ChangeNotifier {
         )
         .first;
 
-    websocket.send(message.toJson());
+    websocket.sink.add(message);
 
     try {
       final value = await response;
@@ -84,10 +125,7 @@ class MidiMappingService extends ChangeNotifier {
   Future<void> createMapping(
     MidiMappingEntry mapping,
   ) async {
-    final response = websocket.dataStream
-        .map(
-          MidiApiMessage.fromJson,
-        )
+    final response = websocket.stream
         .where((event) => event is CreateResponse)
         .map((event) => event as CreateResponse)
         .map(
@@ -102,7 +140,7 @@ class MidiMappingService extends ChangeNotifier {
     notifyListeners();
 
     final message = MidiApiMessage.createRequest(mapping: mapping);
-    websocket.send(message.toJson());
+    websocket.sink.add(message);
 
     try {
       await response;
@@ -117,7 +155,7 @@ class MidiMappingService extends ChangeNotifier {
     notifyListeners();
 
     final message = MidiApiMessage.update(mapping: mapping);
-    websocket.send(message.toJson());
+    websocket.sink.add(message);
   }
 
   Future<void> deleteMapping({required String id}) async {
@@ -125,6 +163,6 @@ class MidiMappingService extends ChangeNotifier {
     notifyListeners();
 
     final message = MidiApiMessage.remove(id: id);
-    websocket.send(message.toJson());
+    websocket.sink.add(message);
   }
 }

@@ -18,84 +18,20 @@
  */
 
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logging/logging.dart';
 import 'package:rxdart/rxdart.dart';
 
+import '../../api/api_websocket.dart';
 import '../../core/message_transport.dart';
 import '../../core/stream_extensions.dart';
-import '../../json_websocket.dart';
-import '../proto/generated/presets.pb.dart' as pb;
-
 import 'presets.dart' as presets;
 
 part 'presets_client.freezed.dart';
 
-part 'presets_client.g.dart';
-
 // ignore: unused_element
 final _log = Logger('presets_client');
-
-class _PresetParametersJsonConverter
-    implements JsonConverter<PresetParametersData, String> {
-  const _PresetParametersJsonConverter();
-
-  @override
-  PresetParametersData fromJson(String json) {
-    final parameters = pb.PresetParameters.fromBuffer(base64Decode(json));
-    return PresetParametersData(
-      ampGain: parameters.ampGain / 1000,
-      ampChannel: parameters.ampChannel / 1000,
-      bass: parameters.bass / 1000,
-      middle: parameters.middle / 1000,
-      treble: parameters.treble / 1000,
-      contour: parameters.contour / 1000,
-      volume: parameters.volume / 1000,
-      noiseGateThreshold: parameters.noiseGateThreshold / 1000,
-      noiseGateHysteresis: parameters.noiseGateHysteresis / 1000,
-      noiseGateAttack: parameters.noiseGateAttack / 1000,
-      noiseGateHold: parameters.noiseGateHold / 1000,
-      noiseGateRelease: parameters.noiseGateRelease / 1000,
-      noiseGateBypass: parameters.noiseGateBypass / 1000,
-      chorusRate: parameters.chorusRate / 1000,
-      chorusDepth: parameters.chorusDepth / 1000,
-      chorusMix: parameters.chorusMix / 1000,
-      chorusBypass: parameters.chorusBypass / 1000,
-      wahPosition: parameters.wahPosition / 1000,
-      wahVocal: parameters.wahVocal / 1000,
-      wahBypass: parameters.wahBypass / 1000,
-    );
-  }
-
-  @override
-  String toJson(PresetParametersData object) {
-    final parameters = pb.PresetParameters(
-      ampGain: (object.ampGain * 1000).round(),
-      ampChannel: (object.ampChannel * 1000).round(),
-      bass: (object.bass * 1000).round(),
-      middle: (object.middle * 1000).round(),
-      treble: (object.treble * 1000).round(),
-      contour: (object.contour * 1000).round(),
-      volume: (object.volume * 1000).round(),
-      noiseGateThreshold: (object.noiseGateThreshold * 1000).round(),
-      noiseGateHysteresis: (object.noiseGateHysteresis * 1000).round(),
-      noiseGateAttack: (object.noiseGateAttack * 1000).round(),
-      noiseGateHold: (object.noiseGateHold * 1000).round(),
-      noiseGateRelease: (object.noiseGateRelease * 1000).round(),
-      noiseGateBypass: (object.noiseGateBypass * 1000).round(),
-      chorusRate: (object.chorusRate * 1000).round(),
-      chorusDepth: (object.chorusDepth * 1000).round(),
-      chorusMix: (object.chorusMix * 1000).round(),
-      chorusBypass: (object.chorusBypass * 1000).round(),
-      wahPosition: (object.wahPosition * 1000).round(),
-      wahVocal: (object.wahVocal * 1000).round(),
-      wahBypass: (object.wahBypass * 1000).round(),
-    );
-    return base64Encode(parameters.writeToBuffer());
-  }
-}
 
 @freezed
 class PresetParametersData with _$PresetParametersData {
@@ -153,14 +89,10 @@ class PresetParametersData with _$PresetParametersData {
 
 @freezed
 class PresetData with _$PresetData {
-  @_PresetParametersJsonConverter()
   factory PresetData({
     required String name,
     required PresetParametersData parameters,
   }) = _PresetData;
-
-  factory PresetData.fromJson(Map<String, dynamic> json) =>
-      _$PresetDataFromJson(json);
 
   // ignore: prefer_constructors_over_static_methods
   static PresetData fromPresetState(presets.PresetState presetState) {
@@ -171,27 +103,19 @@ class PresetData with _$PresetData {
   }
 }
 
-@Freezed(unionKey: 'messageType')
+@freezed
 class PresetsMessage with _$PresetsMessage {
-  @FreezedUnionValue('Presets::initialise')
   factory PresetsMessage.initialise() = PresetsMessageInitialise;
 
-  @FreezedUnionValue('Presets::notify')
   factory PresetsMessage.notify(int id, PresetData preset) =
       PresetsMessageNotify;
 
-  @FreezedUnionValue('Presets::create')
   factory PresetsMessage.create(PresetData preset) = PresetsMessageCreate;
 
-  @FreezedUnionValue('Presets::update')
   factory PresetsMessage.update(int id, PresetData preset) =
       PresetsMessageUpdate;
 
-  @FreezedUnionValue('Presets::delete')
   factory PresetsMessage.delete(int id) = PresetsMessageDelete;
-
-  factory PresetsMessage.fromJson(Map<String, dynamic> json) =>
-      _$PresetsMessageFromJson(json);
 }
 
 class PresetsTransport
@@ -199,7 +123,9 @@ class PresetsTransport
   PresetsTransport({required this.websocket}) {
     _controller.stream
         .logFinest(_log, (event) => 'send message: $event')
-        .listen((message) => websocket.send(message.toJson()));
+        .listen(
+          (message) => websocket.send(ApiMessage.presets(message: message)),
+        );
   }
 
   final _controller = StreamController<PresetsMessage>();
@@ -208,30 +134,26 @@ class PresetsTransport
   StreamSink<PresetsMessage> get sink => _controller.sink;
 
   @override
-  late final Stream<PresetsMessage> stream = websocket.dataStream.transform(
-    StreamTransformer.fromBind((jsonStream) async* {
-      await for (final message in jsonStream) {
-        try {
-          yield PresetsMessage.fromJson(message);
-        } catch (_) {
-          // ignore
-        }
-      }
-    }),
-  ).logFinest(
-    _log,
-    (event) => 'receive message: $event',
-  );
+  late final Stream<PresetsMessage> stream = websocket.stream
+      .whereType<ApiMessagePresets>()
+      .map((event) => event.message)
+      .logFinest(
+        _log,
+        (event) => 'receive message: $event',
+      );
 
   @override
   Stream<void> get connectionStream => websocket.connectionStream;
 
-  JsonWebsocket websocket;
+  ApiWebsocket websocket;
 
   @override
   void dispose() {
     unawaited(_controller.close());
   }
+
+  @override
+  bool get isAlive => websocket.isAlive;
 }
 
 class PresetsClient {

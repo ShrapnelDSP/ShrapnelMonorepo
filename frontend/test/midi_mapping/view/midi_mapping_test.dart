@@ -18,14 +18,13 @@
  */
 
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
+import 'package:shrapnel/api/api_websocket.dart';
 import 'package:shrapnel/audio_events.dart';
-import 'package:shrapnel/json_websocket.dart';
 import 'package:shrapnel/main.dart';
 import 'package:shrapnel/midi_mapping/model/models.dart';
 import 'package:shrapnel/robust_websocket.dart';
@@ -34,44 +33,34 @@ import 'package:shrapnel/util/uuid.dart';
 import '../../home_page_object.dart';
 import 'midi_mapping_test.mocks.dart';
 
-@GenerateMocks([JsonWebsocket, UuidService])
+@GenerateMocks([ApiWebsocket, UuidService])
 @GenerateNiceMocks(
   [MockSpec<RobustWebsocket>(), MockSpec<AudioClippingService>()],
 )
 void main() {
   testWidgets('Midi mapping can be created', (tester) async {
-    final apiController = StreamController<Map<String, dynamic>>.broadcast();
+    final apiController = StreamController<ApiMessage>.broadcast();
     final websocket = MockRobustWebsocket();
-    final api = MockJsonWebsocket();
-    when(api.dataStream).thenAnswer((_) => apiController.stream);
+    final api = MockApiWebsocket();
+    when(api.stream).thenAnswer((_) => apiController.stream);
     when(api.connectionStream).thenAnswer((_) => Stream.fromIterable([]));
     when(api.isAlive).thenReturn(true);
     final uuid = MockUuidService();
 
     final sut = App(
       websocket: websocket,
-      jsonWebsocket: api,
+      apiWebsocket: api,
       uuid: uuid,
     );
 
-    final getRequest = json.decodeAsMap(
-      '''
-      {
-        "messageType": "MidiMap::get::request"
-      }
-      ''',
-    );
+    const getRequest =
+        ApiMessage.midiMapping(message: MidiApiMessage.getRequest());
 
     when(api.send(getRequest)).thenAnswer(
       (_) {
         apiController.add(
-          json.decodeAsMap(
-            '''
-            {
-              "messageType": "MidiMap::get::response",
-              "mappings": { }
-            }
-            ''',
+          const ApiMessage.midiMapping(
+            message: MidiApiMessage.getResponse(mappings: {}),
           ),
         );
       },
@@ -86,39 +75,35 @@ void main() {
     verify(api.send(getRequest));
     when(uuid.v4()).thenReturn('123');
 
-    final createRequest = json.decodeAsMap(
-      '''
-      {
-        "messageType": "MidiMap::create::request",
-        "mapping": {
-          "123": {
-            "midi_channel": 1,
-            "cc_number": 2,
-            "parameter_id": "chorusDepth",
-            "mode": "parameter"
-          }
-        }
-      }
-      ''',
+    const createRequest = ApiMessage.midiMapping(
+      message: MidiApiMessage.createRequest(
+        mapping: MidiMappingEntry(
+          id: '123',
+          mapping: MidiMapping(
+            midiChannel: 1,
+            ccNumber: 2,
+            parameterId: 'chorusDepth',
+            mode: MidiMappingMode.parameter,
+          ),
+        ),
+      ),
     );
 
     when(api.send(createRequest)).thenAnswer(
       (_) {
         apiController.add(
-          json.decodeAsMap(
-            '''
-            {
-              "messageType": "MidiMap::create::response",
-              "mapping": {
-                "123": {
-                  "midi_channel": 1,
-                  "cc_number": 2,
-                  "parameter_id": "chorusDepth",
-                  "mode": "parameter"
-                }
-              }
-            }
-            ''',
+          const ApiMessage.midiMapping(
+            message: MidiApiMessage.createResponse(
+              mapping: MidiMappingEntry(
+                id: '123',
+                mapping: MidiMapping(
+                  midiChannel: 1,
+                  ccNumber: 2,
+                  parameterId: 'chorusDepth',
+                  mode: MidiMappingMode.parameter,
+                ),
+              ),
+            ),
           ),
         );
       },
@@ -148,38 +133,28 @@ void main() {
   });
 
   testWidgets('Midi mapping create rolls back on error', (tester) async {
-    final apiController = StreamController<Map<String, dynamic>>.broadcast();
+    final apiController = StreamController<ApiMessage>.broadcast();
     final websocket = MockRobustWebsocket();
-    final api = MockJsonWebsocket();
-    when(api.dataStream).thenAnswer((_) => apiController.stream);
+    final api = MockApiWebsocket();
+    when(api.stream).thenAnswer((_) => apiController.stream);
     when(api.connectionStream).thenAnswer((_) => Stream.fromIterable([]));
     when(api.isAlive).thenReturn(true);
     final uuid = MockUuidService();
 
     final sut = App(
       websocket: websocket,
-      jsonWebsocket: api,
+      apiWebsocket: api,
       uuid: uuid,
     );
 
-    final getRequest = json.decodeAsMap(
-      '''
-      {
-        "messageType": "MidiMap::get::request"
-      }
-      ''',
-    );
+    const getRequest =
+        ApiMessage.midiMapping(message: MidiApiMessage.getRequest());
 
     when(api.send(getRequest)).thenAnswer(
       (_) {
         apiController.add(
-          json.decodeAsMap(
-            '''
-            {
-              "messageType": "MidiMap::get::response",
-              "mappings": { }
-            }
-            ''',
+          const ApiMessage.midiMapping(
+            message: MidiApiMessage.getResponse(mappings: {}),
           ),
         );
       },
@@ -194,20 +169,18 @@ void main() {
 
     when(uuid.v4()).thenReturn('123');
 
-    final createRequest = json.decodeAsMap(
-      '''
-      {
-        "messageType": "MidiMap::create::request",
-        "mapping": {
-          "123": {
-            "midi_channel": 1,
-            "cc_number": 2,
-            "mode": "parameter",
-            "parameter_id": "chorusDepth"
-          }
-        }
-      }
-      ''',
+    const createRequest = ApiMessage.midiMapping(
+      message: MidiApiMessage.createRequest(
+        mapping: MidiMappingEntry(
+          id: '123',
+          mapping: MidiMapping(
+            midiChannel: 1,
+            ccNumber: 2,
+            parameterId: 'chorusDepth',
+            mode: MidiMappingMode.parameter,
+          ),
+        ),
+      ),
     );
 
     final midiMappingCreatePage = await midiMappingPage.openCreateDialog();
@@ -243,38 +216,30 @@ void main() {
   testWidgets(
     'Midi mapping can be edited',
     (tester) async {
-      final apiController = StreamController<Map<String, dynamic>>.broadcast();
+      final apiController = StreamController<ApiMessage>.broadcast();
       final websocket = MockRobustWebsocket();
-      final api = MockJsonWebsocket();
-      when(api.dataStream).thenAnswer((_) => apiController.stream);
+      final api = MockApiWebsocket();
+      when(api.stream).thenAnswer((_) => apiController.stream);
       when(api.connectionStream).thenAnswer((_) => Stream.fromIterable([]));
       when(api.isAlive).thenReturn(true);
 
-      final getRequest = json.decodeAsMap(
-        '''
-        {
-          "messageType": "MidiMap::get::request"
-        }
-        ''',
-      );
+      const getRequest =
+          ApiMessage.midiMapping(message: MidiApiMessage.getRequest());
 
       when(api.send(getRequest)).thenAnswer(
         (_) {
           apiController.add(
-            json.decodeAsMap(
-              '''
-              {
-                "messageType": "MidiMap::get::response",
-                "mappings": {
-                  "123": {
-                    "midi_channel": 1,
-                    "cc_number": 2,
-                    "mode": "parameter",
-                    "parameter_id": "ampGain"
-                  }
-                }
-              }
-              ''',
+            const ApiMessage.midiMapping(
+              message: MidiApiMessage.getResponse(
+                mappings: {
+                  '123': MidiMapping(
+                    midiChannel: 1,
+                    ccNumber: 2,
+                    parameterId: 'ampGain',
+                    mode: MidiMappingMode.parameter,
+                  ),
+                },
+              ),
             ),
           );
         },
@@ -283,7 +248,7 @@ void main() {
       await tester.pumpWidget(
         App(
           websocket: websocket,
-          jsonWebsocket: api,
+          apiWebsocket: api,
         ),
       );
 
@@ -298,20 +263,18 @@ void main() {
       await midiMappingPage.updateMidiChannel(id: '123', value: 3);
       verify(
         api.send(
-          json.decodeAsMap(
-            '''
-            {
-              "messageType": "MidiMap::update",
-              "mapping": {
-                "123": {
-                  "midi_channel": 3,
-                  "cc_number": 2,
-                  "mode": "parameter",
-                  "parameter_id": "ampGain"
-                }
-              }
-            }
-            ''',
+          const ApiMessage.midiMapping(
+            message: MidiApiMessage.update(
+              mapping: MidiMappingEntry(
+                id: '123',
+                mapping: MidiMapping(
+                  midiChannel: 3,
+                  ccNumber: 2,
+                  parameterId: 'ampGain',
+                  mode: MidiMappingMode.parameter,
+                ),
+              ),
+            ),
           ),
         ),
       );
@@ -319,20 +282,18 @@ void main() {
       await midiMappingPage.updateCcNumber(id: '123', value: 4);
       verify(
         api.send(
-          json.decodeAsMap(
-            '''
-            {
-              "messageType": "MidiMap::update",
-              "mapping": {
-                "123": {
-                  "midi_channel": 3,
-                  "cc_number": 4,
-                  "mode": "parameter",
-                  "parameter_id": "ampGain"
-                }
-              }
-            }
-            ''',
+          const ApiMessage.midiMapping(
+            message: MidiApiMessage.update(
+              mapping: MidiMappingEntry(
+                id: '123',
+                mapping: MidiMapping(
+                  midiChannel: 3,
+                  ccNumber: 4,
+                  parameterId: 'ampGain',
+                  mode: MidiMappingMode.parameter,
+                ),
+              ),
+            ),
           ),
         ),
       );
@@ -343,20 +304,18 @@ void main() {
       );
       verify(
         api.send(
-          json.decodeAsMap(
-            '''
-            {
-              "messageType": "MidiMap::update",
-              "mapping": {
-                "123": {
-                  "midi_channel": 3,
-                  "cc_number": 4,
-                  "mode": "toggle",
-                  "parameter_id": "ampGain"
-                }
-              }
-            }
-            ''',
+          const ApiMessage.midiMapping(
+            message: MidiApiMessage.update(
+              mapping: MidiMappingEntry(
+                id: '123',
+                mapping: MidiMapping(
+                  midiChannel: 3,
+                  ccNumber: 4,
+                  parameterId: 'ampGain',
+                  mode: MidiMappingMode.toggle,
+                ),
+              ),
+            ),
           ),
         ),
       );
@@ -367,20 +326,18 @@ void main() {
       );
       verify(
         api.send(
-          json.decodeAsMap(
-            '''
-            {
-              "messageType": "MidiMap::update",
-              "mapping": {
-                "123": {
-                  "midi_channel": 3,
-                  "cc_number": 4,
-                  "mode": "toggle",
-                  "parameter_id": "contour"
-                }
-              }
-            }
-            ''',
+          const ApiMessage.midiMapping(
+            message: MidiApiMessage.update(
+              mapping: MidiMappingEntry(
+                id: '123',
+                mapping: MidiMapping(
+                  midiChannel: 3,
+                  ccNumber: 4,
+                  parameterId: 'contour',
+                  mode: MidiMappingMode.toggle,
+                ),
+              ),
+            ),
           ),
         ),
       );
@@ -396,33 +353,30 @@ void main() {
     (tester) async {
       await tester.binding.setSurfaceSize(const Size(1920, 1080));
 
-      final apiController = StreamController<Map<String, dynamic>>.broadcast();
+      final apiController = StreamController<ApiMessage>.broadcast();
       final websocket = MockRobustWebsocket();
-      final api = MockJsonWebsocket();
-      when(api.dataStream).thenAnswer((_) => apiController.stream);
+      final api = MockApiWebsocket();
+      when(api.stream).thenAnswer((_) => apiController.stream);
       when(api.connectionStream).thenAnswer((_) => Stream.fromIterable([]));
       when(api.isAlive).thenReturn(true);
 
-      final getRequest = json.decodeAsMap(
-        '''
-        {
-          "messageType": "MidiMap::get::request"
-        }
-        ''',
-      );
+      const getRequest =
+          ApiMessage.midiMapping(message: MidiApiMessage.getRequest());
 
       when(api.send(getRequest)).thenAnswer(
         (_) {
           apiController.add(
-            json.decodeAsMap(
-              '''
-              {
-                "messageType": "MidiMap::get::response",
-                "mappings": {
-                  "123": { "midi_channel": 1, "cc_number": 2, "parameter_id": "ampGain" }
-                }
-              }
-              ''',
+            const ApiMessage.midiMapping(
+              message: MidiApiMessage.getResponse(
+                mappings: {
+                  '123': MidiMapping(
+                    midiChannel: 1,
+                    ccNumber: 2,
+                    parameterId: 'ampGain',
+                    mode: MidiMappingMode.parameter,
+                  ),
+                },
+              ),
             ),
           );
         },
@@ -431,7 +385,7 @@ void main() {
       await tester.pumpWidget(
         App(
           websocket: websocket,
-          jsonWebsocket: api,
+          apiWebsocket: api,
         ),
       );
 
@@ -446,13 +400,10 @@ void main() {
 
       verify(
         api.send(
-          json.decodeAsMap(
-            '''
-          {
-            "messageType": "MidiMap::remove",
-            "id": "123"
-          }
-          ''',
+          const ApiMessage.midiMapping(
+            message: MidiApiMessage.remove(
+              id: '123',
+            ),
           ),
         ),
       );
@@ -467,38 +418,28 @@ void main() {
     (tester) async {
       await tester.binding.setSurfaceSize(const Size(1920, 1080));
 
-      final apiController = StreamController<Map<String, dynamic>>.broadcast();
+      final apiController = StreamController<ApiMessage>.broadcast();
       final websocket = MockRobustWebsocket();
-      final api = MockJsonWebsocket();
-      when(api.dataStream).thenAnswer((_) => apiController.stream);
+      final api = MockApiWebsocket();
+      when(api.stream).thenAnswer((_) => apiController.stream);
       when(api.connectionStream).thenAnswer((_) => Stream.fromIterable([]));
       when(api.isAlive).thenReturn(true);
       final uuid = MockUuidService();
 
       final sut = App(
         websocket: websocket,
-        jsonWebsocket: api,
+        apiWebsocket: api,
         uuid: uuid,
       );
 
-      final getRequest = json.decodeAsMap(
-        '''
-        {
-          "messageType": "MidiMap::get::request"
-        }
-        ''',
-      );
+      const getRequest =
+          ApiMessage.midiMapping(message: MidiApiMessage.getRequest());
 
       when(api.send(getRequest)).thenAnswer(
         (_) {
           apiController.add(
-            json.decodeAsMap(
-              '''
-            {
-              "messageType": "MidiMap::get::response",
-              "mappings": { }
-            }
-            ''',
+            const ApiMessage.midiMapping(
+              message: MidiApiMessage.getResponse(mappings: {}),
             ),
           );
         },
@@ -522,39 +463,35 @@ void main() {
         findsOneWidget,
       );
 
-      final createRequest = json.decodeAsMap(
-        '''
-      {
-        "messageType": "MidiMap::create::request",
-        "mapping": {
-          "123": {
-            "midi_channel": 1,
-            "cc_number": 2,
-            "parameter_id": "volume",
-            "mode": "parameter"
-          }
-        }
-      }
-      ''',
+      const createRequest = ApiMessage.midiMapping(
+        message: MidiApiMessage.createRequest(
+          mapping: MidiMappingEntry(
+            id: '123',
+            mapping: MidiMapping(
+              midiChannel: 1,
+              ccNumber: 2,
+              parameterId: 'volume',
+              mode: MidiMappingMode.parameter,
+            ),
+          ),
+        ),
       );
 
       when(api.send(createRequest)).thenAnswer(
         (_) {
           apiController.add(
-            json.decodeAsMap(
-              '''
-            {
-              "messageType": "MidiMap::create::response",
-              "mapping": {
-                "123": {
-                  "midi_channel": 1,
-                  "cc_number": 2,
-                  "parameter_id": "volume",
-                  "mode": "parameter"
-                }
-              }
-            }
-            ''',
+            const ApiMessage.midiMapping(
+              message: MidiApiMessage.createResponse(
+                mapping: MidiMappingEntry(
+                  id: '123',
+                  mapping: MidiMapping(
+                    midiChannel: 1,
+                    ccNumber: 2,
+                    parameterId: 'volume',
+                    mode: MidiMappingMode.parameter,
+                  ),
+                ),
+              ),
             ),
           );
         },
@@ -565,17 +502,15 @@ void main() {
       // The MIDI message received event finishes the learning process, and
       // creates a the new mapping
       apiController.add(
-        json.decodeAsMap('''
-          {
-            "messageType": "MidiMap::midi_message_received",
-            "message": {
-              "runtimeType": "controlChange",
-              "channel": 1,
-              "control": 2,
-              "value": 3
-            }
-          }
-      '''),
+        const ApiMessage.midiMapping(
+          message: MidiApiMessage.midiMessageReceived(
+            message: MidiMessage.controlChange(
+              channel: 1,
+              control: 2,
+              value: 3,
+            ),
+          ),
+        ),
       );
 
       await tester.pumpAndSettle();
@@ -600,39 +535,31 @@ void main() {
     (tester) async {
       await tester.binding.setSurfaceSize(const Size(1920, 1080));
 
-      final apiController = StreamController<Map<String, dynamic>>.broadcast();
+      final apiController = StreamController<ApiMessage>.broadcast();
       final websocket = MockRobustWebsocket();
-      final api = MockJsonWebsocket();
-      when(api.dataStream).thenAnswer((_) => apiController.stream);
+      final api = MockApiWebsocket();
+      when(api.stream).thenAnswer((_) => apiController.stream);
       when(api.connectionStream).thenAnswer((_) => Stream.fromIterable([]));
       when(api.isAlive).thenReturn(true);
       final uuid = MockUuidService();
 
-      final getRequest = json.decodeAsMap(
-        '''
-        {
-          "messageType": "MidiMap::get::request"
-        }
-        ''',
-      );
+      const getRequest =
+          ApiMessage.midiMapping(message: MidiApiMessage.getRequest());
 
       when(api.send(getRequest)).thenAnswer(
         (_) {
           apiController.add(
-            json.decodeAsMap(
-              '''
-            {
-              "messageType": "MidiMap::get::response",
-              "mappings": {
-                "456": {
-                  "midi_channel": 3,
-                  "cc_number": 4,
-                  "mode": "parameter",
-                  "parameter_id": "volume"
-                }
-              }
-            }
-            ''',
+            const ApiMessage.midiMapping(
+              message: MidiApiMessage.getResponse(
+                mappings: {
+                  '456': MidiMapping(
+                    midiChannel: 3,
+                    ccNumber: 4,
+                    parameterId: 'volume',
+                    mode: MidiMappingMode.parameter,
+                  ),
+                },
+              ),
             ),
           );
         },
@@ -643,7 +570,7 @@ void main() {
       await tester.pumpWidget(
         App(
           websocket: websocket,
-          jsonWebsocket: api,
+          apiWebsocket: api,
           uuid: uuid,
         ),
       );
@@ -662,39 +589,35 @@ void main() {
         findsOneWidget,
       );
 
-      final createRequest = json.decodeAsMap(
-        '''
-      {
-        "messageType": "MidiMap::create::request",
-        "mapping": {
-          "123": {
-            "midi_channel": 1,
-            "cc_number": 2,
-            "parameter_id": "volume",
-            "mode": "parameter"
-          }
-        }
-      }
-      ''',
+      const createRequest = ApiMessage.midiMapping(
+        message: MidiApiMessage.createRequest(
+          mapping: MidiMappingEntry(
+            id: '123',
+            mapping: MidiMapping(
+              midiChannel: 1,
+              ccNumber: 2,
+              parameterId: 'volume',
+              mode: MidiMappingMode.parameter,
+            ),
+          ),
+        ),
       );
 
       when(api.send(createRequest)).thenAnswer(
         (_) {
           apiController.add(
-            json.decodeAsMap(
-              '''
-            {
-              "messageType": "MidiMap::create::response",
-              "mapping": {
-                "123": {
-                  "midi_channel": 1,
-                  "cc_number": 2,
-                  "parameter_id": "volume",
-                  "mode": "parameter"
-                }
-              }
-            }
-            ''',
+            const ApiMessage.midiMapping(
+              message: MidiApiMessage.createResponse(
+                mapping: MidiMappingEntry(
+                  id: '123',
+                  mapping: MidiMapping(
+                    midiChannel: 1,
+                    ccNumber: 2,
+                    parameterId: 'volume',
+                    mode: MidiMappingMode.parameter,
+                  ),
+                ),
+              ),
             ),
           );
         },
@@ -705,30 +628,23 @@ void main() {
       // The MIDI message received event finishes the learning process, and
       // creates a the new mapping
       apiController.add(
-        json.decodeAsMap('''
-          {
-            "messageType": "MidiMap::midi_message_received",
-            "message": {
-              "runtimeType": "controlChange",
-              "channel": 1,
-              "control": 2,
-              "value": 3
-            }
-          }
-      '''),
+        const ApiMessage.midiMapping(
+          message: MidiApiMessage.midiMessageReceived(
+            message: MidiMessage.controlChange(
+              channel: 1,
+              control: 2,
+              value: 3,
+            ),
+          ),
+        ),
       );
 
       await tester.pumpAndSettle();
 
       verify(
         api.send(
-          json.decodeAsMap(
-            '''
-          {
-            "messageType": "MidiMap::remove",
-            "id": "456"
-          }
-          ''',
+          const ApiMessage.midiMapping(
+            message: MidiApiMessage.remove(id: '456'),
           ),
         ),
       );
@@ -745,39 +661,35 @@ void main() {
         findsOneWidget,
       );
 
-      final createRequest2 = json.decodeAsMap(
-        '''
-      {
-        "messageType": "MidiMap::create::request",
-        "mapping": {
-          "456": {
-            "midi_channel": 3,
-            "cc_number": 4,
-            "parameter_id": "volume",
-            "mode": "parameter"
-          }
-        }
-      }
-      ''',
+      const createRequest2 = ApiMessage.midiMapping(
+        message: MidiApiMessage.createRequest(
+          mapping: MidiMappingEntry(
+            id: '456',
+            mapping: MidiMapping(
+              midiChannel: 3,
+              ccNumber: 4,
+              parameterId: 'volume',
+              mode: MidiMappingMode.parameter,
+            ),
+          ),
+        ),
       );
 
       when(api.send(createRequest2)).thenAnswer(
         (_) {
           apiController.add(
-            json.decodeAsMap(
-              '''
-            {
-              "messageType": "MidiMap::create::response",
-              "mapping": {
-                "456": {
-                  "midi_channel": 3,
-                  "cc_number": 4,
-                  "parameter_id": "volume",
-                  "mode": "parameter"
-                }
-              }
-            }
-            ''',
+            const ApiMessage.midiMapping(
+              message: MidiApiMessage.createResponse(
+                mapping: MidiMappingEntry(
+                  id: '456',
+                  mapping: MidiMapping(
+                    midiChannel: 3,
+                    ccNumber: 4,
+                    parameterId: 'volume',
+                    mode: MidiMappingMode.parameter,
+                  ),
+                ),
+              ),
             ),
           );
         },
@@ -794,9 +706,4 @@ void main() {
       await apiController.close();
     },
   );
-}
-
-extension on JsonCodec {
-  Map<String, dynamic> decodeAsMap(String s) =>
-      json.decode(s) as Map<String, dynamic>;
 }

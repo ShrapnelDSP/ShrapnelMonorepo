@@ -24,10 +24,10 @@
  */
 
 import 'package:shrapnel/amplifier.dart';
+import 'package:shrapnel/api/api_websocket.dart';
 import 'package:shrapnel/audio_events.dart';
 import 'package:shrapnel/chorus.dart';
 import 'package:shrapnel/heavy_metal.dart';
-import 'package:shrapnel/json_websocket.dart';
 import 'package:shrapnel/knob.dart';
 import 'package:shrapnel/knob_with_label.dart';
 import 'package:shrapnel/main.dart';
