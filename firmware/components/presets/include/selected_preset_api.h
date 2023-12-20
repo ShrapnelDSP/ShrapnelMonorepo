@@ -24,6 +24,7 @@
 
 #include "api.h"
 #include "presets.h"
+#include "selected_preset.pb.h"
 #include "uuid.h"
 
 namespace shrapnel::selected_preset {
@@ -60,9 +61,9 @@ etl::string_stream &operator<<(etl::string_stream &out,
 namespace shrapnel::api {
 
 template <>
-std::optional<std::span<uint8_t>> to_bytes(const selected_preset::SelectedPresetApiMessage &message, std::span<uint8_t> buffer);
+std::optional<shrapnel_selected_preset_Message> to_proto(const selected_preset::SelectedPresetApiMessage &message);
 
 template <>
-std::optional<selected_preset::SelectedPresetApiMessage> from_bytes(std::span<const uint8_t> buffer);
+std::optional<selected_preset::SelectedPresetApiMessage> from_proto(const shrapnel_selected_preset_Message &message);
 
 }

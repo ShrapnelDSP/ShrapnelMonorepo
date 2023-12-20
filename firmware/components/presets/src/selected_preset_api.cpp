@@ -4,15 +4,90 @@
 namespace shrapnel::api {
 
 template <>
+std::optional<shrapnel_selected_preset_Read>
+to_proto(const selected_preset::Read &)
+{
+    shrapnel_selected_preset_Read out = shrapnel_selected_preset_Read_init_zero;
+    return out;
+}
+
+template <>
+std::optional<shrapnel_selected_preset_Notify>
+to_proto(const selected_preset::Notify &message)
+{
+    shrapnel_selected_preset_Notify out = shrapnel_selected_preset_Notify_init_zero;
+    out.id = message.selectedPresetId;
+    return out;
+}
+
+template <>
+std::optional<shrapnel_selected_preset_Write>
+to_proto(const selected_preset ::Write &message)
+{
+    shrapnel_selected_preset_Write out = shrapnel_selected_preset_Write_init_zero;
+    out.id = message.selectedPresetId;
+    return out;
+}
+
+template <>
 std::optional<shrapnel_selected_preset_Message>
 to_proto(const selected_preset::SelectedPresetApiMessage &message)
 {
-    shrapnel_selected_preset_Message out =
-        shrapnel_selected_preset_Message_init_zero;
+    return std::visit(
+        [](const auto &message)
+            -> std::optional<shrapnel_selected_preset_Message>
+        {
+            shrapnel_selected_preset_Message out =
+                shrapnel_selected_preset_Message_init_zero;
 
-    
+            using T = std::decay_t<decltype(message)>;
+            if constexpr(std::is_same_v<T, selected_preset::Read>)
+            {
+                out.which_message = shrapnel_selected_preset_Message_read_tag;
+                out.message.read =
+                    *to_proto<shrapnel_selected_preset_Read>(message);
+            }
+            else if constexpr(std::is_same_v<T, selected_preset::Notify>)
+            {
+                out.which_message = shrapnel_selected_preset_Message_notify_tag;
+                out.message.notify =
+                    *to_proto<shrapnel_selected_preset_Notify>(message);
+            }
+            else if constexpr(std::is_same_v<T, selected_preset::Write>)
+            {
+                out.which_message = shrapnel_selected_preset_Message_write_tag;
+                out.message.write =
+                    *to_proto<shrapnel_selected_preset_Write>(message);
+            }
+            else
+            {
+                return std::nullopt;
+            }
 
-    return out;
+            return out;
+        },
+        message);
+}
+
+template <>
+std::optional<selected_preset::Read>
+from_proto(const shrapnel_selected_preset_Read &message)
+{
+    return {{}};
+}
+
+template <>
+std::optional<selected_preset::Notify>
+from_proto(const shrapnel_selected_preset_Notify &message)
+{
+    return {{.selectedPresetId{message.id}}};
+}
+
+template <>
+std::optional<selected_preset::Write>
+from_proto(const shrapnel_selected_preset_Write &message)
+{
+    return {{.selectedPresetId{message.id}}};
 }
 
 template <>
@@ -30,23 +105,6 @@ from_proto(const shrapnel_selected_preset_Message &message)
     }
 
     return std::nullopt;
-}
-
-template <>
-std::optional<std::span<uint8_t>>
-to_bytes(const selected_preset::SelectedPresetApiMessage &message,
-         std::span<uint8_t> buffer)
-{
-    auto proto = to_proto<shrapnel_selected_preset_Message>(message);
-    return to_bytes(*proto, buffer);
-}
-
-template <>
-std::optional<selected_preset::SelectedPresetApiMessage>
-from_bytes(std::span<const uint8_t> buffer)
-{
-    auto proto = from_bytes<shrapnel_selected_preset_Message>(buffer);
-    return from_proto<selected_preset::SelectedPresetApiMessage>(*proto);
 }
 
 } // namespace shrapnel::api
