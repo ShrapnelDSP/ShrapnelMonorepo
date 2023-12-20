@@ -539,125 +539,6 @@ from_proto(const shrapnel_midi_mapping_Remove &message)
 }
 
 template <>
-std::optional<shrapnel_midi_mapping_MidiMessage>
-to_proto(const midi::Message &message)
-{
-    auto channel = message.channel;
-    return std::visit(
-        [channel](const auto &message)
-            -> std::optional<shrapnel_midi_mapping_MidiMessage>
-        {
-            using T = std::decay_t<decltype(message)>;
-
-            shrapnel_midi_mapping_MidiMessage out =
-                shrapnel_midi_mapping_MidiMessage_init_zero;
-
-            out.channel = channel;
-
-            using T = std::decay_t<decltype(message)>;
-            if constexpr(std::is_same_v<T, midi::Message::NoteOn>)
-            {
-                out.which_parameters =
-                    shrapnel_midi_mapping_MidiMessage_note_on_tag;
-                auto proto_message =
-                    to_proto<shrapnel_midi_mapping_MidiMessage_NoteOn>(message);
-                if(!proto_message.has_value())
-                {
-                    return std::nullopt;
-                }
-                out.parameters.note_on = *proto_message;
-            }
-            else if constexpr(std::is_same_v<T, midi::Message::NoteOff>)
-            {
-                out.which_parameters =
-                    shrapnel_midi_mapping_MidiMessage_note_off_tag;
-                auto proto_message =
-                    to_proto<shrapnel_midi_mapping_MidiMessage_NoteOff>(
-                        message);
-                if(!proto_message.has_value())
-                {
-                    return std::nullopt;
-                }
-                out.parameters.note_off = *proto_message;
-            }
-            else if constexpr(std::is_same_v<T, midi::Message::ControlChange>)
-            {
-                out.which_parameters =
-                    shrapnel_midi_mapping_MidiMessage_control_change_tag;
-                auto proto_message =
-                    to_proto<shrapnel_midi_mapping_MidiMessage_ControlChange>(
-                        message);
-                if(!proto_message.has_value())
-                {
-                    return std::nullopt;
-                }
-                out.parameters.control_change = *proto_message;
-            }
-            else if constexpr(std::is_same_v<T, midi::Message::ProgramChange>)
-            {
-                out.which_parameters =
-                    shrapnel_midi_mapping_MidiMessage_program_change_tag;
-                auto proto_message =
-                    to_proto<shrapnel_midi_mapping_MidiMessage_ProgramChange>(
-                        message);
-                if(!proto_message.has_value())
-                {
-                    return std::nullopt;
-                }
-                out.parameters.program_change = *proto_message;
-            }
-            else
-            {
-                return std::nullopt;
-            }
-
-            return out;
-        },
-        message.parameters);
-}
-
-template <>
-std::optional<midi::Message>
-from_proto(const shrapnel_midi_mapping_MidiMessage &message)
-{
-    midi::Message out{
-        .channel = static_cast<uint8_t>(message.channel),
-    };
-
-    std::optional<decltype(out.parameters)> parameters;
-
-    switch(message.which_parameters)
-    {
-    case shrapnel_midi_mapping_MidiMessage_note_on_tag:
-        parameters =
-            from_proto<midi::Message::NoteOn>(message.parameters.note_on);
-        break;
-    case shrapnel_midi_mapping_MidiMessage_note_off_tag:
-        parameters =
-            from_proto<midi::Message::NoteOff>(message.parameters.note_off);
-        break;
-    case shrapnel_midi_mapping_MidiMessage_control_change_tag:
-        parameters = from_proto<midi::Message::ControlChange>(
-            message.parameters.control_change);
-        break;
-    case shrapnel_midi_mapping_MidiMessage_program_change_tag:
-        parameters = from_proto<midi::Message::ProgramChange>(
-            message.parameters.program_change);
-        break;
-    default:
-        return std::nullopt;
-    }
-
-    if(!parameters.has_value())
-    {
-        return std::nullopt;
-    }
-
-    out.parameters = *parameters;
-    return out;
-}
-
-template <>
 std::optional<shrapnel_midi_mapping_MidiMessage_NoteOn>
 to_proto(const midi::Message::NoteOn &message)
 {
@@ -736,6 +617,125 @@ from_proto(const shrapnel_midi_mapping_MidiMessage_ProgramChange &message)
 {
     midi::Message::ProgramChange out{};
     out.number = message.number;
+    return out;
+}
+
+template <>
+std::optional<shrapnel_midi_mapping_MidiMessage>
+to_proto(const midi::Message &message)
+{
+    auto channel = message.channel;
+    return std::visit(
+        [channel](const auto &message)
+            -> std::optional<shrapnel_midi_mapping_MidiMessage>
+        {
+          using T = std::decay_t<decltype(message)>;
+
+          shrapnel_midi_mapping_MidiMessage out =
+              shrapnel_midi_mapping_MidiMessage_init_zero;
+
+          out.channel = channel;
+
+          using T = std::decay_t<decltype(message)>;
+          if constexpr(std::is_same_v<T, midi::Message::NoteOn>)
+          {
+              out.which_parameters =
+                  shrapnel_midi_mapping_MidiMessage_note_on_tag;
+              auto proto_message =
+                  to_proto<shrapnel_midi_mapping_MidiMessage_NoteOn>(message);
+              if(!proto_message.has_value())
+              {
+                  return std::nullopt;
+              }
+              out.parameters.note_on = *proto_message;
+          }
+          else if constexpr(std::is_same_v<T, midi::Message::NoteOff>)
+          {
+              out.which_parameters =
+                  shrapnel_midi_mapping_MidiMessage_note_off_tag;
+              auto proto_message =
+                  to_proto<shrapnel_midi_mapping_MidiMessage_NoteOff>(
+                      message);
+              if(!proto_message.has_value())
+              {
+                  return std::nullopt;
+              }
+              out.parameters.note_off = *proto_message;
+          }
+          else if constexpr(std::is_same_v<T, midi::Message::ControlChange>)
+          {
+              out.which_parameters =
+                  shrapnel_midi_mapping_MidiMessage_control_change_tag;
+              auto proto_message =
+                  to_proto<shrapnel_midi_mapping_MidiMessage_ControlChange>(
+                      message);
+              if(!proto_message.has_value())
+              {
+                  return std::nullopt;
+              }
+              out.parameters.control_change = *proto_message;
+          }
+          else if constexpr(std::is_same_v<T, midi::Message::ProgramChange>)
+          {
+              out.which_parameters =
+                  shrapnel_midi_mapping_MidiMessage_program_change_tag;
+              auto proto_message =
+                  to_proto<shrapnel_midi_mapping_MidiMessage_ProgramChange>(
+                      message);
+              if(!proto_message.has_value())
+              {
+                  return std::nullopt;
+              }
+              out.parameters.program_change = *proto_message;
+          }
+          else
+          {
+              return std::nullopt;
+          }
+
+          return out;
+        },
+        message.parameters);
+}
+
+template <>
+std::optional<midi::Message>
+from_proto(const shrapnel_midi_mapping_MidiMessage &message)
+{
+    midi::Message out{
+        .channel = static_cast<uint8_t>(message.channel),
+    };
+
+    std::optional<decltype(out.parameters)> parameters;
+
+    switch(message.which_parameters)
+    {
+    case shrapnel_midi_mapping_MidiMessage_note_on_tag:
+        parameters =
+            from_proto<midi::Message::NoteOn>(message.parameters.note_on);
+        break;
+    case shrapnel_midi_mapping_MidiMessage_note_off_tag:
+        parameters =
+            from_proto<midi::Message::NoteOff>(message.parameters.note_off);
+        break;
+    case shrapnel_midi_mapping_MidiMessage_control_change_tag:
+        parameters = from_proto<midi::Message::ControlChange>(
+            message.parameters.control_change);
+        break;
+    case shrapnel_midi_mapping_MidiMessage_program_change_tag:
+        parameters = from_proto<midi::Message::ProgramChange>(
+            message.parameters.program_change);
+        break;
+    default:
+        return std::nullopt;
+    }
+
+    if(!parameters.has_value())
+    {
+        return std::nullopt;
+    }
+
+    out.parameters = *parameters;
     return out;
 }
 

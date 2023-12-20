@@ -73,7 +73,13 @@ private:
             etl::map<midi::Mapping::id_t, midi::Mapping, 10>(
                 {mappings->begin(), mappings->end()}));
 
-        auto result_buffer = api::to_bytes(proto, buffer);
+        if(!proto.has_value())
+        {
+            ESP_LOGE(TAG, "failed to convert midi mappings");
+            return;
+        }
+
+        auto result_buffer = api::to_bytes(*proto, buffer);
         if(!result_buffer.has_value()) {
             ESP_LOGE(TAG, "failed to serialise midi mappings");
             return;
