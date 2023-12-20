@@ -101,8 +101,8 @@ class MidiMappingService extends ChangeNotifier {
     const message = MidiApiMessage.getRequest();
 
     final response = websocket.stream
-        .where((event) => event is GetResponse)
-        .map((event) => event as GetResponse)
+        .where((event) => event is MidiGetResponse)
+        .map((event) => event as MidiGetResponse)
         .map((event) => event.mappings)
         .timeout(
           responseTimeout,
@@ -126,8 +126,8 @@ class MidiMappingService extends ChangeNotifier {
     MidiMappingEntry mapping,
   ) async {
     final response = websocket.stream
-        .where((event) => event is CreateResponse)
-        .map((event) => event as CreateResponse)
+        .where((event) => event is MidiCreateResponse)
+        .map((event) => event as MidiCreateResponse)
         .map(
           (event) => event.mapping,
         )

@@ -23,20 +23,26 @@ part 'models.freezed.dart';
 
 @freezed
 class MidiApiMessage with _$MidiApiMessage {
-  const factory MidiApiMessage.getRequest() = GetRequest;
+  const factory MidiApiMessage.getRequest() = MidiGetRequest;
+
   const factory MidiApiMessage.getResponse({
     required Map<String, MidiMapping> mappings,
-  }) = GetResponse;
+  }) = MidiGetResponse;
+
   const factory MidiApiMessage.createRequest({
     required MidiMappingEntry mapping,
-  }) = CreateRequest;
+  }) = MidiCreateRequest;
+
   const factory MidiApiMessage.createResponse({
     required MidiMappingEntry mapping,
-  }) = CreateResponse;
+  }) = MidiCreateResponse;
+
   const factory MidiApiMessage.update({
     required MidiMappingEntry mapping,
-  }) = Update;
-  const factory MidiApiMessage.remove({required String id}) = Remove;
+  }) = MidiUpdate;
+
+  const factory MidiApiMessage.remove({required String id}) = MidiRemove;
+
   const factory MidiApiMessage.midiMessageReceived({
     required MidiMessage message,
   }) = MidiMessageReceived;
@@ -65,12 +71,11 @@ class MidiMappingEntry with _$MidiMappingEntry {
 }
 
 enum MidiMappingMode {
-  toggle(apiName: 'toggle', uiName: 'Toggle'),
-  parameter(apiName: 'parameter', uiName: 'Knob');
+  toggle(uiName: 'Toggle'),
+  parameter(uiName: 'Knob');
 
-  const MidiMappingMode({required this.apiName, required this.uiName});
+  const MidiMappingMode({required this.uiName});
 
-  final String apiName;
   final String uiName;
 }
 
@@ -80,19 +85,22 @@ class MidiMessage with _$MidiMessage {
     required int channel,
     required int note,
     required int velocity,
-  }) = _NoteOn;
+  }) = MidiMessageNoteOn;
+
   const factory MidiMessage.noteOff({
     required int channel,
     required int note,
     required int velocity,
-  }) = _NoteOff;
+  }) = MidiMessageNoteOff;
+
   const factory MidiMessage.controlChange({
     required int channel,
     required int control,
     required int value,
-  }) = _ControlChange;
+  }) = MidiMessageControlChange;
+
   const factory MidiMessage.programChange({
     required int channel,
     required int number,
-  }) = _ProgramChange;
+  }) = MidiMessageProgramChange;
 }
