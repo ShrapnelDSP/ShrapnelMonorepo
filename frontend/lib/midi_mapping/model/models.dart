@@ -22,7 +22,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part 'models.freezed.dart';
 
 @freezed
-class MidiApiMessage with _$MidiApiMessage {
+sealed class MidiApiMessage with _$MidiApiMessage {
   const factory MidiApiMessage.getRequest() = MidiGetRequest;
 
   const factory MidiApiMessage.getResponse({

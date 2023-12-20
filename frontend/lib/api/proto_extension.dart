@@ -37,6 +37,24 @@ extension ApiMessageProtoEx on ApiMessage {
       shrapnel_pb.Message_Message.notSet => throw ProtoException(),
     };
   }
+
+  static shrapnel_pb.Message toProto(ApiMessage message) {
+    return switch (message) {
+      ApiMessageAudioEvent(:final message) =>
+        shrapnel_pb.Message(audioEvent: AudioEventProtoEx.toProto(message)),
+      ApiMessageParameterInput() => throw ProtoException(),
+      ApiMessageParameterOutput(:final message) => shrapnel_pb.Message(
+          command: ParameterServiceOutputMessageProtoEx.toProto(message),
+        ),
+      ApiMessageMidiMapping(:final message) =>
+        shrapnel_pb.Message(midiMapping: MidiProtoEx.toProto(message)),
+      ApiMessagePresets(:final message) =>
+        shrapnel_pb.Message(preset: PresetsMessageProtoEx.toProto(message)),
+      ApiMessageSelectedPreset(:final message) => shrapnel_pb.Message(
+          selectedPreset: SelectedPresetMessageProtoEx.toProto(message),
+        ),
+    };
+  }
 }
 
 extension AudioEventProtoEx on AudioEventMessage {
@@ -47,6 +65,15 @@ extension AudioEventProtoEx on AudioEventMessage {
       audio_events_pb.Message_Event.outputClipped =>
         AudioEventOutputClippedProtoEx.fromProto(proto.outputClipped),
       audio_events_pb.Message_Event.notSet => throw ProtoException(),
+    };
+  }
+
+  static audio_events_pb.Message toProto(AudioEventMessage message) {
+    return switch (message) {
+      AudioEventMessageInputClipped() =>
+        audio_events_pb.Message(inputClipped: audio_events_pb.InputClipped()),
+      AudioEventMessageOutputClipped() =>
+        audio_events_pb.Message(outputClipped: audio_events_pb.OutputClipped()),
     };
   }
 }
@@ -70,6 +97,24 @@ extension ParameterServiceInputMessageProtoEx on ParameterServiceInputMessage {
         ParameterServiceInputMessageUpdateProtoEx.fromProto(proto.update),
       cmd_handling_pb.Message_Message.initialise => throw ProtoException(),
       cmd_handling_pb.Message_Message.notSet => throw ProtoException(),
+    };
+  }
+}
+
+extension ParameterServiceOutputMessageProtoEx
+    on ParameterServiceOutputMessage {
+  static cmd_handling_pb.Message toProto(
+    ParameterServiceOutputMessage message,
+  ) {
+    return switch (message) {
+      ParameterServiceOutputMessageRequestInitialisation() =>
+        cmd_handling_pb.Message(initialise: cmd_handling_pb.Initialise()),
+      ParameterServiceOutputMessageParameterUpdate() => cmd_handling_pb.Message(
+          update: cmd_handling_pb.Update(
+            id: message.id,
+            value: message.value,
+          ),
+        ),
     };
   }
 }
@@ -98,6 +143,41 @@ extension MidiProtoEx on MidiApiMessage {
       midi_mapping_pb.Message_Message.messageReceived =>
         MidiMessageReceivedProtoEx.fromProto(proto.messageReceived),
       midi_mapping_pb.Message_Message.notSet => throw ProtoException(),
+    };
+  }
+
+  static midi_mapping_pb.Message toProto(MidiApiMessage message) {
+    return switch (message) {
+      MidiGetRequest() =>
+        midi_mapping_pb.Message(getRequest: midi_mapping_pb.GetRequest()),
+      MidiGetResponse() => throw ProtoException(),
+      MidiCreateRequest() => midi_mapping_pb.Message(
+          createRequest: midi_mapping_pb.CreateRequest(
+            mapping: midi_mapping_pb.MappingRecord(
+              id: UuidValueProtoEx.toProto(UuidValue(message.mapping.id)),
+              mapping: MidiMappingProtoEx.toProto(
+                message.mapping.mapping,
+              ),
+            ),
+          ),
+        ),
+      MidiCreateResponse() => throw ProtoException(),
+      MidiUpdate() => midi_mapping_pb.Message(
+          update: midi_mapping_pb.Update(
+            mapping: midi_mapping_pb.MappingRecord(
+              id: UuidValueProtoEx.toProto(UuidValue(message.mapping.id)),
+              mapping: MidiMappingProtoEx.toProto(
+                message.mapping.mapping,
+              ),
+            ),
+          ),
+        ),
+      MidiRemove() => midi_mapping_pb.Message(
+          remove: midi_mapping_pb.Remove(
+            id: UuidValueProtoEx.toProto(UuidValue(message.id)),
+          ),
+        ),
+      MidiMessageReceived() => throw ProtoException(),
     };
   }
 }
@@ -134,6 +214,10 @@ extension UuidValueProtoEx on UuidValue {
   static UuidValue fromProto(uuid_pb.Uuid proto) {
     return UuidValue.fromList(proto.value);
   }
+
+  static uuid_pb.Uuid toProto(UuidValue message) {
+    return uuid_pb.Uuid(value: message.toBytes());
+  }
 }
 
 extension MidiMappingProtoEx on MidiMapping {
@@ -145,6 +229,15 @@ extension MidiMappingProtoEx on MidiMapping {
       mode: MidiMappingModeProtoEx.fromProto(proto.mode),
     );
   }
+
+  static midi_mapping_pb.Mapping toProto(MidiMapping mapping) {
+    return midi_mapping_pb.Mapping(
+      midiChannel: mapping.midiChannel,
+      ccNumber: mapping.ccNumber,
+      mode: MidiMappingModeProtoEx.toProto(mapping.mode),
+      parameterName: mapping.parameterId,
+    );
+  }
 }
 
 extension MidiMappingModeProtoEx on MidiMappingMode {
@@ -153,6 +246,13 @@ extension MidiMappingModeProtoEx on MidiMappingMode {
       midi_mapping_pb.Mapping_Mode.parameter => MidiMappingMode.parameter,
       midi_mapping_pb.Mapping_Mode.toggle => MidiMappingMode.toggle,
       _ => throw ProtoException(),
+    };
+  }
+
+  static midi_mapping_pb.Mapping_Mode toProto(MidiMappingMode mode) {
+    return switch (mode) {
+      MidiMappingMode.toggle => midi_mapping_pb.Mapping_Mode.parameter,
+      MidiMappingMode.parameter => midi_mapping_pb.Mapping_Mode.parameter,
     };
   }
 }
@@ -222,6 +322,36 @@ extension PresetsMessageProtoEx on PresetsMessage {
       presets_pb.Message_Message.notSet => throw ProtoException(),
     };
   }
+
+  static presets_pb.Message toProto(PresetsMessage message) {
+    return switch (message) {
+      PresetsMessageInitialise() =>
+        presets_pb.Message(initialise: presets_pb.Initialise()),
+      PresetsMessageNotify() => presets_pb.Message(
+          notify: presets_pb.Notify(
+            preset: presets_pb.PresetRecord(
+              id: message.id,
+              preset: PresetDataProtoEx.toProto(message.preset),
+            ),
+          ),
+        ),
+      PresetsMessageCreate() => presets_pb.Message(
+          create_3: presets_pb.Create(
+            preset: PresetDataProtoEx.toProto(message.preset),
+          ),
+        ),
+      PresetsMessageUpdate() => presets_pb.Message(
+          update: presets_pb.Update(
+            preset: presets_pb.PresetRecord(
+              id: message.id,
+              preset: PresetDataProtoEx.toProto(message.preset),
+            ),
+          ),
+        ),
+      PresetsMessageDelete() =>
+        presets_pb.Message(remove: presets_pb.Remove(id: message.id)),
+    };
+  }
 }
 
 extension PresetDataProtoEx on PresetData {
@@ -229,6 +359,13 @@ extension PresetDataProtoEx on PresetData {
     return PresetData(
       name: proto.name,
       parameters: PresetParametersDataProtoEx.fromProto(proto.parameters),
+    );
+  }
+
+  static presets_pb.Preset toProto(PresetData preset) {
+    return presets_pb.Preset(
+      name: preset.name,
+      parameters: PresetParametersDataProtoEx.toProto(preset.parameters),
     );
   }
 }
@@ -258,6 +395,31 @@ extension PresetParametersDataProtoEx on PresetParametersData {
       wahBypass: proto.wahBypass / 1000,
     );
   }
+
+  static presets_pb.PresetParameters toProto(PresetParametersData message) {
+    return presets_pb.PresetParameters(
+      ampGain: (message.ampGain * 1000).round(),
+      ampChannel: (message.ampChannel * 1000).round(),
+      bass: (message.bass * 1000).round(),
+      middle: (message.middle * 1000).round(),
+      treble: (message.treble * 1000).round(),
+      contour: (message.contour * 1000).round(),
+      volume: (message.volume * 1000).round(),
+      noiseGateThreshold: (message.noiseGateThreshold * 1000).round(),
+      noiseGateHysteresis: (message.noiseGateHysteresis * 1000).round(),
+      noiseGateAttack: (message.noiseGateAttack * 1000).round(),
+      noiseGateHold: (message.noiseGateHold * 1000).round(),
+      noiseGateRelease: (message.noiseGateRelease * 1000).round(),
+      noiseGateBypass: (message.noiseGateBypass * 1000).round(),
+      chorusRate: (message.chorusRate * 1000).round(),
+      chorusDepth: (message.chorusDepth * 1000).round(),
+      chorusMix: (message.chorusMix * 1000).round(),
+      chorusBypass: (message.chorusBypass * 1000).round(),
+      wahPosition: (message.wahPosition * 1000).round(),
+      wahVocal: (message.wahVocal * 1000).round(),
+      wahBypass: (message.wahBypass * 1000).round(),
+    );
+  }
 }
 
 extension SelectedPresetMessageProtoEx on SelectedPresetMessage {
@@ -269,6 +431,19 @@ extension SelectedPresetMessageProtoEx on SelectedPresetMessage {
       selected_preset_pb.Message_Message.write =>
         SelectedPresetMessage.write(selectedPreset: proto.write.id),
       selected_preset_pb.Message_Message.notSet => throw ProtoException(),
+    };
+  }
+
+  static selected_preset_pb.Message toProto(SelectedPresetMessage message) {
+    return switch (message) {
+      ReadSelectedPresetMessage() =>
+        selected_preset_pb.Message(read: selected_preset_pb.Read()),
+      NotifySelectedPresetMessage() => selected_preset_pb.Message(
+          notify: selected_preset_pb.Notify(id: message.selectedPreset),
+        ),
+      WriteSelectedPresetMessage() => selected_preset_pb.Message(
+          write: selected_preset_pb.Write(id: message.selectedPreset),
+        ),
     };
   }
 }

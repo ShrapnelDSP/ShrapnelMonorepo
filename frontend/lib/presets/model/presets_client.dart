@@ -104,7 +104,7 @@ class PresetData with _$PresetData {
 }
 
 @freezed
-class PresetsMessage with _$PresetsMessage {
+sealed class PresetsMessage with _$PresetsMessage {
   factory PresetsMessage.initialise() = PresetsMessageInitialise;
 
   factory PresetsMessage.notify(int id, PresetData preset) =
