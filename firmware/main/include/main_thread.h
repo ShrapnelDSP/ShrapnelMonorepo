@@ -70,7 +70,7 @@ private:
 
         auto mappings = mapping_manager.get();
         auto proto = api::to_proto<shrapnel_midi_mapping_MappingList>(
-            etl::map<midi::Mapping::id_t, midi::Mapping, 10>(
+            etl::map<midi::Mapping::id_t, midi::Mapping, 1>(
                 {mappings->begin(), mappings->end()}));
 
         if(!proto.has_value())
@@ -310,7 +310,7 @@ public:
            * - We could store each entry in the table at a different key
            * - Replace etl::map with more efficient implementation
            */
-            std::optional<etl::map<midi::Mapping::id_t, midi::Mapping, 10>>
+            std::optional<etl::map<midi::Mapping::id_t, midi::Mapping, 1>>
                 saved_mappings;
 
             std::array<uint8_t, 1024> memory{};
@@ -327,13 +327,13 @@ public:
                 if(mapping_proto.has_value())
                 {
                     saved_mappings = api::from_proto<
-                        etl::map<midi::Mapping::id_t, midi::Mapping, 10>>(
+                        etl::map<midi::Mapping::id_t, midi::Mapping, 1>>(
                         *mapping_proto);
                 }
             }
 
             using MidiMappingType =
-                midi::MappingManager<ParameterUpdateNotifier, 10, 1>;
+                midi::MappingManager<ParameterUpdateNotifier, 1, 1>;
             midi_mapping_manager =
                 saved_mappings.has_value()
                     ? std::make_unique<MidiMappingType>(parameter_notifier,
@@ -342,7 +342,7 @@ public:
         }();
 
         mapping_observer = std::make_unique<MidiMappingObserver<
-            midi::MappingManager<ParameterUpdateNotifier, 10, 1>>>(
+            midi::MappingManager<ParameterUpdateNotifier, 1, 1>>>(
             a_persistence, *midi_mapping_manager);
         midi_mapping_manager->add_observer(*mapping_observer);
 
@@ -660,14 +660,14 @@ private:
     std::optional<midi::Message> last_notified_midi_message;
     std::unique_ptr<midi::Decoder> midi_decoder;
     std::mutex midi_mutex;
-    std::unique_ptr<midi::MappingManager<ParameterUpdateNotifier, 10, 1>>
+    std::unique_ptr<midi::MappingManager<ParameterUpdateNotifier, 1, 1>>
         midi_mapping_manager;
     std::shared_ptr<AudioParameters> audio_params;
     std::unique_ptr<parameters::CommandHandling<
         parameters::AudioParameters<MAX_PARAMETERS, 1>>>
         cmd_handling;
     std::unique_ptr<MidiMappingObserver<
-        midi::MappingManager<ParameterUpdateNotifier, 10, 1>>>
+        midi::MappingManager<ParameterUpdateNotifier, 1, 1>>>
         mapping_observer;
     std::unique_ptr<presets::PresetsManager> presets_manager;
     std::unique_ptr<selected_preset::SelectedPresetManager>

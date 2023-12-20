@@ -17,6 +17,9 @@
  * ShrapnelDSP. If not, see <https://www.gnu.org/licenses/>.
  */
 
+#include "freertos/FreeRTOS.h"
+#include "freertos/task.h"
+
 #include "midi_mapping_api.h"
 #include "etl_utility.h"
 #include <pb_decode.h>
@@ -272,6 +275,11 @@ template <>
 std::optional<shrapnel_midi_mapping_MappingRecord>
 to_proto(const std::pair<midi::Mapping::id_t, midi::Mapping> &message)
 {
+    ESP_LOGE("DEBUG",
+             "%s stack %d",
+             __FUNCTION__,
+             uxTaskGetStackHighWaterMark(nullptr));
+
     shrapnel_midi_mapping_MappingRecord out =
         shrapnel_midi_mapping_MappingRecord_init_zero;
     auto mapping = to_proto<shrapnel_midi_mapping_Mapping>(message.second);
@@ -315,8 +323,13 @@ from_proto(const shrapnel_midi_mapping_MappingRecord &message)
 
 template <>
 std::optional<shrapnel_midi_mapping_MappingList>
-to_proto(const etl::map<midi::Mapping::id_t, midi::Mapping, 10> &message)
+to_proto(const etl::map<midi::Mapping::id_t, midi::Mapping, 1> &message)
 {
+    ESP_LOGE("DEBUG",
+             "%s stack %d",
+             __FUNCTION__,
+             uxTaskGetStackHighWaterMark(nullptr));
+
     shrapnel_midi_mapping_MappingList out =
         shrapnel_midi_mapping_MappingList_init_zero;
 
@@ -343,10 +356,10 @@ to_proto(const etl::map<midi::Mapping::id_t, midi::Mapping, 10> &message)
 }
 
 template <>
-std::optional<etl::map<midi::Mapping::id_t, midi::Mapping, 10>>
+std::optional<etl::map<midi::Mapping::id_t, midi::Mapping, 1>>
 from_proto(const shrapnel_midi_mapping_MappingList &message)
 {
-    etl::map<midi::Mapping::id_t, midi::Mapping, 10> out;
+    etl::map<midi::Mapping::id_t, midi::Mapping, 1> out;
 
     for(size_t i = 0; i < message.mappings_count; i++)
     {
@@ -387,6 +400,11 @@ template <>
 std::optional<shrapnel_midi_mapping_GetResponse>
 to_proto(const midi::GetResponse &message)
 {
+    ESP_LOGE("DEBUG",
+             "%s stack %d",
+             __FUNCTION__,
+             uxTaskGetStackHighWaterMark(nullptr));
+
     shrapnel_midi_mapping_GetResponse out =
         shrapnel_midi_mapping_GetResponse_init_zero;
     auto mappings =
@@ -405,7 +423,7 @@ from_proto(const shrapnel_midi_mapping_GetResponse &message)
 {
     midi::GetResponse out{};
     auto mappings =
-        from_proto<etl::map<midi::Mapping::id_t, midi::Mapping, 10>>(
+        from_proto<etl::map<midi::Mapping::id_t, midi::Mapping, 1>>(
             message.mappings);
     if(!mappings.has_value())
     {
@@ -770,9 +788,19 @@ template <>
 std::optional<shrapnel_midi_mapping_Message>
 to_proto(const midi::MappingApiMessage &message)
 {
+    ESP_LOGE("DEBUG",
+             "%s stack %d",
+             __FUNCTION__,
+             uxTaskGetStackHighWaterMark(nullptr));
+             
     return std::visit(
         [](const auto &message) -> std::optional<shrapnel_midi_mapping_Message>
         {
+          ESP_LOGE("DEBUG",
+                   "%s stack %d",
+                   __FUNCTION__,
+                   uxTaskGetStackHighWaterMark(nullptr));
+                   
             using T = std::decay_t<decltype(message)>;
 
             shrapnel_midi_mapping_Message out =

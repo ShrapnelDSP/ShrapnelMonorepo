@@ -36,7 +36,9 @@ struct GetRequest
 
 struct GetResponse
 {
-    etl::map<Mapping::id_t, Mapping, 10> mappings;
+    // FIXME: just one entry for now to work around not enough memory
+    // long term this can be fixed by sending one mapping at a time
+    etl::map<Mapping::id_t, Mapping, 1> mappings;
     std::strong_ordering operator<=>(const GetResponse &other) const = default;
 };
 
@@ -102,11 +104,11 @@ namespace api {
 
 template <>
 std::optional<std::span<uint8_t>>
-to_bytes(const etl::map<midi::Mapping::id_t, midi::Mapping, 10> &message,
+to_bytes(const etl::map<midi::Mapping::id_t, midi::Mapping, 1> &message,
          std::span<uint8_t> buffer);
 
 template <>
-std::optional<etl::map<midi::Mapping::id_t, midi::Mapping, 10>>
+std::optional<etl::map<midi::Mapping::id_t, midi::Mapping, 1>>
 from_bytes(std::span<const uint8_t> buffer);
 
 // FIXME: remove and use the version above
@@ -123,11 +125,11 @@ from_bytes(std::span<const uint8_t> buffer);
 // FIXME: remove
 template <>
 std::optional<shrapnel_midi_mapping_MappingList>
-to_proto(const etl::map<midi::Mapping::id_t, midi::Mapping, 10> &message);
+to_proto(const etl::map<midi::Mapping::id_t, midi::Mapping, 1> &message);
 
 // FIXME: remove
 template <>
-std::optional<etl::map<midi::Mapping::id_t, midi::Mapping, 10>>
+std::optional<etl::map<midi::Mapping::id_t, midi::Mapping, 1>>
 from_proto(const shrapnel_midi_mapping_MappingList &message);
 
 template <>

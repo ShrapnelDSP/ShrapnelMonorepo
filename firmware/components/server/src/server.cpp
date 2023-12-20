@@ -17,7 +17,7 @@
  * ShrapnelDSP. If not, see <https://www.gnu.org/licenses/>.
  */
 
-// #define LOG_LOCAL_LEVEL ESP_LOG_VERBOSE
+#define LOG_LOCAL_LEVEL ESP_LOG_VERBOSE
 #include "server.h"
 #include "esp_http_server.h"
 #include "esp_log.h"
@@ -52,7 +52,7 @@ void Server::start()
     config.server_port = 8080;
     config.ctrl_port = 8081;
     config.max_open_sockets = MAX_CLIENTS;
-    config.stack_size = 5000;
+    config.stack_size = 7700;
 
     // Start the httpd server
     ESP_LOGI(TAG, "Starting server on port: '%d'", config.server_port);
@@ -92,7 +92,7 @@ void Server::stop()
 esp_err_t websocket_get_handler(httpd_req_t *req)
 {
     auto self = reinterpret_cast<Server *>(req->user_ctx);
-    std::array<uint8_t, 256> buffer_data = {0};
+    std::array<uint8_t, 1024> buffer_data = {0};
 
     httpd_ws_frame_t pkt = {
         .final = false,
@@ -105,6 +105,10 @@ esp_err_t websocket_get_handler(httpd_req_t *req)
     if(req->method == HTTP_GET)
     {
         ESP_LOGI(TAG, "Got websocket upgrade request");
+        ESP_LOGE("DEBUG",
+                 "%s stack before upgrade %d",
+                 __FUNCTION__,
+                 uxTaskGetStackHighWaterMark(nullptr));
         heap_caps_print_heap_info(MALLOC_CAP_DEFAULT);
         debug_dump_task_list();
         return ESP_OK;
@@ -127,13 +131,17 @@ esp_err_t websocket_get_handler(httpd_req_t *req)
     assert(!pkt.fragmented);
     assert(pkt.len <= buffer_data.size());
 
-    ESP_LOGD(TAG, "%s len = %zd", __FUNCTION__, pkt.len);
-    ESP_LOG_BUFFER_HEX_LEVEL(TAG, buffer_data.data(), buffer_data.size(), ESP_LOG_VERBOSE);
-
     int fd = httpd_req_to_sockfd(req);
-    
+
     auto buffer = std::span<uint8_t>(buffer_data.data(), pkt.len);
 
+    ESP_LOGD(TAG, "%s len = %zd", __FUNCTION__, buffer.size());
+    ESP_LOG_BUFFER_HEXDUMP(TAG, buffer.data(), buffer.size(), ESP_LOG_VERBOSE);
+
+    ESP_LOGE("DEBUG",
+             "%s stack before decode %d",
+             __FUNCTION__,
+             uxTaskGetStackHighWaterMark(nullptr));
     auto message = api::from_bytes<ApiMessage>(buffer);
     if(message.has_value())
     {
@@ -144,6 +152,11 @@ esp_err_t websocket_get_handler(httpd_req_t *req)
             ESP_LOGE(TAG, "in_queue message dropped");
         }
     }
+
+    ESP_LOGE("DEBUG",
+             "%s stack after decode %d",
+             __FUNCTION__,
+             uxTaskGetStackHighWaterMark(nullptr));
 
     ESP_LOGI(
         TAG, "%s stack %d", __FUNCTION__, uxTaskGetStackHighWaterMark(nullptr));
@@ -171,13 +184,39 @@ void websocket_send(void *arg)
         ESP_LOGD(TAG, "%s source fd = %d", __FUNCTION__, *message.second);
     }
 
-    std::array<uint8_t, 256> memory{};
-    auto buffer = std::span<uint8_t, 256>{memory};
+    etl::string<128> debug;
+    etl::string_stream debug_stream{debug};
+    std::visit(
+        [&](const auto &message) -> void
+        {
+            using T = std::decay_t<decltype(message)>;
+            if constexpr(std::is_same_v<T, midi::MappingApiMessage>)
+            {
+                debug_stream << message;
+                ESP_LOGE("DEBUG", "%s", debug.data());
+            }
+        },
+        message.first);
+
+    std::array<uint8_t, 1024> memory{};
+    auto buffer = std::span<uint8_t>{memory};
+
+    ESP_LOGE("DEBUG",
+             "%s stack before encode %d",
+             __FUNCTION__,
+             uxTaskGetStackHighWaterMark(nullptr));
+
     auto encoded = api::to_bytes(message.first, buffer);
     // FIXME: handle error
 
+    ESP_LOGE("DEBUG",
+             "%s stack after encode %d",
+             __FUNCTION__,
+             uxTaskGetStackHighWaterMark(nullptr));
+
     ESP_LOGD(TAG, "%s len = %zd", __FUNCTION__, encoded->size());
-    ESP_LOG_BUFFER_HEX_LEVEL(TAG, memory.data(), memory.size(), ESP_LOG_VERBOSE);
+    ESP_LOG_BUFFER_HEXDUMP(
+        TAG, encoded->data(), encoded->size(), ESP_LOG_VERBOSE);
 
     httpd_ws_frame_t pkt = {
         .final = false,

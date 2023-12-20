@@ -21,6 +21,7 @@ import 'dart:async';
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logging/logging.dart';
+import 'package:rxdart/rxdart.dart';
 
 import '../audio_events.dart';
 import '../core/stream_extensions.dart';
@@ -29,6 +30,8 @@ import '../parameter.dart';
 import '../presets/model/presets_client.dart';
 import '../presets/model/selected_preset_client.dart';
 import '../robust_websocket.dart';
+import 'generated/shrapnel.pb.dart' as shrapnel_pb;
+import 'proto_extension.dart';
 
 part 'api_websocket.freezed.dart';
 
@@ -67,9 +70,9 @@ class ApiWebsocket {
 
   /// The stream of incoming messages
   late final Stream<ApiMessage> stream = _websocket.dataStream
-      .map(
-        (dynamic event) => throw UnimplementedError('API decoding'),
-      )
+      .whereType<List<int>>()
+      .map(shrapnel_pb.Message.fromBuffer)
+      .map(ApiMessageProtoEx.fromProto)
       .logFinest(
         _log,
         (event) => 'received: $event',
@@ -80,7 +83,6 @@ class ApiWebsocket {
   bool get isAlive => _websocket.isAlive;
 
   void send(ApiMessage message) {
-    throw UnimplementedError('API encoding');
-    // _websocket.sendMessage(jsonEncode(json));
+    _websocket.sendMessage(message.toProto().writeToBuffer());
   }
 }

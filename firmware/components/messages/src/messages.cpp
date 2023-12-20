@@ -17,6 +17,9 @@
  * ShrapnelDSP. If not, see <https://www.gnu.org/licenses/>.
  */
 
+#include <freertos/FreeRTOS.h>
+#include <freertos/task.h>
+
 #include "messages.h"
 #include "shrapnel.pb.h"
 #include <pb_decode.h>
@@ -58,10 +61,19 @@ from_bytes(std::span<const uint8_t> buffer)
 template <>
 std::optional<shrapnel_messages_Message> to_proto(const ApiMessage &message)
 {
+    ESP_LOGE("DEBUG",
+             "%s stack %d",
+             __FUNCTION__,
+             uxTaskGetStackHighWaterMark(nullptr));
+
     return std::visit(
         [&](const auto &message) -> std::optional<shrapnel_messages_Message>
         {
             using T = std::decay_t<decltype(message)>;
+            ESP_LOGE("DEBUG",
+                     "%s stack %d",
+                     __FUNCTION__,
+                     uxTaskGetStackHighWaterMark(nullptr));
 
             shrapnel_messages_Message out = shrapnel_messages_Message_init_zero;
 
@@ -137,7 +149,18 @@ template <>
 std::optional<std::span<uint8_t>> to_bytes(const ApiMessage &message,
                                            std::span<uint8_t> buffer)
 {
+    ESP_LOGE("DEBUG",
+             "%s before to_proto stack %d",
+             __FUNCTION__,
+             uxTaskGetStackHighWaterMark(nullptr));
+
     auto proto_message = to_proto<shrapnel_messages_Message>(message);
+
+    ESP_LOGE("DEBUG",
+             "%s before to_bytes stack %d",
+             __FUNCTION__,
+             uxTaskGetStackHighWaterMark(nullptr));
+
     return to_bytes(*proto_message, buffer);
 }
 
