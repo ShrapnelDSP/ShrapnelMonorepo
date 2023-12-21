@@ -47,8 +47,8 @@ extern std::atomic_flag output_clipped;
 namespace shrapnel::api {
 
 template <>
-std::optional<shrapnel_audio_events_Message>
-to_proto(const events::ApiMessage &message);
+int to_proto(const events::ApiMessage &message,
+             shrapnel_audio_events_Message &out);
 
 template <>
 std::optional<events::ApiMessage>

@@ -61,9 +61,11 @@ etl::string_stream &operator<<(etl::string_stream &out,
 namespace shrapnel::api {
 
 template <>
-std::optional<shrapnel_selected_preset_Message> to_proto(const selected_preset::SelectedPresetApiMessage &message);
+int
+to_proto(const selected_preset::SelectedPresetApiMessage &message, shrapnel_selected_preset_Message &out);
 
 template <>
-std::optional<selected_preset::SelectedPresetApiMessage> from_proto(const shrapnel_selected_preset_Message &message);
+std::optional<selected_preset::SelectedPresetApiMessage>
+from_proto(const shrapnel_selected_preset_Message &message);
 
-}
+} // namespace shrapnel::api

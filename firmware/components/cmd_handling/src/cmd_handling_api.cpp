@@ -4,28 +4,27 @@
 namespace shrapnel::api {
 
 template <>
-std::optional<shrapnel_cmd_handling_Update>
-to_proto(const parameters::Update &message)
+int
+to_proto(const parameters::Update &message, shrapnel_cmd_handling_Update &out)
 {
-    shrapnel_cmd_handling_Update out = shrapnel_cmd_handling_Update_init_zero;
     out.value = message.value;
     strncpy(out.id, message.id.data(), sizeof out.id);
-    return out;
+    return 0;
 }
 
 template <>
-std::optional<shrapnel_cmd_handling_Initialise>
-to_proto(const parameters::Initialise &)
+int
+to_proto(const parameters::Initialise &, shrapnel_cmd_handling_Initialise &)
 {
-    return {{}};
+    return 0;
 }
 
 template <>
-std::optional<shrapnel_cmd_handling_Message>
-to_proto(const parameters::ApiMessage &message)
+int
+to_proto(const parameters::ApiMessage &message, shrapnel_cmd_handling_Message &out)
 {
     return std::visit(
-        [](const auto &message) -> std::optional<shrapnel_cmd_handling_Message>
+        [](const auto &message) -> int 
         {
             shrapnel_cmd_handling_Message out =
                 shrapnel_cmd_handling_Message_init_zero;
@@ -34,22 +33,28 @@ to_proto(const parameters::ApiMessage &message)
             if constexpr(std::is_same_v<T, parameters::Update>)
             {
                 out.which_message = shrapnel_cmd_handling_Message_update_tag;
-                out.message.update =
-                    *to_proto<shrapnel_cmd_handling_Update>(message);
+                int rc = to_proto<shrapnel_cmd_handling_Update>(message, out.message.update);
+                if(rc != 0)
+                {
+                    return -1;
+                }
             }
             else if constexpr(std::is_same_v<T, parameters::Initialise>)
             {
                 out.which_message =
                     shrapnel_cmd_handling_Message_initialise_tag;
-                out.message.initialise =
-                    *to_proto<shrapnel_cmd_handling_Initialise>(message);
+                int rc = to_proto<shrapnel_cmd_handling_Initialise>(message, out.message.initialise);
+                if(rc != 0)
+                {
+                    return -1;
+                }
             }
             else
             {
-                return std::nullopt;
+                return -1;
             }
 
-            return out;
+            return 0;
         },
         message);
 }

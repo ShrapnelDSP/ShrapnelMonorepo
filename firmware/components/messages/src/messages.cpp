@@ -59,7 +59,7 @@ from_bytes(std::span<const uint8_t> buffer)
 }
 
 template <>
-std::optional<shrapnel_messages_Message> to_proto(const ApiMessage &message)
+int to_proto(const ApiMessage &message, shrapnel_messages_Message &out)
 {
     ESP_LOGE("DEBUG",
              "%s stack %d",
@@ -67,7 +67,7 @@ std::optional<shrapnel_messages_Message> to_proto(const ApiMessage &message)
              uxTaskGetStackHighWaterMark(nullptr));
 
     return std::visit(
-        [&](const auto &message) -> std::optional<shrapnel_messages_Message>
+        [&out](const auto &message) -> int
         {
             using T = std::decay_t<decltype(message)>;
             ESP_LOGE("DEBUG",
@@ -75,35 +75,29 @@ std::optional<shrapnel_messages_Message> to_proto(const ApiMessage &message)
                      __FUNCTION__,
                      uxTaskGetStackHighWaterMark(nullptr));
 
-            shrapnel_messages_Message out = shrapnel_messages_Message_init_zero;
-
             if constexpr(std::is_same_v<T, events::ApiMessage>)
             {
                 out.which_message = shrapnel_messages_Message_audio_event_tag;
-                out.message.audio_event =
-                    *to_proto<shrapnel_audio_events_Message>(message);
-                return out;
+                return to_proto<shrapnel_audio_events_Message>(
+                    message, out.message.audio_event);
             }
             else if constexpr(std::is_same_v<T, parameters::ApiMessage>)
             {
                 out.which_message = shrapnel_messages_Message_command_tag;
-                out.message.command =
-                    *to_proto<shrapnel_cmd_handling_Message>(message);
-                return out;
+                return to_proto<shrapnel_cmd_handling_Message>(
+                    message, out.message.command);
             }
             else if constexpr(std::is_same_v<T, midi::MappingApiMessage>)
             {
                 out.which_message = shrapnel_messages_Message_midi_mapping_tag;
-                out.message.midi_mapping =
-                    *to_proto<shrapnel_midi_mapping_Message>(message);
-                return out;
+                return to_proto<shrapnel_midi_mapping_Message>(
+                    message, out.message.midi_mapping);
             }
             else if constexpr(std::is_same_v<T, presets::PresetsApiMessage>)
             {
                 out.which_message = shrapnel_messages_Message_preset_tag;
-                out.message.preset =
-                    *to_proto<shrapnel_presets_Message>(message);
-                return out;
+                return to_proto<shrapnel_presets_Message>(message,
+                                                          out.message.preset);
             }
             else if constexpr(std::is_same_v<
                                   T,
@@ -111,13 +105,12 @@ std::optional<shrapnel_messages_Message> to_proto(const ApiMessage &message)
             {
                 out.which_message =
                     shrapnel_messages_Message_selected_preset_tag;
-                out.message.selected_preset =
-                    *to_proto<shrapnel_selected_preset_Message>(message);
-                return out;
+                return to_proto<shrapnel_selected_preset_Message>(
+                    message, out.message.selected_preset);
             }
             else
             {
-                return std::nullopt;
+                return -1;
             }
         },
         message);
@@ -154,14 +147,20 @@ std::optional<std::span<uint8_t>> to_bytes(const ApiMessage &message,
              __FUNCTION__,
              uxTaskGetStackHighWaterMark(nullptr));
 
-    auto proto_message = to_proto<shrapnel_messages_Message>(message);
+    shrapnel_messages_Message proto_message =
+        shrapnel_messages_Message_init_zero;
+    int rc = to_proto<shrapnel_messages_Message>(message, proto_message);
+    if(rc != 0)
+    {
+        return std::nullopt;
+    }
 
     ESP_LOGE("DEBUG",
              "%s before to_bytes stack %d",
              __FUNCTION__,
              uxTaskGetStackHighWaterMark(nullptr));
 
-    return to_bytes(*proto_message, buffer);
+    return to_bytes(proto_message, buffer);
 }
 
 template <>

@@ -20,8 +20,8 @@
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 
-#include "midi_mapping_api.h"
 #include "etl_utility.h"
+#include "midi_mapping_api.h"
 #include <pb_decode.h>
 #include <pb_encode.h>
 
@@ -229,10 +229,8 @@ from_bytes(std::span<const uint8_t> buffer)
 }
 
 template <>
-std::optional<shrapnel_midi_mapping_Mapping>
-to_proto(const midi::Mapping &message)
+int to_proto(const midi::Mapping &message, shrapnel_midi_mapping_Mapping &out)
 {
-    shrapnel_midi_mapping_Mapping out = shrapnel_midi_mapping_Mapping_init_zero;
     out.midi_channel = message.midi_channel;
     out.cc_number = message.cc_number;
     switch(message.mode)
@@ -247,7 +245,7 @@ to_proto(const midi::Mapping &message)
     strncpy(out.parameterName,
             message.parameter_name.data(),
             sizeof out.parameterName);
-    return out;
+    return 0;
 }
 
 template <>
@@ -272,31 +270,28 @@ from_proto(const shrapnel_midi_mapping_Mapping &message)
 }
 
 template <>
-std::optional<shrapnel_midi_mapping_MappingRecord>
-to_proto(const std::pair<midi::Mapping::id_t, midi::Mapping> &message)
+int to_proto(const std::pair<midi::Mapping::id_t, midi::Mapping> &message,
+             shrapnel_midi_mapping_MappingRecord &out)
 {
     ESP_LOGE("DEBUG",
              "%s stack %d",
              __FUNCTION__,
              uxTaskGetStackHighWaterMark(nullptr));
 
-    shrapnel_midi_mapping_MappingRecord out =
-        shrapnel_midi_mapping_MappingRecord_init_zero;
-    auto mapping = to_proto<shrapnel_midi_mapping_Mapping>(message.second);
-    if(!mapping.has_value())
+    int rc =
+        to_proto<shrapnel_midi_mapping_Mapping>(message.second, out.mapping);
+    if(rc != 0)
     {
-        return std::nullopt;
+        return -1;
     }
     // FIXME: do we have to set the has_mapping etc? In proto3, there is no
     // presence, so it should not even exist?
-    out.mapping = *mapping;
-    auto id = to_proto<shrapnel_uuid_Uuid>(message.first);
-    if(!id.has_value())
+    rc = to_proto<shrapnel_uuid_Uuid>(message.first, out.id);
+    if(rc != 0)
     {
-        return std::nullopt;
+        return -1;
     }
-    out.id = *id;
-    return out;
+    return 0;
 }
 
 template <>
@@ -322,16 +317,13 @@ from_proto(const shrapnel_midi_mapping_MappingRecord &message)
 }
 
 template <>
-std::optional<shrapnel_midi_mapping_MappingList>
-to_proto(const etl::map<midi::Mapping::id_t, midi::Mapping, 1> &message)
+int to_proto(const etl::map<midi::Mapping::id_t, midi::Mapping, 10> &message,
+             shrapnel_midi_mapping_MappingList &out)
 {
     ESP_LOGE("DEBUG",
              "%s stack %d",
              __FUNCTION__,
              uxTaskGetStackHighWaterMark(nullptr));
-
-    shrapnel_midi_mapping_MappingList out =
-        shrapnel_midi_mapping_MappingList_init_zero;
 
     int i = 0;
     for(const auto &[key, value] : message)
@@ -341,25 +333,24 @@ to_proto(const etl::map<midi::Mapping::id_t, midi::Mapping, 1> &message)
             break;
         }
 
-        auto mapping = to_proto<shrapnel_midi_mapping_MappingRecord>(
-            std::pair{key, value});
-        if(!mapping.has_value())
+        int rc = to_proto<shrapnel_midi_mapping_MappingRecord>(
+            std::pair{key, value}, out.mappings[i]);
+        if(rc != 0)
         {
-            return std::nullopt;
+            return -1;
         }
-        out.mappings[i] = *mapping;
         i++;
     }
     out.mappings_count = i;
 
-    return out;
+    return 0;
 }
 
 template <>
-std::optional<etl::map<midi::Mapping::id_t, midi::Mapping, 1>>
+std::optional<etl::map<midi::Mapping::id_t, midi::Mapping, 10>>
 from_proto(const shrapnel_midi_mapping_MappingList &message)
 {
-    etl::map<midi::Mapping::id_t, midi::Mapping, 1> out;
+    etl::map<midi::Mapping::id_t, midi::Mapping, 10> out;
 
     for(size_t i = 0; i < message.mappings_count; i++)
     {
@@ -380,12 +371,9 @@ from_proto(const shrapnel_midi_mapping_MappingList &message)
 }
 
 template <>
-std::optional<shrapnel_midi_mapping_GetRequest>
-to_proto(const midi::GetRequest &)
+int to_proto(const midi::GetRequest &, shrapnel_midi_mapping_GetRequest &)
 {
-    shrapnel_midi_mapping_GetRequest out =
-        shrapnel_midi_mapping_GetRequest_init_zero;
-    return out;
+    return 0;
 }
 
 template <>
@@ -397,24 +385,21 @@ from_proto(const shrapnel_midi_mapping_GetRequest &)
 }
 
 template <>
-std::optional<shrapnel_midi_mapping_GetResponse>
-to_proto(const midi::GetResponse &message)
+int to_proto(const midi::GetResponse &message,
+             shrapnel_midi_mapping_GetResponse &out)
 {
     ESP_LOGE("DEBUG",
              "%s stack %d",
              __FUNCTION__,
              uxTaskGetStackHighWaterMark(nullptr));
 
-    shrapnel_midi_mapping_GetResponse out =
-        shrapnel_midi_mapping_GetResponse_init_zero;
-    auto mappings =
-        to_proto<shrapnel_midi_mapping_MappingList>(message.mappings);
-    if(!mappings.has_value())
+    int rc = to_proto<shrapnel_midi_mapping_MappingList>(message.mappings,
+                                                         out.mappings);
+    if(rc != 0)
     {
-        return std::nullopt;
+        return -1;
     }
-    out.mappings = *mappings;
-    return out;
+    return 0;
 }
 
 template <>
@@ -422,9 +407,8 @@ std::optional<midi::GetResponse>
 from_proto(const shrapnel_midi_mapping_GetResponse &message)
 {
     midi::GetResponse out{};
-    auto mappings =
-        from_proto<etl::map<midi::Mapping::id_t, midi::Mapping, 1>>(
-            message.mappings);
+    auto mappings = from_proto<etl::map<midi::Mapping::id_t, midi::Mapping, 10>>(
+        message.mappings);
     if(!mappings.has_value())
     {
         return std::nullopt;
@@ -434,19 +418,16 @@ from_proto(const shrapnel_midi_mapping_GetResponse &message)
 }
 
 template <>
-std::optional<shrapnel_midi_mapping_CreateRequest>
-to_proto(const midi::CreateRequest &message)
+int to_proto(const midi::CreateRequest &message,
+             shrapnel_midi_mapping_CreateRequest &out)
 {
-    shrapnel_midi_mapping_CreateRequest out =
-        shrapnel_midi_mapping_CreateRequest_init_zero;
-    auto mapping =
-        to_proto<shrapnel_midi_mapping_MappingRecord>(message.mapping);
-    if(!mapping.has_value())
+    int rc = to_proto<shrapnel_midi_mapping_MappingRecord>(message.mapping,
+                                                           out.mapping);
+    if(rc != 0)
     {
-        return std::nullopt;
+        return -1;
     }
-    out.mapping = *mapping;
-    return out;
+    return 0;
 }
 
 template <>
@@ -465,20 +446,16 @@ from_proto(const shrapnel_midi_mapping_CreateRequest &message)
 }
 
 template <>
-std::optional<shrapnel_midi_mapping_CreateResponse>
-to_proto(const midi::CreateResponse &message)
+int to_proto(const midi::CreateResponse &message,
+             shrapnel_midi_mapping_CreateResponse &out)
 {
-    shrapnel_midi_mapping_CreateResponse out =
-        shrapnel_midi_mapping_CreateResponse_init_zero;
-
-    auto mapping =
-        to_proto<shrapnel_midi_mapping_MappingRecord>(message.mapping);
-    if(!mapping.has_value())
+    int rc = to_proto<shrapnel_midi_mapping_MappingRecord>(message.mapping,
+                                                           out.mapping);
+    if(rc != 0)
     {
-        return std::nullopt;
+        return -1;
     }
-    out.mapping = *mapping;
-    return out;
+    return 0;
 }
 
 template <>
@@ -497,19 +474,15 @@ from_proto(const shrapnel_midi_mapping_CreateResponse &message)
 }
 
 template <>
-std::optional<shrapnel_midi_mapping_Update>
-to_proto(const midi::Update &message)
+int to_proto(const midi::Update &message, shrapnel_midi_mapping_Update &out)
 {
-    shrapnel_midi_mapping_Update out = shrapnel_midi_mapping_Update_init_zero;
-
-    auto mapping =
-        to_proto<shrapnel_midi_mapping_MappingRecord>(message.mapping);
-    if(!mapping.has_value())
+    int rc = to_proto<shrapnel_midi_mapping_MappingRecord>(message.mapping,
+                                                           out.mapping);
+    if(rc != 0)
     {
-        return std::nullopt;
+        return -1;
     }
-    out.mapping = *mapping;
-    return out;
+    return 0;
 }
 
 template <>
@@ -528,18 +501,14 @@ from_proto(const shrapnel_midi_mapping_Update &message)
 }
 
 template <>
-std::optional<shrapnel_midi_mapping_Remove>
-to_proto(const midi::Remove &message)
+int to_proto(const midi::Remove &message, shrapnel_midi_mapping_Remove &out)
 {
-    shrapnel_midi_mapping_Remove out = shrapnel_midi_mapping_Remove_init_zero;
-
-    auto id = to_proto<shrapnel_uuid_Uuid>(message.id);
-    if(!id.has_value())
+    int rc = to_proto<shrapnel_uuid_Uuid>(message.id, out.id);
+    if(rc != 0)
     {
-        return std::nullopt;
+        return -1;
     }
-    out.id = *id;
-    return out;
+    return 0;
 }
 
 template <>
@@ -557,14 +526,12 @@ from_proto(const shrapnel_midi_mapping_Remove &message)
 }
 
 template <>
-std::optional<shrapnel_midi_mapping_MidiMessage_NoteOn>
-to_proto(const midi::Message::NoteOn &message)
+int to_proto(const midi::Message::NoteOn &message,
+             shrapnel_midi_mapping_MidiMessage_NoteOn &out)
 {
-    shrapnel_midi_mapping_MidiMessage_NoteOn out =
-        shrapnel_midi_mapping_MidiMessage_NoteOn_init_zero;
     out.note = message.note;
     out.velocity = message.velocity;
-    return out;
+    return 0;
 }
 
 template <>
@@ -578,14 +545,12 @@ from_proto(const shrapnel_midi_mapping_MidiMessage_NoteOn &message)
 }
 
 template <>
-std::optional<shrapnel_midi_mapping_MidiMessage_NoteOff>
-to_proto(const midi::Message::NoteOff &message)
+int to_proto(const midi::Message::NoteOff &message,
+             shrapnel_midi_mapping_MidiMessage_NoteOff &out)
 {
-    shrapnel_midi_mapping_MidiMessage_NoteOff out =
-        shrapnel_midi_mapping_MidiMessage_NoteOff_init_zero;
     out.note = message.note;
     out.velocity = message.velocity;
-    return out;
+    return 0;
 }
 
 template <>
@@ -599,14 +564,12 @@ from_proto(const shrapnel_midi_mapping_MidiMessage_NoteOff &message)
 }
 
 template <>
-std::optional<shrapnel_midi_mapping_MidiMessage_ControlChange>
-to_proto(const midi::Message::ControlChange &message)
+int to_proto(const midi::Message::ControlChange &message,
+             shrapnel_midi_mapping_MidiMessage_ControlChange &out)
 {
-    shrapnel_midi_mapping_MidiMessage_ControlChange out =
-        shrapnel_midi_mapping_MidiMessage_ControlChange_init_zero;
     out.control = message.control;
     out.value = message.value;
-    return out;
+    return 0;
 }
 
 template <>
@@ -620,13 +583,11 @@ from_proto(const shrapnel_midi_mapping_MidiMessage_ControlChange &message)
 }
 
 template <>
-std::optional<shrapnel_midi_mapping_MidiMessage_ProgramChange>
-to_proto(const midi::Message::ProgramChange &message)
+int to_proto(const midi::Message::ProgramChange &message,
+             shrapnel_midi_mapping_MidiMessage_ProgramChange &out)
 {
-    shrapnel_midi_mapping_MidiMessage_ProgramChange out =
-        shrapnel_midi_mapping_MidiMessage_ProgramChange_init_zero;
     out.number = message.number;
-    return out;
+    return 0;
 }
 
 template <>
@@ -639,79 +600,70 @@ from_proto(const shrapnel_midi_mapping_MidiMessage_ProgramChange &message)
 }
 
 template <>
-std::optional<shrapnel_midi_mapping_MidiMessage>
-to_proto(const midi::Message &message)
+int to_proto(const midi::Message &message,
+             shrapnel_midi_mapping_MidiMessage &out)
 {
     auto channel = message.channel;
     return std::visit(
-        [channel](const auto &message)
-            -> std::optional<shrapnel_midi_mapping_MidiMessage>
+        [channel, &out](const auto &message) -> int
         {
-          using T = std::decay_t<decltype(message)>;
+            using T = std::decay_t<decltype(message)>;
 
-          shrapnel_midi_mapping_MidiMessage out =
-              shrapnel_midi_mapping_MidiMessage_init_zero;
+            out.channel = channel;
 
-          out.channel = channel;
+            using T = std::decay_t<decltype(message)>;
+            if constexpr(std::is_same_v<T, midi::Message::NoteOn>)
+            {
+                out.which_parameters =
+                    shrapnel_midi_mapping_MidiMessage_note_on_tag;
+                int rc = to_proto<shrapnel_midi_mapping_MidiMessage_NoteOn>(
+                    message, out.parameters.note_on);
+                if(rc != 0)
+                {
+                    return -1;
+                }
+            }
+            else if constexpr(std::is_same_v<T, midi::Message::NoteOff>)
+            {
+                out.which_parameters =
+                    shrapnel_midi_mapping_MidiMessage_note_off_tag;
+                int rc = to_proto<shrapnel_midi_mapping_MidiMessage_NoteOff>(
+                    message, out.parameters.note_off);
+                if(rc != 0)
+                {
+                    return -1;
+                }
+            }
+            else if constexpr(std::is_same_v<T, midi::Message::ControlChange>)
+            {
+                out.which_parameters =
+                    shrapnel_midi_mapping_MidiMessage_control_change_tag;
+                int rc =
+                    to_proto<shrapnel_midi_mapping_MidiMessage_ControlChange>(
+                        message, out.parameters.control_change);
+                if(rc != 0)
+                {
+                    return -1;
+                }
+            }
+            else if constexpr(std::is_same_v<T, midi::Message::ProgramChange>)
+            {
+                out.which_parameters =
+                    shrapnel_midi_mapping_MidiMessage_program_change_tag;
+                int rc =
+                    to_proto<shrapnel_midi_mapping_MidiMessage_ProgramChange>(
+                        message, out.parameters.program_change);
+                if(rc != 0)
+                {
+                    return -1;
+                }
+            }
+            else
+            {
+                return -1;
+            }
 
-          using T = std::decay_t<decltype(message)>;
-          if constexpr(std::is_same_v<T, midi::Message::NoteOn>)
-          {
-              out.which_parameters =
-                  shrapnel_midi_mapping_MidiMessage_note_on_tag;
-              auto proto_message =
-                  to_proto<shrapnel_midi_mapping_MidiMessage_NoteOn>(message);
-              if(!proto_message.has_value())
-              {
-                  return std::nullopt;
-              }
-              out.parameters.note_on = *proto_message;
-          }
-          else if constexpr(std::is_same_v<T, midi::Message::NoteOff>)
-          {
-              out.which_parameters =
-                  shrapnel_midi_mapping_MidiMessage_note_off_tag;
-              auto proto_message =
-                  to_proto<shrapnel_midi_mapping_MidiMessage_NoteOff>(
-                      message);
-              if(!proto_message.has_value())
-              {
-                  return std::nullopt;
-              }
-              out.parameters.note_off = *proto_message;
-          }
-          else if constexpr(std::is_same_v<T, midi::Message::ControlChange>)
-          {
-              out.which_parameters =
-                  shrapnel_midi_mapping_MidiMessage_control_change_tag;
-              auto proto_message =
-                  to_proto<shrapnel_midi_mapping_MidiMessage_ControlChange>(
-                      message);
-              if(!proto_message.has_value())
-              {
-                  return std::nullopt;
-              }
-              out.parameters.control_change = *proto_message;
-          }
-          else if constexpr(std::is_same_v<T, midi::Message::ProgramChange>)
-          {
-              out.which_parameters =
-                  shrapnel_midi_mapping_MidiMessage_program_change_tag;
-              auto proto_message =
-                  to_proto<shrapnel_midi_mapping_MidiMessage_ProgramChange>(
-                      message);
-              if(!proto_message.has_value())
-              {
-                  return std::nullopt;
-              }
-              out.parameters.program_change = *proto_message;
-          }
-          else
-          {
-              return std::nullopt;
-          }
-
-          return out;
+            return 0;
         },
         message.parameters);
 }
@@ -758,20 +710,16 @@ from_proto(const shrapnel_midi_mapping_MidiMessage &message)
 }
 
 template <>
-std::optional<shrapnel_midi_mapping_MessageReceived>
-to_proto(const midi::MessageReceived &message)
+int to_proto(const midi::MessageReceived &message,
+             shrapnel_midi_mapping_MessageReceived &out)
 {
-    shrapnel_midi_mapping_MessageReceived out =
-        shrapnel_midi_mapping_MessageReceived_init_zero;
-
-    auto received_message =
-        to_proto<shrapnel_midi_mapping_MidiMessage>(message.message);
-    if(!received_message.has_value())
+    int rc = to_proto<shrapnel_midi_mapping_MidiMessage>(message.message,
+                                                         out.received_message);
+    if(rc != 0)
     {
-        return std::nullopt;
+        return -1;
     }
-    out.received_message = *received_message;
-    return out;
+    return 0;
 }
 
 template <>
@@ -785,116 +733,104 @@ from_proto(const shrapnel_midi_mapping_MessageReceived &message)
 }
 
 template <>
-std::optional<shrapnel_midi_mapping_Message>
-to_proto(const midi::MappingApiMessage &message)
+int to_proto(const midi::MappingApiMessage &message,
+             shrapnel_midi_mapping_Message &out)
 {
     ESP_LOGE("DEBUG",
              "%s stack %d",
              __FUNCTION__,
              uxTaskGetStackHighWaterMark(nullptr));
-             
-    return std::visit(
-        [](const auto &message) -> std::optional<shrapnel_midi_mapping_Message>
-        {
-          ESP_LOGE("DEBUG",
-                   "%s stack %d",
-                   __FUNCTION__,
-                   uxTaskGetStackHighWaterMark(nullptr));
-                   
-            using T = std::decay_t<decltype(message)>;
 
-            shrapnel_midi_mapping_Message out =
-                shrapnel_midi_mapping_Message_init_zero;
+    return std::visit(
+        [&out](const auto &message) -> int
+        {
+            ESP_LOGE("DEBUG",
+                     "%s stack %d",
+                     __FUNCTION__,
+                     uxTaskGetStackHighWaterMark(nullptr));
 
             using T = std::decay_t<decltype(message)>;
             if constexpr(std::is_same_v<T, midi::GetRequest>)
             {
                 out.which_message =
                     shrapnel_midi_mapping_Message_get_request_tag;
-                auto proto_message =
-                    to_proto<shrapnel_midi_mapping_GetRequest>(message);
-                if(!proto_message.has_value())
+                int rc = to_proto<shrapnel_midi_mapping_GetRequest>(
+                    message, out.message.get_request);
+                if(rc != 0)
                 {
-                    return std::nullopt;
+                    return -1;
                 }
-                out.message.get_request = *proto_message;
             }
             else if constexpr(std::is_same_v<T, midi::GetResponse>)
             {
                 out.which_message =
                     shrapnel_midi_mapping_Message_get_response_tag;
-                auto proto_message =
-                    to_proto<shrapnel_midi_mapping_GetResponse>(message);
-                if(!proto_message.has_value())
+                int rc = to_proto<shrapnel_midi_mapping_GetResponse>(
+                    message, out.message.get_response);
+                if(rc != 0)
                 {
-                    return std::nullopt;
+                    return -1;
                 }
-                out.message.get_response = *proto_message;
             }
             else if constexpr(std::is_same_v<T, midi::CreateRequest>)
             {
                 out.which_message =
                     shrapnel_midi_mapping_Message_create_request_tag;
-                auto proto_message =
-                    to_proto<shrapnel_midi_mapping_CreateRequest>(message);
-                if(!proto_message.has_value())
+                int rc = to_proto<shrapnel_midi_mapping_CreateRequest>(
+                    message, out.message.create_request);
+                if(rc != 0)
                 {
-                    return std::nullopt;
+                    return -1;
                 }
-                out.message.create_request = *proto_message;
             }
             else if constexpr(std::is_same_v<T, midi::CreateResponse>)
             {
                 out.which_message =
                     shrapnel_midi_mapping_Message_create_response_tag;
-                auto proto_message =
-                    to_proto<shrapnel_midi_mapping_CreateResponse>(message);
-                if(!proto_message.has_value())
+                int rc = to_proto<shrapnel_midi_mapping_CreateResponse>(
+                    message, out.message.create_response);
+                if(rc != 0)
                 {
-                    return std::nullopt;
+                    return -1;
                 }
-                out.message.create_response = *proto_message;
             }
             else if constexpr(std::is_same_v<T, midi::Update>)
             {
                 out.which_message = shrapnel_midi_mapping_Message_update_tag;
-                auto proto_message =
-                    to_proto<shrapnel_midi_mapping_Update>(message);
-                if(!proto_message.has_value())
+                int rc = to_proto<shrapnel_midi_mapping_Update>(
+                    message, out.message.update);
+                if(rc != 0)
                 {
-                    return std::nullopt;
+                    return -1;
                 }
-                out.message.update = *proto_message;
             }
             else if constexpr(std::is_same_v<T, midi::Remove>)
             {
                 out.which_message = shrapnel_midi_mapping_Message_remove_tag;
-                auto proto_message =
-                    to_proto<shrapnel_midi_mapping_Remove>(message);
-                if(!proto_message.has_value())
+                int rc = to_proto<shrapnel_midi_mapping_Remove>(
+                    message, out.message.remove);
+                if(rc != 0)
                 {
-                    return std::nullopt;
+                    return -1;
                 }
-                out.message.remove = *proto_message;
             }
             else if constexpr(std::is_same_v<T, midi::MessageReceived>)
             {
                 out.which_message =
                     shrapnel_midi_mapping_Message_message_received_tag;
-                auto proto_message =
-                    to_proto<shrapnel_midi_mapping_MessageReceived>(message);
-                if(!proto_message.has_value())
+                int rc = to_proto<shrapnel_midi_mapping_MessageReceived>(
+                    message, out.message.message_received);
+                if(rc != 0)
                 {
-                    return std::nullopt;
+                    return -1;
                 }
-                out.message.message_received = *proto_message;
             }
             else
             {
-                return std::nullopt;
+                return -1;
             }
 
-            return out;
+            return 0;
         },
         message);
 }

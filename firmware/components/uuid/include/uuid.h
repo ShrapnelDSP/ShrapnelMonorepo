@@ -32,7 +32,7 @@ using uuid_t = std::array<uint8_t, 16>;
 namespace shrapnel::api {
 
 template <>
-std::optional<shrapnel_uuid_Uuid> to_proto(const uuid::uuid_t &message);
+int to_proto(const uuid::uuid_t &message, shrapnel_uuid_Uuid &out);
 
 template <>
 std::optional<uuid::uuid_t> from_proto(const shrapnel_uuid_Uuid &message);

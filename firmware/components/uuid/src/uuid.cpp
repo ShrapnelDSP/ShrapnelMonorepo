@@ -22,13 +22,10 @@
 namespace shrapnel::api {
 
 template <>
-std::optional<shrapnel_uuid_Uuid> to_proto(const uuid::uuid_t &message)
+int to_proto(const uuid::uuid_t &message, shrapnel_uuid_Uuid &out)
 {
-    shrapnel_uuid_Uuid out = shrapnel_uuid_Uuid_init_zero;
-
     std::copy(std::begin(message), std::end(message), std::begin(out.value));
-
-    return out;
+    return 0;
 }
 
 template <>

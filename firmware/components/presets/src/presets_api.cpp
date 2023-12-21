@@ -66,11 +66,9 @@ from_bytes(std::span<const uint8_t> buffer)
 }
 
 template <>
-std::optional<shrapnel_presets_PresetParameters>
-to_proto(const presets::ParametersData &parameters)
+int to_proto(const presets::ParametersData &parameters,
+             shrapnel_presets_PresetParameters &out)
 {
-    shrapnel_presets_PresetParameters out =
-        shrapnel_presets_PresetParameters_init_zero;
     out.amp_gain = parameters.amp_gain * 1000;
     out.amp_channel = parameters.amp_channel * 1000;
     out.bass = parameters.bass * 1000;
@@ -91,7 +89,7 @@ to_proto(const presets::ParametersData &parameters)
     out.wah_position = parameters.wah_position * 1000;
     out.wah_vocal = parameters.wah_vocal * 1000;
     out.wah_bypass = parameters.wah_bypass * 1000;
-    return out;
+    return 0;
 }
 
 template <>
@@ -125,22 +123,20 @@ from_proto(const shrapnel_presets_PresetParameters &unpacked)
 }
 
 template <>
-std::optional<shrapnel_presets_Preset>
-to_proto(const presets::PresetData &preset)
+int to_proto(const presets::PresetData &preset, shrapnel_presets_Preset &out)
 {
     shrapnel_presets_Preset preset_proto = shrapnel_presets_Preset_init_zero;
 
-    auto parameters =
-        to_proto<shrapnel_presets_PresetParameters>(preset.parameters);
-    if(!parameters.has_value())
+    int rc = to_proto<shrapnel_presets_PresetParameters>(
+        preset.parameters, preset_proto.parameters);
+    if(rc != 0)
     {
-        return std::nullopt;
+        return -1;
     }
-    preset_proto.parameters = *parameters;
 
     strncpy(preset_proto.name, preset.name.data(), sizeof preset_proto.name);
 
-    return preset_proto;
+    return 0;
 }
 
 template <>
@@ -162,10 +158,9 @@ from_proto(const shrapnel_presets_Preset &unpacked)
 }
 
 template <>
-std::optional<shrapnel_presets_Initialise> to_proto(const presets::Initialise &)
+int to_proto(const presets::Initialise &, shrapnel_presets_Initialise &)
 {
-    shrapnel_presets_Initialise out = shrapnel_presets_Initialise_init_zero;
-    return out;
+    return 0;
 }
 
 template <>
@@ -176,12 +171,10 @@ from_proto(const shrapnel_presets_Initialise &message)
 }
 
 template <>
-std::optional<shrapnel_presets_Notify> to_proto(const presets::Notify &message)
+int to_proto(const presets::Notify &message, shrapnel_presets_Notify &out)
 {
-    shrapnel_presets_Notify out = shrapnel_presets_Notify_init_zero;
     out.preset.id = message.id;
-    out.preset.preset = *to_proto<shrapnel_presets_Preset>(message.preset);
-    return out;
+    return to_proto<shrapnel_presets_Preset>(message.preset, out.preset.preset);
 }
 
 template <>
@@ -195,11 +188,9 @@ from_proto(const shrapnel_presets_Notify &message)
 }
 
 template <>
-std::optional<shrapnel_presets_Create> to_proto(const presets::Create &message)
+int to_proto(const presets::Create &message, shrapnel_presets_Create &out)
 {
-    shrapnel_presets_Create out = shrapnel_presets_Create_init_zero;
-    out.preset = *to_proto<shrapnel_presets_Preset>(message.preset);
-    return out;
+    return to_proto<shrapnel_presets_Preset>(message.preset, out.preset);
 }
 
 template <>
@@ -212,12 +203,10 @@ from_proto(const shrapnel_presets_Create &message)
 }
 
 template <>
-std::optional<shrapnel_presets_Update> to_proto(const presets::Update &message)
+int to_proto(const presets::Update &message, shrapnel_presets_Update &out)
 {
-    shrapnel_presets_Update out = shrapnel_presets_Update_init_zero;
     out.preset.id = message.id;
-    out.preset.preset = *to_proto<shrapnel_presets_Preset>(message.preset);
-    return out;
+    return to_proto<shrapnel_presets_Preset>(message.preset, out.preset.preset);
 }
 
 template <>
@@ -231,11 +220,10 @@ from_proto(const shrapnel_presets_Update &message)
 }
 
 template <>
-std::optional<shrapnel_presets_Remove> to_proto(const presets::Delete &message)
+int to_proto(const presets::Delete &message, shrapnel_presets_Remove &out)
 {
-    shrapnel_presets_Remove out = shrapnel_presets_Remove_init_zero;
     out.id = message.id;
-    return out;
+    return 0;
 }
 
 template <>
@@ -246,74 +234,69 @@ from_proto(const shrapnel_presets_Remove &message)
 }
 
 template <>
-std::optional<shrapnel_presets_Message>
-to_proto(const presets::PresetsApiMessage &message)
+int to_proto(const presets::PresetsApiMessage &message,
+             shrapnel_presets_Message &out)
 {
     return std::visit(
-        [](const auto &message) -> std::optional<shrapnel_presets_Message>
+        [&out](const auto &message) -> int
         {
-            using T = std::decay_t<decltype(message)>;
-
-            shrapnel_presets_Message out = shrapnel_presets_Message_init_zero;
-
             using T = std::decay_t<decltype(message)>;
             if constexpr(std::is_same_v<T, presets::Initialise>)
             {
                 out.which_message = shrapnel_presets_Message_initialise_tag;
-                auto proto_message =
-                    to_proto<shrapnel_presets_Initialise>(message);
-                if(!proto_message.has_value())
+                int rc = to_proto<shrapnel_presets_Initialise>(
+                    message, out.message.initialise);
+                if(rc != 0)
                 {
-                    return std::nullopt;
+                    return -1;
                 }
-                out.message.initialise = *proto_message;
             }
             else if constexpr(std::is_same_v<T, presets::Notify>)
             {
                 out.which_message = shrapnel_presets_Message_notify_tag;
-                auto proto_message = to_proto<shrapnel_presets_Notify>(message);
-                if(!proto_message.has_value())
+                int rc = to_proto<shrapnel_presets_Notify>(message,
+                                                           out.message.notify);
+                if(rc != 0)
                 {
-                    return std::nullopt;
+                    return -1;
                 }
-                out.message.notify = *proto_message;
             }
             else if constexpr(std::is_same_v<T, presets::Create>)
             {
                 out.which_message = shrapnel_presets_Message_create_tag;
-                auto proto_message = to_proto<shrapnel_presets_Create>(message);
-                if(!proto_message.has_value())
+                int rc = to_proto<shrapnel_presets_Create>(message,
+                                                           out.message.create);
+                if(rc != 0)
                 {
-                    return std::nullopt;
+                    return -1;
                 }
-                out.message.create = *proto_message;
             }
             else if constexpr(std::is_same_v<T, presets::Update>)
             {
                 out.which_message = shrapnel_presets_Message_update_tag;
-                auto proto_message = to_proto<shrapnel_presets_Update>(message);
-                if(!proto_message.has_value())
+                int rc = to_proto<shrapnel_presets_Update>(message,
+                                                           out.message.update);
+                if(rc != 0)
                 {
-                    return std::nullopt;
+                    return -1;
                 }
-                out.message.update = *proto_message;
             }
             else if constexpr(std::is_same_v<T, presets::Delete>)
             {
                 out.which_message = shrapnel_presets_Message_remove_tag;
-                auto proto_message = to_proto<shrapnel_presets_Remove>(message);
-                if(!proto_message.has_value())
+                int rc = to_proto<shrapnel_presets_Remove>(message,
+                                                           out.message.remove);
+                if(rc != 0)
                 {
-                    return std::nullopt;
+                    return -1;
                 }
-                out.message.remove = *proto_message;
             }
             else
             {
-                return std::nullopt;
+                return -1;
             }
 
-            return out;
+            return 0;
         },
         message);
 }

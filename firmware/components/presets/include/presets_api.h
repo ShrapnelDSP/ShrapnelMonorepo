@@ -136,64 +136,64 @@ std::optional<shrapnel_presets_Message>
 from_bytes(std::span<const uint8_t> buffer);
 
 template <>
-std::optional<shrapnel_presets_PresetParameters>
-to_proto(const presets::ParametersData &message);
+int
+to_proto(const presets::ParametersData &message, shrapnel_presets_PresetParameters &out);
 
 template <>
 std::optional<presets::ParametersData>
 from_proto(const shrapnel_presets_PresetParameters &message);
 
 template <>
-std::optional<shrapnel_presets_Preset>
-to_proto(const presets::PresetData &message);
+int
+to_proto(const presets::PresetData &message, shrapnel_presets_Preset &out);
 
 template <>
 std::optional<presets::PresetData>
 from_proto(const shrapnel_presets_Preset &message);
 
 template <>
-std::optional<shrapnel_presets_Initialise >
-to_proto(const presets::Initialise  &message);
+int
+to_proto(const presets::Initialise  &message, shrapnel_presets_Initialise  &out);
 
 template <>
 std::optional<presets::Initialise >
 from_proto(const shrapnel_presets_Initialise &message);
 
 template <>
-std::optional<shrapnel_presets_Notify>
-to_proto(const presets::Notify &message);
+int
+to_proto(const presets::Notify &message, shrapnel_presets_Notify &out);
 
 template <>
 std::optional<presets::Notify>
 from_proto(const shrapnel_presets_Notify &message);
 
 template <>
-std::optional<shrapnel_presets_Create >
-to_proto(const presets::Create &message);
+int
+to_proto(const presets::Create &message, shrapnel_presets_Create  &out);
 
 template <>
 std::optional<presets::Create>
 from_proto(const shrapnel_presets_Create  &message);
 
 template <>
-std::optional<shrapnel_presets_Update >
-to_proto(const presets::Update &message);
+int
+to_proto(const presets::Update &message, shrapnel_presets_Update  &out);
 
 template <>
 std::optional<presets::Update>
 from_proto(const shrapnel_presets_Update  &message);
 
 template <>
-std::optional<shrapnel_presets_Remove >
-to_proto(const presets::Delete &message);
+int
+to_proto(const presets::Delete &message, shrapnel_presets_Remove  &out);
 
 template <>
 std::optional<presets::Delete>
 from_proto(const shrapnel_presets_Remove  &message);
 
 template <>
-std::optional<shrapnel_presets_Message >
-to_proto(const presets::PresetsApiMessage &message);
+int
+to_proto(const presets::PresetsApiMessage &message, shrapnel_presets_Message  &out);
 
 template <>
 std::optional<presets::PresetsApiMessage>

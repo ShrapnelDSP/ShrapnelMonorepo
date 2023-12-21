@@ -33,11 +33,11 @@ std::optional<std::span<uint8_t>> to_bytes(const T &message, std::span<uint8_t> 
 template <typename T>
 std::optional<T> from_bytes(std::span<const uint8_t> buffer);
 
-/// Convert a message from proto struct
-template <typename ProtoT, typename T>
-std::optional<ProtoT> to_proto(const T &message);
-
 /// Convert a message to proto struct
+template <typename ProtoT, typename T>
+[[nodiscard]] int to_proto(const T &message, ProtoT &out);
+
+/// Convert a message from proto struct
 template <typename T, typename ProtoT>
 std::optional<T> from_proto(const ProtoT &message);
 

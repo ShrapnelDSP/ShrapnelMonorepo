@@ -69,23 +69,27 @@ private:
         auto buffer = std::span{memory};
 
         auto mappings = mapping_manager.get();
-        auto proto = api::to_proto<shrapnel_midi_mapping_MappingList>(
-            etl::map<midi::Mapping::id_t, midi::Mapping, 1>(
-                {mappings->begin(), mappings->end()}));
+        shrapnel_midi_mapping_MappingList proto =
+            shrapnel_midi_mapping_MappingList_init_zero;
+        int rc = api::to_proto<shrapnel_midi_mapping_MappingList>(
+            etl::map<midi::Mapping::id_t, midi::Mapping, 10>(
+                {mappings->begin(), mappings->end()}),
+            proto);
 
-        if(!proto.has_value())
+        if(rc != 0)
         {
             ESP_LOGE(TAG, "failed to convert midi mappings");
             return;
         }
 
-        auto result_buffer = api::to_bytes(*proto, buffer);
-        if(!result_buffer.has_value()) {
+        auto result_buffer = api::to_bytes(proto, buffer);
+        if(!result_buffer.has_value())
+        {
             ESP_LOGE(TAG, "failed to serialise midi mappings");
             return;
         }
 
-        int rc = persistence->save("midi_mappings", *result_buffer);
+        rc = persistence->save("midi_mappings", *result_buffer);
         if(rc != 0)
         {
             ESP_LOGE(TAG, "failed to persist midi mappings");
@@ -310,7 +314,7 @@ public:
            * - We could store each entry in the table at a different key
            * - Replace etl::map with more efficient implementation
            */
-            std::optional<etl::map<midi::Mapping::id_t, midi::Mapping, 1>>
+            std::optional<etl::map<midi::Mapping::id_t, midi::Mapping, 10>>
                 saved_mappings;
 
             std::array<uint8_t, 1024> memory{};
@@ -323,17 +327,18 @@ public:
             }
             else
             {
-                auto mapping_proto = api::from_bytes<shrapnel_midi_mapping_MappingList>(buffer);
+                auto mapping_proto =
+                    api::from_bytes<shrapnel_midi_mapping_MappingList>(buffer);
                 if(mapping_proto.has_value())
                 {
                     saved_mappings = api::from_proto<
-                        etl::map<midi::Mapping::id_t, midi::Mapping, 1>>(
+                        etl::map<midi::Mapping::id_t, midi::Mapping, 10>>(
                         *mapping_proto);
                 }
             }
 
             using MidiMappingType =
-                midi::MappingManager<ParameterUpdateNotifier, 1, 1>;
+                midi::MappingManager<ParameterUpdateNotifier, 10, 1>;
             midi_mapping_manager =
                 saved_mappings.has_value()
                     ? std::make_unique<MidiMappingType>(parameter_notifier,
@@ -342,7 +347,7 @@ public:
         }();
 
         mapping_observer = std::make_unique<MidiMappingObserver<
-            midi::MappingManager<ParameterUpdateNotifier, 1, 1>>>(
+            midi::MappingManager<ParameterUpdateNotifier, 10, 1>>>(
             a_persistence, *midi_mapping_manager);
         midi_mapping_manager->add_observer(*mapping_observer);
 
@@ -445,7 +450,8 @@ private:
                                                 midi::GetRequest>)
                     {
                         auto mappings = midi_mapping_manager->get();
-                        return midi::GetResponse{{mappings->begin(), mappings->end()}};
+                        return midi::GetResponse{
+                            {mappings->begin(), mappings->end()}};
                     }
                     else if constexpr(std::is_same_v<MidiMappingMessageT,
                                                      midi::CreateRequest>)
@@ -660,14 +666,14 @@ private:
     std::optional<midi::Message> last_notified_midi_message;
     std::unique_ptr<midi::Decoder> midi_decoder;
     std::mutex midi_mutex;
-    std::unique_ptr<midi::MappingManager<ParameterUpdateNotifier, 1, 1>>
+    std::unique_ptr<midi::MappingManager<ParameterUpdateNotifier, 10, 1>>
         midi_mapping_manager;
     std::shared_ptr<AudioParameters> audio_params;
     std::unique_ptr<parameters::CommandHandling<
         parameters::AudioParameters<MAX_PARAMETERS, 1>>>
         cmd_handling;
     std::unique_ptr<MidiMappingObserver<
-        midi::MappingManager<ParameterUpdateNotifier, 1, 1>>>
+        midi::MappingManager<ParameterUpdateNotifier, 10, 1>>>
         mapping_observer;
     std::unique_ptr<presets::PresetsManager> presets_manager;
     std::unique_ptr<selected_preset::SelectedPresetManager>

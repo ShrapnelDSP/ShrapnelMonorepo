@@ -46,8 +46,8 @@ using ApiMessage = std::variant<Update, Initialise>;
 namespace shrapnel::api {
 
 template <>
-std::optional<shrapnel_cmd_handling_Message>
-to_proto(const parameters::ApiMessage &message);
+int
+to_proto(const parameters::ApiMessage &message, shrapnel_cmd_handling_Message &out);
 
 template <>
 std::optional<parameters::ApiMessage>

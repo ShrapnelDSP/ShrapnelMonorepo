@@ -66,10 +66,10 @@ std::atomic_flag output_clipped;
 namespace shrapnel::api {
 
 template <>
-std::optional<shrapnel_audio_events_InputClipped>
-to_proto(const events::InputClipped &message)
+int
+to_proto(const events::InputClipped &, shrapnel_audio_events_InputClipped &)
 {
-    return {{}};
+    return 0;
 }
 
 template <>
@@ -80,10 +80,10 @@ from_proto(const shrapnel_audio_events_InputClipped &message)
 }
 
 template <>
-std::optional<shrapnel_audio_events_OutputClipped>
-to_proto(const events::OutputClipped &message)
+int
+to_proto(const events::OutputClipped &, shrapnel_audio_events_OutputClipped &)
 {
-    return {{}};
+    return 0;
 }
 
 template <>
@@ -94,36 +94,38 @@ from_proto(const shrapnel_audio_events_OutputClipped &message)
 }
 
 template <>
-std::optional<shrapnel_audio_events_Message>
-to_proto(const events::ApiMessage &message)
+int
+to_proto(const events::ApiMessage &message, shrapnel_audio_events_Message &out)
 {
     return std::visit(
-        [](const auto &message) -> std::optional<shrapnel_audio_events_Message>
+        [&out](const auto &message) -> int 
         {
-            shrapnel_audio_events_Message out =
-                shrapnel_audio_events_Message_init_zero;
-
             using T = std::decay_t<decltype(message)>;
             if constexpr(std::is_same_v<T, events::InputClipped>)
             {
-                out.which_event =
-                    shrapnel_audio_events_Message_input_clipped_tag;
-                out.event.input_clipped =
-                    *to_proto<shrapnel_audio_events_InputClipped>(message);
+                out.which_event = shrapnel_audio_events_Message_input_clipped_tag;
+                int rc = to_proto<shrapnel_audio_events_InputClipped>(message, out.event.input_clipped);
+                if(rc != 0)
+                {
+                    return -1;
+                }
             }
             else if constexpr(std::is_same_v<T, events::OutputClipped>)
             {
                 out.which_event =
                     shrapnel_audio_events_Message_output_clipped_tag;
-                out.event.output_clipped =
-                    *to_proto<shrapnel_audio_events_OutputClipped>(message);
+                int rc = to_proto<shrapnel_audio_events_OutputClipped>(message, out.event.output_clipped);
+                if(rc != 0)
+                {
+                    return -1;
+                }
             }
             else
             {
-                return std::nullopt;
+                return -1;
             }
 
-            return out;
+            return 0;
         },
         message);
 }
