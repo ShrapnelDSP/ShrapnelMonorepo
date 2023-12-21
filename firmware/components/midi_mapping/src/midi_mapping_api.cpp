@@ -719,6 +719,7 @@ int to_proto(const midi::MessageReceived &message,
     {
         return -1;
     }
+    out.has_received_message = true;
     return 0;
 }
 
