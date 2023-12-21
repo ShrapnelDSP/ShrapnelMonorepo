@@ -117,25 +117,49 @@ int to_proto(const ApiMessage &message, shrapnel_messages_Message &out)
 }
 
 template <>
-std::optional<ApiMessage> from_proto(const shrapnel_messages_Message &message)
+int from_proto(const shrapnel_messages_Message &message, ApiMessage &out)
 {
     switch(message.which_message)
     {
     case shrapnel_messages_Message_audio_event_tag:
-        return from_proto<events::ApiMessage>(message.message.audio_event);
+    {
+        events::ApiMessage tmp{};
+        from_proto<events::ApiMessage>(message.message.audio_event, tmp);
+        out = tmp;
+        return 0;
+    }
     case shrapnel_messages_Message_command_tag:
-        return from_proto<parameters::ApiMessage>(message.message.command);
+    {
+        parameters::ApiMessage tmp{};
+        from_proto<parameters::ApiMessage>(message.message.command, tmp);
+        out = tmp;
+        return 0;
+    }
     case shrapnel_messages_Message_midi_mapping_tag:
-        return from_proto<midi::MappingApiMessage>(
-            message.message.midi_mapping);
+    {
+        midi::MappingApiMessage tmp{};
+        from_proto<midi::MappingApiMessage>(message.message.midi_mapping, tmp);
+        out = tmp;
+        return 0;
+    }
     case shrapnel_messages_Message_preset_tag:
-        return from_proto<presets::PresetsApiMessage>(message.message.preset);
+    {
+        presets::PresetsApiMessage tmp{};
+        from_proto<presets::PresetsApiMessage>(message.message.preset, tmp);
+        out = tmp;
+        return 0;
+    }
     case shrapnel_messages_Message_selected_preset_tag:
-        return from_proto<selected_preset::SelectedPresetApiMessage>(
-            message.message.selected_preset);
+    {
+        selected_preset::SelectedPresetApiMessage tmp{};
+        from_proto<selected_preset::SelectedPresetApiMessage>(
+            message.message.selected_preset, tmp);
+        out = tmp;
+        return 0;
+    }
     }
 
-    return std::nullopt;
+    return -1;
 }
 
 template <>
@@ -167,7 +191,13 @@ template <>
 std::optional<ApiMessage> from_bytes(std::span<const uint8_t> buffer)
 {
     auto proto_message = from_bytes<shrapnel_messages_Message>(buffer);
-    return from_proto<ApiMessage>(*proto_message);
+    ApiMessage out{};
+    int rc = from_proto<ApiMessage>(*proto_message, out);
+    if(rc != 0)
+    {
+        return std::nullopt;
+    }
+    return out;
 }
 
 } // namespace shrapnel::api

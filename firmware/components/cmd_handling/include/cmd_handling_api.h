@@ -50,7 +50,7 @@ int
 to_proto(const parameters::ApiMessage &message, shrapnel_cmd_handling_Message &out);
 
 template <>
-std::optional<parameters::ApiMessage>
-from_proto(const shrapnel_cmd_handling_Message &message);
+int
+from_proto(const shrapnel_cmd_handling_Message &message, parameters::ApiMessage &out);
 
 } // namespace shrapnel::api

@@ -86,6 +86,7 @@ void deserialise_live_parameters(T &parameters_service,
     parameters_service.update("wahBypass", parameters.wah_bypass);
 }
 
+// FIXME: replace with to_bytes
 inline int serialise_preset(const PresetData &preset,
                             std::span<uint8_t> &buffer)
 {
@@ -106,6 +107,7 @@ inline int serialise_preset(const PresetData &preset,
     return 0;
 }
 
+// FIXME: replace with from_bytes
 inline int deserialise_preset(const std::span<const uint8_t> &buffer,
                               PresetData &preset)
 {
@@ -115,13 +117,12 @@ inline int deserialise_preset(const std::span<const uint8_t> &buffer,
         return -1;
     }
 
-    auto preset_result = api::from_proto<PresetData>(*unpacked);
-    if(!preset_result.has_value())
+    int rc = api::from_proto<PresetData>(*unpacked, preset);
+    if(rc != 0)
     {
         return -1;
     }
 
-    preset = *preset_result;
     return 0;
 }
 

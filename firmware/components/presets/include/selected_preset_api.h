@@ -65,7 +65,7 @@ int
 to_proto(const selected_preset::SelectedPresetApiMessage &message, shrapnel_selected_preset_Message &out);
 
 template <>
-std::optional<selected_preset::SelectedPresetApiMessage>
-from_proto(const shrapnel_selected_preset_Message &message);
+int
+from_proto(const shrapnel_selected_preset_Message &message, selected_preset::SelectedPresetApiMessage &out);
 
 } // namespace shrapnel::api

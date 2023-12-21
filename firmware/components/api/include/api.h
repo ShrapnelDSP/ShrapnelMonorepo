@@ -39,6 +39,6 @@ template <typename ProtoT, typename T>
 
 /// Convert a message from proto struct
 template <typename T, typename ProtoT>
-std::optional<T> from_proto(const ProtoT &message);
+int from_proto(const ProtoT &message, T &out);
 
 }

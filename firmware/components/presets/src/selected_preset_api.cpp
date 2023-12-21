@@ -74,41 +74,57 @@ int to_proto(const selected_preset::SelectedPresetApiMessage &message,
 }
 
 template <>
-std::optional<selected_preset::Read>
-from_proto(const shrapnel_selected_preset_Read &)
+int from_proto(const shrapnel_selected_preset_Read &, selected_preset::Read &)
 {
-    return {{}};
+    return 0;
 }
 
 template <>
-std::optional<selected_preset::Notify>
-from_proto(const shrapnel_selected_preset_Notify &message)
+int from_proto(const shrapnel_selected_preset_Notify &message,
+               selected_preset::Notify &out)
 {
-    return {{.selectedPresetId{message.id}}};
+    out.selectedPresetId = message.id;
+    return 0;
 }
 
 template <>
-std::optional<selected_preset::Write>
-from_proto(const shrapnel_selected_preset_Write &message)
+int from_proto(const shrapnel_selected_preset_Write &message,
+               selected_preset::Write &out)
 {
-    return {{.selectedPresetId{message.id}}};
+    out.selectedPresetId = message.id;
+    return 0;
 }
 
 template <>
-std::optional<selected_preset::SelectedPresetApiMessage>
-from_proto(const shrapnel_selected_preset_Message &message)
+int from_proto(const shrapnel_selected_preset_Message &message,
+               selected_preset::SelectedPresetApiMessage &out)
 {
     switch(message.which_message)
     {
     case shrapnel_selected_preset_Message_read_tag:
-        return from_proto<selected_preset::Read>(message.message.read);
+    {
+        selected_preset::Read tmp{};
+        from_proto<selected_preset::Read>(message.message.read, tmp);
+        out = tmp;
+        return 0;
+    }
     case shrapnel_selected_preset_Message_notify_tag:
-        return from_proto<selected_preset::Notify>(message.message.notify);
+    {
+        selected_preset::Notify tmp{};
+        from_proto<selected_preset::Notify>(message.message.notify, tmp);
+        out = tmp;
+        return 0;
+    }
     case shrapnel_selected_preset_Message_write_tag:
-        return from_proto<selected_preset::Write>(message.message.write);
+    {
+        selected_preset::Write tmp{};
+        from_proto<selected_preset::Write>(message.message.write, tmp);
+        out = tmp;
+        return 0;
+    }
     }
 
-    return std::nullopt;
+    return -1;
 }
 
 } // namespace shrapnel::api

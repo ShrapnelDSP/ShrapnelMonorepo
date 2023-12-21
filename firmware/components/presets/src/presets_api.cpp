@@ -66,60 +66,57 @@ from_bytes(std::span<const uint8_t> buffer)
 }
 
 template <>
-int to_proto(const presets::ParametersData &parameters,
+int to_proto(const presets::ParametersData &message,
              shrapnel_presets_PresetParameters &out)
 {
-    out.amp_gain = parameters.amp_gain * 1000;
-    out.amp_channel = parameters.amp_channel * 1000;
-    out.bass = parameters.bass * 1000;
-    out.middle = parameters.middle * 1000;
-    out.treble = parameters.treble * 1000;
-    out.contour = parameters.contour * 1000;
-    out.volume = parameters.volume * 1000;
-    out.noise_gate_threshold = parameters.noise_gate_threshold * 1000;
-    out.noise_gate_hysteresis = parameters.noise_gate_hysteresis * 1000;
-    out.noise_gate_attack = parameters.noise_gate_attack * 1000;
-    out.noise_gate_hold = parameters.noise_gate_hold * 1000;
-    out.noise_gate_release = parameters.noise_gate_release * 1000;
-    out.noise_gate_bypass = parameters.noise_gate_bypass * 1000;
-    out.chorus_rate = parameters.chorus_rate * 1000;
-    out.chorus_depth = parameters.chorus_depth * 1000;
-    out.chorus_mix = parameters.chorus_mix * 1000;
-    out.chorus_bypass = parameters.chorus_bypass * 1000;
-    out.wah_position = parameters.wah_position * 1000;
-    out.wah_vocal = parameters.wah_vocal * 1000;
-    out.wah_bypass = parameters.wah_bypass * 1000;
+    out.amp_gain = message.amp_gain * 1000;
+    out.amp_channel = message.amp_channel * 1000;
+    out.bass = message.bass * 1000;
+    out.middle = message.middle * 1000;
+    out.treble = message.treble * 1000;
+    out.contour = message.contour * 1000;
+    out.volume = message.volume * 1000;
+    out.noise_gate_threshold = message.noise_gate_threshold * 1000;
+    out.noise_gate_hysteresis = message.noise_gate_hysteresis * 1000;
+    out.noise_gate_attack = message.noise_gate_attack * 1000;
+    out.noise_gate_hold = message.noise_gate_hold * 1000;
+    out.noise_gate_release = message.noise_gate_release * 1000;
+    out.noise_gate_bypass = message.noise_gate_bypass * 1000;
+    out.chorus_rate = message.chorus_rate * 1000;
+    out.chorus_depth = message.chorus_depth * 1000;
+    out.chorus_mix = message.chorus_mix * 1000;
+    out.chorus_bypass = message.chorus_bypass * 1000;
+    out.wah_position = message.wah_position * 1000;
+    out.wah_vocal = message.wah_vocal * 1000;
+    out.wah_bypass = message.wah_bypass * 1000;
     return 0;
 }
 
 template <>
-std::optional<presets::ParametersData>
-from_proto(const shrapnel_presets_PresetParameters &unpacked)
+int from_proto(const shrapnel_presets_PresetParameters &message,
+               presets::ParametersData &out)
 {
-    return {
-        {
-            .amp_gain = unpacked.amp_gain / 1000.f,
-            .amp_channel = unpacked.amp_channel / 1000.f,
-            .bass = unpacked.bass / 1000.f,
-            .middle = unpacked.middle / 1000.f,
-            .treble = unpacked.treble / 1000.f,
-            .contour = unpacked.contour / 1000.f,
-            .volume = unpacked.volume / 1000.f,
-            .noise_gate_threshold = unpacked.noise_gate_threshold / 1000.f,
-            .noise_gate_hysteresis = unpacked.noise_gate_hysteresis / 1000.f,
-            .noise_gate_attack = unpacked.noise_gate_attack / 1000.f,
-            .noise_gate_hold = unpacked.noise_gate_hold / 1000.f,
-            .noise_gate_release = unpacked.noise_gate_release / 1000.f,
-            .noise_gate_bypass = unpacked.noise_gate_bypass / 1000.f,
-            .chorus_rate = unpacked.chorus_rate / 1000.f,
-            .chorus_depth = unpacked.chorus_depth / 1000.f,
-            .chorus_mix = unpacked.chorus_mix / 1000.f,
-            .chorus_bypass = unpacked.chorus_bypass / 1000.f,
-            .wah_position = unpacked.wah_position / 1000.f,
-            .wah_vocal = unpacked.wah_vocal / 1000.f,
-            .wah_bypass = unpacked.wah_bypass / 1000.f,
-        },
-    };
+    out.amp_gain = message.amp_gain / 1000.f;
+    out.amp_channel = message.amp_channel / 1000.f;
+    out.bass = message.bass / 1000.f;
+    out.middle = message.middle / 1000.f;
+    out.treble = message.treble / 1000.f;
+    out.contour = message.contour / 1000.f;
+    out.volume = message.volume / 1000.f;
+    out.noise_gate_threshold = message.noise_gate_threshold / 1000.f;
+    out.noise_gate_hysteresis = message.noise_gate_hysteresis / 1000.f;
+    out.noise_gate_attack = message.noise_gate_attack / 1000.f;
+    out.noise_gate_hold = message.noise_gate_hold / 1000.f;
+    out.noise_gate_release = message.noise_gate_release / 1000.f;
+    out.noise_gate_bypass = message.noise_gate_bypass / 1000.f;
+    out.chorus_rate = message.chorus_rate / 1000.f;
+    out.chorus_depth = message.chorus_depth / 1000.f;
+    out.chorus_mix = message.chorus_mix / 1000.f;
+    out.chorus_bypass = message.chorus_bypass / 1000.f;
+    out.wah_position = message.wah_position / 1000.f;
+    out.wah_vocal = message.wah_vocal / 1000.f;
+    out.wah_bypass = message.wah_bypass / 1000.f;
+    return 0;
 }
 
 template <>
@@ -140,21 +137,12 @@ int to_proto(const presets::PresetData &preset, shrapnel_presets_Preset &out)
 }
 
 template <>
-std::optional<presets::PresetData>
-from_proto(const shrapnel_presets_Preset &unpacked)
+int from_proto(const shrapnel_presets_Preset &unpacked,
+               presets::PresetData &out)
 {
-    auto parameters = from_proto<presets::ParametersData>(unpacked.parameters);
-    if(!parameters.has_value())
-    {
-        return std::nullopt;
-    }
-
-    return {
-        {
-            .name{unpacked.name},
-            .parameters{*parameters},
-        },
-    };
+    out.name = unpacked.name;
+    return from_proto<presets::ParametersData>(unpacked.parameters,
+                                               out.parameters);
 }
 
 template <>
@@ -164,10 +152,9 @@ int to_proto(const presets::Initialise &, shrapnel_presets_Initialise &)
 }
 
 template <>
-std::optional<presets::Initialise>
-from_proto(const shrapnel_presets_Initialise &message)
+int from_proto(const shrapnel_presets_Initialise &, presets::Initialise &)
 {
-    return {{}};
+    return 0;
 }
 
 template <>
@@ -178,13 +165,10 @@ int to_proto(const presets::Notify &message, shrapnel_presets_Notify &out)
 }
 
 template <>
-std::optional<presets::Notify>
-from_proto(const shrapnel_presets_Notify &message)
+int from_proto(const shrapnel_presets_Notify &message, presets::Notify &out)
 {
-    presets::Notify out{};
     out.id = message.preset.id;
-    out.preset = *from_proto<presets::PresetData>(message.preset.preset);
-    return out;
+    return from_proto<presets::PresetData>(message.preset.preset, out.preset);
 }
 
 template <>
@@ -194,12 +178,9 @@ int to_proto(const presets::Create &message, shrapnel_presets_Create &out)
 }
 
 template <>
-std::optional<presets::Create>
-from_proto(const shrapnel_presets_Create &message)
+int from_proto(const shrapnel_presets_Create &message, presets::Create &out)
 {
-    presets::Create out{};
-    out.preset = *from_proto<presets::PresetData>(message.preset);
-    return out;
+    return from_proto<presets::PresetData>(message.preset, out.preset);
 }
 
 template <>
@@ -210,13 +191,10 @@ int to_proto(const presets::Update &message, shrapnel_presets_Update &out)
 }
 
 template <>
-std::optional<presets::Update>
-from_proto(const shrapnel_presets_Update &message)
+int from_proto(const shrapnel_presets_Update &message, presets::Update &out)
 {
-    presets::Update out{};
     out.id = message.preset.id;
-    out.preset = *from_proto<presets::PresetData>(message.preset.preset);
-    return out;
+    return from_proto<presets::PresetData>(message.preset.preset, out.preset);
 }
 
 template <>
@@ -227,10 +205,10 @@ int to_proto(const presets::Delete &message, shrapnel_presets_Remove &out)
 }
 
 template <>
-std::optional<presets::Delete>
-from_proto(const shrapnel_presets_Remove &message)
+int from_proto(const shrapnel_presets_Remove &message, presets::Delete &out)
 {
-    return {{.id{message.id}}};
+    out.id = message.id;
+    return 0;
 }
 
 template <>
@@ -302,24 +280,49 @@ int to_proto(const presets::PresetsApiMessage &message,
 }
 
 template <>
-std::optional<presets::PresetsApiMessage>
-from_proto(const shrapnel_presets_Message &message)
+int from_proto(const shrapnel_presets_Message &message,
+               presets::PresetsApiMessage &out)
 {
     switch(message.which_message)
     {
     case shrapnel_presets_Message_initialise_tag:
-        return from_proto<presets::Initialise>(message.message.initialise);
+    {
+        presets::Initialise tmp{};
+        from_proto<presets::Initialise>(message.message.initialise, tmp);
+        out = tmp;
+        return 0;
+    }
     case shrapnel_presets_Message_notify_tag:
-        return from_proto<presets::Notify>(message.message.notify);
+    {
+        presets::Notify tmp{};
+        from_proto<presets::Notify>(message.message.notify, tmp);
+        out = tmp;
+        return 0;
+    }
     case shrapnel_presets_Message_create_tag:
-        return from_proto<presets::Create>(message.message.create);
+    {
+        presets::Create tmp{};
+        from_proto<presets::Create>(message.message.create, tmp);
+        out = tmp;
+        return 0;
+    }
     case shrapnel_presets_Message_update_tag:
-        return from_proto<presets::Update>(message.message.update);
+    {
+        presets::Update tmp{};
+        from_proto<presets::Update>(message.message.update, tmp);
+        out = tmp;
+        return 0;
+    }
     case shrapnel_presets_Message_remove_tag:
-        return from_proto<presets::Delete>(message.message.remove);
+    {
+        presets::Delete tmp{};
+        from_proto<presets::Delete>(message.message.remove, tmp);
+        out = tmp;
+        return 0;
+    }
     }
 
-    return std::nullopt;
+    return -1;
 }
 
 } // namespace shrapnel::api

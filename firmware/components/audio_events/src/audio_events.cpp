@@ -66,45 +66,46 @@ std::atomic_flag output_clipped;
 namespace shrapnel::api {
 
 template <>
-int
-to_proto(const events::InputClipped &, shrapnel_audio_events_InputClipped &)
+int to_proto(const events::InputClipped &, shrapnel_audio_events_InputClipped &)
 {
     return 0;
 }
 
 template <>
-std::optional<events::InputClipped>
-from_proto(const shrapnel_audio_events_InputClipped &message)
-{
-    return {{}};
-}
-
-template <>
-int
-to_proto(const events::OutputClipped &, shrapnel_audio_events_OutputClipped &)
+int from_proto(const shrapnel_audio_events_InputClipped &,
+               events::InputClipped &)
 {
     return 0;
 }
 
 template <>
-std::optional<events::OutputClipped>
-from_proto(const shrapnel_audio_events_OutputClipped &message)
+int to_proto(const events::OutputClipped &,
+             shrapnel_audio_events_OutputClipped &)
 {
-    return {{}};
+    return 0;
 }
 
 template <>
-int
-to_proto(const events::ApiMessage &message, shrapnel_audio_events_Message &out)
+int from_proto(const shrapnel_audio_events_OutputClipped &,
+               events::OutputClipped &)
+{
+    return 0;
+}
+
+template <>
+int to_proto(const events::ApiMessage &message,
+             shrapnel_audio_events_Message &out)
 {
     return std::visit(
-        [&out](const auto &message) -> int 
+        [&out](const auto &message) -> int
         {
             using T = std::decay_t<decltype(message)>;
             if constexpr(std::is_same_v<T, events::InputClipped>)
             {
-                out.which_event = shrapnel_audio_events_Message_input_clipped_tag;
-                int rc = to_proto<shrapnel_audio_events_InputClipped>(message, out.event.input_clipped);
+                out.which_event =
+                    shrapnel_audio_events_Message_input_clipped_tag;
+                int rc = to_proto<shrapnel_audio_events_InputClipped>(
+                    message, out.event.input_clipped);
                 if(rc != 0)
                 {
                     return -1;
@@ -114,7 +115,8 @@ to_proto(const events::ApiMessage &message, shrapnel_audio_events_Message &out)
             {
                 out.which_event =
                     shrapnel_audio_events_Message_output_clipped_tag;
-                int rc = to_proto<shrapnel_audio_events_OutputClipped>(message, out.event.output_clipped);
+                int rc = to_proto<shrapnel_audio_events_OutputClipped>(
+                    message, out.event.output_clipped);
                 if(rc != 0)
                 {
                     return -1;
@@ -131,18 +133,30 @@ to_proto(const events::ApiMessage &message, shrapnel_audio_events_Message &out)
 }
 
 template <>
-std::optional<events::ApiMessage>
-from_proto(const shrapnel_audio_events_Message &message)
+int from_proto(const shrapnel_audio_events_Message &message,
+               events::ApiMessage &out)
 {
     switch(message.which_event)
     {
     case shrapnel_audio_events_Message_input_clipped_tag:
-        return from_proto<events::InputClipped>(message.event.input_clipped);
+    {
+        events::InputClipped tmp{};
+        int rc =
+            from_proto<events::InputClipped>(message.event.input_clipped, tmp);
+        out = tmp;
+        return rc;
+    }
     case shrapnel_audio_events_Message_output_clipped_tag:
-        return from_proto<events::OutputClipped>(message.event.output_clipped);
+    {
+        events::OutputClipped tmp{};
+        int rc = from_proto<events::OutputClipped>(message.event.output_clipped,
+                                                   tmp);
+        out = tmp;
+        return rc;
+    }
     }
 
-    return std::nullopt;
+    return -1;
 }
 
 } // namespace shrapnel::api

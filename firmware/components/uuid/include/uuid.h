@@ -35,6 +35,7 @@ template <>
 int to_proto(const uuid::uuid_t &message, shrapnel_uuid_Uuid &out);
 
 template <>
-std::optional<uuid::uuid_t> from_proto(const shrapnel_uuid_Uuid &message);
+int
+from_proto(const shrapnel_uuid_Uuid &message, uuid::uuid_t &out);
 
 } // namespace shrapnel::api

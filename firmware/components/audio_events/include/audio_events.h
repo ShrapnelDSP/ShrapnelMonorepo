@@ -51,7 +51,7 @@ int to_proto(const events::ApiMessage &message,
              shrapnel_audio_events_Message &out);
 
 template <>
-std::optional<events::ApiMessage>
-from_proto(const shrapnel_audio_events_Message &message);
+int
+from_proto(const shrapnel_audio_events_Message &message, events::ApiMessage &out);
 
 } // namespace shrapnel::api
