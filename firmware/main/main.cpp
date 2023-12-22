@@ -416,12 +416,6 @@ void nvs_debug_print()
         res = nvs_entry_next(&it);
     }
     nvs_release_iterator(it);
-    
-    ESP_LOGI(TAG, "dumping NVS using C++ abstraction");
-    auto storage = presets_storage::Storage();
-    for(const auto& info : storage ) {
-        ESP_LOGI(TAG, "key '%s', type '%d'", info.key, info.type);
-    }
 }
 
 } // namespace shrapnel

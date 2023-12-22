@@ -211,14 +211,14 @@
  *   }
  *   ~~~
  * <tr>
- *   <td> `MidiMap::remove`
- *   <td> `id` (`UUID`): The ID of the MIDI mapping to remove
+ *   <td> `MidiMap::destroy`
+ *   <td> `id` (`UUID`): The ID of the MIDI mapping to destroy
  *   <td> UI -> Firmware
  *   <td> Firmware removes the specified MIDI mapping .
  *   <td>
  *   ~~~
  *   {
- *     "messageType": "MidiMap::remove",
+ *     "messageType": "MidiMap::destroy",
  *     "id": "..."
  *   }
  *   ~~~

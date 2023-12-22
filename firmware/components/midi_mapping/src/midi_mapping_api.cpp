@@ -46,11 +46,6 @@ etl::string_stream &operator<<(etl::string_stream &out, const GetRequest &)
     return out;
 }
 
-etl::string_stream &operator<<(etl::string_stream &out, const GetResponse &)
-{
-    return out << "{ TODO }";
-}
-
 etl::string_stream &operator<<(etl::string_stream &out,
                                const CreateRequest &self)
 {
@@ -91,10 +86,6 @@ etl::string_stream &operator<<(etl::string_stream &out,
         if constexpr(std::is_same_v<T, GetRequest>)
         {
             out << "<GetRequest>" << message;
-        }
-        else if constexpr(std::is_same_v<T, GetResponse>)
-        {
-            out << "<GetResponse>" << message;
         }
         else if constexpr(std::is_same_v<T, CreateRequest>)
         {

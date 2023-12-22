@@ -43,62 +43,7 @@ constexpr const size_t MAX_PARAMETERS = 20;
 
 using AudioParameters = parameters::AudioParameters<MAX_PARAMETERS, 1>;
 using SendMessageCallback = etl::delegate<void(const AppMessage &)>;
-
-template <typename MappingManagerT>
-class MidiMappingObserver final : public midi::MappingObserver
-{
-public:
-    explicit MidiMappingObserver(
-        std::shared_ptr<persistence::Storage> a_persistence,
-        const MappingManagerT &a_mapping_manager)
-        : persistence{a_persistence},
-          mapping_manager{a_mapping_manager}
-    {
-    }
-
-    void notification(const midi::Mapping::id_t &) override
-    {
-        ESP_LOGI(TAG, "Midi mapping has changed");
-        persist();
-    }
-
-private:
-    void persist()
-    {
-        std::array<uint8_t, 256> memory{};
-        auto buffer = std::span{memory};
-
-        auto mappings = mapping_manager.get();
-        shrapnel_midi_mapping_MappingList proto =
-            shrapnel_midi_mapping_MappingList_init_zero;
-        int rc = api::to_proto<shrapnel_midi_mapping_MappingList>(
-            etl::map<midi::Mapping::id_t, midi::Mapping, 10>(
-                {mappings->begin(), mappings->end()}),
-            proto);
-
-        if(rc != 0)
-        {
-            ESP_LOGE(TAG, "failed to convert midi mappings");
-            return;
-        }
-
-        auto result_buffer = api::to_bytes(proto, buffer);
-        if(!result_buffer.has_value())
-        {
-            ESP_LOGE(TAG, "failed to serialise midi mappings");
-            return;
-        }
-
-        rc = persistence->save("midi_mappings", *result_buffer);
-        if(rc != 0)
-        {
-            ESP_LOGE(TAG, "failed to persist midi mappings");
-        }
-    };
-
-    std::shared_ptr<persistence::Storage> persistence;
-    const MappingManagerT &mapping_manager;
-};
+using Crud = presets_storage::EspCrud<256>;
 
 class ParameterUpdateNotifier
 {
@@ -242,7 +187,8 @@ public:
                       SendMessageCallback::create<
                           MainThread,
                           &MainThread::cmd_handling_send_message>(*this))},
-          presets_manager{std::make_unique<presets::PresetsManager>()},
+          presets_manager{std::make_unique<presets::PresetsManager>(
+              std::make_unique<Crud>())},
           selected_preset_manager{
               std::make_unique<selected_preset::SelectedPresetManager>(
                   a_persistence)}
@@ -319,17 +265,9 @@ public:
 
             std::array<uint8_t, 1024> memory{};
             auto buffer = std::span<uint8_t>{memory};
-
-            int rc = a_persistence->load("midi_mappings", buffer);
-            if(rc != 0)
-            {
-                ESP_LOGE(TAG, "failed to load midi mappings");
-            }
-            else
-            {
-                saved_mappings = api::from_bytes<
-                    etl::map<midi::Mapping::id_t, midi::Mapping, 10>>(buffer);
-            }
+            
+            // FIXME: load the midi mappings, but maybe in the constructor of
+            // the manager, since the new design has a reference to the crud storage.
 
             using MidiMappingType =
                 midi::MappingManager<ParameterUpdateNotifier, 10, 1>;
@@ -339,11 +277,6 @@ public:
                                                         *saved_mappings)
                     : std::make_unique<MidiMappingType>(parameter_notifier);
         }();
-
-        mapping_observer = std::make_unique<MidiMappingObserver<
-            midi::MappingManager<ParameterUpdateNotifier, 10, 1>>>(
-            a_persistence, *midi_mapping_manager);
-        midi_mapping_manager->add_observer(*mapping_observer);
 
         BaseType_t rc = midi_message_notify_timer.start(portMAX_DELAY);
         if(rc != pdPASS)
@@ -444,8 +377,16 @@ private:
                                                 midi::GetRequest>)
                     {
                         auto mappings = midi_mapping_manager->get();
-                        return midi::GetResponse{
-                            {mappings->begin(), mappings->end()}};
+                        for(const auto &[id, mapping] : *mappings)
+                        {
+                            send_message({midi::Update{
+                                              {
+                                                  id,
+                                                  mapping,
+                                              },
+                                          },
+                                          std::nullopt});
+                        }
                     }
                     else if constexpr(std::is_same_v<MidiMappingMessageT,
                                                      midi::CreateRequest>)
@@ -499,6 +440,7 @@ private:
                                                 presets::Initialise>)
                     {
                         presets_manager->for_each(
+
                             [this](presets::id_t id,
                                    const presets::PresetData &preset)
                             {
@@ -544,10 +486,10 @@ private:
                     else if constexpr(std::is_same_v<PresetsMessageT,
                                                      presets::Delete>)
                     {
-                        int rc = presets_manager->remove(presets_message.id);
+                        int rc = presets_manager->destroy(presets_message.id);
                         if(rc != 0)
                         {
-                            ESP_LOGE(TAG, "Failed to remove preset");
+                            ESP_LOGE(TAG, "Failed to destroy preset");
                             return std::nullopt;
                         }
                     }
@@ -613,13 +555,14 @@ private:
             return std::nullopt;
         }
 
-        auto preset = presets_manager->read(write.selectedPresetId);
-        if(!preset.has_value())
+        presets::PresetData preset{};
+        rc = presets_manager->read(write.selectedPresetId, preset);
+        if(rc != 0)
         {
             return std::nullopt;
         }
 
-        deserialise_live_parameters(*parameter_notifier, preset->parameters);
+        deserialise_live_parameters(*parameter_notifier, preset.parameters);
 
         return selected_preset::Notify{
             .selectedPresetId = write.selectedPresetId,
@@ -666,9 +609,6 @@ private:
     std::unique_ptr<parameters::CommandHandling<
         parameters::AudioParameters<MAX_PARAMETERS, 1>>>
         cmd_handling;
-    std::unique_ptr<MidiMappingObserver<
-        midi::MappingManager<ParameterUpdateNotifier, 10, 1>>>
-        mapping_observer;
     std::unique_ptr<presets::PresetsManager> presets_manager;
     std::unique_ptr<selected_preset::SelectedPresetManager>
         selected_preset_manager;

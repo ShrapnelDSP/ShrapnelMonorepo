@@ -49,9 +49,177 @@ namespace shrapnel::presets_storage {
 * The data sent to \ref save should be reloaded by \ref load even after power
 * down.
 */
-class Storage
+template<size_t READ_BUFFER_SIZE>
+class EspCrud : public persistence::Crud<std::span<uint8_t>>
 {
 public:
+    [[nodiscard]] int create(const std::span<uint8_t> &data,
+                             presets::id_t &id_out) override
+    {
+        nvs_handle_t nvs_handle;
+        esp_err_t err;
+        int rc = -1;
+
+        // start at 0 in case last ID has not been saved to NVS
+        uint32_t id = 0;
+
+        ESP_ERROR_CHECK_WITHOUT_ABORT(
+            err = nvs_open(namespace_name, NVS_READWRITE, &nvs_handle));
+        if(err != ESP_OK)
+            goto out;
+
+        ESP_ERROR_CHECK_WITHOUT_ABORT(
+            err = nvs_get_u32(nvs_handle, last_id_name, &id));
+        if(err != ESP_OK && err != ESP_ERR_NVS_NOT_FOUND)
+            goto out;
+
+        id++;
+        id_out = id;
+
+        ESP_ERROR_CHECK_WITHOUT_ABORT(
+            err = nvs_set_blob(
+                nvs_handle, id_to_key(id).c_str(), data.data(), data.size()));
+        if(err != ESP_OK)
+            goto out;
+
+        ESP_ERROR_CHECK_WITHOUT_ABORT(
+            err = nvs_set_u32(nvs_handle, last_id_name, id));
+        if(err != ESP_OK && err != ESP_ERR_NVS_NOT_FOUND)
+            goto out;
+
+        ESP_ERROR_CHECK_WITHOUT_ABORT(err = nvs_commit(nvs_handle));
+        if(err != ESP_OK)
+            goto out;
+
+        rc = 0;
+
+    out:
+        nvs_close(nvs_handle);
+        return rc;
+    }
+
+    /// \return  non-zero on error
+    [[nodiscard]] int read(presets::id_t id,
+                           std::span<uint8_t> &buffer) override
+    {
+        nvs_handle_t nvs_handle;
+        esp_err_t err;
+        std::size_t required_size = 0;
+        int rc = -1;
+
+        ESP_ERROR_CHECK_WITHOUT_ABORT(
+            err = nvs_open(namespace_name, NVS_READONLY, &nvs_handle));
+        if(err != ESP_OK)
+            goto out;
+
+        // query the required size
+        ESP_ERROR_CHECK_WITHOUT_ABORT(
+            err = nvs_get_blob(
+                nvs_handle, id_to_key(id).c_str(), nullptr, &required_size));
+        if(err != ESP_OK)
+            goto out;
+
+        if(required_size > buffer.size())
+        {
+            ESP_LOGE(TAG,
+                     "Not enough space in the output buffer. Need %zu, got %zu",
+                     required_size,
+                     buffer.size());
+            goto out;
+        }
+
+        ESP_ERROR_CHECK_WITHOUT_ABORT(err = nvs_get_blob(nvs_handle,
+                                                         id_to_key(id).c_str(),
+                                                         buffer.data(),
+                                                         &required_size));
+        if(err != ESP_OK)
+            goto out;
+
+        buffer = buffer.subspan(0, required_size);
+        rc = 0;
+    out:
+        nvs_close(nvs_handle);
+        return rc;
+    };
+
+    /// \return  non-zero on error
+    [[nodiscard]] int update(presets::id_t id,
+                             const std::span<uint8_t> &data) override
+    {
+        nvs_handle_t nvs_handle;
+        esp_err_t err;
+        int rc = -1;
+
+        ESP_ERROR_CHECK_WITHOUT_ABORT(
+            err = nvs_open(namespace_name, NVS_READWRITE, &nvs_handle));
+        if(err != ESP_OK)
+            goto out;
+
+        ESP_ERROR_CHECK_WITHOUT_ABORT(
+            err = nvs_set_blob(
+                nvs_handle, id_to_key(id).c_str(), data.data(), data.size()));
+        if(err != ESP_OK)
+            goto out;
+
+        ESP_ERROR_CHECK_WITHOUT_ABORT(err = nvs_commit(nvs_handle));
+        if(err != ESP_OK)
+            goto out;
+
+        rc = 0;
+
+    out:
+        nvs_close(nvs_handle);
+        return rc;
+    };
+
+    /// \return  non-zero on error
+    [[nodiscard]] int destroy(presets::id_t id) override
+    {
+        nvs_handle_t nvs_handle;
+        esp_err_t err;
+        int rc = -1;
+
+        ESP_ERROR_CHECK_WITHOUT_ABORT(
+            err = nvs_open(namespace_name, NVS_READWRITE, &nvs_handle));
+        if(err != ESP_OK)
+            goto out;
+
+        ESP_ERROR_CHECK_WITHOUT_ABORT(
+            err = nvs_erase_key(nvs_handle, id_to_key(id).c_str()));
+        if(err != ESP_OK)
+            goto out;
+
+        ESP_ERROR_CHECK_WITHOUT_ABORT(err = nvs_commit(nvs_handle));
+        if(err != ESP_OK)
+            goto out;
+
+        rc = 0;
+
+    out:
+        nvs_close(nvs_handle);
+        return rc;
+    };
+
+    void for_each(etl::delegate<void(uint32_t, const std::span<uint8_t> &)>
+                      callback) override
+    {
+        for(const auto &entry : *this)
+        {
+            std::array<uint8_t, READ_BUFFER_SIZE> memory;
+            auto buffer = std::span<uint8_t>(memory);
+            
+            auto id = key_to_id(entry.key);
+            auto rc = read(id, buffer);
+            if(rc != 0)
+            {
+                ESP_LOGE(TAG, "Failed to read preset at key %s", entry.key);
+                continue;
+            }
+            callback(id, buffer);
+        }
+    }
+
+private:
     struct Iterator
     {
         using difference_type = int;
@@ -72,7 +240,8 @@ public:
               namespace_name(namespace_name),
               type(type)
         {
-            esp_err_t rc = nvs_entry_find(part_name, namespace_name, type, &self);
+            esp_err_t rc =
+                nvs_entry_find(part_name, namespace_name, type, &self);
             if(rc == ESP_ERR_NVS_NOT_FOUND)
             {
                 assert(self == nullptr);
@@ -220,161 +389,17 @@ public:
         nvs_iterator_t self = nullptr;
     };
 
-    [[nodiscard]] int create(std::span<uint8_t> data, presets::id_t &id_out)
-    {
-        nvs_handle_t nvs_handle;
-        esp_err_t err;
-        int rc = -1;
-
-        // start at 0 in case last ID has not been saved to NVS
-        uint32_t id = 0;
-
-        ESP_ERROR_CHECK_WITHOUT_ABORT(
-            err = nvs_open(namespace_name, NVS_READWRITE, &nvs_handle));
-        if(err != ESP_OK)
-            goto out;
-
-        ESP_ERROR_CHECK_WITHOUT_ABORT(
-            err = nvs_get_u32(nvs_handle, last_id_name, &id));
-        if(err != ESP_OK && err != ESP_ERR_NVS_NOT_FOUND)
-            goto out;
-
-        id++;
-        id_out = id;
-
-        ESP_ERROR_CHECK_WITHOUT_ABORT(
-            err = nvs_set_blob(
-                nvs_handle, id_to_key(id).c_str(), data.data(), data.size()));
-        if(err != ESP_OK)
-            goto out;
-
-        ESP_ERROR_CHECK_WITHOUT_ABORT(
-            err = nvs_set_u32(nvs_handle, last_id_name, id));
-        if(err != ESP_OK && err != ESP_ERR_NVS_NOT_FOUND)
-            goto out;
-
-        ESP_ERROR_CHECK_WITHOUT_ABORT(err = nvs_commit(nvs_handle));
-        if(err != ESP_OK)
-            goto out;
-
-        rc = 0;
-
-    out:
-        nvs_close(nvs_handle);
-        return rc;
-    }
-
-    /// \return  non-zero on error
-    [[nodiscard]] int save(presets::id_t id, std::span<uint8_t> data)
-    {
-        nvs_handle_t nvs_handle;
-        esp_err_t err;
-        int rc = -1;
-
-        ESP_ERROR_CHECK_WITHOUT_ABORT(
-            err = nvs_open(namespace_name, NVS_READWRITE, &nvs_handle));
-        if(err != ESP_OK)
-            goto out;
-
-        ESP_ERROR_CHECK_WITHOUT_ABORT(
-            err = nvs_set_blob(
-                nvs_handle, id_to_key(id).c_str(), data.data(), data.size()));
-        if(err != ESP_OK)
-            goto out;
-
-        ESP_ERROR_CHECK_WITHOUT_ABORT(err = nvs_commit(nvs_handle));
-        if(err != ESP_OK)
-            goto out;
-
-        rc = 0;
-
-    out:
-        nvs_close(nvs_handle);
-        return rc;
-    };
-
-    /// \return  non-zero on error
-    [[nodiscard]] int load(presets::id_t id, std::span<uint8_t> &buffer)
-    {
-        nvs_handle_t nvs_handle;
-        esp_err_t err;
-        std::size_t required_size = 0;
-        int rc = -1;
-
-        ESP_ERROR_CHECK_WITHOUT_ABORT(
-            err = nvs_open(namespace_name, NVS_READONLY, &nvs_handle));
-        if(err != ESP_OK)
-            goto out;
-
-        // query the required size
-        ESP_ERROR_CHECK_WITHOUT_ABORT(
-            err = nvs_get_blob(
-                nvs_handle, id_to_key(id).c_str(), nullptr, &required_size));
-        if(err != ESP_OK)
-            goto out;
-
-        if(required_size > buffer.size())
-        {
-            ESP_LOGE(TAG,
-                     "Not enough space in the output buffer. Need %zu, got %zu",
-                     required_size,
-                     buffer.size());
-            goto out;
-        }
-
-        ESP_ERROR_CHECK_WITHOUT_ABORT(err = nvs_get_blob(nvs_handle,
-                                                         id_to_key(id).c_str(),
-                                                         buffer.data(),
-                                                         &required_size));
-        if(err != ESP_OK)
-            goto out;
-
-        buffer = buffer.subspan(0, required_size);
-        rc = 0;
-    out:
-        nvs_close(nvs_handle);
-        return rc;
-    };
-
-    /// \return  non-zero on error
-    [[nodiscard]] int remove(presets::id_t id)
-    {
-        nvs_handle_t nvs_handle;
-        esp_err_t err;
-        int rc = -1;
-
-        ESP_ERROR_CHECK_WITHOUT_ABORT(
-            err = nvs_open(namespace_name, NVS_READWRITE, &nvs_handle));
-        if(err != ESP_OK)
-            goto out;
-
-        ESP_ERROR_CHECK_WITHOUT_ABORT(
-            err = nvs_erase_key(nvs_handle, id_to_key(id).c_str()));
-        if(err != ESP_OK)
-            goto out;
-
-        ESP_ERROR_CHECK_WITHOUT_ABORT(err = nvs_commit(nvs_handle));
-        if(err != ESP_OK)
-            goto out;
-
-        rc = 0;
-
-    out:
-        nvs_close(nvs_handle);
-        return rc;
-    };
-
     Iterator begin() { return {part_name, namespace_name, NVS_TYPE_BLOB}; }
 
     Iterator end() { return Iterator(); }
 
-private:
-    static constexpr char part_name[] = "nvs";
-    static constexpr char namespace_name[] = "presets";
+    char *part_name;
+    char *namespace_name;
+
     static constexpr char last_id_name[] = "last_id";
     static constexpr char TAG[] = "presets_storage";
-};
 
-static_assert(std::input_iterator<Storage::Iterator>);
+    static_assert(std::input_iterator<EspCrud::Iterator>);
+};
 
 } // namespace shrapnel::presets_storage

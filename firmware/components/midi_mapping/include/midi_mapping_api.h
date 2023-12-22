@@ -34,14 +34,6 @@ struct GetRequest
     std::strong_ordering operator<=>(const GetRequest &other) const = default;
 };
 
-struct GetResponse
-{
-    // FIXME: just one entry for now to work around not enough memory
-    // long term this can be fixed by sending one mapping at a time
-    etl::map<Mapping::id_t, Mapping, 10> mappings;
-    std::strong_ordering operator<=>(const GetResponse &other) const = default;
-};
-
 struct CreateRequest
 {
     std::pair<Mapping::id_t, Mapping> mapping;
@@ -76,7 +68,6 @@ struct MessageReceived
 };
 
 using MappingApiMessage = std::variant<GetRequest,
-                                       GetResponse,
                                        CreateRequest,
                                        CreateResponse,
                                        Update,
@@ -85,8 +76,6 @@ using MappingApiMessage = std::variant<GetRequest,
 
 etl::string_stream &operator<<(etl::string_stream &out, const Mapping &self);
 etl::string_stream &operator<<(etl::string_stream &out, const GetRequest &self);
-etl::string_stream &operator<<(etl::string_stream &out,
-                               const GetResponse &self);
 etl::string_stream &operator<<(etl::string_stream &out,
                                const CreateRequest &self);
 etl::string_stream &operator<<(etl::string_stream &out,
