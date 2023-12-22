@@ -103,31 +103,6 @@ etl::string_stream &operator<<(etl::string_stream &out,
 namespace api {
 
 template <>
-std::optional<std::span<uint8_t>>
-to_bytes(const etl::map<midi::Mapping::id_t, midi::Mapping, 10> &message,
-         std::span<uint8_t> buffer);
-
-template <>
-std::optional<etl::map<midi::Mapping::id_t, midi::Mapping, 10>>
-from_bytes(std::span<const uint8_t> buffer);
-
-// FIXME: remove and use the version above
-template <>
-std::optional<std::span<uint8_t>>
-to_bytes(const shrapnel_midi_mapping_MappingList &message,
-         std::span<uint8_t> buffer);
-
-// FIXME: remove
-template <>
-int
-to_proto(const etl::map<midi::Mapping::id_t, midi::Mapping, 10> &message, shrapnel_midi_mapping_MappingList &out);
-
-// FIXME: remove
-template <>
-int
-from_proto(const shrapnel_midi_mapping_MappingList &message, etl::map<midi::Mapping::id_t, midi::Mapping, 10> &out);
-
-template <>
 int
 to_proto(const midi::MappingApiMessage &message, shrapnel_midi_mapping_Message &out);
 

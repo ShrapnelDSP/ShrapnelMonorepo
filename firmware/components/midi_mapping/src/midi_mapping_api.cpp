@@ -198,40 +198,6 @@ from_bytes(std::span<const uint8_t> buffer)
 #endif
 
 template <>
-std::optional<std::span<uint8_t>>
-to_bytes(const shrapnel_midi_mapping_MappingList &message,
-         std::span<uint8_t> buffer)
-{
-    pb_ostream_t stream = pb_ostream_from_buffer(buffer.data(), buffer.size());
-
-    bool success =
-        pb_encode(&stream, &shrapnel_midi_mapping_MappingList_msg, &message);
-    if(!success)
-    {
-        return std::nullopt;
-    }
-
-    return buffer.subspan(0, stream.bytes_written);
-}
-
-template <>
-std::optional<shrapnel_midi_mapping_MappingList>
-from_bytes(std::span<const uint8_t> buffer)
-{
-    auto stream = pb_istream_from_buffer(buffer.data(), buffer.size());
-    shrapnel_midi_mapping_MappingList message =
-        shrapnel_midi_mapping_MappingList_init_zero;
-    bool success =
-        pb_decode(&stream, &shrapnel_midi_mapping_MappingList_msg, &message);
-    if(!success)
-    {
-        return std::nullopt;
-    }
-
-    return message;
-}
-
-template <>
 int to_proto(const midi::Mapping &message, shrapnel_midi_mapping_Mapping &out)
 {
     out.midi_channel = message.midi_channel;
@@ -317,60 +283,6 @@ int from_proto(const shrapnel_midi_mapping_MappingRecord &message,
 }
 
 template <>
-int to_proto(const etl::map<midi::Mapping::id_t, midi::Mapping, 10> &message,
-             shrapnel_midi_mapping_MappingList &out)
-{
-    ESP_LOGE("DEBUG",
-             "%s stack %d",
-             __FUNCTION__,
-             uxTaskGetStackHighWaterMark(nullptr));
-
-    int i = 0;
-    for(const auto &[key, value] : message)
-    {
-        if(i >= (sizeof(out.mappings) / sizeof(out.mappings[0])))
-        {
-            break;
-        }
-
-        int rc = to_proto<shrapnel_midi_mapping_MappingRecord>(
-            std::pair{key, value}, out.mappings[i]);
-        if(rc != 0)
-        {
-            return -1;
-        }
-        i++;
-    }
-    out.mappings_count = i;
-
-    return 0;
-}
-
-template <>
-int from_proto(const shrapnel_midi_mapping_MappingList &message,
-               etl::map<midi::Mapping::id_t, midi::Mapping, 10> &out)
-{
-    for(size_t i = 0; i < message.mappings_count; i++)
-    {
-        midi::Mapping::id_t id{};
-        midi::Mapping mapping{};
-        auto &proto_mapping = message.mappings[i];
-        int rc = from_proto<midi::Mapping::id_t>(proto_mapping.id, id);
-        if(rc != 0)
-        {
-            return -1;
-        }
-        rc = api::from_proto<midi::Mapping>(proto_mapping.mapping, mapping);
-        if(rc != 0)
-        {
-            out[id] = mapping;
-        }
-    }
-
-    return 0;
-}
-
-template <>
 int to_proto(const midi::GetRequest &, shrapnel_midi_mapping_GetRequest &)
 {
     return 0;
@@ -380,27 +292,6 @@ template <>
 int from_proto(const shrapnel_midi_mapping_GetRequest &, midi::GetRequest &)
 {
     return 0;
-}
-
-template <>
-int to_proto(const midi::GetResponse &message,
-             shrapnel_midi_mapping_GetResponse &out)
-{
-    ESP_LOGE("DEBUG",
-             "%s stack %d",
-             __FUNCTION__,
-             uxTaskGetStackHighWaterMark(nullptr));
-
-    return to_proto<shrapnel_midi_mapping_MappingList>(message.mappings,
-                                                       out.mappings);
-}
-
-template <>
-int from_proto(const shrapnel_midi_mapping_GetResponse &message,
-               midi::GetResponse &out)
-{
-    return from_proto<etl::map<midi::Mapping::id_t, midi::Mapping, 10>>(
-        message.mappings, out.mappings);
 }
 
 template <>
@@ -682,17 +573,6 @@ int to_proto(const midi::MappingApiMessage &message,
                     return -1;
                 }
             }
-            else if constexpr(std::is_same_v<T, midi::GetResponse>)
-            {
-                out.which_message =
-                    shrapnel_midi_mapping_Message_get_response_tag;
-                int rc = to_proto<shrapnel_midi_mapping_GetResponse>(
-                    message, out.message.get_response);
-                if(rc != 0)
-                {
-                    return -1;
-                }
-            }
             else if constexpr(std::is_same_v<T, midi::CreateRequest>)
             {
                 out.which_message =
@@ -769,14 +649,6 @@ int from_proto(const shrapnel_midi_mapping_Message &message,
         out = tmp;
         return rc;
     }
-    case shrapnel_midi_mapping_Message_get_response_tag:
-    {
-        midi::GetResponse tmp{};
-        int rc =
-            from_proto<midi::GetResponse>(message.message.get_response, tmp);
-        out = tmp;
-        return rc;
-    }
     case shrapnel_midi_mapping_Message_create_request_tag:
     {
         midi::CreateRequest tmp{};
@@ -818,25 +690,6 @@ int from_proto(const shrapnel_midi_mapping_Message &message,
     }
 
     return -1;
-}
-
-template <>
-std::optional<etl::map<midi::Mapping::id_t, midi::Mapping, 10>>
-from_bytes(std::span<const uint8_t> buffer)
-{
-    auto proto = from_bytes<shrapnel_midi_mapping_MappingList>(buffer);
-    if(!proto.has_value())
-    {
-        return std::nullopt;
-    }
-
-    etl::map<midi::Mapping::id_t, midi::Mapping, 10> out{};
-    int rc = from_proto(*proto, out);
-    if(rc != 0)
-    {
-        return std::nullopt;
-    }
-    return out;
 }
 
 } // namespace api
