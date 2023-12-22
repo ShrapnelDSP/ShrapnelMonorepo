@@ -25,10 +25,6 @@ part 'models.freezed.dart';
 sealed class MidiApiMessage with _$MidiApiMessage {
   const factory MidiApiMessage.getRequest() = MidiGetRequest;
 
-  const factory MidiApiMessage.getResponse({
-    required Map<String, MidiMapping> mappings,
-  }) = MidiGetResponse;
-
   const factory MidiApiMessage.createRequest({
     required MidiMappingEntry mapping,
   }) = MidiCreateRequest;

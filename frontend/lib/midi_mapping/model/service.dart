@@ -76,6 +76,7 @@ class MidiMappingService extends ChangeNotifier {
     _mappingsView = UnmodifiableMapView(__mappings);
 
     websocket.connectionStream.listen((_) async => getMapping());
+    _subscription = websocket.stream.listen(_handleMessage);
 
     if (websocket.isAlive) {
       unawaited(getMapping());
@@ -96,29 +97,13 @@ class MidiMappingService extends ChangeNotifier {
   UnmodifiableMapView<String, MidiMapping> get mappings => _mappingsView;
 
   MessageTransport<MidiApiMessage, MidiApiMessage> websocket;
+  late StreamSubscription<MidiApiMessage> _subscription;
 
   Future<void> getMapping() async {
     const message = MidiApiMessage.getRequest();
 
-    final response = websocket.stream
-        .where((event) => event is MidiGetResponse)
-        .map((event) => event as MidiGetResponse)
-        .map((event) => event.mappings)
-        .timeout(
-          responseTimeout,
-        )
-        .first;
-
+    __mappings.clear();
     websocket.sink.add(message);
-
-    try {
-      final value = await response;
-      __mappings.clear();
-      __mappings.addAll(value);
-      notifyListeners();
-    } on TimeoutException {
-      // ignore
-    }
   }
 
   // TODO this should not take a UUID, instead it should create it internally
@@ -164,5 +149,29 @@ class MidiMappingService extends ChangeNotifier {
 
     final message = MidiApiMessage.remove(id: id);
     websocket.sink.add(message);
+  }
+
+  void _handleMessage(MidiApiMessage message) {
+    switch (message) {
+      case MidiGetRequest():
+        break;
+      case MidiCreateRequest():
+        break;
+      case MidiCreateResponse():
+        break;
+      case MidiUpdate(:final mapping):
+        __mappings[mapping.id] = mapping.mapping;
+        notifyListeners();
+      case MidiRemove():
+        break;
+      case MidiMessageReceived():
+        break;
+    }
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    unawaited(_subscription.cancel());
   }
 }

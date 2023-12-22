@@ -51,16 +51,7 @@ message MappingRecord {
   Mapping mapping = 2;
 }
 
-// A list of all mappings used by the firmware to persist the mappings.
-message MappingList {
-  repeated MappingRecord mappings = 1;
-}
-
 message GetRequest {};
-
-message GetResponse {
-  MappingList mappings = 1;
-};
 
 message CreateRequest {
   MappingRecord mapping = 1;
@@ -85,11 +76,10 @@ message MessageReceived {
 message Message {
   oneof message {
     GetRequest get_request = 1;
-    GetResponse get_response = 2;
-    CreateRequest create_request = 3;
-    CreateResponse create_response = 4;
-    Update update = 5;
-    Remove remove = 6;
-    MessageReceived message_received = 7;
+    CreateRequest create_request = 2;
+    CreateResponse create_response = 3;
+    Update update = 4;
+    Remove remove = 5;
+    MessageReceived message_received = 6;
   }
 }

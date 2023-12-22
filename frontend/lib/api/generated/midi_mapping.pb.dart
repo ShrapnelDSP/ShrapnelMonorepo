@@ -554,51 +554,6 @@ class MappingRecord extends $pb.GeneratedMessage {
   Mapping ensureMapping() => $_ensure(1);
 }
 
-/// A list of all mappings used by the firmware to persist the mappings.
-class MappingList extends $pb.GeneratedMessage {
-  factory MappingList({
-    $core.Iterable<MappingRecord>? mappings,
-  }) {
-    final $result = create();
-    if (mappings != null) {
-      $result.mappings.addAll(mappings);
-    }
-    return $result;
-  }
-  MappingList._() : super();
-  factory MappingList.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
-  factory MappingList.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
-
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'MappingList', package: const $pb.PackageName(_omitMessageNames ? '' : 'shrapnel.midi_mapping'), createEmptyInstance: create)
-    ..pc<MappingRecord>(1, _omitFieldNames ? '' : 'mappings', $pb.PbFieldType.PM, subBuilder: MappingRecord.create)
-    ..hasRequiredFields = false
-  ;
-
-  @$core.Deprecated(
-  'Using this can add significant overhead to your binary. '
-  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
-  'Will be removed in next major version')
-  MappingList clone() => MappingList()..mergeFromMessage(this);
-  @$core.Deprecated(
-  'Using this can add significant overhead to your binary. '
-  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
-  'Will be removed in next major version')
-  MappingList copyWith(void Function(MappingList) updates) => super.copyWith((message) => updates(message as MappingList)) as MappingList;
-
-  $pb.BuilderInfo get info_ => _i;
-
-  @$core.pragma('dart2js:noInline')
-  static MappingList create() => MappingList._();
-  MappingList createEmptyInstance() => create();
-  static $pb.PbList<MappingList> createRepeated() => $pb.PbList<MappingList>();
-  @$core.pragma('dart2js:noInline')
-  static MappingList getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<MappingList>(create);
-  static MappingList? _defaultInstance;
-
-  @$pb.TagNumber(1)
-  $core.List<MappingRecord> get mappings => $_getList(0);
-}
-
 class GetRequest extends $pb.GeneratedMessage {
   factory GetRequest() => create();
   GetRequest._() : super();
@@ -629,58 +584,6 @@ class GetRequest extends $pb.GeneratedMessage {
   @$core.pragma('dart2js:noInline')
   static GetRequest getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<GetRequest>(create);
   static GetRequest? _defaultInstance;
-}
-
-class GetResponse extends $pb.GeneratedMessage {
-  factory GetResponse({
-    MappingList? mappings,
-  }) {
-    final $result = create();
-    if (mappings != null) {
-      $result.mappings = mappings;
-    }
-    return $result;
-  }
-  GetResponse._() : super();
-  factory GetResponse.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
-  factory GetResponse.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
-
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'GetResponse', package: const $pb.PackageName(_omitMessageNames ? '' : 'shrapnel.midi_mapping'), createEmptyInstance: create)
-    ..aOM<MappingList>(1, _omitFieldNames ? '' : 'mappings', subBuilder: MappingList.create)
-    ..hasRequiredFields = false
-  ;
-
-  @$core.Deprecated(
-  'Using this can add significant overhead to your binary. '
-  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
-  'Will be removed in next major version')
-  GetResponse clone() => GetResponse()..mergeFromMessage(this);
-  @$core.Deprecated(
-  'Using this can add significant overhead to your binary. '
-  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
-  'Will be removed in next major version')
-  GetResponse copyWith(void Function(GetResponse) updates) => super.copyWith((message) => updates(message as GetResponse)) as GetResponse;
-
-  $pb.BuilderInfo get info_ => _i;
-
-  @$core.pragma('dart2js:noInline')
-  static GetResponse create() => GetResponse._();
-  GetResponse createEmptyInstance() => create();
-  static $pb.PbList<GetResponse> createRepeated() => $pb.PbList<GetResponse>();
-  @$core.pragma('dart2js:noInline')
-  static GetResponse getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<GetResponse>(create);
-  static GetResponse? _defaultInstance;
-
-  @$pb.TagNumber(1)
-  MappingList get mappings => $_getN(0);
-  @$pb.TagNumber(1)
-  set mappings(MappingList v) { setField(1, v); }
-  @$pb.TagNumber(1)
-  $core.bool hasMappings() => $_has(0);
-  @$pb.TagNumber(1)
-  void clearMappings() => clearField(1);
-  @$pb.TagNumber(1)
-  MappingList ensureMappings() => $_ensure(0);
 }
 
 class CreateRequest extends $pb.GeneratedMessage {
@@ -945,7 +848,6 @@ class MessageReceived extends $pb.GeneratedMessage {
 
 enum Message_Message {
   getRequest, 
-  getResponse, 
   createRequest, 
   createResponse, 
   update, 
@@ -957,7 +859,6 @@ enum Message_Message {
 class Message extends $pb.GeneratedMessage {
   factory Message({
     GetRequest? getRequest,
-    GetResponse? getResponse,
     CreateRequest? createRequest,
     CreateResponse? createResponse,
     Update? update,
@@ -967,9 +868,6 @@ class Message extends $pb.GeneratedMessage {
     final $result = create();
     if (getRequest != null) {
       $result.getRequest = getRequest;
-    }
-    if (getResponse != null) {
-      $result.getResponse = getResponse;
     }
     if (createRequest != null) {
       $result.createRequest = createRequest;
@@ -994,23 +892,21 @@ class Message extends $pb.GeneratedMessage {
 
   static const $core.Map<$core.int, Message_Message> _Message_MessageByTag = {
     1 : Message_Message.getRequest,
-    2 : Message_Message.getResponse,
-    3 : Message_Message.createRequest,
-    4 : Message_Message.createResponse,
-    5 : Message_Message.update,
-    6 : Message_Message.remove,
-    7 : Message_Message.messageReceived,
+    2 : Message_Message.createRequest,
+    3 : Message_Message.createResponse,
+    4 : Message_Message.update,
+    5 : Message_Message.remove,
+    6 : Message_Message.messageReceived,
     0 : Message_Message.notSet
   };
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'Message', package: const $pb.PackageName(_omitMessageNames ? '' : 'shrapnel.midi_mapping'), createEmptyInstance: create)
-    ..oo(0, [1, 2, 3, 4, 5, 6, 7])
+    ..oo(0, [1, 2, 3, 4, 5, 6])
     ..aOM<GetRequest>(1, _omitFieldNames ? '' : 'getRequest', subBuilder: GetRequest.create)
-    ..aOM<GetResponse>(2, _omitFieldNames ? '' : 'getResponse', subBuilder: GetResponse.create)
-    ..aOM<CreateRequest>(3, _omitFieldNames ? '' : 'createRequest', subBuilder: CreateRequest.create)
-    ..aOM<CreateResponse>(4, _omitFieldNames ? '' : 'createResponse', subBuilder: CreateResponse.create)
-    ..aOM<Update>(5, _omitFieldNames ? '' : 'update', subBuilder: Update.create)
-    ..aOM<Remove>(6, _omitFieldNames ? '' : 'remove', subBuilder: Remove.create)
-    ..aOM<MessageReceived>(7, _omitFieldNames ? '' : 'messageReceived', subBuilder: MessageReceived.create)
+    ..aOM<CreateRequest>(2, _omitFieldNames ? '' : 'createRequest', subBuilder: CreateRequest.create)
+    ..aOM<CreateResponse>(3, _omitFieldNames ? '' : 'createResponse', subBuilder: CreateResponse.create)
+    ..aOM<Update>(4, _omitFieldNames ? '' : 'update', subBuilder: Update.create)
+    ..aOM<Remove>(5, _omitFieldNames ? '' : 'remove', subBuilder: Remove.create)
+    ..aOM<MessageReceived>(6, _omitFieldNames ? '' : 'messageReceived', subBuilder: MessageReceived.create)
     ..hasRequiredFields = false
   ;
 
@@ -1050,70 +946,59 @@ class Message extends $pb.GeneratedMessage {
   GetRequest ensureGetRequest() => $_ensure(0);
 
   @$pb.TagNumber(2)
-  GetResponse get getResponse => $_getN(1);
+  CreateRequest get createRequest => $_getN(1);
   @$pb.TagNumber(2)
-  set getResponse(GetResponse v) { setField(2, v); }
+  set createRequest(CreateRequest v) { setField(2, v); }
   @$pb.TagNumber(2)
-  $core.bool hasGetResponse() => $_has(1);
+  $core.bool hasCreateRequest() => $_has(1);
   @$pb.TagNumber(2)
-  void clearGetResponse() => clearField(2);
+  void clearCreateRequest() => clearField(2);
   @$pb.TagNumber(2)
-  GetResponse ensureGetResponse() => $_ensure(1);
+  CreateRequest ensureCreateRequest() => $_ensure(1);
 
   @$pb.TagNumber(3)
-  CreateRequest get createRequest => $_getN(2);
+  CreateResponse get createResponse => $_getN(2);
   @$pb.TagNumber(3)
-  set createRequest(CreateRequest v) { setField(3, v); }
+  set createResponse(CreateResponse v) { setField(3, v); }
   @$pb.TagNumber(3)
-  $core.bool hasCreateRequest() => $_has(2);
+  $core.bool hasCreateResponse() => $_has(2);
   @$pb.TagNumber(3)
-  void clearCreateRequest() => clearField(3);
+  void clearCreateResponse() => clearField(3);
   @$pb.TagNumber(3)
-  CreateRequest ensureCreateRequest() => $_ensure(2);
+  CreateResponse ensureCreateResponse() => $_ensure(2);
 
   @$pb.TagNumber(4)
-  CreateResponse get createResponse => $_getN(3);
+  Update get update => $_getN(3);
   @$pb.TagNumber(4)
-  set createResponse(CreateResponse v) { setField(4, v); }
+  set update(Update v) { setField(4, v); }
   @$pb.TagNumber(4)
-  $core.bool hasCreateResponse() => $_has(3);
+  $core.bool hasUpdate() => $_has(3);
   @$pb.TagNumber(4)
-  void clearCreateResponse() => clearField(4);
+  void clearUpdate() => clearField(4);
   @$pb.TagNumber(4)
-  CreateResponse ensureCreateResponse() => $_ensure(3);
+  Update ensureUpdate() => $_ensure(3);
 
   @$pb.TagNumber(5)
-  Update get update => $_getN(4);
+  Remove get remove => $_getN(4);
   @$pb.TagNumber(5)
-  set update(Update v) { setField(5, v); }
+  set remove(Remove v) { setField(5, v); }
   @$pb.TagNumber(5)
-  $core.bool hasUpdate() => $_has(4);
+  $core.bool hasRemove() => $_has(4);
   @$pb.TagNumber(5)
-  void clearUpdate() => clearField(5);
+  void clearRemove() => clearField(5);
   @$pb.TagNumber(5)
-  Update ensureUpdate() => $_ensure(4);
+  Remove ensureRemove() => $_ensure(4);
 
   @$pb.TagNumber(6)
-  Remove get remove => $_getN(5);
+  MessageReceived get messageReceived => $_getN(5);
   @$pb.TagNumber(6)
-  set remove(Remove v) { setField(6, v); }
+  set messageReceived(MessageReceived v) { setField(6, v); }
   @$pb.TagNumber(6)
-  $core.bool hasRemove() => $_has(5);
+  $core.bool hasMessageReceived() => $_has(5);
   @$pb.TagNumber(6)
-  void clearRemove() => clearField(6);
+  void clearMessageReceived() => clearField(6);
   @$pb.TagNumber(6)
-  Remove ensureRemove() => $_ensure(5);
-
-  @$pb.TagNumber(7)
-  MessageReceived get messageReceived => $_getN(6);
-  @$pb.TagNumber(7)
-  set messageReceived(MessageReceived v) { setField(7, v); }
-  @$pb.TagNumber(7)
-  $core.bool hasMessageReceived() => $_has(6);
-  @$pb.TagNumber(7)
-  void clearMessageReceived() => clearField(7);
-  @$pb.TagNumber(7)
-  MessageReceived ensureMessageReceived() => $_ensure(6);
+  MessageReceived ensureMessageReceived() => $_ensure(5);
 }
 
 

@@ -1,4 +1,3 @@
 # nanopb-specific options for the messages defined in midi_mapping.proto.
 
-shrapnel.midi_mapping.MappingList.mappings max_count:10
 shrapnel.midi_mapping.Mapping.parameterName max_size:32

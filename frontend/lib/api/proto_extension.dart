@@ -132,8 +132,6 @@ extension MidiProtoEx on MidiApiMessage {
   static MidiApiMessage fromProto(midi_mapping_pb.Message proto) {
     return switch (proto.whichMessage()) {
       midi_mapping_pb.Message_Message.getRequest => throw ProtoException(),
-      midi_mapping_pb.Message_Message.getResponse =>
-        MidiGetResponseProtoEx.fromProto(proto.getResponse),
       midi_mapping_pb.Message_Message.createRequest => throw ProtoException(),
       midi_mapping_pb.Message_Message.createResponse =>
         MidiCreateResponseProtoEx.fromProto(proto.createResponse),
@@ -149,7 +147,6 @@ extension MidiProtoEx on MidiApiMessage {
     return switch (this) {
       MidiGetRequest() =>
         midi_mapping_pb.Message(getRequest: midi_mapping_pb.GetRequest()),
-      MidiGetResponse() => throw ProtoException(),
       MidiCreateRequest(:final mapping) => midi_mapping_pb.Message(
           createRequest: midi_mapping_pb.CreateRequest(
             mapping: midi_mapping_pb.MappingRecord(
@@ -174,25 +171,6 @@ extension MidiProtoEx on MidiApiMessage {
         ),
       MidiMessageReceived() => throw ProtoException(),
     };
-  }
-}
-
-extension MidiGetResponseProtoEx on MidiGetResponse {
-  static MidiApiMessage fromProto(midi_mapping_pb.GetResponse proto) {
-    return MidiApiMessage.getResponse(
-      mappings: MidiMappingsProtoEx.fromProto(proto.mappings),
-    );
-  }
-}
-
-extension MidiMappingsProtoEx on Map<String, MidiMapping> {
-  static Map<String, MidiMapping> fromProto(midi_mapping_pb.MappingList proto) {
-    final out = <String, MidiMapping>{};
-    for (final protoEntry in proto.mappings) {
-      final entry = MidiMappingEntryProtoEx.fromProto(protoEntry);
-      out[entry.id] = entry.mapping;
-    }
-    return out;
   }
 }
 

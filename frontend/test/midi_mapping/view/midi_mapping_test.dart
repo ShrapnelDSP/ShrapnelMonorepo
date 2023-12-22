@@ -56,16 +56,6 @@ void main() {
     const getRequest =
         ApiMessage.midiMapping(message: MidiApiMessage.getRequest());
 
-    when(api.send(getRequest)).thenAnswer(
-      (_) {
-        apiController.add(
-          const ApiMessage.midiMapping(
-            message: MidiApiMessage.getResponse(mappings: {}),
-          ),
-        );
-      },
-    );
-
     await tester.pumpWidget(sut);
 
     final midiMappingPage = await HomePageObject(tester).openMidiMapping();
@@ -147,19 +137,6 @@ void main() {
       uuid: uuid,
     );
 
-    const getRequest =
-        ApiMessage.midiMapping(message: MidiApiMessage.getRequest());
-
-    when(api.send(getRequest)).thenAnswer(
-      (_) {
-        apiController.add(
-          const ApiMessage.midiMapping(
-            message: MidiApiMessage.getResponse(mappings: {}),
-          ),
-        );
-      },
-    );
-
     await tester.pumpWidget(sut);
 
     final midiMappingPage = await HomePageObject(tester).openMidiMapping();
@@ -230,15 +207,16 @@ void main() {
         (_) {
           apiController.add(
             const ApiMessage.midiMapping(
-              message: MidiApiMessage.getResponse(
-                mappings: {
-                  '123': MidiMapping(
+              message: MidiApiMessage.update(
+                mapping: MidiMappingEntry(
+                  id: '123',
+                  mapping: MidiMapping(
                     midiChannel: 1,
                     ccNumber: 2,
                     parameterId: 'ampGain',
                     mode: MidiMappingMode.parameter,
                   ),
-                },
+                ),
               ),
             ),
           );
@@ -367,15 +345,16 @@ void main() {
         (_) {
           apiController.add(
             const ApiMessage.midiMapping(
-              message: MidiApiMessage.getResponse(
-                mappings: {
-                  '123': MidiMapping(
+              message: MidiApiMessage.update(
+                mapping: MidiMappingEntry(
+                  id: '123',
+                  mapping: MidiMapping(
                     midiChannel: 1,
                     ccNumber: 2,
                     parameterId: 'ampGain',
                     mode: MidiMappingMode.parameter,
                   ),
-                },
+                ),
               ),
             ),
           );
@@ -430,19 +409,6 @@ void main() {
         websocket: websocket,
         apiWebsocket: api,
         uuid: uuid,
-      );
-
-      const getRequest =
-          ApiMessage.midiMapping(message: MidiApiMessage.getRequest());
-
-      when(api.send(getRequest)).thenAnswer(
-        (_) {
-          apiController.add(
-            const ApiMessage.midiMapping(
-              message: MidiApiMessage.getResponse(mappings: {}),
-            ),
-          );
-        },
       );
 
       final homePageObject = HomePageObject(tester);
@@ -550,15 +516,16 @@ void main() {
         (_) {
           apiController.add(
             const ApiMessage.midiMapping(
-              message: MidiApiMessage.getResponse(
-                mappings: {
-                  '456': MidiMapping(
+              message: MidiApiMessage.update(
+                mapping: MidiMappingEntry(
+                  id: '456',
+                  mapping: MidiMapping(
                     midiChannel: 3,
                     ccNumber: 4,
                     parameterId: 'volume',
                     mode: MidiMappingMode.parameter,
                   ),
-                },
+                ),
               ),
             ),
           );

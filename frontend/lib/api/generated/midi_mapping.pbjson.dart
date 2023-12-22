@@ -120,19 +120,6 @@ final $typed_data.Uint8List mappingRecordDescriptor = $convert.base64Decode(
     'Cg1NYXBwaW5nUmVjb3JkEiMKAmlkGAEgASgLMhMuc2hyYXBuZWwudXVpZC5VdWlkUgJpZBI4Cg'
     'dtYXBwaW5nGAIgASgLMh4uc2hyYXBuZWwubWlkaV9tYXBwaW5nLk1hcHBpbmdSB21hcHBpbmc=');
 
-@$core.Deprecated('Use mappingListDescriptor instead')
-const MappingList$json = {
-  '1': 'MappingList',
-  '2': [
-    {'1': 'mappings', '3': 1, '4': 3, '5': 11, '6': '.shrapnel.midi_mapping.MappingRecord', '10': 'mappings'},
-  ],
-};
-
-/// Descriptor for `MappingList`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List mappingListDescriptor = $convert.base64Decode(
-    'CgtNYXBwaW5nTGlzdBJACghtYXBwaW5ncxgBIAMoCzIkLnNocmFwbmVsLm1pZGlfbWFwcGluZy'
-    '5NYXBwaW5nUmVjb3JkUghtYXBwaW5ncw==');
-
 @$core.Deprecated('Use getRequestDescriptor instead')
 const GetRequest$json = {
   '1': 'GetRequest',
@@ -141,19 +128,6 @@ const GetRequest$json = {
 /// Descriptor for `GetRequest`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List getRequestDescriptor = $convert.base64Decode(
     'CgpHZXRSZXF1ZXN0');
-
-@$core.Deprecated('Use getResponseDescriptor instead')
-const GetResponse$json = {
-  '1': 'GetResponse',
-  '2': [
-    {'1': 'mappings', '3': 1, '4': 1, '5': 11, '6': '.shrapnel.midi_mapping.MappingList', '10': 'mappings'},
-  ],
-};
-
-/// Descriptor for `GetResponse`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List getResponseDescriptor = $convert.base64Decode(
-    'CgtHZXRSZXNwb25zZRI+CghtYXBwaW5ncxgBIAEoCzIiLnNocmFwbmVsLm1pZGlfbWFwcGluZy'
-    '5NYXBwaW5nTGlzdFIIbWFwcGluZ3M=');
 
 @$core.Deprecated('Use createRequestDescriptor instead')
 const CreateRequest$json = {
@@ -224,12 +198,11 @@ const Message$json = {
   '1': 'Message',
   '2': [
     {'1': 'get_request', '3': 1, '4': 1, '5': 11, '6': '.shrapnel.midi_mapping.GetRequest', '9': 0, '10': 'getRequest'},
-    {'1': 'get_response', '3': 2, '4': 1, '5': 11, '6': '.shrapnel.midi_mapping.GetResponse', '9': 0, '10': 'getResponse'},
-    {'1': 'create_request', '3': 3, '4': 1, '5': 11, '6': '.shrapnel.midi_mapping.CreateRequest', '9': 0, '10': 'createRequest'},
-    {'1': 'create_response', '3': 4, '4': 1, '5': 11, '6': '.shrapnel.midi_mapping.CreateResponse', '9': 0, '10': 'createResponse'},
-    {'1': 'update', '3': 5, '4': 1, '5': 11, '6': '.shrapnel.midi_mapping.Update', '9': 0, '10': 'update'},
-    {'1': 'remove', '3': 6, '4': 1, '5': 11, '6': '.shrapnel.midi_mapping.Remove', '9': 0, '10': 'remove'},
-    {'1': 'message_received', '3': 7, '4': 1, '5': 11, '6': '.shrapnel.midi_mapping.MessageReceived', '9': 0, '10': 'messageReceived'},
+    {'1': 'create_request', '3': 2, '4': 1, '5': 11, '6': '.shrapnel.midi_mapping.CreateRequest', '9': 0, '10': 'createRequest'},
+    {'1': 'create_response', '3': 3, '4': 1, '5': 11, '6': '.shrapnel.midi_mapping.CreateResponse', '9': 0, '10': 'createResponse'},
+    {'1': 'update', '3': 4, '4': 1, '5': 11, '6': '.shrapnel.midi_mapping.Update', '9': 0, '10': 'update'},
+    {'1': 'remove', '3': 5, '4': 1, '5': 11, '6': '.shrapnel.midi_mapping.Remove', '9': 0, '10': 'remove'},
+    {'1': 'message_received', '3': 6, '4': 1, '5': 11, '6': '.shrapnel.midi_mapping.MessageReceived', '9': 0, '10': 'messageReceived'},
   ],
   '8': [
     {'1': 'message'},
@@ -239,13 +212,12 @@ const Message$json = {
 /// Descriptor for `Message`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List messageDescriptor = $convert.base64Decode(
     'CgdNZXNzYWdlEkQKC2dldF9yZXF1ZXN0GAEgASgLMiEuc2hyYXBuZWwubWlkaV9tYXBwaW5nLk'
-    'dldFJlcXVlc3RIAFIKZ2V0UmVxdWVzdBJHCgxnZXRfcmVzcG9uc2UYAiABKAsyIi5zaHJhcG5l'
-    'bC5taWRpX21hcHBpbmcuR2V0UmVzcG9uc2VIAFILZ2V0UmVzcG9uc2USTQoOY3JlYXRlX3JlcX'
-    'Vlc3QYAyABKAsyJC5zaHJhcG5lbC5taWRpX21hcHBpbmcuQ3JlYXRlUmVxdWVzdEgAUg1jcmVh'
-    'dGVSZXF1ZXN0ElAKD2NyZWF0ZV9yZXNwb25zZRgEIAEoCzIlLnNocmFwbmVsLm1pZGlfbWFwcG'
-    'luZy5DcmVhdGVSZXNwb25zZUgAUg5jcmVhdGVSZXNwb25zZRI3CgZ1cGRhdGUYBSABKAsyHS5z'
-    'aHJhcG5lbC5taWRpX21hcHBpbmcuVXBkYXRlSABSBnVwZGF0ZRI3CgZyZW1vdmUYBiABKAsyHS'
-    '5zaHJhcG5lbC5taWRpX21hcHBpbmcuUmVtb3ZlSABSBnJlbW92ZRJTChBtZXNzYWdlX3JlY2Vp'
-    'dmVkGAcgASgLMiYuc2hyYXBuZWwubWlkaV9tYXBwaW5nLk1lc3NhZ2VSZWNlaXZlZEgAUg9tZX'
-    'NzYWdlUmVjZWl2ZWRCCQoHbWVzc2FnZQ==');
+    'dldFJlcXVlc3RIAFIKZ2V0UmVxdWVzdBJNCg5jcmVhdGVfcmVxdWVzdBgCIAEoCzIkLnNocmFw'
+    'bmVsLm1pZGlfbWFwcGluZy5DcmVhdGVSZXF1ZXN0SABSDWNyZWF0ZVJlcXVlc3QSUAoPY3JlYX'
+    'RlX3Jlc3BvbnNlGAMgASgLMiUuc2hyYXBuZWwubWlkaV9tYXBwaW5nLkNyZWF0ZVJlc3BvbnNl'
+    'SABSDmNyZWF0ZVJlc3BvbnNlEjcKBnVwZGF0ZRgEIAEoCzIdLnNocmFwbmVsLm1pZGlfbWFwcG'
+    'luZy5VcGRhdGVIAFIGdXBkYXRlEjcKBnJlbW92ZRgFIAEoCzIdLnNocmFwbmVsLm1pZGlfbWFw'
+    'cGluZy5SZW1vdmVIAFIGcmVtb3ZlElMKEG1lc3NhZ2VfcmVjZWl2ZWQYBiABKAsyJi5zaHJhcG'
+    '5lbC5taWRpX21hcHBpbmcuTWVzc2FnZVJlY2VpdmVkSABSD21lc3NhZ2VSZWNlaXZlZEIJCgdt'
+    'ZXNzYWdl');
 

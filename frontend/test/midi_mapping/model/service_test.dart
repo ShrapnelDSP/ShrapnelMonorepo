@@ -46,17 +46,17 @@ void main() {
       when(fakeWebsocket.connectionStream)
           .thenAnswer((_) => Stream.fromIterable([]));
       when(fakeWebsocket.isAlive).thenReturn(false);
-      final uut = MidiMappingService(websocket: fakeWebsocket);
 
-      const response = MidiApiMessage.getResponse(
-        mappings: {
-          '123': MidiMapping(
+      const response = MidiApiMessage.update(
+        mapping: MidiMappingEntry(
+          id: '123',
+          mapping: MidiMapping(
             midiChannel: 1,
             ccNumber: 2,
             parameterId: 'gain',
             mode: MidiMappingMode.parameter,
           ),
-        },
+        ),
       );
 
       const request = MidiApiMessage.getRequest();
@@ -72,10 +72,14 @@ void main() {
       when(fakeWebsocket.sink).thenAnswer((_) => sinkController);
       when(fakeWebsocket.stream).thenAnswer((_) => controller.stream);
 
-      expect(listenerCount, 0);
+      final uut = MidiMappingService(websocket: fakeWebsocket);
+
+      expect(listenerCount, 1);
       expect(uut.mappings, isEmpty);
 
       await uut.getMapping();
+      await pumpEventQueue();
+
       expect(outputMessages.removeLast(), request);
       expect(outputMessages, isEmpty);
       expect(uut.mappings, {
@@ -87,38 +91,7 @@ void main() {
         ),
       });
 
-      await pumpEventQueue();
-      expect(listenerCount, 0);
-
-      await controller.close();
-    });
-
-    test('timeout', () async {
-      var listenerCount = 0;
-      final controller = StreamController<MidiApiMessage>.broadcast(
-        onListen: () => listenerCount++,
-        onCancel: () => listenerCount--,
-      );
-      final sinkController = StreamController<MidiApiMessage>();
-
-      final fakeWebsocket =
-          MockMessageTransport<MidiApiMessage, MidiApiMessage>();
-      when(fakeWebsocket.connectionStream)
-          .thenAnswer((_) => Stream.fromIterable([]));
-      when(fakeWebsocket.isAlive).thenReturn(false);
-      final uut = MidiMappingService(websocket: fakeWebsocket);
-
-      when(fakeWebsocket.sink).thenAnswer((_) => sinkController);
-      when(fakeWebsocket.stream).thenAnswer((_) => controller.stream);
-
-      expect(listenerCount, 0);
-      expect(uut.mappings, isEmpty);
-
-      await uut.getMapping();
-      expect(uut.mappings, isEmpty);
-
-      // wait for timeout
-      await Future<void>.delayed(const Duration(seconds: 1));
+      uut.dispose();
 
       expect(listenerCount, 0);
 
@@ -142,7 +115,6 @@ void main() {
       when(fakeWebsocket.connectionStream)
           .thenAnswer((_) => Stream.fromIterable([]));
       when(fakeWebsocket.isAlive).thenReturn(false);
-      final uut = MidiMappingService(websocket: fakeWebsocket);
 
       const response = MidiApiMessage.createResponse(
         mapping: MidiMappingEntry(
@@ -178,7 +150,9 @@ void main() {
       when(fakeWebsocket.sink).thenAnswer((_) => sinkController);
       when(fakeWebsocket.stream).thenAnswer((_) => controller.stream);
 
-      expect(listenerCount, 0);
+      final uut = MidiMappingService(websocket: fakeWebsocket);
+
+      expect(listenerCount, 1);
       expect(uut.mappings, isEmpty);
 
       await uut.createMapping(
@@ -192,54 +166,13 @@ void main() {
           ),
         ),
       );
+      await pumpEventQueue();
+
       expect(outputMessages.removeLast(), request);
       expect(outputMessages, isEmpty);
       expect(uut.mappings, hasLength(1));
 
-      await pumpEventQueue();
-      expect(listenerCount, 0);
-
-      await controller.close();
-    });
-
-    test('timeout', () async {
-      var listenerCount = 0;
-      final controller = StreamController<MidiApiMessage>.broadcast(
-        onListen: () => listenerCount++,
-        onCancel: () => listenerCount--,
-      );
-
-      final sinkController = StreamController<MidiApiMessage>();
-
-      final fakeWebsocket =
-          MockMessageTransport<MidiApiMessage, MidiApiMessage>();
-      when(fakeWebsocket.connectionStream)
-          .thenAnswer((_) => Stream.fromIterable([]));
-      when(fakeWebsocket.isAlive).thenReturn(false);
-      final uut = MidiMappingService(websocket: fakeWebsocket);
-
-      when(fakeWebsocket.sink).thenAnswer((_) => sinkController);
-      when(fakeWebsocket.stream).thenAnswer((_) => controller.stream);
-
-      expect(listenerCount, 0);
-      expect(uut.mappings, isEmpty);
-
-      final result = uut.createMapping(
-        const MidiMappingEntry(
-          id: '123',
-          mapping: MidiMapping(
-            midiChannel: 1,
-            ccNumber: 2,
-            mode: MidiMappingMode.parameter,
-            parameterId: 'gain',
-          ),
-        ),
-      );
-      expect(uut.mappings, hasLength(1));
-      await result;
-
-      await pumpEventQueue();
-      expect(uut.mappings, isEmpty);
+      uut.dispose();
       expect(listenerCount, 0);
 
       await controller.close();
