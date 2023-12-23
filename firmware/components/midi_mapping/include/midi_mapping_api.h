@@ -21,13 +21,31 @@
 
 #include "api.h"
 #include "audio_param.h"
-#include "midi_mapping.h"
 #include "midi_mapping.pb.h"
+#include "midi_protocol.h"
 #include <utility>
 #include <variant>
 
 namespace shrapnel {
 namespace midi {
+
+struct Mapping
+{
+    using id_t = uint32_t;
+
+    enum class Mode
+    {
+        PARAMETER,
+        TOGGLE,
+    };
+
+    uint8_t midi_channel;
+    uint8_t cc_number;
+    Mode mode;
+    parameters::id_t parameter_name;
+
+    std::strong_ordering operator<=>(const Mapping &other) const = default;
+};
 
 struct GetRequest
 {
@@ -36,7 +54,7 @@ struct GetRequest
 
 struct CreateRequest
 {
-    std::pair<Mapping::id_t, Mapping> mapping;
+    Mapping mapping;
     std::strong_ordering
     operator<=>(const CreateRequest &other) const = default;
 };
@@ -90,6 +108,12 @@ etl::string_stream &operator<<(etl::string_stream &out,
 } // namespace midi
 
 namespace api {
+
+template <>
+std::optional<std::span<uint8_t>> to_bytes(const midi::Mapping &message, std::span<uint8_t> buffer);
+
+template <>
+std::optional<midi::Mapping> from_bytes(std::span<const uint8_t> buffer);
 
 template <>
 int

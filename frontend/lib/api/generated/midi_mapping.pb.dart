@@ -14,7 +14,6 @@ import 'dart:core' as $core;
 import 'package:protobuf/protobuf.dart' as $pb;
 
 import 'midi_mapping.pbenum.dart';
-import 'uuid.pb.dart' as $0;
 
 export 'midi_mapping.pbenum.dart';
 
@@ -488,7 +487,7 @@ class MidiMessage extends $pb.GeneratedMessage {
 
 class MappingRecord extends $pb.GeneratedMessage {
   factory MappingRecord({
-    $0.Uuid? id,
+    $core.int? id,
     Mapping? mapping,
   }) {
     final $result = create();
@@ -505,7 +504,7 @@ class MappingRecord extends $pb.GeneratedMessage {
   factory MappingRecord.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'MappingRecord', package: const $pb.PackageName(_omitMessageNames ? '' : 'shrapnel.midi_mapping'), createEmptyInstance: create)
-    ..aOM<$0.Uuid>(1, _omitFieldNames ? '' : 'id', subBuilder: $0.Uuid.create)
+    ..a<$core.int>(1, _omitFieldNames ? '' : 'id', $pb.PbFieldType.OU3)
     ..aOM<Mapping>(2, _omitFieldNames ? '' : 'mapping', subBuilder: Mapping.create)
     ..hasRequiredFields = false
   ;
@@ -532,15 +531,13 @@ class MappingRecord extends $pb.GeneratedMessage {
   static MappingRecord? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $0.Uuid get id => $_getN(0);
+  $core.int get id => $_getIZ(0);
   @$pb.TagNumber(1)
-  set id($0.Uuid v) { setField(1, v); }
+  set id($core.int v) { $_setUnsignedInt32(0, v); }
   @$pb.TagNumber(1)
   $core.bool hasId() => $_has(0);
   @$pb.TagNumber(1)
   void clearId() => clearField(1);
-  @$pb.TagNumber(1)
-  $0.Uuid ensureId() => $_ensure(0);
 
   @$pb.TagNumber(2)
   Mapping get mapping => $_getN(1);
@@ -588,7 +585,7 @@ class GetRequest extends $pb.GeneratedMessage {
 
 class CreateRequest extends $pb.GeneratedMessage {
   factory CreateRequest({
-    MappingRecord? mapping,
+    Mapping? mapping,
   }) {
     final $result = create();
     if (mapping != null) {
@@ -601,7 +598,7 @@ class CreateRequest extends $pb.GeneratedMessage {
   factory CreateRequest.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'CreateRequest', package: const $pb.PackageName(_omitMessageNames ? '' : 'shrapnel.midi_mapping'), createEmptyInstance: create)
-    ..aOM<MappingRecord>(1, _omitFieldNames ? '' : 'mapping', subBuilder: MappingRecord.create)
+    ..aOM<Mapping>(1, _omitFieldNames ? '' : 'mapping', subBuilder: Mapping.create)
     ..hasRequiredFields = false
   ;
 
@@ -627,15 +624,15 @@ class CreateRequest extends $pb.GeneratedMessage {
   static CreateRequest? _defaultInstance;
 
   @$pb.TagNumber(1)
-  MappingRecord get mapping => $_getN(0);
+  Mapping get mapping => $_getN(0);
   @$pb.TagNumber(1)
-  set mapping(MappingRecord v) { setField(1, v); }
+  set mapping(Mapping v) { setField(1, v); }
   @$pb.TagNumber(1)
   $core.bool hasMapping() => $_has(0);
   @$pb.TagNumber(1)
   void clearMapping() => clearField(1);
   @$pb.TagNumber(1)
-  MappingRecord ensureMapping() => $_ensure(0);
+  Mapping ensureMapping() => $_ensure(0);
 }
 
 class CreateResponse extends $pb.GeneratedMessage {
@@ -744,7 +741,7 @@ class Update extends $pb.GeneratedMessage {
 
 class Remove extends $pb.GeneratedMessage {
   factory Remove({
-    $0.Uuid? id,
+    $core.int? id,
   }) {
     final $result = create();
     if (id != null) {
@@ -757,7 +754,7 @@ class Remove extends $pb.GeneratedMessage {
   factory Remove.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'Remove', package: const $pb.PackageName(_omitMessageNames ? '' : 'shrapnel.midi_mapping'), createEmptyInstance: create)
-    ..aOM<$0.Uuid>(1, _omitFieldNames ? '' : 'id', subBuilder: $0.Uuid.create)
+    ..a<$core.int>(1, _omitFieldNames ? '' : 'id', $pb.PbFieldType.OU3)
     ..hasRequiredFields = false
   ;
 
@@ -783,15 +780,13 @@ class Remove extends $pb.GeneratedMessage {
   static Remove? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $0.Uuid get id => $_getN(0);
+  $core.int get id => $_getIZ(0);
   @$pb.TagNumber(1)
-  set id($0.Uuid v) { setField(1, v); }
+  set id($core.int v) { $_setUnsignedInt32(0, v); }
   @$pb.TagNumber(1)
   $core.bool hasId() => $_has(0);
   @$pb.TagNumber(1)
   void clearId() => clearField(1);
-  @$pb.TagNumber(1)
-  $0.Uuid ensureId() => $_ensure(0);
 }
 
 class MessageReceived extends $pb.GeneratedMessage {

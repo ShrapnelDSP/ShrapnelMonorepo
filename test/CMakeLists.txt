@@ -27,8 +27,9 @@ set(TESTING ON)
 
 add_subdirectory(support)
 
+# have to add nanopb before other components for the generator function to work correctly
+add_subdirectory(../thirdparty thirdparty)
 add_subdirectory(../effects/abstract_dsp/ abstract_dsp)
 add_subdirectory(../plugins/JUCE_static JUCE_static)
 add_subdirectory(../firmware firmware)
-add_subdirectory(../thirdparty thirdparty)
 add_subdirectory(integration)

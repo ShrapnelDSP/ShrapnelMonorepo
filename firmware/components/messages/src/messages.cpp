@@ -61,20 +61,10 @@ from_bytes(std::span<const uint8_t> buffer)
 template <>
 int to_proto(const ApiMessage &message, shrapnel_messages_Message &out)
 {
-    ESP_LOGE("DEBUG",
-             "%s stack %d",
-             __FUNCTION__,
-             uxTaskGetStackHighWaterMark(nullptr));
-
     return std::visit(
         [&out](const auto &message) -> int
         {
             using T = std::decay_t<decltype(message)>;
-            ESP_LOGE("DEBUG",
-                     "%s stack %d",
-                     __FUNCTION__,
-                     uxTaskGetStackHighWaterMark(nullptr));
-
             if constexpr(std::is_same_v<T, events::ApiMessage>)
             {
                 out.which_message = shrapnel_messages_Message_audio_event_tag;
@@ -166,11 +156,6 @@ template <>
 std::optional<std::span<uint8_t>> to_bytes(const ApiMessage &message,
                                            std::span<uint8_t> buffer)
 {
-    ESP_LOGE("DEBUG",
-             "%s before to_proto stack %d",
-             __FUNCTION__,
-             uxTaskGetStackHighWaterMark(nullptr));
-
     shrapnel_messages_Message proto_message =
         shrapnel_messages_Message_init_zero;
     int rc = to_proto<shrapnel_messages_Message>(message, proto_message);
@@ -178,11 +163,6 @@ std::optional<std::span<uint8_t>> to_bytes(const ApiMessage &message,
     {
         return std::nullopt;
     }
-
-    ESP_LOGE("DEBUG",
-             "%s before to_bytes stack %d",
-             __FUNCTION__,
-             uxTaskGetStackHighWaterMark(nullptr));
 
     return to_bytes(proto_message, buffer);
 }

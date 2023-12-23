@@ -10,6 +10,8 @@ template <typename DataT>
 class Crud
 {
 public:
+    virtual ~Crud() = default;
+
     [[nodiscard]] virtual int create(const DataT &data, uint32_t &id_out) = 0;
     [[nodiscard]] virtual int read(uint32_t id, DataT &data_out) = 0;
     [[nodiscard]] virtual int update(uint32_t id, const DataT &data) = 0;

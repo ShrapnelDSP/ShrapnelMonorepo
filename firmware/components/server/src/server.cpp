@@ -52,7 +52,7 @@ void Server::start()
     config.server_port = 8080;
     config.ctrl_port = 8081;
     config.max_open_sockets = MAX_CLIENTS;
-    config.stack_size = 7700;
+    config.stack_size = 5700;
 
     // Start the httpd server
     ESP_LOGI(TAG, "Starting server on port: '%d'", config.server_port);
@@ -105,8 +105,8 @@ esp_err_t websocket_get_handler(httpd_req_t *req)
     if(req->method == HTTP_GET)
     {
         ESP_LOGI(TAG, "Got websocket upgrade request");
-        ESP_LOGE("DEBUG",
-                 "%s stack before upgrade %d",
+        ESP_LOGI(TAG,
+                 "%s stack %d",
                  __FUNCTION__,
                  uxTaskGetStackHighWaterMark(nullptr));
         heap_caps_print_heap_info(MALLOC_CAP_DEFAULT);
@@ -138,10 +138,6 @@ esp_err_t websocket_get_handler(httpd_req_t *req)
     ESP_LOGD(TAG, "%s len = %zd", __FUNCTION__, buffer.size());
     ESP_LOG_BUFFER_HEXDUMP(TAG, buffer.data(), buffer.size(), ESP_LOG_VERBOSE);
 
-    ESP_LOGE("DEBUG",
-             "%s stack before decode %d",
-             __FUNCTION__,
-             uxTaskGetStackHighWaterMark(nullptr));
     auto message = api::from_bytes<ApiMessage>(buffer);
     if(message.has_value())
     {
@@ -152,11 +148,6 @@ esp_err_t websocket_get_handler(httpd_req_t *req)
             ESP_LOGE(TAG, "in_queue message dropped");
         }
     }
-
-    ESP_LOGE("DEBUG",
-             "%s stack after decode %d",
-             __FUNCTION__,
-             uxTaskGetStackHighWaterMark(nullptr));
 
     ESP_LOGI(
         TAG, "%s stack %d", __FUNCTION__, uxTaskGetStackHighWaterMark(nullptr));
@@ -193,7 +184,7 @@ void websocket_send(void *arg)
             if constexpr(std::is_same_v<T, midi::MappingApiMessage>)
             {
                 debug_stream << message;
-                ESP_LOGE("DEBUG", "%s", debug.data());
+                ESP_LOGE("DEBUG", "mapping message: %s", debug.data());
             }
         },
         message.first);
@@ -201,18 +192,8 @@ void websocket_send(void *arg)
     std::array<uint8_t, 1024> memory{};
     auto buffer = std::span<uint8_t>{memory};
 
-    ESP_LOGE("DEBUG",
-             "%s stack before encode %d",
-             __FUNCTION__,
-             uxTaskGetStackHighWaterMark(nullptr));
-
     auto encoded = api::to_bytes(message.first, buffer);
     // FIXME: handle error
-
-    ESP_LOGE("DEBUG",
-             "%s stack after encode %d",
-             __FUNCTION__,
-             uxTaskGetStackHighWaterMark(nullptr));
 
     ESP_LOGD(TAG, "%s len = %zd", __FUNCTION__, encoded->size());
     ESP_LOG_BUFFER_HEXDUMP(

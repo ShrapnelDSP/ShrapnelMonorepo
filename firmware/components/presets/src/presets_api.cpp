@@ -122,16 +122,15 @@ int from_proto(const shrapnel_presets_PresetParameters &message,
 template <>
 int to_proto(const presets::PresetData &preset, shrapnel_presets_Preset &out)
 {
-    shrapnel_presets_Preset preset_proto = shrapnel_presets_Preset_init_zero;
-
     int rc = to_proto<shrapnel_presets_PresetParameters>(
-        preset.parameters, preset_proto.parameters);
+        preset.parameters, out.parameters);
     if(rc != 0)
     {
         return -1;
     }
+    out.has_parameters = true;
 
-    strncpy(preset_proto.name, preset.name.data(), sizeof preset_proto.name);
+    strncpy(out.name, preset.name.data(), sizeof out.name);
 
     return 0;
 }
@@ -161,6 +160,8 @@ template <>
 int to_proto(const presets::Notify &message, shrapnel_presets_Notify &out)
 {
     out.preset.id = message.id;
+    out.has_preset = true;
+    out.preset.has_preset = true;
     return to_proto<shrapnel_presets_Preset>(message.preset, out.preset.preset);
 }
 
@@ -174,6 +175,7 @@ int from_proto(const shrapnel_presets_Notify &message, presets::Notify &out)
 template <>
 int to_proto(const presets::Create &message, shrapnel_presets_Create &out)
 {
+    out.has_preset = true;
     return to_proto<shrapnel_presets_Preset>(message.preset, out.preset);
 }
 
@@ -187,6 +189,8 @@ template <>
 int to_proto(const presets::Update &message, shrapnel_presets_Update &out)
 {
     out.preset.id = message.id;
+    out.has_preset = true;
+    out.preset.has_preset = true;
     return to_proto<shrapnel_presets_Preset>(message.preset, out.preset.preset);
 }
 

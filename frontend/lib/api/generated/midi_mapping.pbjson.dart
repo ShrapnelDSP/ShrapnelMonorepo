@@ -110,15 +110,15 @@ final $typed_data.Uint8List midiMessageDescriptor = $convert.base64Decode(
 const MappingRecord$json = {
   '1': 'MappingRecord',
   '2': [
-    {'1': 'id', '3': 1, '4': 1, '5': 11, '6': '.shrapnel.uuid.Uuid', '10': 'id'},
+    {'1': 'id', '3': 1, '4': 1, '5': 13, '10': 'id'},
     {'1': 'mapping', '3': 2, '4': 1, '5': 11, '6': '.shrapnel.midi_mapping.Mapping', '10': 'mapping'},
   ],
 };
 
 /// Descriptor for `MappingRecord`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List mappingRecordDescriptor = $convert.base64Decode(
-    'Cg1NYXBwaW5nUmVjb3JkEiMKAmlkGAEgASgLMhMuc2hyYXBuZWwudXVpZC5VdWlkUgJpZBI4Cg'
-    'dtYXBwaW5nGAIgASgLMh4uc2hyYXBuZWwubWlkaV9tYXBwaW5nLk1hcHBpbmdSB21hcHBpbmc=');
+    'Cg1NYXBwaW5nUmVjb3JkEg4KAmlkGAEgASgNUgJpZBI4CgdtYXBwaW5nGAIgASgLMh4uc2hyYX'
+    'BuZWwubWlkaV9tYXBwaW5nLk1hcHBpbmdSB21hcHBpbmc=');
 
 @$core.Deprecated('Use getRequestDescriptor instead')
 const GetRequest$json = {
@@ -133,14 +133,14 @@ final $typed_data.Uint8List getRequestDescriptor = $convert.base64Decode(
 const CreateRequest$json = {
   '1': 'CreateRequest',
   '2': [
-    {'1': 'mapping', '3': 1, '4': 1, '5': 11, '6': '.shrapnel.midi_mapping.MappingRecord', '10': 'mapping'},
+    {'1': 'mapping', '3': 1, '4': 1, '5': 11, '6': '.shrapnel.midi_mapping.Mapping', '10': 'mapping'},
   ],
 };
 
 /// Descriptor for `CreateRequest`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List createRequestDescriptor = $convert.base64Decode(
-    'Cg1DcmVhdGVSZXF1ZXN0Ej4KB21hcHBpbmcYASABKAsyJC5zaHJhcG5lbC5taWRpX21hcHBpbm'
-    'cuTWFwcGluZ1JlY29yZFIHbWFwcGluZw==');
+    'Cg1DcmVhdGVSZXF1ZXN0EjgKB21hcHBpbmcYASABKAsyHi5zaHJhcG5lbC5taWRpX21hcHBpbm'
+    'cuTWFwcGluZ1IHbWFwcGluZw==');
 
 @$core.Deprecated('Use createResponseDescriptor instead')
 const CreateResponse$json = {
@@ -172,13 +172,13 @@ final $typed_data.Uint8List updateDescriptor = $convert.base64Decode(
 const Remove$json = {
   '1': 'Remove',
   '2': [
-    {'1': 'id', '3': 1, '4': 1, '5': 11, '6': '.shrapnel.uuid.Uuid', '10': 'id'},
+    {'1': 'id', '3': 1, '4': 1, '5': 13, '10': 'id'},
   ],
 };
 
 /// Descriptor for `Remove`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List removeDescriptor = $convert.base64Decode(
-    'CgZSZW1vdmUSIwoCaWQYASABKAsyEy5zaHJhcG5lbC51dWlkLlV1aWRSAmlk');
+    'CgZSZW1vdmUSDgoCaWQYASABKA1SAmlk');
 
 @$core.Deprecated('Use messageReceivedDescriptor instead')
 const MessageReceived$json = {

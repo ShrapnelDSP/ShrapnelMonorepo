@@ -21,12 +21,14 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'models.freezed.dart';
 
+typedef MidiMappingId = int;
+
 @freezed
 sealed class MidiApiMessage with _$MidiApiMessage {
   const factory MidiApiMessage.getRequest() = MidiGetRequest;
 
   const factory MidiApiMessage.createRequest({
-    required MidiMappingEntry mapping,
+    required MidiMapping mapping,
   }) = MidiCreateRequest;
 
   const factory MidiApiMessage.createResponse({
@@ -37,7 +39,7 @@ sealed class MidiApiMessage with _$MidiApiMessage {
     required MidiMappingEntry mapping,
   }) = MidiUpdate;
 
-  const factory MidiApiMessage.remove({required String id}) = MidiRemove;
+  const factory MidiApiMessage.remove({required MidiMappingId id}) = MidiRemove;
 
   const factory MidiApiMessage.midiMessageReceived({
     required MidiMessage message,
@@ -59,7 +61,7 @@ class MidiMapping with _$MidiMapping {
 @freezed
 class MidiMappingEntry with _$MidiMappingEntry {
   const factory MidiMappingEntry({
-    required String id,
+    required MidiMappingId id,
     required MidiMapping mapping,
   }) = _MidiMappingEntry;
 

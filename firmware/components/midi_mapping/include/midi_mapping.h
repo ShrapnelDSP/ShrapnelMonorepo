@@ -248,81 +248,172 @@
 
 #include <array>
 #include <cstdint>
+#include <cinttypes>
 #include <esp_log.h>
+#include <span>
 
 #include "audio_param.h"
+#include "crud.h"
+#include "midi_mapping_api.h"
 #include "midi_protocol.h"
-#include "uuid.h"
 
 namespace shrapnel {
 namespace midi {
 
-struct Mapping {
-    using id_t = uuid::uuid_t;
+using MappingObserver = etl::observer<const Mapping::id_t &>;
 
-    enum class Mode
-    {
-        PARAMETER,
-        TOGGLE,
-    };
-
-    uint8_t midi_channel;
-    uint8_t cc_number;
-    Mode mode;
-    parameters::id_t parameter_name;
-
-    std::strong_ordering operator<=>(const Mapping &other) const = default;
-};
-
-using MappingObserver = etl::observer<const Mapping::id_t&>;
-
-template<typename AudioParametersT, std::size_t MAX_MAPPINGS, std::size_t MAX_OBSERVERS>
-class MappingManager final : public etl::observable<MappingObserver, MAX_OBSERVERS> {
-    public:
+template <typename AudioParametersT,
+          std::size_t MAX_MAPPINGS,
+          std::size_t MAX_OBSERVERS>
+class MappingManager final
+    : public etl::observable<MappingObserver, MAX_OBSERVERS>,
+      public persistence::Crud<Mapping>
+{
+public:
     using MapType = etl::map<Mapping::id_t, Mapping, MAX_MAPPINGS>;
 
-    explicit MappingManager(std::shared_ptr<AudioParametersT> a_parameters) : parameters{a_parameters} {}
-    MappingManager(std::shared_ptr<AudioParametersT> a_parameters, MapType initial_mappings) : parameters{a_parameters}, mappings{initial_mappings} {}
+    explicit MappingManager(
+        std::shared_ptr<AudioParametersT> a_parameters,
+        std::unique_ptr<persistence::Crud<std::span<uint8_t>>> a_storage)
+        : parameters{a_parameters},
+          storage{std::move(a_storage)}
+    {
+        // FIXME: load the midi mappings, but maybe in the constructor of
+        // the manager, since the new design has a reference to the crud storage.
+    }
 
-    [[nodiscard]] const etl::imap<Mapping::id_t, Mapping> *get() const {
+#if 0
+    // FIXME: is this needed?
+    ~MappingManager() override = default;
+#endif
+
+    [[nodiscard]] const etl::imap<Mapping::id_t, Mapping> *get() const
+    {
         return &mappings;
     }
+
     /// \return non-zero on failure
-    [[nodiscard]] int create(const std::pair<const Mapping::id_t, Mapping> &mapping) {
-        if(mappings.full()) {
+    [[nodiscard]] int create(const Mapping &mapping,
+                             Mapping::id_t &id_out) override
+    {
+        if(mappings.full())
+        {
             ESP_LOGE(TAG, "Failed to create new midi mapping, map is full");
             return -1;
         }
 
-        mappings.insert(mapping);
-        this->notify_observers(mapping.first);
-        return 0;
-    }
-    /// \return non-zero on failure
-    [[nodiscard]] int update(const std::pair<const Mapping::id_t, Mapping> &mapping) {
-        if(!mappings.contains(mapping.first))
+        std::array<uint8_t, 256> memory{};
+        std::span<uint8_t> buffer{memory};
+
+        ESP_LOGE(TAG, "to bytes called");
+        auto encoded = api::to_bytes(mapping, buffer);
+        if(!encoded.has_value())
         {
-            ESP_LOGE(TAG, "Does not contain key");
-            ESP_LOG_BUFFER_HEX_LEVEL(TAG, mapping.first.data(), mapping.first.size(), ESP_LOG_ERROR);
             return -1;
         }
 
-        mappings.erase(mapping.first);
-        mappings.insert(mapping);
-        this->notify_observers(mapping.first);
+        ESP_LOGE(TAG, "create called");
+        int rc = storage->create(*encoded, id_out);
+        if(rc != 0)
+        {
+            return -1;
+        }
+
+        mappings.insert({id_out, mapping});
+        this->notify_observers(id_out);
         return 0;
     }
-    void remove(const Mapping::id_t &id) {
+
+    [[nodiscard]] int read(Mapping::id_t id, Mapping &mapping) override
+    {
+        std::array<uint8_t, 256> memory{};
+        std::span<uint8_t> buffer{memory};
+
+        int rc = storage->read(id, buffer);
+        if(rc != 0)
+        {
+            return -1;
+        }
+
+        auto decoded = api::from_bytes<Mapping>(buffer);
+        if(!decoded.has_value())
+        {
+            return -1;
+        }
+
+        mappings.insert({id, *decoded});
+        mapping = *decoded;
+        this->notify_observers(id);
+        return 0;
+    }
+
+    /// \return non-zero on failure
+    [[nodiscard]] int update(Mapping::id_t id, const Mapping &mapping) override
+    {
+        if(!mappings.contains(id))
+        {
+            ESP_LOGE(TAG, "Does not contain key %" PRIu32, id);
+            return -1;
+        }
+
+        std::array<uint8_t, 256> memory{};
+        std::span<uint8_t> buffer{memory};
+
+        auto encoded = api::to_bytes(mapping, buffer);
+        if(!encoded.has_value())
+        {
+            return -1;
+        }
+
+        int rc = storage->update(id, *encoded);
+        if(rc != 0)
+        {
+            return -1;
+        }
+
+        mappings.erase(id);
+        mappings.insert({id, mapping});
+        this->notify_observers(id);
+        return 0;
+    }
+
+    [[nodiscard]] int destroy(Mapping::id_t id) override
+    {
+        int rc = storage->destroy(id);
+        if(rc != 0)
+        {
+            return -1;
+        }
+
         mappings.erase(id);
         this->notify_observers(id);
+        return 0;
+    }
+
+    void
+    for_each(etl::delegate<void(uint32_t, const Mapping &)> callback) override
+    {
+        storage->for_each(
+            [&callback](uint32_t id, const std::span<uint8_t> &buffer)
+            {
+                auto decoded = api::from_bytes<Mapping>(buffer);
+                if(!decoded.has_value())
+                {
+                    return;
+                }
+
+                callback(id, *decoded);
+            });
     }
 
     /** React to a MIDI message by updating an audio parameter if there is a
      * mapping registered
      */
-    void process_message(Message message) const {
+    void process_message(Message message) const
+    {
         auto cc_params = get_if<Message::ControlChange>(&message.parameters);
-        if(!cc_params) return;
+        if(!cc_params)
+            return;
 
         for(const auto &[_, mapping] : mappings)
         {
@@ -357,12 +448,13 @@ class MappingManager final : public etl::observable<MappingObserver, MAX_OBSERVE
         }
     };
 
-    private:
+private:
     std::shared_ptr<AudioParametersT> parameters;
+    std::unique_ptr<persistence::Crud<std::span<uint8_t>>> storage;
     MapType mappings;
 
     static constexpr char TAG[] = "midi_mapping";
 };
 
-}
-}
+} // namespace midi
+} // namespace shrapnel

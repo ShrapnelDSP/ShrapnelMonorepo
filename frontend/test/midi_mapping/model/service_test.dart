@@ -49,7 +49,7 @@ void main() {
 
       const response = MidiApiMessage.update(
         mapping: MidiMappingEntry(
-          id: '123',
+          id: 123,
           mapping: MidiMapping(
             midiChannel: 1,
             ccNumber: 2,
@@ -118,7 +118,7 @@ void main() {
 
       const response = MidiApiMessage.createResponse(
         mapping: MidiMappingEntry(
-          id: '123',
+          id: 123,
           mapping: MidiMapping(
             midiChannel: 1,
             ccNumber: 2,
@@ -129,14 +129,11 @@ void main() {
       );
 
       const request = MidiApiMessage.createRequest(
-        mapping: MidiMappingEntry(
-          id: '123',
-          mapping: MidiMapping(
-            midiChannel: 1,
-            ccNumber: 2,
-            mode: MidiMappingMode.parameter,
-            parameterId: 'gain',
-          ),
+        mapping: MidiMapping(
+          midiChannel: 1,
+          ccNumber: 2,
+          mode: MidiMappingMode.parameter,
+          parameterId: 'gain',
         ),
       );
 
@@ -156,14 +153,11 @@ void main() {
       expect(uut.mappings, isEmpty);
 
       await uut.createMapping(
-        const MidiMappingEntry(
-          id: '123',
-          mapping: MidiMapping(
-            midiChannel: 1,
-            ccNumber: 2,
-            mode: MidiMappingMode.parameter,
-            parameterId: 'gain',
-          ),
+        const MidiMapping(
+          midiChannel: 1,
+          ccNumber: 2,
+          mode: MidiMappingMode.parameter,
+          parameterId: 'gain',
         ),
       );
       await pumpEventQueue();

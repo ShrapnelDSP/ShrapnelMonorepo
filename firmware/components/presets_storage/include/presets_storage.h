@@ -20,6 +20,7 @@
 #pragma once
 
 #include "nvs.h"
+#include <cinttypes>
 #include <esp_log.h>
 #include <span>
 #include <string_view>
@@ -42,17 +43,23 @@ inline id_t key_to_id(const etl::string<15> &key)
 }
 } // namespace
 
-namespace shrapnel::presets_storage {
+namespace shrapnel::persistence {
 
 /** Interface for storing persistent data
 *
 * The data sent to \ref save should be reloaded by \ref load even after power
 * down.
 */
-template<size_t READ_BUFFER_SIZE>
-class EspCrud : public persistence::Crud<std::span<uint8_t>>
+template <size_t READ_BUFFER_SIZE>
+class EspCrud final : public persistence::Crud<std::span<uint8_t>>
 {
 public:
+    EspCrud(const char *a_part_name, const char *a_namespace_name)
+        : part_name{a_part_name},
+          namespace_name{a_namespace_name}
+    {
+    }
+
     [[nodiscard]] int create(const std::span<uint8_t> &data,
                              presets::id_t &id_out) override
     {
@@ -207,7 +214,7 @@ public:
         {
             std::array<uint8_t, READ_BUFFER_SIZE> memory;
             auto buffer = std::span<uint8_t>(memory);
-            
+
             auto id = key_to_id(entry.key);
             auto rc = read(id, buffer);
             if(rc != 0)
@@ -393,8 +400,8 @@ private:
 
     Iterator end() { return Iterator(); }
 
-    char *part_name;
-    char *namespace_name;
+    const char *const part_name;
+    const char *const namespace_name;
 
     static constexpr char last_id_name[] = "last_id";
     static constexpr char TAG[] = "presets_storage";

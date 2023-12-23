@@ -45,7 +45,6 @@ if (ESP_PLATFORM)
     add_subdirectory(components/presets)
     add_subdirectory(components/presets_storage)
     add_subdirectory(components/server)
-    add_subdirectory(components/uuid)
     add_subdirectory(components/wifi)
 
     return()

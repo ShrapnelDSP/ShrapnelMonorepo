@@ -83,6 +83,8 @@ using WifiQueue = shrapnel::Queue<shrapnel::wifi::InternalEvent, 3>;
 
 namespace shrapnel {
 
+using Crud = persistence::EspCrud<256>;
+
 extern "C" {
 
 static void disconnect_handler(void* arg, esp_event_base_t event_base,
@@ -348,7 +350,13 @@ extern "C" void app_main(void)
     };
 
     auto main_thread = MainThread<MAX_PARAMETERS, QUEUE_LEN>(
-        send_message, *in_queue, midi_uart, audio_params, persistence);
+        send_message,
+        *in_queue,
+        midi_uart,
+        audio_params,
+        persistence,
+        std::make_unique<Crud>("nvs", "midi_mapping"),
+        std::make_unique<Crud>("nvs", "presets"));
 
     audio::i2s_setup(PROFILING_GPIO, audio_params.get());
 

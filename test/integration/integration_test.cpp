@@ -138,14 +138,24 @@ class FakeStorage final : public shrapnel::persistence::Storage
 public:
     MOCK_METHOD(int,
                 save,
+                ((const char *key), (std::span<uint8_t> data)),
+                (override));
+    MOCK_METHOD(int,
+                save,
                 ((const char *key), (etl::string_view data)),
                 (override));
     MOCK_METHOD(int, save, ((const char *key), (uint32_t data)), (override));
+    MOCK_METHOD(int, save, ((const char *key), (float data)), (override));
+    MOCK_METHOD(int,
+                load,
+                ((const char *key), (std::span<uint8_t> & data)),
+                (override));
     MOCK_METHOD(int,
                 load,
                 ((const char *key), (etl::istring & data)),
                 (override));
     MOCK_METHOD(int, load, ((const char *key), (uint32_t & data)), (override));
+    MOCK_METHOD(int, load, ((const char *key), (float &data)), (override));
 };
 
 class Integration : public ::testing::Test
@@ -214,14 +224,11 @@ TEST_F(Integration, MidiMappingCanBeCreated)
 {
     using namespace shrapnel;
 
-    const auto mapping = std::pair<midi::Mapping::id_t, midi::Mapping>{
-        {0},
-        {
-            .midi_channel = 1,
-            .cc_number = 0,
-            .mode = midi::Mapping::Mode::TOGGLE,
-            .parameter_name{"ampGain"},
-        },
+    const auto mapping = midi::Mapping{
+        .midi_channel = 1,
+        .cc_number = 0,
+        .mode = midi::Mapping::Mode::TOGGLE,
+        .parameter_name{"ampGain"},
     };
 
     const auto create_mapping_request = AppMessage{
@@ -235,7 +242,7 @@ TEST_F(Integration, MidiMappingCanBeCreated)
     // Then appropriate response is sent to the API
     EXPECT_CALL(send_message,
                 Call(AppMessage{
-                    midi::CreateResponse{mapping},
+                    midi::CreateResponse{{0, mapping}},
                     std::nullopt,
                 }));
 
@@ -246,19 +253,14 @@ TEST_F(Integration, MidiCanUpdateParameters)
 {
     using namespace shrapnel;
 
-    const auto mapping = std::pair<midi::Mapping::id_t, midi::Mapping>{};
-
     // Given midi mapping has been set up
     pushServerApiMessage(AppMessage{
         midi::CreateRequest{
             {
-                {0},
-                {
-                    .midi_channel = 1,
-                    .cc_number = 0,
-                    .mode = midi::Mapping::Mode::PARAMETER,
-                    .parameter_name{"ampGain"},
-                },
+                .midi_channel = 1,
+                .cc_number = 0,
+                .mode = midi::Mapping::Mode::PARAMETER,
+                .parameter_name{"ampGain"},
             },
         },
         std::nullopt,

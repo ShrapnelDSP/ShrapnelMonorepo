@@ -19,6 +19,7 @@
 
 #pragma once
 
+#include <midi_mapping.h>
 #include <utility>
 
 #include "audio_param.h"
@@ -43,7 +44,6 @@ constexpr const size_t MAX_PARAMETERS = 20;
 
 using AudioParameters = parameters::AudioParameters<MAX_PARAMETERS, 1>;
 using SendMessageCallback = etl::delegate<void(const AppMessage &)>;
-using Crud = presets_storage::EspCrud<256>;
 
 class ParameterUpdateNotifier
 {
@@ -85,7 +85,7 @@ public:
     explicit ParameterObserver(
         std::shared_ptr<persistence::Storage> a_persistence)
         : is_save_throttled{true},
-          persistence{a_persistence},
+          persistence{std::move(a_persistence)},
           timer{"param save throttle",
                 pdMS_TO_TICKS(10'000),
                 false,
@@ -158,7 +158,11 @@ public:
                Queue<AppMessage, QUEUE_LEN> &a_in_queue,
                midi::MidiUartBase *a_midi_uart,
                std::shared_ptr<AudioParameters> a_audio_params,
-               std::shared_ptr<persistence::Storage> a_persistence)
+               std::shared_ptr<persistence::Storage> a_persistence,
+               std::unique_ptr<persistence::Crud<std::span<uint8_t>>>
+                   a_midi_mapping_storage,
+               std::unique_ptr<persistence::Crud<std::span<uint8_t>>>
+                   a_presets_storage)
         : send_message{a_send_message},
           in_queue{a_in_queue},
           parameter_observer{a_persistence},
@@ -188,7 +192,7 @@ public:
                           MainThread,
                           &MainThread::cmd_handling_send_message>(*this))},
           presets_manager{std::make_unique<presets::PresetsManager>(
-              std::make_unique<Crud>())},
+              std::move(a_presets_storage))},
           selected_preset_manager{
               std::make_unique<selected_preset::SelectedPresetManager>(
                   a_persistence)}
@@ -265,17 +269,11 @@ public:
 
             std::array<uint8_t, 1024> memory{};
             auto buffer = std::span<uint8_t>{memory};
-            
-            // FIXME: load the midi mappings, but maybe in the constructor of
-            // the manager, since the new design has a reference to the crud storage.
 
             using MidiMappingType =
                 midi::MappingManager<ParameterUpdateNotifier, 10, 1>;
-            midi_mapping_manager =
-                saved_mappings.has_value()
-                    ? std::make_unique<MidiMappingType>(parameter_notifier,
-                                                        *saved_mappings)
-                    : std::make_unique<MidiMappingType>(parameter_notifier);
+            midi_mapping_manager = std::make_unique<MidiMappingType>(
+                parameter_notifier, std::move(a_midi_mapping_storage));
         }();
 
         BaseType_t rc = midi_message_notify_timer.start(portMAX_DELAY);
@@ -379,24 +377,32 @@ private:
                         auto mappings = midi_mapping_manager->get();
                         for(const auto &[id, mapping] : *mappings)
                         {
-                            send_message({midi::Update{
-                                              {
-                                                  id,
-                                                  mapping,
-                                              },
-                                          },
-                                          std::nullopt});
+                            ESP_LOGE("DEBUG", );
+                            send_message({
+                                midi::Update{
+                                    {
+                                        id,
+                                        mapping,
+                                    },
+                                },
+                                std::nullopt,
+                            });
                         }
                     }
                     else if constexpr(std::is_same_v<MidiMappingMessageT,
                                                      midi::CreateRequest>)
                     {
+                        uint32_t id;
                         auto rc = midi_mapping_manager->create(
-                            midi_mapping_message.mapping);
+                            midi_mapping_message.mapping, id);
                         if(rc == 0)
                         {
                             return midi::CreateResponse{
-                                midi_mapping_message.mapping};
+                                .mapping{
+                                    id,
+                                    midi_mapping_message.mapping,
+                                },
+                            };
                         }
                     }
                     else if constexpr(std::is_same_v<MidiMappingMessageT,
@@ -405,12 +411,15 @@ private:
                         // return code ignored, as there is no way
                         // to indicate the error to the frontend
                         (void)midi_mapping_manager->update(
-                            midi_mapping_message.mapping);
+                            midi_mapping_message.mapping.first,
+                            midi_mapping_message.mapping.second);
                     }
                     else if constexpr(std::is_same_v<MidiMappingMessageT,
                                                      midi::Remove>)
                     {
-                        midi_mapping_manager->remove(midi_mapping_message.id);
+                        // ignored because no way to report error to frontend
+                        (void)midi_mapping_manager->destroy(
+                            midi_mapping_message.id);
                     }
                     else
                     {

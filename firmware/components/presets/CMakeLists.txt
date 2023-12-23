@@ -29,18 +29,13 @@ target_link_libraries(presets
                       shrapnel::api
                       shrapnel::etl
                       shrapnel::persistence
-                      shrapnel::presets_storage
-                      shrapnel::uuid
                       shrapnel::nanopb
                       PRIVATE
                       cppcodec)
 
 if(DEFINED TESTING)
     add_executable(presets_test
-                   test/presets_json_builder.cpp
-                   test/presets_json_parser.cpp
-                   test/selected_preset_json_builder.cpp
-                   test/selected_preset_json_parser.cpp)
+                   test/dummy.cpp)
 
     target_include_directories(presets_test PRIVATE include)
 

@@ -29,7 +29,7 @@ import '../../core/message_transport.dart';
 import '../../core/stream_extensions.dart';
 import '../model/models.dart';
 
-final _log = Logger('midi_mapping_service');
+final _log = Logger('midi_mapping_service')..level = Level.ALL;
 
 class MidiMappingTransport
     implements MessageTransport<MidiApiMessage, MidiApiMessage> {
@@ -85,30 +85,30 @@ class MidiMappingService extends ChangeNotifier {
 
   static const responseTimeout = Duration(milliseconds: 500);
 
-  final __mappings = <String, MidiMapping>{};
+  final __mappings = <MidiMappingId, MidiMapping>{};
 
-  late UnmodifiableMapView<String, MidiMapping> _mappingsView;
+  late UnmodifiableMapView<MidiMappingId, MidiMapping> _mappingsView;
 
   /// The mappings that are currently considered to be present.
   ///
   /// This is updated optimistically with respect to the back end. When create
   /// is called, the mapping is added, assuming that the backend will not error.
   /// If there is an error, the mapping is removed.
-  UnmodifiableMapView<String, MidiMapping> get mappings => _mappingsView;
+  UnmodifiableMapView<MidiMappingId, MidiMapping> get mappings => _mappingsView;
 
   MessageTransport<MidiApiMessage, MidiApiMessage> websocket;
   late StreamSubscription<MidiApiMessage> _subscription;
 
   Future<void> getMapping() async {
+    _log.info('Initialising');
     const message = MidiApiMessage.getRequest();
 
     __mappings.clear();
     websocket.sink.add(message);
   }
 
-  // TODO this should not take a UUID, instead it should create it internally
   Future<void> createMapping(
-    MidiMappingEntry mapping,
+    MidiMapping mapping,
   ) async {
     final response = websocket.stream
         .where((event) => event is MidiCreateResponse)
@@ -116,22 +116,29 @@ class MidiMappingService extends ChangeNotifier {
         .map(
           (event) => event.mapping,
         )
-        .where((event) => event == mapping)
+        .where((event) => event.mapping == mapping)
         .timeout(responseTimeout)
         .first;
 
-    // optimistically add the mapping to the UI state
+    // FIXME: optimistically add the mapping to the UI state
+    /*
     __mappings[mapping.id] = mapping.mapping;
     notifyListeners();
+     */
 
     final message = MidiApiMessage.createRequest(mapping: mapping);
     websocket.sink.add(message);
 
     try {
-      await response;
+      final responseMapping = await response;
+      __mappings[responseMapping.id] = responseMapping.mapping;
+      notifyListeners();
     } on TimeoutException {
+      // FIXME: rollback optimistic update
+      /*
       __mappings.remove(mapping.id);
       notifyListeners();
+       */
     }
   }
 
@@ -143,7 +150,7 @@ class MidiMappingService extends ChangeNotifier {
     websocket.sink.add(message);
   }
 
-  Future<void> deleteMapping({required String id}) async {
+  Future<void> deleteMapping({required MidiMappingId id}) async {
     __mappings.remove(id);
     notifyListeners();
 

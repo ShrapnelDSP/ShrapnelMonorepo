@@ -23,7 +23,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../parameter.dart';
-import '../../util/uuid.dart';
 import '../model/models.dart';
 import '../model/service.dart';
 
@@ -232,14 +231,11 @@ class CreateMappingDialogState extends State<CreateMappingDialog> {
                     Navigator.pop(context);
                     unawaited(
                       mappings.createMapping(
-                        MidiMappingEntry(
-                          id: context.read<UuidService>().v4(),
-                          mapping: MidiMapping(
-                            midiChannel: channel!,
-                            ccNumber: ccNumber!,
-                            parameterId: parameter!,
-                            mode: mode!,
-                          ),
+                        MidiMapping(
+                          midiChannel: channel!,
+                          ccNumber: ccNumber!,
+                          parameterId: parameter!,
+                          mode: mode!,
                         ),
                       ),
                     );

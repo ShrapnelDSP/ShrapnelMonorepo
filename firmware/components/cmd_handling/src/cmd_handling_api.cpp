@@ -23,11 +23,8 @@ int to_proto(const parameters::ApiMessage &message,
              shrapnel_cmd_handling_Message &out)
 {
     return std::visit(
-        [](const auto &message) -> int
+        [&out](const auto &message) -> int
         {
-            shrapnel_cmd_handling_Message out =
-                shrapnel_cmd_handling_Message_init_zero;
-
             using T = std::decay_t<decltype(message)>;
             if constexpr(std::is_same_v<T, parameters::Update>)
             {

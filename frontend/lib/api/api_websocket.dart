@@ -83,6 +83,7 @@ class ApiWebsocket {
   bool get isAlive => _websocket.isAlive;
 
   void send(ApiMessage message) {
+    _log.finest('sending: $message');
     _websocket.sendMessage(message.toProto().writeToBuffer());
   }
 }

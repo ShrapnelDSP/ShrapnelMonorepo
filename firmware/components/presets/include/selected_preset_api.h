@@ -25,7 +25,6 @@
 #include "api.h"
 #include "presets.h"
 #include "selected_preset.pb.h"
-#include "uuid.h"
 
 namespace shrapnel::selected_preset {
 

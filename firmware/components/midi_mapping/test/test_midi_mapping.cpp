@@ -17,8 +17,8 @@
  * ShrapnelDSP. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include "gtest/gtest.h"
 #include "gmock/gmock.h"
+#include "gtest/gtest.h"
 #include <memory>
 
 #include "midi_mapping.h"
@@ -36,66 +36,85 @@ using ::testing::Return;
 
 class MockAudioParameters
 {
-    public:
+public:
     MOCK_METHOD(int, update, (id_t param, float value), ());
     MOCK_METHOD(float, get, (const id_t &param), ());
 };
 
+class MockStorage final : public persistence::Crud<std::span<uint8_t>>
+{
+public:
+    MOCK_METHOD(int,
+                create,
+                (const std::span<uint8_t> &data, uint32_t &id_out),
+                (override));
+    MOCK_METHOD(int,
+                read,
+                (uint32_t id, std::span<uint8_t> &data_out),
+                (override));
+    MOCK_METHOD(int,
+                update,
+                (uint32_t id, const std::span<uint8_t> &data),
+                (override));
+    MOCK_METHOD(int, destroy, (uint32_t id), (override));
+    MOCK_METHOD(
+        void,
+        for_each,
+        (etl::delegate<void(uint32_t, const std::span<uint8_t> &)> callback),
+        (override));
+};
+
 class MidiMapping : public ::testing::Test
 {
-    protected:
+protected:
+    MidiMapping() : sut(parameters_mock, std::move(storage_mock)) {}
 
-    MidiMapping() : sut(parameters_mock) {}
+    std::shared_ptr<MockAudioParameters> parameters_mock =
+        std::make_shared<MockAudioParameters>();
+    std::unique_ptr<MockStorage> storage_mock = std::make_unique<MockStorage>();
 
-    std::shared_ptr<MockAudioParameters> parameters_mock = std::make_shared<MockAudioParameters>();
     MappingManager<MockAudioParameters, 2, 1> sut;
 };
 
 TEST_F(MidiMapping, Create)
 {
     EXPECT_THAT(sut.get()->size(), 0);
-    EXPECT_THAT(sut.create({{1}, {1, 2, Mapping::Mode::PARAMETER, "gain"}}), 0);
+    uint32_t id = 0;
+    EXPECT_THAT(sut.create({1, 2, Mapping::Mode::PARAMETER, "gain"}, id), 0);
     EXPECT_THAT(sut.get()->size(), 1);
-    EXPECT_THAT(sut.create({{2}, {3, 4, Mapping::Mode::PARAMETER, "volume"}}),
-                0);
+    EXPECT_THAT(sut.create({3, 4, Mapping::Mode::PARAMETER, "volume"}, id), 0);
     EXPECT_THAT(sut.get()->size(), 2);
-    EXPECT_THAT(sut.create({{2}, {5, 6, Mapping::Mode::PARAMETER, "tone"}}),
+    EXPECT_THAT(sut.create({5, 6, Mapping::Mode::PARAMETER, "tone"}, id),
                 Not(0));
 }
 
 TEST_F(MidiMapping, ProcessParameter)
 {
-    EXPECT_EQ(0, sut.create({{1}, {1, 2, Mapping::Mode::PARAMETER, "gain"}}));
+    uint32_t id;
+    EXPECT_EQ(0, sut.create({1, 2, Mapping::Mode::PARAMETER, "gain"}, id));
 
     EXPECT_CALL(*parameters_mock, update(id_t("gain"), 0.f));
     sut.process_message({
         .channel{1},
-        .parameters{
-            Message::ControlChange{.control = 2, .value = 0}
-        },
+        .parameters{Message::ControlChange{.control = 2, .value = 0}},
     });
 
     EXPECT_CALL(*parameters_mock, update(id_t("gain"), 1.f));
     sut.process_message({
         .channel{1},
         .parameters{
-            Message::ControlChange{.control = 2, .value = CC_VALUE_MAX}
-        },
+            Message::ControlChange{.control = 2, .value = CC_VALUE_MAX}},
     });
 
     EXPECT_CALL(*parameters_mock, update).Times(0);
     sut.process_message({
         .channel{99},
-        .parameters{
-            Message::ControlChange{.control = 2, .value = 0}
-        },
+        .parameters{Message::ControlChange{.control = 2, .value = 0}},
     });
 
     sut.process_message({
         .channel{1},
-        .parameters{
-            Message::ControlChange{.control = 99, .value = 0}
-        },
+        .parameters{Message::ControlChange{.control = 99, .value = 0}},
     });
 }
 
@@ -109,7 +128,9 @@ TEST_F(MidiMapping, ProcessToggle)
         });
     };
 
-    EXPECT_EQ(0, sut.create({{1}, {1, 2, Mapping::Mode::TOGGLE, "bypass"}}));
+    // FIXME: use a mock for this, rather than setting up here
+    uint32_t id;
+    EXPECT_EQ(0, sut.create({1, 2, Mapping::Mode::TOGGLE, "bypass"}, id));
 
     EXPECT_CALL(*parameters_mock, get(id_t{"bypass"}))
         .WillRepeatedly(Return(0.f));
@@ -140,66 +161,66 @@ TEST_F(MidiMapping, ProcessToggle)
 
 TEST_F(MidiMapping, Update)
 {
-    EXPECT_EQ(0, sut.create({{1}, {1, 2, Mapping::Mode::PARAMETER, "gain"}}));
+    uint32_t id;
+    EXPECT_EQ(0, sut.create({1, 2, Mapping::Mode::PARAMETER, "gain"}, id));
 
     // update non-existent should fail
-    EXPECT_THAT(sut.update({{3}, {7, 8, Mapping::Mode::PARAMETER, "contour"}}),
-                -1);
+    EXPECT_THAT(sut.update(3, {7, 8, Mapping::Mode::PARAMETER, "contour"}), -1);
     EXPECT_THAT(sut.get()->size(), 1);
 
-    EXPECT_EQ(0, sut.create({{2}, {3, 4, Mapping::Mode::PARAMETER, "volume"}}));
+    EXPECT_EQ(0, sut.create({3, 4, Mapping::Mode::PARAMETER, "volume"}, id));
     EXPECT_THAT(sut.get()->size(), 2);
 
-    EXPECT_THAT(sut.update({{1}, {5, 6, Mapping::Mode::PARAMETER, "tone"}}), 0);
+    EXPECT_THAT(sut.update(3, {5, 6, Mapping::Mode::PARAMETER, "tone"}), 0);
     EXPECT_THAT(sut.get()->size(), 2);
 
+    // FIXME: move the tests related to this function elsewhere
     EXPECT_CALL(*parameters_mock, update).Times(0);
     sut.process_message({
         .channel{1},
-        .parameters{
-            Message::ControlChange{.control = 2, .value = 0}
-        },
+        .parameters{Message::ControlChange{.control = 2, .value = 0}},
     });
 
     EXPECT_CALL(*parameters_mock, update(id_t("tone"), 0));
     sut.process_message({
         .channel{5},
-        .parameters{
-            Message::ControlChange{.control = 6, .value = 0}
-        },
+        .parameters{Message::ControlChange{.control = 6, .value = 0}},
     });
 }
 
-TEST_F(MidiMapping, Remove)
+TEST_F(MidiMapping, Destroy)
 {
-    EXPECT_EQ(0, sut.create({{1}, {1, 2, Mapping::Mode::PARAMETER, "gain"}}));
-    sut.remove({1});
+    uint32_t id;
+    EXPECT_EQ(0, sut.create({1, 2, Mapping::Mode::PARAMETER, "gain"}, id));
+    EXPECT_EQ(0, sut.destroy(id));
     EXPECT_THAT(sut.get()->size(), 0);
 }
 
 TEST_F(MidiMapping, Notifications)
 {
-    class Observer final : public midi::MappingObserver {
+    class Observer final : public midi::MappingObserver
+    {
     public:
-        void notification(const Mapping::id_t &) override {
+        void notification(const Mapping::id_t &) override
+        {
             notification_count++;
         }
 
         int notification_count = 0;
     };
 
-
     Observer observer;
     sut.add_observer(observer);
     EXPECT_EQ(0, observer.notification_count);
 
-    EXPECT_EQ(0, sut.create({{1}, {1, 2, Mapping::Mode::PARAMETER, "gain"}}));
+    uint32_t id;
+    EXPECT_EQ(0, sut.create({1, 2, Mapping::Mode::PARAMETER, "gain"}, id));
     EXPECT_EQ(1, observer.notification_count);
 
-    EXPECT_EQ(0, sut.update({{1}, {3, 4, Mapping::Mode::PARAMETER, "gain"}}));
+    EXPECT_EQ(0, sut.update(id, {3, 4, Mapping::Mode::PARAMETER, "gain"}));
     EXPECT_EQ(2, observer.notification_count);
 
-    sut.remove({1});
+    EXPECT_EQ(0, sut.destroy(id));
     EXPECT_EQ(3, observer.notification_count);
 }
 
@@ -215,4 +236,102 @@ TEST(MidiMappingPod, ToString)
                 "{ channel 1 cc number 2 mode parameter name test }");
 }
 
+TEST(MidiMappingPod, GetRequestToString)
+{
+    MappingApiMessage message{GetRequest{}};
+
+    etl::string<64> buffer;
+    etl::string_stream stream{buffer};
+    stream << message;
+
+    EXPECT_THAT(std::string(buffer.data()), "<GetRequest>{}");
 }
+
+TEST(MidiMappingPod, CreateRequestToString)
+{
+    MappingApiMessage message{
+        CreateRequest{
+            .mapping{
+                .midi_channel{1},
+                .cc_number{2},
+                .mode{Mapping::Mode::TOGGLE},
+                .parameter_name{"test"},
+            },
+        },
+    };
+
+    etl::string<128> buffer;
+    etl::string_stream stream{buffer};
+    stream << message;
+
+    EXPECT_THAT(
+        std::string(buffer.data()),
+        "<CreateRequest>{ { channel 1 cc number 2 mode toggle name test } }");
+}
+
+TEST(MidiMappingPod, CreateResponseToString)
+{
+    MappingApiMessage message{
+        CreateResponse{
+            {
+                42,
+                {
+                    .midi_channel{1},
+                    .cc_number{2},
+                    .mode{Mapping::Mode::TOGGLE},
+                    .parameter_name{"test"},
+                },
+            },
+        },
+    };
+
+    etl::string<128> buffer;
+    etl::string_stream stream{buffer};
+    stream << message;
+
+    EXPECT_THAT(
+        std::string(buffer.data()),
+        "<CreateResponse>{ { 42, { channel 1 cc number 2 mode toggle name test } } }");
+}
+
+TEST(MidiMappingPod, UpdateToString)
+{
+    MappingApiMessage message{
+        Update{
+            {
+                42,
+                {
+                    .midi_channel{1},
+                    .cc_number{2},
+                    .mode{Mapping::Mode::TOGGLE},
+                    .parameter_name{"test"},
+                },
+            },
+        },
+    };
+
+    etl::string<128> buffer;
+    etl::string_stream stream{buffer};
+    stream << message;
+
+    EXPECT_THAT(
+        std::string(buffer.data()),
+        "<Update>{ { 42, { channel 1 cc number 2 mode toggle name test } } }");
+}
+
+TEST(MidiMappingPod, RemoveToString)
+{
+    MappingApiMessage message{
+        Remove{42},
+    };
+
+    etl::string<128> buffer;
+    etl::string_stream stream{buffer};
+    stream << message;
+
+    EXPECT_THAT(
+        std::string(buffer.data()),
+        "<Remove>{ 42 }");
+}
+
+} // namespace

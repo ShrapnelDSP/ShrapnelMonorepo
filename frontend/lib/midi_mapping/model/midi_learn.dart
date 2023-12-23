@@ -76,7 +76,9 @@ class MidiLearnService extends StateNotifier<MidiLearnState> {
 
               // Need copy to prevent concurrent modification of the lazy iterator
               final similarMappingsList =
-                  List<MapEntry<String, MidiMapping>>.from(similarMappings);
+                  List<MapEntry<MidiMappingId, MidiMapping>>.from(
+                similarMappings,
+              );
 
               if (similarMappingsList.isNotEmpty) {
                 for (final mapping in similarMappingsList) {
@@ -86,14 +88,11 @@ class MidiLearnService extends StateNotifier<MidiLearnState> {
               }
 
               await mappingService.createMapping(
-                MidiMappingEntry(
-                  id: uuid.v4(),
-                  mapping: MidiMapping(
-                    ccNumber: control,
-                    midiChannel: channel,
-                    parameterId: parameterId,
-                    mode: MidiMappingMode.parameter,
-                  ),
+                MidiMapping(
+                  ccNumber: control,
+                  midiChannel: channel,
+                  parameterId: parameterId,
+                  mode: MidiMappingMode.parameter,
                 ),
               );
 
@@ -121,12 +120,7 @@ class MidiLearnService extends StateNotifier<MidiLearnState> {
 
           state = const MidiLearnState.savingMapping();
           for (final mapping in duplicates) {
-            await mappingService.createMapping(
-              MidiMappingEntry(
-                id: mapping.key,
-                mapping: mapping.value,
-              ),
-            );
+            await mappingService.createMapping(mapping.value);
           }
           state = const MidiLearnState.idle(null);
         },

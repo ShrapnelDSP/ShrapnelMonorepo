@@ -135,7 +135,9 @@ extension MidiProtoEx on MidiApiMessage {
       midi_mapping_pb.Message_Message.createRequest => throw ProtoException(),
       midi_mapping_pb.Message_Message.createResponse =>
         MidiCreateResponseProtoEx.fromProto(proto.createResponse),
-      midi_mapping_pb.Message_Message.update => throw ProtoException(),
+      midi_mapping_pb.Message_Message.update => MidiApiMessage.update(
+          mapping: MidiMappingEntryProtoEx.fromProto(proto.update.mapping),
+        ),
       midi_mapping_pb.Message_Message.remove => throw ProtoException(),
       midi_mapping_pb.Message_Message.messageReceived =>
         MidiMessageReceivedProtoEx.fromProto(proto.messageReceived),
@@ -149,24 +151,21 @@ extension MidiProtoEx on MidiApiMessage {
         midi_mapping_pb.Message(getRequest: midi_mapping_pb.GetRequest()),
       MidiCreateRequest(:final mapping) => midi_mapping_pb.Message(
           createRequest: midi_mapping_pb.CreateRequest(
-            mapping: midi_mapping_pb.MappingRecord(
-              id: UuidValue(mapping.id).toProto(),
-              mapping: mapping.mapping.toProto(),
-            ),
+            mapping: mapping.toProto(),
           ),
         ),
       MidiCreateResponse() => throw ProtoException(),
       MidiUpdate(:final mapping) => midi_mapping_pb.Message(
           update: midi_mapping_pb.Update(
             mapping: midi_mapping_pb.MappingRecord(
-              id: UuidValue(mapping.id).toProto(),
+              id: mapping.id,
               mapping: mapping.mapping.toProto(),
             ),
           ),
         ),
       MidiRemove(:final id) => midi_mapping_pb.Message(
           remove: midi_mapping_pb.Remove(
-            id: UuidValue(id).toProto(),
+            id: id,
           ),
         ),
       MidiMessageReceived() => throw ProtoException(),
@@ -177,7 +176,7 @@ extension MidiProtoEx on MidiApiMessage {
 extension MidiMappingEntryProtoEx on MidiMappingEntry {
   static MidiMappingEntry fromProto(midi_mapping_pb.MappingRecord proto) {
     return MidiMappingEntry(
-      id: UuidValueProtoEx.fromProto(proto.id).uuid,
+      id: proto.id,
       mapping: MidiMappingProtoEx.fromProto(proto.mapping),
     );
   }

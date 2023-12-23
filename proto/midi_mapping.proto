@@ -1,7 +1,5 @@
 syntax = "proto3";
 
-import 'uuid.proto';
-
 package shrapnel.midi_mapping;
 
 message Mapping {
@@ -47,14 +45,14 @@ message MidiMessage {
 }
 
 message MappingRecord {
-  uuid.Uuid id = 1;
+  uint32 id = 1;
   Mapping mapping = 2;
 }
 
 message GetRequest {};
 
 message CreateRequest {
-  MappingRecord mapping = 1;
+  Mapping mapping = 1;
 };
 
 message CreateResponse {
@@ -66,7 +64,7 @@ message Update {
 };
 
 message Remove {
-  uuid.Uuid id = 1;
+  uint32 id = 1;
 };
 
 message MessageReceived {

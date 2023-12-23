@@ -17,9 +17,6 @@
  * ShrapnelDSP. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include "freertos/FreeRTOS.h"
-#include "freertos/task.h"
-
 #include "etl_utility.h"
 #include "midi_mapping_api.h"
 #include <pb_decode.h>
@@ -75,10 +72,53 @@ etl::string_stream &operator<<(etl::string_stream &out,
     return out << "{ " << self.message << " }";
 }
 
+#if 0
 etl::string_stream &operator<<(etl::string_stream &out,
                                const MappingApiMessage &self)
 {
-#if 1
+    std::visit(
+        [&](const auto &message)
+        {
+            using T = std::decay_t<decltype(message)>;
+
+            if constexpr(std::is_same_v<T, GetRequest>)
+            {
+                out << "<GetRequest>" << message;
+            }
+            else if constexpr(std::is_same_v<T, CreateRequest>)
+            {
+                out << "<CreateRequest>" << message;
+            }
+            else if constexpr(std::is_same_v<T, CreateResponse>)
+            {
+                out << "<CreateResponse>" << message;
+            }
+            else if constexpr(std::is_same_v<T, Update>)
+            {
+                out << "<Update>" << message;
+            }
+            else if constexpr(std::is_same_v<T, Remove>)
+            {
+                out << "<Remove>" << message;
+            }
+            else
+            {
+                ESP_LOGE("DEBUG", "unknown ?!");
+                out << "Unknown";
+            }
+        },
+        self);
+
+    return out;
+}
+#endif
+
+etl::string_stream &operator<<(etl::string_stream &out,
+                               const MappingApiMessage &self)
+{
+
+// FIXME: neither version is working in the firmware build
+#if 0
     auto print = [&](const auto &message)
     {
         using T = std::decay_t<decltype(message)>;
@@ -117,10 +157,6 @@ etl::string_stream &operator<<(etl::string_stream &out,
     {
         out << "<GetRequest>" << *message;
     }
-    else if(auto message = std::get_if<GetResponse>(&self))
-    {
-        out << "<GetResponse>" << *message;
-    }
     else if(auto message = std::get_if<CreateRequest>(&self))
     {
         out << "<CreateRequest>" << *message;
@@ -151,17 +187,15 @@ etl::string_stream &operator<<(etl::string_stream &out,
 
 namespace api {
 
-// FIXME: there is no need for this function?
-#if 0
 template <>
 std::optional<std::span<uint8_t>>
-to_bytes(const shrapnel_midi_mapping_Message &message,
+to_bytes(const shrapnel_midi_mapping_Mapping &message,
          std::span<uint8_t> buffer)
 {
     pb_ostream_t stream = pb_ostream_from_buffer(buffer.data(), buffer.size());
 
     bool success =
-        pb_encode(&stream, &shrapnel_midi_mapping_Message_msg, &message);
+        pb_encode(&stream, &shrapnel_midi_mapping_Mapping_msg, &message);
     if(!success)
     {
         return std::nullopt;
@@ -171,14 +205,14 @@ to_bytes(const shrapnel_midi_mapping_Message &message,
 }
 
 template <>
-std::optional<shrapnel_midi_mapping_Message>
+std::optional<shrapnel_midi_mapping_Mapping>
 from_bytes(std::span<const uint8_t> buffer)
 {
     auto stream = pb_istream_from_buffer(buffer.data(), buffer.size());
-    shrapnel_midi_mapping_Message message =
-        shrapnel_midi_mapping_Message_init_zero;
+    shrapnel_midi_mapping_Mapping message =
+        shrapnel_midi_mapping_Mapping_init_zero;
     bool success =
-        pb_decode(&stream, &shrapnel_midi_mapping_Message_msg, &message);
+        pb_decode(&stream, &shrapnel_midi_mapping_Mapping_msg, &message);
     if(!success)
     {
         return std::nullopt;
@@ -186,7 +220,6 @@ from_bytes(std::span<const uint8_t> buffer)
 
     return message;
 }
-#endif
 
 template <>
 int to_proto(const midi::Mapping &message, shrapnel_midi_mapping_Mapping &out)
@@ -234,24 +267,14 @@ template <>
 int to_proto(const std::pair<midi::Mapping::id_t, midi::Mapping> &message,
              shrapnel_midi_mapping_MappingRecord &out)
 {
-    ESP_LOGE("DEBUG",
-             "%s stack %d",
-             __FUNCTION__,
-             uxTaskGetStackHighWaterMark(nullptr));
-
     int rc =
         to_proto<shrapnel_midi_mapping_Mapping>(message.second, out.mapping);
     if(rc != 0)
     {
         return -1;
     }
-    // FIXME: do we have to set the has_mapping etc? In proto3, there is no
-    // presence, so it should not even exist?
-    rc = to_proto<shrapnel_uuid_Uuid>(message.first, out.id);
-    if(rc != 0)
-    {
-        return -1;
-    }
+    out.has_mapping = true;
+    out.id = message.first;
     return 0;
 }
 
@@ -259,18 +282,8 @@ template <>
 int from_proto(const shrapnel_midi_mapping_MappingRecord &message,
                std::pair<midi::Mapping::id_t, midi::Mapping> &out)
 {
-    int rc = from_proto<midi::Mapping::id_t>(message.id, out.first);
-    if(rc != 0)
-    {
-        return -1;
-    }
-
-    rc = from_proto<midi::Mapping>(message.mapping, out.second);
-    if(rc != 0)
-    {
-        return -1;
-    }
-    return 0;
+    out.first = message.id;
+    return from_proto<midi::Mapping>(message.mapping, out.second);
 }
 
 template <>
@@ -289,22 +302,23 @@ template <>
 int to_proto(const midi::CreateRequest &message,
              shrapnel_midi_mapping_CreateRequest &out)
 {
-    return to_proto<shrapnel_midi_mapping_MappingRecord>(message.mapping,
-                                                         out.mapping);
+    out.has_mapping = true;
+    return to_proto<shrapnel_midi_mapping_Mapping>(message.mapping,
+                                                   out.mapping);
 }
 
 template <>
 int from_proto(const shrapnel_midi_mapping_CreateRequest &message,
                midi::CreateRequest &out)
 {
-    return from_proto<std::pair<midi::Mapping::id_t, midi::Mapping>>(
-        message.mapping, out.mapping);
+    return from_proto<midi::Mapping>(message.mapping, out.mapping);
 }
 
 template <>
 int to_proto(const midi::CreateResponse &message,
              shrapnel_midi_mapping_CreateResponse &out)
 {
+    out.has_mapping = true;
     return to_proto<shrapnel_midi_mapping_MappingRecord>(message.mapping,
                                                          out.mapping);
 }
@@ -320,6 +334,7 @@ int from_proto(const shrapnel_midi_mapping_CreateResponse &message,
 template <>
 int to_proto(const midi::Update &message, shrapnel_midi_mapping_Update &out)
 {
+    out.has_mapping = true;
     int rc = to_proto<shrapnel_midi_mapping_MappingRecord>(message.mapping,
                                                            out.mapping);
     if(rc != 0)
@@ -339,13 +354,15 @@ int from_proto(const shrapnel_midi_mapping_Update &message, midi::Update &out)
 template <>
 int to_proto(const midi::Remove &message, shrapnel_midi_mapping_Remove &out)
 {
-    return to_proto<shrapnel_uuid_Uuid>(message.id, out.id);
+    out.id = message.id;
+    return 0;
 }
 
 template <>
 int from_proto(const shrapnel_midi_mapping_Remove &message, midi::Remove &out)
 {
-    return from_proto<midi::Mapping::id_t>(message.id, out.id);
+    out.id = message.id;
+    return 0;
 }
 
 template <>
@@ -518,6 +535,7 @@ template <>
 int to_proto(const midi::MessageReceived &message,
              shrapnel_midi_mapping_MessageReceived &out)
 {
+    out.has_received_message = true;
     int rc = to_proto<shrapnel_midi_mapping_MidiMessage>(message.message,
                                                          out.received_message);
     if(rc != 0)
@@ -539,19 +557,9 @@ template <>
 int to_proto(const midi::MappingApiMessage &message,
              shrapnel_midi_mapping_Message &out)
 {
-    ESP_LOGE("DEBUG",
-             "%s stack %d",
-             __FUNCTION__,
-             uxTaskGetStackHighWaterMark(nullptr));
-
     return std::visit(
         [&out](const auto &message) -> int
         {
-            ESP_LOGE("DEBUG",
-                     "%s stack %d",
-                     __FUNCTION__,
-                     uxTaskGetStackHighWaterMark(nullptr));
-
             using T = std::decay_t<decltype(message)>;
             if constexpr(std::is_same_v<T, midi::GetRequest>)
             {
@@ -681,6 +689,38 @@ int from_proto(const shrapnel_midi_mapping_Message &message,
     }
 
     return -1;
+}
+
+template <>
+std::optional<std::span<uint8_t>> to_bytes(const midi::Mapping &message,
+                                           std::span<uint8_t> buffer)
+{
+    shrapnel_midi_mapping_Mapping proto;
+    int rc = to_proto(message, proto);
+    if(rc != 0)
+    {
+        return std::nullopt;
+    }
+
+    return to_bytes(proto, buffer);
+}
+
+template <>
+std::optional<midi::Mapping> from_bytes(std::span<const uint8_t> buffer)
+{
+    auto proto = from_bytes<shrapnel_midi_mapping_Mapping>(buffer);
+    if(!proto.has_value())
+    {
+        return std::nullopt;
+    }
+
+    midi::Mapping out{};
+    int rc = from_proto(*proto, out);
+    if(rc != 0)
+    {
+        return std::nullopt;
+    }
+    return out;
 }
 
 } // namespace api
