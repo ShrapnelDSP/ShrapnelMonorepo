@@ -20,7 +20,7 @@ env:
 jobs:
   build-firmware:
     runs-on: ubuntu-latest
-    container: barabas5532/shrapnel:7
+    container: barabas5532/shrapnel:8
     steps:
     - uses: actions/checkout@v2
       with:
@@ -40,14 +40,17 @@ jobs:
     # This could be two different steps, but we need to preserve the
     # environment that is set up by export.sh
     - name: Setup ESP-IDF and build
-      run: . $IDF_PATH/export.sh && idf.py -C firmware build
+      run: |
+        . $IDF_PATH/export.sh
+        python -m pip install -r thirdparty/esp-idf-components/nanopb/nanopb/requirements.txt
+        idf.py -C firmware build
 
     - name: ccache statistics
       run: ccache --show-stats
 
   build-plugins:
     runs-on: ubuntu-latest
-    container: barabas5532/shrapnel:7
+    container: barabas5532/shrapnel:8
     strategy:
       matrix:
         plugin: ["shrapnel"]
@@ -69,6 +72,9 @@ jobs:
     - name: ccache reset statistics
       run: ccache --zero-stats
 
+    - name: Install python dependencies
+      run: python -m pip install -r thirdparty/esp-idf-components/nanopb/nanopb/requirements.txt
+
     - name: Configure CMake
       run: cmake -B build -DCMAKE_BUILD_TYPE=${{matrix.build_type}} plugins/${{matrix.plugin}}
 
@@ -80,7 +86,7 @@ jobs:
 
   ctest:
     runs-on: ubuntu-latest
-    container: barabas5532/shrapnel:7
+    container: barabas5532/shrapnel:8
     strategy:
       matrix:
         build_type: ["Release", "Debug"]
@@ -99,6 +105,9 @@ jobs:
 
     - name: ccache reset statistics
       run: ccache --zero-stats
+
+    - name: Install python dependencies
+      run: python -m pip install -r thirdparty/esp-idf-components/nanopb/nanopb/requirements.txt
 
     - name: Configure CMake
       env:
@@ -140,7 +149,7 @@ jobs:
 
   ctest-sanitize:
     runs-on: ubuntu-latest
-    container: barabas5532/shrapnel:7
+    container: barabas5532/shrapnel:8
     strategy:
       matrix:
         build_type: ["Release", "Debug"]
@@ -159,6 +168,9 @@ jobs:
 
     - name: ccache reset statistics
       run: ccache --zero-stats
+
+    - name: Install python dependencies
+      run: python -m pip install -r thirdparty/esp-idf-components/nanopb/nanopb/requirements.txt
 
     - name: Configure CMake
       env:
