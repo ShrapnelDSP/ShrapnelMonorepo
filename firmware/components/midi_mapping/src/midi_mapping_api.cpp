@@ -72,87 +72,9 @@ etl::string_stream &operator<<(etl::string_stream &out,
     return out << "{ " << self.message << " }";
 }
 
-#if 0
 etl::string_stream &operator<<(etl::string_stream &out,
                                const MappingApiMessage &self)
 {
-    std::visit(
-        [&](const auto &message)
-        {
-            using T = std::decay_t<decltype(message)>;
-
-            if constexpr(std::is_same_v<T, GetRequest>)
-            {
-                out << "<GetRequest>" << message;
-            }
-            else if constexpr(std::is_same_v<T, CreateRequest>)
-            {
-                out << "<CreateRequest>" << message;
-            }
-            else if constexpr(std::is_same_v<T, CreateResponse>)
-            {
-                out << "<CreateResponse>" << message;
-            }
-            else if constexpr(std::is_same_v<T, Update>)
-            {
-                out << "<Update>" << message;
-            }
-            else if constexpr(std::is_same_v<T, Remove>)
-            {
-                out << "<Remove>" << message;
-            }
-            else
-            {
-                ESP_LOGE("DEBUG", "unknown ?!");
-                out << "Unknown";
-            }
-        },
-        self);
-
-    return out;
-}
-#endif
-
-etl::string_stream &operator<<(etl::string_stream &out,
-                               const MappingApiMessage &self)
-{
-
-// FIXME: neither version is working in the firmware build
-#if 0
-    auto print = [&](const auto &message)
-    {
-        using T = std::decay_t<decltype(message)>;
-
-        if constexpr(std::is_same_v<T, GetRequest>)
-        {
-            out << "<GetRequest>" << message;
-        }
-        else if constexpr(std::is_same_v<T, CreateRequest>)
-        {
-            out << "<CreateRequest>" << message;
-        }
-        else if constexpr(std::is_same_v<T, CreateResponse>)
-        {
-            out << "<CreateResponse>" << message;
-        }
-        else if constexpr(std::is_same_v<T, Update>)
-        {
-            out << "<Update>" << message;
-        }
-        else if constexpr(std::is_same_v<T, Remove>)
-        {
-            out << "<Remove>" << message;
-        }
-        else
-        {
-            out << "Unknown";
-        }
-    };
-
-    std::visit(print, self);
-
-#else
-
     if(auto message = std::get_if<GetRequest>(&self))
     {
         out << "<GetRequest>" << *message;
@@ -181,8 +103,6 @@ etl::string_stream &operator<<(etl::string_stream &out,
     {
         out << "Unknown";
     }
-
-#endif
 
     return out;
 }

@@ -91,7 +91,6 @@ etl::string_stream &operator<<(etl::string_stream &out, const ApiMessage &self)
           }
           else
           {
-              ESP_LOGE("DEBUG", "unknown ?!");
               out << "<Unknown>";
           }
         },

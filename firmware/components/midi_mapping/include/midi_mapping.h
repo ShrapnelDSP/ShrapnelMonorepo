@@ -247,8 +247,8 @@
 #pragma once
 
 #include <array>
-#include <cstdint>
 #include <cinttypes>
+#include <cstdint>
 #include <esp_log.h>
 #include <span>
 
@@ -257,8 +257,7 @@
 #include "midi_mapping_api.h"
 #include "midi_protocol.h"
 
-namespace shrapnel {
-namespace midi {
+namespace shrapnel::midi {
 
 using MappingObserver = etl::observer<const Mapping::id_t &>;
 
@@ -278,14 +277,11 @@ public:
         : parameters{a_parameters},
           storage{std::move(a_storage)}
     {
-        // FIXME: load the midi mappings, but maybe in the constructor of
-        // the manager, since the new design has a reference to the crud storage.
+        for_each(
+            [this](uint32_t id, const shrapnel::midi::Mapping &mapping) {
+                mappings.insert({id, mapping});
+            });
     }
-
-#if 0
-    // FIXME: is this needed?
-    ~MappingManager() override = default;
-#endif
 
     [[nodiscard]] const etl::imap<Mapping::id_t, Mapping> *get() const
     {
@@ -305,14 +301,12 @@ public:
         std::array<uint8_t, 256> memory{};
         std::span<uint8_t> buffer{memory};
 
-        ESP_LOGE(TAG, "to bytes called");
         auto encoded = api::to_bytes(mapping, buffer);
         if(!encoded.has_value())
         {
             return -1;
         }
 
-        ESP_LOGE(TAG, "create called");
         int rc = storage->create(*encoded, id_out);
         if(rc != 0)
         {
@@ -456,5 +450,4 @@ private:
     static constexpr char TAG[] = "midi_mapping";
 };
 
-} // namespace midi
-} // namespace shrapnel
+} // namespace shrapnel::midi

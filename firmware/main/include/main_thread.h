@@ -377,7 +377,6 @@ private:
                         auto mappings = midi_mapping_manager->get();
                         for(const auto &[id, mapping] : *mappings)
                         {
-                            ESP_LOGE("DEBUG", );
                             send_message({
                                 midi::Update{
                                     {

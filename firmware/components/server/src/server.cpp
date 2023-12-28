@@ -196,7 +196,11 @@ void send_websocket_message(Server &self, const AppMessage &message)
     auto buffer = std::span<uint8_t>{memory};
 
     auto encoded = api::to_bytes(message.first, buffer);
-    // FIXME: handle error
+    if(!encoded.has_value())
+    {
+        ESP_LOGE(TAG, "Failed to encode message");
+        return;
+    }
 
     ESP_LOGD(TAG, "%s len = %zd", __FUNCTION__, encoded->size());
     ESP_LOG_BUFFER_HEXDUMP(

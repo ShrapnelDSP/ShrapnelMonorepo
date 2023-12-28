@@ -37,16 +37,6 @@ using ApiMessage =
 using FileDescriptor = std::optional<int>;
 using AppMessage = std::pair<ApiMessage, FileDescriptor>;
 
-// FIXME: debug
-constexpr size_t app_message_size = sizeof(AppMessage);
-
-constexpr size_t parameters_size = sizeof(shrapnel::parameters::ApiMessage);
-constexpr size_t midi_size = sizeof(shrapnel::midi::MappingApiMessage);
-constexpr size_t events_size = sizeof(shrapnel::events::ApiMessage);
-constexpr size_t selected_size = sizeof(shrapnel::selected_preset::SelectedPresetApiMessage);
-constexpr size_t preset_size = sizeof(shrapnel::presets::PresetsApiMessage);
-// FIXME: debug end
-
 namespace shrapnel::api {
 
 template <>
