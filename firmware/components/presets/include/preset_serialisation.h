@@ -86,44 +86,4 @@ void deserialise_live_parameters(T &parameters_service,
     parameters_service.update("wahBypass", parameters.wah_bypass);
 }
 
-// FIXME: replace with to_bytes
-inline int serialise_preset(const PresetData &preset,
-                            std::span<uint8_t> &buffer)
-{
-    shrapnel_presets_Preset proto = shrapnel_presets_Preset_init_zero;
-    int rc = api::to_proto<shrapnel_presets_Preset>(preset, proto);
-    if(rc != 0)
-    {
-        return -1;
-    }
-
-    auto result_buffer = api::to_bytes(proto, buffer);
-    if(!result_buffer.has_value())
-    {
-        return -1;
-    }
-
-    buffer = *result_buffer;
-    return 0;
-}
-
-// FIXME: replace with from_bytes
-inline int deserialise_preset(const std::span<const uint8_t> &buffer,
-                              PresetData &preset)
-{
-    auto unpacked = api::from_bytes<shrapnel_presets_Preset>(buffer);
-    if(!unpacked.has_value())
-    {
-        return -1;
-    }
-
-    int rc = api::from_proto<PresetData>(*unpacked, preset);
-    if(rc != 0)
-    {
-        return -1;
-    }
-
-    return 0;
-}
-
 } // namespace shrapnel::presets

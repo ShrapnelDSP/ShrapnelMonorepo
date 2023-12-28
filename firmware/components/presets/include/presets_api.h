@@ -121,82 +121,18 @@ namespace shrapnel::api {
 
 template <>
 std::optional<std::span<uint8_t>>
-to_bytes(const shrapnel_presets_Preset &message, std::span<uint8_t> buffer);
+to_bytes(const presets::PresetData &message, std::span<uint8_t> buffer);
 
 template <>
-std::optional<shrapnel_presets_Preset>
-from_bytes(std::span<const uint8_t> buffer);
-
-template <>
-std::optional<std::span<uint8_t>>
-to_bytes(const shrapnel_presets_Message &message, std::span<uint8_t> buffer);
-
-template <>
-std::optional<shrapnel_presets_Message>
+std::optional<presets::PresetData>
 from_bytes(std::span<const uint8_t> buffer);
 
 template <>
 int
-to_proto(const presets::ParametersData &message, shrapnel_presets_PresetParameters &out);
+to_proto(const presets::PresetsApiMessage &message, shrapnel_presets_Message &out);
 
 template <>
 int
-from_proto(const shrapnel_presets_PresetParameters &message, presets::ParametersData &out);
-
-template <>
-int
-to_proto(const presets::PresetData &message, shrapnel_presets_Preset &out);
-
-template <>
-int
-from_proto(const shrapnel_presets_Preset &message, presets::PresetData &out);
-
-template <>
-int
-to_proto(const presets::Initialise  &message, shrapnel_presets_Initialise  &out);
-
-template <>
-int
-from_proto(const shrapnel_presets_Initialise &message, std::optional<presets::Initialise > &out);
-
-template <>
-int
-to_proto(const presets::Notify &message, shrapnel_presets_Notify &out);
-
-template <>
-int
-from_proto(const shrapnel_presets_Notify &message, presets::Notify &out);
-
-template <>
-int
-to_proto(const presets::Create &message, shrapnel_presets_Create  &out);
-
-template <>
-int
-from_proto(const shrapnel_presets_Create  &message, presets::Create &out);
-
-template <>
-int
-to_proto(const presets::Update &message, shrapnel_presets_Update  &out);
-
-template <>
-int
-from_proto(const shrapnel_presets_Update  &message, presets::Update &out);
-
-template <>
-int
-to_proto(const presets::Delete &message, shrapnel_presets_Remove  &out);
-
-template <>
-int
-from_proto(const shrapnel_presets_Remove  &message, presets::Delete &out);
-
-template <>
-int
-to_proto(const presets::PresetsApiMessage &message, shrapnel_presets_Message  &out);
-
-template <>
-int
-from_proto(const shrapnel_presets_Message  &message, presets::PresetsApiMessage &out);
+from_proto(const shrapnel_presets_Message &message, presets::PresetsApiMessage &out);
 
 } // namespace shrapnel::api

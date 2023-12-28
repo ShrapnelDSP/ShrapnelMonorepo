@@ -6,66 +6,6 @@
 namespace shrapnel::api {
 
 template <>
-std::optional<std::span<uint8_t>> to_bytes(const shrapnel_presets_Preset &proto,
-                                           std::span<uint8_t> buffer)
-{
-    pb_ostream_t stream = pb_ostream_from_buffer(buffer.data(), buffer.size());
-
-    bool success = pb_encode(&stream, &shrapnel_presets_Preset_msg, &proto);
-    if(!success)
-    {
-        return std::nullopt;
-    }
-
-    return buffer.subspan(0, stream.bytes_written);
-}
-
-template <>
-std::optional<shrapnel_presets_Preset>
-from_bytes(std::span<const uint8_t> buffer)
-{
-    auto stream = pb_istream_from_buffer(buffer.data(), buffer.size());
-    shrapnel_presets_Preset unpacked = shrapnel_presets_Preset_init_zero;
-    bool success = pb_decode(&stream, &shrapnel_presets_Preset_msg, &unpacked);
-    if(!success)
-    {
-        return std::nullopt;
-    }
-
-    return unpacked;
-}
-
-template <>
-std::optional<std::span<uint8_t>>
-to_bytes(const shrapnel_presets_Message &message, std::span<uint8_t> buffer)
-{
-    pb_ostream_t stream = pb_ostream_from_buffer(buffer.data(), buffer.size());
-
-    bool success = pb_encode(&stream, &shrapnel_presets_Message_msg, &message);
-    if(!success)
-    {
-        return std::nullopt;
-    }
-
-    return buffer.subspan(0, stream.bytes_written);
-}
-
-template <>
-std::optional<shrapnel_presets_Message>
-from_bytes(std::span<const uint8_t> buffer)
-{
-    auto stream = pb_istream_from_buffer(buffer.data(), buffer.size());
-    shrapnel_presets_Message unpacked = shrapnel_presets_Message_init_zero;
-    bool success = pb_decode(&stream, &shrapnel_presets_Message_msg, &unpacked);
-    if(!success)
-    {
-        return std::nullopt;
-    }
-
-    return unpacked;
-}
-
-template <>
 int to_proto(const presets::ParametersData &message,
              shrapnel_presets_PresetParameters &out)
 {
@@ -328,5 +268,68 @@ int from_proto(const shrapnel_presets_Message &message,
 
     return -1;
 }
+
+template <>
+std::optional<std::span<uint8_t>> to_bytes(const shrapnel_presets_Preset &proto,
+                                           std::span<uint8_t> buffer)
+{
+    pb_ostream_t stream = pb_ostream_from_buffer(buffer.data(), buffer.size());
+
+    bool success = pb_encode(&stream, &shrapnel_presets_Preset_msg, &proto);
+    if(!success)
+    {
+        return std::nullopt;
+    }
+
+    return buffer.subspan(0, stream.bytes_written);
+}
+
+template <>
+std::optional<shrapnel_presets_Preset>
+from_bytes(std::span<const uint8_t> buffer)
+{
+    auto stream = pb_istream_from_buffer(buffer.data(), buffer.size());
+    shrapnel_presets_Preset unpacked = shrapnel_presets_Preset_init_zero;
+    bool success = pb_decode(&stream, &shrapnel_presets_Preset_msg, &unpacked);
+    if(!success)
+    {
+        return std::nullopt;
+    }
+
+    return unpacked;
+}
+
+template <>
+std::optional<std::span<uint8_t>>
+to_bytes(const presets::PresetData &message, std::span<uint8_t> buffer) {
+    shrapnel_presets_Preset proto = shrapnel_presets_Preset_init_zero;
+    int rc = to_proto(message, proto);
+    if(rc != 0)
+    {
+        return std::nullopt;
+    }
+
+    return to_bytes(proto, buffer);
+}
+
+template <>
+std::optional<presets::PresetData>
+from_bytes(std::span<const uint8_t> buffer) {
+    auto proto = from_bytes<shrapnel_presets_Preset>(buffer);
+    if(!proto.has_value())
+    {
+        return std::nullopt;
+    }
+
+    presets::PresetData out{};
+    int rc = from_proto<presets::PresetData>(*proto, out);
+    if(rc != 0)
+    {
+        return std::nullopt;
+    }
+
+    return out;
+}
+
 
 } // namespace shrapnel::api

@@ -34,13 +34,13 @@ int PresetsManager::create(const PresetData &preset, id_t &id_out)
     std::array<uint8_t, 100> buffer;
     auto data = std::span<uint8_t, std::dynamic_extent>(buffer);
 
-    int rc = serialise_preset(preset, data);
-    if(rc != 0)
+    auto encoded = api::to_bytes(preset, data);
+    if(!encoded.has_value())
     {
         return -1;
     }
 
-    rc = storage->create(data, id_out);
+    int rc = storage->create(*encoded, id_out);
     if(rc != 0)
     {
         return -1;
@@ -59,11 +59,13 @@ int PresetsManager::read(id_t id, PresetData &preset)
         return -1;
     }
 
-    rc = deserialise_preset(data, preset);
-    if(rc != 0)
+    auto decoded = api::from_bytes<PresetData>(data);
+    if(!decoded.has_value())
     {
         return -1;
     }
+
+    preset = *decoded;
 
     return 0;
 }
@@ -73,13 +75,13 @@ int PresetsManager::update(id_t id, const PresetData &preset)
     std::array<uint8_t, 100> buffer;
     auto data = std::span<uint8_t, std::dynamic_extent>(buffer);
 
-    int rc = serialise_preset(preset, data);
-    if(rc != 0)
+    auto encoded = api::to_bytes(preset, data);
+    if(!encoded.has_value())
     {
         return -1;
     }
 
-    rc = storage->update(id, data);
+    int rc = storage->update(id, *encoded);
     if(rc != 0)
     {
         return -1;
@@ -105,14 +107,13 @@ void PresetsManager::for_each(
     storage->for_each(
         [&callback](uint32_t id, std::span<uint8_t> data)
         {
-            PresetData preset{};
-            int rc = deserialise_preset(data, preset);
-            if(rc != 0)
+            auto decoded = api::from_bytes<PresetData>(data);
+            if(!decoded.has_value())
             {
                 return;
             }
 
-            callback(id, preset);
+            callback(id, *decoded);
         });
 }
 
