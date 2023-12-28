@@ -29,7 +29,7 @@ import '../../core/message_transport.dart';
 import '../../core/stream_extensions.dart';
 import '../model/models.dart';
 
-final _log = Logger('midi_mapping_service')..level = Level.ALL;
+final _log = Logger('midi_mapping_service');
 
 class MidiMappingTransport
     implements MessageTransport<MidiApiMessage, MidiApiMessage> {

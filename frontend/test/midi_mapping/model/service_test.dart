@@ -83,7 +83,7 @@ void main() {
       expect(outputMessages.removeLast(), request);
       expect(outputMessages, isEmpty);
       expect(uut.mappings, {
-        '123': const MidiMapping(
+        123: const MidiMapping(
           midiChannel: 1,
           ccNumber: 2,
           mode: MidiMappingMode.parameter,
@@ -96,6 +96,7 @@ void main() {
       expect(listenerCount, 0);
 
       await controller.close();
+      await sinkController.close();
     });
   });
 
@@ -170,6 +171,7 @@ void main() {
       expect(listenerCount, 0);
 
       await controller.close();
+      await sinkController.close();
     });
   });
 }
