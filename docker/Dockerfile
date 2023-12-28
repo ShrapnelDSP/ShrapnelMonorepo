@@ -37,7 +37,8 @@ RUN apt-get install -y \
     libssl-dev \
     dfu-util \
     libusb-1.0-0 \
-    lcov
+    lcov \
+    protobuf-compiler
 
 RUN rm -rf /var/lib/apt/lists/* && \
     apt-get clean
