@@ -19,5 +19,7 @@ target_link_libraries(audio_events
                       PUBLIC
                       shrapnel::api
                       shrapnel::nanopb
+                      shrapnel::etl
                       PRIVATE
+                      idf::log
                       shrapnel::compiler_warning_flags)

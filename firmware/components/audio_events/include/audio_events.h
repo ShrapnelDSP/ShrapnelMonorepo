@@ -23,6 +23,7 @@
 #include "audio_events.pb.h"
 
 #include <atomic>
+#include <etl/string_stream.h>
 #include <variant>
 
 namespace shrapnel::events {
@@ -41,6 +42,10 @@ using ApiMessage = std::variant<InputClipped, OutputClipped>;
 
 extern std::atomic_flag input_clipped;
 extern std::atomic_flag output_clipped;
+
+etl::string_stream &operator<<(etl::string_stream &out, const InputClipped &self);
+etl::string_stream &operator<<(etl::string_stream &out, const OutputClipped &self);
+etl::string_stream &operator<<(etl::string_stream &out, const ApiMessage &self);
 
 } // namespace shrapnel::events
 

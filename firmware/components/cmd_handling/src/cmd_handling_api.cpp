@@ -1,6 +1,46 @@
 #include "cmd_handling_api.h"
 #include "cmd_handling.pb.h"
 
+namespace shrapnel::parameters {
+
+etl::string_stream &operator<<(etl::string_stream &out, const Update &self)
+{
+    return out << "{ id=" << self.id << " value=" << self.value << " }";
+}
+
+etl::string_stream &operator<<(etl::string_stream &out, const Initialise &self)
+{
+    return out << "{ }";
+}
+
+etl::string_stream &operator<<(etl::string_stream &out, const ApiMessage &self)
+{
+    std::visit(
+        [&](const auto &message)
+        {
+            using T = std::decay_t<decltype(message)>;
+
+            if constexpr(std::is_same_v<T, Update>)
+            {
+                out << "<Update>" << message;
+            }
+            else if constexpr(std::is_same_v<T, Initialise>)
+            {
+                out << "<Initialise>" << message;
+            }
+            else
+            {
+                ESP_LOGE("DEBUG", "unknown ?!");
+                out << "<Unknown>";
+            }
+        },
+        self);
+
+    return out;
+}
+
+} // namespace shrapnel::parameters
+
 namespace shrapnel::api {
 
 template <>

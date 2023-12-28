@@ -17,7 +17,7 @@
  * ShrapnelDSP. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#define LOG_LOCAL_LEVEL ESP_LOG_VERBOSE
+#define LOG_LOCAL_LEVEL ESP_LOG_DEBUG
 #include "server.h"
 #include "esp_http_server.h"
 #include "esp_log.h"
@@ -30,6 +30,9 @@
 #define ARRAY_LENGTH(a) (sizeof(a) / sizeof(a[0]))
 
 namespace shrapnel {
+
+static void debug_print_sent_message(const ApiMessage &message);
+static void debug_print_received_message(const ApiMessage &message);
 
 Server::Server(QueueBase<AppMessage> *a_in_queue,
                QueueBase<AppMessage> *a_out_queue)
@@ -141,12 +144,17 @@ esp_err_t websocket_get_handler(httpd_req_t *req)
     auto message = api::from_bytes<ApiMessage>(buffer);
     if(message.has_value())
     {
+        debug_print_received_message(*message);
         auto out = AppMessage{*message, fd};
         int queue_rc = self->in_queue->send(&out, pdMS_TO_TICKS(100));
         if(queue_rc != pdPASS)
         {
             ESP_LOGE(TAG, "in_queue message dropped");
         }
+    }
+    else {
+        ESP_LOGE(TAG, "failed to parse received message");
+        ESP_LOG_BUFFER_HEXDUMP(TAG, buffer.data(), buffer.size(), ESP_LOG_ERROR);
     }
 
     ESP_LOGI(
@@ -175,20 +183,15 @@ void websocket_send(void *arg)
         ESP_LOGD(TAG, "%s source fd = %d", __FUNCTION__, *message.second);
     }
 
-    etl::string<128> debug;
-    etl::string_stream debug_stream{debug};
-    std::visit(
-        [&](const auto &message) -> void
-        {
-            using T = std::decay_t<decltype(message)>;
-            if constexpr(std::is_same_v<T, midi::MappingApiMessage>)
-            {
-                debug_stream << message;
-                ESP_LOGE("DEBUG", "mapping message: %s", debug.data());
-            }
-        },
-        message.first);
+    debug_print_sent_message(message.first);
 
+    send_websocket_message(*self, message);
+
+    xSemaphoreGive(self->work_semaphore);
+}
+
+void send_websocket_message(Server &self, const AppMessage &message)
+{
     std::array<uint8_t, 1024> memory{};
     auto buffer = std::span<uint8_t>{memory};
 
@@ -210,7 +213,7 @@ void websocket_send(void *arg)
     int client_fds[MAX_CLIENTS];
     size_t number_of_clients = ARRAY_LENGTH(client_fds);
 
-    rc = httpd_get_client_list(self->server, &number_of_clients, client_fds);
+    int rc = httpd_get_client_list(self.server, &number_of_clients, client_fds);
     if(rc != ESP_OK)
     {
         ESP_LOGE(
@@ -228,7 +231,7 @@ void websocket_send(void *arg)
 
         ESP_LOGD(TAG, "fd = %d", fd);
 
-        if(HTTPD_WS_CLIENT_WEBSOCKET != httpd_ws_get_fd_info(self->server, fd))
+        if(HTTPD_WS_CLIENT_WEBSOCKET != httpd_ws_get_fd_info(self.server, fd))
         {
             continue;
         }
@@ -238,19 +241,43 @@ void websocket_send(void *arg)
             continue;
         }
 
-        rc = httpd_ws_send_frame_async(self->server, fd, &pkt);
+        rc = httpd_ws_send_frame_async(self.server, fd, &pkt);
         if(ESP_OK != rc)
         {
             ESP_LOGE(TAG, "failed to send to fd %d rc %d", fd, rc);
         }
     }
+}
 
-    xSemaphoreGive(self->work_semaphore);
+static void debug_print_sent_message(const ApiMessage &message)
+{
+    etl::string<128> debug;
+    etl::string_stream debug_stream{debug};
+    std::visit(
+        [&](const auto &message) -> void
+        {
+            debug_stream << message;
+            ESP_LOGD(TAG, "sending message: %s", debug.data());
+        },
+        message);
+}
+
+static void debug_print_received_message(const ApiMessage &message)
+{
+    etl::string<128> debug;
+    etl::string_stream debug_stream{debug};
+    std::visit(
+        [&](const auto &message) -> void
+        {
+            debug_stream << message;
+            ESP_LOGD(TAG, "received message: %s", debug.data());
+        },
+        message);
 }
 
 void Server::send_message(const AppMessage &message)
 {
-    ESP_LOGD(TAG, "%s %s", __FUNCTION__, pcTaskGetName(nullptr));
+    ESP_LOGD(TAG, "%s called from task: %s", __FUNCTION__, pcTaskGetName(nullptr));
 
     if(errQUEUE_FULL == out_queue->send(&message, pdMS_TO_TICKS(100)))
     {

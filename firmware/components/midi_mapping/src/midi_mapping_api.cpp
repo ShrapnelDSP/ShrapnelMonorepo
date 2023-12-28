@@ -173,6 +173,10 @@ etl::string_stream &operator<<(etl::string_stream &out,
     {
         out << "<Remove>" << *message;
     }
+    else if(auto message = std::get_if<MessageReceived>(&self))
+    {
+        out << "<MessageReceived>" << *message;
+    }
     else
     {
         out << "Unknown";

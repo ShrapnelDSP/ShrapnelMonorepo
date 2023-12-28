@@ -52,6 +52,7 @@
  */
 
 #include "audio_events.h"
+#include "esp_log.h"
 #include "audio_events.pb.h"
 
 #define TAG "audio_events"
@@ -60,6 +61,44 @@ namespace shrapnel::events {
 
 std::atomic_flag input_clipped;
 std::atomic_flag output_clipped;
+
+etl::string_stream &operator<<(etl::string_stream &out,
+                               const InputClipped &self)
+{
+    return out << "{ }";
+}
+
+etl::string_stream &operator<<(etl::string_stream &out,
+                               const OutputClipped &self)
+{
+    return out << "{ }";
+}
+
+etl::string_stream &operator<<(etl::string_stream &out, const ApiMessage &self)
+{
+    std::visit(
+        [&](const auto &message)
+        {
+          using T = std::decay_t<decltype(message)>;
+
+          if constexpr(std::is_same_v<T, InputClipped>)
+          {
+              out << "<InputClipped>" << message;
+          }
+          else if constexpr(std::is_same_v<T, OutputClipped>)
+          {
+              out << "<OutputClipped>" << message;
+          }
+          else
+          {
+              ESP_LOGE("DEBUG", "unknown ?!");
+              out << "<Unknown>";
+          }
+        },
+        self);
+
+    return out;
+}
 
 } // namespace shrapnel::events
 

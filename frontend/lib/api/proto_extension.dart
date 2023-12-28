@@ -223,7 +223,7 @@ extension MidiMappingModeProtoEx on MidiMappingMode {
 
   midi_mapping_pb.Mapping_Mode toProto() {
     return switch (this) {
-      MidiMappingMode.toggle => midi_mapping_pb.Mapping_Mode.parameter,
+      MidiMappingMode.toggle => midi_mapping_pb.Mapping_Mode.toggle,
       MidiMappingMode.parameter => midi_mapping_pb.Mapping_Mode.parameter,
     };
   }
