@@ -42,8 +42,11 @@ constexpr const char *TAG = "main_thread";
 
 constexpr const size_t MAX_PARAMETERS = 20;
 
+class ParameterUpdateNotifier;
+
 using AudioParameters = parameters::AudioParameters<MAX_PARAMETERS, 1>;
 using SendMessageCallback = etl::delegate<void(const AppMessage &)>;
+using MidiMappingType = midi::MappingManager<ParameterUpdateNotifier, 10, 1>;
 
 class ParameterUpdateNotifier
 {
@@ -258,23 +261,8 @@ public:
         parameter_notifier = std::make_shared<ParameterUpdateNotifier>(
             a_audio_params, a_send_message);
 
-        [&]
-        {
-            /* TODO How to reduce the memory usage?
-           * - We could store each entry in the table at a different key
-           * - Replace etl::map with more efficient implementation
-           */
-            std::optional<etl::map<midi::Mapping::id_t, midi::Mapping, 10>>
-                saved_mappings;
-
-            std::array<uint8_t, 1024> memory{};
-            auto buffer = std::span<uint8_t>{memory};
-
-            using MidiMappingType =
-                midi::MappingManager<ParameterUpdateNotifier, 10, 1>;
-            midi_mapping_manager = std::make_unique<MidiMappingType>(
-                parameter_notifier, std::move(a_midi_mapping_storage));
-        }();
+        midi_mapping_manager = std::make_unique<MidiMappingType>(
+            parameter_notifier, std::move(a_midi_mapping_storage));
 
         BaseType_t rc = midi_message_notify_timer.start(portMAX_DELAY);
         if(rc != pdPASS)
@@ -611,8 +599,7 @@ private:
     std::optional<midi::Message> last_notified_midi_message;
     std::unique_ptr<midi::Decoder> midi_decoder;
     std::mutex midi_mutex;
-    std::unique_ptr<midi::MappingManager<ParameterUpdateNotifier, 10, 1>>
-        midi_mapping_manager;
+    std::unique_ptr<MidiMappingType> midi_mapping_manager;
     std::shared_ptr<AudioParameters> audio_params;
     std::unique_ptr<parameters::CommandHandling<
         parameters::AudioParameters<MAX_PARAMETERS, 1>>>
