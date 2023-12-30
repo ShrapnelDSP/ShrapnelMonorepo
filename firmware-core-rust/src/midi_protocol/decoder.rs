@@ -61,7 +61,7 @@ impl MidiDecoder<'_> {
     fn decode_message(&mut self, byte: u8) -> State {
         assert!(Self::is_status_byte(self.current_status));
 
-        match MessageType::try_from(self.current_status) {
+        match MessageType::try_from(self.current_status & 0xF0) {
             Ok(MessageType::ControlChange) | Ok(MessageType::NoteOn) | Ok(MessageType::NoteOff) => {
                 match self.data_count {
                     0 => self.received_data.0 = byte,
@@ -99,7 +99,7 @@ impl MidiDecoder<'_> {
 
     fn get_message(&self) -> Option<MidiMessage> {
         let channel = (self.current_status & 0x0F) + 1;
-        match MessageType::try_from(self.current_status) {
+        match MessageType::try_from(self.current_status & 0xF0) {
             Ok(MessageType::NoteOn) => Some(MidiMessage {
                 channel,
                 parameters: NoteOn {
@@ -146,7 +146,7 @@ impl MidiDecoder<'_> {
 
 #[cfg(test)]
 mod tests {
-    use mockall::{automock, predicate};
+    use mockall::{automock, predicate, Sequence};
     use crate::midi_protocol::models::MidiMessageParameters::NoteOn;
     use super::*;
 
@@ -174,4 +174,177 @@ mod tests {
             sut.decode(byte);
         }
     }
+
+    #[test]
+    fn note_off() {
+        let expected = MidiMessage {
+            channel: 1,
+            parameters: NoteOff {
+                note: 0,
+                velocity: 1,
+            },
+        };
+
+        let mut mock = MockReceiver::new();
+        mock.expect_notify().with(predicate::eq(expected)).once().returning(|_| ());
+
+        let mut notify = |message: &_| mock.notify(message);
+        let mut sut = MidiDecoder::new(&mut notify);
+        for byte in [0x80, 0x00, 0x01] {
+            sut.decode(byte);
+        }
+    }
+
+    #[test]
+    fn program_change() {
+        let expected = MidiMessage {
+            channel: 1,
+            parameters: ProgramChange {
+                program: 0
+            },
+        };
+
+        let mut mock = MockReceiver::new();
+        mock.expect_notify().with(predicate::eq(expected)).once().returning(|_| ());
+
+        let mut notify = |message: &_| mock.notify(message);
+        let mut sut = MidiDecoder::new(&mut notify);
+        for byte in [0xC0, 0x00] {
+            sut.decode(byte);
+        }
+    }
+
+    #[test]
+    fn note_on_running_status() {
+        let expected_first = MidiMessage {
+            channel: 1,
+            parameters: NoteOn {
+                note: 0,
+                velocity: 1,
+            },
+        };
+
+        let expected_second = MidiMessage {
+            channel: 1,
+            parameters: NoteOn {
+                note: 2,
+                velocity: 3,
+            },
+        };
+
+        let mut mock = MockReceiver::new();
+
+        let mut seq = Sequence::new();
+        mock.expect_notify().with(predicate::eq(expected_first)).once().in_sequence(&mut seq).returning(|_| ());
+        mock.expect_notify().with(predicate::eq(expected_second)).once().in_sequence(&mut seq).returning(|_| ());
+
+        let mut notify = |message: &_| mock.notify(message);
+        let mut sut = MidiDecoder::new(&mut notify);
+        for byte in [0x90, 0x00, 0x01, 0x02, 0x03] {
+            sut.decode(byte);
+        }
+    }
+
+    #[test]
+    fn control_change() {
+        let expected = MidiMessage {
+            channel: 1,
+            parameters: ControlChange {
+                control: 0,
+                value: 1,
+            },
+        };
+
+        let mut mock = MockReceiver::new();
+        mock.expect_notify().with(predicate::eq(expected)).once().returning(|_| ());
+
+        let mut notify = |message: &_| mock.notify(message);
+        let mut sut = MidiDecoder::new(&mut notify);
+        for byte in [0xB0, 0x00, 0x01] {
+            sut.decode(byte);
+        }
+    }
+
+    #[test]
+    fn channel_mode_is_not_control_change() {
+        let mut mock = MockReceiver::new();
+        mock.expect_notify().with(predicate::always()).never();
+
+        let mut notify = |message: &_| mock.notify(message);
+        let mut sut = MidiDecoder::new(&mut notify);
+        for second_byte in 0x78..=0x7F {
+            for byte in [0xB0, second_byte, 0x01] {
+                sut.decode(byte);
+            }
+        }
+    }
+
+    #[test]
+    fn channel_number() {
+        let expected = MidiMessage {
+            channel: 16,
+            parameters: NoteOn {
+                note: 0,
+                velocity: 1,
+            },
+        };
+
+        let mut mock = MockReceiver::new();
+        mock.expect_notify().with(predicate::eq(expected)).once().returning(|_| ());
+
+        let mut notify = |message: &_| mock.notify(message);
+        let mut sut = MidiDecoder::new(&mut notify);
+        for byte in [0x9F, 0x00, 0x01] {
+            sut.decode(byte);
+        }
+    }
+
+    #[test]
+    fn ignores_unimplemented_messages() {
+        let expected = MidiMessage {
+            channel: 1,
+            parameters: NoteOn {
+                note: 0,
+                velocity: 1,
+            },
+        };
+
+        let mut mock = MockReceiver::new();
+        mock.expect_notify().with(predicate::eq(expected)).once().returning(|_| ());
+
+        let mut notify = |message: &_| mock.notify(message);
+        let mut sut = MidiDecoder::new(&mut notify);
+        for byte in [0xE0, 0x00, 0x90, 0x00, 0x01] {
+            sut.decode(byte);
+        }
+    }
+
+    #[ignore]
+    #[test]
+    fn unimplemented_message_does_not_upset_running_status() {
+        let expected = MidiMessage {
+            channel: 1,
+            parameters: NoteOn {
+                note: 0,
+                velocity: 1,
+            },
+        };
+
+        let mut mock = MockReceiver::new();
+        mock.expect_notify().with(predicate::eq(expected)).once().returning(|_| ());
+
+        let mut notify = |message: &_| mock.notify(message);
+        let mut sut = MidiDecoder::new(&mut notify);
+        for byte in [0x90, 0x00, 0x01, 0xE0, 0x00, 0x00, 0x01] {
+            sut.decode(byte);
+        }
+    }
+
+    // TODO System exclusive message does not upset decoder
+    // TODO Bank select:
+    //      Control Change 0x00 followed by Control change 0x20, finally followed
+    //      by program change is used to select a program from a 14-bit bank
+    //      address.
+    // TODO Real-Time messages may be sent at any time — even between bytes of a
+    //      message which has a different status.
 }
