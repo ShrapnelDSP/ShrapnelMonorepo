@@ -30,6 +30,7 @@ RUN apt-get install -y \
     bison \
     gperf \
     python3 \
+    python3-pip \
     python3-venv \
     ninja-build \
     ccache \
