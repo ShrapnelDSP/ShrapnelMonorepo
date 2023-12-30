@@ -19,6 +19,7 @@
 
 #include "gmock/gmock.h"
 #include "gtest/gtest.h"
+#include <mock_persistence.h>
 #include <span>
 
 #include "juce_audio_basics/juce_audio_basics.h"
@@ -110,7 +111,9 @@ class Integration : public ::testing::Test
 protected:
     Integration()
         : audio_params(std::make_unique<shrapnel::AudioParameters>()),
-          storage{std::make_shared<FakeStorage>()}
+          storage{std::make_shared<FakeStorage>()},
+          midi_mapping_storage{std::make_unique<shrapnel::MockStorage>()},
+          presets_storage{std::make_unique<shrapnel::MockStorage>()}
     {
     }
 
@@ -140,8 +143,6 @@ protected:
         ASSERT_THAT(rc, pdPASS);
     }
     
-    
-
     testing::MockFunction<void(const AppMessage &)> send_message;
     std::function<void(const AppMessage &)> send_message_fn =
         send_message.AsStdFunction();
@@ -149,8 +150,8 @@ protected:
     FakeMidiUart midi_uart;
     std::shared_ptr<shrapnel::AudioParameters> audio_params;
     std::shared_ptr<FakeStorage> storage;
-    std::unique_ptr<shrapnel::persistence::Crud<std::span<uint8_t>>> midi_mapping_storage;
-    std::unique_ptr<shrapnel::persistence::Crud<std::span<uint8_t>>> presets_storage;
+    std::unique_ptr<shrapnel::MockStorage> midi_mapping_storage;
+    std::unique_ptr<shrapnel::MockStorage> presets_storage;
 };
 
 TEST_F(Integration, NotifiesServerAboutMidiMessages)

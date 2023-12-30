@@ -23,6 +23,7 @@
 
 #include "midi_mapping.h"
 #include "midi_mapping_api.h"
+#include "mock_persistence.h"
 
 namespace {
 
@@ -39,61 +40,6 @@ class MockAudioParameters
 public:
     MOCK_METHOD(int, update, (id_t param, float value), ());
     MOCK_METHOD(float, get, (const id_t &param), ());
-};
-
-class MockStorage final : public persistence::Crud<std::span<uint8_t>>
-{
-public:
-    [[nodiscard]] int create(const std::span<uint8_t> &data,
-                             uint32_t &id_out) override
-    {
-        id_out = last_key + 1;
-        assert(!storage.contains(id_out));
-        storage[id_out].assign(data.begin(), data.end());
-        last_key = id_out;
-        return 0;
-    };
-
-    [[nodiscard]] int read(uint32_t id, std::span<uint8_t> &data_out) override
-    {
-        const auto &entry = storage[id];
-        if(data_out.size() < entry.size())
-        {
-            return -1;
-        }
-
-        std::copy(entry.begin(), entry.end(), data_out.begin());
-        data_out = data_out.subspan(entry.size());
-        return 0;
-    };
-
-    [[nodiscard]] int update(uint32_t id,
-                             const std::span<uint8_t> &data) override
-    {
-        storage[id].assign(data.begin(), data.end());
-        return 0;
-    };
-
-    [[nodiscard]] int destroy(uint32_t id) override
-    {
-        storage.erase(id);
-        return 0;
-    };
-
-    void for_each(etl::delegate<void(uint32_t, const std::span<uint8_t> &)>
-                      callback) override
-    {
-        for(const auto &[id, entry] : storage)
-        {
-            std::vector<uint8_t> copy{entry};
-            std::span<uint8_t> span{copy};
-            callback(id, span);
-        }
-    };
-
-private:
-    uint32_t last_key = 0;
-    std::map<uint32_t, std::vector<uint8_t>> storage;
 };
 
 class MidiMapping : public ::testing::Test
@@ -210,7 +156,7 @@ TEST_F(MidiMapping, Update)
     EXPECT_EQ(0, sut.create({3, 4, Mapping::Mode::PARAMETER, "volume"}, id));
     EXPECT_THAT(sut.get()->size(), 2);
 
-    EXPECT_THAT(sut.update(1, {5, 6, Mapping::Mode::PARAMETER, "tone"}), 0);
+    EXPECT_THAT(sut.update(0, {5, 6, Mapping::Mode::PARAMETER, "tone"}), 0);
     EXPECT_THAT(sut.get()->size(), 2);
 
     // FIXME: move the tests related to this function elsewhere
