@@ -1,4 +1,5 @@
 <map id="shrapnel::midi::MappingManager&lt; AudioParametersT, MAX_MAPPINGS, MAX_OBSERVERS &gt;" name="shrapnel::midi::MappingManager&lt; AudioParametersT, MAX_MAPPINGS, MAX_OBSERVERS &gt;">
-<area shape="rect" id="node1" title=" " alt="" coords="5,95,264,151"/>
-<area shape="rect" id="node2" title=" " alt="" coords="30,5,239,47"/>
+<area shape="rect" id="node1" title=" " alt="" coords="263,31,521,87"/>
+<area shape="rect" id="node2" title=" " alt="" coords="5,5,215,47"/>
+<area shape="rect" id="node3" href="$classshrapnel_1_1persistence_1_1Crud.html" title=" " alt="" coords="38,71,182,112"/>
 </map>

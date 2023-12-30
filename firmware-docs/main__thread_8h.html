@@ -95,7 +95,6 @@ $(document).ready(function(){initNavTree('main__thread_8h.html',''); initResizab
 <a href="#nested-classes">Data Structures</a> &#124;
 <a href="#namespaces">Namespaces</a> &#124;
 <a href="#typedef-members">Typedefs</a> &#124;
-<a href="#func-members">Functions</a> &#124;
 <a href="#var-members">Variables</a>  </div>
   <div class="headertitle"><div class="title">main_thread.h File Reference</div></div>
 </div><!--header-->
@@ -105,8 +104,6 @@ $(document).ready(function(){initNavTree('main__thread_8h.html',''); initResizab
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Data Structures</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classshrapnel_1_1MidiMappingObserver.html">shrapnel::MidiMappingObserver&lt; MappingManagerT &gt;</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classshrapnel_1_1ParameterUpdateNotifier.html">shrapnel::ParameterUpdateNotifier</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classshrapnel_1_1ParameterObserver.html">shrapnel::ParameterObserver&lt; MAX_PARAMETERS &gt;</a></td></tr>
@@ -118,8 +115,6 @@ Data Structures</h2></td></tr>
 Namespaces</h2></td></tr>
 <tr class="memitem:namespaceshrapnel"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceshrapnel.html">shrapnel</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:namespaceshrapnel_1_1midi"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceshrapnel_1_1midi.html">shrapnel::midi</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="typedef-members" name="typedef-members"></a>
 Typedefs</h2></td></tr>
@@ -127,16 +122,8 @@ Typedefs</h2></td></tr>
 <tr class="separator:aa010626969fadec55bb5ce236c9ecf20"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab2ebec6ed99b3653eb98cc08f4aba8c6"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceshrapnel.html#ab2ebec6ed99b3653eb98cc08f4aba8c6">shrapnel::SendMessageCallback</a> = etl::delegate&lt; void(const <a class="el" href="messages_8h.html#a4a2a8445978c00038c4b9a0d35ca7a69">AppMessage</a> &amp;)&gt;</td></tr>
 <tr class="separator:ab2ebec6ed99b3653eb98cc08f4aba8c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
-Functions</h2></td></tr>
-<tr class="memitem:aeca60d148722432ef0ab3afe06890514"><td class="memItemLeft" align="right" valign="top">template&lt;&gt; </td></tr>
-<tr class="memitem:aeca60d148722432ef0ab3afe06890514"><td class="memTemplItemLeft" align="right" valign="top">std::optional&lt; float &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceshrapnel_1_1midi.html#aeca60d148722432ef0ab3afe06890514">shrapnel::midi::from_json</a> (const rapidjson::Value &amp;value)</td></tr>
-<tr class="memdesc:aeca60d148722432ef0ab3afe06890514"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert the message into a object representing it.  <a href="namespaceshrapnel_1_1midi.html#aeca60d148722432ef0ab3afe06890514">More...</a><br /></td></tr>
-<tr class="separator:aeca60d148722432ef0ab3afe06890514"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8e904f36f88c1590c804e27965f26c16"><td class="memItemLeft" align="right" valign="top">template&lt;&gt; </td></tr>
-<tr class="memitem:a8e904f36f88c1590c804e27965f26c16"><td class="memTemplItemLeft" align="right" valign="top">rapidjson::Value&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceshrapnel_1_1midi.html#a8e904f36f88c1590c804e27965f26c16">shrapnel::midi::to_json</a> (rapidjson::Document &amp;, const float &amp;object)</td></tr>
-<tr class="separator:a8e904f36f88c1590c804e27965f26c16"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a89755075bfdaa3d1ef39377ec6101f8b"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceshrapnel.html#a89755075bfdaa3d1ef39377ec6101f8b">shrapnel::MidiMappingType</a> = midi::MappingManager&lt; ParameterUpdateNotifier, 10, 1 &gt;</td></tr>
+<tr class="separator:a89755075bfdaa3d1ef39377ec6101f8b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
 Variables</h2></td></tr>

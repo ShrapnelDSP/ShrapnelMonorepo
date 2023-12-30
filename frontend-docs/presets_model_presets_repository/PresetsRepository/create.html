@@ -90,7 +90,7 @@ Future&lt;PresetRecord&gt; create(PresetState preset) async {
       &#47;&#47; errors after roundtrip through the firmware, instead just check the
       &#47;&#47; name.
       .firstWhere((element) =&gt; element.preset.name == preset.name)
-      .timeout(const Duration(seconds: 1));
+      .timeout(const Duration(seconds: 2));
 
   final newValue = _presets.value..[record.id] = record;
   _presets.add(newValue);

@@ -119,105 +119,113 @@ $(document).ready(function(){initNavTree('preset__manager_8cpp_source.html','');
 <div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span> </div>
 <div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespaceshrapnel_1_1presets.html">shrapnel::presets</a> {</div>
 <div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span> </div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno"><a class="line" href="classshrapnel_1_1presets_1_1PresetsManager.html#aa8624140d2d08100473d5f264e5b92a7">   26</a></span><span class="keywordtype">int</span> <a class="code hl_function" href="classshrapnel_1_1presets_1_1PresetsManager.html#aa8624140d2d08100473d5f264e5b92a7">PresetsManager::create</a>(<span class="keyword">const</span> <a class="code hl_struct" href="structshrapnel_1_1presets_1_1PresetData.html">PresetData</a> &amp;preset, <a class="code hl_typedef" href="namespaceshrapnel_1_1presets.html#ac181ce2b435bffbfb2c4f45dd121fae6">id_t</a> &amp;id_out)</div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>{</div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>    std::array&lt;uint8_t, 100&gt; buffer;</div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>    <span class="keyword">auto</span> data = std::span&lt;uint8_t, std::dynamic_extent&gt;(buffer);</div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span> </div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>    <span class="keywordtype">int</span> rc = <a class="code hl_function" href="namespaceshrapnel_1_1presets.html#a73471fb6ac9316c4a5030700ce39bc54">serialise_preset</a>(preset, data);</div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>    <span class="keywordflow">if</span>(rc != 0)</div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>    {</div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>        <span class="keywordflow">return</span> -1;</div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>    }</div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno"><a class="line" href="classshrapnel_1_1presets_1_1PresetsManager.html#ac32d7de2f08895a847ee4461777b46be">   26</a></span><a class="code hl_function" href="classshrapnel_1_1presets_1_1PresetsManager.html#ac32d7de2f08895a847ee4461777b46be">PresetsManager::PresetsManager</a>(</div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>    std::unique_ptr&lt;<a class="code hl_class" href="classshrapnel_1_1persistence_1_1Crud.html">persistence::Crud</a>&lt;std::span&lt;uint8_t&gt;&gt;&gt; a_storage)</div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>    : storage{std::move(a_storage)}</div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>{</div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>}</div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span> </div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno"><a class="line" href="classshrapnel_1_1presets_1_1PresetsManager.html#a61ecad878277bcfb1af7b6ee08b6b43e">   32</a></span><span class="keywordtype">int</span> <a class="code hl_function" href="classshrapnel_1_1presets_1_1PresetsManager.html#a61ecad878277bcfb1af7b6ee08b6b43e">PresetsManager::create</a>(<span class="keyword">const</span> <a class="code hl_struct" href="structshrapnel_1_1presets_1_1PresetData.html">PresetData</a> &amp;preset, <a class="code hl_typedef" href="namespaceshrapnel_1_1presets.html#ac181ce2b435bffbfb2c4f45dd121fae6">id_t</a> &amp;id_out)</div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>{</div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>    std::array&lt;uint8_t, 100&gt; buffer;</div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>    <span class="keyword">auto</span> data = std::span&lt;uint8_t, std::dynamic_extent&gt;(buffer);</div>
 <div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span> </div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>    rc = storage-&gt;create(data, id_out);</div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>    <span class="keywordflow">if</span>(rc != 0)</div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>    <span class="keyword">auto</span> encoded = <a class="code hl_function" href="namespaceshrapnel_1_1api.html#a4eb6fa3c5ed2f9fe0bce8d80e4479a32">api::to_bytes</a>(preset, data);</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>    <span class="keywordflow">if</span>(!encoded.has_value())</div>
 <div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>    {</div>
 <div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>        <span class="keywordflow">return</span> -1;</div>
 <div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>    }</div>
 <div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span> </div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>    <span class="keywordflow">return</span> 0;</div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>}</div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span> </div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno"><a class="line" href="classshrapnel_1_1presets_1_1PresetsManager.html#a4b8b000ea2510a8c50cb12bd25512961">   46</a></span>std::optional&lt;PresetData&gt; <a class="code hl_function" href="classshrapnel_1_1presets_1_1PresetsManager.html#a4b8b000ea2510a8c50cb12bd25512961">PresetsManager::read</a>(<a class="code hl_typedef" href="namespaceshrapnel_1_1presets.html#ac181ce2b435bffbfb2c4f45dd121fae6">id_t</a> <span class="keywordtype">id</span>)</div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>{</div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>    std::array&lt;uint8_t, 100&gt; buffer;</div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>    <span class="keyword">auto</span> data = std::span&lt;uint8_t, std::dynamic_extent&gt;(buffer);</div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>    <span class="keywordtype">int</span> rc = storage-&gt;load(<span class="keywordtype">id</span>, data);</div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>    <span class="keywordflow">if</span>(rc != 0)</div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>    {</div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>        <span class="keywordflow">return</span> std::nullopt;</div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>    }</div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span> </div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>    <a class="code hl_struct" href="structshrapnel_1_1presets_1_1PresetData.html">PresetData</a> preset;</div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>    rc = <a class="code hl_function" href="namespaceshrapnel_1_1presets.html#aa35a346d4965d22500c2f29e78b8b27f">deserialise_preset</a>(data, preset);</div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>    <span class="keywordflow">if</span>(rc != 0)</div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>    {</div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>        <span class="keywordflow">return</span> std::nullopt;</div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>    }</div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span> </div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>    <span class="keywordflow">return</span> preset;</div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>}</div>
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span> </div>
-<div class="line"><a id="l00066" name="l00066"></a><span class="lineno"><a class="line" href="classshrapnel_1_1presets_1_1PresetsManager.html#a88f27a1651b0ff568df83d6db76a0d88">   66</a></span><span class="keywordtype">int</span> <a class="code hl_function" href="classshrapnel_1_1presets_1_1PresetsManager.html#a88f27a1651b0ff568df83d6db76a0d88">PresetsManager::update</a>(<a class="code hl_typedef" href="namespaceshrapnel_1_1presets.html#ac181ce2b435bffbfb2c4f45dd121fae6">id_t</a> <span class="keywordtype">id</span>, <span class="keyword">const</span> <a class="code hl_struct" href="structshrapnel_1_1presets_1_1PresetData.html">PresetData</a> &amp;preset)</div>
-<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>{</div>
-<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>    std::array&lt;uint8_t, 100&gt; buffer;</div>
-<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>    <span class="keyword">auto</span> data = std::span&lt;uint8_t, std::dynamic_extent&gt;(buffer);</div>
-<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span> </div>
-<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>    <span class="keywordtype">int</span> rc = <a class="code hl_function" href="namespaceshrapnel_1_1presets.html#a73471fb6ac9316c4a5030700ce39bc54">serialise_preset</a>(preset, data);</div>
-<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>    <span class="keywordflow">if</span>(rc != 0)</div>
-<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>    {</div>
-<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>        <span class="keywordflow">return</span> -1;</div>
-<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>    }</div>
-<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span> </div>
-<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>    rc = storage-&gt;save(<span class="keywordtype">id</span>, data);</div>
-<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>    <span class="keywordflow">if</span>(rc != 0)</div>
-<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>    {</div>
-<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>        <span class="keywordflow">return</span> -1;</div>
-<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>    }</div>
-<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span> </div>
-<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>    <span class="keywordflow">return</span> 0;</div>
-<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>}</div>
-<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span> </div>
-<div class="line"><a id="l00086" name="l00086"></a><span class="lineno"><a class="line" href="classshrapnel_1_1presets_1_1PresetsManager.html#a9cb3a0c08c66ef1710b40a4316ff6eff">   86</a></span><span class="keywordtype">int</span> <a class="code hl_function" href="classshrapnel_1_1presets_1_1PresetsManager.html#a9cb3a0c08c66ef1710b40a4316ff6eff">PresetsManager::remove</a>(<a class="code hl_typedef" href="namespaceshrapnel_1_1presets.html#ac181ce2b435bffbfb2c4f45dd121fae6">id_t</a> <span class="keywordtype">id</span>)</div>
-<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>{</div>
-<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>    <span class="keywordtype">int</span> rc = storage-&gt;remove(<span class="keywordtype">id</span>);</div>
-<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>    <span class="keywordflow">if</span>(rc != 0)</div>
-<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>    {</div>
-<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>        <span class="keywordflow">return</span> -1;</div>
-<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>    }</div>
-<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span> </div>
-<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>    <span class="keywordflow">return</span> 0;</div>
-<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>}</div>
-<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span> </div>
-<div class="line"><a id="l00097" name="l00097"></a><span class="lineno"><a class="line" href="classshrapnel_1_1presets_1_1PresetsManager.html#a0028114c6e78724f0ce9838c4d50d7da">   97</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="classshrapnel_1_1presets_1_1PresetsManager.html#a0028114c6e78724f0ce9838c4d50d7da">PresetsManager::for_each</a>(</div>
-<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>    etl::delegate&lt;<span class="keywordtype">void</span>(<a class="code hl_typedef" href="namespaceshrapnel_1_1presets.html#ac181ce2b435bffbfb2c4f45dd121fae6">id_t</a>, <span class="keyword">const</span> <a class="code hl_struct" href="structshrapnel_1_1presets_1_1PresetData.html">PresetData</a> &amp;)&gt; callback)</div>
-<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>{</div>
-<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>    <span class="keywordflow">for</span>(<span class="keyword">const</span> <span class="keyword">auto</span> &amp;entry : *storage)</div>
-<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>    {</div>
-<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>        <span class="keyword">auto</span> <span class="keywordtype">id</span> = key_to_id(entry.key);</div>
-<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>        <span class="keyword">auto</span> preset = <a class="code hl_function" href="classshrapnel_1_1presets_1_1PresetsManager.html#a4b8b000ea2510a8c50cb12bd25512961">read</a>(<span class="keywordtype">id</span>);</div>
-<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>        <span class="keywordflow">if</span>(!preset.has_value())</div>
-<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>        {</div>
-<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>            ESP_LOGE(TAG, <span class="stringliteral">&quot;Failed to read preset at key %s&quot;</span>, entry.key);</div>
-<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>            <span class="keywordflow">continue</span>;</div>
-<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>        }</div>
-<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>        callback(<span class="keywordtype">id</span>, *preset);</div>
-<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>    }</div>
-<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>}</div>
-<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span> </div>
-<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>} <span class="comment">// namespace shrapnel::presets</span></div>
-<div class="ttc" id="aclassshrapnel_1_1presets_1_1PresetsManager_html_a0028114c6e78724f0ce9838c4d50d7da"><div class="ttname"><a href="classshrapnel_1_1presets_1_1PresetsManager.html#a0028114c6e78724f0ce9838c4d50d7da">shrapnel::presets::PresetsManager::for_each</a></div><div class="ttdeci">void for_each(etl::delegate&lt; void(id_t, const PresetData &amp;)&gt; callback)</div><div class="ttdef"><b>Definition:</b> <a href="preset__manager_8cpp_source.html#l00097">preset_manager.cpp:97</a></div></div>
-<div class="ttc" id="aclassshrapnel_1_1presets_1_1PresetsManager_html_a4b8b000ea2510a8c50cb12bd25512961"><div class="ttname"><a href="classshrapnel_1_1presets_1_1PresetsManager.html#a4b8b000ea2510a8c50cb12bd25512961">shrapnel::presets::PresetsManager::read</a></div><div class="ttdeci">std::optional&lt; PresetData &gt; read(id_t id)</div><div class="ttdef"><b>Definition:</b> <a href="preset__manager_8cpp_source.html#l00046">preset_manager.cpp:46</a></div></div>
-<div class="ttc" id="aclassshrapnel_1_1presets_1_1PresetsManager_html_a88f27a1651b0ff568df83d6db76a0d88"><div class="ttname"><a href="classshrapnel_1_1presets_1_1PresetsManager.html#a88f27a1651b0ff568df83d6db76a0d88">shrapnel::presets::PresetsManager::update</a></div><div class="ttdeci">int update(id_t id, const PresetData &amp;preset)</div><div class="ttdef"><b>Definition:</b> <a href="preset__manager_8cpp_source.html#l00066">preset_manager.cpp:66</a></div></div>
-<div class="ttc" id="aclassshrapnel_1_1presets_1_1PresetsManager_html_a9cb3a0c08c66ef1710b40a4316ff6eff"><div class="ttname"><a href="classshrapnel_1_1presets_1_1PresetsManager.html#a9cb3a0c08c66ef1710b40a4316ff6eff">shrapnel::presets::PresetsManager::remove</a></div><div class="ttdeci">int remove(id_t id)</div><div class="ttdef"><b>Definition:</b> <a href="preset__manager_8cpp_source.html#l00086">preset_manager.cpp:86</a></div></div>
-<div class="ttc" id="aclassshrapnel_1_1presets_1_1PresetsManager_html_aa8624140d2d08100473d5f264e5b92a7"><div class="ttname"><a href="classshrapnel_1_1presets_1_1PresetsManager.html#aa8624140d2d08100473d5f264e5b92a7">shrapnel::presets::PresetsManager::create</a></div><div class="ttdeci">int create(const PresetData &amp;preset, id_t &amp;id_out)</div><div class="ttdef"><b>Definition:</b> <a href="preset__manager_8cpp_source.html#l00026">preset_manager.cpp:26</a></div></div>
-<div class="ttc" id="anamespaceshrapnel_1_1presets_html"><div class="ttname"><a href="namespaceshrapnel_1_1presets.html">shrapnel::presets</a></div><div class="ttdef"><b>Definition:</b> <a href="preset__serialisation_8h_source.html#l00027">preset_serialisation.h:27</a></div></div>
-<div class="ttc" id="anamespaceshrapnel_1_1presets_html_a73471fb6ac9316c4a5030700ce39bc54"><div class="ttname"><a href="namespaceshrapnel_1_1presets.html#a73471fb6ac9316c4a5030700ce39bc54">shrapnel::presets::serialise_preset</a></div><div class="ttdeci">int serialise_preset(const PresetData &amp;preset, std::span&lt; uint8_t &gt; &amp;buffer)</div><div class="ttdef"><b>Definition:</b> <a href="preset__serialisation_8h_source.html#l00122">preset_serialisation.h:122</a></div></div>
-<div class="ttc" id="anamespaceshrapnel_1_1presets_html_aa35a346d4965d22500c2f29e78b8b27f"><div class="ttname"><a href="namespaceshrapnel_1_1presets.html#aa35a346d4965d22500c2f29e78b8b27f">shrapnel::presets::deserialise_preset</a></div><div class="ttdeci">int deserialise_preset(const std::span&lt; uint8_t &gt; &amp;buffer, PresetData &amp;preset)</div><div class="ttdef"><b>Definition:</b> <a href="preset__serialisation_8h_source.html#l00171">preset_serialisation.h:171</a></div></div>
-<div class="ttc" id="anamespaceshrapnel_1_1presets_html_ac181ce2b435bffbfb2c4f45dd121fae6"><div class="ttname"><a href="namespaceshrapnel_1_1presets.html#ac181ce2b435bffbfb2c4f45dd121fae6">shrapnel::presets::id_t</a></div><div class="ttdeci">uint32_t id_t</div><div class="ttdef"><b>Definition:</b> <a href="presets_8h_source.html#l00026">presets.h:26</a></div></div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>    <span class="keywordtype">int</span> rc = storage-&gt;create(*encoded, id_out);</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>    <span class="keywordflow">if</span>(rc != 0)</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>    {</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>        <span class="keywordflow">return</span> -1;</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>    }</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span> </div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>    <span class="keywordflow">return</span> 0;</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>}</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span> </div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno"><a class="line" href="classshrapnel_1_1presets_1_1PresetsManager.html#a0aff6cb20b818976fb3b63792a1ba089">   52</a></span><span class="keywordtype">int</span> <a class="code hl_function" href="classshrapnel_1_1presets_1_1PresetsManager.html#a0aff6cb20b818976fb3b63792a1ba089">PresetsManager::read</a>(<a class="code hl_typedef" href="namespaceshrapnel_1_1presets.html#ac181ce2b435bffbfb2c4f45dd121fae6">id_t</a> <span class="keywordtype">id</span>, <a class="code hl_struct" href="structshrapnel_1_1presets_1_1PresetData.html">PresetData</a> &amp;preset)</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>{</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>    std::array&lt;uint8_t, 100&gt; buffer;</div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>    <span class="keyword">auto</span> data = std::span&lt;uint8_t&gt;(buffer);</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>    <span class="keywordtype">int</span> rc = storage-&gt;read(<span class="keywordtype">id</span>, data);</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>    <span class="keywordflow">if</span>(rc != 0)</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>    {</div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>        <span class="keywordflow">return</span> -1;</div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>    }</div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span> </div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>    <span class="keyword">auto</span> decoded = api::from_bytes&lt;PresetData&gt;(data);</div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>    <span class="keywordflow">if</span>(!decoded.has_value())</div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>    {</div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>        <span class="keywordflow">return</span> -1;</div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>    }</div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span> </div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>    preset = *decoded;</div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span> </div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>    <span class="keywordflow">return</span> 0;</div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>}</div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span> </div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno"><a class="line" href="classshrapnel_1_1presets_1_1PresetsManager.html#ab1499051b1b135575f8f7b012e663af9">   73</a></span><span class="keywordtype">int</span> <a class="code hl_function" href="classshrapnel_1_1presets_1_1PresetsManager.html#ab1499051b1b135575f8f7b012e663af9">PresetsManager::update</a>(<a class="code hl_typedef" href="namespaceshrapnel_1_1presets.html#ac181ce2b435bffbfb2c4f45dd121fae6">id_t</a> <span class="keywordtype">id</span>, <span class="keyword">const</span> <a class="code hl_struct" href="structshrapnel_1_1presets_1_1PresetData.html">PresetData</a> &amp;preset)</div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>{</div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>    std::array&lt;uint8_t, 100&gt; buffer;</div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>    <span class="keyword">auto</span> data = std::span&lt;uint8_t, std::dynamic_extent&gt;(buffer);</div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span> </div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>    <span class="keyword">auto</span> encoded = <a class="code hl_function" href="namespaceshrapnel_1_1api.html#a4eb6fa3c5ed2f9fe0bce8d80e4479a32">api::to_bytes</a>(preset, data);</div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>    <span class="keywordflow">if</span>(!encoded.has_value())</div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>    {</div>
+<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>        <span class="keywordflow">return</span> -1;</div>
+<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>    }</div>
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span> </div>
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>    <span class="keywordtype">int</span> rc = storage-&gt;update(<span class="keywordtype">id</span>, *encoded);</div>
+<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>    <span class="keywordflow">if</span>(rc != 0)</div>
+<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>    {</div>
+<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>        <span class="keywordflow">return</span> -1;</div>
+<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>    }</div>
+<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span> </div>
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>    <span class="keywordflow">return</span> 0;</div>
+<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>}</div>
+<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span> </div>
+<div class="line"><a id="l00093" name="l00093"></a><span class="lineno"><a class="line" href="classshrapnel_1_1presets_1_1PresetsManager.html#a81619ca2dd7e6916a1ca07fa68953350">   93</a></span><span class="keywordtype">int</span> <a class="code hl_function" href="classshrapnel_1_1presets_1_1PresetsManager.html#a81619ca2dd7e6916a1ca07fa68953350">PresetsManager::destroy</a>(<a class="code hl_typedef" href="namespaceshrapnel_1_1presets.html#ac181ce2b435bffbfb2c4f45dd121fae6">id_t</a> <span class="keywordtype">id</span>)</div>
+<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>{</div>
+<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>    <span class="keywordtype">int</span> rc = storage-&gt;destroy(<span class="keywordtype">id</span>);</div>
+<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>    <span class="keywordflow">if</span>(rc != 0)</div>
+<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>    {</div>
+<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>        <span class="keywordflow">return</span> -1;</div>
+<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>    }</div>
+<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span> </div>
+<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>    <span class="keywordflow">return</span> 0;</div>
+<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>}</div>
+<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span> </div>
+<div class="line"><a id="l00104" name="l00104"></a><span class="lineno"><a class="line" href="classshrapnel_1_1presets_1_1PresetsManager.html#a914be4f663cde5c648b34bbf427760d8">  104</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="classshrapnel_1_1presets_1_1PresetsManager.html#a914be4f663cde5c648b34bbf427760d8">PresetsManager::for_each</a>(</div>
+<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>    etl::delegate&lt;<span class="keywordtype">void</span>(<a class="code hl_typedef" href="namespaceshrapnel_1_1presets.html#ac181ce2b435bffbfb2c4f45dd121fae6">id_t</a>, <span class="keyword">const</span> <a class="code hl_struct" href="structshrapnel_1_1presets_1_1PresetData.html">PresetData</a> &amp;)&gt; callback)</div>
+<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>{</div>
+<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>    storage-&gt;for_each(</div>
+<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>        [&amp;callback](uint32_t <span class="keywordtype">id</span>, std::span&lt;uint8_t&gt; data)</div>
+<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>        {</div>
+<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>            <span class="keyword">auto</span> decoded = api::from_bytes&lt;PresetData&gt;(data);</div>
+<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>            <span class="keywordflow">if</span>(!decoded.has_value())</div>
+<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>            {</div>
+<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>                <span class="keywordflow">return</span>;</div>
+<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>            }</div>
+<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span> </div>
+<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>            callback(<span class="keywordtype">id</span>, *decoded);</div>
+<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>        });</div>
+<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>}</div>
+<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span> </div>
+<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>} <span class="comment">// namespace shrapnel::presets</span></div>
+<div class="ttc" id="aclassshrapnel_1_1persistence_1_1Crud_html"><div class="ttname"><a href="classshrapnel_1_1persistence_1_1Crud.html">shrapnel::persistence::Crud</a></div><div class="ttdef"><b>Definition:</b> <a href="crud_8h_source.html#l00029">crud.h:30</a></div></div>
+<div class="ttc" id="aclassshrapnel_1_1presets_1_1PresetsManager_html_a0aff6cb20b818976fb3b63792a1ba089"><div class="ttname"><a href="classshrapnel_1_1presets_1_1PresetsManager.html#a0aff6cb20b818976fb3b63792a1ba089">shrapnel::presets::PresetsManager::read</a></div><div class="ttdeci">int read(id_t id, PresetData &amp;data) override</div><div class="ttdef"><b>Definition:</b> <a href="preset__manager_8cpp_source.html#l00052">preset_manager.cpp:52</a></div></div>
+<div class="ttc" id="aclassshrapnel_1_1presets_1_1PresetsManager_html_a61ecad878277bcfb1af7b6ee08b6b43e"><div class="ttname"><a href="classshrapnel_1_1presets_1_1PresetsManager.html#a61ecad878277bcfb1af7b6ee08b6b43e">shrapnel::presets::PresetsManager::create</a></div><div class="ttdeci">int create(const PresetData &amp;preset, id_t &amp;id_out) override</div><div class="ttdef"><b>Definition:</b> <a href="preset__manager_8cpp_source.html#l00032">preset_manager.cpp:32</a></div></div>
+<div class="ttc" id="aclassshrapnel_1_1presets_1_1PresetsManager_html_a81619ca2dd7e6916a1ca07fa68953350"><div class="ttname"><a href="classshrapnel_1_1presets_1_1PresetsManager.html#a81619ca2dd7e6916a1ca07fa68953350">shrapnel::presets::PresetsManager::destroy</a></div><div class="ttdeci">int destroy(id_t id) override</div><div class="ttdef"><b>Definition:</b> <a href="preset__manager_8cpp_source.html#l00093">preset_manager.cpp:93</a></div></div>
+<div class="ttc" id="aclassshrapnel_1_1presets_1_1PresetsManager_html_a914be4f663cde5c648b34bbf427760d8"><div class="ttname"><a href="classshrapnel_1_1presets_1_1PresetsManager.html#a914be4f663cde5c648b34bbf427760d8">shrapnel::presets::PresetsManager::for_each</a></div><div class="ttdeci">void for_each(etl::delegate&lt; void(id_t, const PresetData &amp;)&gt; callback) override</div><div class="ttdef"><b>Definition:</b> <a href="preset__manager_8cpp_source.html#l00104">preset_manager.cpp:104</a></div></div>
+<div class="ttc" id="aclassshrapnel_1_1presets_1_1PresetsManager_html_ab1499051b1b135575f8f7b012e663af9"><div class="ttname"><a href="classshrapnel_1_1presets_1_1PresetsManager.html#ab1499051b1b135575f8f7b012e663af9">shrapnel::presets::PresetsManager::update</a></div><div class="ttdeci">int update(id_t id, const PresetData &amp;preset) override</div><div class="ttdef"><b>Definition:</b> <a href="preset__manager_8cpp_source.html#l00073">preset_manager.cpp:73</a></div></div>
+<div class="ttc" id="aclassshrapnel_1_1presets_1_1PresetsManager_html_ac32d7de2f08895a847ee4461777b46be"><div class="ttname"><a href="classshrapnel_1_1presets_1_1PresetsManager.html#ac32d7de2f08895a847ee4461777b46be">shrapnel::presets::PresetsManager::PresetsManager</a></div><div class="ttdeci">PresetsManager(std::unique_ptr&lt; persistence::Crud&lt; std::span&lt; uint8_t &gt; &gt; &gt; a_storage)</div><div class="ttdef"><b>Definition:</b> <a href="preset__manager_8cpp_source.html#l00026">preset_manager.cpp:26</a></div></div>
+<div class="ttc" id="anamespaceshrapnel_1_1api_html_a4eb6fa3c5ed2f9fe0bce8d80e4479a32"><div class="ttname"><a href="namespaceshrapnel_1_1api.html#a4eb6fa3c5ed2f9fe0bce8d80e4479a32">shrapnel::api::to_bytes</a></div><div class="ttdeci">std::optional&lt; std::span&lt; uint8_t &gt; &gt; to_bytes(const T &amp;message, std::span&lt; uint8_t &gt; buffer)</div><div class="ttdoc">Convert a message to bytes to be sent over the network to the frontend.</div></div>
+<div class="ttc" id="anamespaceshrapnel_1_1presets_html"><div class="ttname"><a href="namespaceshrapnel_1_1presets.html">shrapnel::presets</a></div><div class="ttdef"><b>Definition:</b> <a href="preset__serialisation_8h_source.html#l00029">preset_serialisation.h:29</a></div></div>
+<div class="ttc" id="anamespaceshrapnel_1_1presets_html_ac181ce2b435bffbfb2c4f45dd121fae6"><div class="ttname"><a href="namespaceshrapnel_1_1presets.html#ac181ce2b435bffbfb2c4f45dd121fae6">shrapnel::presets::id_t</a></div><div class="ttdeci">uint32_t id_t</div><div class="ttdef"><b>Definition:</b> <a href="presets_8h_source.html#l00025">presets.h:25</a></div></div>
 <div class="ttc" id="apresets__manager_8h_html"><div class="ttname"><a href="presets__manager_8h.html">presets_manager.h</a></div></div>
-<div class="ttc" id="astructshrapnel_1_1presets_1_1PresetData_html"><div class="ttname"><a href="structshrapnel_1_1presets_1_1PresetData.html">shrapnel::presets::PresetData</a></div><div class="ttdef"><b>Definition:</b> <a href="presets__api_8h_source.html#l00059">presets_api.h:60</a></div></div>
+<div class="ttc" id="astructshrapnel_1_1presets_1_1PresetData_html"><div class="ttname"><a href="structshrapnel_1_1presets_1_1PresetData.html">shrapnel::presets::PresetData</a></div><div class="ttdef"><b>Definition:</b> <a href="presets__api_8h_source.html#l00061">presets_api.h:62</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

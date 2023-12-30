@@ -133,7 +133,6 @@ Widget build(BuildContext context) {
       ChangeNotifierProvider.value(
         value: midiMappingService,
       ),
-      ChangeNotifierProvider.value(value: uuid),
       ChangeNotifierProvider.value(value: audioClippingService),
       Provider(
         create: (_) =&gt; ChorusModel(parameterService: parameterService),

@@ -115,7 +115,7 @@ Public Member Functions</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><div class="compoundTemplParams">template&lt;typename AudioParametersT&gt;<br />
 class shrapnel::parameters::CommandHandling&lt; AudioParametersT &gt;</div>
-<p class="definition">Definition at line <a class="el" href="cmd__handling_8h_source.html#l00089">89</a> of file <a class="el" href="cmd__handling_8h_source.html">cmd_handling.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="cmd__handling_8h_source.html#l00039">39</a> of file <a class="el" href="cmd__handling_8h_source.html">cmd_handling.h</a>.</p>
 </div><h2 class="groupheader">Member Typedef Documentation</h2>
 <a id="a74bde046f30ac45fae0e130b246d3f45" name="a74bde046f30ac45fae0e130b246d3f45"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a74bde046f30ac45fae0e130b246d3f45">&#9670;&nbsp;</a></span>SendMessageCallback</h2>
@@ -131,7 +131,7 @@ template&lt;typename AudioParametersT &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="cmd__handling_8h_source.html#l00092">92</a> of file <a class="el" href="cmd__handling_8h_source.html">cmd_handling.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="cmd__handling_8h_source.html#l00042">42</a> of file <a class="el" href="cmd__handling_8h_source.html">cmd_handling.h</a>.</p>
 
 </div>
 </div>
@@ -178,10 +178,10 @@ template&lt;typename AudioParametersT &gt; </div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="cmd__handling_8h_source.html#l00100">100</a> of file <a class="el" href="cmd__handling_8h_source.html">cmd_handling.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  102</span>            : param(a_param),</div>
-<div class="line"><span class="lineno">  103</span>              send_message(a_send_message)</div>
-<div class="line"><span class="lineno">  104</span>        {}</div>
+<p class="definition">Definition at line <a class="el" href="cmd__handling_8h_source.html#l00050">50</a> of file <a class="el" href="cmd__handling_8h_source.html">cmd_handling.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   52</span>            : param(a_param),</div>
+<div class="line"><span class="lineno">   53</span>              send_message(a_send_message)</div>
+<div class="line"><span class="lineno">   54</span>        {}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -222,32 +222,32 @@ template&lt;typename AudioParametersT &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="cmd__handling_8h_source.html#l00106">106</a> of file <a class="el" href="cmd__handling_8h_source.html">cmd_handling.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  107</span>        {</div>
-<div class="line"><span class="lineno">  108</span><span class="preprocessor">#if !defined(TESTING)</span></div>
-<div class="line"><span class="lineno">  109</span>        ESP_LOGI(TAG, <span class="stringliteral">&quot;%s stack %d&quot;</span>, __FUNCTION__, uxTaskGetStackHighWaterMark(NULL));</div>
-<div class="line"><span class="lineno">  110</span><span class="preprocessor">#endif</span></div>
-<div class="line"><span class="lineno">  111</span> </div>
-<div class="line"><span class="lineno">  112</span>        std::visit(</div>
-<div class="line"><span class="lineno">  113</span>            [&amp;](<span class="keyword">const</span> <span class="keyword">auto</span> &amp;message) -&gt; <span class="keywordtype">void</span></div>
-<div class="line"><span class="lineno">  114</span>            {</div>
-<div class="line"><span class="lineno">  115</span>                <span class="keyword">using </span>T = std::decay_t&lt;<span class="keyword">decltype</span>(message)&gt;;</div>
-<div class="line"><span class="lineno">  116</span> </div>
-<div class="line"><span class="lineno">  117</span>                <span class="keywordflow">if</span> <span class="keyword">constexpr</span>(std::is_same_v&lt;T, Update&gt;)</div>
-<div class="line"><span class="lineno">  118</span>                {</div>
-<div class="line"><span class="lineno">  119</span>                    parameter_update(message, fd);</div>
-<div class="line"><span class="lineno">  120</span>                }</div>
-<div class="line"><span class="lineno">  121</span>                <span class="keywordflow">else</span> <span class="keywordflow">if</span> <span class="keyword">constexpr</span>(std::is_same_v&lt;T, Initialise&gt;)</div>
-<div class="line"><span class="lineno">  122</span>                {</div>
-<div class="line"><span class="lineno">  123</span>                    initialise_parameters();</div>
-<div class="line"><span class="lineno">  124</span>                }</div>
-<div class="line"><span class="lineno">  125</span>                <span class="keywordflow">else</span></div>
-<div class="line"><span class="lineno">  126</span>                {</div>
-<div class="line"><span class="lineno">  127</span>                    ESP_LOGE(TAG, <span class="stringliteral">&quot;Unhandled message type&quot;</span>);</div>
-<div class="line"><span class="lineno">  128</span>                }</div>
-<div class="line"><span class="lineno">  129</span>            },</div>
-<div class="line"><span class="lineno">  130</span>            a_message);</div>
-<div class="line"><span class="lineno">  131</span>        }</div>
+<p class="definition">Definition at line <a class="el" href="cmd__handling_8h_source.html#l00056">56</a> of file <a class="el" href="cmd__handling_8h_source.html">cmd_handling.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   57</span>        {</div>
+<div class="line"><span class="lineno">   58</span><span class="preprocessor">#if !defined(TESTING)</span></div>
+<div class="line"><span class="lineno">   59</span>        ESP_LOGI(TAG, <span class="stringliteral">&quot;%s stack %d&quot;</span>, __FUNCTION__, uxTaskGetStackHighWaterMark(NULL));</div>
+<div class="line"><span class="lineno">   60</span><span class="preprocessor">#endif</span></div>
+<div class="line"><span class="lineno">   61</span> </div>
+<div class="line"><span class="lineno">   62</span>        std::visit(</div>
+<div class="line"><span class="lineno">   63</span>            [&amp;](<span class="keyword">const</span> <span class="keyword">auto</span> &amp;message) -&gt; <span class="keywordtype">void</span></div>
+<div class="line"><span class="lineno">   64</span>            {</div>
+<div class="line"><span class="lineno">   65</span>                <span class="keyword">using </span>T = std::decay_t&lt;<span class="keyword">decltype</span>(message)&gt;;</div>
+<div class="line"><span class="lineno">   66</span> </div>
+<div class="line"><span class="lineno">   67</span>                <span class="keywordflow">if</span> <span class="keyword">constexpr</span>(std::is_same_v&lt;T, Update&gt;)</div>
+<div class="line"><span class="lineno">   68</span>                {</div>
+<div class="line"><span class="lineno">   69</span>                    parameter_update(message, fd);</div>
+<div class="line"><span class="lineno">   70</span>                }</div>
+<div class="line"><span class="lineno">   71</span>                <span class="keywordflow">else</span> <span class="keywordflow">if</span> <span class="keyword">constexpr</span>(std::is_same_v&lt;T, Initialise&gt;)</div>
+<div class="line"><span class="lineno">   72</span>                {</div>
+<div class="line"><span class="lineno">   73</span>                    initialise_parameters();</div>
+<div class="line"><span class="lineno">   74</span>                }</div>
+<div class="line"><span class="lineno">   75</span>                <span class="keywordflow">else</span></div>
+<div class="line"><span class="lineno">   76</span>                {</div>
+<div class="line"><span class="lineno">   77</span>                    ESP_LOGE(TAG, <span class="stringliteral">&quot;Unhandled message type&quot;</span>);</div>
+<div class="line"><span class="lineno">   78</span>                }</div>
+<div class="line"><span class="lineno">   79</span>            },</div>
+<div class="line"><span class="lineno">   80</span>            a_message);</div>
+<div class="line"><span class="lineno">   81</span>        }</div>
 </div><!-- fragment -->
 </div>
 </div>

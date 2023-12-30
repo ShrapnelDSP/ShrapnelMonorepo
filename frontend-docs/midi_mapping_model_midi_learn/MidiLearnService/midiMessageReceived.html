@@ -101,7 +101,9 @@
 
             &#47;&#47; Need copy to prevent concurrent modification of the lazy iterator
             final similarMappingsList =
-                List&lt;MapEntry&lt;String, MidiMapping&gt;&gt;.from(similarMappings);
+                List&lt;MapEntry&lt;MidiMappingId, MidiMapping&gt;&gt;.from(
+              similarMappings,
+            );
 
             if (similarMappingsList.isNotEmpty) {
               for (final mapping in similarMappingsList) {
@@ -111,14 +113,11 @@
             }
 
             await mappingService.createMapping(
-              MidiMappingEntry(
-                id: uuid.v4(),
-                mapping: MidiMapping(
-                  ccNumber: control,
-                  midiChannel: channel,
-                  parameterId: parameterId,
-                  mode: MidiMappingMode.parameter,
-                ),
+              MidiMapping(
+                ccNumber: control,
+                midiChannel: channel,
+                parameterId: parameterId,
+                mode: MidiMappingMode.parameter,
               ),
             );
 

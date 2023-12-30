@@ -113,62 +113,164 @@ $(document).ready(function(){initNavTree('audio__events_8cpp_source.html',''); i
 <div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="comment"> * ShrapnelDSP. If not, see &lt;https://www.gnu.org/licenses/&gt;.</span></div>
 <div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><span class="comment"> */</span></div>
 <div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span> </div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span><span class="preprocessor">#include &quot;<a class="code" href="audio__events_8h.html">audio_events.h</a>&quot;</span></div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span> </div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span><span class="preprocessor">#define TAG &quot;audio_events&quot;</span></div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span> </div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span><span class="keyword">namespace </span>{</div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span> </div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span><span class="keyword">constexpr</span> <span class="keyword">const</span> <span class="keywordtype">char</span> *<a class="code hl_function" href="namespaceshrapnel_1_1parameters.html#ad270d7a19e73398f010b8fb9f9b3a799">get_message_type</a>();</div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span> </div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span><span class="keyword">template</span> &lt;&gt;</div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span><span class="keyword">constexpr</span> <span class="keyword">const</span> <span class="keywordtype">char</span> *get_message_type&lt;shrapnel::events::InputClipped&gt;()</div>
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>{</div>
-<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>    <span class="keywordflow">return</span> <span class="stringliteral">&quot;Event::input_clipped&quot;</span>;</div>
-<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>}</div>
-<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span> </div>
-<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span><span class="keyword">template</span> &lt;&gt;</div>
-<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span><span class="keyword">constexpr</span> <span class="keyword">const</span> <span class="keywordtype">char</span> *get_message_type&lt;shrapnel::events::OutputClipped&gt;()</div>
-<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>{</div>
-<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>    <span class="keywordflow">return</span> <span class="stringliteral">&quot;Event::output_clipped&quot;</span>;</div>
-<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>}</div>
-<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span> </div>
-<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>} <span class="comment">// namespace</span></div>
-<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span> </div>
-<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespaceshrapnel_1_1events.html">shrapnel::events</a> {</div>
-<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span> </div>
-<div class="line"><a id="l00079" name="l00079"></a><span class="lineno"><a class="line" href="namespaceshrapnel_1_1events.html#a63fd47484f0f2560469429a7b28b7a0e">   79</a></span>std::atomic_flag <a class="code hl_variable" href="namespaceshrapnel_1_1events.html#a63fd47484f0f2560469429a7b28b7a0e">input_clipped</a>;</div>
-<div class="line"><a id="l00080" name="l00080"></a><span class="lineno"><a class="line" href="namespaceshrapnel_1_1events.html#ad28eee14b7b281e8580c0ca9f14adda2">   80</a></span>std::atomic_flag <a class="code hl_variable" href="namespaceshrapnel_1_1events.html#ad28eee14b7b281e8580c0ca9f14adda2">output_clipped</a>;</div>
-<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span> </div>
-<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span><span class="keyword">template</span> &lt;&gt;</div>
-<div class="line"><a id="l00083" name="l00083"></a><span class="lineno"><a class="line" href="namespaceshrapnel_1_1events.html#a46d2b649bc546f06556c79536c9d13ea">   83</a></span>rapidjson::Value <a class="code hl_function" href="namespaceshrapnel_1_1events.html#a1571fbb6cd61595e6c9ba447f3b04dec">to_json</a>(rapidjson::Document &amp;document,</div>
-<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>                         <span class="keyword">const</span> <a class="code hl_typedef" href="namespaceshrapnel_1_1events.html#a8dd3c21ae53adc98fc773a8c06ce300a">ApiMessage</a> &amp;<span class="keywordtype">object</span>)</div>
-<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>{</div>
-<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>    rapidjson::Value json;</div>
-<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>    json.SetObject();</div>
-<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span> </div>
-<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>    <span class="keyword">auto</span> visitor = [&amp;](<span class="keyword">const</span> <span class="keyword">auto</span> &amp;message)</div>
-<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>    {</div>
-<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>        <span class="keyword">using </span>T = std::decay_t&lt;<span class="keyword">decltype</span>(message)&gt;;</div>
-<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>        json.AddMember(<span class="stringliteral">&quot;messageType&quot;</span>,</div>
-<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>                       rapidjson::StringRef(get_message_type&lt;T&gt;()),</div>
-<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>                       document.GetAllocator());</div>
-<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>    };</div>
-<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span> </div>
-<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>    std::visit(visitor, <span class="keywordtype">object</span>);</div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="preprocessor">#include &quot;<a class="code" href="audio__events_8h.html">audio_events.h</a>&quot;</span></div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span><span class="preprocessor">#include &quot;esp_log.h&quot;</span></div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="preprocessor">#include &quot;audio_events.pb.h&quot;</span></div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span> </div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="preprocessor">#define TAG &quot;audio_events&quot;</span></div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span> </div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespaceshrapnel_1_1events.html">shrapnel::events</a> {</div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span> </div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno"><a class="line" href="namespaceshrapnel_1_1events.html#a63fd47484f0f2560469429a7b28b7a0e">   28</a></span>std::atomic_flag <a class="code hl_variable" href="namespaceshrapnel_1_1events.html#a63fd47484f0f2560469429a7b28b7a0e">input_clipped</a>;</div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno"><a class="line" href="namespaceshrapnel_1_1events.html#ad28eee14b7b281e8580c0ca9f14adda2">   29</a></span>std::atomic_flag <a class="code hl_variable" href="namespaceshrapnel_1_1events.html#ad28eee14b7b281e8580c0ca9f14adda2">output_clipped</a>;</div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span> </div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno"><a class="line" href="namespaceshrapnel_1_1events.html#a80ae3d5eab91e76d45bc1f08f38b790f">   31</a></span>etl::string_stream &amp;<a class="code hl_function" href="namespaceshrapnel_1_1events.html#a80ae3d5eab91e76d45bc1f08f38b790f">operator&lt;&lt;</a>(etl::string_stream &amp;out,</div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>                               <span class="keyword">const</span> <a class="code hl_struct" href="structshrapnel_1_1events_1_1InputClipped.html">InputClipped</a> &amp;self)</div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>{</div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>    <span class="keywordflow">return</span> out &lt;&lt; <span class="stringliteral">&quot;{ }&quot;</span>;</div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>}</div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span> </div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno"><a class="line" href="namespaceshrapnel_1_1events.html#a49c5e2553f5c834a575cdf4a495a687a">   37</a></span>etl::string_stream &amp;<a class="code hl_function" href="namespaceshrapnel_1_1events.html#a80ae3d5eab91e76d45bc1f08f38b790f">operator&lt;&lt;</a>(etl::string_stream &amp;out,</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>                               <span class="keyword">const</span> <a class="code hl_struct" href="structshrapnel_1_1events_1_1OutputClipped.html">OutputClipped</a> &amp;self)</div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>{</div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>    <span class="keywordflow">return</span> out &lt;&lt; <span class="stringliteral">&quot;{ }&quot;</span>;</div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>}</div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span> </div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno"><a class="line" href="namespaceshrapnel_1_1events.html#a858a80c3cfd77ecccea45dc2418db3c4">   43</a></span>etl::string_stream &amp;<a class="code hl_function" href="namespaceshrapnel_1_1events.html#a80ae3d5eab91e76d45bc1f08f38b790f">operator&lt;&lt;</a>(etl::string_stream &amp;out, <span class="keyword">const</span> <a class="code hl_typedef" href="namespaceshrapnel_1_1events.html#a8dd3c21ae53adc98fc773a8c06ce300a">ApiMessage</a> &amp;self)</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>{</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>    std::visit(</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>        [&amp;](<span class="keyword">const</span> <span class="keyword">auto</span> &amp;message)</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>        {</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>          <span class="keyword">using </span>T = std::decay_t&lt;<span class="keyword">decltype</span>(message)&gt;;</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span> </div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>          <span class="keywordflow">if</span> <span class="keyword">constexpr</span>(std::is_same_v&lt;T, InputClipped&gt;)</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>          {</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>              out &lt;&lt; <span class="stringliteral">&quot;&lt;InputClipped&gt;&quot;</span> &lt;&lt; message;</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>          }</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>          <span class="keywordflow">else</span> <span class="keywordflow">if</span> <span class="keyword">constexpr</span>(std::is_same_v&lt;T, OutputClipped&gt;)</div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>          {</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>              out &lt;&lt; <span class="stringliteral">&quot;&lt;OutputClipped&gt;&quot;</span> &lt;&lt; message;</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>          }</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>          <span class="keywordflow">else</span></div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>          {</div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>              out &lt;&lt; <span class="stringliteral">&quot;&lt;Unknown&gt;&quot;</span>;</div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>          }</div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>        },</div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>        self);</div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span> </div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>    <span class="keywordflow">return</span> out;</div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>}</div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span> </div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>} <span class="comment">// namespace shrapnel::events</span></div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span> </div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespaceshrapnel_1_1api.html">shrapnel::api</a> {</div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span> </div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span><span class="keyword">template</span> &lt;&gt;</div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno"><a class="line" href="namespaceshrapnel_1_1api.html#aa2fe3cdf104cd186cf8295776a2f8777">   73</a></span><span class="keywordtype">int</span> <a class="code hl_function" href="namespaceshrapnel_1_1api.html#a8fc768e74a62eb09f96ae1ca9f18199b">to_proto</a>(<span class="keyword">const</span> <a class="code hl_struct" href="structshrapnel_1_1events_1_1InputClipped.html">events::InputClipped</a> &amp;, shrapnel_audio_events_InputClipped &amp;)</div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>{</div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>    <span class="keywordflow">return</span> 0;</div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>}</div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span> </div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span><span class="keyword">template</span> &lt;&gt;</div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno"><a class="line" href="namespaceshrapnel_1_1api.html#a2e760d7790abe98be3dda6f355d8a69a">   79</a></span><span class="keywordtype">int</span> <a class="code hl_function" href="namespaceshrapnel_1_1api.html#a3fe25beb5fb138338c66392d3788da02">from_proto</a>(<span class="keyword">const</span> shrapnel_audio_events_InputClipped &amp;,</div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>               <a class="code hl_struct" href="structshrapnel_1_1events_1_1InputClipped.html">events::InputClipped</a> &amp;)</div>
+<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>{</div>
+<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>    <span class="keywordflow">return</span> 0;</div>
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>}</div>
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span> </div>
+<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span><span class="keyword">template</span> &lt;&gt;</div>
+<div class="line"><a id="l00086" name="l00086"></a><span class="lineno"><a class="line" href="namespaceshrapnel_1_1api.html#a132564894e99604f7dcf99f493156c09">   86</a></span><span class="keywordtype">int</span> <a class="code hl_function" href="namespaceshrapnel_1_1api.html#a8fc768e74a62eb09f96ae1ca9f18199b">to_proto</a>(<span class="keyword">const</span> <a class="code hl_struct" href="structshrapnel_1_1events_1_1OutputClipped.html">events::OutputClipped</a> &amp;,</div>
+<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>             shrapnel_audio_events_OutputClipped &amp;)</div>
+<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>{</div>
+<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>    <span class="keywordflow">return</span> 0;</div>
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>}</div>
+<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span> </div>
+<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span><span class="keyword">template</span> &lt;&gt;</div>
+<div class="line"><a id="l00093" name="l00093"></a><span class="lineno"><a class="line" href="namespaceshrapnel_1_1api.html#a760d0bbbd35b8f586fa01f9b27244d08">   93</a></span><span class="keywordtype">int</span> <a class="code hl_function" href="namespaceshrapnel_1_1api.html#a3fe25beb5fb138338c66392d3788da02">from_proto</a>(<span class="keyword">const</span> shrapnel_audio_events_OutputClipped &amp;,</div>
+<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>               <a class="code hl_struct" href="structshrapnel_1_1events_1_1OutputClipped.html">events::OutputClipped</a> &amp;)</div>
+<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>{</div>
+<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>    <span class="keywordflow">return</span> 0;</div>
+<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>}</div>
 <div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span> </div>
-<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>    <span class="keywordflow">return</span> json;</div>
-<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>}</div>
-<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span> </div>
-<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>} <span class="comment">// namespace shrapnel::events</span></div>
+<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span><span class="keyword">template</span> &lt;&gt;</div>
+<div class="line"><a id="l00100" name="l00100"></a><span class="lineno"><a class="line" href="namespaceshrapnel_1_1api.html#aae4bead7e4f0feb41b93b10d00cd7e5e">  100</a></span><span class="keywordtype">int</span> <a class="code hl_function" href="namespaceshrapnel_1_1api.html#a8fc768e74a62eb09f96ae1ca9f18199b">to_proto</a>(<span class="keyword">const</span> <a class="code hl_typedef" href="namespaceshrapnel_1_1events.html#a8dd3c21ae53adc98fc773a8c06ce300a">events::ApiMessage</a> &amp;message,</div>
+<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>             shrapnel_audio_events_Message &amp;out)</div>
+<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>{</div>
+<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>    <span class="keywordflow">return</span> std::visit(</div>
+<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>        [&amp;out](<span class="keyword">const</span> <span class="keyword">auto</span> &amp;message) -&gt; <span class="keywordtype">int</span></div>
+<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>        {</div>
+<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>            <span class="keyword">using </span>T = std::decay_t&lt;<span class="keyword">decltype</span>(message)&gt;;</div>
+<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>            <span class="keywordflow">if</span> <span class="keyword">constexpr</span>(std::is_same_v&lt;T, events::InputClipped&gt;)</div>
+<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>            {</div>
+<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>                out.which_event =</div>
+<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>                    shrapnel_audio_events_Message_input_clipped_tag;</div>
+<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>                <span class="keywordtype">int</span> rc = to_proto&lt;shrapnel_audio_events_InputClipped&gt;(</div>
+<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>                    message, out.event.input_clipped);</div>
+<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>                <span class="keywordflow">if</span>(rc != 0)</div>
+<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>                {</div>
+<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>                    <span class="keywordflow">return</span> -1;</div>
+<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>                }</div>
+<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>            }</div>
+<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>            <span class="keywordflow">else</span> <span class="keywordflow">if</span> <span class="keyword">constexpr</span>(std::is_same_v&lt;T, events::OutputClipped&gt;)</div>
+<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span>            {</div>
+<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>                out.which_event =</div>
+<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>                    shrapnel_audio_events_Message_output_clipped_tag;</div>
+<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>                <span class="keywordtype">int</span> rc = to_proto&lt;shrapnel_audio_events_OutputClipped&gt;(</div>
+<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>                    message, out.event.output_clipped);</div>
+<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>                <span class="keywordflow">if</span>(rc != 0)</div>
+<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>                {</div>
+<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span>                    <span class="keywordflow">return</span> -1;</div>
+<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span>                }</div>
+<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span>            }</div>
+<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>            <span class="keywordflow">else</span></div>
+<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span>            {</div>
+<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span>                <span class="keywordflow">return</span> -1;</div>
+<div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span>            }</div>
+<div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span> </div>
+<div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span>            <span class="keywordflow">return</span> 0;</div>
+<div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span>        },</div>
+<div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span>        message);</div>
+<div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span>}</div>
+<div class="line"><a id="l00138" name="l00138"></a><span class="lineno">  138</span> </div>
+<div class="line"><a id="l00139" name="l00139"></a><span class="lineno">  139</span><span class="keyword">template</span> &lt;&gt;</div>
+<div class="line"><a id="l00140" name="l00140"></a><span class="lineno"><a class="line" href="namespaceshrapnel_1_1api.html#ae5d4670474d1aa04eb4fc75df2647ec4">  140</a></span><span class="keywordtype">int</span> <a class="code hl_function" href="namespaceshrapnel_1_1api.html#a3fe25beb5fb138338c66392d3788da02">from_proto</a>(<span class="keyword">const</span> shrapnel_audio_events_Message &amp;message,</div>
+<div class="line"><a id="l00141" name="l00141"></a><span class="lineno">  141</span>               <a class="code hl_typedef" href="namespaceshrapnel_1_1events.html#a8dd3c21ae53adc98fc773a8c06ce300a">events::ApiMessage</a> &amp;out)</div>
+<div class="line"><a id="l00142" name="l00142"></a><span class="lineno">  142</span>{</div>
+<div class="line"><a id="l00143" name="l00143"></a><span class="lineno">  143</span>    <span class="keywordflow">switch</span>(message.which_event)</div>
+<div class="line"><a id="l00144" name="l00144"></a><span class="lineno">  144</span>    {</div>
+<div class="line"><a id="l00145" name="l00145"></a><span class="lineno">  145</span>    <span class="keywordflow">case</span> shrapnel_audio_events_Message_input_clipped_tag:</div>
+<div class="line"><a id="l00146" name="l00146"></a><span class="lineno">  146</span>    {</div>
+<div class="line"><a id="l00147" name="l00147"></a><span class="lineno">  147</span>        <a class="code hl_struct" href="structshrapnel_1_1events_1_1InputClipped.html">events::InputClipped</a> tmp{};</div>
+<div class="line"><a id="l00148" name="l00148"></a><span class="lineno">  148</span>        <span class="keywordtype">int</span> rc =</div>
+<div class="line"><a id="l00149" name="l00149"></a><span class="lineno">  149</span>            from_proto&lt;events::InputClipped&gt;(message.event.input_clipped, tmp);</div>
+<div class="line"><a id="l00150" name="l00150"></a><span class="lineno">  150</span>        out = tmp;</div>
+<div class="line"><a id="l00151" name="l00151"></a><span class="lineno">  151</span>        <span class="keywordflow">return</span> rc;</div>
+<div class="line"><a id="l00152" name="l00152"></a><span class="lineno">  152</span>    }</div>
+<div class="line"><a id="l00153" name="l00153"></a><span class="lineno">  153</span>    <span class="keywordflow">case</span> shrapnel_audio_events_Message_output_clipped_tag:</div>
+<div class="line"><a id="l00154" name="l00154"></a><span class="lineno">  154</span>    {</div>
+<div class="line"><a id="l00155" name="l00155"></a><span class="lineno">  155</span>        <a class="code hl_struct" href="structshrapnel_1_1events_1_1OutputClipped.html">events::OutputClipped</a> tmp{};</div>
+<div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span>        <span class="keywordtype">int</span> rc = from_proto&lt;events::OutputClipped&gt;(message.event.output_clipped,</div>
+<div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span>                                                   tmp);</div>
+<div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span>        out = tmp;</div>
+<div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span>        <span class="keywordflow">return</span> rc;</div>
+<div class="line"><a id="l00160" name="l00160"></a><span class="lineno">  160</span>    }</div>
+<div class="line"><a id="l00161" name="l00161"></a><span class="lineno">  161</span>    }</div>
+<div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span> </div>
+<div class="line"><a id="l00163" name="l00163"></a><span class="lineno">  163</span>    <span class="keywordflow">return</span> -1;</div>
+<div class="line"><a id="l00164" name="l00164"></a><span class="lineno">  164</span>}</div>
+<div class="line"><a id="l00165" name="l00165"></a><span class="lineno">  165</span> </div>
+<div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span>} <span class="comment">// namespace shrapnel::api</span></div>
 <div class="ttc" id="aaudio__events_8h_html"><div class="ttname"><a href="audio__events_8h.html">audio_events.h</a></div></div>
-<div class="ttc" id="anamespaceshrapnel_1_1events_html"><div class="ttname"><a href="namespaceshrapnel_1_1events.html">shrapnel::events</a></div><div class="ttdef"><b>Definition:</b> <a href="audio__events_8h_source.html#l00034">audio_events.h:34</a></div></div>
-<div class="ttc" id="anamespaceshrapnel_1_1events_html_a1571fbb6cd61595e6c9ba447f3b04dec"><div class="ttname"><a href="namespaceshrapnel_1_1events.html#a1571fbb6cd61595e6c9ba447f3b04dec">shrapnel::events::to_json</a></div><div class="ttdeci">rapidjson::Value to_json(rapidjson::Document &amp;document, const T &amp;object)</div></div>
-<div class="ttc" id="anamespaceshrapnel_1_1events_html_a63fd47484f0f2560469429a7b28b7a0e"><div class="ttname"><a href="namespaceshrapnel_1_1events.html#a63fd47484f0f2560469429a7b28b7a0e">shrapnel::events::input_clipped</a></div><div class="ttdeci">std::atomic_flag input_clipped</div><div class="ttdef"><b>Definition:</b> <a href="audio__events_8cpp_source.html#l00079">audio_events.cpp:79</a></div></div>
-<div class="ttc" id="anamespaceshrapnel_1_1events_html_a8dd3c21ae53adc98fc773a8c06ce300a"><div class="ttname"><a href="namespaceshrapnel_1_1events.html#a8dd3c21ae53adc98fc773a8c06ce300a">shrapnel::events::ApiMessage</a></div><div class="ttdeci">std::variant&lt; InputClipped, OutputClipped &gt; ApiMessage</div><div class="ttdef"><b>Definition:</b> <a href="audio__events_8h_source.html#l00049">audio_events.h:49</a></div></div>
-<div class="ttc" id="anamespaceshrapnel_1_1events_html_ad28eee14b7b281e8580c0ca9f14adda2"><div class="ttname"><a href="namespaceshrapnel_1_1events.html#ad28eee14b7b281e8580c0ca9f14adda2">shrapnel::events::output_clipped</a></div><div class="ttdeci">std::atomic_flag output_clipped</div><div class="ttdef"><b>Definition:</b> <a href="audio__events_8cpp_source.html#l00080">audio_events.cpp:80</a></div></div>
-<div class="ttc" id="anamespaceshrapnel_1_1parameters_html_ad270d7a19e73398f010b8fb9f9b3a799"><div class="ttname"><a href="namespaceshrapnel_1_1parameters.html#ad270d7a19e73398f010b8fb9f9b3a799">shrapnel::parameters::get_message_type</a></div><div class="ttdeci">constexpr const char * get_message_type()</div></div>
+<div class="ttc" id="anamespaceshrapnel_1_1api_html"><div class="ttname"><a href="namespaceshrapnel_1_1api.html">shrapnel::api</a></div><div class="ttdef"><b>Definition:</b> <a href="api_8h_source.html#l00026">api.h:26</a></div></div>
+<div class="ttc" id="anamespaceshrapnel_1_1api_html_a3fe25beb5fb138338c66392d3788da02"><div class="ttname"><a href="namespaceshrapnel_1_1api.html#a3fe25beb5fb138338c66392d3788da02">shrapnel::api::from_proto</a></div><div class="ttdeci">int from_proto(const ProtoT &amp;message, T &amp;out)</div><div class="ttdoc">Convert a message from proto struct.</div></div>
+<div class="ttc" id="anamespaceshrapnel_1_1api_html_a8fc768e74a62eb09f96ae1ca9f18199b"><div class="ttname"><a href="namespaceshrapnel_1_1api.html#a8fc768e74a62eb09f96ae1ca9f18199b">shrapnel::api::to_proto</a></div><div class="ttdeci">int to_proto(const T &amp;message, ProtoT &amp;out)</div><div class="ttdoc">Convert a message to proto struct.</div></div>
+<div class="ttc" id="anamespaceshrapnel_1_1events_html"><div class="ttname"><a href="namespaceshrapnel_1_1events.html">shrapnel::events</a></div><div class="ttdef"><b>Definition:</b> <a href="audio__events_8h_source.html#l00029">audio_events.h:29</a></div></div>
+<div class="ttc" id="anamespaceshrapnel_1_1events_html_a63fd47484f0f2560469429a7b28b7a0e"><div class="ttname"><a href="namespaceshrapnel_1_1events.html#a63fd47484f0f2560469429a7b28b7a0e">shrapnel::events::input_clipped</a></div><div class="ttdeci">std::atomic_flag input_clipped</div><div class="ttdef"><b>Definition:</b> <a href="audio__events_8cpp_source.html#l00028">audio_events.cpp:28</a></div></div>
+<div class="ttc" id="anamespaceshrapnel_1_1events_html_a80ae3d5eab91e76d45bc1f08f38b790f"><div class="ttname"><a href="namespaceshrapnel_1_1events.html#a80ae3d5eab91e76d45bc1f08f38b790f">shrapnel::events::operator&lt;&lt;</a></div><div class="ttdeci">etl::string_stream &amp; operator&lt;&lt;(etl::string_stream &amp;out, const InputClipped &amp;self)</div><div class="ttdef"><b>Definition:</b> <a href="audio__events_8cpp_source.html#l00031">audio_events.cpp:31</a></div></div>
+<div class="ttc" id="anamespaceshrapnel_1_1events_html_a8dd3c21ae53adc98fc773a8c06ce300a"><div class="ttname"><a href="namespaceshrapnel_1_1events.html#a8dd3c21ae53adc98fc773a8c06ce300a">shrapnel::events::ApiMessage</a></div><div class="ttdeci">std::variant&lt; InputClipped, OutputClipped &gt; ApiMessage</div><div class="ttdef"><b>Definition:</b> <a href="audio__events_8h_source.html#l00041">audio_events.h:41</a></div></div>
+<div class="ttc" id="anamespaceshrapnel_1_1events_html_ad28eee14b7b281e8580c0ca9f14adda2"><div class="ttname"><a href="namespaceshrapnel_1_1events.html#ad28eee14b7b281e8580c0ca9f14adda2">shrapnel::events::output_clipped</a></div><div class="ttdeci">std::atomic_flag output_clipped</div><div class="ttdef"><b>Definition:</b> <a href="audio__events_8cpp_source.html#l00029">audio_events.cpp:29</a></div></div>
+<div class="ttc" id="astructshrapnel_1_1events_1_1InputClipped_html"><div class="ttname"><a href="structshrapnel_1_1events_1_1InputClipped.html">shrapnel::events::InputClipped</a></div><div class="ttdef"><b>Definition:</b> <a href="audio__events_8h_source.html#l00031">audio_events.h:32</a></div></div>
+<div class="ttc" id="astructshrapnel_1_1events_1_1OutputClipped_html"><div class="ttname"><a href="structshrapnel_1_1events_1_1OutputClipped.html">shrapnel::events::OutputClipped</a></div><div class="ttdef"><b>Definition:</b> <a href="audio__events_8h_source.html#l00035">audio_events.h:36</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

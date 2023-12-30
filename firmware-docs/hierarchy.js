@@ -14,6 +14,16 @@ var hierarchy =
     [ "shrapnel::presets::Create", "structshrapnel_1_1presets_1_1Create.html", null ],
     [ "shrapnel::midi::CreateRequest", "structshrapnel_1_1midi_1_1CreateRequest.html", null ],
     [ "shrapnel::midi::CreateResponse", "structshrapnel_1_1midi_1_1CreateResponse.html", null ],
+    [ "shrapnel::persistence::Crud< DataT >", "classshrapnel_1_1persistence_1_1Crud.html", null ],
+    [ "shrapnel::persistence::Crud< Mapping >", "classshrapnel_1_1persistence_1_1Crud.html", [
+      [ "shrapnel::midi::MappingManager< AudioParametersT, MAX_MAPPINGS, MAX_OBSERVERS >", "classshrapnel_1_1midi_1_1MappingManager.html", null ]
+    ] ],
+    [ "shrapnel::persistence::Crud< PresetData >", "classshrapnel_1_1persistence_1_1Crud.html", [
+      [ "shrapnel::presets::PresetsManager", "classshrapnel_1_1presets_1_1PresetsManager.html", null ]
+    ] ],
+    [ "shrapnel::persistence::Crud< std::span< uint8_t > >", "classshrapnel_1_1persistence_1_1Crud.html", [
+      [ "shrapnel::persistence::EspCrud< READ_BUFFER_SIZE >", "classshrapnel_1_1persistence_1_1EspCrud.html", null ]
+    ] ],
     [ "shrapnel::midi::Decoder", "classshrapnel_1_1midi_1_1Decoder.html", null ],
     [ "shrapnel::dsp::DelayLine", "classshrapnel_1_1dsp_1_1DelayLine.html", null ],
     [ "shrapnel::presets::Delete", "structshrapnel_1_1presets_1_1Delete.html", null ],
@@ -25,7 +35,6 @@ var hierarchy =
     [ "shrapnel::effect::valvestate::FMVFilter", "classshrapnel_1_1effect_1_1valvestate_1_1FMVFilter.html", null ],
     [ "shrapnel::effect::valvestate::GainControl", "classshrapnel_1_1effect_1_1valvestate_1_1GainControl.html", null ],
     [ "shrapnel::midi::GetRequest", "structshrapnel_1_1midi_1_1GetRequest.html", null ],
-    [ "shrapnel::midi::GetResponse", "structshrapnel_1_1midi_1_1GetResponse.html", null ],
     [ "shrapnel::dsp::IirFilterBase", "classshrapnel_1_1dsp_1_1IirFilterBase.html", [
       [ "shrapnel::dsp::IirFilter", "classshrapnel_1_1dsp_1_1IirFilter.html", null ],
       [ "shrapnel::dsp::IirFilter", "classshrapnel_1_1dsp_1_1IirFilter.html", null ]
@@ -36,12 +45,8 @@ var hierarchy =
     [ "shrapnel::events::InputClipped", "structshrapnel_1_1events_1_1InputClipped.html", null ],
     [ "shrapnel::effect::valvestate::InputFilter", "classshrapnel_1_1effect_1_1valvestate_1_1InputFilter.html", null ],
     [ "shrapnel::wifi::InternalEvent", "structshrapnel_1_1wifi_1_1InternalEvent.html", null ],
-    [ "shrapnel::presets_storage::Storage::Iterator", "structshrapnel_1_1presets__storage_1_1Storage_1_1Iterator.html", null ],
     [ "shrapnel::MainThread< MAX_PARAMETERS, QUEUE_LEN >", "classshrapnel_1_1MainThread.html", null ],
     [ "shrapnel::midi::Mapping", "structshrapnel_1_1midi_1_1Mapping.html", null ],
-    [ "midi::MappingObserver", null, [
-      [ "shrapnel::MidiMappingObserver< MappingManagerT >", "classshrapnel_1_1MidiMappingObserver.html", null ]
-    ] ],
     [ "shrapnel::midi::Message", "structshrapnel_1_1midi_1_1Message.html", null ],
     [ "shrapnel::midi::MessageReceived", "structshrapnel_1_1midi_1_1MessageReceived.html", null ],
     [ "shrapnel::midi::MidiUartBase", "classshrapnel_1_1midi_1_1MidiUartBase.html", [
@@ -61,11 +66,7 @@ var hierarchy =
     ] ],
     [ "shrapnel::presets::ParametersData", "structshrapnel_1_1presets_1_1ParametersData.html", null ],
     [ "shrapnel::ParameterUpdateNotifier", "classshrapnel_1_1ParameterUpdateNotifier.html", null ],
-    [ "Preset", "structPreset.html", null ],
     [ "shrapnel::presets::PresetData", "structshrapnel_1_1presets_1_1PresetData.html", null ],
-    [ "PresetParameters", "structPresetParameters.html", null ],
-    [ "PresetRecord", "structPresetRecord.html", null ],
-    [ "shrapnel::presets::PresetsManager", "classshrapnel_1_1presets_1_1PresetsManager.html", null ],
     [ "juce::dsp::ProcessorBase", null, [
       [ "shrapnel::dsp::BlockProcessor< N, ChildProcessor >", "classshrapnel_1_1dsp_1_1BlockProcessor.html", null ]
     ] ],
@@ -85,7 +86,6 @@ var hierarchy =
     [ "shrapnel::persistence::Storage", "classshrapnel_1_1persistence_1_1Storage.html", [
       [ "shrapnel::persistence::EspStorage", "classshrapnel_1_1persistence_1_1EspStorage.html", null ]
     ] ],
-    [ "shrapnel::presets_storage::Storage", "classshrapnel_1_1presets__storage_1_1Storage.html", null ],
     [ "shrapnel::os::Timer", "classshrapnel_1_1os_1_1Timer.html", null ],
     [ "shrapnel::midi::Update", "structshrapnel_1_1midi_1_1Update.html", null ],
     [ "shrapnel::parameters::Update", "structshrapnel_1_1parameters_1_1Update.html", null ],

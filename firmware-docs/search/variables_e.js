@@ -1,20 +1,8 @@
 var searchData=
 [
   ['parameter_5fname_0',['parameter_name',['../structshrapnel_1_1midi_1_1Mapping.html#ad1d90b2aa45178377665b16f88aa4433',1,'shrapnel::midi::Mapping']]],
-  ['parameters_1',['parameters',['../structshrapnel_1_1midi_1_1Message.html#aed40e3ab3220667ba38796866604cbb7',1,'shrapnel::midi::Message::parameters()'],['../structshrapnel_1_1presets_1_1PresetData.html#a1cd85cf34c4e356960862195b609d31d',1,'shrapnel::presets::PresetData::parameters()'],['../structPreset.html#adeb6d5a1d9e1a622c163097e55110101',1,'Preset::parameters()']]],
+  ['parameters_1',['parameters',['../structshrapnel_1_1midi_1_1Message.html#aed40e3ab3220667ba38796866604cbb7',1,'shrapnel::midi::Message::parameters()'],['../structshrapnel_1_1presets_1_1PresetData.html#a1cd85cf34c4e356960862195b609d31d',1,'shrapnel::presets::PresetData::parameters()']]],
   ['position_2',['position',['../structshrapnel_1_1AudioProcessorParameters.html#ad858fa39fcab80d8e5c1f7fc5781a6fd',1,'shrapnel::AudioProcessorParameters']]],
-  ['preset_3',['preset',['../structshrapnel_1_1presets_1_1Notify.html#ac37fad328d6c6d79a2a8ee56d6320944',1,'shrapnel::presets::Notify::preset()'],['../structshrapnel_1_1presets_1_1Create.html#a8e85e077ce5cd962b17c122c14d4f6f0',1,'shrapnel::presets::Create::preset()'],['../structshrapnel_1_1presets_1_1Update.html#a79b374c4020f1304e34dedb4f63697b1',1,'shrapnel::presets::Update::preset()'],['../structPresetRecord.html#ae2441ec04b5c005bc708f47313d808be',1,'PresetRecord::preset()']]],
-  ['preset_5f_5fdescriptor_4',['preset__descriptor',['../presets_8pb-c_8c.html#adcf98d0496a2363977ddba4411be4ce9',1,'preset__descriptor():&#160;presets.pb-c.c'],['../presets_8pb-c_8h.html#adcf98d0496a2363977ddba4411be4ce9',1,'preset__descriptor():&#160;presets.pb-c.c']]],
-  ['preset_5f_5ffield_5fdescriptors_5',['preset__field_descriptors',['../presets_8pb-c_8c.html#a743a78f9651bacb503d3a86a49557eca',1,'presets.pb-c.c']]],
-  ['preset_5f_5ffield_5findices_5fby_5fname_6',['preset__field_indices_by_name',['../presets_8pb-c_8c.html#a7cd5f69bee838295fb57013588ce7c95',1,'presets.pb-c.c']]],
-  ['preset_5f_5fnumber_5franges_7',['preset__number_ranges',['../presets_8pb-c_8c.html#ae77eddacd0d890f8aca81d0814f36c20',1,'presets.pb-c.c']]],
-  ['preset_5fparameters_5f_5fdescriptor_8',['preset_parameters__descriptor',['../presets_8pb-c_8c.html#ae757de92029676b543140226751441df',1,'preset_parameters__descriptor():&#160;presets.pb-c.c'],['../presets_8pb-c_8h.html#ae757de92029676b543140226751441df',1,'preset_parameters__descriptor():&#160;presets.pb-c.c']]],
-  ['preset_5fparameters_5f_5ffield_5fdescriptors_9',['preset_parameters__field_descriptors',['../presets_8pb-c_8c.html#a5331a8b2057ea8760a1f4f008a4c55e1',1,'presets.pb-c.c']]],
-  ['preset_5fparameters_5f_5ffield_5findices_5fby_5fname_10',['preset_parameters__field_indices_by_name',['../presets_8pb-c_8c.html#a79ef73a24617c71a47b6ba7ddf40f308',1,'presets.pb-c.c']]],
-  ['preset_5fparameters_5f_5fnumber_5franges_11',['preset_parameters__number_ranges',['../presets_8pb-c_8c.html#ac8b3573101eceb3f0e6d467e45d0e741',1,'presets.pb-c.c']]],
-  ['preset_5frecord_5f_5fdescriptor_12',['preset_record__descriptor',['../presets_8pb-c_8c.html#a117c2bb1c293459f8cec201de296ffda',1,'preset_record__descriptor():&#160;presets.pb-c.c'],['../presets_8pb-c_8h.html#a117c2bb1c293459f8cec201de296ffda',1,'preset_record__descriptor():&#160;presets.pb-c.c']]],
-  ['preset_5frecord_5f_5ffield_5fdescriptors_13',['preset_record__field_descriptors',['../presets_8pb-c_8c.html#aed42e5b21c015de4d2ed7e70c2f8fffb',1,'presets.pb-c.c']]],
-  ['preset_5frecord_5f_5ffield_5findices_5fby_5fname_14',['preset_record__field_indices_by_name',['../presets_8pb-c_8c.html#aef580d6b9b8f1e36fbf1c816d06d66d5',1,'presets.pb-c.c']]],
-  ['preset_5frecord_5f_5fnumber_5franges_15',['preset_record__number_ranges',['../presets_8pb-c_8c.html#a7cb8de2b03b78f2887c85c4a04c24e3b',1,'presets.pb-c.c']]],
-  ['profiling_5fmutex_16',['profiling_mutex',['../esp32_2profiling_8c.html#a3b34b520123016210f0a0bb409286805',1,'profiling.c']]]
+  ['preset_3',['preset',['../structshrapnel_1_1presets_1_1Notify.html#ac37fad328d6c6d79a2a8ee56d6320944',1,'shrapnel::presets::Notify::preset()'],['../structshrapnel_1_1presets_1_1Create.html#a8e85e077ce5cd962b17c122c14d4f6f0',1,'shrapnel::presets::Create::preset()'],['../structshrapnel_1_1presets_1_1Update.html#a79b374c4020f1304e34dedb4f63697b1',1,'shrapnel::presets::Update::preset()']]],
+  ['profiling_5fmutex_4',['profiling_mutex',['../esp32_2profiling_8c.html#a3b34b520123016210f0a0bb409286805',1,'profiling.c']]]
 ];

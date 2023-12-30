@@ -30,7 +30,6 @@ var annotated_dup =
         [ "Decoder", "classshrapnel_1_1midi_1_1Decoder.html", "classshrapnel_1_1midi_1_1Decoder" ],
         [ "EspMidiUart", "classshrapnel_1_1midi_1_1EspMidiUart.html", "classshrapnel_1_1midi_1_1EspMidiUart" ],
         [ "GetRequest", "structshrapnel_1_1midi_1_1GetRequest.html", "structshrapnel_1_1midi_1_1GetRequest" ],
-        [ "GetResponse", "structshrapnel_1_1midi_1_1GetResponse.html", "structshrapnel_1_1midi_1_1GetResponse" ],
         [ "Mapping", "structshrapnel_1_1midi_1_1Mapping.html", "structshrapnel_1_1midi_1_1Mapping" ],
         [ "MappingManager", "classshrapnel_1_1midi_1_1MappingManager.html", "classshrapnel_1_1midi_1_1MappingManager" ],
         [ "Message", "structshrapnel_1_1midi_1_1Message.html", "structshrapnel_1_1midi_1_1Message" ],
@@ -51,6 +50,8 @@ var annotated_dup =
         [ "Update", "structshrapnel_1_1parameters_1_1Update.html", "structshrapnel_1_1parameters_1_1Update" ]
       ] ],
       [ "persistence", "namespaceshrapnel_1_1persistence.html", [
+        [ "Crud", "classshrapnel_1_1persistence_1_1Crud.html", "classshrapnel_1_1persistence_1_1Crud" ],
+        [ "EspCrud", "classshrapnel_1_1persistence_1_1EspCrud.html", "classshrapnel_1_1persistence_1_1EspCrud" ],
         [ "EspStorage", "classshrapnel_1_1persistence_1_1EspStorage.html", "classshrapnel_1_1persistence_1_1EspStorage" ],
         [ "Storage", "classshrapnel_1_1persistence_1_1Storage.html", "classshrapnel_1_1persistence_1_1Storage" ]
       ] ],
@@ -63,9 +64,6 @@ var annotated_dup =
         [ "PresetData", "structshrapnel_1_1presets_1_1PresetData.html", "structshrapnel_1_1presets_1_1PresetData" ],
         [ "PresetsManager", "classshrapnel_1_1presets_1_1PresetsManager.html", "classshrapnel_1_1presets_1_1PresetsManager" ],
         [ "Update", "structshrapnel_1_1presets_1_1Update.html", "structshrapnel_1_1presets_1_1Update" ]
-      ] ],
-      [ "presets_storage", "namespaceshrapnel_1_1presets__storage.html", [
-        [ "Storage", "classshrapnel_1_1presets__storage_1_1Storage.html", "classshrapnel_1_1presets__storage_1_1Storage" ]
       ] ],
       [ "selected_preset", "namespaceshrapnel_1_1selected__preset.html", [
         [ "Notify", "structshrapnel_1_1selected__preset_1_1Notify.html", "structshrapnel_1_1selected__preset_1_1Notify" ],
@@ -82,7 +80,6 @@ var annotated_dup =
       [ "AudioProcessor", "classshrapnel_1_1AudioProcessor.html", "classshrapnel_1_1AudioProcessor" ],
       [ "AudioProcessorParameters", "structshrapnel_1_1AudioProcessorParameters.html", "structshrapnel_1_1AudioProcessorParameters" ],
       [ "MainThread", "classshrapnel_1_1MainThread.html", "classshrapnel_1_1MainThread" ],
-      [ "MidiMappingObserver", "classshrapnel_1_1MidiMappingObserver.html", "classshrapnel_1_1MidiMappingObserver" ],
       [ "ParameterObserver", "classshrapnel_1_1ParameterObserver.html", "classshrapnel_1_1ParameterObserver" ],
       [ "ParameterUpdateNotifier", "classshrapnel_1_1ParameterUpdateNotifier.html", "classshrapnel_1_1ParameterUpdateNotifier" ],
       [ "Queue", "classshrapnel_1_1Queue.html", "classshrapnel_1_1Queue" ],
@@ -92,8 +89,5 @@ var annotated_dup =
     [ "ContourFilter", "classContourFilter.html", "classContourFilter" ],
     [ "dspal_delayline", "structdspal__delayline.html", "structdspal__delayline" ],
     [ "EspHeapTracing", "classEspHeapTracing.html", "classEspHeapTracing" ],
-    [ "Preset", "structPreset.html", "structPreset" ],
-    [ "PresetParameters", "structPresetParameters.html", "structPresetParameters" ],
-    [ "PresetRecord", "structPresetRecord.html", "structPresetRecord" ],
     [ "ScopedHeapTracing", "classScopedHeapTracing.html", "classScopedHeapTracing" ]
 ];

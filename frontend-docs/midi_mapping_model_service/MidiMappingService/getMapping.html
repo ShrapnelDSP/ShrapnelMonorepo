@@ -76,30 +76,11 @@
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
   <pre class="language-dart"><code class="language-dart">Future&lt;void&gt; getMapping() async {
+  _log.info(&#39;Initialising&#39;);
   const message = MidiApiMessage.getRequest();
 
-  final response = websocket.dataStream
-      .map(
-        MidiApiMessage.fromJson,
-      )
-      .where((event) =&gt; event is GetResponse)
-      .map((event) =&gt; event as GetResponse)
-      .map((event) =&gt; event.mappings)
-      .timeout(
-        responseTimeout,
-      )
-      .first;
-
-  websocket.send(message.toJson());
-
-  try {
-    final value = await response;
-    __mappings.clear();
-    __mappings.addAll(value);
-    notifyListeners();
-  } on TimeoutException {
-    &#47;&#47; ignore
-  }
+  __mappings.clear();
+  websocket.sink.add(message);
 }</code></pre>
 </section>
 

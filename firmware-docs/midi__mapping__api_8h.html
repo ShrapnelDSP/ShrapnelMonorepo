@@ -104,9 +104,9 @@ $(document).ready(function(){initNavTree('midi__mapping__api_8h.html',''); initR
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Data Structures</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structshrapnel_1_1midi_1_1GetRequest.html">shrapnel::midi::GetRequest</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structshrapnel_1_1midi_1_1Mapping.html">shrapnel::midi::Mapping</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structshrapnel_1_1midi_1_1GetResponse.html">shrapnel::midi::GetResponse</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structshrapnel_1_1midi_1_1GetRequest.html">shrapnel::midi::GetRequest</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structshrapnel_1_1midi_1_1CreateRequest.html">shrapnel::midi::CreateRequest</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -125,11 +125,13 @@ Namespaces</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:namespaceshrapnel_1_1midi"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceshrapnel_1_1midi.html">shrapnel::midi</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:namespaceshrapnel_1_1api"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceshrapnel_1_1api.html">shrapnel::api</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="typedef-members" name="typedef-members"></a>
 Typedefs</h2></td></tr>
-<tr class="memitem:aaf7b16e9372891903e3d6de1b406a458"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceshrapnel_1_1midi.html#aaf7b16e9372891903e3d6de1b406a458">shrapnel::midi::MappingApiMessage</a> = std::variant&lt; GetRequest, GetResponse, CreateRequest, CreateResponse, Update, Remove, MessageReceived &gt;</td></tr>
-<tr class="separator:aaf7b16e9372891903e3d6de1b406a458"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1f9618ba2a946f50c5d3decb14ad0a07"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceshrapnel_1_1midi.html#a1f9618ba2a946f50c5d3decb14ad0a07">shrapnel::midi::MappingApiMessage</a> = std::variant&lt; GetRequest, CreateRequest, CreateResponse, Update, Remove, MessageReceived &gt;</td></tr>
+<tr class="separator:a1f9618ba2a946f50c5d3decb14ad0a07"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
@@ -137,8 +139,6 @@ Functions</h2></td></tr>
 <tr class="separator:a4d7f2f5d6c81f92e63bcb0b8879551b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3dc01486d4db000642bb5215a53834d2"><td class="memItemLeft" align="right" valign="top">etl::string_stream &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceshrapnel_1_1midi.html#a3dc01486d4db000642bb5215a53834d2">shrapnel::midi::operator&lt;&lt;</a> (etl::string_stream &amp;out, const GetRequest &amp;self)</td></tr>
 <tr class="separator:a3dc01486d4db000642bb5215a53834d2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac3e251f40b5858c67d80374fb25b83ec"><td class="memItemLeft" align="right" valign="top">etl::string_stream &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceshrapnel_1_1midi.html#ac3e251f40b5858c67d80374fb25b83ec">shrapnel::midi::operator&lt;&lt;</a> (etl::string_stream &amp;out, const GetResponse &amp;self)</td></tr>
-<tr class="separator:ac3e251f40b5858c67d80374fb25b83ec"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a194d563135c45c7b4569555334b0ca5f"><td class="memItemLeft" align="right" valign="top">etl::string_stream &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceshrapnel_1_1midi.html#a194d563135c45c7b4569555334b0ca5f">shrapnel::midi::operator&lt;&lt;</a> (etl::string_stream &amp;out, const CreateRequest &amp;self)</td></tr>
 <tr class="separator:a194d563135c45c7b4569555334b0ca5f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa6b9b379b8567a30054f2619183bb792"><td class="memItemLeft" align="right" valign="top">etl::string_stream &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceshrapnel_1_1midi.html#aa6b9b379b8567a30054f2619183bb792">shrapnel::midi::operator&lt;&lt;</a> (etl::string_stream &amp;out, const CreateResponse &amp;self)</td></tr>
@@ -151,6 +151,18 @@ Functions</h2></td></tr>
 <tr class="separator:a2384d045c582fb6c7a4e53b245edf3b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7bec202ccff14cb7091cfcec55164715"><td class="memItemLeft" align="right" valign="top">etl::string_stream &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceshrapnel_1_1midi.html#a7bec202ccff14cb7091cfcec55164715">shrapnel::midi::operator&lt;&lt;</a> (etl::string_stream &amp;out, const MappingApiMessage &amp;self)</td></tr>
 <tr class="separator:a7bec202ccff14cb7091cfcec55164715"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3b494d4866d913ed460e84c8c1d0f181"><td class="memItemLeft" align="right" valign="top">template&lt;&gt; </td></tr>
+<tr class="memitem:a3b494d4866d913ed460e84c8c1d0f181"><td class="memTemplItemLeft" align="right" valign="top">std::optional&lt; std::span&lt; uint8_t &gt; &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceshrapnel_1_1api.html#a3b494d4866d913ed460e84c8c1d0f181">shrapnel::api::to_bytes</a> (const midi::Mapping &amp;message, std::span&lt; uint8_t &gt; buffer)</td></tr>
+<tr class="separator:a3b494d4866d913ed460e84c8c1d0f181"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae4aacb12f1ef64aeb00516d408132c85"><td class="memItemLeft" align="right" valign="top">template&lt;&gt; </td></tr>
+<tr class="memitem:ae4aacb12f1ef64aeb00516d408132c85"><td class="memTemplItemLeft" align="right" valign="top">std::optional&lt; midi::Mapping &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceshrapnel_1_1api.html#ae4aacb12f1ef64aeb00516d408132c85">shrapnel::api::from_bytes</a> (std::span&lt; const uint8_t &gt; buffer)</td></tr>
+<tr class="separator:ae4aacb12f1ef64aeb00516d408132c85"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a17ffbcb76b6df3a9506ad50c3fe5f751"><td class="memItemLeft" align="right" valign="top">template&lt;&gt; </td></tr>
+<tr class="memitem:a17ffbcb76b6df3a9506ad50c3fe5f751"><td class="memTemplItemLeft" align="right" valign="top">int&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceshrapnel_1_1api.html#a17ffbcb76b6df3a9506ad50c3fe5f751">shrapnel::api::to_proto</a> (const midi::MappingApiMessage &amp;message, shrapnel_midi_mapping_Message &amp;out)</td></tr>
+<tr class="separator:a17ffbcb76b6df3a9506ad50c3fe5f751"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af21ae755eaf9ca3e8e385e5e4f436025"><td class="memItemLeft" align="right" valign="top">template&lt;&gt; </td></tr>
+<tr class="memitem:af21ae755eaf9ca3e8e385e5e4f436025"><td class="memTemplItemLeft" align="right" valign="top">int&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceshrapnel_1_1api.html#af21ae755eaf9ca3e8e385e5e4f436025">shrapnel::api::from_proto</a> (const shrapnel_midi_mapping_Message &amp;message, midi::MappingApiMessage &amp;out)</td></tr>
+<tr class="separator:af21ae755eaf9ca3e8e385e5e4f436025"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 </div><!-- doc-content -->

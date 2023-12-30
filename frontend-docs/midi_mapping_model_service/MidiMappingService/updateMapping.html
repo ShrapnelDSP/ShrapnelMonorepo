@@ -81,7 +81,7 @@
   notifyListeners();
 
   final message = MidiApiMessage.update(mapping: mapping);
-  websocket.send(message.toJson());
+  websocket.sink.add(message);
 }</code></pre>
 </section>
 

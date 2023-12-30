@@ -61,13 +61,8 @@
 </h1></div>
 
     <section class="multi-line-signature">
-      
-  <div>
-    <ol class="annotation-list">
-        <li>@<a href="https://pub.dev/documentation/freezed_annotation/2.4.1/freezed_annotation/FreezedUnionValue-class.html">FreezedUnionValue</a>(&#39;MidiMap::create::request&#39;)</li>
-    </ol>
-  </div>const
-      <span class="name ">MidiApiMessage.createRequest</span>(<wbr><ol class="parameter-list"><li><span class="parameter" id="createRequest-param-mapping">{<span>required</span> <span class="type-annotation"><a href="../../midi_mapping_model_models/MidiMappingEntry-class.html">MidiMappingEntry</a></span> <span class="parameter-name">mapping</span>}</span></li>
+      const
+      <span class="name ">MidiApiMessage.createRequest</span>(<wbr><ol class="parameter-list"><li><span class="parameter" id="createRequest-param-mapping">{<span>required</span> <span class="type-annotation"><a href="../../midi_mapping_model_models/MidiMapping-class.html">MidiMapping</a></span> <span class="parameter-name">mapping</span>}</span></li>
 </ol>)
     </section>
 
@@ -77,10 +72,9 @@
     
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">@FreezedUnionValue(&#39;MidiMap::create::request&#39;)
-const factory MidiApiMessage.createRequest({
-  required MidiMappingEntry mapping,
-}) = CreateRequest;</code></pre>
+  <pre class="language-dart"><code class="language-dart">const factory MidiApiMessage.createRequest({
+  required MidiMapping mapping,
+}) = MidiCreateRequest;</code></pre>
 </section>
 
 

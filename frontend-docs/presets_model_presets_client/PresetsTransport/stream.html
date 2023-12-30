@@ -81,20 +81,13 @@
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
   <pre class="language-dart"><code class="language-dart">@override
-late final Stream&lt;PresetsMessage&gt; stream = websocket.dataStream.transform(
-  StreamTransformer.fromBind((jsonStream) async* {
-    await for (final message in jsonStream) {
-      try {
-        yield PresetsMessage.fromJson(message);
-      } catch (_) {
-        &#47;&#47; ignore
-      }
-    }
-  }),
-).logFinest(
-  _log,
-  (event) =&gt; &#39;receive message: $event&#39;,
-);</code></pre>
+late final Stream&lt;PresetsMessage&gt; stream = websocket.stream
+    .whereType&lt;ApiMessagePresets&gt;()
+    .map((event) =&gt; event.message)
+    .logFinest(
+      _log,
+      (event) =&gt; &#39;receive message: $event&#39;,
+    );</code></pre>
 </section>
 
 

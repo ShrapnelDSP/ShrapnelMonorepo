@@ -64,7 +64,7 @@
       
 
 <span class="returntype"><a href="https://api.flutter.dev/flutter/dart-async/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter">void</span>&gt;</span></span>
-<span class="name ">createMapping</span>(<wbr><ol class="parameter-list"><li><span class="parameter" id="createMapping-param-mapping"><span class="type-annotation"><a href="../../midi_mapping_model_models/MidiMappingEntry-class.html">MidiMappingEntry</a></span> <span class="parameter-name">mapping</span></span></li>
+<span class="name ">createMapping</span>(<wbr><ol class="parameter-list"><li><span class="parameter" id="createMapping-param-mapping"><span class="type-annotation"><a href="../../midi_mapping_model_models/MidiMapping-class.html">MidiMapping</a></span> <span class="parameter-name">mapping</span></span></li>
 </ol>)
 
       
@@ -77,33 +77,37 @@
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
   <pre class="language-dart"><code class="language-dart">Future&lt;void&gt; createMapping(
-  MidiMappingEntry mapping,
+  MidiMapping mapping,
 ) async {
-  final response = websocket.dataStream
-      .map(
-        MidiApiMessage.fromJson,
-      )
-      .where((event) =&gt; event is CreateResponse)
-      .map((event) =&gt; event as CreateResponse)
+  final response = websocket.stream
+      .where((event) =&gt; event is MidiCreateResponse)
+      .map((event) =&gt; event as MidiCreateResponse)
       .map(
         (event) =&gt; event.mapping,
       )
-      .where((event) =&gt; event == mapping)
+      .where((event) =&gt; event.mapping == mapping)
       .timeout(responseTimeout)
       .first;
 
-  &#47;&#47; optimistically add the mapping to the UI state
+  &#47;&#47; FIXME: optimistically add the mapping to the UI state
+  &#47;*
   __mappings[mapping.id] = mapping.mapping;
   notifyListeners();
+   *&#47;
 
   final message = MidiApiMessage.createRequest(mapping: mapping);
-  websocket.send(message.toJson());
+  websocket.sink.add(message);
 
   try {
-    await response;
+    final responseMapping = await response;
+    __mappings[responseMapping.id] = responseMapping.mapping;
+    notifyListeners();
   } on TimeoutException {
+    &#47;&#47; FIXME: rollback optimistic update
+    &#47;*
     __mappings.remove(mapping.id);
     notifyListeners();
+     *&#47;
   }
 }</code></pre>
 </section>

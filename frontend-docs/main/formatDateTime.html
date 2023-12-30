@@ -80,11 +80,17 @@
   final builder = StringBuffer()
     ..write(t.hour.toString().padLeft(2, &#39;0&#39;))
     ..write(&#39;:&#39;)
-    ..write(t.minute.toString().padLeft(2, &#39;0&#39;))
+    ..write(
+      t.minute.toString().padLeft(2, &#39;0&#39;),
+    )
     ..write(&#39;:&#39;)
-    ..write(t.second.toString().padLeft(2, &#39;0&#39;))
+    ..write(
+      t.second.toString().padLeft(2, &#39;0&#39;),
+    )
     ..write(&#39;.&#39;)
-    ..write(t.millisecond.toString().padLeft(3, &#39;0&#39;));
+    ..write(
+      t.millisecond.toString().padLeft(3, &#39;0&#39;),
+    );
 
   return builder.toString();
 }</code></pre>

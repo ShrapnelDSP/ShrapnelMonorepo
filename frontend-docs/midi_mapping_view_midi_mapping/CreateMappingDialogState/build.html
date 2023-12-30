@@ -267,14 +267,11 @@ Widget build(BuildContext context) {
                   Navigator.pop(context);
                   unawaited(
                     mappings.createMapping(
-                      MidiMappingEntry(
-                        id: context.read&lt;UuidService&gt;().v4(),
-                        mapping: MidiMapping(
-                          midiChannel: channel!,
-                          ccNumber: ccNumber!,
-                          parameterId: parameter!,
-                          mode: mode!,
-                        ),
+                      MidiMapping(
+                        midiChannel: channel!,
+                        ccNumber: ccNumber!,
+                        parameterId: parameter!,
+                        mode: mode!,
                       ),
                     ),
                   );

@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.4"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>ShrapnelDSP: websockets JSON API</title>
+<title>ShrapnelDSP: websockets API</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -91,25 +91,15 @@ $(document).ready(function(){initNavTree('ws_api.html',''); initResizable(); });
 </div>
 
 <div><div class="header">
-  <div class="headertitle"><div class="title">websockets JSON API </div></div>
+  <div class="headertitle"><div class="title">websockets API </div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p >This page documents the JSON-based message passing API used to communicate between the Flutter frontend and the embedded firmware.</p>
+<div class="textblock"><p >This page documents the message passing API used to communicate between the Flutter frontend and the embedded firmware.</p>
 <p >The API works by passing messages across a websockets connection. This allows the firmware to send events to the frontend without polling. It is useful e.g. when an audio parameter is updated through MIDI, and the new value should be displayed in the UI.</p>
-<p >All messages have a string valued member <code>messageType</code>, used to identify what operation should be performed.</p>
 <p >Messages may receive no response, a single response message or multiple responses messages. This is documented separately for each message.</p>
-<p >A message with <code>messageType</code> set to <code>hello</code> and a single parameter <code>example_parameter</code> with an integer value 1 looks like this:</p>
-<div class="fragment"><div class="line">{</div>
-<div class="line">  <span class="stringliteral">&quot;messageType&quot;</span>: <span class="stringliteral">&quot;hello&quot;</span>,</div>
-<div class="line">  <span class="stringliteral">&quot;example_parameter&quot;</span>: 1,</div>
-<div class="line">}</div>
-</div><!-- fragment --><dl class="section note"><dt>Note</dt><dd>The messages should be designed to be compatible with the Freezed Dart package. <a href="https://pub.dev/packages/freezed#fromjsontojson">https://pub.dev/packages/freezed#fromjsontojson</a></dd>
-<dd>
-This can be made easier if unions or sum types use the <code>runtimeType</code> field as the type tag. Some messages don't do this, but it can be worked around using annotations provided by Freezed.</dd></dl>
+<dl class="section note"><dt>Note</dt><dd>The messages are encoded using the protobuf library. Protobuf is the most popular library for this, and has extensive community libraries that simply converting between messages and bytes.</dd></dl>
 <p>See also:</p><ul>
-<li><a class="el" href="ws_api_events.html">Audio event JSON messages</a></li>
-<li><a class="el" href="ws_api_midi.html">MIDI mapping JSON messages</a></li>
-<li><a class="el" href="ws_api_parameters.html">Audio parameter JSON messages</a> </li>
+<li>Documentation in <code></code>.proto files defining the messages </li>
 </ul>
 </div></div><!-- contents -->
 </div><!-- PageDoc -->

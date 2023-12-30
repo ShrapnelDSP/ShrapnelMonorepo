@@ -92,7 +92,7 @@
 
     <dl class="constructor-summary-list">
         <dt id="MidiMappingService" class="callable">
-          <span class="name"><a href="../midi_mapping_model_service/MidiMappingService/MidiMappingService.html">MidiMappingService</a></span><span class="signature">(<span class="parameter" id="-param-websocket">{<span>required</span> <span class="type-annotation"><a href="../json_websocket/JsonWebsocket-class.html">JsonWebsocket</a></span> <span class="parameter-name">websocket</span>}</span>)</span>
+          <span class="name"><a href="../midi_mapping_model_service/MidiMappingService/MidiMappingService.html">MidiMappingService</a></span><span class="signature">(<span class="parameter" id="-param-websocket">{<span>required</span> <span class="type-annotation"><a href="../core_message_transport/MessageTransport-class.html">MessageTransport</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../midi_mapping_model_models/MidiApiMessage-class.html">MidiApiMessage</a></span>, <span class="type-parameter"><a href="../midi_mapping_model_models/MidiApiMessage-class.html">MidiApiMessage</a></span>&gt;</span></span> <span class="parameter-name">websocket</span>}</span>)</span>
         </dt>
         <dd>
           
@@ -128,7 +128,7 @@
 
         <dt id="mappings" class="property">
   <span class="name"><a href="../midi_mapping_model_service/MidiMappingService/mappings.html">mappings</a></span>
-  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/dart-collection/UnmodifiableMapView-class.html">UnmodifiableMapView</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span>, <span class="type-parameter"><a href="../midi_mapping_model_models/MidiMapping-class.html">MidiMapping</a></span>&gt;</span></span> 
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/dart-collection/UnmodifiableMapView-class.html">UnmodifiableMapView</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../midi_mapping_model_models/MidiMappingId.html">MidiMappingId</a></span>, <span class="type-parameter"><a href="../midi_mapping_model_models/MidiMapping-class.html">MidiMapping</a></span>&gt;</span></span> 
 
 </dt>
 <dd>
@@ -150,7 +150,7 @@
 
         <dt id="websocket" class="property">
   <span class="name"><a href="../midi_mapping_model_service/MidiMappingService/websocket.html">websocket</a></span>
-  <span class="signature">&#8596; <a href="../json_websocket/JsonWebsocket-class.html">JsonWebsocket</a></span> 
+  <span class="signature">&#8596; <a href="../core_message_transport/MessageTransport-class.html">MessageTransport</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../midi_mapping_model_models/MidiApiMessage-class.html">MidiApiMessage</a></span>, <span class="type-parameter"><a href="../midi_mapping_model_models/MidiApiMessage-class.html">MidiApiMessage</a></span>&gt;</span></span> 
 
 </dt>
 <dd>
@@ -182,7 +182,7 @@
 </dd>
 
         <dt id="createMapping" class="callable">
-  <span class="name"><a href="../midi_mapping_model_service/MidiMappingService/createMapping.html">createMapping</a></span><span class="signature">(<wbr><span class="parameter" id="createMapping-param-mapping"><span class="type-annotation"><a href="../midi_mapping_model_models/MidiMappingEntry-class.html">MidiMappingEntry</a></span> <span class="parameter-name">mapping</span></span>)
+  <span class="name"><a href="../midi_mapping_model_service/MidiMappingService/createMapping.html">createMapping</a></span><span class="signature">(<wbr><span class="parameter" id="createMapping-param-mapping"><span class="type-annotation"><a href="../midi_mapping_model_models/MidiMapping-class.html">MidiMapping</a></span> <span class="parameter-name">mapping</span></span>)
     <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-async/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter">void</span>&gt;</span></span>
   </span>
   
@@ -195,7 +195,7 @@
 </dd>
 
         <dt id="deleteMapping" class="callable">
-  <span class="name"><a href="../midi_mapping_model_service/MidiMappingService/deleteMapping.html">deleteMapping</a></span><span class="signature">(<wbr><span class="parameter" id="deleteMapping-param-id">{<span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">id</span>}</span>)
+  <span class="name"><a href="../midi_mapping_model_service/MidiMappingService/deleteMapping.html">deleteMapping</a></span><span class="signature">(<wbr><span class="parameter" id="deleteMapping-param-id">{<span>required</span> <span class="type-annotation"><a href="../midi_mapping_model_models/MidiMappingId.html">MidiMappingId</a></span> <span class="parameter-name">id</span>}</span>)
     <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-async/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter">void</span>&gt;</span></span>
   </span>
   
@@ -207,18 +207,18 @@
 
 </dd>
 
-        <dt id="dispose" class="callable inherited">
-  <span class="name"><a href="https://api.flutter.dev/flutter/foundation/ChangeNotifier/dispose.html">dispose</a></span><span class="signature">(<wbr>)
+        <dt id="dispose" class="callable">
+  <span class="name"><a href="../midi_mapping_model_service/MidiMappingService/dispose.html">dispose</a></span><span class="signature">(<wbr>)
     <span class="returntype parameter">&#8594; void</span>
   </span>
   
 
 </dt>
-<dd class="inherited">
+<dd>
   Discards any resources used by the object. After this is called, the
 object is not in a usable state and should be discarded (calls to
 <a href="https://api.flutter.dev/flutter/foundation/ChangeNotifier/addListener.html">addListener</a> will throw after the object is disposed).
-  <div class="features"><span class="feature">inherited</span></div>
+  <div class="features"><span class="feature">override</span></div>
 
 </dd>
 

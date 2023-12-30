@@ -85,12 +85,7 @@
 
         state = const MidiLearnState.savingMapping();
         for (final mapping in duplicates) {
-          await mappingService.createMapping(
-            MidiMappingEntry(
-              id: mapping.key,
-              mapping: mapping.value,
-            ),
-          );
+          await mappingService.createMapping(mapping.value);
         }
         state = const MidiLearnState.idle(null);
       },

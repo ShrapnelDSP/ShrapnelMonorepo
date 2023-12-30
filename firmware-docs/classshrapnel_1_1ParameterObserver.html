@@ -123,7 +123,7 @@ Public Member Functions</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><div class="compoundTemplParams">template&lt;std::size_t MAX_PARAMETERS&gt;<br />
 class shrapnel::ParameterObserver&lt; MAX_PARAMETERS &gt;</div>
-<p class="definition">Definition at line <a class="el" href="main__thread_8h_source.html#l00143">143</a> of file <a class="el" href="main__thread_8h_source.html">main_thread.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="main__thread_8h_source.html#l00085">85</a> of file <a class="el" href="main__thread_8h_source.html">main_thread.h</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a30f2bbf0b4b69af6aadea8ac1d09ec46" name="a30f2bbf0b4b69af6aadea8ac1d09ec46"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a30f2bbf0b4b69af6aadea8ac1d09ec46">&#9670;&nbsp;</a></span>ParameterObserver()</h2>
@@ -151,17 +151,17 @@ template&lt;std::size_t MAX_PARAMETERS&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="main__thread_8h_source.html#l00146">146</a> of file <a class="el" href="main__thread_8h_source.html">main_thread.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  148</span>        : is_save_throttled{<span class="keyword">true</span>},</div>
-<div class="line"><span class="lineno">  149</span>          persistence{a_persistence},</div>
-<div class="line"><span class="lineno">  150</span>          timer{<span class="stringliteral">&quot;param save throttle&quot;</span>,</div>
-<div class="line"><span class="lineno">  151</span>                pdMS_TO_TICKS(10&#39;000),</div>
-<div class="line"><span class="lineno">  152</span>                <span class="keyword">false</span>,</div>
-<div class="line"><span class="lineno">  153</span>                etl::delegate&lt;void(<span class="keywordtype">void</span>)&gt;::create&lt;</div>
-<div class="line"><span class="lineno">  154</span>                    ParameterObserver&lt;MAX_PARAMETERS&gt;,</div>
-<div class="line"><span class="lineno">  155</span>                    &amp;ParameterObserver&lt;MAX_PARAMETERS&gt;::timer_callback&gt;(*this)}</div>
-<div class="line"><span class="lineno">  156</span>    {</div>
-<div class="line"><span class="lineno">  157</span>    }</div>
+<p class="definition">Definition at line <a class="el" href="main__thread_8h_source.html#l00088">88</a> of file <a class="el" href="main__thread_8h_source.html">main_thread.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   90</span>        : is_save_throttled{<span class="keyword">true</span>},</div>
+<div class="line"><span class="lineno">   91</span>          persistence{std::move(a_persistence)},</div>
+<div class="line"><span class="lineno">   92</span>          timer{<span class="stringliteral">&quot;param save throttle&quot;</span>,</div>
+<div class="line"><span class="lineno">   93</span>                pdMS_TO_TICKS(10&#39;000),</div>
+<div class="line"><span class="lineno">   94</span>                <span class="keyword">false</span>,</div>
+<div class="line"><span class="lineno">   95</span>                etl::delegate&lt;void(<span class="keywordtype">void</span>)&gt;::create&lt;</div>
+<div class="line"><span class="lineno">   96</span>                    ParameterObserver&lt;MAX_PARAMETERS&gt;,</div>
+<div class="line"><span class="lineno">   97</span>                    &amp;ParameterObserver&lt;MAX_PARAMETERS&gt;::timer_callback&gt;(*this)}</div>
+<div class="line"><span class="lineno">   98</span>    {</div>
+<div class="line"><span class="lineno">   99</span>    }</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -191,14 +191,14 @@ template&lt;std::size_t MAX_PARAMETERS&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="main__thread_8h_source.html#l00182">182</a> of file <a class="el" href="main__thread_8h_source.html">main_thread.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  183</span>    {</div>
-<div class="line"><span class="lineno">  184</span>        <span class="keywordflow">if</span>(!is_save_throttled.test_and_set())</div>
-<div class="line"><span class="lineno">  185</span>        {</div>
-<div class="line"><span class="lineno">  186</span>            persist_parameters();</div>
-<div class="line"><span class="lineno">  187</span>            ESP_LOGI(TAG, <span class="stringliteral">&quot;Parameters saved to NVS&quot;</span>);</div>
-<div class="line"><span class="lineno">  188</span>        }</div>
-<div class="line"><span class="lineno">  189</span>    }</div>
+<p class="definition">Definition at line <a class="el" href="main__thread_8h_source.html#l00124">124</a> of file <a class="el" href="main__thread_8h_source.html">main_thread.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  125</span>    {</div>
+<div class="line"><span class="lineno">  126</span>        <span class="keywordflow">if</span>(!is_save_throttled.test_and_set())</div>
+<div class="line"><span class="lineno">  127</span>        {</div>
+<div class="line"><span class="lineno">  128</span>            persist_parameters();</div>
+<div class="line"><span class="lineno">  129</span>            ESP_LOGI(TAG, <span class="stringliteral">&quot;Parameters saved to NVS&quot;</span>);</div>
+<div class="line"><span class="lineno">  130</span>        }</div>
+<div class="line"><span class="lineno">  131</span>    }</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -228,27 +228,27 @@ template&lt;std::size_t MAX_PARAMETERS&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="main__thread_8h_source.html#l00160">160</a> of file <a class="el" href="main__thread_8h_source.html">main_thread.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  161</span>    {</div>
-<div class="line"><span class="lineno">  162</span>        <span class="keyword">auto</span> &amp;[id, value] = parameter;</div>
-<div class="line"><span class="lineno">  163</span>        ESP_LOGI(</div>
-<div class="line"><span class="lineno">  164</span>            TAG, <span class="stringliteral">&quot;notified about parameter change %s %f&quot;</span>, <span class="keywordtype">id</span>.data(), value);</div>
-<div class="line"><span class="lineno">  165</span>        <span class="keywordflow">if</span>(!updated_parameters.available())</div>
-<div class="line"><span class="lineno">  166</span>        {</div>
-<div class="line"><span class="lineno">  167</span>            ESP_LOGE(TAG, <span class="stringliteral">&quot;no space available&quot;</span>);</div>
-<div class="line"><span class="lineno">  168</span>            <span class="keywordflow">return</span>;</div>
-<div class="line"><span class="lineno">  169</span>        }</div>
-<div class="line"><span class="lineno">  170</span> </div>
-<div class="line"><span class="lineno">  171</span>        updated_parameters[id] = value;</div>
-<div class="line"><span class="lineno">  172</span> </div>
-<div class="line"><span class="lineno">  173</span>        <span class="keywordflow">if</span>(!timer.<a class="code hl_function" href="classshrapnel_1_1os_1_1Timer.html#a700eee72ff07045cfdebbef6d397668e">is_active</a>())</div>
-<div class="line"><span class="lineno">  174</span>        {</div>
-<div class="line"><span class="lineno">  175</span>            <span class="keywordflow">if</span>(pdPASS != timer.<a class="code hl_function" href="classshrapnel_1_1os_1_1Timer.html#a5ff1b2e05dc1558fb40ef551fc00d6a9">start</a>(pdMS_TO_TICKS(5)))</div>
-<div class="line"><span class="lineno">  176</span>            {</div>
-<div class="line"><span class="lineno">  177</span>                ESP_LOGE(TAG, <span class="stringliteral">&quot;Failed to start parameter observer timer&quot;</span>);</div>
-<div class="line"><span class="lineno">  178</span>            }</div>
-<div class="line"><span class="lineno">  179</span>        }</div>
-<div class="line"><span class="lineno">  180</span>    }</div>
+<p class="definition">Definition at line <a class="el" href="main__thread_8h_source.html#l00102">102</a> of file <a class="el" href="main__thread_8h_source.html">main_thread.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  103</span>    {</div>
+<div class="line"><span class="lineno">  104</span>        <span class="keyword">auto</span> &amp;[id, value] = parameter;</div>
+<div class="line"><span class="lineno">  105</span>        ESP_LOGI(</div>
+<div class="line"><span class="lineno">  106</span>            TAG, <span class="stringliteral">&quot;notified about parameter change %s %f&quot;</span>, <span class="keywordtype">id</span>.data(), value);</div>
+<div class="line"><span class="lineno">  107</span>        <span class="keywordflow">if</span>(!updated_parameters.available())</div>
+<div class="line"><span class="lineno">  108</span>        {</div>
+<div class="line"><span class="lineno">  109</span>            ESP_LOGE(TAG, <span class="stringliteral">&quot;no space available&quot;</span>);</div>
+<div class="line"><span class="lineno">  110</span>            <span class="keywordflow">return</span>;</div>
+<div class="line"><span class="lineno">  111</span>        }</div>
+<div class="line"><span class="lineno">  112</span> </div>
+<div class="line"><span class="lineno">  113</span>        updated_parameters[id] = value;</div>
+<div class="line"><span class="lineno">  114</span> </div>
+<div class="line"><span class="lineno">  115</span>        <span class="keywordflow">if</span>(!timer.<a class="code hl_function" href="classshrapnel_1_1os_1_1Timer.html#a700eee72ff07045cfdebbef6d397668e">is_active</a>())</div>
+<div class="line"><span class="lineno">  116</span>        {</div>
+<div class="line"><span class="lineno">  117</span>            <span class="keywordflow">if</span>(pdPASS != timer.<a class="code hl_function" href="classshrapnel_1_1os_1_1Timer.html#a5ff1b2e05dc1558fb40ef551fc00d6a9">start</a>(pdMS_TO_TICKS(5)))</div>
+<div class="line"><span class="lineno">  118</span>            {</div>
+<div class="line"><span class="lineno">  119</span>                ESP_LOGE(TAG, <span class="stringliteral">&quot;Failed to start parameter observer timer&quot;</span>);</div>
+<div class="line"><span class="lineno">  120</span>            }</div>
+<div class="line"><span class="lineno">  121</span>        }</div>
+<div class="line"><span class="lineno">  122</span>    }</div>
 <div class="ttc" id="aclassshrapnel_1_1os_1_1Timer_html_a5ff1b2e05dc1558fb40ef551fc00d6a9"><div class="ttname"><a href="classshrapnel_1_1os_1_1Timer.html#a5ff1b2e05dc1558fb40ef551fc00d6a9">shrapnel::os::Timer::start</a></div><div class="ttdeci">BaseType_t start(TickType_t xBlockTime)</div><div class="ttdef"><b>Definition:</b> <a href="timer_8cpp_source.html#l00038">timer.cpp:38</a></div></div>
 <div class="ttc" id="aclassshrapnel_1_1os_1_1Timer_html_a700eee72ff07045cfdebbef6d397668e"><div class="ttname"><a href="classshrapnel_1_1os_1_1Timer.html#a700eee72ff07045cfdebbef6d397668e">shrapnel::os::Timer::is_active</a></div><div class="ttdeci">BaseType_t is_active() const</div><div class="ttdef"><b>Definition:</b> <a href="timer_8cpp_source.html#l00036">timer.cpp:36</a></div></div>
 </div><!-- fragment -->

@@ -1,0 +1,8 @@
+<map id="shrapnel::api::to_bytes" name="shrapnel::api::to_bytes">
+<area shape="rect" id="node1" title="Convert a message to bytes to be sent over the network to the frontend." alt="" coords="260,137,409,163"/>
+<area shape="rect" id="node2" href="$classshrapnel_1_1midi_1_1MappingManager.html#ab2d882a062a0547cfa02e71e6d848559" title=" " alt="" coords="5,5,212,47"/>
+<area shape="rect" id="node3" href="$classshrapnel_1_1presets_1_1PresetsManager.html#a61ecad878277bcfb1af7b6ee08b6b43e" title=" " alt="" coords="29,71,188,112"/>
+<area shape="rect" id="node4" href="$namespaceshrapnel_1_1api.html#abb2daa1d7735e5b18dae9a8b2cfeb9fc" title=" " alt="" coords="34,137,183,163"/>
+<area shape="rect" id="node5" href="$classshrapnel_1_1presets_1_1PresetsManager.html#ab1499051b1b135575f8f7b012e663af9" title=" " alt="" coords="27,188,190,229"/>
+<area shape="rect" id="node6" href="$classshrapnel_1_1midi_1_1MappingManager.html#a456e26b8ff75565779d3f5f3246fbd81" title=" " alt="" coords="5,253,212,295"/>
+</map>
