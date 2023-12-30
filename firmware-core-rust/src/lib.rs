@@ -1,6 +1,13 @@
 #![no_std]
 
+mod messages;
+mod midi_mapping;
 mod midi_protocol;
+mod parameters;
+mod audio_events;
+mod selected_preset;
+mod presets;
+mod persistence;
 
 pub fn add(left: usize, right: usize) -> usize {
     left + right
