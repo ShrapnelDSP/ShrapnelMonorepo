@@ -1,0 +1,3 @@
+# nanopb-specific options for the messages defined in presets.proto.
+
+shrapnel.presets.Preset.name max_size:32

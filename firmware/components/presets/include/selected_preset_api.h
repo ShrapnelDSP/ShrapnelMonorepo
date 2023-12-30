@@ -22,8 +22,9 @@
 #include <etl/string_stream.h>
 #include <variant>
 
+#include "api.h"
 #include "presets.h"
-#include "uuid.h"
+#include "selected_preset.pb.h"
 
 namespace shrapnel::selected_preset {
 
@@ -55,3 +56,15 @@ etl::string_stream &operator<<(etl::string_stream &out,
                                const SelectedPresetApiMessage &self);
 
 } // namespace shrapnel::selected_preset
+
+namespace shrapnel::api {
+
+template <>
+int
+to_proto(const selected_preset::SelectedPresetApiMessage &message, shrapnel_selected_preset_Message &out);
+
+template <>
+int
+from_proto(const shrapnel_selected_preset_Message &message, selected_preset::SelectedPresetApiMessage &out);
+
+} // namespace shrapnel::api

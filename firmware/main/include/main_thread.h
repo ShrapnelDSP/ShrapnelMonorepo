@@ -19,13 +19,13 @@
 
 #pragma once
 
+#include <midi_mapping.h>
 #include <utility>
 
 #include "audio_param.h"
 #include "cmd_handling.h"
 #include "messages.h"
-#include "midi_mapping_json_builder.h"
-#include "midi_mapping_json_parser.h"
+#include "midi_mapping.pb.h"
 #include "midi_uart.h"
 #include "os/queue.h"
 #include "os/timer.h"
@@ -42,69 +42,11 @@ constexpr const char *TAG = "main_thread";
 
 constexpr const size_t MAX_PARAMETERS = 20;
 
+class ParameterUpdateNotifier;
+
 using AudioParameters = parameters::AudioParameters<MAX_PARAMETERS, 1>;
 using SendMessageCallback = etl::delegate<void(const AppMessage &)>;
-
-// TODO move all the json parser function into a json namespace
-namespace midi {
-using midi::from_json;
-
-template <>
-std::optional<float> from_json(const rapidjson::Value &value)
-{
-    if(!value.IsFloat())
-    {
-        ESP_LOGE(TAG, "not float");
-        return std::nullopt;
-    }
-    return value.GetFloat();
-}
-
-template <>
-rapidjson::Value to_json(rapidjson::Document &, const float &object)
-{
-    rapidjson::Value out{};
-    out.SetFloat(object);
-    return out;
-}
-} // namespace midi
-
-template <typename MappingManagerT>
-class MidiMappingObserver final : public midi::MappingObserver
-{
-public:
-    explicit MidiMappingObserver(
-        std::shared_ptr<persistence::Storage> a_persistence,
-        const MappingManagerT &a_mapping_manager)
-        : persistence{a_persistence},
-          mapping_manager{a_mapping_manager}
-    {
-    }
-
-    void notification(const midi::Mapping::id_t &) override
-    {
-        ESP_LOGI(TAG, "Midi mapping has changed");
-        persist();
-    }
-
-private:
-    void persist()
-    {
-        rapidjson::Document document;
-
-        auto mapping_data = midi::to_json(document, *mapping_manager.get());
-        document.Swap(mapping_data);
-
-        rapidjson::StringBuffer buffer;
-        rapidjson::Writer writer{buffer};
-        document.Accept(writer);
-
-        persistence->save("midi_mappings", buffer.GetString());
-    };
-
-    std::shared_ptr<persistence::Storage> persistence;
-    const MappingManagerT &mapping_manager;
-};
+using MidiMappingType = midi::MappingManager<ParameterUpdateNotifier, 10, 1>;
 
 class ParameterUpdateNotifier
 {
@@ -146,7 +88,7 @@ public:
     explicit ParameterObserver(
         std::shared_ptr<persistence::Storage> a_persistence)
         : is_save_throttled{true},
-          persistence{a_persistence},
+          persistence{std::move(a_persistence)},
           timer{"param save throttle",
                 pdMS_TO_TICKS(10'000),
                 false,
@@ -199,16 +141,7 @@ private:
     {
         for(const auto &param : updated_parameters)
         {
-            rapidjson::Document document;
-
-            auto parameter_data = midi::to_json(document, param.second);
-            document.Swap(parameter_data);
-
-            rapidjson::StringBuffer buffer;
-            rapidjson::Writer writer{buffer};
-            document.Accept(writer);
-
-            persistence->save(param.first.data(), buffer.GetString());
+            persistence->save(param.first.data(), param.second);
         }
 
         updated_parameters.clear();
@@ -228,7 +161,11 @@ public:
                Queue<AppMessage, QUEUE_LEN> &a_in_queue,
                midi::MidiUartBase *a_midi_uart,
                std::shared_ptr<AudioParameters> a_audio_params,
-               std::shared_ptr<persistence::Storage> a_persistence)
+               std::shared_ptr<persistence::Storage> a_persistence,
+               std::unique_ptr<persistence::Crud<std::span<uint8_t>>>
+                   a_midi_mapping_storage,
+               std::unique_ptr<persistence::Crud<std::span<uint8_t>>>
+                   a_presets_storage)
         : send_message{a_send_message},
           in_queue{a_in_queue},
           parameter_observer{a_persistence},
@@ -257,7 +194,8 @@ public:
                       SendMessageCallback::create<
                           MainThread,
                           &MainThread::cmd_handling_send_message>(*this))},
-          presets_manager{std::make_unique<presets::PresetsManager>()},
+          presets_manager{std::make_unique<presets::PresetsManager>(
+              std::move(a_presets_storage))},
           selected_preset_manager{
               std::make_unique<selected_preset::SelectedPresetManager>(
                   a_persistence)}
@@ -268,30 +206,15 @@ public:
                                              float default_value)
         {
             std::optional<float> loaded_value;
-            etl::string<128> json_string{};
-            int rc = a_persistence->load(name.data(), json_string);
+            float value;
+            int rc = a_persistence->load(name.data(), value);
             if(rc != 0)
             {
                 ESP_LOGW(TAG, "Parameter %s failed to load", name.data());
                 goto out;
             }
 
-            {
-                rapidjson::Document document;
-                document.Parse(json_string.data());
-
-                if(!document.HasParseError())
-                {
-                    loaded_value = midi::from_json<float>(document);
-                }
-                else
-                {
-                    ESP_LOGE(TAG,
-                             "document failed to parse '%s'",
-                             json_string.data());
-                }
-            }
-
+            loaded_value = value;
         out:
             auto range = maximum - minimum;
             rc = a_audio_params->create_and_add_parameter(
@@ -338,36 +261,8 @@ public:
         parameter_notifier = std::make_shared<ParameterUpdateNotifier>(
             a_audio_params, a_send_message);
 
-        [&]
-        {
-            /* TODO How to reduce the memory usage?
-           * - We could store each entry in the table at a different key
-           * - Use the streaming API so that the entire message does not have to
-           *   be parsed at once?
-           * - Replace etl::map with more efficient implementation
-           */
-            etl::string<1500> mapping_json;
-            a_persistence->load("midi_mappings", mapping_json);
-            ESP_LOGI(TAG, "saved mappings: %s", mapping_json.c_str());
-
-            rapidjson::Document document;
-            document.Parse(mapping_json.c_str());
-            auto saved_mappings = midi::from_json<
-                etl::map<midi::Mapping::id_t, midi::Mapping, 10>>(document);
-
-            using MidiMappingType =
-                midi::MappingManager<ParameterUpdateNotifier, 10, 1>;
-            midi_mapping_manager =
-                saved_mappings.has_value()
-                    ? std::make_unique<MidiMappingType>(parameter_notifier,
-                                                        *saved_mappings)
-                    : std::make_unique<MidiMappingType>(parameter_notifier);
-        }();
-
-        mapping_observer = std::make_unique<MidiMappingObserver<
-            midi::MappingManager<ParameterUpdateNotifier, 10, 1>>>(
-            a_persistence, *midi_mapping_manager);
-        midi_mapping_manager->add_observer(*mapping_observer);
+        midi_mapping_manager = std::make_unique<MidiMappingType>(
+            parameter_notifier, std::move(a_midi_mapping_storage));
 
         BaseType_t rc = midi_message_notify_timer.start(portMAX_DELAY);
         if(rc != pdPASS)
@@ -468,17 +363,33 @@ private:
                                                 midi::GetRequest>)
                     {
                         auto mappings = midi_mapping_manager->get();
-                        return midi::GetResponse{mappings};
+                        for(const auto &[id, mapping] : *mappings)
+                        {
+                            send_message({
+                                midi::Update{
+                                    {
+                                        id,
+                                        mapping,
+                                    },
+                                },
+                                std::nullopt,
+                            });
+                        }
                     }
                     else if constexpr(std::is_same_v<MidiMappingMessageT,
                                                      midi::CreateRequest>)
                     {
+                        uint32_t id;
                         auto rc = midi_mapping_manager->create(
-                            midi_mapping_message.mapping);
+                            midi_mapping_message.mapping, id);
                         if(rc == 0)
                         {
                             return midi::CreateResponse{
-                                midi_mapping_message.mapping};
+                                .mapping{
+                                    id,
+                                    midi_mapping_message.mapping,
+                                },
+                            };
                         }
                     }
                     else if constexpr(std::is_same_v<MidiMappingMessageT,
@@ -487,12 +398,15 @@ private:
                         // return code ignored, as there is no way
                         // to indicate the error to the frontend
                         (void)midi_mapping_manager->update(
-                            midi_mapping_message.mapping);
+                            midi_mapping_message.mapping.first,
+                            midi_mapping_message.mapping.second);
                     }
                     else if constexpr(std::is_same_v<MidiMappingMessageT,
                                                      midi::Remove>)
                     {
-                        midi_mapping_manager->remove(midi_mapping_message.id);
+                        // ignored because no way to report error to frontend
+                        (void)midi_mapping_manager->destroy(
+                            midi_mapping_message.id);
                     }
                     else
                     {
@@ -522,6 +436,7 @@ private:
                                                 presets::Initialise>)
                     {
                         presets_manager->for_each(
+
                             [this](presets::id_t id,
                                    const presets::PresetData &preset)
                             {
@@ -567,10 +482,10 @@ private:
                     else if constexpr(std::is_same_v<PresetsMessageT,
                                                      presets::Delete>)
                     {
-                        int rc = presets_manager->remove(presets_message.id);
+                        int rc = presets_manager->destroy(presets_message.id);
                         if(rc != 0)
                         {
-                            ESP_LOGE(TAG, "Failed to remove preset");
+                            ESP_LOGE(TAG, "Failed to destroy preset");
                             return std::nullopt;
                         }
                     }
@@ -636,13 +551,14 @@ private:
             return std::nullopt;
         }
 
-        auto preset = presets_manager->read(write.selectedPresetId);
-        if(!preset.has_value())
+        presets::PresetData preset{};
+        rc = presets_manager->read(write.selectedPresetId, preset);
+        if(rc != 0)
         {
             return std::nullopt;
         }
-       
-        deserialise_live_parameters(*parameter_notifier, preset->parameters);
+
+        deserialise_live_parameters(*parameter_notifier, preset.parameters);
 
         return selected_preset::Notify{
             .selectedPresetId = write.selectedPresetId,
@@ -683,15 +599,11 @@ private:
     std::optional<midi::Message> last_notified_midi_message;
     std::unique_ptr<midi::Decoder> midi_decoder;
     std::mutex midi_mutex;
-    std::unique_ptr<midi::MappingManager<ParameterUpdateNotifier, 10, 1>>
-        midi_mapping_manager;
+    std::unique_ptr<MidiMappingType> midi_mapping_manager;
     std::shared_ptr<AudioParameters> audio_params;
     std::unique_ptr<parameters::CommandHandling<
         parameters::AudioParameters<MAX_PARAMETERS, 1>>>
         cmd_handling;
-    std::unique_ptr<MidiMappingObserver<
-        midi::MappingManager<ParameterUpdateNotifier, 10, 1>>>
-        mapping_observer;
     std::unique_ptr<presets::PresetsManager> presets_manager;
     std::unique_ptr<selected_preset::SelectedPresetManager>
         selected_preset_manager;

@@ -44,7 +44,7 @@ class PresetsRepository implements PresetsRepositoryBase {
         // errors after roundtrip through the firmware, instead just check the
         // name.
         .firstWhere((element) => element.preset.name == preset.name)
-        .timeout(const Duration(seconds: 1));
+        .timeout(const Duration(seconds: 2));
 
     final newValue = _presets.value..[record.id] = record;
     _presets.add(newValue);

@@ -19,6 +19,7 @@
 
 #pragma once
 
+#include "api.h"
 #include <cstdint>
 #include <etl/array.h>
 #include <etl/string.h>
@@ -26,6 +27,7 @@
 #include <variant>
 
 #include "presets.h"
+#include "presets.pb.h"
 
 namespace shrapnel::presets {
 
@@ -114,3 +116,23 @@ etl::string_stream &operator<<(etl::string_stream &out,
                                const PresetsApiMessage &self);
 
 } // namespace shrapnel::presets
+
+namespace shrapnel::api {
+
+template <>
+std::optional<std::span<uint8_t>>
+to_bytes(const presets::PresetData &message, std::span<uint8_t> buffer);
+
+template <>
+std::optional<presets::PresetData>
+from_bytes(std::span<const uint8_t> buffer);
+
+template <>
+int
+to_proto(const presets::PresetsApiMessage &message, shrapnel_presets_Message &out);
+
+template <>
+int
+from_proto(const shrapnel_presets_Message &message, presets::PresetsApiMessage &out);
+
+} // namespace shrapnel::api

@@ -117,7 +117,7 @@ class RobustWebsocket extends ChangeNotifier {
     _connectionController.add(null);
   }
 
-  void sendMessage(String s) {
+  void sendMessage(List<int> s) {
     _ws?.add(s);
   }
 

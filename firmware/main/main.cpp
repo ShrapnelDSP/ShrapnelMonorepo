@@ -31,7 +31,6 @@
 #include "cmd_handling_api.h"
 #include "esp_heap_caps.h"
 #include "midi_mapping.h"
-#include "rapidjson/writer.h"
 #include "esp_log.h"
 #include "freertos/projdefs.h"
 
@@ -59,21 +58,19 @@
 #include "audio_events.h"
 #include "audio_param.h"
 #include "cmd_handling.h"
+#include "esp_crud.h"
 #include "esp_persistence.h"
 #include "hardware.h"
 #include "i2s.h"
 #include "main_thread.h"
 #include "messages.h"
 #include "midi_mapping_api.h"
-#include "midi_mapping_json_builder.h"
-#include "midi_mapping_json_parser.h"
 #include "midi_protocol.h"
 #include "midi_uart.h"
 #include "os/debug.h"
 #include "os/queue.h"
 #include "os/timer.h"
 #include "pcm3060.h"
-#include "presets_storage.h"
 #include "profiling.h"
 #include "server.h"
 #include "wifi_state_machine.h"
@@ -85,6 +82,8 @@
 using WifiQueue = shrapnel::Queue<shrapnel::wifi::InternalEvent, 3>;
 
 namespace shrapnel {
+
+using Crud = persistence::EspCrud<256>;
 
 extern "C" {
 
@@ -351,7 +350,13 @@ extern "C" void app_main(void)
     };
 
     auto main_thread = MainThread<MAX_PARAMETERS, QUEUE_LEN>(
-        send_message, *in_queue, midi_uart, audio_params, persistence);
+        send_message,
+        *in_queue,
+        midi_uart,
+        audio_params,
+        persistence,
+        std::make_unique<Crud>("nvs", "midi_mapping"),
+        std::make_unique<Crud>("nvs", "presets"));
 
     audio::i2s_setup(PROFILING_GPIO, audio_params.get());
 
@@ -419,12 +424,6 @@ void nvs_debug_print()
         res = nvs_entry_next(&it);
     }
     nvs_release_iterator(it);
-    
-    ESP_LOGI(TAG, "dumping NVS using C++ abstraction");
-    auto storage = presets_storage::Storage();
-    for(const auto& info : storage ) {
-        ESP_LOGI(TAG, "key '%s', type '%d'", info.key, info.type);
-    }
 }
 
 } // namespace shrapnel

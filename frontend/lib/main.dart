@@ -27,13 +27,13 @@ import 'package:logging/logging.dart';
 import 'package:provider/provider.dart';
 import 'package:rxdart/rxdart.dart';
 
+import 'api/api_websocket.dart';
 import 'audio_events.dart';
 import 'chorus.dart';
+import 'core/message_transport.dart';
 import 'heavy_metal.dart';
-import 'json_websocket.dart';
 import 'midi_mapping/model/midi_learn.dart';
 import 'midi_mapping/model/midi_learn_state.dart';
-import 'midi_mapping/model/models.dart';
 import 'midi_mapping/model/service.dart';
 import 'midi_mapping/view/midi_learn.dart';
 import 'midi_mapping/view/midi_mapping.dart';
@@ -52,7 +52,6 @@ import 'status/data/status.dart';
 import 'status/model/websocket_status.dart';
 import 'status/view/websocket_status.dart';
 import 'tube_screamer.dart';
-import 'util/uuid.dart';
 import 'valvestate.dart';
 import 'wah.dart';
 import 'wifi_provisioning.dart';
@@ -63,11 +62,17 @@ String formatDateTime(DateTime t) {
   final builder = StringBuffer()
     ..write(t.hour.toString().padLeft(2, '0'))
     ..write(':')
-    ..write(t.minute.toString().padLeft(2, '0'))
+    ..write(
+      t.minute.toString().padLeft(2, '0'),
+    )
     ..write(':')
-    ..write(t.second.toString().padLeft(2, '0'))
+    ..write(
+      t.second.toString().padLeft(2, '0'),
+    )
     ..write('.')
-    ..write(t.millisecond.toString().padLeft(3, '0'));
+    ..write(
+      t.millisecond.toString().padLeft(3, '0'),
+    );
 
   return builder.toString();
 }
@@ -95,10 +100,11 @@ class App extends StatelessWidget {
   App({
     super.key,
     RobustWebsocket? websocket,
-    JsonWebsocket? jsonWebsocket,
-    UuidService? uuid,
+    ApiWebsocket? apiWebsocket,
     WifiProvisioningService? provisioning,
-    ParameterRepositoryBase? parameterRepository,
+    MessageTransport<ParameterServiceOutputMessage,
+            ParameterServiceInputMessage>?
+        parameterTransport,
     PresetsRepositoryBase? presetsRepository,
     ParameterService? parameterService,
     SelectedPresetRepositoryBase? selectedPresetRepository,
@@ -107,9 +113,12 @@ class App extends StatelessWidget {
       uri: Uri.parse('http://guitar-dsp.local:8080/websocket'),
     );
     _websocket = websocket;
-    jsonWebsocket ??= JsonWebsocket(websocket: websocket);
-    audioClippingService = AudioClippingService(websocket: jsonWebsocket);
-    this.uuid = uuid ?? UuidService();
+    apiWebsocket ??= ApiWebsocket(websocket: websocket);
+    audioClippingService = AudioClippingService(
+      stream: apiWebsocket.stream
+          .whereType<ApiMessageAudioEvent>()
+          .map((event) => event.message),
+    );
     this.provisioning = provisioning ??
         WifiProvisioningService(
           provisioningFactory: () {
@@ -122,16 +131,15 @@ class App extends StatelessWidget {
         );
 
     midiMappingService = MidiMappingService(
-      websocket: jsonWebsocket,
+      websocket: MidiMappingTransport(websocket: apiWebsocket),
     );
     this.parameterService = parameterService ??
         ParameterService(
-          repository: parameterRepository ??
-              ParameterRepository(websocket: jsonWebsocket),
+          transport:
+              parameterTransport ?? ParameterTransport(websocket: apiWebsocket),
         );
     midiLearnService = MidiLearnService(
       mappingService: midiMappingService,
-      uuid: this.uuid,
     );
 
     this
@@ -140,9 +148,9 @@ class App extends StatelessWidget {
         .map((e) => e.id)
         .listen(midiLearnService.parameterUpdated);
 
-    jsonWebsocket.dataStream
-        .where((e) => e['messageType'] == 'MidiMap::midi_message_received')
-        .map(MidiApiMessage.fromJson)
+    apiWebsocket.stream
+        .whereType<ApiMessageMidiMapping>()
+        .map((event) => event.message)
         .listen(
           (m) => m.maybeWhen(
             midiMessageReceived: midiLearnService.midiMessageReceived,
@@ -153,21 +161,19 @@ class App extends StatelessWidget {
     this.presetsRepository = presetsRepository ??
         PresetsRepository(
           client: presets_client.PresetsClient(
-            transport:
-                presets_client.PresetsTransport(websocket: jsonWebsocket),
+            transport: presets_client.PresetsTransport(websocket: apiWebsocket),
           ),
         );
     this.selectedPresetRepository = selectedPresetRepository ??
         SelectedPresetRepository(
           client: SelectedPresetClient(
-            transport: SelectedPresetTransport(websocket: jsonWebsocket),
+            transport: SelectedPresetTransport(websocket: apiWebsocket),
           ),
         );
   }
 
   late final RobustWebsocket _websocket;
   late final AudioClippingService audioClippingService;
-  late final UuidService uuid;
   late final WifiProvisioningService provisioning;
   late final MidiLearnService midiLearnService;
   late final ParameterService parameterService;
@@ -192,7 +198,6 @@ class App extends StatelessWidget {
         ChangeNotifierProvider.value(
           value: midiMappingService,
         ),
-        ChangeNotifierProvider.value(value: uuid),
         ChangeNotifierProvider.value(value: audioClippingService),
         Provider(
           create: (_) => ChorusModel(parameterService: parameterService),
@@ -570,7 +575,9 @@ class MyHomePage extends StatelessWidget {
               ),
               const Spacer(),
               // Same size as icons
-              WebSocketStatus(size: IconTheme.of(context).size ?? 24.0),
+              WebSocketStatus(
+                size: IconTheme.of(context).size ?? 24.0,
+              ),
             ],
           ),
         ),

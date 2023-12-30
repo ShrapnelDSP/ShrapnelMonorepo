@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package shrapnel.audio_events;
+
+// Sent when the input level is too high, causing clipping
+message InputClipped {};
+
+// Sent when the output level is too high, causing clipping
+message OutputClipped {};
+
+message Message {
+  oneof event {
+    InputClipped input_clipped = 1;
+    OutputClipped output_clipped = 2;
+  }
+}

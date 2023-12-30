@@ -26,8 +26,9 @@ import 'package:logging/logging.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:shrapnel/api/api_websocket.dart';
 import 'package:shrapnel/audio_events.dart';
-import 'package:shrapnel/json_websocket.dart';
+import 'package:shrapnel/core/message_transport.dart';
 import 'package:shrapnel/main.dart';
 import 'package:shrapnel/parameter.dart';
 import 'package:shrapnel/presets/model/presets.dart';
@@ -42,9 +43,11 @@ final _log = Logger('presets_test');
 @GenerateNiceMocks(
   [
     MockSpec<RobustWebsocket>(),
-    MockSpec<JsonWebsocket>(),
+    MockSpec<ApiWebsocket>(),
     MockSpec<AudioClippingService>(),
-    MockSpec<ParameterRepositoryBase>(),
+    MockSpec<
+        MessageTransport<ParameterServiceOutputMessage,
+            ParameterServiceInputMessage>>(),
     MockSpec<PresetsRepositoryBase>(),
     MockSpec<SelectedPresetRepositoryBase>(),
   ],
@@ -79,9 +82,12 @@ void main() {
         'wahVocal': 1.0,
         'wahBypass': 0.1,
       };
-      final parameterRepository = MockParameterRepositoryBase();
+      final parameterTransport = MockMessageTransport();
       final parameterController =
           StreamController<ParameterServiceInputMessage>();
+      // FIXME: see end of test
+      // ignore: close_sinks
+      final parameterSink = StreamController<ParameterServiceOutputMessage>();
       final parameterMessages = Queue<ParameterServiceOutputMessage>();
 
       void updateParameter(String id, double value) {
@@ -120,9 +126,9 @@ void main() {
         updateParameter('wahBypass', preset.parameters.wahBypass);
       }
 
-      when(parameterRepository.sendMessage(any)).thenAnswer((realInvocation) {
-        final message = realInvocation.positionalArguments.single
-            as ParameterServiceOutputMessage;
+      when(parameterTransport.sink)
+          .thenAnswer((realInvocation) => parameterSink);
+      parameterSink.stream.listen((message) {
         parameterMessages.add(message);
 
         switch (message) {
@@ -142,8 +148,8 @@ void main() {
             updateParameter(id, value);
         }
       });
-      when(parameterRepository.isAlive).thenReturn(true);
-      when(parameterRepository.stream)
+      when(parameterTransport.isAlive).thenReturn(true);
+      when(parameterTransport.stream)
           .thenAnswer((_) => parameterController.stream);
 
       const initialPresetId = 0;
@@ -216,17 +222,17 @@ void main() {
       });
 
       final websocket = MockRobustWebsocket();
-      final jsonWebsocket = MockJsonWebsocket();
-      when(jsonWebsocket.dataStream)
-          .thenAnswer((_) => StreamController<Map<String, dynamic>>().stream);
-      when(jsonWebsocket.connectionStream)
+      final apiWebsocket = MockApiWebsocket();
+      when(apiWebsocket.stream)
+          .thenAnswer((_) => StreamController<ApiMessage>().stream);
+      when(apiWebsocket.connectionStream)
           .thenAnswer((_) => const Stream.empty());
-      when(jsonWebsocket.isAlive).thenReturn(true);
+      when(apiWebsocket.isAlive).thenReturn(true);
 
       final sut = App(
         websocket: websocket,
-        jsonWebsocket: jsonWebsocket,
-        parameterRepository: parameterRepository,
+        apiWebsocket: apiWebsocket,
+        parameterTransport: parameterTransport,
         presetsRepository: presetsRepository,
         selectedPresetRepository: selectedPresetRepository,
       );
@@ -307,6 +313,9 @@ void main() {
       );
 
       unawaited(parameterController.close());
+      // FIXME: need to dispose the ParameterService before test ends, so that
+      // the addStream is cancelled and this doesn't throw.
+      // unawaited(parameterSink.close());
       unawaited(presetsSubject.close());
       unawaited(selectedPresetSubject.close());
     });

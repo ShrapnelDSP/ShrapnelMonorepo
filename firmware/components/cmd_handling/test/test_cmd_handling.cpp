@@ -55,7 +55,7 @@ class MockAudioParameters
 class MockEventSend
 {
     public:
-        MOCK_METHOD(void, send, (const char *json, std::optional<int> fd));
+        MOCK_METHOD(void, send, (const shrapnel::parameters::ApiMessage &message, std::optional<int> fd));
 };
 
 class EventSendAdapter final {
@@ -65,15 +65,7 @@ class EventSendAdapter final {
         void send(const shrapnel::parameters::ApiMessage &message,
                   std::optional<int> fd)
         {
-            rapidjson::Document document;
-            auto json = to_json(document, message);
-            document.Swap(json);
-
-            rapidjson::StringBuffer buffer;
-            rapidjson::Writer writer{buffer};
-            document.Accept(writer);
-
-            event.send(buffer.GetString(), fd);
+            event.send(message, fd);
         }
 
     private:
@@ -116,20 +108,9 @@ protected:
     EventSendAdapter event_adapter{event};
     shrapnel::parameters::CommandHandling<MockAudioParameters> cmd;
 
-    void parseAndDispatch(const char *json, int fd)
+    void dispatch(const shrapnel::parameters::ApiMessage &message, int fd)
     {
-        rapidjson::Document document;
-        document.Parse(json);
-        ASSERT_FALSE(document.HasParseError())
-            << "Must use valid JSON for testing.";
-
-        auto parsed_message =
-            shrapnel::parameters::from_json<shrapnel::parameters::ApiMessage>(
-                document.GetObject());
-        ASSERT_TRUE(parsed_message.has_value())
-            << "Must use valid JSON for testing.";
-
-        cmd.dispatch(*parsed_message, fd);
+        cmd.dispatch(message, fd);
     }
 };
 
@@ -139,10 +120,13 @@ TEST_F(CmdHandling, ValidMessage)
         .Times(1)
         .WillRepeatedly(Return(0));
 
-    const char *json = R"({"id":"tight","value":1.0,"messageType":"parameterUpdate"})";
-    EXPECT_CALL(event, send(StrEq(json), testing::Optional(42))).Times(1);
+    shrapnel::parameters::Update message {
+        .id{"tight"},
+        .value{1.f},
+    };
+    EXPECT_CALL(event, send({message}, testing::Optional(42))).Times(1);
 
-    parseAndDispatch(json, 42);
+    dispatch(message, 42);
 }
 
 TEST_F(CmdHandling, InitialiseParameters)
@@ -154,14 +138,21 @@ TEST_F(CmdHandling, InitialiseParameters)
     param->parameters["test0"] = std::move(parameter0);
     param->parameters["test1"] = std::move(parameter1);
 
-    const char *expected = R"({"id":"test0","value":0.0,"messageType":"parameterUpdate"})";
-    EXPECT_CALL(event, send(StrEq(expected), testing::Eq(std::nullopt)))
+    shrapnel::parameters::Update expected{
+        .id{"test0"},
+        .value{0.0f},
+    };
+    EXPECT_CALL(event, send({expected}, testing::Eq(std::nullopt)))
         .Times(1);
-    expected = R"({"id":"test1","value":1.0,"messageType":"parameterUpdate"})";
-    EXPECT_CALL(event, send(StrEq(expected), testing::Eq(std::nullopt)))
+        
+        expected = shrapnel::parameters::Update{
+            .id{"test1"},
+            .value{1.0f},
+    };
+    EXPECT_CALL(event, send({expected}, testing::Eq(std::nullopt)))
         .Times(1);
 
-    parseAndDispatch(R"({"messageType": "initialiseParameters"})", 0);
+    dispatch(shrapnel::parameters::Initialise{}, 0);
 }
 
 }

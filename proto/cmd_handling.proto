@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+package shrapnel.cmd_handling;
+
+// Firmware: update DSP processing to use the new parameter value.
+// 
+// Frontend: Update UI to show new parameter value.
+message Update {
+  string id = 1;
+  float value = 2;
+}
+
+// The firmware will respond by sending a `parameterUpdate` message with the
+// current value of each audio parameter
+message Initialise {}
+
+message Message {
+  oneof message {
+    Update update = 1;
+    Initialise initialise = 2;
+  }
+}

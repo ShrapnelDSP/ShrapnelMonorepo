@@ -24,10 +24,10 @@
  */
 
 import 'package:shrapnel/amplifier.dart';
+import 'package:shrapnel/api/api_websocket.dart';
 import 'package:shrapnel/audio_events.dart';
 import 'package:shrapnel/chorus.dart';
 import 'package:shrapnel/heavy_metal.dart';
-import 'package:shrapnel/json_websocket.dart';
 import 'package:shrapnel/knob.dart';
 import 'package:shrapnel/knob_with_label.dart';
 import 'package:shrapnel/main.dart';
@@ -45,7 +45,6 @@ import 'package:shrapnel/status/view/websocket_status.dart';
 import 'package:shrapnel/stompbox.dart';
 import 'package:shrapnel/tube_screamer.dart';
 import 'package:shrapnel/util/conditional_parent.dart';
-import 'package:shrapnel/util/uuid.dart';
 import 'package:shrapnel/valvestate.dart';
 import 'package:shrapnel/wah.dart';
 import 'package:shrapnel/wifi_provisioning.dart';

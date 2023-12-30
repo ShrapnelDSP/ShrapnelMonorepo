@@ -23,43 +23,35 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logging/logging.dart';
 import 'package:rxdart/rxdart.dart';
 
+import '../../api/api_websocket.dart';
 import '../../core/message_transport.dart';
 import '../../core/stream_extensions.dart';
-import '../../core/uuid_json_converter.dart';
-import '../../json_websocket.dart';
 
 part 'selected_preset_client.freezed.dart';
 
-part 'selected_preset_client.g.dart';
-
 final _log = Logger('selected_preset_client');
 
-@Freezed(unionKey: 'messageType')
+@freezed
 sealed class SelectedPresetMessage with _$SelectedPresetMessage {
-  @FreezedUnionValue('SelectedPreset::read')
   factory SelectedPresetMessage.read() = ReadSelectedPresetMessage;
 
-  @UuidJsonConverter()
-  @FreezedUnionValue('SelectedPreset::notify')
   factory SelectedPresetMessage.notify({required int selectedPreset}) =
       NotifySelectedPresetMessage;
 
-  @UuidJsonConverter()
-  @FreezedUnionValue('SelectedPreset::write')
   factory SelectedPresetMessage.write({required int selectedPreset}) =
       WriteSelectedPresetMessage;
-
-  factory SelectedPresetMessage.fromJson(Map<String, dynamic> json) =>
-      _$SelectedPresetMessageFromJson(json);
 }
 
 class SelectedPresetTransport
     implements MessageTransport<SelectedPresetMessage, SelectedPresetMessage> {
-  SelectedPresetTransport({required JsonWebsocket websocket})
+  SelectedPresetTransport({required ApiWebsocket websocket})
       : _websocket = websocket {
     _controller.stream
         .logFinest(_log, (event) => 'send message: $event')
-        .listen((message) => _websocket.send(message.toJson()));
+        .listen(
+          (message) =>
+              _websocket.send(ApiMessage.selectedPreset(message: message)),
+        );
   }
 
   final _controller = StreamController<SelectedPresetMessage>();
@@ -68,27 +60,23 @@ class SelectedPresetTransport
   StreamSink<SelectedPresetMessage> get sink => _controller;
 
   @override
-  late final stream = _websocket.dataStream.transform(
-    StreamTransformer.fromBind((jsonStream) async* {
-      await for (final message in jsonStream) {
-        try {
-          yield SelectedPresetMessage.fromJson(message);
-        } catch (_) {
-          // ignore
-        }
-      }
-    }),
-  ).logFinest(_log, (event) => 'received message: $event');
+  late final stream = _websocket.stream
+      .whereType<ApiMessageSelectedPreset>()
+      .map((event) => event.message)
+      .logFinest(_log, (event) => 'received message: $event');
 
   @override
   Stream<void> get connectionStream => _websocket.connectionStream;
 
-  final JsonWebsocket _websocket;
+  final ApiWebsocket _websocket;
 
   @override
   void dispose() {
     unawaited(_controller.close());
   }
+
+  @override
+  bool get isAlive => _websocket.isAlive;
 }
 
 class SelectedPresetClient {

@@ -1,30 +1,37 @@
+include(../../../thirdparty/esp-idf-components/nanopb/nanopb-generate-cpp.cmake)
+
 add_library(midi_mapping STATIC)
 add_library(shrapnel::midi_mapping ALIAS midi_mapping)
 
+set(NANOPB_GENERATE_CPP_APPEND_PATH ON)
+nanopb_generate_cpp(PROTO_SRCS PROTO_HDRS
+                    ../../../proto/midi_mapping.proto)
+
 target_sources(midi_mapping
                PRIVATE
+               ${PROTO_SRCS}
                src/midi_mapping.cpp
-               src/midi_mapping_api.cpp
-               src/midi_mapping_json_parser.cpp
-               src/midi_mapping_json_builder.cpp)
+               src/midi_mapping_api.cpp)
 
-target_include_directories(midi_mapping PUBLIC include)
+target_include_directories(midi_mapping PUBLIC
+                           include
+                           # for generated proto headers
+                           ${CMAKE_CURRENT_BINARY_DIR})
 
 target_link_libraries(midi_mapping
                       PUBLIC
+                      shrapnel::api
                       shrapnel::audio_param
                       shrapnel::etl
                       shrapnel::midi_protocol
-                      shrapnel::uuid
-                      shrapnel::rapidjson
+                      shrapnel::nanopb
+                      shrapnel::persistence
                       PRIVATE
                       shrapnel::compiler_warning_flags)
 
 if(DEFINED TESTING)
     add_executable(midi_mapping_test
-                   test/test_midi_mapping.cpp
-                   test/test_json_parser.cpp
-                   test/test_json_builder.cpp)
+                   test/test_midi_mapping.cpp)
 
     target_link_libraries(midi_mapping_test
                           PRIVATE

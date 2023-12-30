@@ -11,5 +11,8 @@
       <file path="$PROJECT_DIR$/../thirdparty/esp-idf-components/etl/etl" />
       <file path="$PROJECT_DIR$/../thirdparty/esp-idf-components/rapidjson/rapidjson" />
     </libraryRoots>
+    <excludeRoots>
+      <file path="$PROJECT_DIR$/../effects/wah/dsp/.venv" />
+    </excludeRoots>
   </component>
 </project>

@@ -22,7 +22,6 @@ import 'dart:async';
 import 'package:logging/logging.dart';
 import 'package:state_notifier/state_notifier.dart';
 
-import '../../util/uuid.dart';
 import 'midi_learn_state.dart';
 import 'models.dart';
 import 'service.dart';
@@ -30,11 +29,10 @@ import 'service.dart';
 final _log = Logger('shrapnel.midi_mapping.model.midi_learn');
 
 class MidiLearnService extends StateNotifier<MidiLearnState> {
-  MidiLearnService({required this.uuid, required this.mappingService})
+  MidiLearnService({required this.mappingService})
       : super(const MidiLearnState.idle(null));
 
   final MidiMappingService mappingService;
-  final UuidService uuid;
 
   void startLearning() {
     state.maybeWhen(
@@ -76,7 +74,9 @@ class MidiLearnService extends StateNotifier<MidiLearnState> {
 
               // Need copy to prevent concurrent modification of the lazy iterator
               final similarMappingsList =
-                  List<MapEntry<String, MidiMapping>>.from(similarMappings);
+                  List<MapEntry<MidiMappingId, MidiMapping>>.from(
+                similarMappings,
+              );
 
               if (similarMappingsList.isNotEmpty) {
                 for (final mapping in similarMappingsList) {
@@ -86,14 +86,11 @@ class MidiLearnService extends StateNotifier<MidiLearnState> {
               }
 
               await mappingService.createMapping(
-                MidiMappingEntry(
-                  id: uuid.v4(),
-                  mapping: MidiMapping(
-                    ccNumber: control,
-                    midiChannel: channel,
-                    parameterId: parameterId,
-                    mode: MidiMappingMode.parameter,
-                  ),
+                MidiMapping(
+                  ccNumber: control,
+                  midiChannel: channel,
+                  parameterId: parameterId,
+                  mode: MidiMappingMode.parameter,
                 ),
               );
 
@@ -121,12 +118,7 @@ class MidiLearnService extends StateNotifier<MidiLearnState> {
 
           state = const MidiLearnState.savingMapping();
           for (final mapping in duplicates) {
-            await mappingService.createMapping(
-              MidiMappingEntry(
-                id: mapping.key,
-                mapping: mapping.value,
-              ),
-            );
+            await mappingService.createMapping(mapping.value);
           }
           state = const MidiLearnState.idle(null);
         },
