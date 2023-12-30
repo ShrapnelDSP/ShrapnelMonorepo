@@ -18,6 +18,7 @@ if(ESP_PLATFORM)
                           shrapnel::abstract_dsp
                           shrapnel::audio_events
                           shrapnel::cmd_handling
+                          shrapnel::esp_persistence
                           shrapnel::etl
                           shrapnel::hardware
                           shrapnel::heap_tracing

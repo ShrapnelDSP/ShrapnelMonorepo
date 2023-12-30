@@ -1,16 +1,10 @@
 if(NOT DEFINED TESTING)
-    add_library(persistence STATIC)
+    add_library(persistence INTERFACE)
     add_library(shrapnel::persistence ALIAS persistence)
 
-    target_sources(persistence PRIVATE src/esp_persistence.cpp)
-    target_include_directories(persistence PUBLIC include)
+    target_include_directories(persistence INTERFACE include)
 
-    target_link_libraries(persistence
-                          PUBLIC
-                          shrapnel::etl
-                          PRIVATE
-                          idf::nvs_flash
-                          shrapnel::compiler_warning_flags)
+    target_link_libraries(persistence INTERFACE shrapnel::etl)
 else()
     add_library(persistence INTERFACE)
     add_library(shrapnel::persistence ALIAS persistence)
