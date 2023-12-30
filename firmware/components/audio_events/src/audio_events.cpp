@@ -17,40 +17,6 @@
  * ShrapnelDSP. If not, see <https://www.gnu.org/licenses/>.
  */
 
-/**
- * \page ws_api_events Audio event JSON messages
- *
- * This page documents the message format used for messages related to audio
- * events.
- *
- * <table>
- * <tr><th> Message type <th> Parameters <th> Direction <th> Behaviour <th>
- * Example
- * <tr>
- *   <td> `Event::input_clipped`
- *   <td> None
- *   <td> Firmware -> UI
- *   <td> Sent when the input level is too high, causing clipping
- *   <td>
- *   ~~~
- *   {
- *     "messageType": "Event::input_clipped"
- *   }
- *   ~~~
- * <tr>
- *   <td> `Event::output_clipped`
- *   <td> None
- *   <td> Firmware -> UI
- *   <td> Sent when the output level is too high, causing clipping
- *   <td>
- *   ~~~
- *   {
- *     "messageType": "Event::output_clipped"
- *   }
- *   ~~~
- * </table>
- */
-
 #include "audio_events.h"
 #include "esp_log.h"
 #include "audio_events.pb.h"

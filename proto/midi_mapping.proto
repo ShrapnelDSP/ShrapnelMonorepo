@@ -14,6 +14,7 @@ message Mapping {
   string parameterName = 4;
 }
 
+// A MIDI message that was received by the firmware
 message MidiMessage {
   message NoteOn {
     uint32 note = 1;
@@ -49,24 +50,33 @@ message MappingRecord {
   Mapping mapping = 2;
 }
 
+// Send from the frontend to the firmware. When received, the firmware will send
+// an update for each midi mapping that currently exists.
 message GetRequest {};
 
+// Firmware creates a new MIDI mapping according to the parameters.
 message CreateRequest {
   Mapping mapping = 1;
 };
 
+// Indicates that a new MIDI mapping was created successfully.
 message CreateResponse {
   MappingRecord mapping = 1;
 };
 
+// Firmware updates an existing MIDI mapping according to the parameters.
 message Update {
   MappingRecord mapping = 1;
 };
 
+// Firmware removes the specified MIDI mapping .
 message Remove {
   uint32 id = 1;
 };
 
+// Firmware notifies this periodically, so that the frontend can react
+// to MIDI messages, for example to connect a parameter to the MIDI
+// message.
 message MessageReceived {
   MidiMessage received_message = 1;
 };

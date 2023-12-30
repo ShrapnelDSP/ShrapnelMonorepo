@@ -17,43 +17,6 @@
  * ShrapnelDSP. If not, see <https://www.gnu.org/licenses/>.
  */
 
-/**
- * \page ws_api_parameters Audio parameter JSON messages
- *
- * <table>
- * <tr><th> Message type <th> Parameters <th> Direction <th> Behaviour <th> Example
- * <tr>
- *   <td> `initialiseParameters`
- *   <td> None
- *   <td> UI -> Firmware
- *   <td> The firmware will respond by sending a `parameterUpdate` message with
- *        the current value of each audio parameter
- *   <td>
- *   ~~~
- *   {
- *     "messageType": "initialiseParameters"
- *   }
- *   ~~~
- * <tr>
- *   <td> `parameterUpdate`
- *   <td> `id` (string): The parameter ID of the parameter to change.
- *
- *   `value` (float): The value of the parameter. This must be in the range 0 - 1.
- *   <td> Any
- *   <td> Firmware: update DSP processing to use the new parameter value.
- *
- *   Frontend: Update UI to show new parameter value.
- *   <td>
- *   ~~~
- *   {
- *     "messageType": "parameterUpdate",
- *     "id": "gain",
- *     "value": 0.5
- *   }
- *   ~~~
- * </table>
- */
-
 #pragma once
 
 #include "audio_param.h"
