@@ -22,6 +22,5 @@ const Uuid$json = {
 };
 
 /// Descriptor for `Uuid`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List uuidDescriptor = $convert.base64Decode(
-    'CgRVdWlkEhQKBXZhbHVlGAEgASgMUgV2YWx1ZQ==');
-
+final $typed_data.Uint8List uuidDescriptor =
+    $convert.base64Decode('CgRVdWlkEhQKBXZhbHVlGAEgASgMUgV2YWx1ZQ==');

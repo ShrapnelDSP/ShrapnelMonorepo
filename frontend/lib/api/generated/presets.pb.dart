@@ -100,10 +100,18 @@ class PresetParameters extends $pb.GeneratedMessage {
     return $result;
   }
   PresetParameters._() : super();
-  factory PresetParameters.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
-  factory PresetParameters.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+  factory PresetParameters.fromBuffer($core.List<$core.int> i,
+          [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(i, r);
+  factory PresetParameters.fromJson($core.String i,
+          [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(i, r);
 
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'PresetParameters', package: const $pb.PackageName(_omitMessageNames ? '' : 'shrapnel.presets'), createEmptyInstance: create)
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'PresetParameters',
+      package:
+          const $pb.PackageName(_omitMessageNames ? '' : 'shrapnel.presets'),
+      createEmptyInstance: create)
     ..a<$core.int>(1, _omitFieldNames ? '' : 'ampGain', $pb.PbFieldType.O3)
     ..a<$core.int>(2, _omitFieldNames ? '' : 'ampChannel', $pb.PbFieldType.O3)
     ..a<$core.int>(3, _omitFieldNames ? '' : 'bass', $pb.PbFieldType.O3)
@@ -111,47 +119,58 @@ class PresetParameters extends $pb.GeneratedMessage {
     ..a<$core.int>(5, _omitFieldNames ? '' : 'treble', $pb.PbFieldType.O3)
     ..a<$core.int>(6, _omitFieldNames ? '' : 'contour', $pb.PbFieldType.O3)
     ..a<$core.int>(7, _omitFieldNames ? '' : 'volume', $pb.PbFieldType.O3)
-    ..a<$core.int>(8, _omitFieldNames ? '' : 'noiseGateThreshold', $pb.PbFieldType.O3)
-    ..a<$core.int>(9, _omitFieldNames ? '' : 'noiseGateHysteresis', $pb.PbFieldType.O3)
-    ..a<$core.int>(10, _omitFieldNames ? '' : 'noiseGateAttack', $pb.PbFieldType.O3)
-    ..a<$core.int>(11, _omitFieldNames ? '' : 'noiseGateHold', $pb.PbFieldType.O3)
-    ..a<$core.int>(12, _omitFieldNames ? '' : 'noiseGateRelease', $pb.PbFieldType.O3)
-    ..a<$core.int>(13, _omitFieldNames ? '' : 'noiseGateBypass', $pb.PbFieldType.O3)
+    ..a<$core.int>(
+        8, _omitFieldNames ? '' : 'noiseGateThreshold', $pb.PbFieldType.O3)
+    ..a<$core.int>(
+        9, _omitFieldNames ? '' : 'noiseGateHysteresis', $pb.PbFieldType.O3)
+    ..a<$core.int>(
+        10, _omitFieldNames ? '' : 'noiseGateAttack', $pb.PbFieldType.O3)
+    ..a<$core.int>(
+        11, _omitFieldNames ? '' : 'noiseGateHold', $pb.PbFieldType.O3)
+    ..a<$core.int>(
+        12, _omitFieldNames ? '' : 'noiseGateRelease', $pb.PbFieldType.O3)
+    ..a<$core.int>(
+        13, _omitFieldNames ? '' : 'noiseGateBypass', $pb.PbFieldType.O3)
     ..a<$core.int>(14, _omitFieldNames ? '' : 'chorusRate', $pb.PbFieldType.O3)
     ..a<$core.int>(15, _omitFieldNames ? '' : 'chorusDepth', $pb.PbFieldType.O3)
     ..a<$core.int>(16, _omitFieldNames ? '' : 'chorusMix', $pb.PbFieldType.O3)
-    ..a<$core.int>(17, _omitFieldNames ? '' : 'chorusBypass', $pb.PbFieldType.O3)
+    ..a<$core.int>(
+        17, _omitFieldNames ? '' : 'chorusBypass', $pb.PbFieldType.O3)
     ..a<$core.int>(18, _omitFieldNames ? '' : 'wahPosition', $pb.PbFieldType.O3)
     ..a<$core.int>(19, _omitFieldNames ? '' : 'wahVocal', $pb.PbFieldType.O3)
     ..a<$core.int>(20, _omitFieldNames ? '' : 'wahBypass', $pb.PbFieldType.O3)
-    ..hasRequiredFields = false
-  ;
+    ..hasRequiredFields = false;
 
-  @$core.Deprecated(
-  'Using this can add significant overhead to your binary. '
-  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
-  'Will be removed in next major version')
+  @$core.Deprecated('Using this can add significant overhead to your binary. '
+      'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
+      'Will be removed in next major version')
   PresetParameters clone() => PresetParameters()..mergeFromMessage(this);
-  @$core.Deprecated(
-  'Using this can add significant overhead to your binary. '
-  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
-  'Will be removed in next major version')
-  PresetParameters copyWith(void Function(PresetParameters) updates) => super.copyWith((message) => updates(message as PresetParameters)) as PresetParameters;
+  @$core.Deprecated('Using this can add significant overhead to your binary. '
+      'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
+      'Will be removed in next major version')
+  PresetParameters copyWith(void Function(PresetParameters) updates) =>
+      super.copyWith((message) => updates(message as PresetParameters))
+          as PresetParameters;
 
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
   static PresetParameters create() => PresetParameters._();
   PresetParameters createEmptyInstance() => create();
-  static $pb.PbList<PresetParameters> createRepeated() => $pb.PbList<PresetParameters>();
+  static $pb.PbList<PresetParameters> createRepeated() =>
+      $pb.PbList<PresetParameters>();
   @$core.pragma('dart2js:noInline')
-  static PresetParameters getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<PresetParameters>(create);
+  static PresetParameters getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<PresetParameters>(create);
   static PresetParameters? _defaultInstance;
 
   @$pb.TagNumber(1)
   $core.int get ampGain => $_getIZ(0);
   @$pb.TagNumber(1)
-  set ampGain($core.int v) { $_setSignedInt32(0, v); }
+  set ampGain($core.int v) {
+    $_setSignedInt32(0, v);
+  }
+
   @$pb.TagNumber(1)
   $core.bool hasAmpGain() => $_has(0);
   @$pb.TagNumber(1)
@@ -160,7 +179,10 @@ class PresetParameters extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   $core.int get ampChannel => $_getIZ(1);
   @$pb.TagNumber(2)
-  set ampChannel($core.int v) { $_setSignedInt32(1, v); }
+  set ampChannel($core.int v) {
+    $_setSignedInt32(1, v);
+  }
+
   @$pb.TagNumber(2)
   $core.bool hasAmpChannel() => $_has(1);
   @$pb.TagNumber(2)
@@ -169,7 +191,10 @@ class PresetParameters extends $pb.GeneratedMessage {
   @$pb.TagNumber(3)
   $core.int get bass => $_getIZ(2);
   @$pb.TagNumber(3)
-  set bass($core.int v) { $_setSignedInt32(2, v); }
+  set bass($core.int v) {
+    $_setSignedInt32(2, v);
+  }
+
   @$pb.TagNumber(3)
   $core.bool hasBass() => $_has(2);
   @$pb.TagNumber(3)
@@ -178,7 +203,10 @@ class PresetParameters extends $pb.GeneratedMessage {
   @$pb.TagNumber(4)
   $core.int get middle => $_getIZ(3);
   @$pb.TagNumber(4)
-  set middle($core.int v) { $_setSignedInt32(3, v); }
+  set middle($core.int v) {
+    $_setSignedInt32(3, v);
+  }
+
   @$pb.TagNumber(4)
   $core.bool hasMiddle() => $_has(3);
   @$pb.TagNumber(4)
@@ -187,7 +215,10 @@ class PresetParameters extends $pb.GeneratedMessage {
   @$pb.TagNumber(5)
   $core.int get treble => $_getIZ(4);
   @$pb.TagNumber(5)
-  set treble($core.int v) { $_setSignedInt32(4, v); }
+  set treble($core.int v) {
+    $_setSignedInt32(4, v);
+  }
+
   @$pb.TagNumber(5)
   $core.bool hasTreble() => $_has(4);
   @$pb.TagNumber(5)
@@ -196,7 +227,10 @@ class PresetParameters extends $pb.GeneratedMessage {
   @$pb.TagNumber(6)
   $core.int get contour => $_getIZ(5);
   @$pb.TagNumber(6)
-  set contour($core.int v) { $_setSignedInt32(5, v); }
+  set contour($core.int v) {
+    $_setSignedInt32(5, v);
+  }
+
   @$pb.TagNumber(6)
   $core.bool hasContour() => $_has(5);
   @$pb.TagNumber(6)
@@ -205,7 +239,10 @@ class PresetParameters extends $pb.GeneratedMessage {
   @$pb.TagNumber(7)
   $core.int get volume => $_getIZ(6);
   @$pb.TagNumber(7)
-  set volume($core.int v) { $_setSignedInt32(6, v); }
+  set volume($core.int v) {
+    $_setSignedInt32(6, v);
+  }
+
   @$pb.TagNumber(7)
   $core.bool hasVolume() => $_has(6);
   @$pb.TagNumber(7)
@@ -214,7 +251,10 @@ class PresetParameters extends $pb.GeneratedMessage {
   @$pb.TagNumber(8)
   $core.int get noiseGateThreshold => $_getIZ(7);
   @$pb.TagNumber(8)
-  set noiseGateThreshold($core.int v) { $_setSignedInt32(7, v); }
+  set noiseGateThreshold($core.int v) {
+    $_setSignedInt32(7, v);
+  }
+
   @$pb.TagNumber(8)
   $core.bool hasNoiseGateThreshold() => $_has(7);
   @$pb.TagNumber(8)
@@ -223,7 +263,10 @@ class PresetParameters extends $pb.GeneratedMessage {
   @$pb.TagNumber(9)
   $core.int get noiseGateHysteresis => $_getIZ(8);
   @$pb.TagNumber(9)
-  set noiseGateHysteresis($core.int v) { $_setSignedInt32(8, v); }
+  set noiseGateHysteresis($core.int v) {
+    $_setSignedInt32(8, v);
+  }
+
   @$pb.TagNumber(9)
   $core.bool hasNoiseGateHysteresis() => $_has(8);
   @$pb.TagNumber(9)
@@ -232,7 +275,10 @@ class PresetParameters extends $pb.GeneratedMessage {
   @$pb.TagNumber(10)
   $core.int get noiseGateAttack => $_getIZ(9);
   @$pb.TagNumber(10)
-  set noiseGateAttack($core.int v) { $_setSignedInt32(9, v); }
+  set noiseGateAttack($core.int v) {
+    $_setSignedInt32(9, v);
+  }
+
   @$pb.TagNumber(10)
   $core.bool hasNoiseGateAttack() => $_has(9);
   @$pb.TagNumber(10)
@@ -241,7 +287,10 @@ class PresetParameters extends $pb.GeneratedMessage {
   @$pb.TagNumber(11)
   $core.int get noiseGateHold => $_getIZ(10);
   @$pb.TagNumber(11)
-  set noiseGateHold($core.int v) { $_setSignedInt32(10, v); }
+  set noiseGateHold($core.int v) {
+    $_setSignedInt32(10, v);
+  }
+
   @$pb.TagNumber(11)
   $core.bool hasNoiseGateHold() => $_has(10);
   @$pb.TagNumber(11)
@@ -250,7 +299,10 @@ class PresetParameters extends $pb.GeneratedMessage {
   @$pb.TagNumber(12)
   $core.int get noiseGateRelease => $_getIZ(11);
   @$pb.TagNumber(12)
-  set noiseGateRelease($core.int v) { $_setSignedInt32(11, v); }
+  set noiseGateRelease($core.int v) {
+    $_setSignedInt32(11, v);
+  }
+
   @$pb.TagNumber(12)
   $core.bool hasNoiseGateRelease() => $_has(11);
   @$pb.TagNumber(12)
@@ -259,7 +311,10 @@ class PresetParameters extends $pb.GeneratedMessage {
   @$pb.TagNumber(13)
   $core.int get noiseGateBypass => $_getIZ(12);
   @$pb.TagNumber(13)
-  set noiseGateBypass($core.int v) { $_setSignedInt32(12, v); }
+  set noiseGateBypass($core.int v) {
+    $_setSignedInt32(12, v);
+  }
+
   @$pb.TagNumber(13)
   $core.bool hasNoiseGateBypass() => $_has(12);
   @$pb.TagNumber(13)
@@ -268,7 +323,10 @@ class PresetParameters extends $pb.GeneratedMessage {
   @$pb.TagNumber(14)
   $core.int get chorusRate => $_getIZ(13);
   @$pb.TagNumber(14)
-  set chorusRate($core.int v) { $_setSignedInt32(13, v); }
+  set chorusRate($core.int v) {
+    $_setSignedInt32(13, v);
+  }
+
   @$pb.TagNumber(14)
   $core.bool hasChorusRate() => $_has(13);
   @$pb.TagNumber(14)
@@ -277,7 +335,10 @@ class PresetParameters extends $pb.GeneratedMessage {
   @$pb.TagNumber(15)
   $core.int get chorusDepth => $_getIZ(14);
   @$pb.TagNumber(15)
-  set chorusDepth($core.int v) { $_setSignedInt32(14, v); }
+  set chorusDepth($core.int v) {
+    $_setSignedInt32(14, v);
+  }
+
   @$pb.TagNumber(15)
   $core.bool hasChorusDepth() => $_has(14);
   @$pb.TagNumber(15)
@@ -286,7 +347,10 @@ class PresetParameters extends $pb.GeneratedMessage {
   @$pb.TagNumber(16)
   $core.int get chorusMix => $_getIZ(15);
   @$pb.TagNumber(16)
-  set chorusMix($core.int v) { $_setSignedInt32(15, v); }
+  set chorusMix($core.int v) {
+    $_setSignedInt32(15, v);
+  }
+
   @$pb.TagNumber(16)
   $core.bool hasChorusMix() => $_has(15);
   @$pb.TagNumber(16)
@@ -295,7 +359,10 @@ class PresetParameters extends $pb.GeneratedMessage {
   @$pb.TagNumber(17)
   $core.int get chorusBypass => $_getIZ(16);
   @$pb.TagNumber(17)
-  set chorusBypass($core.int v) { $_setSignedInt32(16, v); }
+  set chorusBypass($core.int v) {
+    $_setSignedInt32(16, v);
+  }
+
   @$pb.TagNumber(17)
   $core.bool hasChorusBypass() => $_has(16);
   @$pb.TagNumber(17)
@@ -304,7 +371,10 @@ class PresetParameters extends $pb.GeneratedMessage {
   @$pb.TagNumber(18)
   $core.int get wahPosition => $_getIZ(17);
   @$pb.TagNumber(18)
-  set wahPosition($core.int v) { $_setSignedInt32(17, v); }
+  set wahPosition($core.int v) {
+    $_setSignedInt32(17, v);
+  }
+
   @$pb.TagNumber(18)
   $core.bool hasWahPosition() => $_has(17);
   @$pb.TagNumber(18)
@@ -313,7 +383,10 @@ class PresetParameters extends $pb.GeneratedMessage {
   @$pb.TagNumber(19)
   $core.int get wahVocal => $_getIZ(18);
   @$pb.TagNumber(19)
-  set wahVocal($core.int v) { $_setSignedInt32(18, v); }
+  set wahVocal($core.int v) {
+    $_setSignedInt32(18, v);
+  }
+
   @$pb.TagNumber(19)
   $core.bool hasWahVocal() => $_has(18);
   @$pb.TagNumber(19)
@@ -322,7 +395,10 @@ class PresetParameters extends $pb.GeneratedMessage {
   @$pb.TagNumber(20)
   $core.int get wahBypass => $_getIZ(19);
   @$pb.TagNumber(20)
-  set wahBypass($core.int v) { $_setSignedInt32(19, v); }
+  set wahBypass($core.int v) {
+    $_setSignedInt32(19, v);
+  }
+
   @$pb.TagNumber(20)
   $core.bool hasWahBypass() => $_has(19);
   @$pb.TagNumber(20)
@@ -344,25 +420,32 @@ class Preset extends $pb.GeneratedMessage {
     return $result;
   }
   Preset._() : super();
-  factory Preset.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
-  factory Preset.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+  factory Preset.fromBuffer($core.List<$core.int> i,
+          [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(i, r);
+  factory Preset.fromJson($core.String i,
+          [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(i, r);
 
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'Preset', package: const $pb.PackageName(_omitMessageNames ? '' : 'shrapnel.presets'), createEmptyInstance: create)
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'Preset',
+      package:
+          const $pb.PackageName(_omitMessageNames ? '' : 'shrapnel.presets'),
+      createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'name')
-    ..aOM<PresetParameters>(2, _omitFieldNames ? '' : 'parameters', subBuilder: PresetParameters.create)
-    ..hasRequiredFields = false
-  ;
+    ..aOM<PresetParameters>(2, _omitFieldNames ? '' : 'parameters',
+        subBuilder: PresetParameters.create)
+    ..hasRequiredFields = false;
 
-  @$core.Deprecated(
-  'Using this can add significant overhead to your binary. '
-  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
-  'Will be removed in next major version')
+  @$core.Deprecated('Using this can add significant overhead to your binary. '
+      'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
+      'Will be removed in next major version')
   Preset clone() => Preset()..mergeFromMessage(this);
-  @$core.Deprecated(
-  'Using this can add significant overhead to your binary. '
-  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
-  'Will be removed in next major version')
-  Preset copyWith(void Function(Preset) updates) => super.copyWith((message) => updates(message as Preset)) as Preset;
+  @$core.Deprecated('Using this can add significant overhead to your binary. '
+      'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
+      'Will be removed in next major version')
+  Preset copyWith(void Function(Preset) updates) =>
+      super.copyWith((message) => updates(message as Preset)) as Preset;
 
   $pb.BuilderInfo get info_ => _i;
 
@@ -371,14 +454,18 @@ class Preset extends $pb.GeneratedMessage {
   Preset createEmptyInstance() => create();
   static $pb.PbList<Preset> createRepeated() => $pb.PbList<Preset>();
   @$core.pragma('dart2js:noInline')
-  static Preset getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<Preset>(create);
+  static Preset getDefault() =>
+      _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<Preset>(create);
   static Preset? _defaultInstance;
 
   /// The name given by the user to the preset
   @$pb.TagNumber(1)
   $core.String get name => $_getSZ(0);
   @$pb.TagNumber(1)
-  set name($core.String v) { $_setString(0, v); }
+  set name($core.String v) {
+    $_setString(0, v);
+  }
+
   @$pb.TagNumber(1)
   $core.bool hasName() => $_has(0);
   @$pb.TagNumber(1)
@@ -388,7 +475,10 @@ class Preset extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   PresetParameters get parameters => $_getN(1);
   @$pb.TagNumber(2)
-  set parameters(PresetParameters v) { setField(2, v); }
+  set parameters(PresetParameters v) {
+    setField(2, v);
+  }
+
   @$pb.TagNumber(2)
   $core.bool hasParameters() => $_has(1);
   @$pb.TagNumber(2)
@@ -412,41 +502,53 @@ class PresetRecord extends $pb.GeneratedMessage {
     return $result;
   }
   PresetRecord._() : super();
-  factory PresetRecord.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
-  factory PresetRecord.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+  factory PresetRecord.fromBuffer($core.List<$core.int> i,
+          [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(i, r);
+  factory PresetRecord.fromJson($core.String i,
+          [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(i, r);
 
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'PresetRecord', package: const $pb.PackageName(_omitMessageNames ? '' : 'shrapnel.presets'), createEmptyInstance: create)
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'PresetRecord',
+      package:
+          const $pb.PackageName(_omitMessageNames ? '' : 'shrapnel.presets'),
+      createEmptyInstance: create)
     ..a<$core.int>(1, _omitFieldNames ? '' : 'id', $pb.PbFieldType.OU3)
     ..aOM<Preset>(2, _omitFieldNames ? '' : 'preset', subBuilder: Preset.create)
-    ..hasRequiredFields = false
-  ;
+    ..hasRequiredFields = false;
 
-  @$core.Deprecated(
-  'Using this can add significant overhead to your binary. '
-  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
-  'Will be removed in next major version')
+  @$core.Deprecated('Using this can add significant overhead to your binary. '
+      'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
+      'Will be removed in next major version')
   PresetRecord clone() => PresetRecord()..mergeFromMessage(this);
-  @$core.Deprecated(
-  'Using this can add significant overhead to your binary. '
-  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
-  'Will be removed in next major version')
-  PresetRecord copyWith(void Function(PresetRecord) updates) => super.copyWith((message) => updates(message as PresetRecord)) as PresetRecord;
+  @$core.Deprecated('Using this can add significant overhead to your binary. '
+      'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
+      'Will be removed in next major version')
+  PresetRecord copyWith(void Function(PresetRecord) updates) =>
+      super.copyWith((message) => updates(message as PresetRecord))
+          as PresetRecord;
 
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
   static PresetRecord create() => PresetRecord._();
   PresetRecord createEmptyInstance() => create();
-  static $pb.PbList<PresetRecord> createRepeated() => $pb.PbList<PresetRecord>();
+  static $pb.PbList<PresetRecord> createRepeated() =>
+      $pb.PbList<PresetRecord>();
   @$core.pragma('dart2js:noInline')
-  static PresetRecord getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<PresetRecord>(create);
+  static PresetRecord getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<PresetRecord>(create);
   static PresetRecord? _defaultInstance;
 
   /// A number used to identify the preset
   @$pb.TagNumber(1)
   $core.int get id => $_getIZ(0);
   @$pb.TagNumber(1)
-  set id($core.int v) { $_setUnsignedInt32(0, v); }
+  set id($core.int v) {
+    $_setUnsignedInt32(0, v);
+  }
+
   @$pb.TagNumber(1)
   $core.bool hasId() => $_has(0);
   @$pb.TagNumber(1)
@@ -455,7 +557,10 @@ class PresetRecord extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   Preset get preset => $_getN(1);
   @$pb.TagNumber(2)
-  set preset(Preset v) { setField(2, v); }
+  set preset(Preset v) {
+    setField(2, v);
+  }
+
   @$pb.TagNumber(2)
   $core.bool hasPreset() => $_has(1);
   @$pb.TagNumber(2)
@@ -467,23 +572,29 @@ class PresetRecord extends $pb.GeneratedMessage {
 class Initialise extends $pb.GeneratedMessage {
   factory Initialise() => create();
   Initialise._() : super();
-  factory Initialise.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
-  factory Initialise.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+  factory Initialise.fromBuffer($core.List<$core.int> i,
+          [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(i, r);
+  factory Initialise.fromJson($core.String i,
+          [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(i, r);
 
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'Initialise', package: const $pb.PackageName(_omitMessageNames ? '' : 'shrapnel.presets'), createEmptyInstance: create)
-    ..hasRequiredFields = false
-  ;
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'Initialise',
+      package:
+          const $pb.PackageName(_omitMessageNames ? '' : 'shrapnel.presets'),
+      createEmptyInstance: create)
+    ..hasRequiredFields = false;
 
-  @$core.Deprecated(
-  'Using this can add significant overhead to your binary. '
-  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
-  'Will be removed in next major version')
+  @$core.Deprecated('Using this can add significant overhead to your binary. '
+      'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
+      'Will be removed in next major version')
   Initialise clone() => Initialise()..mergeFromMessage(this);
-  @$core.Deprecated(
-  'Using this can add significant overhead to your binary. '
-  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
-  'Will be removed in next major version')
-  Initialise copyWith(void Function(Initialise) updates) => super.copyWith((message) => updates(message as Initialise)) as Initialise;
+  @$core.Deprecated('Using this can add significant overhead to your binary. '
+      'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
+      'Will be removed in next major version')
+  Initialise copyWith(void Function(Initialise) updates) =>
+      super.copyWith((message) => updates(message as Initialise)) as Initialise;
 
   $pb.BuilderInfo get info_ => _i;
 
@@ -492,7 +603,8 @@ class Initialise extends $pb.GeneratedMessage {
   Initialise createEmptyInstance() => create();
   static $pb.PbList<Initialise> createRepeated() => $pb.PbList<Initialise>();
   @$core.pragma('dart2js:noInline')
-  static Initialise getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<Initialise>(create);
+  static Initialise getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<Initialise>(create);
   static Initialise? _defaultInstance;
 }
 
@@ -507,24 +619,31 @@ class Notify extends $pb.GeneratedMessage {
     return $result;
   }
   Notify._() : super();
-  factory Notify.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
-  factory Notify.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+  factory Notify.fromBuffer($core.List<$core.int> i,
+          [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(i, r);
+  factory Notify.fromJson($core.String i,
+          [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(i, r);
 
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'Notify', package: const $pb.PackageName(_omitMessageNames ? '' : 'shrapnel.presets'), createEmptyInstance: create)
-    ..aOM<PresetRecord>(1, _omitFieldNames ? '' : 'preset', subBuilder: PresetRecord.create)
-    ..hasRequiredFields = false
-  ;
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'Notify',
+      package:
+          const $pb.PackageName(_omitMessageNames ? '' : 'shrapnel.presets'),
+      createEmptyInstance: create)
+    ..aOM<PresetRecord>(1, _omitFieldNames ? '' : 'preset',
+        subBuilder: PresetRecord.create)
+    ..hasRequiredFields = false;
 
-  @$core.Deprecated(
-  'Using this can add significant overhead to your binary. '
-  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
-  'Will be removed in next major version')
+  @$core.Deprecated('Using this can add significant overhead to your binary. '
+      'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
+      'Will be removed in next major version')
   Notify clone() => Notify()..mergeFromMessage(this);
-  @$core.Deprecated(
-  'Using this can add significant overhead to your binary. '
-  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
-  'Will be removed in next major version')
-  Notify copyWith(void Function(Notify) updates) => super.copyWith((message) => updates(message as Notify)) as Notify;
+  @$core.Deprecated('Using this can add significant overhead to your binary. '
+      'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
+      'Will be removed in next major version')
+  Notify copyWith(void Function(Notify) updates) =>
+      super.copyWith((message) => updates(message as Notify)) as Notify;
 
   $pb.BuilderInfo get info_ => _i;
 
@@ -533,13 +652,17 @@ class Notify extends $pb.GeneratedMessage {
   Notify createEmptyInstance() => create();
   static $pb.PbList<Notify> createRepeated() => $pb.PbList<Notify>();
   @$core.pragma('dart2js:noInline')
-  static Notify getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<Notify>(create);
+  static Notify getDefault() =>
+      _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<Notify>(create);
   static Notify? _defaultInstance;
 
   @$pb.TagNumber(1)
   PresetRecord get preset => $_getN(0);
   @$pb.TagNumber(1)
-  set preset(PresetRecord v) { setField(1, v); }
+  set preset(PresetRecord v) {
+    setField(1, v);
+  }
+
   @$pb.TagNumber(1)
   $core.bool hasPreset() => $_has(0);
   @$pb.TagNumber(1)
@@ -559,24 +682,30 @@ class Create extends $pb.GeneratedMessage {
     return $result;
   }
   Create._() : super();
-  factory Create.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
-  factory Create.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+  factory Create.fromBuffer($core.List<$core.int> i,
+          [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(i, r);
+  factory Create.fromJson($core.String i,
+          [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(i, r);
 
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'Create', package: const $pb.PackageName(_omitMessageNames ? '' : 'shrapnel.presets'), createEmptyInstance: create)
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'Create',
+      package:
+          const $pb.PackageName(_omitMessageNames ? '' : 'shrapnel.presets'),
+      createEmptyInstance: create)
     ..aOM<Preset>(1, _omitFieldNames ? '' : 'preset', subBuilder: Preset.create)
-    ..hasRequiredFields = false
-  ;
+    ..hasRequiredFields = false;
 
-  @$core.Deprecated(
-  'Using this can add significant overhead to your binary. '
-  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
-  'Will be removed in next major version')
+  @$core.Deprecated('Using this can add significant overhead to your binary. '
+      'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
+      'Will be removed in next major version')
   Create clone() => Create()..mergeFromMessage(this);
-  @$core.Deprecated(
-  'Using this can add significant overhead to your binary. '
-  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
-  'Will be removed in next major version')
-  Create copyWith(void Function(Create) updates) => super.copyWith((message) => updates(message as Create)) as Create;
+  @$core.Deprecated('Using this can add significant overhead to your binary. '
+      'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
+      'Will be removed in next major version')
+  Create copyWith(void Function(Create) updates) =>
+      super.copyWith((message) => updates(message as Create)) as Create;
 
   $pb.BuilderInfo get info_ => _i;
 
@@ -585,13 +714,17 @@ class Create extends $pb.GeneratedMessage {
   Create createEmptyInstance() => create();
   static $pb.PbList<Create> createRepeated() => $pb.PbList<Create>();
   @$core.pragma('dart2js:noInline')
-  static Create getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<Create>(create);
+  static Create getDefault() =>
+      _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<Create>(create);
   static Create? _defaultInstance;
 
   @$pb.TagNumber(1)
   Preset get preset => $_getN(0);
   @$pb.TagNumber(1)
-  set preset(Preset v) { setField(1, v); }
+  set preset(Preset v) {
+    setField(1, v);
+  }
+
   @$pb.TagNumber(1)
   $core.bool hasPreset() => $_has(0);
   @$pb.TagNumber(1)
@@ -611,24 +744,31 @@ class Update extends $pb.GeneratedMessage {
     return $result;
   }
   Update._() : super();
-  factory Update.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
-  factory Update.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+  factory Update.fromBuffer($core.List<$core.int> i,
+          [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(i, r);
+  factory Update.fromJson($core.String i,
+          [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(i, r);
 
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'Update', package: const $pb.PackageName(_omitMessageNames ? '' : 'shrapnel.presets'), createEmptyInstance: create)
-    ..aOM<PresetRecord>(1, _omitFieldNames ? '' : 'preset', subBuilder: PresetRecord.create)
-    ..hasRequiredFields = false
-  ;
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'Update',
+      package:
+          const $pb.PackageName(_omitMessageNames ? '' : 'shrapnel.presets'),
+      createEmptyInstance: create)
+    ..aOM<PresetRecord>(1, _omitFieldNames ? '' : 'preset',
+        subBuilder: PresetRecord.create)
+    ..hasRequiredFields = false;
 
-  @$core.Deprecated(
-  'Using this can add significant overhead to your binary. '
-  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
-  'Will be removed in next major version')
+  @$core.Deprecated('Using this can add significant overhead to your binary. '
+      'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
+      'Will be removed in next major version')
   Update clone() => Update()..mergeFromMessage(this);
-  @$core.Deprecated(
-  'Using this can add significant overhead to your binary. '
-  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
-  'Will be removed in next major version')
-  Update copyWith(void Function(Update) updates) => super.copyWith((message) => updates(message as Update)) as Update;
+  @$core.Deprecated('Using this can add significant overhead to your binary. '
+      'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
+      'Will be removed in next major version')
+  Update copyWith(void Function(Update) updates) =>
+      super.copyWith((message) => updates(message as Update)) as Update;
 
   $pb.BuilderInfo get info_ => _i;
 
@@ -637,13 +777,17 @@ class Update extends $pb.GeneratedMessage {
   Update createEmptyInstance() => create();
   static $pb.PbList<Update> createRepeated() => $pb.PbList<Update>();
   @$core.pragma('dart2js:noInline')
-  static Update getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<Update>(create);
+  static Update getDefault() =>
+      _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<Update>(create);
   static Update? _defaultInstance;
 
   @$pb.TagNumber(1)
   PresetRecord get preset => $_getN(0);
   @$pb.TagNumber(1)
-  set preset(PresetRecord v) { setField(1, v); }
+  set preset(PresetRecord v) {
+    setField(1, v);
+  }
+
   @$pb.TagNumber(1)
   $core.bool hasPreset() => $_has(0);
   @$pb.TagNumber(1)
@@ -663,24 +807,30 @@ class Remove extends $pb.GeneratedMessage {
     return $result;
   }
   Remove._() : super();
-  factory Remove.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
-  factory Remove.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+  factory Remove.fromBuffer($core.List<$core.int> i,
+          [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(i, r);
+  factory Remove.fromJson($core.String i,
+          [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(i, r);
 
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'Remove', package: const $pb.PackageName(_omitMessageNames ? '' : 'shrapnel.presets'), createEmptyInstance: create)
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'Remove',
+      package:
+          const $pb.PackageName(_omitMessageNames ? '' : 'shrapnel.presets'),
+      createEmptyInstance: create)
     ..a<$core.int>(1, _omitFieldNames ? '' : 'id', $pb.PbFieldType.OU3)
-    ..hasRequiredFields = false
-  ;
+    ..hasRequiredFields = false;
 
-  @$core.Deprecated(
-  'Using this can add significant overhead to your binary. '
-  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
-  'Will be removed in next major version')
+  @$core.Deprecated('Using this can add significant overhead to your binary. '
+      'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
+      'Will be removed in next major version')
   Remove clone() => Remove()..mergeFromMessage(this);
-  @$core.Deprecated(
-  'Using this can add significant overhead to your binary. '
-  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
-  'Will be removed in next major version')
-  Remove copyWith(void Function(Remove) updates) => super.copyWith((message) => updates(message as Remove)) as Remove;
+  @$core.Deprecated('Using this can add significant overhead to your binary. '
+      'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
+      'Will be removed in next major version')
+  Remove copyWith(void Function(Remove) updates) =>
+      super.copyWith((message) => updates(message as Remove)) as Remove;
 
   $pb.BuilderInfo get info_ => _i;
 
@@ -689,27 +839,24 @@ class Remove extends $pb.GeneratedMessage {
   Remove createEmptyInstance() => create();
   static $pb.PbList<Remove> createRepeated() => $pb.PbList<Remove>();
   @$core.pragma('dart2js:noInline')
-  static Remove getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<Remove>(create);
+  static Remove getDefault() =>
+      _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<Remove>(create);
   static Remove? _defaultInstance;
 
   @$pb.TagNumber(1)
   $core.int get id => $_getIZ(0);
   @$pb.TagNumber(1)
-  set id($core.int v) { $_setUnsignedInt32(0, v); }
+  set id($core.int v) {
+    $_setUnsignedInt32(0, v);
+  }
+
   @$pb.TagNumber(1)
   $core.bool hasId() => $_has(0);
   @$pb.TagNumber(1)
   void clearId() => clearField(1);
 }
 
-enum Message_Message {
-  initialise, 
-  notify, 
-  create_3, 
-  update, 
-  remove, 
-  notSet
-}
+enum Message_Message { initialise, notify, create_3, update, remove, notSet }
 
 class Message extends $pb.GeneratedMessage {
   factory Message({
@@ -738,37 +885,44 @@ class Message extends $pb.GeneratedMessage {
     return $result;
   }
   Message._() : super();
-  factory Message.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
-  factory Message.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+  factory Message.fromBuffer($core.List<$core.int> i,
+          [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(i, r);
+  factory Message.fromJson($core.String i,
+          [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(i, r);
 
   static const $core.Map<$core.int, Message_Message> _Message_MessageByTag = {
-    1 : Message_Message.initialise,
-    2 : Message_Message.notify,
-    3 : Message_Message.create_3,
-    4 : Message_Message.update,
-    5 : Message_Message.remove,
-    0 : Message_Message.notSet
+    1: Message_Message.initialise,
+    2: Message_Message.notify,
+    3: Message_Message.create_3,
+    4: Message_Message.update,
+    5: Message_Message.remove,
+    0: Message_Message.notSet
   };
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'Message', package: const $pb.PackageName(_omitMessageNames ? '' : 'shrapnel.presets'), createEmptyInstance: create)
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'Message',
+      package:
+          const $pb.PackageName(_omitMessageNames ? '' : 'shrapnel.presets'),
+      createEmptyInstance: create)
     ..oo(0, [1, 2, 3, 4, 5])
-    ..aOM<Initialise>(1, _omitFieldNames ? '' : 'initialise', subBuilder: Initialise.create)
+    ..aOM<Initialise>(1, _omitFieldNames ? '' : 'initialise',
+        subBuilder: Initialise.create)
     ..aOM<Notify>(2, _omitFieldNames ? '' : 'notify', subBuilder: Notify.create)
     ..aOM<Create>(3, _omitFieldNames ? '' : 'create', subBuilder: Create.create)
     ..aOM<Update>(4, _omitFieldNames ? '' : 'update', subBuilder: Update.create)
     ..aOM<Remove>(5, _omitFieldNames ? '' : 'remove', subBuilder: Remove.create)
-    ..hasRequiredFields = false
-  ;
+    ..hasRequiredFields = false;
 
-  @$core.Deprecated(
-  'Using this can add significant overhead to your binary. '
-  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
-  'Will be removed in next major version')
+  @$core.Deprecated('Using this can add significant overhead to your binary. '
+      'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
+      'Will be removed in next major version')
   Message clone() => Message()..mergeFromMessage(this);
-  @$core.Deprecated(
-  'Using this can add significant overhead to your binary. '
-  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
-  'Will be removed in next major version')
-  Message copyWith(void Function(Message) updates) => super.copyWith((message) => updates(message as Message)) as Message;
+  @$core.Deprecated('Using this can add significant overhead to your binary. '
+      'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
+      'Will be removed in next major version')
+  Message copyWith(void Function(Message) updates) =>
+      super.copyWith((message) => updates(message as Message)) as Message;
 
   $pb.BuilderInfo get info_ => _i;
 
@@ -777,7 +931,8 @@ class Message extends $pb.GeneratedMessage {
   Message createEmptyInstance() => create();
   static $pb.PbList<Message> createRepeated() => $pb.PbList<Message>();
   @$core.pragma('dart2js:noInline')
-  static Message getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<Message>(create);
+  static Message getDefault() =>
+      _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<Message>(create);
   static Message? _defaultInstance;
 
   Message_Message whichMessage() => _Message_MessageByTag[$_whichOneof(0)]!;
@@ -786,7 +941,10 @@ class Message extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   Initialise get initialise => $_getN(0);
   @$pb.TagNumber(1)
-  set initialise(Initialise v) { setField(1, v); }
+  set initialise(Initialise v) {
+    setField(1, v);
+  }
+
   @$pb.TagNumber(1)
   $core.bool hasInitialise() => $_has(0);
   @$pb.TagNumber(1)
@@ -797,7 +955,10 @@ class Message extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   Notify get notify => $_getN(1);
   @$pb.TagNumber(2)
-  set notify(Notify v) { setField(2, v); }
+  set notify(Notify v) {
+    setField(2, v);
+  }
+
   @$pb.TagNumber(2)
   $core.bool hasNotify() => $_has(1);
   @$pb.TagNumber(2)
@@ -808,7 +969,10 @@ class Message extends $pb.GeneratedMessage {
   @$pb.TagNumber(3)
   Create get create_3 => $_getN(2);
   @$pb.TagNumber(3)
-  set create_3(Create v) { setField(3, v); }
+  set create_3(Create v) {
+    setField(3, v);
+  }
+
   @$pb.TagNumber(3)
   $core.bool hasCreate_3() => $_has(2);
   @$pb.TagNumber(3)
@@ -819,7 +983,10 @@ class Message extends $pb.GeneratedMessage {
   @$pb.TagNumber(4)
   Update get update => $_getN(3);
   @$pb.TagNumber(4)
-  set update(Update v) { setField(4, v); }
+  set update(Update v) {
+    setField(4, v);
+  }
+
   @$pb.TagNumber(4)
   $core.bool hasUpdate() => $_has(3);
   @$pb.TagNumber(4)
@@ -830,7 +997,10 @@ class Message extends $pb.GeneratedMessage {
   @$pb.TagNumber(5)
   Remove get remove => $_getN(4);
   @$pb.TagNumber(5)
-  set remove(Remove v) { setField(5, v); }
+  set remove(Remove v) {
+    setField(5, v);
+  }
+
   @$pb.TagNumber(5)
   $core.bool hasRemove() => $_has(4);
   @$pb.TagNumber(5)
@@ -839,6 +1009,6 @@ class Message extends $pb.GeneratedMessage {
   Remove ensureRemove() => $_ensure(4);
 }
 
-
 const _omitFieldNames = $core.bool.fromEnvironment('protobuf.omit_field_names');
-const _omitMessageNames = $core.bool.fromEnvironment('protobuf.omit_message_names');
+const _omitMessageNames =
+    $core.bool.fromEnvironment('protobuf.omit_message_names');

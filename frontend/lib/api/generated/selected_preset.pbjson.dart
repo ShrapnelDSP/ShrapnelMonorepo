@@ -19,8 +19,7 @@ const Read$json = {
 };
 
 /// Descriptor for `Read`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List readDescriptor = $convert.base64Decode(
-    'CgRSZWFk');
+final $typed_data.Uint8List readDescriptor = $convert.base64Decode('CgRSZWFk');
 
 @$core.Deprecated('Use notifyDescriptor instead')
 const Notify$json = {
@@ -31,8 +30,8 @@ const Notify$json = {
 };
 
 /// Descriptor for `Notify`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List notifyDescriptor = $convert.base64Decode(
-    'CgZOb3RpZnkSDgoCaWQYASABKA1SAmlk');
+final $typed_data.Uint8List notifyDescriptor =
+    $convert.base64Decode('CgZOb3RpZnkSDgoCaWQYASABKA1SAmlk');
 
 @$core.Deprecated('Use writeDescriptor instead')
 const Write$json = {
@@ -43,16 +42,40 @@ const Write$json = {
 };
 
 /// Descriptor for `Write`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List writeDescriptor = $convert.base64Decode(
-    'CgVXcml0ZRIOCgJpZBgBIAEoDVICaWQ=');
+final $typed_data.Uint8List writeDescriptor =
+    $convert.base64Decode('CgVXcml0ZRIOCgJpZBgBIAEoDVICaWQ=');
 
 @$core.Deprecated('Use messageDescriptor instead')
 const Message$json = {
   '1': 'Message',
   '2': [
-    {'1': 'read', '3': 1, '4': 1, '5': 11, '6': '.shrapnel.selected_preset.Read', '9': 0, '10': 'read'},
-    {'1': 'notify', '3': 2, '4': 1, '5': 11, '6': '.shrapnel.selected_preset.Notify', '9': 0, '10': 'notify'},
-    {'1': 'write', '3': 3, '4': 1, '5': 11, '6': '.shrapnel.selected_preset.Write', '9': 0, '10': 'write'},
+    {
+      '1': 'read',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.shrapnel.selected_preset.Read',
+      '9': 0,
+      '10': 'read'
+    },
+    {
+      '1': 'notify',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6': '.shrapnel.selected_preset.Notify',
+      '9': 0,
+      '10': 'notify'
+    },
+    {
+      '1': 'write',
+      '3': 3,
+      '4': 1,
+      '5': 11,
+      '6': '.shrapnel.selected_preset.Write',
+      '9': 0,
+      '10': 'write'
+    },
   ],
   '8': [
     {'1': 'message'},
@@ -65,4 +88,3 @@ final $typed_data.Uint8List messageDescriptor = $convert.base64Decode(
     'gAUgRyZWFkEjoKBm5vdGlmeRgCIAEoCzIgLnNocmFwbmVsLnNlbGVjdGVkX3ByZXNldC5Ob3Rp'
     'ZnlIAFIGbm90aWZ5EjcKBXdyaXRlGAMgASgLMh8uc2hyYXBuZWwuc2VsZWN0ZWRfcHJlc2V0Ll'
     'dyaXRlSABSBXdyaXRlQgkKB21lc3NhZ2U=');
-
