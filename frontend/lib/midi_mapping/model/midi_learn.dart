@@ -22,7 +22,6 @@ import 'dart:async';
 import 'package:logging/logging.dart';
 import 'package:state_notifier/state_notifier.dart';
 
-import '../../util/uuid.dart';
 import 'midi_learn_state.dart';
 import 'models.dart';
 import 'service.dart';
@@ -30,11 +29,10 @@ import 'service.dart';
 final _log = Logger('shrapnel.midi_mapping.model.midi_learn');
 
 class MidiLearnService extends StateNotifier<MidiLearnState> {
-  MidiLearnService({required this.uuid, required this.mappingService})
+  MidiLearnService({required this.mappingService})
       : super(const MidiLearnState.idle(null));
 
   final MidiMappingService mappingService;
-  final UuidService uuid;
 
   void startLearning() {
     state.maybeWhen(

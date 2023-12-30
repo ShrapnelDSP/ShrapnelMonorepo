@@ -52,7 +52,6 @@ import 'status/data/status.dart';
 import 'status/model/websocket_status.dart';
 import 'status/view/websocket_status.dart';
 import 'tube_screamer.dart';
-import 'util/uuid.dart';
 import 'valvestate.dart';
 import 'wah.dart';
 import 'wifi_provisioning.dart';
@@ -102,7 +101,6 @@ class App extends StatelessWidget {
     super.key,
     RobustWebsocket? websocket,
     ApiWebsocket? apiWebsocket,
-    UuidService? uuid,
     WifiProvisioningService? provisioning,
     MessageTransport<ParameterServiceOutputMessage,
             ParameterServiceInputMessage>?
@@ -121,7 +119,6 @@ class App extends StatelessWidget {
           .whereType<ApiMessageAudioEvent>()
           .map((event) => event.message),
     );
-    this.uuid = uuid ?? UuidService();
     this.provisioning = provisioning ??
         WifiProvisioningService(
           provisioningFactory: () {
@@ -143,7 +140,6 @@ class App extends StatelessWidget {
         );
     midiLearnService = MidiLearnService(
       mappingService: midiMappingService,
-      uuid: this.uuid,
     );
 
     this
@@ -178,7 +174,6 @@ class App extends StatelessWidget {
 
   late final RobustWebsocket _websocket;
   late final AudioClippingService audioClippingService;
-  late final UuidService uuid;
   late final WifiProvisioningService provisioning;
   late final MidiLearnService midiLearnService;
   late final ParameterService parameterService;
@@ -203,7 +198,6 @@ class App extends StatelessWidget {
         ChangeNotifierProvider.value(
           value: midiMappingService,
         ),
-        ChangeNotifierProvider.value(value: uuid),
         ChangeNotifierProvider.value(value: audioClippingService),
         Provider(
           create: (_) => ChorusModel(parameterService: parameterService),

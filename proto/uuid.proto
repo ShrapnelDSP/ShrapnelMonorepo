@@ -1,8 +1,0 @@
-syntax = "proto3";
-
-package shrapnel.uuid;
-
-message Uuid {
-  // A list of 16 bytes holding UUID value
-  bytes value = 1;
-}

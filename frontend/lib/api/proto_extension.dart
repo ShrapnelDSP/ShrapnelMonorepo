@@ -17,8 +17,6 @@
  * ShrapnelDSP. If not, see <https://www.gnu.org/licenses/>.
  */
 
-import 'package:uuid/uuid.dart';
-
 import '../audio_events.dart';
 import '../midi_mapping/model/models.dart';
 import '../parameter.dart';
@@ -31,7 +29,6 @@ import 'generated/midi_mapping.pb.dart' as midi_mapping_pb;
 import 'generated/presets.pb.dart' as presets_pb;
 import 'generated/selected_preset.pb.dart' as selected_preset_pb;
 import 'generated/shrapnel.pb.dart' as shrapnel_pb;
-import 'generated/uuid.pb.dart' as uuid_pb;
 
 class ProtoException implements Exception {}
 
@@ -198,16 +195,6 @@ extension MidiMappingEntryProtoEx on MidiMappingEntry {
       id: proto.id,
       mapping: MidiMappingProtoEx.fromProto(proto.mapping),
     );
-  }
-}
-
-extension UuidValueProtoEx on UuidValue {
-  static UuidValue fromProto(uuid_pb.Uuid proto) {
-    return UuidValue.fromList(proto.value);
-  }
-
-  uuid_pb.Uuid toProto() {
-    return uuid_pb.Uuid(value: toBytes());
   }
 }
 

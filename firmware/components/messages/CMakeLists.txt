@@ -9,8 +9,7 @@ nanopb_generate_cpp(PROTO_SRCS PROTO_HDRS
                     ../../../proto/cmd_handling.proto
                     ../../../proto/shrapnel.proto
                     ../../../proto/presets.proto
-                    ../../../proto/midi_mapping.proto
-                    ../../../proto/uuid.proto)
+                    ../../../proto/midi_mapping.proto)
 
 target_include_directories(messages PUBLIC
                            include

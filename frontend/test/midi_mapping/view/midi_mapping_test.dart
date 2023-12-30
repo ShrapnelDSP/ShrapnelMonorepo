@@ -28,12 +28,11 @@ import 'package:shrapnel/audio_events.dart';
 import 'package:shrapnel/main.dart';
 import 'package:shrapnel/midi_mapping/model/models.dart';
 import 'package:shrapnel/robust_websocket.dart';
-import 'package:shrapnel/util/uuid.dart';
 
 import '../../home_page_object.dart';
 import 'midi_mapping_test.mocks.dart';
 
-@GenerateMocks([ApiWebsocket, UuidService])
+@GenerateMocks([ApiWebsocket])
 @GenerateNiceMocks(
   [MockSpec<RobustWebsocket>(), MockSpec<AudioClippingService>()],
 )
@@ -45,12 +44,10 @@ void main() {
     when(api.stream).thenAnswer((_) => apiController.stream);
     when(api.connectionStream).thenAnswer((_) => Stream.fromIterable([]));
     when(api.isAlive).thenReturn(true);
-    final uuid = MockUuidService();
 
     final sut = App(
       websocket: websocket,
       apiWebsocket: api,
-      uuid: uuid,
     );
 
     const getRequest =
@@ -63,7 +60,6 @@ void main() {
     expect(midiMappingPage.findPage(), findsOneWidget);
     expect(midiMappingPage.findMappingRows(), findsNothing);
     verify(api.send(getRequest));
-    when(uuid.v4()).thenReturn('123');
 
     const createRequest = ApiMessage.midiMapping(
       message: MidiApiMessage.createRequest(
@@ -128,12 +124,10 @@ void main() {
       when(api.stream).thenAnswer((_) => apiController.stream);
       when(api.connectionStream).thenAnswer((_) => Stream.fromIterable([]));
       when(api.isAlive).thenReturn(true);
-      final uuid = MockUuidService();
 
       final sut = App(
         websocket: websocket,
         apiWebsocket: api,
-        uuid: uuid,
       );
 
       await tester.pumpWidget(sut);
@@ -142,8 +136,6 @@ void main() {
 
       expect(midiMappingPage.findPage(), findsOneWidget);
       expect(midiMappingPage.findMappingRows(), findsNothing);
-
-      when(uuid.v4()).thenReturn('123');
 
       const createRequest = ApiMessage.midiMapping(
         message: MidiApiMessage.createRequest(
@@ -401,12 +393,10 @@ void main() {
       when(api.stream).thenAnswer((_) => apiController.stream);
       when(api.connectionStream).thenAnswer((_) => Stream.fromIterable([]));
       when(api.isAlive).thenReturn(true);
-      final uuid = MockUuidService();
 
       final sut = App(
         websocket: websocket,
         apiWebsocket: api,
-        uuid: uuid,
       );
 
       final homePageObject = HomePageObject(tester);
@@ -458,8 +448,6 @@ void main() {
         },
       );
 
-      when(uuid.v4()).thenReturn('123');
-
       // The MIDI message received event finishes the learning process, and
       // creates a the new mapping
       apiController.add(
@@ -502,7 +490,6 @@ void main() {
       when(api.stream).thenAnswer((_) => apiController.stream);
       when(api.connectionStream).thenAnswer((_) => Stream.fromIterable([]));
       when(api.isAlive).thenReturn(true);
-      final uuid = MockUuidService();
 
       const getRequest =
           ApiMessage.midiMapping(message: MidiApiMessage.getRequest());
@@ -533,7 +520,6 @@ void main() {
         App(
           websocket: websocket,
           apiWebsocket: api,
-          uuid: uuid,
         ),
       );
 
@@ -581,8 +567,6 @@ void main() {
           );
         },
       );
-
-      when(uuid.v4()).thenReturn('123');
 
       // The MIDI message received event finishes the learning process, and
       // creates a the new mapping

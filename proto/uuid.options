@@ -1,3 +1,0 @@
-# nanopb-specific options for the messages defined in presets.proto.
-
-shrapnel.uuid.Uuid.value max_size:16 fixed_length:true

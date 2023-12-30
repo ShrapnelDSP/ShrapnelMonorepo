@@ -10,5 +10,4 @@ protoc --dart_out="$proto_dir/generated" \
   midi_mapping.proto \
   presets.proto \
   selected_preset.proto \
-  shrapnel.proto  \
-  uuid.proto
+  shrapnel.proto
