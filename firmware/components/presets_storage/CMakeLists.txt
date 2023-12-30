@@ -1,6 +1,0 @@
-add_library(shrapnel_presets_storage INTERFACE)
-add_library(shrapnel::presets_storage ALIAS shrapnel_presets_storage)
-
-target_include_directories(shrapnel_presets_storage INTERFACE include)
-
-target_link_libraries(shrapnel_presets_storage INTERFACE idf::nvs_flash idf::log)

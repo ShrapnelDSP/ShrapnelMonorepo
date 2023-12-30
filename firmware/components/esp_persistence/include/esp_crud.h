@@ -61,7 +61,7 @@ public:
     }
 
     [[nodiscard]] int create(const std::span<uint8_t> &data,
-                             presets::id_t &id_out) override
+                             uint32_t &id_out) override
     {
         nvs_handle_t nvs_handle;
         esp_err_t err;
@@ -106,7 +106,7 @@ public:
     }
 
     /// \return  non-zero on error
-    [[nodiscard]] int read(presets::id_t id,
+    [[nodiscard]] int read(uint32_t id,
                            std::span<uint8_t> &buffer) override
     {
         nvs_handle_t nvs_handle;
@@ -150,7 +150,7 @@ public:
     };
 
     /// \return  non-zero on error
-    [[nodiscard]] int update(presets::id_t id,
+    [[nodiscard]] int update(uint32_t id,
                              const std::span<uint8_t> &data) override
     {
         nvs_handle_t nvs_handle;
@@ -180,7 +180,7 @@ public:
     };
 
     /// \return  non-zero on error
-    [[nodiscard]] int destroy(presets::id_t id) override
+    [[nodiscard]] int destroy(uint32_t id) override
     {
         nvs_handle_t nvs_handle;
         esp_err_t err;
@@ -404,7 +404,7 @@ private:
     const char *const namespace_name;
 
     static constexpr char last_id_name[] = "last_id";
-    static constexpr char TAG[] = "presets_storage";
+    static constexpr char TAG[] = "esp_crud";
 
     static_assert(std::input_iterator<EspCrud::Iterator>);
 };

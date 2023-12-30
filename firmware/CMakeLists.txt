@@ -44,7 +44,6 @@ if (ESP_PLATFORM)
     add_subdirectory(components/pcm3060)
     add_subdirectory(components/persistence)
     add_subdirectory(components/presets)
-    add_subdirectory(components/presets_storage)
     add_subdirectory(components/server)
     add_subdirectory(components/wifi)
 
