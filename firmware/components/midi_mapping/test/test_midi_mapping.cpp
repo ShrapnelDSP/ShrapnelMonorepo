@@ -44,40 +44,75 @@ public:
 class MockStorage final : public persistence::Crud<std::span<uint8_t>>
 {
 public:
-    MOCK_METHOD(int,
-                create,
-                (const std::span<uint8_t> &data, uint32_t &id_out),
-                (override));
-    MOCK_METHOD(int,
-                read,
-                (uint32_t id, std::span<uint8_t> &data_out),
-                (override));
-    MOCK_METHOD(int,
-                update,
-                (uint32_t id, const std::span<uint8_t> &data),
-                (override));
-    MOCK_METHOD(int, destroy, (uint32_t id), (override));
-    MOCK_METHOD(
-        void,
-        for_each,
-        (etl::delegate<void(uint32_t, const std::span<uint8_t> &)> callback),
-        (override));
+    [[nodiscard]] int create(const std::span<uint8_t> &data,
+                             uint32_t &id_out) override
+    {
+        id_out = last_key + 1;
+        assert(!storage.contains(id_out));
+        storage[id_out].assign(data.begin(), data.end());
+        last_key = id_out;
+        return 0;
+    };
+
+    [[nodiscard]] int read(uint32_t id, std::span<uint8_t> &data_out) override
+    {
+        const auto &entry = storage[id];
+        if(data_out.size() < entry.size())
+        {
+            return -1;
+        }
+
+        std::copy(entry.begin(), entry.end(), data_out.begin());
+        data_out = data_out.subspan(entry.size());
+        return 0;
+    };
+
+    [[nodiscard]] int update(uint32_t id,
+                             const std::span<uint8_t> &data) override
+    {
+        storage[id].assign(data.begin(), data.end());
+        return 0;
+    };
+
+    [[nodiscard]] int destroy(uint32_t id) override
+    {
+        storage.erase(id);
+        return 0;
+    };
+
+    void for_each(etl::delegate<void(uint32_t, const std::span<uint8_t> &)>
+                      callback) override
+    {
+        for(const auto &[id, entry] : storage)
+        {
+            std::vector<uint8_t> copy{entry};
+            std::span<uint8_t> span{copy};
+            callback(id, span);
+        }
+    };
+
+private:
+    uint32_t last_key = 0;
+    std::map<uint32_t, std::vector<uint8_t>> storage;
 };
 
 class MidiMapping : public ::testing::Test
 {
+    using SutType = MappingManager<MockAudioParameters, 2, 1>;
+
 protected:
-    MidiMapping() : sut(parameters_mock, std::move(storage_mock)) {}
+    MidiMapping() {}
+
+    SutType create_sut() { return {parameters_mock, std::move(storage_mock)}; }
 
     std::shared_ptr<MockAudioParameters> parameters_mock =
         std::make_shared<MockAudioParameters>();
     std::unique_ptr<MockStorage> storage_mock = std::make_unique<MockStorage>();
-
-    MappingManager<MockAudioParameters, 2, 1> sut;
 };
 
 TEST_F(MidiMapping, Create)
 {
+    auto sut = create_sut();
     EXPECT_THAT(sut.get()->size(), 0);
     uint32_t id = 0;
     EXPECT_THAT(sut.create({1, 2, Mapping::Mode::PARAMETER, "gain"}, id), 0);
@@ -91,6 +126,7 @@ TEST_F(MidiMapping, Create)
 TEST_F(MidiMapping, ProcessParameter)
 {
     uint32_t id;
+    auto sut = create_sut();
     EXPECT_EQ(0, sut.create({1, 2, Mapping::Mode::PARAMETER, "gain"}, id));
 
     EXPECT_CALL(*parameters_mock, update(id_t("gain"), 0.f));
@@ -120,6 +156,8 @@ TEST_F(MidiMapping, ProcessParameter)
 
 TEST_F(MidiMapping, ProcessToggle)
 {
+    auto sut = create_sut();
+
     auto process_message_with_value = [&](uint8_t value)
     {
         sut.process_message({
@@ -162,6 +200,7 @@ TEST_F(MidiMapping, ProcessToggle)
 TEST_F(MidiMapping, Update)
 {
     uint32_t id;
+    auto sut = create_sut();
     EXPECT_EQ(0, sut.create({1, 2, Mapping::Mode::PARAMETER, "gain"}, id));
 
     // update non-existent should fail
@@ -171,7 +210,7 @@ TEST_F(MidiMapping, Update)
     EXPECT_EQ(0, sut.create({3, 4, Mapping::Mode::PARAMETER, "volume"}, id));
     EXPECT_THAT(sut.get()->size(), 2);
 
-    EXPECT_THAT(sut.update(3, {5, 6, Mapping::Mode::PARAMETER, "tone"}), 0);
+    EXPECT_THAT(sut.update(1, {5, 6, Mapping::Mode::PARAMETER, "tone"}), 0);
     EXPECT_THAT(sut.get()->size(), 2);
 
     // FIXME: move the tests related to this function elsewhere
@@ -191,6 +230,7 @@ TEST_F(MidiMapping, Update)
 TEST_F(MidiMapping, Destroy)
 {
     uint32_t id;
+    auto sut = create_sut();
     EXPECT_EQ(0, sut.create({1, 2, Mapping::Mode::PARAMETER, "gain"}, id));
     EXPECT_EQ(0, sut.destroy(id));
     EXPECT_THAT(sut.get()->size(), 0);
@@ -210,6 +250,7 @@ TEST_F(MidiMapping, Notifications)
     };
 
     Observer observer;
+    auto sut = create_sut();
     sut.add_observer(observer);
     EXPECT_EQ(0, observer.notification_count);
 

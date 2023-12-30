@@ -271,7 +271,7 @@ class MappingManager final
 public:
     using MapType = etl::map<Mapping::id_t, Mapping, MAX_MAPPINGS>;
 
-    explicit MappingManager(
+    MappingManager(
         std::shared_ptr<AudioParametersT> a_parameters,
         std::unique_ptr<persistence::Crud<std::span<uint8_t>>> a_storage)
         : parameters{a_parameters},
