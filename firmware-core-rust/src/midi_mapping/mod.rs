@@ -1,10 +1,13 @@
 mod manager;
 
-use crate::{midi_protocol, parameters};
+use crate::parameters::ParameterId;
+use crate::midi_protocol::MidiMessage;
+
+pub(crate) use manager::ParameterSetter;
 
 pub(crate) struct MappingId(u32);
 
-enum MappingMode {
+pub(crate) enum MappingMode {
     Parameter,
     Toggle,
 }
@@ -13,7 +16,7 @@ pub(crate) struct Mapping {
     midi_channel: u8,
     cc_number: u8,
     mode: MappingMode,
-    parameter_name: parameters::ParameterId,
+    parameter_name: ParameterId,
 }
 
 pub(crate) enum ApiMessage {
@@ -33,6 +36,6 @@ pub(crate) enum ApiMessage {
         id: MappingId,
     },
     MessageReceived {
-        message: midi_protocol::MidiMessage,
+        message: MidiMessage,
     }
 }

@@ -1,5 +1,7 @@
 use num_enum::TryFromPrimitive;
 
+pub const CC_VALUE_MAX: u8 = 127;
+
 #[derive(Debug, PartialEq, Eq)]
 pub struct MidiMessage {
     pub channel: u8,
@@ -7,22 +9,37 @@ pub struct MidiMessage {
 }
 
 #[derive(Debug, PartialEq, Eq)]
+pub struct NoteOn {
+    pub note: u8,
+    pub velocity: u8,
+}
+
+#[derive(Debug, PartialEq, Eq)]
+pub struct NoteOff {
+    pub note: u8,
+    pub velocity: u8,
+}
+
+#[derive(Debug, PartialEq, Eq)]
+/// The value of a continuous controller has changed
+pub struct ControlChange {
+    /// The controller number
+    pub control: u8,
+    /// The value of the controller
+    pub value: u8,
+}
+
+#[derive(Debug, PartialEq, Eq)]
+pub struct ProgramChange {
+    pub program: u8,
+}
+
+#[derive(Debug, PartialEq, Eq)]
 pub enum MidiMessageParameters {
-    NoteOn {
-        note: u8,
-        velocity: u8,
-    },
-    NoteOff {
-        note: u8,
-        velocity: u8,
-    },
-    ControlChange {
-        control: u8,
-        value: u8,
-    },
-    ProgramChange {
-        program: u8,
-    },
+    NoteOn(NoteOn),
+    NoteOff(NoteOff),
+    ControlChange(ControlChange),
+    ProgramChange(ProgramChange),
 }
 
 #[derive(TryFromPrimitive)]

@@ -1,4 +1,5 @@
-use crate::midi_protocol::models::MidiMessageParameters::{ControlChange, NoteOff, NoteOn, ProgramChange};
+use crate::midi_protocol::MidiMessageParameters;
+use crate::midi_protocol::*;
 use super::models::{MidiMessage, MessageType};
 
 // TODO what's the difference between `dyn Fn` and `fn`
@@ -102,17 +103,17 @@ impl MidiDecoder<'_> {
         match MessageType::try_from(self.current_status & 0xF0) {
             Ok(MessageType::NoteOn) => Some(MidiMessage {
                 channel,
-                parameters: NoteOn {
+                parameters: MidiMessageParameters::NoteOn(NoteOn {
                     note: self.received_data.0,
                     velocity: self.received_data.1,
-                },
+                }),
             }),
             Ok(MessageType::NoteOff) => Some(MidiMessage {
                 channel,
-                parameters: NoteOff {
+                parameters: MidiMessageParameters::NoteOff(NoteOff {
                     note: self.received_data.0,
                     velocity: self.received_data.1,
-                },
+                }),
             }),
             Ok(MessageType::ControlChange) => Some({
                 // Channel Mode messages should be ignored
@@ -123,17 +124,17 @@ impl MidiDecoder<'_> {
 
                 MidiMessage {
                     channel,
-                    parameters: ControlChange {
+                    parameters: MidiMessageParameters::ControlChange(ControlChange {
                         control: self.received_data.0,
                         value: self.received_data.1,
-                    },
+                    }),
                 }
             }),
             Ok(MessageType::ProgramChange) => Some(MidiMessage {
                 channel,
-                parameters: ProgramChange {
+                parameters: MidiMessageParameters::ProgramChange(ProgramChange {
                     program: self.received_data.0,
-                },
+                }),
             }),
             _ => None,
         }
@@ -147,7 +148,6 @@ impl MidiDecoder<'_> {
 #[cfg(test)]
 mod tests {
     use mockall::{automock, predicate, Sequence};
-    use crate::midi_protocol::models::MidiMessageParameters::NoteOn;
     use super::*;
 
     #[automock]
@@ -159,10 +159,10 @@ mod tests {
     fn note_on() {
         let expected = MidiMessage {
             channel: 1,
-            parameters: NoteOn {
+            parameters: MidiMessageParameters::NoteOn(NoteOn {
                 note: 0,
                 velocity: 1,
-            },
+            }),
         };
 
         let mut mock = MockReceiver::new();
@@ -179,10 +179,10 @@ mod tests {
     fn note_off() {
         let expected = MidiMessage {
             channel: 1,
-            parameters: NoteOff {
+            parameters: MidiMessageParameters::NoteOff(NoteOff {
                 note: 0,
                 velocity: 1,
-            },
+            }),
         };
 
         let mut mock = MockReceiver::new();
@@ -199,9 +199,9 @@ mod tests {
     fn program_change() {
         let expected = MidiMessage {
             channel: 1,
-            parameters: ProgramChange {
+            parameters: MidiMessageParameters::ProgramChange(ProgramChange {
                 program: 0
-            },
+            }),
         };
 
         let mut mock = MockReceiver::new();
@@ -218,18 +218,18 @@ mod tests {
     fn note_on_running_status() {
         let expected_first = MidiMessage {
             channel: 1,
-            parameters: NoteOn {
+            parameters: MidiMessageParameters::NoteOn(NoteOn {
                 note: 0,
                 velocity: 1,
-            },
+            }),
         };
 
         let expected_second = MidiMessage {
             channel: 1,
-            parameters: NoteOn {
+            parameters: MidiMessageParameters::NoteOn(NoteOn {
                 note: 2,
                 velocity: 3,
-            },
+            }),
         };
 
         let mut mock = MockReceiver::new();
@@ -249,10 +249,10 @@ mod tests {
     fn control_change() {
         let expected = MidiMessage {
             channel: 1,
-            parameters: ControlChange {
+            parameters: MidiMessageParameters::ControlChange(ControlChange {
                 control: 0,
                 value: 1,
-            },
+            }),
         };
 
         let mut mock = MockReceiver::new();
@@ -283,10 +283,10 @@ mod tests {
     fn channel_number() {
         let expected = MidiMessage {
             channel: 16,
-            parameters: NoteOn {
+            parameters: MidiMessageParameters::NoteOn(NoteOn {
                 note: 0,
                 velocity: 1,
-            },
+            }),
         };
 
         let mut mock = MockReceiver::new();
@@ -303,10 +303,10 @@ mod tests {
     fn ignores_unimplemented_messages() {
         let expected = MidiMessage {
             channel: 1,
-            parameters: NoteOn {
+            parameters: MidiMessageParameters::NoteOn(NoteOn {
                 note: 0,
                 velocity: 1,
-            },
+            }),
         };
 
         let mut mock = MockReceiver::new();
@@ -324,10 +324,10 @@ mod tests {
     fn unimplemented_message_does_not_upset_running_status() {
         let expected = MidiMessage {
             channel: 1,
-            parameters: NoteOn {
+            parameters: MidiMessageParameters::NoteOn(NoteOn {
                 note: 0,
                 velocity: 1,
-            },
+            }),
         };
 
         let mut mock = MockReceiver::new();

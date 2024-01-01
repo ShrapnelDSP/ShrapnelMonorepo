@@ -1,5 +1,7 @@
 #![no_std]
 
+extern crate alloc;
+
 mod messages;
 mod midi_mapping;
 mod midi_protocol;
