@@ -7,6 +7,6 @@ pub trait Crud<T> {
     fn read(&mut self, id: u32) -> Result<T>;
     fn update(&mut self, id: u32, entry: &T) -> Result<()>;
     fn destroy(&mut self, id: u32) -> Result<()>;
-   
+
     fn for_each(callback: &mut dyn FnMut(u32, &T));
 }

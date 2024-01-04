@@ -1,6 +1,6 @@
+use super::models::{MessageType, MidiMessage};
 use crate::midi_protocol::MidiMessageParameters;
 use crate::midi_protocol::*;
-use super::models::{MidiMessage, MessageType};
 
 // TODO what's the difference between `dyn Fn` and `fn`
 // generic trait for MidiDecoder might be more appropriate. It avoids the
@@ -45,7 +45,8 @@ impl MidiDecoder<'_> {
     }
 
     fn decode_idle(&mut self, byte: u8) -> State {
-        if !Self::is_status_byte(byte) && Self::is_status_byte(self.current_status)
+        if !Self::is_status_byte(byte)
+            && Self::is_status_byte(self.current_status)
         {
             return self.decode_message(byte);
         }
@@ -63,16 +64,17 @@ impl MidiDecoder<'_> {
         assert!(Self::is_status_byte(self.current_status));
 
         match MessageType::try_from(self.current_status & 0xF0) {
-            Ok(MessageType::ControlChange) | Ok(MessageType::NoteOn) | Ok(MessageType::NoteOff) => {
+            Ok(MessageType::ControlChange)
+            | Ok(MessageType::NoteOn)
+            | Ok(MessageType::NoteOff) => {
                 match self.data_count {
                     0 => self.received_data.0 = byte,
                     1 => self.received_data.1 = byte,
-                    _ => assert!(false)
+                    _ => assert!(false),
                 };
 
                 self.data_count += 1;
-                if self.data_count == 2
-                {
+                if self.data_count == 2 {
                     self.output_message();
                     self.data_count = 0;
                     return State::Idle;
@@ -117,24 +119,27 @@ impl MidiDecoder<'_> {
             }),
             Ok(MessageType::ControlChange) => Some({
                 // Channel Mode messages should be ignored
-                if (self.received_data.0 & 0xF8) == 0x78
-                {
+                if (self.received_data.0 & 0xF8) == 0x78 {
                     return None;
                 }
 
                 MidiMessage {
                     channel,
-                    parameters: MidiMessageParameters::ControlChange(ControlChange {
-                        control: self.received_data.0,
-                        value: self.received_data.1,
-                    }),
+                    parameters: MidiMessageParameters::ControlChange(
+                        ControlChange {
+                            control: self.received_data.0,
+                            value: self.received_data.1,
+                        },
+                    ),
                 }
             }),
             Ok(MessageType::ProgramChange) => Some(MidiMessage {
                 channel,
-                parameters: MidiMessageParameters::ProgramChange(ProgramChange {
-                    program: self.received_data.0,
-                }),
+                parameters: MidiMessageParameters::ProgramChange(
+                    ProgramChange {
+                        program: self.received_data.0,
+                    },
+                ),
             }),
             _ => None,
         }
@@ -147,8 +152,8 @@ impl MidiDecoder<'_> {
 
 #[cfg(test)]
 mod tests {
-    use mockall::{automock, predicate, Sequence};
     use super::*;
+    use mockall::{automock, predicate, Sequence};
 
     #[automock]
     trait Receiver {
@@ -166,7 +171,10 @@ mod tests {
         };
 
         let mut mock = MockReceiver::new();
-        mock.expect_notify().with(predicate::eq(expected)).once().returning(|_| ());
+        mock.expect_notify()
+            .with(predicate::eq(expected))
+            .once()
+            .returning(|_| ());
 
         let mut notify = |message: &_| mock.notify(message);
         let mut sut = MidiDecoder::new(&mut notify);
@@ -186,7 +194,10 @@ mod tests {
         };
 
         let mut mock = MockReceiver::new();
-        mock.expect_notify().with(predicate::eq(expected)).once().returning(|_| ());
+        mock.expect_notify()
+            .with(predicate::eq(expected))
+            .once()
+            .returning(|_| ());
 
         let mut notify = |message: &_| mock.notify(message);
         let mut sut = MidiDecoder::new(&mut notify);
@@ -200,12 +211,15 @@ mod tests {
         let expected = MidiMessage {
             channel: 1,
             parameters: MidiMessageParameters::ProgramChange(ProgramChange {
-                program: 0
+                program: 0,
             }),
         };
 
         let mut mock = MockReceiver::new();
-        mock.expect_notify().with(predicate::eq(expected)).once().returning(|_| ());
+        mock.expect_notify()
+            .with(predicate::eq(expected))
+            .once()
+            .returning(|_| ());
 
         let mut notify = |message: &_| mock.notify(message);
         let mut sut = MidiDecoder::new(&mut notify);
@@ -235,8 +249,16 @@ mod tests {
         let mut mock = MockReceiver::new();
 
         let mut seq = Sequence::new();
-        mock.expect_notify().with(predicate::eq(expected_first)).once().in_sequence(&mut seq).returning(|_| ());
-        mock.expect_notify().with(predicate::eq(expected_second)).once().in_sequence(&mut seq).returning(|_| ());
+        mock.expect_notify()
+            .with(predicate::eq(expected_first))
+            .once()
+            .in_sequence(&mut seq)
+            .returning(|_| ());
+        mock.expect_notify()
+            .with(predicate::eq(expected_second))
+            .once()
+            .in_sequence(&mut seq)
+            .returning(|_| ());
 
         let mut notify = |message: &_| mock.notify(message);
         let mut sut = MidiDecoder::new(&mut notify);
@@ -256,7 +278,10 @@ mod tests {
         };
 
         let mut mock = MockReceiver::new();
-        mock.expect_notify().with(predicate::eq(expected)).once().returning(|_| ());
+        mock.expect_notify()
+            .with(predicate::eq(expected))
+            .once()
+            .returning(|_| ());
 
         let mut notify = |message: &_| mock.notify(message);
         let mut sut = MidiDecoder::new(&mut notify);
@@ -290,7 +315,10 @@ mod tests {
         };
 
         let mut mock = MockReceiver::new();
-        mock.expect_notify().with(predicate::eq(expected)).once().returning(|_| ());
+        mock.expect_notify()
+            .with(predicate::eq(expected))
+            .once()
+            .returning(|_| ());
 
         let mut notify = |message: &_| mock.notify(message);
         let mut sut = MidiDecoder::new(&mut notify);
@@ -310,7 +338,10 @@ mod tests {
         };
 
         let mut mock = MockReceiver::new();
-        mock.expect_notify().with(predicate::eq(expected)).once().returning(|_| ());
+        mock.expect_notify()
+            .with(predicate::eq(expected))
+            .once()
+            .returning(|_| ());
 
         let mut notify = |message: &_| mock.notify(message);
         let mut sut = MidiDecoder::new(&mut notify);
@@ -331,7 +362,10 @@ mod tests {
         };
 
         let mut mock = MockReceiver::new();
-        mock.expect_notify().with(predicate::eq(expected)).once().returning(|_| ());
+        mock.expect_notify()
+            .with(predicate::eq(expected))
+            .once()
+            .returning(|_| ());
 
         let mut notify = |message: &_| mock.notify(message);
         let mut sut = MidiDecoder::new(&mut notify);

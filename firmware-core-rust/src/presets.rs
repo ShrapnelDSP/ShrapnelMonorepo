@@ -34,18 +34,8 @@ pub(crate) struct PresetData {
 
 pub(crate) enum ApiMessage {
     Initialise,
-    Notify {
-        id: PresetId,
-        preset: PresetData,
-    },
-    Create {
-        preset: PresetData,
-    },
-    Update {
-        id: PresetId,
-        preset: PresetData,
-    },
-    Delete {
-        id: PresetId,
-    },
+    Notify { id: PresetId, preset: PresetData },
+    Create { preset: PresetData },
+    Update { id: PresetId, preset: PresetData },
+    Delete { id: PresetId },
 }
