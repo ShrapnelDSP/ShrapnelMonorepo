@@ -53,7 +53,7 @@ fn process_mapped_message<MapType: for<'a> Index<&'a u32, Output = Mapping>>(
     }
 }
 
-#[automock]
+#[cfg_attr(test, automock)]
 pub(crate) trait ParameterSetter {
     fn update(&mut self, parameter_id: &ParameterId, value: f32);
     fn get(&mut self, parameter_id: &ParameterId) -> f32;
@@ -70,11 +70,19 @@ struct MidiMappingManager<
 impl<Crud: for<'a> persistence::Crud<&'a [u8]>, const N: usize>
     MidiMappingManager<Crud, N>
 {
+    fn new(storage: Crud) -> Self {
+        MidiMappingManager {
+            storage,
+            mappings: LinearMap::default(),
+        }
+    }
+
     fn get_mappings(&self) -> &LinearMap<u32, Mapping, N> {
         &self.mappings
     }
 }
 
+/*
 impl<Crud: for<'a> persistence::Crud<&'a [u8]>, const N: usize>
     persistence::Crud<Mapping> for MidiMappingManager<Crud, N>
 {
@@ -100,16 +108,15 @@ impl<Crud: for<'a> persistence::Crud<&'a [u8]>, const N: usize>
     fn destroy(&mut self, id: u32) -> crate::persistence::crud::Result<()> {
         todo!()
     }
-
-    fn for_each(callback: &mut dyn FnMut(u32, &Mapping)) {
-        todo!()
-    }
 }
+
+ */
 
 #[cfg(test)]
 mod tests {
     use super::*;
     use crate::midi_protocol::ControlChange;
+    // use crate::persistence::crud::MockCrud;
     use fstr::FStr;
     use mockall::{predicate, Sequence};
     use std::sync::{Arc, Mutex};
@@ -320,6 +327,14 @@ mod tests {
         );
     }
 
-    // crud
+    /*
+       fn create() {
+           let mock_storage = MockCrud::default();
+           let mut sut = MidiMappingManager::new(mock_storage);
+           assert_eq!(sut.get_mappings().len(), 0);
+       }
+
+    */
+
     // reference c++ tests
 }
