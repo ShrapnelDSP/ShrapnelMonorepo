@@ -88,7 +88,23 @@ where
     Crud: for<'a> persistence::Crud<&'a [u8]>,
 {
     fn create(&mut self, entry: &Mapping) -> persistence::crud::Result<u32> {
-        todo!()
+        // TODO inject encode function, encode to bytes
+        let memory = [0u8; 256];
+
+        if self.mappings.len() == self.mappings.capacity() {
+            return Err(());
+        }
+
+        let Ok(id) = self.storage.create(&[].as_slice()) else {
+            return Err(());
+        };
+
+        // Only fails if the map is full, but we already checked for that
+        self.mappings
+            .insert(id, entry.clone())
+            .expect("Failed to insert mapping");
+
+        return Ok(id);
     }
 
     fn read<'a>(
@@ -116,10 +132,21 @@ where
 mod tests {
     use super::*;
     use crate::midi_protocol::ControlChange;
-    use crate::persistence::crud::MockCrud;
+    use crate::persistence::crud::Result;
+    use crate::persistence::Crud;
     use fstr::FStr;
-    use mockall::{predicate, Sequence};
+    use mockall::{mock, predicate, Sequence};
     use std::sync::{Arc, Mutex};
+
+    mock! {
+       BytesCrud {}
+       impl Crud<&[u8]> for BytesCrud {
+        fn create<'a>(&mut self, entry: & &'a [u8]) -> Result<u32>;
+        fn read<'a>(&mut self, id: u32, entry_out: &mut &'a[u8]) -> Result<()>;
+        fn update<'a>(&mut self, id: u32, entry: & &'a [u8]) -> Result<()>;
+        fn destroy(&mut self, id: u32) -> Result<()>;
+       }
+    }
 
     #[test]
     fn wrong_channel_message_is_ignored() {
@@ -327,10 +354,40 @@ mod tests {
         );
     }
 
+    #[test]
     fn create() {
-        let mock_storage = MockCrud::default();
-        let mut sut = MidiMappingManager::new(mock_storage);
+        let mut mock_storage = MockBytesCrud::default();
+        let mut i = 0;
+        mock_storage.expect_create().returning(move |_| {
+            i += 1;
+            Ok(i)
+        });
+
+        let mut sut: MidiMappingManager<MockBytesCrud, 2> =
+            MidiMappingManager::new(mock_storage);
+
         assert_eq!(sut.get_mappings().len(), 0);
+        let mapping = Mapping {
+            midi_channel: 1,
+            cc_number: 2,
+            mode: MappingMode::Parameter,
+            parameter_name: ParameterId(FStr::from_str_lossy("gain", 0)),
+        };
+        sut.create(&mapping).unwrap();
+        let mapping = Mapping {
+            midi_channel: 3,
+            cc_number: 4,
+            mode: MappingMode::Parameter,
+            parameter_name: ParameterId(FStr::from_str_lossy("volume", 0)),
+        };
+        sut.create(&mapping).unwrap();
+        let mapping = Mapping {
+            midi_channel: 5,
+            cc_number: 6,
+            mode: MappingMode::Parameter,
+            parameter_name: ParameterId(FStr::from_str_lossy("tone", 0)),
+        };
+        assert!(sut.create(&mapping).is_err());
     }
 
     // reference c++ tests

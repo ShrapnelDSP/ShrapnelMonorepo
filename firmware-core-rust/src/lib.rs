@@ -2,6 +2,7 @@
 
 extern crate alloc;
 
+mod api;
 mod audio_events;
 mod messages;
 mod midi_mapping;

@@ -1,8 +1,5 @@
-use mockall::automock;
-
 pub(crate) type Result<T> = core::result::Result<T, ()>;
 
-#[cfg_attr(test, automock)]
 pub trait Crud<T> {
     /// Create a new entry in the database. Returns the id of the new entry, or
     /// an error when the entry could not be created.

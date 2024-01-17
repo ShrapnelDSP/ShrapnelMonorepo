@@ -8,13 +8,13 @@ pub(crate) use manager::ParameterSetter;
 #[derive(Debug, PartialEq, Eq)]
 pub(crate) struct MappingId(u32);
 
-#[derive(Debug, PartialEq, Eq)]
+#[derive(Debug, PartialEq, Eq, Clone)]
 pub(crate) enum MappingMode {
     Parameter,
     Toggle,
 }
 
-#[derive(Debug, PartialEq, Eq)]
+#[derive(Debug, PartialEq, Eq, Clone)]
 pub(crate) struct Mapping {
     midi_channel: u8,
     cc_number: u8,
