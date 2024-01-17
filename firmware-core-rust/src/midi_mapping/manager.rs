@@ -82,18 +82,20 @@ impl<Crud: for<'a> persistence::Crud<&'a [u8]>, const N: usize>
     }
 }
 
-/*
-impl<Crud: for<'a> persistence::Crud<&'a [u8]>, const N: usize>
-    persistence::Crud<Mapping> for MidiMappingManager<Crud, N>
+impl<Crud, const N: usize> persistence::Crud<Mapping>
+    for MidiMappingManager<Crud, N>
+where
+    Crud: for<'a> persistence::Crud<&'a [u8]>,
 {
-    fn create(
-        &mut self,
-        entry: &Mapping,
-    ) -> crate::persistence::crud::Result<u32> {
+    fn create(&mut self, entry: &Mapping) -> persistence::crud::Result<u32> {
         todo!()
     }
 
-    fn read(&mut self, id: u32) -> crate::persistence::crud::Result<Mapping> {
+    fn read<'a>(
+        &mut self,
+        id: u32,
+        entry_out: &'a mut Mapping,
+    ) -> persistence::crud::Result<()> {
         todo!()
     }
 
@@ -101,22 +103,20 @@ impl<Crud: for<'a> persistence::Crud<&'a [u8]>, const N: usize>
         &mut self,
         id: u32,
         entry: &Mapping,
-    ) -> crate::persistence::crud::Result<()> {
+    ) -> persistence::crud::Result<()> {
         todo!()
     }
 
-    fn destroy(&mut self, id: u32) -> crate::persistence::crud::Result<()> {
+    fn destroy(&mut self, id: u32) -> persistence::crud::Result<()> {
         todo!()
     }
 }
-
- */
 
 #[cfg(test)]
 mod tests {
     use super::*;
     use crate::midi_protocol::ControlChange;
-    // use crate::persistence::crud::MockCrud;
+    use crate::persistence::crud::MockCrud;
     use fstr::FStr;
     use mockall::{predicate, Sequence};
     use std::sync::{Arc, Mutex};
@@ -327,14 +327,11 @@ mod tests {
         );
     }
 
-    /*
-       fn create() {
-           let mock_storage = MockCrud::default();
-           let mut sut = MidiMappingManager::new(mock_storage);
-           assert_eq!(sut.get_mappings().len(), 0);
-       }
-
-    */
+    fn create() {
+        let mock_storage = MockCrud::default();
+        let mut sut = MidiMappingManager::new(mock_storage);
+        assert_eq!(sut.get_mappings().len(), 0);
+    }
 
     // reference c++ tests
 }
