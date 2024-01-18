@@ -11,6 +11,7 @@ mod parameters;
 mod persistence;
 mod presets;
 mod selected_preset;
+mod experiment_return_through_slice;
 
 pub fn add(left: usize, right: usize) -> usize {
     left + right

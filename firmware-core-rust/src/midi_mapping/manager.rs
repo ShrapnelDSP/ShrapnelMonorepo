@@ -3,10 +3,10 @@ use crate::api::BytesCodec;
 use crate::midi_mapping::MappingMode;
 use crate::midi_protocol::{MidiMessage, MidiMessageParameters, CC_VALUE_MAX};
 use crate::parameters::ParameterId;
+use core::marker::PhantomData;
 use core::ops::Index;
 use heapless::LinearMap;
 use mockall::automock;
-use std::marker::PhantomData;
 
 use crate::persistence;
 
@@ -61,21 +61,19 @@ pub(crate) trait ParameterSetter {
     fn get(&mut self, parameter_id: &ParameterId) -> f32;
 }
 
-struct MidiMappingManager<
-    Crud: for<'a> persistence::Crud<&'a [u8]>,
-    Codec: BytesCodec<Mapping>,
-    const N: usize,
-> {
+struct MidiMappingManager<Crud, Codec: BytesCodec<Mapping>, const N: usize>
+where
+    Crud: persistence::BytesCrud,
+{
     storage: Crud,
     mappings: LinearMap<u32, Mapping, N>,
     codec: PhantomData<Codec>,
 }
 
-impl<
-        Crud: for<'a> persistence::Crud<&'a [u8]>,
-        Codec: BytesCodec<Mapping>,
-        const N: usize,
-    > MidiMappingManager<Crud, Codec, N>
+impl<Crud, Codec: BytesCodec<Mapping>, const N: usize>
+    MidiMappingManager<Crud, Codec, N>
+where
+    Crud: persistence::BytesCrud,
 {
     fn new(storage: Crud) -> Self {
         MidiMappingManager {
@@ -93,7 +91,7 @@ impl<
 impl<Crud, Codec: BytesCodec<Mapping>, const N: usize>
     persistence::Crud<Mapping> for MidiMappingManager<Crud, Codec, N>
 where
-    Crud: for<'a> persistence::Crud<&'a [u8]>,
+    Crud: persistence::BytesCrud,
 {
     fn create(&mut self, entry: &Mapping) -> persistence::crud::Result<u32> {
         let mut memory = [0u8; 256];
@@ -104,7 +102,7 @@ where
             return Err(());
         }
 
-        let Ok(id) = self.storage.create(&[].as_slice()) else {
+        let Ok(id) = self.storage.create(&memory) else {
             return Err(());
         };
 
@@ -118,12 +116,21 @@ where
         return Ok(id);
     }
 
-    fn read<'a>(
-        &mut self,
-        id: u32,
-        entry_out: &'a mut Mapping,
-    ) -> persistence::crud::Result<()> {
-        todo!()
+    fn read<'a>(&mut self, id: u32) -> persistence::crud::Result<Mapping> {
+        let mut memory = [0u8; 256];
+
+        let Ok(_) = self.storage.read(id, &mut memory) else {
+            return Err(());
+        };
+
+        let Some(decoded) = Codec::decode(memory.as_slice()) else {
+            return Err(());
+        };
+
+        let _ = self.mappings.insert(id, decoded.clone());
+
+        // TODO notify observers
+        Ok(decoded)
     }
 
     fn update(
@@ -154,8 +161,8 @@ where
         return Ok(());
     }
 
-    fn destroy(&mut self, id: u32) -> persistence::crud::Result<()> {
-        let Ok(_) = self.storage.destroy(id) else {
+    fn delete(&mut self, id: u32) -> persistence::crud::Result<()> {
+        let Ok(_) = self.storage.delete(id) else {
             return Err(());
         };
 
@@ -172,10 +179,11 @@ mod tests {
     use super::*;
     use crate::midi_protocol::ControlChange;
     use crate::persistence::crud::Result;
+    use crate::persistence::BytesCrud;
     use crate::persistence::Crud;
     use fstr::FStr;
     use heapless::LinearMap;
-    use mockall::{mock, predicate, Sequence};
+    use mockall::{predicate, Sequence};
     use std::sync::{Arc, Mutex};
 
     mod process {
@@ -392,16 +400,38 @@ mod tests {
 
     mod manager {
         use super::*;
-        use std::println;
 
-        mock! {
-           BytesCrud {}
-           impl Crud<&[u8]> for BytesCrud {
-            fn create<'a>(&mut self, entry: & &'a [u8]) -> Result<u32>;
-            fn read<'a>(&mut self, id: u32, entry_out: &mut &'a[u8]) -> Result<()>;
-            fn update<'a>(&mut self, id: u32, entry: & &'a [u8]) -> Result<()>;
-            fn destroy(&mut self, id: u32) -> Result<()>;
-           }
+        struct MockBytesCrud {
+            i: u32,
+        }
+
+        impl MockBytesCrud {
+            fn new() -> Self {
+                MockBytesCrud { i: 0 }
+            }
+        }
+
+        impl BytesCrud for MockBytesCrud {
+            fn create(&mut self, entry: &[u8]) -> Result<u32> {
+                self.i += 1;
+                Ok(self.i)
+            }
+
+            fn read<'a>(
+                &mut self,
+                id: u32,
+                buffer: &'a mut [u8],
+            ) -> Result<&'a mut [u8]> {
+                Ok(buffer)
+            }
+
+            fn update(&mut self, id: u32, entry: &[u8]) -> Result<()> {
+                Ok(())
+            }
+
+            fn delete(&mut self, id: u32) -> Result<()> {
+                Ok(())
+            }
         }
 
         struct MockMappingCodec {}
@@ -421,12 +451,7 @@ mod tests {
 
         #[test]
         fn create() {
-            let mut mock_storage = MockBytesCrud::default();
-            let mut i = 0;
-            mock_storage.expect_create().returning(move |_| {
-                i += 1;
-                Ok(i)
-            });
+            let mock_storage = MockBytesCrud::new();
 
             let mut sut: MidiMappingManager<
                 MockBytesCrud,
@@ -466,13 +491,7 @@ mod tests {
 
         #[test]
         fn update() {
-            let mut mock_storage = MockBytesCrud::default();
-            let mut i = 0;
-            mock_storage.expect_create().returning(move |_| {
-                i += 1;
-                Ok(i)
-            });
-            mock_storage.expect_update().returning(|_, _| Ok(()));
+            let mut mock_storage = MockBytesCrud::new();
 
             let mut sut: MidiMappingManager<
                 MockBytesCrud,
@@ -553,14 +572,7 @@ mod tests {
 
         #[test]
         fn delete() {
-            let mut mock_storage = MockBytesCrud::default();
-            let mut i = 0;
-            mock_storage.expect_create().once().returning(move |_| {
-                i += 1;
-                Ok(i)
-            });
-
-            mock_storage.expect_destroy().once().returning(|_| Ok(()));
+            let mock_storage = MockBytesCrud::new();
 
             let mut sut: MidiMappingManager<
                 MockBytesCrud,
@@ -579,7 +591,7 @@ mod tests {
             let id = sut.create(&mapping).unwrap();
             assert_eq!(sut.get_mappings().len(), 1);
 
-            sut.destroy(id).unwrap();
+            sut.delete(id).unwrap();
             assert_eq!(sut.get_mappings().len(), 0);
         }
     }
