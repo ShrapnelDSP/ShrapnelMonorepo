@@ -155,7 +155,15 @@ where
     }
 
     fn destroy(&mut self, id: u32) -> persistence::crud::Result<()> {
-        todo!()
+        let Ok(_) = self.storage.destroy(id) else {
+            return Err(());
+        };
+
+        self.mappings.remove(&id);
+
+        // TODO notify observer
+
+        Ok(())
     }
 }
 
@@ -166,6 +174,7 @@ mod tests {
     use crate::persistence::crud::Result;
     use crate::persistence::Crud;
     use fstr::FStr;
+    use heapless::LinearMap;
     use mockall::{mock, predicate, Sequence};
     use std::sync::{Arc, Mutex};
 
@@ -510,8 +519,68 @@ mod tests {
             };
             sut.update(id, &mapping).unwrap();
 
-            // TODO verify the mapping getter returns expected mappings
-            println!("{:?}", sut.get_mappings());
+            let mut expected: LinearMap<u32, Mapping, 2> = LinearMap::default();
+            expected
+                .insert(
+                    1,
+                    Mapping {
+                        midi_channel: 5,
+                        cc_number: 6,
+                        mode: MappingMode::Parameter,
+                        parameter_name: ParameterId(FStr::from_str_lossy(
+                            "tone", 0,
+                        )),
+                    },
+                )
+                .unwrap();
+
+            expected
+                .insert(
+                    2,
+                    Mapping {
+                        midi_channel: 3,
+                        cc_number: 4,
+                        mode: MappingMode::Parameter,
+                        parameter_name: ParameterId(FStr::from_str_lossy(
+                            "volume", 0,
+                        )),
+                    },
+                )
+                .unwrap();
+
+            assert_eq!(sut.get_mappings(), &expected);
+        }
+
+        #[test]
+        fn delete() {
+            let mut mock_storage = MockBytesCrud::default();
+            let mut i = 0;
+            mock_storage.expect_create().once().returning(move |_| {
+                i += 1;
+                Ok(i)
+            });
+
+            mock_storage.expect_destroy().once().returning(|_| Ok(()));
+
+            let mut sut: MidiMappingManager<
+                MockBytesCrud,
+                MockMappingCodec,
+                2,
+            > = MidiMappingManager::new(mock_storage);
+
+            assert_eq!(sut.get_mappings().len(), 0);
+
+            let mapping = Mapping {
+                midi_channel: 1,
+                cc_number: 2,
+                mode: MappingMode::Parameter,
+                parameter_name: ParameterId(FStr::from_str_lossy("gain", 0)),
+            };
+            let id = sut.create(&mapping).unwrap();
+            assert_eq!(sut.get_mappings().len(), 1);
+
+            sut.destroy(id).unwrap();
+            assert_eq!(sut.get_mappings().len(), 0);
         }
     }
 
