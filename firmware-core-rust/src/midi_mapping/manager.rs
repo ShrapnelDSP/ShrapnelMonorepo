@@ -1,10 +1,12 @@
 use super::Mapping;
+use crate::api::BytesCodec;
 use crate::midi_mapping::MappingMode;
 use crate::midi_protocol::{MidiMessage, MidiMessageParameters, CC_VALUE_MAX};
 use crate::parameters::ParameterId;
 use core::ops::Index;
 use heapless::LinearMap;
 use mockall::automock;
+use std::marker::PhantomData;
 
 use crate::persistence;
 
@@ -61,19 +63,25 @@ pub(crate) trait ParameterSetter {
 
 struct MidiMappingManager<
     Crud: for<'a> persistence::Crud<&'a [u8]>,
+    Codec: BytesCodec<Mapping>,
     const N: usize,
 > {
     storage: Crud,
     mappings: LinearMap<u32, Mapping, N>,
+    codec: PhantomData<Codec>,
 }
 
-impl<Crud: for<'a> persistence::Crud<&'a [u8]>, const N: usize>
-    MidiMappingManager<Crud, N>
+impl<
+        Crud: for<'a> persistence::Crud<&'a [u8]>,
+        Codec: BytesCodec<Mapping>,
+        const N: usize,
+    > MidiMappingManager<Crud, Codec, N>
 {
     fn new(storage: Crud) -> Self {
         MidiMappingManager {
             storage,
             mappings: LinearMap::default(),
+            codec: PhantomData::default(),
         }
     }
 
@@ -82,14 +90,15 @@ impl<Crud: for<'a> persistence::Crud<&'a [u8]>, const N: usize>
     }
 }
 
-impl<Crud, const N: usize> persistence::Crud<Mapping>
-    for MidiMappingManager<Crud, N>
+impl<Crud, Codec: BytesCodec<Mapping>, const N: usize>
+    persistence::Crud<Mapping> for MidiMappingManager<Crud, Codec, N>
 where
     Crud: for<'a> persistence::Crud<&'a [u8]>,
 {
     fn create(&mut self, entry: &Mapping) -> persistence::crud::Result<u32> {
-        // TODO inject encode function, encode to bytes
-        let memory = [0u8; 256];
+        let mut memory = [0u8; 256];
+
+        Codec::encode(entry, &mut memory);
 
         if self.mappings.len() == self.mappings.capacity() {
             return Err(());
@@ -103,6 +112,8 @@ where
         self.mappings
             .insert(id, entry.clone())
             .expect("Failed to insert mapping");
+
+        // TODO notify new key added
 
         return Ok(id);
     }
@@ -120,7 +131,27 @@ where
         id: u32,
         entry: &Mapping,
     ) -> persistence::crud::Result<()> {
-        todo!()
+        if !self.mappings.contains_key(&id) {
+            return Err(());
+        }
+
+        let mut memory = [0u8; 256];
+
+        let Some(encoded) = Codec::encode(entry, &mut memory) else {
+            return Err(());
+        };
+
+        let Ok(_) = self.storage.update(id, &encoded) else {
+            return Err(());
+        };
+
+        self.mappings
+            .insert(id, entry.clone())
+            .expect("should not fail when updating an existing element");
+
+        // TODO notify observers about updated id
+
+        return Ok(());
     }
 
     fn destroy(&mut self, id: u32) -> persistence::crud::Result<()> {
@@ -138,256 +169,350 @@ mod tests {
     use mockall::{mock, predicate, Sequence};
     use std::sync::{Arc, Mutex};
 
-    mock! {
-       BytesCrud {}
-       impl Crud<&[u8]> for BytesCrud {
-        fn create<'a>(&mut self, entry: & &'a [u8]) -> Result<u32>;
-        fn read<'a>(&mut self, id: u32, entry_out: &mut &'a[u8]) -> Result<()>;
-        fn update<'a>(&mut self, id: u32, entry: & &'a [u8]) -> Result<()>;
-        fn destroy(&mut self, id: u32) -> Result<()>;
-       }
-    }
+    mod process {
+        use super::*;
 
-    #[test]
-    fn wrong_channel_message_is_ignored() {
-        let mut mappings: LinearMap<u32, Mapping, 4> = LinearMap::default();
-        mappings
-            .insert(
-                0,
-                Mapping {
-                    midi_channel: 1,
-                    mode: MappingMode::Parameter,
-                    cc_number: 42,
-                    parameter_name: ParameterId(FStr::from_str_lossy(
-                        "test", 0,
-                    )),
-                },
-            )
-            .expect("setup failed");
-
-        let mut mock_parameters = MockParameterSetter::default();
-        process_mapped_message(
-            &mappings,
-            &mut mock_parameters,
-            MidiMessage {
-                channel: 0,
-                parameters: MidiMessageParameters::ControlChange(
-                    ControlChange {
-                        control: 42,
-                        value: 0,
+        #[test]
+        fn wrong_channel_message_is_ignored() {
+            let mut mappings: LinearMap<u32, Mapping, 4> = LinearMap::default();
+            mappings
+                .insert(
+                    0,
+                    Mapping {
+                        midi_channel: 1,
+                        mode: MappingMode::Parameter,
+                        cc_number: 42,
+                        parameter_name: ParameterId(FStr::from_str_lossy(
+                            "test", 0,
+                        )),
                     },
-                ),
-            },
-        )
-    }
+                )
+                .expect("setup failed");
 
-    #[test]
-    fn wrong_controller_message_is_ignored() {
-        let mut mappings: LinearMap<u32, Mapping, 4> = LinearMap::default();
-        mappings
-            .insert(
-                0,
-                Mapping {
-                    midi_channel: 1,
-                    mode: MappingMode::Parameter,
-                    cc_number: 42,
-                    parameter_name: ParameterId(FStr::from_str_lossy(
-                        "test", 0,
-                    )),
+            let mut mock_parameters = MockParameterSetter::default();
+            process_mapped_message(
+                &mappings,
+                &mut mock_parameters,
+                MidiMessage {
+                    channel: 0,
+                    parameters: MidiMessageParameters::ControlChange(
+                        ControlChange {
+                            control: 42,
+                            value: 0,
+                        },
+                    ),
                 },
             )
-            .expect("setup failed");
+        }
 
-        let mut mock_parameters = MockParameterSetter::default();
-        process_mapped_message(
-            &mappings,
-            &mut mock_parameters,
-            MidiMessage {
-                channel: 1,
-                parameters: MidiMessageParameters::ControlChange(
-                    ControlChange {
-                        control: 0,
-                        value: 0,
+        #[test]
+        fn wrong_controller_message_is_ignored() {
+            let mut mappings: LinearMap<u32, Mapping, 4> = LinearMap::default();
+            mappings
+                .insert(
+                    0,
+                    Mapping {
+                        midi_channel: 1,
+                        mode: MappingMode::Parameter,
+                        cc_number: 42,
+                        parameter_name: ParameterId(FStr::from_str_lossy(
+                            "test", 0,
+                        )),
                     },
-                ),
-            },
-        )
-    }
+                )
+                .expect("setup failed");
 
-    #[test]
-    fn parameter_mode_works() {
-        let mut mappings: LinearMap<u32, Mapping, 4> = LinearMap::default();
-        mappings
-            .insert(
-                0,
-                Mapping {
-                    midi_channel: 1,
-                    mode: MappingMode::Parameter,
-                    cc_number: 42,
-                    parameter_name: ParameterId(FStr::from_str_lossy(
-                        "test", 0,
-                    )),
+            let mut mock_parameters = MockParameterSetter::default();
+            process_mapped_message(
+                &mappings,
+                &mut mock_parameters,
+                MidiMessage {
+                    channel: 1,
+                    parameters: MidiMessageParameters::ControlChange(
+                        ControlChange {
+                            control: 0,
+                            value: 0,
+                        },
+                    ),
                 },
             )
-            .expect("setup failed");
+        }
 
-        let mut mock_parameters = MockParameterSetter::default();
-        mock_parameters
-            .expect_update()
-            .with(
-                predicate::eq(ParameterId(FStr::from_str_lossy("test", 0))),
-                predicate::eq(1.),
-            )
-            .once()
-            .returning(|_, __| ());
-        process_mapped_message(
-            &mappings,
-            &mut mock_parameters,
-            MidiMessage {
-                channel: 1,
-                parameters: MidiMessageParameters::ControlChange(
-                    ControlChange {
-                        control: 42,
-                        value: 127,
+        #[test]
+        fn parameter_mode_works() {
+            let mut mappings: LinearMap<u32, Mapping, 4> = LinearMap::default();
+            mappings
+                .insert(
+                    0,
+                    Mapping {
+                        midi_channel: 1,
+                        mode: MappingMode::Parameter,
+                        cc_number: 42,
+                        parameter_name: ParameterId(FStr::from_str_lossy(
+                            "test", 0,
+                        )),
                     },
-                ),
-            },
-        )
-    }
+                )
+                .expect("setup failed");
 
-    #[test]
-    fn toggle_mode_works() {
-        let mut mappings: LinearMap<u32, Mapping, 4> = LinearMap::default();
-        mappings
-            .insert(
-                0,
-                Mapping {
-                    midi_channel: 1,
-                    mode: MappingMode::Toggle,
-                    cc_number: 42,
-                    parameter_name: ParameterId(FStr::from_str_lossy(
-                        "test", 0,
-                    )),
+            let mut mock_parameters = MockParameterSetter::default();
+            mock_parameters
+                .expect_update()
+                .with(
+                    predicate::eq(ParameterId(FStr::from_str_lossy("test", 0))),
+                    predicate::eq(1.),
+                )
+                .once()
+                .returning(|_, __| ());
+            process_mapped_message(
+                &mappings,
+                &mut mock_parameters,
+                MidiMessage {
+                    channel: 1,
+                    parameters: MidiMessageParameters::ControlChange(
+                        ControlChange {
+                            control: 42,
+                            value: 127,
+                        },
+                    ),
                 },
             )
-            .expect("setup failed");
+        }
 
-        let fake_value = Arc::new(Mutex::new(0.5));
-        let mut mock_parameters = MockParameterSetter::default();
+        #[test]
+        fn toggle_mode_works() {
+            let mut mappings: LinearMap<u32, Mapping, 4> = LinearMap::default();
+            mappings
+                .insert(
+                    0,
+                    Mapping {
+                        midi_channel: 1,
+                        mode: MappingMode::Toggle,
+                        cc_number: 42,
+                        parameter_name: ParameterId(FStr::from_str_lossy(
+                            "test", 0,
+                        )),
+                    },
+                )
+                .expect("setup failed");
 
-        let fake_value_clone = Arc::clone(&fake_value);
-        mock_parameters
-            .expect_get()
-            .with(predicate::eq(ParameterId(FStr::from_str_lossy("test", 0))))
-            .returning(move |_| *fake_value_clone.lock().unwrap());
+            let fake_value = Arc::new(Mutex::new(0.5));
+            let mut mock_parameters = MockParameterSetter::default();
 
-        let mut seq = Sequence::default();
+            let fake_value_clone = Arc::clone(&fake_value);
+            mock_parameters
+                .expect_get()
+                .with(predicate::eq(ParameterId(FStr::from_str_lossy(
+                    "test", 0,
+                ))))
+                .returning(move |_| *fake_value_clone.lock().unwrap());
 
-        let fake_value_clone = Arc::clone(&fake_value);
-        mock_parameters
-            .expect_update()
-            .with(
-                predicate::eq(ParameterId(FStr::from_str_lossy("test", 0))),
-                predicate::eq(0.),
-            )
-            .once()
-            .in_sequence(&mut seq)
-            .returning(move |_, value| {
-                *fake_value_clone.lock().unwrap() = value;
+            let mut seq = Sequence::default();
+
+            let fake_value_clone = Arc::clone(&fake_value);
+            mock_parameters
+                .expect_update()
+                .with(
+                    predicate::eq(ParameterId(FStr::from_str_lossy("test", 0))),
+                    predicate::eq(0.),
+                )
+                .once()
+                .in_sequence(&mut seq)
+                .returning(move |_, value| {
+                    *fake_value_clone.lock().unwrap() = value;
+                });
+
+            let fake_value_clone = Arc::clone(&fake_value);
+            mock_parameters
+                .expect_update()
+                .with(
+                    predicate::eq(ParameterId(FStr::from_str_lossy("test", 0))),
+                    predicate::eq(1.),
+                )
+                .once()
+                .in_sequence(&mut seq)
+                .returning(move |_, value| {
+                    *fake_value_clone.lock().unwrap() = value;
+                });
+
+            // this mode ignores messages with value 0, and any message with
+            // non-zero value will switch the parameter value between 0 and 1.
+            process_mapped_message(
+                &mappings,
+                &mut mock_parameters,
+                MidiMessage {
+                    channel: 1,
+                    parameters: MidiMessageParameters::ControlChange(
+                        ControlChange {
+                            control: 42,
+                            value: 0,
+                        },
+                    ),
+                },
+            );
+
+            process_mapped_message(
+                &mappings,
+                &mut mock_parameters,
+                MidiMessage {
+                    channel: 1,
+                    parameters: MidiMessageParameters::ControlChange(
+                        ControlChange {
+                            control: 42,
+                            value: 1,
+                        },
+                    ),
+                },
+            );
+
+            process_mapped_message(
+                &mappings,
+                &mut mock_parameters,
+                MidiMessage {
+                    channel: 1,
+                    parameters: MidiMessageParameters::ControlChange(
+                        ControlChange {
+                            control: 42,
+                            value: 1,
+                        },
+                    ),
+                },
+            );
+        }
+    }
+
+    mod manager {
+        use super::*;
+        use std::println;
+
+        mock! {
+           BytesCrud {}
+           impl Crud<&[u8]> for BytesCrud {
+            fn create<'a>(&mut self, entry: & &'a [u8]) -> Result<u32>;
+            fn read<'a>(&mut self, id: u32, entry_out: &mut &'a[u8]) -> Result<()>;
+            fn update<'a>(&mut self, id: u32, entry: & &'a [u8]) -> Result<()>;
+            fn destroy(&mut self, id: u32) -> Result<()>;
+           }
+        }
+
+        struct MockMappingCodec {}
+
+        impl BytesCodec<Mapping> for MockMappingCodec {
+            fn decode(bytes: &[u8]) -> Option<Mapping> {
+                todo!()
+            }
+
+            fn encode<'a>(
+                message: &Mapping,
+                entry_out: &'a mut [u8],
+            ) -> Option<&'a [u8]> {
+                Some(&entry_out[0..10])
+            }
+        }
+
+        #[test]
+        fn create() {
+            let mut mock_storage = MockBytesCrud::default();
+            let mut i = 0;
+            mock_storage.expect_create().returning(move |_| {
+                i += 1;
+                Ok(i)
             });
 
-        let fake_value_clone = Arc::clone(&fake_value);
-        mock_parameters
-            .expect_update()
-            .with(
-                predicate::eq(ParameterId(FStr::from_str_lossy("test", 0))),
-                predicate::eq(1.),
-            )
-            .once()
-            .in_sequence(&mut seq)
-            .returning(move |_, value| {
-                *fake_value_clone.lock().unwrap() = value;
+            let mut sut: MidiMappingManager<
+                MockBytesCrud,
+                MockMappingCodec,
+                2,
+            > = MidiMappingManager::new(mock_storage);
+
+            assert_eq!(sut.get_mappings().len(), 0);
+
+            let mapping = Mapping {
+                midi_channel: 1,
+                cc_number: 2,
+                mode: MappingMode::Parameter,
+                parameter_name: ParameterId(FStr::from_str_lossy("gain", 0)),
+            };
+            sut.create(&mapping).unwrap();
+            assert_eq!(sut.get_mappings().len(), 1);
+
+            let mapping = Mapping {
+                midi_channel: 3,
+                cc_number: 4,
+                mode: MappingMode::Parameter,
+                parameter_name: ParameterId(FStr::from_str_lossy("volume", 0)),
+            };
+            sut.create(&mapping).unwrap();
+            assert_eq!(sut.get_mappings().len(), 2);
+
+            let mapping = Mapping {
+                midi_channel: 5,
+                cc_number: 6,
+                mode: MappingMode::Parameter,
+                parameter_name: ParameterId(FStr::from_str_lossy("tone", 0)),
+            };
+            assert!(sut.create(&mapping).is_err());
+            assert_eq!(sut.get_mappings().len(), 2);
+        }
+
+        #[test]
+        fn update() {
+            let mut mock_storage = MockBytesCrud::default();
+            let mut i = 0;
+            mock_storage.expect_create().returning(move |_| {
+                i += 1;
+                Ok(i)
             });
+            mock_storage.expect_update().returning(|_, _| Ok(()));
 
-        // this mode ignores messages with value 0, and any message with
-        // non-zero value will switch the parameter value between 0 and 1.
-        process_mapped_message(
-            &mappings,
-            &mut mock_parameters,
-            MidiMessage {
-                channel: 1,
-                parameters: MidiMessageParameters::ControlChange(
-                    ControlChange {
-                        control: 42,
-                        value: 0,
-                    },
-                ),
-            },
-        );
+            let mut sut: MidiMappingManager<
+                MockBytesCrud,
+                MockMappingCodec,
+                2,
+            > = MidiMappingManager::new(mock_storage);
 
-        process_mapped_message(
-            &mappings,
-            &mut mock_parameters,
-            MidiMessage {
-                channel: 1,
-                parameters: MidiMessageParameters::ControlChange(
-                    ControlChange {
-                        control: 42,
-                        value: 1,
-                    },
-                ),
-            },
-        );
+            assert_eq!(sut.get_mappings().len(), 0);
 
-        process_mapped_message(
-            &mappings,
-            &mut mock_parameters,
-            MidiMessage {
-                channel: 1,
-                parameters: MidiMessageParameters::ControlChange(
-                    ControlChange {
-                        control: 42,
-                        value: 1,
-                    },
-                ),
-            },
-        );
-    }
+            let mapping = Mapping {
+                midi_channel: 1,
+                cc_number: 2,
+                mode: MappingMode::Parameter,
+                parameter_name: ParameterId(FStr::from_str_lossy("gain", 0)),
+            };
+            let id = sut.create(&mapping).unwrap();
 
-    #[test]
-    fn create() {
-        let mut mock_storage = MockBytesCrud::default();
-        let mut i = 0;
-        mock_storage.expect_create().returning(move |_| {
-            i += 1;
-            Ok(i)
-        });
+            let mapping = Mapping {
+                midi_channel: 7,
+                cc_number: 8,
+                mode: MappingMode::Parameter,
+                parameter_name: ParameterId(FStr::from_str_lossy("contour", 0)),
+            };
+            assert!(
+                sut.update(3, &mapping).is_err(),
+                "update non-existent should fail"
+            );
+            assert_eq!(sut.get_mappings().len(), 1);
 
-        let mut sut: MidiMappingManager<MockBytesCrud, 2> =
-            MidiMappingManager::new(mock_storage);
+            let mapping = Mapping {
+                midi_channel: 3,
+                cc_number: 4,
+                mode: MappingMode::Parameter,
+                parameter_name: ParameterId(FStr::from_str_lossy("volume", 0)),
+            };
+            sut.create(&mapping).unwrap();
+            assert_eq!(sut.get_mappings().len(), 2);
 
-        assert_eq!(sut.get_mappings().len(), 0);
-        let mapping = Mapping {
-            midi_channel: 1,
-            cc_number: 2,
-            mode: MappingMode::Parameter,
-            parameter_name: ParameterId(FStr::from_str_lossy("gain", 0)),
-        };
-        sut.create(&mapping).unwrap();
-        let mapping = Mapping {
-            midi_channel: 3,
-            cc_number: 4,
-            mode: MappingMode::Parameter,
-            parameter_name: ParameterId(FStr::from_str_lossy("volume", 0)),
-        };
-        sut.create(&mapping).unwrap();
-        let mapping = Mapping {
-            midi_channel: 5,
-            cc_number: 6,
-            mode: MappingMode::Parameter,
-            parameter_name: ParameterId(FStr::from_str_lossy("tone", 0)),
-        };
-        assert!(sut.create(&mapping).is_err());
+            let mapping = Mapping {
+                midi_channel: 5,
+                cc_number: 6,
+                mode: MappingMode::Parameter,
+                parameter_name: ParameterId(FStr::from_str_lossy("tone", 0)),
+            };
+            sut.update(id, &mapping).unwrap();
+
+            // TODO verify the mapping getter returns expected mappings
+            println!("{:?}", sut.get_mappings());
+        }
     }
 
     // reference c++ tests

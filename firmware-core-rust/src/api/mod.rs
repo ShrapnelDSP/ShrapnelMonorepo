@@ -1,5 +1,5 @@
 /// Coder decoder from T to bytes
 pub trait BytesCodec<T> {
-    fn from_bytes(bytes: &[u8]) -> Option<T>;
-    fn to_bytes(self: &Self, entry_out: &mut [u8]) -> ();
+    fn decode(bytes: &[u8]) -> Option<T>;
+    fn encode<'a>(message: &T, entry_out: &'a mut [u8]) -> Option<&'a [u8]>;
 }
