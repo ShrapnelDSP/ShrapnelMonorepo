@@ -4,6 +4,7 @@ extern crate alloc;
 
 mod api;
 mod audio_events;
+mod experiment_return_through_slice;
 mod messages;
 mod midi_mapping;
 mod midi_protocol;
@@ -11,7 +12,6 @@ mod parameters;
 mod persistence;
 mod presets;
 mod selected_preset;
-mod experiment_return_through_slice;
 
 pub fn add(left: usize, right: usize) -> usize {
     left + right
@@ -19,14 +19,3 @@ pub fn add(left: usize, right: usize) -> usize {
 
 #[cfg(test)]
 extern crate std;
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn it_works() {
-        let result = add(2, 2);
-        assert_eq!(result, 4);
-    }
-}

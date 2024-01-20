@@ -11,6 +11,8 @@ use mockall::automock;
 use crate::persistence;
 
 // TODO make this observable
+// perhaps use some message bus to work around lifetime issue. The message bus
+// would outlive both the observable and the observers.
 
 /// React to a MIDI message by updating an audio parameter if there is a
 /// mapping registered
