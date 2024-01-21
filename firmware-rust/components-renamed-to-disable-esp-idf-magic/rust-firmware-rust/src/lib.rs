@@ -7,7 +7,6 @@ use esp_idf_svc::hal::units::Hertz;
 
 mod midi;
 
-
 #[no_mangle]
 extern "C" fn rust_main() -> i32 {
     // It is necessary to call this function once. Otherwise some patches to the runtime
@@ -23,7 +22,14 @@ extern "C" fn rust_main() -> i32 {
     let rx = peripherals.pins.gpio26;
 
     let config = UartConfig::new().baudrate(Hertz(31_250));
-    let uart = UartRxDriver::new(peripherals.uart1, rx, Option::<esp_idf_svc::hal::gpio::Gpio0>::None, Option::<esp_idf_svc::hal::gpio::Gpio0>::None, &config).unwrap();
+    let uart = UartRxDriver::new(
+        peripherals.uart1,
+        rx,
+        Option::<esp_idf_svc::hal::gpio::Gpio0>::None,
+        Option::<esp_idf_svc::hal::gpio::Gpio0>::None,
+        &config,
+    )
+    .unwrap();
 
     loop {
         let mut byte = [0u8; 1];
@@ -34,4 +40,3 @@ extern "C" fn rust_main() -> i32 {
         }
     }
 }
-
