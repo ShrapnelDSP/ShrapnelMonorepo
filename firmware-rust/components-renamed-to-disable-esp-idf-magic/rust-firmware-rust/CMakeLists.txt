@@ -1,14 +1,5 @@
-# If this component depends on other components - be it ESP-IDF or project-specific ones - enumerate those in the double-quotes below, separated by spaces
-# Note that pthread should always be there, or else STD will not work
-set(RUST_DEPS "pthread" "driver")
-# Here's a non-minimal, reasonable set of ESP-IDF components that one might want enabled for Rust:
-#set(RUST_DEPS "pthread" "esp_http_client" "esp_http_server" "espcoredump" "app_update" "esp_serial_slave_link" "nvs_flash" "spi_flash" "esp_adc_cal" "mqtt")
-
-idf_component_register(
-    SRCS "placeholder.c"
-    INCLUDE_DIRS ""
-    PRIV_REQUIRES "${RUST_DEPS}"
-)
+add_library(dummy INTERFACE)
+target_link_libraries(dummy INTERFACE )
 
 if(CONFIG_IDF_TARGET_ARCH_RISCV)
     if (CONFIG_IDF_TARGET_ESP32C6 OR CONFIG_IDF_TARGET_ESP32C5 OR CONFIG_IDF_TARGET_ESP32H2)
@@ -64,8 +55,8 @@ ExternalProject_Add(
         cargo clean --target ${RUST_TARGET} --target-dir ${CARGO_TARGET_DIR}
     USES_TERMINAL_BUILD true
     BUILD_COMMAND ${CMAKE_COMMAND} -E env
-        CARGO_CMAKE_BUILD_INCLUDES=$<TARGET_PROPERTY:${COMPONENT_LIB},INCLUDE_DIRECTORIES>
-        CARGO_CMAKE_BUILD_LINK_LIBRARIES=$<TARGET_PROPERTY:${COMPONENT_LIB},LINK_LIBRARIES>
+        #CARGO_CMAKE_BUILD_INCLUDES=$<TARGET_PROPERTY:dummy,INTERFACE_INCLUDE_DIRECTORIES>
+        #CARGO_CMAKE_BUILD_LINK_LIBRARIES=$<TARGET_PROPERTY:dummy,INTERFACE_LINK_LIBRARIES>
         CARGO_CMAKE_BUILD_SDKCONFIG=${sdkconfig}
         CARGO_CMAKE_BUILD_ESP_IDF=${idf_path}
         CARGO_CMAKE_BUILD_COMPILER=${CMAKE_C_COMPILER}
@@ -85,8 +76,13 @@ ExternalProject_Add(
         "${RUST_STATIC_LIBRARY}"
 )
 
-add_prebuilt_library(library_rust_firmware_rust "${RUST_STATIC_LIBRARY}" PRIV_REQUIRES "${RUST_DEPS}")
+add_library(library_rust_firmware_rust STATIC IMPORTED)
+set_target_properties(library_rust_firmware_rust PROPERTIES IMPORTED_LOCATION ${RUST_STATIC_LIBRARY})
+target_link_libraries(library_rust_firmware_rust INTERFACE "idf::pthread" "idf::driver")
 add_dependencies(library_rust_firmware_rust project_rust_firmware_rust)
+target_include_directories(library_rust_firmware_rust INTERFACE "${RUST_INCLUDE_DIR}")
 
-target_include_directories(${COMPONENT_LIB} PUBLIC "${RUST_INCLUDE_DIR}")
-target_link_libraries(${COMPONENT_LIB} PRIVATE library_rust_firmware_rust)
+add_library(rust_firmware_rust INTERFACE)
+target_link_libraries(rust_firmware_rust INTERFACE library_rust_firmware_rust)
+
+add_library(shrapnel::rust_firmware ALIAS rust_firmware_rust)

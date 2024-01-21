@@ -1,5 +1,3 @@
-/.vscode
-/.embuild
 build/
-components/*/target/
-Cargo.lock
+components-renamed-to-disable-esp-idf-magic/*/target/
+sdkconfig
