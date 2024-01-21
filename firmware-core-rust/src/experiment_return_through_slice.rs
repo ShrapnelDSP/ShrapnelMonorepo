@@ -10,6 +10,7 @@ impl SliceWriter {
     }
 }
 
+#[cfg(test)]
 mod test {
     use crate::experiment_return_through_slice::SliceWriter;
     use std::println;

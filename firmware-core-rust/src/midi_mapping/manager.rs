@@ -6,6 +6,8 @@ use crate::parameters::ParameterId;
 use core::marker::PhantomData;
 use core::ops::Index;
 use heapless::LinearMap;
+
+#[cfg(test)]
 use mockall::automock;
 
 use crate::persistence;

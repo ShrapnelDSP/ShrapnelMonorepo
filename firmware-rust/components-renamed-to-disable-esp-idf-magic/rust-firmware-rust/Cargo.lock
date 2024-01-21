@@ -412,7 +412,7 @@ dependencies = [
  "cfg-if",
  "critical-section",
  "futures-util",
- "heapless",
+ "heapless 0.7.17",
 ]
 
 [[package]]
@@ -425,7 +425,7 @@ dependencies = [
  "critical-section",
  "embedded-hal 0.2.7",
  "futures-util",
- "heapless",
+ "heapless 0.7.17",
 ]
 
 [[package]]
@@ -499,7 +499,7 @@ dependencies = [
  "embedded-io",
  "embedded-io-async",
  "enumset",
- "heapless",
+ "heapless 0.7.17",
  "no-std-net",
  "num_enum",
  "serde",
@@ -598,7 +598,7 @@ dependencies = [
  "embuild",
  "enumset",
  "esp-idf-sys",
- "heapless",
+ "heapless 0.7.17",
  "log",
  "nb 1.1.0",
  "num_enum",
@@ -617,7 +617,7 @@ dependencies = [
  "embuild",
  "enumset",
  "esp-idf-hal",
- "heapless",
+ "heapless 0.7.17",
  "log",
  "num_enum",
  "uncased",
@@ -701,6 +701,12 @@ dependencies = [
 ]
 
 [[package]]
+name = "fstr"
+version = "0.2.10"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "7b51da7feff6f685a1d467b251d4238c0a284dd5a1eca574500a8bcf16cf6985"
+
+[[package]]
 name = "futures-core"
 version = "0.3.30"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -775,6 +781,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "hash32"
+version = "0.3.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "47d60b12902ba28e2730cd37e95b8c9223af2808df9e902d4df49588d1470606"
+dependencies = [
+ "byteorder",
+]
+
+[[package]]
 name = "hashbrown"
 version = "0.14.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -787,9 +802,19 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "cdc6457c0eb62c71aac4bc17216026d8410337c4126773b9c5daba343f17964f"
 dependencies = [
  "atomic-polyfill",
- "hash32",
+ "hash32 0.2.1",
  "rustc_version",
  "spin",
+ "stable_deref_trait",
+]
+
+[[package]]
+name = "heapless"
+version = "0.8.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "0bfb9eb618601c89945a70e254898da93b13be0388091d42117462b265bb3fad"
+dependencies = [
+ "hash32 0.3.1",
  "stable_deref_trait",
 ]
 
@@ -1196,6 +1221,7 @@ dependencies = [
  "embuild",
  "esp-idf-svc",
  "log",
+ "shrapnel_core",
 ]
 
 [[package]]
@@ -1339,6 +1365,15 @@ name = "shlex"
 version = "1.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "a7cee0529a6d40f580e7a5e6c495c8fbfe21b7b52795ed4bb5e62cdf92bc6380"
+
+[[package]]
+name = "shrapnel_core"
+version = "0.1.0"
+dependencies = [
+ "fstr",
+ "heapless 0.8.0",
+ "num_enum",
+]
 
 [[package]]
 name = "spin"

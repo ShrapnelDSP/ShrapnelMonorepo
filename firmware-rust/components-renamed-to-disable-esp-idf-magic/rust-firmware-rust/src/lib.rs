@@ -1,9 +1,12 @@
 #![no_std]
 
+use core::char::DecodeUtf16Error;
 use esp_idf_svc::hal::prelude::Peripherals;
 use esp_idf_svc::hal::uart::config::Config as UartConfig;
 use esp_idf_svc::hal::uart::UartRxDriver;
 use esp_idf_svc::hal::units::Hertz;
+
+use shrapnel_core::midi_protocol;
 
 mod midi;
 
@@ -31,12 +34,21 @@ extern "C" fn rust_main() -> i32 {
     )
     .unwrap();
 
+    let mut on_midi_message_received =
+        |x: &_| log::info!("MIDI received message: {:?}", x);
+    let mut midi_decoder =
+        midi_protocol::MidiDecoder::new(&mut on_midi_message_received);
+
     loop {
         let mut byte = [0u8; 1];
 
         match uart.read(byte.as_mut_slice(), 10).unwrap() {
             0 => (),
-            _ => log::info!("MIDI received byte: {:x}", byte[0]),
+            _ => {
+                let byte = byte[0];
+                log::info!("MIDI received byte: {:x}", byte);
+                midi_decoder.decode(byte);
+            }
         }
     }
 }
