@@ -317,7 +317,7 @@ void process_samples(std::span<int32_t, 2 * DMA_BUF_SIZE> buf,
 
         buf[i] = float_to_int32(fbuf[i / 2]);
     }
-    profiling_mark_stage(20);
+    profiling_mark_stage("end");
 
     profiling_stop();
     gpio_set_level(g_profiling_gpio, 0);
