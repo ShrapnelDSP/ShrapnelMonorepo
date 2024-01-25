@@ -131,10 +131,11 @@ Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p class="definition">Definition at line <a class="el" href="delayline_8cpp_source.html#l00026">26</a> of file <a class="el" href="delayline_8cpp_source.html">delayline.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   26</span>                                       :</div>
-<div class="line"><span class="lineno">   27</span>    samples(max_samples + 1),</div>
-<div class="line"><span class="lineno">   28</span>    writeIndex(0),</div>
-<div class="line"><span class="lineno">   29</span>    delay{} { }</div>
+<div class="fragment"><div class="line"><span class="lineno">   27</span>    : samples(max_samples + 1),</div>
+<div class="line"><span class="lineno">   28</span>      writeIndex(0),</div>
+<div class="line"><span class="lineno">   29</span>      delay{}</div>
+<div class="line"><span class="lineno">   30</span>{</div>
+<div class="line"><span class="lineno">   31</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -155,21 +156,23 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="delayline_8cpp_source.html#l00039">39</a> of file <a class="el" href="delayline_8cpp_source.html">delayline.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   40</span>{</div>
-<div class="line"><span class="lineno">   41</span>    <span class="keyword">auto</span> length = samples.size();</div>
-<div class="line"><span class="lineno">   42</span> </div>
-<div class="line"><span class="lineno">   43</span>    <span class="keyword">auto</span> integral_delay = <span class="keyword">static_cast&lt;</span><span class="keywordtype">size_t</span><span class="keyword">&gt;</span>(std::floor(delay));</div>
-<div class="line"><span class="lineno">   44</span>    <span class="keywordtype">float</span> fractional_delay = delay - integral_delay;</div>
-<div class="line"><span class="lineno">   45</span> </div>
-<div class="line"><span class="lineno">   46</span>    <span class="keyword">auto</span> last_written_index = (writeIndex - 1 + length) % length;</div>
-<div class="line"><span class="lineno">   47</span>    <span class="keyword">auto</span> before_last_written_index = (last_written_index - 1 + length) % length;</div>
-<div class="line"><span class="lineno">   48</span> </div>
-<div class="line"><span class="lineno">   49</span>    <span class="keyword">auto</span> sample = samples[(last_written_index - integral_delay + length) % length];</div>
-<div class="line"><span class="lineno">   50</span>    <span class="keyword">auto</span> before_sample = samples[(before_last_written_index - integral_delay + length) % length];</div>
-<div class="line"><span class="lineno">   51</span> </div>
-<div class="line"><span class="lineno">   52</span>    <span class="keywordflow">return</span> (1 - fractional_delay) * sample + fractional_delay * before_sample;</div>
-<div class="line"><span class="lineno">   53</span>}</div>
+<p class="definition">Definition at line <a class="el" href="delayline_8cpp_source.html#l00041">41</a> of file <a class="el" href="delayline_8cpp_source.html">delayline.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   42</span>{</div>
+<div class="line"><span class="lineno">   43</span>    <span class="keyword">auto</span> length = samples.size();</div>
+<div class="line"><span class="lineno">   44</span> </div>
+<div class="line"><span class="lineno">   45</span>    <span class="keyword">auto</span> integral_delay = <span class="keyword">static_cast&lt;</span><span class="keywordtype">size_t</span><span class="keyword">&gt;</span>(std::floor(delay));</div>
+<div class="line"><span class="lineno">   46</span>    <span class="keywordtype">float</span> fractional_delay = delay - integral_delay;</div>
+<div class="line"><span class="lineno">   47</span> </div>
+<div class="line"><span class="lineno">   48</span>    <span class="keyword">auto</span> last_written_index = (writeIndex - 1 + length) % length;</div>
+<div class="line"><span class="lineno">   49</span>    <span class="keyword">auto</span> before_last_written_index = (last_written_index - 1 + length) % length;</div>
+<div class="line"><span class="lineno">   50</span> </div>
+<div class="line"><span class="lineno">   51</span>    <span class="keyword">auto</span> sample =</div>
+<div class="line"><span class="lineno">   52</span>        samples[(last_written_index - integral_delay + length) % length];</div>
+<div class="line"><span class="lineno">   53</span>    <span class="keyword">auto</span> before_sample =</div>
+<div class="line"><span class="lineno">   54</span>        samples[(before_last_written_index - integral_delay + length) % length];</div>
+<div class="line"><span class="lineno">   55</span> </div>
+<div class="line"><span class="lineno">   56</span>    <span class="keywordflow">return</span> (1 - fractional_delay) * sample + fractional_delay * before_sample;</div>
+<div class="line"><span class="lineno">   57</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -189,13 +192,13 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="delayline_8cpp_source.html#l00031">31</a> of file <a class="el" href="delayline_8cpp_source.html">delayline.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   32</span>{</div>
-<div class="line"><span class="lineno">   33</span>    samples[writeIndex] = sample;</div>
-<div class="line"><span class="lineno">   34</span> </div>
-<div class="line"><span class="lineno">   35</span>    writeIndex++;</div>
-<div class="line"><span class="lineno">   36</span>    writeIndex %= samples.size();</div>
-<div class="line"><span class="lineno">   37</span>}</div>
+<p class="definition">Definition at line <a class="el" href="delayline_8cpp_source.html#l00033">33</a> of file <a class="el" href="delayline_8cpp_source.html">delayline.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   34</span>{</div>
+<div class="line"><span class="lineno">   35</span>    samples[writeIndex] = sample;</div>
+<div class="line"><span class="lineno">   36</span> </div>
+<div class="line"><span class="lineno">   37</span>    writeIndex++;</div>
+<div class="line"><span class="lineno">   38</span>    writeIndex %= samples.size();</div>
+<div class="line"><span class="lineno">   39</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -215,10 +218,10 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="delayline_8cpp_source.html#l00055">55</a> of file <a class="el" href="delayline_8cpp_source.html">delayline.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   56</span>{</div>
-<div class="line"><span class="lineno">   57</span>    delay = std::min((<span class="keywordtype">float</span>)samples.size() - 1, std::max(0.f, new_delay));</div>
-<div class="line"><span class="lineno">   58</span>}</div>
+<p class="definition">Definition at line <a class="el" href="delayline_8cpp_source.html#l00059">59</a> of file <a class="el" href="delayline_8cpp_source.html">delayline.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   60</span>{</div>
+<div class="line"><span class="lineno">   61</span>    delay = std::min((<span class="keywordtype">float</span>)samples.size() - 1, std::max(0.f, new_delay));</div>
+<div class="line"><span class="lineno">   62</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>

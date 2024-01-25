@@ -144,19 +144,19 @@ template&lt;std::size_t N, std::size_t K&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="fast__convolution_8h_source.html#l00038">38</a> of file <a class="el" href="fast__convolution_8h_source.html">fast_convolution.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   39</span>    {</div>
-<div class="line"><span class="lineno">   40</span>        esp_err_t rc = dsps_fft4r_init_fc32(NULL, CONFIG_DSP_MAX_FFT_SIZE);</div>
-<div class="line"><span class="lineno">   41</span>        assert(rc == ESP_OK);</div>
-<div class="line"><span class="lineno">   42</span> </div>
-<div class="line"><span class="lineno">   43</span>        <span class="comment">// transform a</span></div>
-<div class="line"><span class="lineno">   44</span>        std::array&lt;float, N&gt; a_copy{};</div>
-<div class="line"><span class="lineno">   45</span>        std::copy(<a class="code hl_variable" href="namespacewah-smoothing.html#abc1f92f01bf15f1729ff05c8074295aa">a</a>.cbegin(), <a class="code hl_variable" href="namespacewah-smoothing.html#abc1f92f01bf15f1729ff05c8074295aa">a</a>.cend(), a_copy.begin());</div>
-<div class="line"><span class="lineno">   46</span>        a_complex = real_to_complex(a_copy);</div>
-<div class="line"><span class="lineno">   47</span>        rc = dsps_fft4r_fc32(<span class="keyword">reinterpret_cast&lt;</span><span class="keywordtype">float</span> *<span class="keyword">&gt;</span>(a_complex.data()), N);</div>
-<div class="line"><span class="lineno">   48</span>        assert(rc == ESP_OK);</div>
-<div class="line"><span class="lineno">   49</span>        dsps_bit_rev4r_fc32(<span class="keyword">reinterpret_cast&lt;</span><span class="keywordtype">float</span> *<span class="keyword">&gt;</span>(a_complex.data()), N);</div>
-<div class="line"><span class="lineno">   50</span>    }</div>
+<p class="definition">Definition at line <a class="el" href="fast__convolution_8h_source.html#l00039">39</a> of file <a class="el" href="fast__convolution_8h_source.html">fast_convolution.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   40</span>    {</div>
+<div class="line"><span class="lineno">   41</span>        esp_err_t rc = dsps_fft4r_init_fc32(NULL, CONFIG_DSP_MAX_FFT_SIZE);</div>
+<div class="line"><span class="lineno">   42</span>        assert(rc == ESP_OK);</div>
+<div class="line"><span class="lineno">   43</span> </div>
+<div class="line"><span class="lineno">   44</span>        <span class="comment">// transform a</span></div>
+<div class="line"><span class="lineno">   45</span>        std::array&lt;float, N&gt; a_copy{};</div>
+<div class="line"><span class="lineno">   46</span>        std::copy(<a class="code hl_variable" href="namespacewah-smoothing.html#abc1f92f01bf15f1729ff05c8074295aa">a</a>.cbegin(), <a class="code hl_variable" href="namespacewah-smoothing.html#abc1f92f01bf15f1729ff05c8074295aa">a</a>.cend(), a_copy.begin());</div>
+<div class="line"><span class="lineno">   47</span>        a_complex = real_to_complex(a_copy);</div>
+<div class="line"><span class="lineno">   48</span>        rc = dsps_fft4r_fc32(<span class="keyword">reinterpret_cast&lt;</span><span class="keywordtype">float</span> *<span class="keyword">&gt;</span>(a_complex.data()), N);</div>
+<div class="line"><span class="lineno">   49</span>        assert(rc == ESP_OK);</div>
+<div class="line"><span class="lineno">   50</span>        dsps_bit_rev4r_fc32(<span class="keyword">reinterpret_cast&lt;</span><span class="keywordtype">float</span> *<span class="keyword">&gt;</span>(a_complex.data()), N);</div>
+<div class="line"><span class="lineno">   51</span>    }</div>
 <div class="ttc" id="anamespacewah-smoothing_html_abc1f92f01bf15f1729ff05c8074295aa"><div class="ttname"><a href="namespacewah-smoothing.html#abc1f92f01bf15f1729ff05c8074295aa">wah-smoothing.a</a></div><div class="ttdeci">a</div><div class="ttdef"><b>Definition:</b> <a href="wah-smoothing_8py_source.html#l00033">wah-smoothing.py:33</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="wah-smoothing_8py_source.html#l00033">wah-smoothing::a</a>.</p>
@@ -207,41 +207,41 @@ template&lt;std::size_t N, std::size_t K&gt; </div>
 </div><div class="memdoc">
 
 <p class="definition">Definition at line <a class="el" href="fast__convolution_8h_source.html#l00125">125</a> of file <a class="el" href="fast__convolution_8h_source.html">fast_convolution.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  129</span>    {</div>
-<div class="line"><span class="lineno">  130</span>        <span class="comment">// We want to compute (r_a + im_a j) * (r_b + im_b j)</span></div>
-<div class="line"><span class="lineno">  131</span>        <span class="comment">// This can be rewritten as follows:</span></div>
-<div class="line"><span class="lineno">  132</span>        <span class="comment">//</span></div>
-<div class="line"><span class="lineno">  133</span>        <span class="comment">// ra rb + ra im_b j + im_a r_b j + im_a im_b j j</span></div>
-<div class="line"><span class="lineno">  134</span>        <span class="comment">//</span></div>
-<div class="line"><span class="lineno">  135</span>        <span class="comment">// j j  is -1 so:</span></div>
-<div class="line"><span class="lineno">  136</span>        <span class="comment">//</span></div>
-<div class="line"><span class="lineno">  137</span>        <span class="comment">// (ra rb + ra im_b j) +    // part 1</span></div>
-<div class="line"><span class="lineno">  138</span>        <span class="comment">// (- im_a im_b + im_a r_b j)   // part 2</span></div>
-<div class="line"><span class="lineno">  139</span> </div>
-<div class="line"><span class="lineno">  140</span>        <span class="comment">// TODO we multiply then add here, could we use the MADD.S instruction</span></div>
-<div class="line"><span class="lineno">  141</span>        <span class="comment">// to speed it up?</span></div>
-<div class="line"><span class="lineno">  142</span> </div>
-<div class="line"><span class="lineno">  143</span>        <span class="keyword">auto</span> a_ptr = <span class="keyword">reinterpret_cast&lt;</span><span class="keyword">const </span><span class="keywordtype">float</span>*<span class="keyword">&gt;</span>(<a class="code hl_variable" href="namespacewah-smoothing.html#abc1f92f01bf15f1729ff05c8074295aa">a</a>.data());</div>
-<div class="line"><span class="lineno">  144</span>        <span class="keyword">auto</span> b_ptr = <span class="keyword">reinterpret_cast&lt;</span><span class="keyword">const </span><span class="keywordtype">float</span>*<span class="keyword">&gt;</span>(<a class="code hl_variable" href="namespacewah-smoothing.html#ace613f5c1ec59de365093c823abb6fc7">b</a>.data());</div>
-<div class="line"><span class="lineno">  145</span>        <span class="keyword">auto</span> out_ptr = <span class="keyword">reinterpret_cast&lt;</span><span class="keywordtype">float</span>*<span class="keyword">&gt;</span>(out.data());</div>
-<div class="line"><span class="lineno">  146</span>        <span class="comment">// part 1</span></div>
-<div class="line"><span class="lineno">  147</span>        dsps_mul_f32(a_ptr, b_ptr, out_ptr, N, 2, 2, 2);</div>
-<div class="line"><span class="lineno">  148</span>        dsps_mul_f32(a_ptr, b_ptr + 1, out_ptr + 1, N, 2, 2, 2);</div>
-<div class="line"><span class="lineno">  149</span> </div>
-<div class="line"><span class="lineno">  150</span>        <span class="comment">// part 2</span></div>
-<div class="line"><span class="lineno">  151</span>        std::array&lt;std::complex&lt;float&gt;, N&gt; out2;</div>
-<div class="line"><span class="lineno">  152</span>        <span class="keyword">auto</span> out2_ptr = <span class="keyword">reinterpret_cast&lt;</span><span class="keywordtype">float</span>*<span class="keyword">&gt;</span>(out2.data());</div>
-<div class="line"><span class="lineno">  153</span>        dsps_mul_f32(a_ptr + 1, b_ptr + 1, out2_ptr, N, 2, 2, 2);</div>
-<div class="line"><span class="lineno">  154</span>        dsps_mul_f32(a_ptr + 1, b_ptr, out2_ptr + 1, N, 2, 2, 2);</div>
-<div class="line"><span class="lineno">  155</span>        dsps_mulc_f32(out2_ptr, out2_ptr, N, -1, 2, 2);</div>
-<div class="line"><span class="lineno">  156</span> </div>
-<div class="line"><span class="lineno">  157</span>        dsps_add_f32(out_ptr, out2_ptr, out_ptr, 2*out.size(), 1, 1, 1);</div>
-<div class="line"><span class="lineno">  158</span>    }</div>
+<div class="fragment"><div class="line"><span class="lineno">  128</span>    {</div>
+<div class="line"><span class="lineno">  129</span>        <span class="comment">// We want to compute (r_a + im_a j) * (r_b + im_b j)</span></div>
+<div class="line"><span class="lineno">  130</span>        <span class="comment">// This can be rewritten as follows:</span></div>
+<div class="line"><span class="lineno">  131</span>        <span class="comment">//</span></div>
+<div class="line"><span class="lineno">  132</span>        <span class="comment">// ra rb + ra im_b j + im_a r_b j + im_a im_b j j</span></div>
+<div class="line"><span class="lineno">  133</span>        <span class="comment">//</span></div>
+<div class="line"><span class="lineno">  134</span>        <span class="comment">// j j  is -1 so:</span></div>
+<div class="line"><span class="lineno">  135</span>        <span class="comment">//</span></div>
+<div class="line"><span class="lineno">  136</span>        <span class="comment">// (ra rb + ra im_b j) +    // part 1</span></div>
+<div class="line"><span class="lineno">  137</span>        <span class="comment">// (- im_a im_b + im_a r_b j)   // part 2</span></div>
+<div class="line"><span class="lineno">  138</span> </div>
+<div class="line"><span class="lineno">  139</span>        <span class="comment">// TODO we multiply then add here, could we use the MADD.S instruction</span></div>
+<div class="line"><span class="lineno">  140</span>        <span class="comment">// to speed it up?</span></div>
+<div class="line"><span class="lineno">  141</span> </div>
+<div class="line"><span class="lineno">  142</span>        <span class="keyword">auto</span> a_ptr = <span class="keyword">reinterpret_cast&lt;</span><span class="keyword">const </span><span class="keywordtype">float</span> *<span class="keyword">&gt;</span>(<a class="code hl_variable" href="namespacewah-smoothing.html#abc1f92f01bf15f1729ff05c8074295aa">a</a>.data());</div>
+<div class="line"><span class="lineno">  143</span>        <span class="keyword">auto</span> b_ptr = <span class="keyword">reinterpret_cast&lt;</span><span class="keyword">const </span><span class="keywordtype">float</span> *<span class="keyword">&gt;</span>(<a class="code hl_variable" href="namespacewah-smoothing.html#ace613f5c1ec59de365093c823abb6fc7">b</a>.data());</div>
+<div class="line"><span class="lineno">  144</span>        <span class="keyword">auto</span> out_ptr = <span class="keyword">reinterpret_cast&lt;</span><span class="keywordtype">float</span> *<span class="keyword">&gt;</span>(out.data());</div>
+<div class="line"><span class="lineno">  145</span>        <span class="comment">// part 1</span></div>
+<div class="line"><span class="lineno">  146</span>        dsps_mul_f32(a_ptr, b_ptr, out_ptr, N, 2, 2, 2);</div>
+<div class="line"><span class="lineno">  147</span>        dsps_mul_f32(a_ptr, b_ptr + 1, out_ptr + 1, N, 2, 2, 2);</div>
+<div class="line"><span class="lineno">  148</span> </div>
+<div class="line"><span class="lineno">  149</span>        <span class="comment">// part 2</span></div>
+<div class="line"><span class="lineno">  150</span>        std::array&lt;std::complex&lt;float&gt;, N&gt; out2;</div>
+<div class="line"><span class="lineno">  151</span>        <span class="keyword">auto</span> out2_ptr = <span class="keyword">reinterpret_cast&lt;</span><span class="keywordtype">float</span> *<span class="keyword">&gt;</span>(out2.data());</div>
+<div class="line"><span class="lineno">  152</span>        dsps_mul_f32(a_ptr + 1, b_ptr + 1, out2_ptr, N, 2, 2, 2);</div>
+<div class="line"><span class="lineno">  153</span>        dsps_mul_f32(a_ptr + 1, b_ptr, out2_ptr + 1, N, 2, 2, 2);</div>
+<div class="line"><span class="lineno">  154</span>        dsps_mulc_f32(out2_ptr, out2_ptr, N, -1, 2, 2);</div>
+<div class="line"><span class="lineno">  155</span> </div>
+<div class="line"><span class="lineno">  156</span>        dsps_add_f32(out_ptr, out2_ptr, out_ptr, 2 * out.size(), 1, 1, 1);</div>
+<div class="line"><span class="lineno">  157</span>    }</div>
 <div class="ttc" id="anamespacewah-smoothing_html_ace613f5c1ec59de365093c823abb6fc7"><div class="ttname"><a href="namespacewah-smoothing.html#ace613f5c1ec59de365093c823abb6fc7">wah-smoothing.b</a></div><div class="ttdeci">b</div><div class="ttdef"><b>Definition:</b> <a href="wah-smoothing_8py_source.html#l00033">wah-smoothing.py:33</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="wah-smoothing_8py_source.html#l00033">wah-smoothing::a</a>, and <a class="el" href="wah-smoothing_8py_source.html#l00033">wah-smoothing::b</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="fast__convolution_8h_source.html#l00057">shrapnel::dsp::FastConvolution&lt; N, K &gt;::process()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="fast__convolution_8h_source.html#l00058">shrapnel::dsp::FastConvolution&lt; N, K &gt;::process()</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
@@ -290,12 +290,13 @@ template&lt;std::size_t N, std::size_t K&gt; </div>
 <p>Process samples. </p>
 <p >\( out = a \circledast b \) </p>
 
-<p class="definition">Definition at line <a class="el" href="fast__convolution_8h_source.html#l00057">57</a> of file <a class="el" href="fast__convolution_8h_source.html">fast_convolution.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   60</span>    {</div>
-<div class="line"><span class="lineno">   61</span>        <span class="comment">// transform b</span></div>
-<div class="line"><span class="lineno">   62</span>        <span class="keyword">auto</span> b_complex = real_to_complex(<a class="code hl_variable" href="namespacewah-smoothing.html#ace613f5c1ec59de365093c823abb6fc7">b</a>);</div>
-<div class="line"><span class="lineno">   63</span>        <a class="code hl_function" href="desktop_2profiling_8c.html#a3171d2be3fbf00e49982243e9869735a">profiling_mark_stage</a>(7);</div>
-<div class="line"><span class="lineno">   64</span>        <span class="keywordtype">int</span> rc = dsps_fft4r_fc32(<span class="keyword">reinterpret_cast&lt;</span><span class="keywordtype">float</span> *<span class="keyword">&gt;</span>(b_complex.data()), N);</div>
+<p class="definition">Definition at line <a class="el" href="fast__convolution_8h_source.html#l00058">58</a> of file <a class="el" href="fast__convolution_8h_source.html">fast_convolution.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   59</span>    {</div>
+<div class="line"><span class="lineno">   60</span>        <span class="comment">// transform b</span></div>
+<div class="line"><span class="lineno">   61</span>        <span class="keyword">auto</span> b_complex = real_to_complex(<a class="code hl_variable" href="namespacewah-smoothing.html#ace613f5c1ec59de365093c823abb6fc7">b</a>);</div>
+<div class="line"><span class="lineno">   62</span>        <a class="code hl_function" href="desktop_2profiling_8c.html#a3171d2be3fbf00e49982243e9869735a">profiling_mark_stage</a>(7);</div>
+<div class="line"><span class="lineno">   63</span>        <span class="keywordtype">int</span> rc =</div>
+<div class="line"><span class="lineno">   64</span>            dsps_fft4r_fc32(<span class="keyword">reinterpret_cast&lt;</span><span class="keywordtype">float</span> *<span class="keyword">&gt;</span>(b_complex.data()), N);</div>
 <div class="line"><span class="lineno">   65</span>        assert(rc == ESP_OK);</div>
 <div class="line"><span class="lineno">   66</span>        <a class="code hl_function" href="desktop_2profiling_8c.html#a3171d2be3fbf00e49982243e9869735a">profiling_mark_stage</a>(8);</div>
 <div class="line"><span class="lineno">   67</span>        dsps_bit_rev4r_fc32(<span class="keyword">reinterpret_cast&lt;</span><span class="keywordtype">float</span> *<span class="keyword">&gt;</span>(b_complex.data()), N);</div>
@@ -329,9 +330,9 @@ template&lt;std::size_t N, std::size_t K&gt; </div>
 <div class="line"><span class="lineno">   95</span>        <a class="code hl_function" href="desktop_2profiling_8c.html#a3171d2be3fbf00e49982243e9869735a">profiling_mark_stage</a>(15);</div>
 <div class="line"><span class="lineno">   96</span>    }</div>
 <div class="ttc" id="aclassshrapnel_1_1dsp_1_1FastConvolution_html_af1edb28634e2a86d0223e4bf56234650"><div class="ttname"><a href="classshrapnel_1_1dsp_1_1FastConvolution.html#af1edb28634e2a86d0223e4bf56234650">shrapnel::dsp::FastConvolution::complex_multiply</a></div><div class="ttdeci">static void complex_multiply(const std::array&lt; std::complex&lt; float &gt;, N &gt; &amp;a, const std::array&lt; std::complex&lt; float &gt;, N &gt; &amp;b, std::array&lt; std::complex&lt; float &gt;, N &gt; &amp;out)</div><div class="ttdef"><b>Definition:</b> <a href="fast__convolution_8h_source.html#l00125">fast_convolution.h:125</a></div></div>
-<div class="ttc" id="adesktop_2profiling_8c_html_a3171d2be3fbf00e49982243e9869735a"><div class="ttname"><a href="desktop_2profiling_8c.html#a3171d2be3fbf00e49982243e9869735a">profiling_mark_stage</a></div><div class="ttdeci">void profiling_mark_stage(unsigned int stage)</div><div class="ttdef"><b>Definition:</b> <a href="desktop_2profiling_8c_source.html#l00027">profiling.c:27</a></div></div>
+<div class="ttc" id="adesktop_2profiling_8c_html_a3171d2be3fbf00e49982243e9869735a"><div class="ttname"><a href="desktop_2profiling_8c.html#a3171d2be3fbf00e49982243e9869735a">profiling_mark_stage</a></div><div class="ttdeci">void profiling_mark_stage(unsigned int stage)</div><div class="ttdef"><b>Definition:</b> <a href="desktop_2profiling_8c_source.html#l00028">profiling.c:28</a></div></div>
 </div><!-- fragment -->
-<p class="reference">References <a class="el" href="wah-smoothing_8py_source.html#l00033">wah-smoothing::b</a>, <a class="el" href="fast__convolution_8h_source.html#l00125">shrapnel::dsp::FastConvolution&lt; N, K &gt;::complex_multiply()</a>, and <a class="el" href="desktop_2profiling_8c_source.html#l00027">profiling_mark_stage()</a>.</p>
+<p class="reference">References <a class="el" href="wah-smoothing_8py_source.html#l00033">wah-smoothing::b</a>, <a class="el" href="fast__convolution_8h_source.html#l00125">shrapnel::dsp::FastConvolution&lt; N, K &gt;::complex_multiply()</a>, and <a class="el" href="desktop_2profiling_8c_source.html#l00028">profiling_mark_stage()</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">

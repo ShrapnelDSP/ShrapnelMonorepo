@@ -115,8 +115,8 @@ $(document).ready(function(){initNavTree('contour_8cpp_source.html',''); initRes
 <div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="comment"> */</span></div>
 <div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span> </div>
 <div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span><span class="preprocessor">#include &quot;<a class="code" href="contour_8h.html">contour.h</a>&quot;</span></div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="preprocessor">#include &lt;cmath&gt;</span></div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="preprocessor">#include &lt;cassert&gt;</span></div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="preprocessor">#include &lt;cassert&gt;</span></div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="preprocessor">#include &lt;cmath&gt;</span></div>
 <div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span> </div>
 <div class="line"><a id="l00025" name="l00025"></a><span class="lineno"><a class="line" href="classContourFilter.html#af4486d2fb4e9beb086f2b11b5f48d111">   25</a></span><a class="code hl_function" href="classContourFilter.html#af4486d2fb4e9beb086f2b11b5f48d111">ContourFilter::ContourFilter</a>()</div>
 <div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>{</div>
@@ -133,89 +133,102 @@ $(document).ready(function(){initNavTree('contour_8cpp_source.html',''); initRes
 <div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span> </div>
 <div class="line"><a id="l00038" name="l00038"></a><span class="lineno"><a class="line" href="classContourFilter.html#a882a98cba62c5082d3afa3ebc828fe65">   38</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="classContourFilter.html#a882a98cba62c5082d3afa3ebc828fe65">ContourFilter::set_parameter</a>(<span class="keywordtype">float</span> p)</div>
 <div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>{</div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>    <span class="keywordtype">float</span> K = 2*samplerate;</div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>    <span class="keywordtype">float</span> K = 2 * samplerate;</div>
 <div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span> </div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>    <span class="keywordtype">float</span> B0 = 9.05251759610179e-11f*std::pow(K, 3.f)*std::pow(p, 2.f) -</div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>        1.08075708355892e-10f*std::pow(K, 3.f)*p + 1.13156469951272e-6f*std::pow(K,</div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>                2.f)*std::pow(p, 2.f) - 1.15683089695001e-6f*std::pow(K, 2.f)*p -</div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>        1.89606569211334e-8f*std::pow(K, 2.f) - 0.000315827467966071f*K*p -</div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>        0.000205739036275041f*K - 0.0902364194188775f;</div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span> </div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>    <span class="keywordtype">float</span> B1 = -1.81050351922036e-10f*std::pow(K, 3.f)*std::pow(p, 2.f) +</div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>        2.16151416711785e-10f*std::pow(K, 3.f)*p - 0.000631654935932142f*K*p -</div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>        0.000411478072550081f*K - 0.36094567767551f;</div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span> </div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>    <span class="keywordtype">float</span> B2 = -2.26312939902545e-6f*std::pow(K, 2.f)*std::pow(p, 2.f) +</div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>        2.31366179390002e-6f*std::pow(K, 2.f)*p + 3.79213138422667e-8f*std::pow(K,</div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>                2.f) - 0.541418516513265f;</div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span> </div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>    <span class="keywordtype">float</span> B3 = 1.81050351922036e-10f*std::pow(K, 3.f)*std::pow(p, 2.f) -</div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>        2.16151416711785e-10f*std::pow(K, 3.f)*p + 0.000631654935932142f*K*p +</div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>        0.000411478072550081f*K - 0.36094567767551f;</div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span> </div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>    <span class="keywordtype">float</span> B4 = -9.05251759610179e-11f*std::pow(K, 3.f)*std::pow(p, 2.f) +</div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>        1.08075708355892e-10f*std::pow(K, 3.f)*p + 1.13156469951272e-6f*std::pow(K,</div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>                2.f)*std::pow(p, 2.f) - 1.15683089695001e-6f*std::pow(K, 2.f)*p -</div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>        1.89606569211334e-8f*std::pow(K, 2.f) + 0.000315827467966071f*K*p +</div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>        0.000205739036275041f*K - 0.0902364194188775f;</div>
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span> </div>
-<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>    <span class="keywordtype">float</span> A0 = 3.50824760873489e-15f*std::pow(K, 4.f)*std::pow(p, 2.f) -</div>
-<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>        4.18840913192565e-15f*std::pow(K, 4.f)*p +</div>
-<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>        1.73715033387475e-10f*std::pow(K, 3.f)*std::pow(p, 2.f) -</div>
-<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>        2.15704710341094e-10f*std::pow(K, 3.f)*p -</div>
-<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>        4.18840913192564e-12f*std::pow(K, 3.f) + 2.09000180472839e-6f*std::pow(K,</div>
-<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>                2.f)*std::pow(p, 2.f) - 2.70050081212777e-6f*std::pow(K, 2.f)*p -</div>
-<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>        1.22402003248511e-7f*std::pow(K, 2.f) - 0.000583333333333333f*K*p -</div>
-<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>        0.00052012272153041f*K - 0.166666666666667f;</div>
-<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span> </div>
-<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>    <span class="keywordtype">float</span> A1 = -1.40329904349395e-14f*std::pow(K, 4.f)*std::pow(p, 2.f) +</div>
-<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>        1.67536365277026e-14f*std::pow(K, 4.f)*p - 3.4743006677495e-10f*std::pow(K,</div>
-<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>                3.f)*std::pow(p, 2.f) + 4.31409420682187e-10f*std::pow(K, 3.f)*p +</div>
-<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>        8.37681826385129e-12f*std::pow(K, 3.f) - 0.00116666666666667f*K*p -</div>
-<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>        0.00104024544306082f*K - 0.666666666666667f;</div>
-<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span> </div>
-<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>    <span class="keywordtype">float</span> A2 = 2.10494856524093e-14f*std::pow(K, 4.f)*std::pow(p, 2.f) -</div>
-<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>        2.51304547915539e-14f*std::pow(K, 4.f)*p - 4.18000360945678e-6f*std::pow(K,</div>
-<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>                2.f)*std::pow(p, 2.f) + 5.40100162425555e-6f*std::pow(K, 2.f)*p +</div>
-<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>        2.44804006497022e-7f*std::pow(K, 2.f) - 1.0f;</div>
-<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span> </div>
-<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>    <span class="keywordtype">float</span> A3 = -1.40329904349395e-14f*std::pow(K, 4.f)*std::pow(p, 2.f) +</div>
-<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>        1.67536365277026e-14f*std::pow(K, 4.f)*p + 3.4743006677495e-10f*std::pow(K,</div>
-<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>                3.f)*std::pow(p, 2.f) - 4.31409420682187e-10f*std::pow(K, 3.f)*p -</div>
-<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>        8.37681826385129e-12f*std::pow(K, 3.f) + 0.00116666666666667f*K*p +</div>
-<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>        0.00104024544306082f*K - 0.666666666666667f;</div>
-<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span> </div>
-<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>    <span class="keywordtype">float</span> A4 = 3.50824760873489e-15f*std::pow(K, 4.f)*std::pow(p, 2.f) -</div>
-<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>        4.18840913192565e-15f*std::pow(K, 4.f)*p -</div>
-<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>        1.73715033387475e-10f*std::pow(K, 3.f)*std::pow(p, 2.f) +</div>
-<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>        2.15704710341094e-10f*std::pow(K, 3.f)*p +</div>
-<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>        4.18840913192564e-12f*std::pow(K, 3.f) + 2.09000180472839e-6f*std::pow(K,</div>
-<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>                2.f)*std::pow(p, 2.f) - 2.70050081212777e-6f*std::pow(K, 2.f)*p -</div>
-<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>        1.22402003248511e-7f*std::pow(K, 2.f) + 0.000583333333333333f*K*p +</div>
-<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>        0.00052012272153041f*K - 0.166666666666667f;</div>
-<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span> </div>
-<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>    assert (A0 != 0);</div>
-<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span> </div>
-<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>    filter.<a class="code hl_function" href="classshrapnel_1_1dsp_1_1IirFilter.html#aa09e7c1ab99d85c0fdd1c98c80636550">set_coefficients</a>(std::array&lt;float, 10&gt;{B0, B1, B2, B3, B4, A0, A1, A2, A3, A4});</div>
-<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>}</div>
-<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span> </div>
-<div class="line"><a id="l00106" name="l00106"></a><span class="lineno"><a class="line" href="classContourFilter.html#af730f92633ec29b43ebf57b724383d3d">  106</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="classContourFilter.html#af730f92633ec29b43ebf57b724383d3d">ContourFilter::process</a>(std::span&lt;float&gt; buffer)</div>
-<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>{</div>
-<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>    filter.<a class="code hl_function" href="classshrapnel_1_1dsp_1_1IirFilter.html#a53cb5a72d2a310cd4b35d4329af682f0">process</a>(buffer.data(), buffer.data(), buffer.size());</div>
-<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>}</div>
-<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span> </div>
-<div class="line"><a id="l00111" name="l00111"></a><span class="lineno"><a class="line" href="classContourFilter.html#a7b6a52867eb20a552fb8f66abe35881e">  111</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="classContourFilter.html#a7b6a52867eb20a552fb8f66abe35881e">ContourFilter::reset</a>()</div>
-<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>{</div>
-<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>    filter.<a class="code hl_function" href="classshrapnel_1_1dsp_1_1IirFilter.html#a0849f4c727beedd3b29f6b8ff50f6b02">reset</a>();</div>
-<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>}</div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>    <span class="keywordtype">float</span> B0 = 9.05251759610179e-11f * std::pow(K, 3.f) * std::pow(p, 2.f) -</div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>               1.08075708355892e-10f * std::pow(K, 3.f) * p +</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>               1.13156469951272e-6f * std::pow(K, 2.f) * std::pow(p, 2.f) -</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>               1.15683089695001e-6f * std::pow(K, 2.f) * p -</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>               1.89606569211334e-8f * std::pow(K, 2.f) -</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>               0.000315827467966071f * K * p - 0.000205739036275041f * K -</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>               0.0902364194188775f;</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span> </div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>    <span class="keywordtype">float</span> B1 = -1.81050351922036e-10f * std::pow(K, 3.f) * std::pow(p, 2.f) +</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>               2.16151416711785e-10f * std::pow(K, 3.f) * p -</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>               0.000631654935932142f * K * p - 0.000411478072550081f * K -</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>               0.36094567767551f;</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span> </div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>    <span class="keywordtype">float</span> B2 = -2.26312939902545e-6f * std::pow(K, 2.f) * std::pow(p, 2.f) +</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>               2.31366179390002e-6f * std::pow(K, 2.f) * p +</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>               3.79213138422667e-8f * std::pow(K, 2.f) - 0.541418516513265f;</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span> </div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>    <span class="keywordtype">float</span> B3 = 1.81050351922036e-10f * std::pow(K, 3.f) * std::pow(p, 2.f) -</div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>               2.16151416711785e-10f * std::pow(K, 3.f) * p +</div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>               0.000631654935932142f * K * p + 0.000411478072550081f * K -</div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>               0.36094567767551f;</div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span> </div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>    <span class="keywordtype">float</span> B4 = -9.05251759610179e-11f * std::pow(K, 3.f) * std::pow(p, 2.f) +</div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>               1.08075708355892e-10f * std::pow(K, 3.f) * p +</div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>               1.13156469951272e-6f * std::pow(K, 2.f) * std::pow(p, 2.f) -</div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>               1.15683089695001e-6f * std::pow(K, 2.f) * p -</div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>               1.89606569211334e-8f * std::pow(K, 2.f) +</div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>               0.000315827467966071f * K * p + 0.000205739036275041f * K -</div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>               0.0902364194188775f;</div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span> </div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>    <span class="keywordtype">float</span> A0 = 3.50824760873489e-15f * std::pow(K, 4.f) * std::pow(p, 2.f) -</div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>               4.18840913192565e-15f * std::pow(K, 4.f) * p +</div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>               1.73715033387475e-10f * std::pow(K, 3.f) * std::pow(p, 2.f) -</div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>               2.15704710341094e-10f * std::pow(K, 3.f) * p -</div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>               4.18840913192564e-12f * std::pow(K, 3.f) +</div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>               2.09000180472839e-6f * std::pow(K, 2.f) * std::pow(p, 2.f) -</div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>               2.70050081212777e-6f * std::pow(K, 2.f) * p -</div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>               1.22402003248511e-7f * std::pow(K, 2.f) -</div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>               0.000583333333333333f * K * p - 0.00052012272153041f * K -</div>
+<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>               0.166666666666667f;</div>
+<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span> </div>
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>    <span class="keywordtype">float</span> A1 = -1.40329904349395e-14f * std::pow(K, 4.f) * std::pow(p, 2.f) +</div>
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>               1.67536365277026e-14f * std::pow(K, 4.f) * p -</div>
+<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>               3.4743006677495e-10f * std::pow(K, 3.f) * std::pow(p, 2.f) +</div>
+<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>               4.31409420682187e-10f * std::pow(K, 3.f) * p +</div>
+<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>               8.37681826385129e-12f * std::pow(K, 3.f) -</div>
+<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>               0.00116666666666667f * K * p - 0.00104024544306082f * K -</div>
+<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>               0.666666666666667f;</div>
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span> </div>
+<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>    <span class="keywordtype">float</span> A2 = 2.10494856524093e-14f * std::pow(K, 4.f) * std::pow(p, 2.f) -</div>
+<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>               2.51304547915539e-14f * std::pow(K, 4.f) * p -</div>
+<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>               4.18000360945678e-6f * std::pow(K, 2.f) * std::pow(p, 2.f) +</div>
+<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>               5.40100162425555e-6f * std::pow(K, 2.f) * p +</div>
+<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>               2.44804006497022e-7f * std::pow(K, 2.f) - 1.0f;</div>
+<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span> </div>
+<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>    <span class="keywordtype">float</span> A3 = -1.40329904349395e-14f * std::pow(K, 4.f) * std::pow(p, 2.f) +</div>
+<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>               1.67536365277026e-14f * std::pow(K, 4.f) * p +</div>
+<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>               3.4743006677495e-10f * std::pow(K, 3.f) * std::pow(p, 2.f) -</div>
+<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>               4.31409420682187e-10f * std::pow(K, 3.f) * p -</div>
+<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>               8.37681826385129e-12f * std::pow(K, 3.f) +</div>
+<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>               0.00116666666666667f * K * p + 0.00104024544306082f * K -</div>
+<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>               0.666666666666667f;</div>
+<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span> </div>
+<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>    <span class="keywordtype">float</span> A4 = 3.50824760873489e-15f * std::pow(K, 4.f) * std::pow(p, 2.f) -</div>
+<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>               4.18840913192565e-15f * std::pow(K, 4.f) * p -</div>
+<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>               1.73715033387475e-10f * std::pow(K, 3.f) * std::pow(p, 2.f) +</div>
+<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>               2.15704710341094e-10f * std::pow(K, 3.f) * p +</div>
+<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>               4.18840913192564e-12f * std::pow(K, 3.f) +</div>
+<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>               2.09000180472839e-6f * std::pow(K, 2.f) * std::pow(p, 2.f) -</div>
+<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>               2.70050081212777e-6f * std::pow(K, 2.f) * p -</div>
+<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>               1.22402003248511e-7f * std::pow(K, 2.f) +</div>
+<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>               0.000583333333333333f * K * p + 0.00052012272153041f * K -</div>
+<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>               0.166666666666667f;</div>
+<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span> </div>
+<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>    assert(A0 != 0);</div>
+<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span> </div>
+<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>    filter.<a class="code hl_function" href="classshrapnel_1_1dsp_1_1IirFilter.html#aa09e7c1ab99d85c0fdd1c98c80636550">set_coefficients</a>(</div>
+<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span>        std::array&lt;float, 10&gt;{B0, B1, B2, B3, B4, A0, A1, A2, A3, A4});</div>
+<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>}</div>
+<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span> </div>
+<div class="line"><a id="l00122" name="l00122"></a><span class="lineno"><a class="line" href="classContourFilter.html#af730f92633ec29b43ebf57b724383d3d">  122</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="classContourFilter.html#af730f92633ec29b43ebf57b724383d3d">ContourFilter::process</a>(std::span&lt;float&gt; buffer)</div>
+<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>{</div>
+<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>    filter.<a class="code hl_function" href="classshrapnel_1_1dsp_1_1IirFilter.html#a53cb5a72d2a310cd4b35d4329af682f0">process</a>(buffer.data(), buffer.data(), buffer.size());</div>
+<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>}</div>
+<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span> </div>
+<div class="line"><a id="l00127" name="l00127"></a><span class="lineno"><a class="line" href="classContourFilter.html#a7b6a52867eb20a552fb8f66abe35881e">  127</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="classContourFilter.html#a7b6a52867eb20a552fb8f66abe35881e">ContourFilter::reset</a>() { filter.<a class="code hl_function" href="classshrapnel_1_1dsp_1_1IirFilter.html#a0849f4c727beedd3b29f6b8ff50f6b02">reset</a>(); }</div>
 <div class="ttc" id="aclassContourFilter_html_a5789ed6d2da0b980a2dc1469925a0509"><div class="ttname"><a href="classContourFilter.html#a5789ed6d2da0b980a2dc1469925a0509">ContourFilter::prepare</a></div><div class="ttdeci">void prepare(float samplerate, size_t)</div><div class="ttdef"><b>Definition:</b> <a href="contour_8cpp_source.html#l00032">contour.cpp:32</a></div></div>
-<div class="ttc" id="aclassContourFilter_html_a7b6a52867eb20a552fb8f66abe35881e"><div class="ttname"><a href="classContourFilter.html#a7b6a52867eb20a552fb8f66abe35881e">ContourFilter::reset</a></div><div class="ttdeci">void reset()</div><div class="ttdef"><b>Definition:</b> <a href="contour_8cpp_source.html#l00111">contour.cpp:111</a></div></div>
+<div class="ttc" id="aclassContourFilter_html_a7b6a52867eb20a552fb8f66abe35881e"><div class="ttname"><a href="classContourFilter.html#a7b6a52867eb20a552fb8f66abe35881e">ContourFilter::reset</a></div><div class="ttdeci">void reset()</div><div class="ttdef"><b>Definition:</b> <a href="contour_8cpp_source.html#l00127">contour.cpp:127</a></div></div>
 <div class="ttc" id="aclassContourFilter_html_a882a98cba62c5082d3afa3ebc828fe65"><div class="ttname"><a href="classContourFilter.html#a882a98cba62c5082d3afa3ebc828fe65">ContourFilter::set_parameter</a></div><div class="ttdeci">void set_parameter(float p)</div><div class="ttdef"><b>Definition:</b> <a href="contour_8cpp_source.html#l00038">contour.cpp:38</a></div></div>
 <div class="ttc" id="aclassContourFilter_html_af4486d2fb4e9beb086f2b11b5f48d111"><div class="ttname"><a href="classContourFilter.html#af4486d2fb4e9beb086f2b11b5f48d111">ContourFilter::ContourFilter</a></div><div class="ttdeci">ContourFilter()</div><div class="ttdef"><b>Definition:</b> <a href="contour_8cpp_source.html#l00025">contour.cpp:25</a></div></div>
-<div class="ttc" id="aclassContourFilter_html_af730f92633ec29b43ebf57b724383d3d"><div class="ttname"><a href="classContourFilter.html#af730f92633ec29b43ebf57b724383d3d">ContourFilter::process</a></div><div class="ttdeci">void process(std::span&lt; float &gt; buffer)</div><div class="ttdef"><b>Definition:</b> <a href="contour_8cpp_source.html#l00106">contour.cpp:106</a></div></div>
+<div class="ttc" id="aclassContourFilter_html_af730f92633ec29b43ebf57b724383d3d"><div class="ttname"><a href="classContourFilter.html#af730f92633ec29b43ebf57b724383d3d">ContourFilter::process</a></div><div class="ttdeci">void process(std::span&lt; float &gt; buffer)</div><div class="ttdef"><b>Definition:</b> <a href="contour_8cpp_source.html#l00122">contour.cpp:122</a></div></div>
 <div class="ttc" id="aclassshrapnel_1_1dsp_1_1IirFilter_html_a0849f4c727beedd3b29f6b8ff50f6b02"><div class="ttname"><a href="classshrapnel_1_1dsp_1_1IirFilter.html#a0849f4c727beedd3b29f6b8ff50f6b02">shrapnel::dsp::IirFilter::reset</a></div><div class="ttdeci">void reset(void) override</div><div class="ttdef"><b>Definition:</b> <a href="desktop_2include_2iir__concrete_8h_source.html#l00054">iir_concrete.h:54</a></div></div>
-<div class="ttc" id="aclassshrapnel_1_1dsp_1_1IirFilter_html_a53cb5a72d2a310cd4b35d4329af682f0"><div class="ttname"><a href="classshrapnel_1_1dsp_1_1IirFilter.html#a53cb5a72d2a310cd4b35d4329af682f0">shrapnel::dsp::IirFilter::process</a></div><div class="ttdeci">void process(const float *in, float *out, size_t buf_size) override</div><div class="ttdef"><b>Definition:</b> <a href="desktop_2include_2iir__concrete_8h_source.html#l00037">iir_concrete.h:37</a></div></div>
-<div class="ttc" id="aclassshrapnel_1_1dsp_1_1IirFilter_html_aa09e7c1ab99d85c0fdd1c98c80636550"><div class="ttname"><a href="classshrapnel_1_1dsp_1_1IirFilter.html#aa09e7c1ab99d85c0fdd1c98c80636550">shrapnel::dsp::IirFilter::set_coefficients</a></div><div class="ttdeci">void set_coefficients(std::array&lt; float, 6 &gt; new_coefficients) override</div><div class="ttdef"><b>Definition:</b> <a href="desktop_2include_2iir__concrete_8h_source.html#l00059">iir_concrete.h:59</a></div></div>
+<div class="ttc" id="aclassshrapnel_1_1dsp_1_1IirFilter_html_a53cb5a72d2a310cd4b35d4329af682f0"><div class="ttname"><a href="classshrapnel_1_1dsp_1_1IirFilter.html#a53cb5a72d2a310cd4b35d4329af682f0">shrapnel::dsp::IirFilter::process</a></div><div class="ttdeci">void process(const float *in, float *out, size_t buf_size) override</div><div class="ttdef"><b>Definition:</b> <a href="desktop_2include_2iir__concrete_8h_source.html#l00035">iir_concrete.h:35</a></div></div>
+<div class="ttc" id="aclassshrapnel_1_1dsp_1_1IirFilter_html_aa09e7c1ab99d85c0fdd1c98c80636550"><div class="ttname"><a href="classshrapnel_1_1dsp_1_1IirFilter.html#aa09e7c1ab99d85c0fdd1c98c80636550">shrapnel::dsp::IirFilter::set_coefficients</a></div><div class="ttdeci">void set_coefficients(std::array&lt; float, 6 &gt; new_coefficients) override</div><div class="ttdef"><b>Definition:</b> <a href="desktop_2include_2iir__concrete_8h_source.html#l00056">iir_concrete.h:56</a></div></div>
 <div class="ttc" id="acontour_8h_html"><div class="ttname"><a href="contour_8h.html">contour.h</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->

@@ -115,7 +115,7 @@ Public Member Functions</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock">
-<p class="definition">Definition at line <a class="el" href="midi__protocol_8h_source.html#l00102">102</a> of file <a class="el" href="midi__protocol_8h_source.html">midi_protocol.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="midi__protocol_8h_source.html#l00123">123</a> of file <a class="el" href="midi__protocol_8h_source.html">midi_protocol.h</a>.</p>
 </div><h2 class="groupheader">Member Typedef Documentation</h2>
 <a id="ad4e5dbc8f0a69ccb85fd14139da9dec2" name="ad4e5dbc8f0a69ccb85fd14139da9dec2"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ad4e5dbc8f0a69ccb85fd14139da9dec2">&#9670;&nbsp;</a></span>Callback</h2>
@@ -129,7 +129,7 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="midi__protocol_8h_source.html#l00104">104</a> of file <a class="el" href="midi__protocol_8h_source.html">midi_protocol.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="midi__protocol_8h_source.html#l00126">126</a> of file <a class="el" href="midi__protocol_8h_source.html">midi_protocol.h</a>.</p>
 
 </div>
 </div>
@@ -157,11 +157,12 @@ Public Member Functions</h2></td></tr>
 </dl>
 
 <p class="definition">Definition at line <a class="el" href="midi_8cpp_source.html#l00027">27</a> of file <a class="el" href="midi_8cpp_source.html">midi.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   27</span>                                             :</div>
-<div class="line"><span class="lineno">   28</span>    on_message_decoded{_on_message_decoded},</div>
-<div class="line"><span class="lineno">   29</span>    state{IDLE},</div>
-<div class="line"><span class="lineno">   30</span>    current_status{0},</div>
-<div class="line"><span class="lineno">   31</span>    data_count{0} {}</div>
+<div class="fragment"><div class="line"><span class="lineno">   28</span>    : on_message_decoded{_on_message_decoded},</div>
+<div class="line"><span class="lineno">   29</span>      state{IDLE},</div>
+<div class="line"><span class="lineno">   30</span>      current_status{0},</div>
+<div class="line"><span class="lineno">   31</span>      data_count{0}</div>
+<div class="line"><span class="lineno">   32</span>{</div>
+<div class="line"><span class="lineno">   33</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -185,24 +186,24 @@ Public Member Functions</h2></td></tr>
 <p>Decode bytes received by UART. </p>
 <p >Call this function every time a byte has been received by UART </p>
 
-<p class="definition">Definition at line <a class="el" href="midi_8cpp_source.html#l00033">33</a> of file <a class="el" href="midi_8cpp_source.html">midi.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   34</span>{</div>
-<div class="line"><span class="lineno">   35</span>    State new_state = IDLE;</div>
-<div class="line"><span class="lineno">   36</span>    <span class="keywordflow">switch</span>(state)</div>
-<div class="line"><span class="lineno">   37</span>    {</div>
-<div class="line"><span class="lineno">   38</span>    <span class="keywordflow">case</span> IDLE:</div>
-<div class="line"><span class="lineno">   39</span>        new_state = decode_idle(<span class="keywordtype">byte</span>);</div>
-<div class="line"><span class="lineno">   40</span>        <span class="keywordflow">break</span>;</div>
-<div class="line"><span class="lineno">   41</span>    <span class="keywordflow">case</span> GOT_MESSAGE:</div>
-<div class="line"><span class="lineno">   42</span>        new_state = decode_message(<span class="keywordtype">byte</span>);</div>
-<div class="line"><span class="lineno">   43</span>        <span class="keywordflow">break</span>;</div>
-<div class="line"><span class="lineno">   44</span>    <span class="keywordflow">default</span>:</div>
-<div class="line"><span class="lineno">   45</span>        ESP_LOGE(TAG, <span class="stringliteral">&quot;Unhandled decoder state %d&quot;</span>, state);</div>
-<div class="line"><span class="lineno">   46</span>        <span class="keywordflow">break</span>;</div>
-<div class="line"><span class="lineno">   47</span>    }</div>
-<div class="line"><span class="lineno">   48</span> </div>
-<div class="line"><span class="lineno">   49</span>   state = new_state;</div>
-<div class="line"><span class="lineno">   50</span>}</div>
+<p class="definition">Definition at line <a class="el" href="midi_8cpp_source.html#l00035">35</a> of file <a class="el" href="midi_8cpp_source.html">midi.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   36</span>{</div>
+<div class="line"><span class="lineno">   37</span>    State new_state = IDLE;</div>
+<div class="line"><span class="lineno">   38</span>    <span class="keywordflow">switch</span>(state)</div>
+<div class="line"><span class="lineno">   39</span>    {</div>
+<div class="line"><span class="lineno">   40</span>    <span class="keywordflow">case</span> IDLE:</div>
+<div class="line"><span class="lineno">   41</span>        new_state = decode_idle(<span class="keywordtype">byte</span>);</div>
+<div class="line"><span class="lineno">   42</span>        <span class="keywordflow">break</span>;</div>
+<div class="line"><span class="lineno">   43</span>    <span class="keywordflow">case</span> GOT_MESSAGE:</div>
+<div class="line"><span class="lineno">   44</span>        new_state = decode_message(<span class="keywordtype">byte</span>);</div>
+<div class="line"><span class="lineno">   45</span>        <span class="keywordflow">break</span>;</div>
+<div class="line"><span class="lineno">   46</span>    <span class="keywordflow">default</span>:</div>
+<div class="line"><span class="lineno">   47</span>        ESP_LOGE(TAG, <span class="stringliteral">&quot;Unhandled decoder state %d&quot;</span>, state);</div>
+<div class="line"><span class="lineno">   48</span>        <span class="keywordflow">break</span>;</div>
+<div class="line"><span class="lineno">   49</span>    }</div>
+<div class="line"><span class="lineno">   50</span> </div>
+<div class="line"><span class="lineno">   51</span>    state = new_state;</div>
+<div class="line"><span class="lineno">   52</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>

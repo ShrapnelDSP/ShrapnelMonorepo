@@ -117,11 +117,11 @@ $(document).ready(function(){initNavTree('fast__fir_8h_source.html',''); initRes
 <div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="preprocessor">#pragma once</span></div>
 <div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span> </div>
 <div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><span class="preprocessor">#include &quot;<a class="code" href="dsp__concepts_8h.html">dsp_concepts.h</a>&quot;</span></div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span><span class="preprocessor">#include &lt;algorithm&gt;</span></div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span><span class="preprocessor">#include &lt;array&gt;</span></div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span><span class="preprocessor">#include &lt;cstddef&gt;</span></div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span><span class="preprocessor">#include &lt;memory&gt;</span></div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span><span class="preprocessor">#include &quot;<a class="code" href="profiling_8h.html">profiling.h</a>&quot;</span></div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span><span class="preprocessor">#include &quot;<a class="code" href="profiling_8h.html">profiling.h</a>&quot;</span></div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span><span class="preprocessor">#include &lt;algorithm&gt;</span></div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span><span class="preprocessor">#include &lt;array&gt;</span></div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span><span class="preprocessor">#include &lt;cstddef&gt;</span></div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span><span class="preprocessor">#include &lt;memory&gt;</span></div>
 <div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span> </div>
 <div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span><span class="keyword">namespace </span>{</div>
 <div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T, T value&gt;</div>
@@ -139,46 +139,44 @@ $(document).ready(function(){initNavTree('fast__fir_8h_source.html',''); initRes
 <div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span><span class="keyword">public</span>:</div>
 <div class="line"><a id="l00056" name="l00056"></a><span class="lineno"><a class="line" href="classshrapnel_1_1dsp_1_1FastFir.html#aaf6ee59dab776dc0125a649342561ba4">   56</a></span>    <span class="keyword">explicit</span> <a class="code hl_function" href="classshrapnel_1_1dsp_1_1FastFir.html#aaf6ee59dab776dc0125a649342561ba4">FastFir</a>(std::unique_ptr&lt;Convolution&gt; a_convolution)</div>
 <div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>        <span class="keyword">requires</span>(<a class="code hl_concept" href="conceptshrapnel_1_1dsp_1_1Processor.html">dsp::Processor&lt;FastFir&lt;N, M, Convolution&gt;</a>, N&gt;)</div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>    : signal{}, convolution{std::move(a_convolution)}</div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>    {</div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>    }</div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span> </div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>    <span class="comment">// TODO implement variable buffer size processing</span></div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno"><a class="line" href="classshrapnel_1_1dsp_1_1FastFir.html#a4cefce66db79ca1b38f64237ddb8f47a">   63</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classshrapnel_1_1dsp_1_1FastFir.html#a4cefce66db79ca1b38f64237ddb8f47a">prepare</a>(<span class="keywordtype">float</span>, <span class="keywordtype">size_t</span>){};</div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span> </div>
-<div class="line"><a id="l00069" name="l00069"></a><span class="lineno"><a class="line" href="classshrapnel_1_1dsp_1_1FastFir.html#af94cf1e105499af836926db798b89530">   69</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classshrapnel_1_1dsp_1_1FastFir.html#af94cf1e105499af836926db798b89530">process</a>(std::span&lt;float, N&gt; buffer)</div>
-<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>    {</div>
-<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>        std::copy(signal.begin() + N, signal.end(), signal.begin());</div>
-<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>        <a class="code hl_function" href="desktop_2profiling_8c.html#a3171d2be3fbf00e49982243e9869735a">profiling_mark_stage</a>(5);</div>
-<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>        std::copy(buffer.data(), buffer.data() + N, signal.end() - N);</div>
-<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>        <a class="code hl_function" href="desktop_2profiling_8c.html#a3171d2be3fbf00e49982243e9869735a">profiling_mark_stage</a>(6);</div>
-<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span> </div>
-<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>        std::array&lt;float, M&gt; out;</div>
-<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>        convolution-&gt;process(signal, out);</div>
-<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>        <a class="code hl_function" href="desktop_2profiling_8c.html#a3171d2be3fbf00e49982243e9869735a">profiling_mark_stage</a>(16);</div>
-<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span> </div>
-<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>        std::copy(out.end() - N, out.end(), buffer.data());</div>
-<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>    }</div>
-<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span> </div>
-<div class="line"><a id="l00087" name="l00087"></a><span class="lineno"><a class="line" href="classshrapnel_1_1dsp_1_1FastFir.html#a0dc5a8024e204c19048406825b293b2f">   87</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classshrapnel_1_1dsp_1_1FastFir.html#a0dc5a8024e204c19048406825b293b2f">reset</a>()</div>
-<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>    {</div>
-<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>        signal.fill(0);</div>
-<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>    };</div>
-<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span> </div>
-<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span><span class="keyword">private</span>:</div>
-<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>    std::array&lt;float, M&gt; signal;</div>
-<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>    std::unique_ptr&lt;Convolution&gt; convolution;</div>
-<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>};</div>
-<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span> </div>
-<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>} <span class="comment">// namespace shrapnel::dsp</span></div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>        : signal{},</div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>          convolution{std::move(a_convolution)}</div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>    {</div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>    }</div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span> </div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>    <span class="comment">// TODO implement variable buffer size processing</span></div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno"><a class="line" href="classshrapnel_1_1dsp_1_1FastFir.html#a4cefce66db79ca1b38f64237ddb8f47a">   64</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classshrapnel_1_1dsp_1_1FastFir.html#a4cefce66db79ca1b38f64237ddb8f47a">prepare</a>(<span class="keywordtype">float</span>, <span class="keywordtype">size_t</span>){};</div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span> </div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno"><a class="line" href="classshrapnel_1_1dsp_1_1FastFir.html#af94cf1e105499af836926db798b89530">   70</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classshrapnel_1_1dsp_1_1FastFir.html#af94cf1e105499af836926db798b89530">process</a>(std::span&lt;float, N&gt; buffer)</div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>    {</div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>        std::copy(signal.begin() + N, signal.end(), signal.begin());</div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>        <a class="code hl_function" href="desktop_2profiling_8c.html#a3171d2be3fbf00e49982243e9869735a">profiling_mark_stage</a>(5);</div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>        std::copy(buffer.data(), buffer.data() + N, signal.end() - N);</div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>        <a class="code hl_function" href="desktop_2profiling_8c.html#a3171d2be3fbf00e49982243e9869735a">profiling_mark_stage</a>(6);</div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span> </div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>        std::array&lt;float, M&gt; out;</div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>        convolution-&gt;process(signal, out);</div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>        <a class="code hl_function" href="desktop_2profiling_8c.html#a3171d2be3fbf00e49982243e9869735a">profiling_mark_stage</a>(16);</div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span> </div>
+<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>        std::copy(out.end() - N, out.end(), buffer.data());</div>
+<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>    }</div>
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span> </div>
+<div class="line"><a id="l00088" name="l00088"></a><span class="lineno"><a class="line" href="classshrapnel_1_1dsp_1_1FastFir.html#a0dc5a8024e204c19048406825b293b2f">   88</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classshrapnel_1_1dsp_1_1FastFir.html#a0dc5a8024e204c19048406825b293b2f">reset</a>() { signal.fill(0); };</div>
+<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span> </div>
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span><span class="keyword">private</span>:</div>
+<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>    std::array&lt;float, M&gt; signal;</div>
+<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>    std::unique_ptr&lt;Convolution&gt; convolution;</div>
+<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>};</div>
+<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span> </div>
+<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>} <span class="comment">// namespace shrapnel::dsp</span></div>
 <div class="ttc" id="aclassshrapnel_1_1dsp_1_1FastFir_html"><div class="ttname"><a href="classshrapnel_1_1dsp_1_1FastFir.html">shrapnel::dsp::FastFir</a></div><div class="ttdef"><b>Definition:</b> <a href="fast__fir_8h_source.html#l00051">fast_fir.h:52</a></div></div>
-<div class="ttc" id="aclassshrapnel_1_1dsp_1_1FastFir_html_a0dc5a8024e204c19048406825b293b2f"><div class="ttname"><a href="classshrapnel_1_1dsp_1_1FastFir.html#a0dc5a8024e204c19048406825b293b2f">shrapnel::dsp::FastFir::reset</a></div><div class="ttdeci">void reset()</div><div class="ttdoc">Reset the state of the filter.</div><div class="ttdef"><b>Definition:</b> <a href="fast__fir_8h_source.html#l00087">fast_fir.h:87</a></div></div>
-<div class="ttc" id="aclassshrapnel_1_1dsp_1_1FastFir_html_a4cefce66db79ca1b38f64237ddb8f47a"><div class="ttname"><a href="classshrapnel_1_1dsp_1_1FastFir.html#a4cefce66db79ca1b38f64237ddb8f47a">shrapnel::dsp::FastFir::prepare</a></div><div class="ttdeci">void prepare(float, size_t)</div><div class="ttdef"><b>Definition:</b> <a href="fast__fir_8h_source.html#l00063">fast_fir.h:63</a></div></div>
+<div class="ttc" id="aclassshrapnel_1_1dsp_1_1FastFir_html_a0dc5a8024e204c19048406825b293b2f"><div class="ttname"><a href="classshrapnel_1_1dsp_1_1FastFir.html#a0dc5a8024e204c19048406825b293b2f">shrapnel::dsp::FastFir::reset</a></div><div class="ttdeci">void reset()</div><div class="ttdoc">Reset the state of the filter.</div><div class="ttdef"><b>Definition:</b> <a href="fast__fir_8h_source.html#l00088">fast_fir.h:88</a></div></div>
+<div class="ttc" id="aclassshrapnel_1_1dsp_1_1FastFir_html_a4cefce66db79ca1b38f64237ddb8f47a"><div class="ttname"><a href="classshrapnel_1_1dsp_1_1FastFir.html#a4cefce66db79ca1b38f64237ddb8f47a">shrapnel::dsp::FastFir::prepare</a></div><div class="ttdeci">void prepare(float, size_t)</div><div class="ttdef"><b>Definition:</b> <a href="fast__fir_8h_source.html#l00064">fast_fir.h:64</a></div></div>
 <div class="ttc" id="aclassshrapnel_1_1dsp_1_1FastFir_html_aaf6ee59dab776dc0125a649342561ba4"><div class="ttname"><a href="classshrapnel_1_1dsp_1_1FastFir.html#aaf6ee59dab776dc0125a649342561ba4">shrapnel::dsp::FastFir::FastFir</a></div><div class="ttdeci">FastFir(std::unique_ptr&lt; Convolution &gt; a_convolution)</div><div class="ttdoc">Initialise the filter.</div><div class="ttdef"><b>Definition:</b> <a href="fast__fir_8h_source.html#l00056">fast_fir.h:56</a></div></div>
-<div class="ttc" id="aclassshrapnel_1_1dsp_1_1FastFir_html_af94cf1e105499af836926db798b89530"><div class="ttname"><a href="classshrapnel_1_1dsp_1_1FastFir.html#af94cf1e105499af836926db798b89530">shrapnel::dsp::FastFir::process</a></div><div class="ttdeci">void process(std::span&lt; float, N &gt; buffer)</div><div class="ttdoc">Filter samples.</div><div class="ttdef"><b>Definition:</b> <a href="fast__fir_8h_source.html#l00069">fast_fir.h:69</a></div></div>
+<div class="ttc" id="aclassshrapnel_1_1dsp_1_1FastFir_html_af94cf1e105499af836926db798b89530"><div class="ttname"><a href="classshrapnel_1_1dsp_1_1FastFir.html#af94cf1e105499af836926db798b89530">shrapnel::dsp::FastFir::process</a></div><div class="ttdeci">void process(std::span&lt; float, N &gt; buffer)</div><div class="ttdoc">Filter samples.</div><div class="ttdef"><b>Definition:</b> <a href="fast__fir_8h_source.html#l00070">fast_fir.h:70</a></div></div>
 <div class="ttc" id="aconcept_0d74_1_1integral__power__of__2_html"><div class="ttname"><a href="concept_0d74_1_1integral__power__of__2.html">@74::integral_power_of_2</a></div><div class="ttdef"><b>Definition:</b> <a href="fast__fir_8h_source.html#l00037">fast_fir.h:37</a></div></div>
 <div class="ttc" id="aconceptshrapnel_1_1dsp_1_1Processor_html"><div class="ttname"><a href="conceptshrapnel_1_1dsp_1_1Processor.html">shrapnel::dsp::Processor</a></div><div class="ttdef"><b>Definition:</b> <a href="dsp__concepts_8h_source.html#l00045">dsp_concepts.h:45</a></div></div>
-<div class="ttc" id="adesktop_2profiling_8c_html_a3171d2be3fbf00e49982243e9869735a"><div class="ttname"><a href="desktop_2profiling_8c.html#a3171d2be3fbf00e49982243e9869735a">profiling_mark_stage</a></div><div class="ttdeci">void profiling_mark_stage(unsigned int stage)</div><div class="ttdef"><b>Definition:</b> <a href="desktop_2profiling_8c_source.html#l00027">profiling.c:27</a></div></div>
+<div class="ttc" id="adesktop_2profiling_8c_html_a3171d2be3fbf00e49982243e9869735a"><div class="ttname"><a href="desktop_2profiling_8c.html#a3171d2be3fbf00e49982243e9869735a">profiling_mark_stage</a></div><div class="ttdeci">void profiling_mark_stage(unsigned int stage)</div><div class="ttdef"><b>Definition:</b> <a href="desktop_2profiling_8c_source.html#l00028">profiling.c:28</a></div></div>
 <div class="ttc" id="adsp__concepts_8h_html"><div class="ttname"><a href="dsp__concepts_8h.html">dsp_concepts.h</a></div></div>
 <div class="ttc" id="anamespaceshrapnel_1_1dsp_html"><div class="ttname"><a href="namespaceshrapnel_1_1dsp.html">shrapnel::dsp</a></div><div class="ttdef"><b>Definition:</b> <a href="block__processor_8h_source.html#l00025">block_processor.h:25</a></div></div>
 <div class="ttc" id="aprofiling_8h_html"><div class="ttname"><a href="profiling_8h.html">profiling.h</a></div></div>

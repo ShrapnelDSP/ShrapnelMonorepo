@@ -109,7 +109,7 @@ Public Member Functions</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><div class="compoundTemplParams">template&lt;std::size_t N&gt;<br />
 class ScopedHeapTracing&lt; N &gt;</div>
-<p class="definition">Definition at line <a class="el" href="heap_8h_source.html#l00055">55</a> of file <a class="el" href="heap_8h_source.html">heap.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="heap_8h_source.html#l00052">52</a> of file <a class="el" href="heap_8h_source.html">heap.h</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a918ff2ada4cef9fbefe68210f8efaf6c" name="a918ff2ada4cef9fbefe68210f8efaf6c"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a918ff2ada4cef9fbefe68210f8efaf6c">&#9670;&nbsp;</a></span>ScopedHeapTracing()</h2>
@@ -136,14 +136,14 @@ template&lt;std::size_t N&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="heap_8h_source.html#l00057">57</a> of file <a class="el" href="heap_8h_source.html">heap.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   58</span>    {</div>
-<div class="line"><span class="lineno">   59</span>        <span class="keyword">auto</span> tracing = <a class="code hl_function" href="classEspHeapTracing.html#af49dc8f718e254d2aa165b56a0cf640e">EspHeapTracing&lt;N&gt;::instance</a>();</div>
-<div class="line"><span class="lineno">   60</span>        tracing.start();</div>
-<div class="line"><span class="lineno">   61</span>    }</div>
-<div class="ttc" id="aclassEspHeapTracing_html_af49dc8f718e254d2aa165b56a0cf640e"><div class="ttname"><a href="classEspHeapTracing.html#af49dc8f718e254d2aa165b56a0cf640e">EspHeapTracing::instance</a></div><div class="ttdeci">static EspHeapTracing &amp; instance()</div><div class="ttdef"><b>Definition:</b> <a href="heap_8h_source.html#l00027">heap.h:27</a></div></div>
+<p class="definition">Definition at line <a class="el" href="heap_8h_source.html#l00055">55</a> of file <a class="el" href="heap_8h_source.html">heap.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   56</span>    {</div>
+<div class="line"><span class="lineno">   57</span>        <span class="keyword">auto</span> tracing = <a class="code hl_function" href="classEspHeapTracing.html#af49dc8f718e254d2aa165b56a0cf640e">EspHeapTracing&lt;N&gt;::instance</a>();</div>
+<div class="line"><span class="lineno">   58</span>        tracing.start();</div>
+<div class="line"><span class="lineno">   59</span>    }</div>
+<div class="ttc" id="aclassEspHeapTracing_html_af49dc8f718e254d2aa165b56a0cf640e"><div class="ttname"><a href="classEspHeapTracing.html#af49dc8f718e254d2aa165b56a0cf640e">EspHeapTracing::instance</a></div><div class="ttdeci">static EspHeapTracing &amp; instance()</div><div class="ttdef"><b>Definition:</b> <a href="heap_8h_source.html#l00028">heap.h:28</a></div></div>
 </div><!-- fragment -->
-<p class="reference">References <a class="el" href="heap_8h_source.html#l00027">EspHeapTracing&lt; N &gt;::instance()</a>.</p>
+<p class="reference">References <a class="el" href="heap_8h_source.html#l00028">EspHeapTracing&lt; N &gt;::instance()</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -178,13 +178,13 @@ template&lt;std::size_t N&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="heap_8h_source.html#l00063">63</a> of file <a class="el" href="heap_8h_source.html">heap.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   64</span>    {</div>
-<div class="line"><span class="lineno">   65</span>        <span class="keyword">auto</span> tracing = <a class="code hl_function" href="classEspHeapTracing.html#af49dc8f718e254d2aa165b56a0cf640e">EspHeapTracing&lt;N&gt;::instance</a>();</div>
-<div class="line"><span class="lineno">   66</span>        tracing.stop();</div>
-<div class="line"><span class="lineno">   67</span>    }</div>
+<p class="definition">Definition at line <a class="el" href="heap_8h_source.html#l00061">61</a> of file <a class="el" href="heap_8h_source.html">heap.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   62</span>    {</div>
+<div class="line"><span class="lineno">   63</span>        <span class="keyword">auto</span> tracing = <a class="code hl_function" href="classEspHeapTracing.html#af49dc8f718e254d2aa165b56a0cf640e">EspHeapTracing&lt;N&gt;::instance</a>();</div>
+<div class="line"><span class="lineno">   64</span>        tracing.stop();</div>
+<div class="line"><span class="lineno">   65</span>    }</div>
 </div><!-- fragment -->
-<p class="reference">References <a class="el" href="heap_8h_source.html#l00027">EspHeapTracing&lt; N &gt;::instance()</a>.</p>
+<p class="reference">References <a class="el" href="heap_8h_source.html#l00028">EspHeapTracing&lt; N &gt;::instance()</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">

@@ -154,7 +154,9 @@ template&lt;size_t N, typename ChildProcessor &gt; </div>
 </div><div class="memdoc">
 
 <p class="definition">Definition at line <a class="el" href="block__processor_8h_source.html#l00031">31</a> of file <a class="el" href="block__processor_8h_source.html">block_processor.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   31</span>: child{std::move(a_child)} {}</div>
+<div class="fragment"><div class="line"><span class="lineno">   31</span>                                                    : child{std::move(a_child)}</div>
+<div class="line"><span class="lineno">   32</span>    {</div>
+<div class="line"><span class="lineno">   33</span>    }</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -185,17 +187,17 @@ template&lt;size_t N, typename ChildProcessor &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="block__processor_8h_source.html#l00033">33</a> of file <a class="el" href="block__processor_8h_source.html">block_processor.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   34</span>    {</div>
-<div class="line"><span class="lineno">   35</span>        <a class="code hl_function" href="classshrapnel_1_1dsp_1_1BlockProcessor.html#a7729e4a8226ad8a7e29b1c54f8be09a9">reset</a>();</div>
-<div class="line"><span class="lineno">   36</span> </div>
-<div class="line"><span class="lineno">   37</span>        <span class="keyword">auto</span> childSpec = spec;</div>
-<div class="line"><span class="lineno">   38</span>        childSpec.maximumBlockSize = N;</div>
-<div class="line"><span class="lineno">   39</span>        child.prepare(childSpec);</div>
-<div class="line"><span class="lineno">   40</span>    };</div>
-<div class="ttc" id="aclassshrapnel_1_1dsp_1_1BlockProcessor_html_a7729e4a8226ad8a7e29b1c54f8be09a9"><div class="ttname"><a href="classshrapnel_1_1dsp_1_1BlockProcessor.html#a7729e4a8226ad8a7e29b1c54f8be09a9">shrapnel::dsp::BlockProcessor::reset</a></div><div class="ttdeci">void reset() override</div><div class="ttdef"><b>Definition:</b> <a href="block__processor_8h_source.html#l00042">block_processor.h:42</a></div></div>
+<p class="definition">Definition at line <a class="el" href="block__processor_8h_source.html#l00035">35</a> of file <a class="el" href="block__processor_8h_source.html">block_processor.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   36</span>    {</div>
+<div class="line"><span class="lineno">   37</span>        <a class="code hl_function" href="classshrapnel_1_1dsp_1_1BlockProcessor.html#a7729e4a8226ad8a7e29b1c54f8be09a9">reset</a>();</div>
+<div class="line"><span class="lineno">   38</span> </div>
+<div class="line"><span class="lineno">   39</span>        <span class="keyword">auto</span> childSpec = spec;</div>
+<div class="line"><span class="lineno">   40</span>        childSpec.maximumBlockSize = N;</div>
+<div class="line"><span class="lineno">   41</span>        child.prepare(childSpec);</div>
+<div class="line"><span class="lineno">   42</span>    };</div>
+<div class="ttc" id="aclassshrapnel_1_1dsp_1_1BlockProcessor_html_a7729e4a8226ad8a7e29b1c54f8be09a9"><div class="ttname"><a href="classshrapnel_1_1dsp_1_1BlockProcessor.html#a7729e4a8226ad8a7e29b1c54f8be09a9">shrapnel::dsp::BlockProcessor::reset</a></div><div class="ttdeci">void reset() override</div><div class="ttdef"><b>Definition:</b> <a href="block__processor_8h_source.html#l00044">block_processor.h:44</a></div></div>
 </div><!-- fragment -->
-<p class="reference">References <a class="el" href="block__processor_8h_source.html#l00042">shrapnel::dsp::BlockProcessor&lt; N, ChildProcessor &gt;::reset()</a>.</p>
+<p class="reference">References <a class="el" href="block__processor_8h_source.html#l00044">shrapnel::dsp::BlockProcessor&lt; N, ChildProcessor &gt;::reset()</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -231,54 +233,54 @@ template&lt;size_t N, typename ChildProcessor &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="block__processor_8h_source.html#l00049">49</a> of file <a class="el" href="block__processor_8h_source.html">block_processor.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   50</span>    {</div>
-<div class="line"><span class="lineno">   51</span>        <span class="keyword">auto</span> io_block = context.getOutputBlock();</div>
-<div class="line"><span class="lineno">   52</span>        <span class="keyword">auto</span> samples_left = io_block.getNumSamples();</div>
-<div class="line"><span class="lineno">   53</span>        <span class="keywordtype">size_t</span> output_done_count = 0;</div>
-<div class="line"><span class="lineno">   54</span> </div>
-<div class="line"><span class="lineno">   55</span>        <span class="keywordflow">while</span>(samples_left &gt; 0)</div>
-<div class="line"><span class="lineno">   56</span>        {</div>
-<div class="line"><span class="lineno">   57</span>            <span class="keyword">auto</span> space_left_in_write_buffer = N - write_size;</div>
-<div class="line"><span class="lineno">   58</span>            <span class="keyword">auto</span> samples_processed_this_iteration =</div>
-<div class="line"><span class="lineno">   59</span>                juce::jmin(space_left_in_write_buffer, samples_left);</div>
-<div class="line"><span class="lineno">   60</span>            samples_left -= samples_processed_this_iteration;</div>
-<div class="line"><span class="lineno">   61</span> </div>
-<div class="line"><span class="lineno">   62</span>            <span class="comment">// We must never overflow the buffer</span></div>
-<div class="line"><span class="lineno">   63</span>            jassert(write_size + samples_processed_this_iteration &lt;= N);</div>
-<div class="line"><span class="lineno">   64</span> </div>
-<div class="line"><span class="lineno">   65</span>            <span class="comment">// Add input samples to the internal buffer</span></div>
-<div class="line"><span class="lineno">   66</span>            <span class="keyword">auto</span> write_buffer = buffers.getWritePointer(!read_buffer_channel);</div>
-<div class="line"><span class="lineno">   67</span>            std::copy(io_block.getChannelPointer(0) + output_done_count,</div>
-<div class="line"><span class="lineno">   68</span>                      io_block.getChannelPointer(0) + output_done_count +</div>
-<div class="line"><span class="lineno">   69</span>                          samples_processed_this_iteration,</div>
-<div class="line"><span class="lineno">   70</span>                      &amp;write_buffer[write_size]);</div>
-<div class="line"><span class="lineno">   71</span>            write_size += samples_processed_this_iteration;</div>
-<div class="line"><span class="lineno">   72</span> </div>
-<div class="line"><span class="lineno">   73</span>            <span class="comment">// Take outputs samples from the internal buffer</span></div>
-<div class="line"><span class="lineno">   74</span>            <span class="keyword">auto</span> read_buffer = buffers.getReadPointer(read_buffer_channel);</div>
-<div class="line"><span class="lineno">   75</span>            std::copy(</div>
-<div class="line"><span class="lineno">   76</span>                &amp;read_buffer[read_size],</div>
-<div class="line"><span class="lineno">   77</span>                &amp;read_buffer[read_size + samples_processed_this_iteration],</div>
-<div class="line"><span class="lineno">   78</span>                &amp;io_block.getChannelPointer(0)[output_done_count]);</div>
-<div class="line"><span class="lineno">   79</span>            output_done_count += samples_processed_this_iteration;</div>
-<div class="line"><span class="lineno">   80</span>            read_size += samples_processed_this_iteration;</div>
-<div class="line"><span class="lineno">   81</span> </div>
-<div class="line"><span class="lineno">   82</span>            jassert(read_size == write_size);</div>
+<p class="definition">Definition at line <a class="el" href="block__processor_8h_source.html#l00051">51</a> of file <a class="el" href="block__processor_8h_source.html">block_processor.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   52</span>    {</div>
+<div class="line"><span class="lineno">   53</span>        <span class="keyword">auto</span> io_block = context.getOutputBlock();</div>
+<div class="line"><span class="lineno">   54</span>        <span class="keyword">auto</span> samples_left = io_block.getNumSamples();</div>
+<div class="line"><span class="lineno">   55</span>        <span class="keywordtype">size_t</span> output_done_count = 0;</div>
+<div class="line"><span class="lineno">   56</span> </div>
+<div class="line"><span class="lineno">   57</span>        <span class="keywordflow">while</span>(samples_left &gt; 0)</div>
+<div class="line"><span class="lineno">   58</span>        {</div>
+<div class="line"><span class="lineno">   59</span>            <span class="keyword">auto</span> space_left_in_write_buffer = N - write_size;</div>
+<div class="line"><span class="lineno">   60</span>            <span class="keyword">auto</span> samples_processed_this_iteration =</div>
+<div class="line"><span class="lineno">   61</span>                juce::jmin(space_left_in_write_buffer, samples_left);</div>
+<div class="line"><span class="lineno">   62</span>            samples_left -= samples_processed_this_iteration;</div>
+<div class="line"><span class="lineno">   63</span> </div>
+<div class="line"><span class="lineno">   64</span>            <span class="comment">// We must never overflow the buffer</span></div>
+<div class="line"><span class="lineno">   65</span>            jassert(write_size + samples_processed_this_iteration &lt;= N);</div>
+<div class="line"><span class="lineno">   66</span> </div>
+<div class="line"><span class="lineno">   67</span>            <span class="comment">// Add input samples to the internal buffer</span></div>
+<div class="line"><span class="lineno">   68</span>            <span class="keyword">auto</span> write_buffer = buffers.getWritePointer(!read_buffer_channel);</div>
+<div class="line"><span class="lineno">   69</span>            std::copy(io_block.getChannelPointer(0) + output_done_count,</div>
+<div class="line"><span class="lineno">   70</span>                      io_block.getChannelPointer(0) + output_done_count +</div>
+<div class="line"><span class="lineno">   71</span>                          samples_processed_this_iteration,</div>
+<div class="line"><span class="lineno">   72</span>                      &amp;write_buffer[write_size]);</div>
+<div class="line"><span class="lineno">   73</span>            write_size += samples_processed_this_iteration;</div>
+<div class="line"><span class="lineno">   74</span> </div>
+<div class="line"><span class="lineno">   75</span>            <span class="comment">// Take outputs samples from the internal buffer</span></div>
+<div class="line"><span class="lineno">   76</span>            <span class="keyword">auto</span> read_buffer = buffers.getReadPointer(read_buffer_channel);</div>
+<div class="line"><span class="lineno">   77</span>            std::copy(</div>
+<div class="line"><span class="lineno">   78</span>                &amp;read_buffer[read_size],</div>
+<div class="line"><span class="lineno">   79</span>                &amp;read_buffer[read_size + samples_processed_this_iteration],</div>
+<div class="line"><span class="lineno">   80</span>                &amp;io_block.getChannelPointer(0)[output_done_count]);</div>
+<div class="line"><span class="lineno">   81</span>            output_done_count += samples_processed_this_iteration;</div>
+<div class="line"><span class="lineno">   82</span>            read_size += samples_processed_this_iteration;</div>
 <div class="line"><span class="lineno">   83</span> </div>
-<div class="line"><span class="lineno">   84</span>            <span class="comment">// After pushing, the buffer might now be full. If it is, then we</span></div>
-<div class="line"><span class="lineno">   85</span>            <span class="comment">// let the block processor process it.</span></div>
-<div class="line"><span class="lineno">   86</span>            <span class="keywordflow">if</span>(write_size == N)</div>
-<div class="line"><span class="lineno">   87</span>            {</div>
-<div class="line"><span class="lineno">   88</span>                <span class="keyword">auto</span> completeBlock =</div>
-<div class="line"><span class="lineno">   89</span>                    block.getSingleChannelBlock(!read_buffer_channel);</div>
-<div class="line"><span class="lineno">   90</span>                child.process(completeBlock);</div>
-<div class="line"><span class="lineno">   91</span>                read_size = 0;</div>
-<div class="line"><span class="lineno">   92</span>                write_size = 0;</div>
-<div class="line"><span class="lineno">   93</span>                read_buffer_channel = !read_buffer_channel;</div>
-<div class="line"><span class="lineno">   94</span>            }</div>
-<div class="line"><span class="lineno">   95</span>        }</div>
-<div class="line"><span class="lineno">   96</span>    };</div>
+<div class="line"><span class="lineno">   84</span>            jassert(read_size == write_size);</div>
+<div class="line"><span class="lineno">   85</span> </div>
+<div class="line"><span class="lineno">   86</span>            <span class="comment">// After pushing, the buffer might now be full. If it is, then we</span></div>
+<div class="line"><span class="lineno">   87</span>            <span class="comment">// let the block processor process it.</span></div>
+<div class="line"><span class="lineno">   88</span>            <span class="keywordflow">if</span>(write_size == N)</div>
+<div class="line"><span class="lineno">   89</span>            {</div>
+<div class="line"><span class="lineno">   90</span>                <span class="keyword">auto</span> completeBlock =</div>
+<div class="line"><span class="lineno">   91</span>                    block.getSingleChannelBlock(!read_buffer_channel);</div>
+<div class="line"><span class="lineno">   92</span>                child.process(completeBlock);</div>
+<div class="line"><span class="lineno">   93</span>                read_size = 0;</div>
+<div class="line"><span class="lineno">   94</span>                write_size = 0;</div>
+<div class="line"><span class="lineno">   95</span>                read_buffer_channel = !read_buffer_channel;</div>
+<div class="line"><span class="lineno">   96</span>            }</div>
+<div class="line"><span class="lineno">   97</span>        }</div>
+<div class="line"><span class="lineno">   98</span>    };</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -307,13 +309,13 @@ template&lt;size_t N, typename ChildProcessor &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="block__processor_8h_source.html#l00042">42</a> of file <a class="el" href="block__processor_8h_source.html">block_processor.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   43</span>    {</div>
-<div class="line"><span class="lineno">   44</span>        buffers.clear();</div>
-<div class="line"><span class="lineno">   45</span>        child.reset();</div>
-<div class="line"><span class="lineno">   46</span>    };</div>
+<p class="definition">Definition at line <a class="el" href="block__processor_8h_source.html#l00044">44</a> of file <a class="el" href="block__processor_8h_source.html">block_processor.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   45</span>    {</div>
+<div class="line"><span class="lineno">   46</span>        buffers.clear();</div>
+<div class="line"><span class="lineno">   47</span>        child.reset();</div>
+<div class="line"><span class="lineno">   48</span>    };</div>
 </div><!-- fragment -->
-<p class="reference">Referenced by <a class="el" href="block__processor_8h_source.html#l00033">shrapnel::dsp::BlockProcessor&lt; N, ChildProcessor &gt;::prepare()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="block__processor_8h_source.html#l00035">shrapnel::dsp::BlockProcessor&lt; N, ChildProcessor &gt;::prepare()</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">

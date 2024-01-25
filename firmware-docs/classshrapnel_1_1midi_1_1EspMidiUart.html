@@ -122,7 +122,7 @@ Public Member Functions</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock">
-<p class="definition">Definition at line <a class="el" href="midi__uart_8h_source.html#l00037">37</a> of file <a class="el" href="midi__uart_8h_source.html">midi_uart.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="midi__uart_8h_source.html#l00038">38</a> of file <a class="el" href="midi__uart_8h_source.html">midi_uart.h</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a9ac817a771cd1e8bd29b8ffa84bd9e39" name="a9ac817a771cd1e8bd29b8ffa84bd9e39"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a9ac817a771cd1e8bd29b8ffa84bd9e39">&#9670;&nbsp;</a></span>EspMidiUart()</h2>
@@ -151,28 +151,28 @@ Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p class="definition">Definition at line <a class="el" href="midi__uart_8cpp_source.html#l00026">26</a> of file <a class="el" href="midi__uart_8cpp_source.html">midi_uart.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   26</span>                                                             : uart(a_uart) {</div>
-<div class="line"><span class="lineno">   27</span>    uart_config_t config = {</div>
-<div class="line"><span class="lineno">   28</span>        .baud_rate = 31250,</div>
-<div class="line"><span class="lineno">   29</span>        .data_bits = UART_DATA_8_BITS,</div>
-<div class="line"><span class="lineno">   30</span>        .parity = UART_PARITY_DISABLE,</div>
-<div class="line"><span class="lineno">   31</span>        .stop_bits = UART_STOP_BITS_1,</div>
-<div class="line"><span class="lineno">   32</span>        .flow_ctrl = UART_HW_FLOWCTRL_DISABLE,</div>
-<div class="line"><span class="lineno">   33</span>        .rx_flow_ctrl_thresh = 0,</div>
-<div class="line"><span class="lineno">   34</span>        .source_clk = UART_SCLK_APB,</div>
-<div class="line"><span class="lineno">   35</span>    };</div>
-<div class="line"><span class="lineno">   36</span> </div>
-<div class="line"><span class="lineno">   37</span>    ESP_ERROR_CHECK(uart_set_pin(uart, UART_PIN_NO_CHANGE, rx_io, UART_PIN_NO_CHANGE, UART_PIN_NO_CHANGE));</div>
-<div class="line"><span class="lineno">   38</span> </div>
-<div class="line"><span class="lineno">   39</span>    ESP_ERROR_CHECK(uart_param_config(uart, &amp;config));</div>
-<div class="line"><span class="lineno">   40</span> </div>
-<div class="line"><span class="lineno">   41</span>    ESP_ERROR_CHECK(uart_driver_install(</div>
-<div class="line"><span class="lineno">   42</span>                uart,</div>
-<div class="line"><span class="lineno">   43</span>                UART_FIFO_LEN + 1,</div>
-<div class="line"><span class="lineno">   44</span>                0,</div>
-<div class="line"><span class="lineno">   45</span>                0,</div>
-<div class="line"><span class="lineno">   46</span>                NULL,</div>
-<div class="line"><span class="lineno">   47</span>                0));</div>
+<div class="fragment"><div class="line"><span class="lineno">   26</span>                                                             : uart(a_uart)</div>
+<div class="line"><span class="lineno">   27</span>{</div>
+<div class="line"><span class="lineno">   28</span>    uart_config_t config = {</div>
+<div class="line"><span class="lineno">   29</span>        .baud_rate = 31250,</div>
+<div class="line"><span class="lineno">   30</span>        .data_bits = UART_DATA_8_BITS,</div>
+<div class="line"><span class="lineno">   31</span>        .parity = UART_PARITY_DISABLE,</div>
+<div class="line"><span class="lineno">   32</span>        .stop_bits = UART_STOP_BITS_1,</div>
+<div class="line"><span class="lineno">   33</span>        .flow_ctrl = UART_HW_FLOWCTRL_DISABLE,</div>
+<div class="line"><span class="lineno">   34</span>        .rx_flow_ctrl_thresh = 0,</div>
+<div class="line"><span class="lineno">   35</span>        .source_clk = UART_SCLK_APB,</div>
+<div class="line"><span class="lineno">   36</span>    };</div>
+<div class="line"><span class="lineno">   37</span> </div>
+<div class="line"><span class="lineno">   38</span>    ESP_ERROR_CHECK(uart_set_pin(uart,</div>
+<div class="line"><span class="lineno">   39</span>                                 UART_PIN_NO_CHANGE,</div>
+<div class="line"><span class="lineno">   40</span>                                 rx_io,</div>
+<div class="line"><span class="lineno">   41</span>                                 UART_PIN_NO_CHANGE,</div>
+<div class="line"><span class="lineno">   42</span>                                 UART_PIN_NO_CHANGE));</div>
+<div class="line"><span class="lineno">   43</span> </div>
+<div class="line"><span class="lineno">   44</span>    ESP_ERROR_CHECK(uart_param_config(uart, &amp;config));</div>
+<div class="line"><span class="lineno">   45</span> </div>
+<div class="line"><span class="lineno">   46</span>    ESP_ERROR_CHECK(</div>
+<div class="line"><span class="lineno">   47</span>        uart_driver_install(uart, UART_FIFO_LEN + 1, 0, 0, NULL, 0));</div>
 <div class="line"><span class="lineno">   48</span>}</div>
 </div><!-- fragment -->
 </div>
@@ -205,18 +205,18 @@ Public Member Functions</h2></td></tr>
 <p>Implements <a class="el" href="classshrapnel_1_1midi_1_1MidiUartBase.html#a62f4c08b5af0b4e486d8e6f4109f6bd1">shrapnel::midi::MidiUartBase</a>.</p>
 
 <p class="definition">Definition at line <a class="el" href="midi__uart_8cpp_source.html#l00050">50</a> of file <a class="el" href="midi__uart_8cpp_source.html">midi_uart.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   50</span>                                                             {</div>
-<div class="line"><span class="lineno">   51</span>    uint8_t out;</div>
-<div class="line"><span class="lineno">   52</span>    <span class="keywordtype">int</span> rc = uart_read_bytes(uart, &amp;out, 1, timeout);</div>
-<div class="line"><span class="lineno">   53</span>    assert((rc == 0) || (rc == 1));</div>
-<div class="line"><span class="lineno">   54</span> </div>
-<div class="line"><span class="lineno">   55</span>    <span class="keywordflow">if</span>(rc == 0)</div>
-<div class="line"><span class="lineno">   56</span>    {</div>
-<div class="line"><span class="lineno">   57</span>        <span class="keywordflow">return</span> std::nullopt;</div>
-<div class="line"><span class="lineno">   58</span>    }</div>
-<div class="line"><span class="lineno">   59</span> </div>
-<div class="line"><span class="lineno">   60</span>    <span class="keywordflow">return</span> out;</div>
-<div class="line"><span class="lineno">   61</span>}</div>
+<div class="fragment"><div class="line"><span class="lineno">   51</span>{</div>
+<div class="line"><span class="lineno">   52</span>    uint8_t out;</div>
+<div class="line"><span class="lineno">   53</span>    <span class="keywordtype">int</span> rc = uart_read_bytes(uart, &amp;out, 1, timeout);</div>
+<div class="line"><span class="lineno">   54</span>    assert((rc == 0) || (rc == 1));</div>
+<div class="line"><span class="lineno">   55</span> </div>
+<div class="line"><span class="lineno">   56</span>    <span class="keywordflow">if</span>(rc == 0)</div>
+<div class="line"><span class="lineno">   57</span>    {</div>
+<div class="line"><span class="lineno">   58</span>        <span class="keywordflow">return</span> std::nullopt;</div>
+<div class="line"><span class="lineno">   59</span>    }</div>
+<div class="line"><span class="lineno">   60</span> </div>
+<div class="line"><span class="lineno">   61</span>    <span class="keywordflow">return</span> out;</div>
+<div class="line"><span class="lineno">   62</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>

@@ -120,30 +120,31 @@ $(document).ready(function(){initNavTree('delayline_8h_source.html',''); initRes
 <div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespaceshrapnel.html">shrapnel</a> {</div>
 <div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="keyword">namespace </span>dsp {</div>
 <div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span> </div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno"><a class="line" href="classshrapnel_1_1dsp_1_1DelayLine.html">   27</a></span><span class="keyword">class </span><a class="code hl_class" href="classshrapnel_1_1dsp_1_1DelayLine.html">DelayLine</a> {</div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>    <span class="keyword">public</span>:</div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>    <a class="code hl_function" href="classshrapnel_1_1dsp_1_1DelayLine.html#a0ccbcadc2f94e3c5ef89721decd107a7">DelayLine</a>(<span class="keywordtype">size_t</span> max_samples);</div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span> </div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classshrapnel_1_1dsp_1_1DelayLine.html#a705f083f7c8adf7bc7e32c0ed449a506">push_sample</a>(<span class="keywordtype">float</span> sample);</div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>    <span class="keywordtype">float</span> <a class="code hl_function" href="classshrapnel_1_1dsp_1_1DelayLine.html#a38d159691f182d38a31fbcaeb6ea48a6">pop_sample</a>(<span class="keywordtype">void</span>);</div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span> </div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classshrapnel_1_1dsp_1_1DelayLine.html#a20bc46b9e24e15cb8a6c91012c9f3a57">set_delay</a>(<span class="keywordtype">float</span> new_delay);</div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span> </div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>    <span class="keyword">private</span>:</div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>    std::vector&lt;float&gt; samples;</div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span> </div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>    <span class="keywordtype">size_t</span> writeIndex;</div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span> </div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>    <span class="keywordtype">float</span> delay;</div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>};</div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span> </div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>}</div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>}</div>
-<div class="ttc" id="aclassshrapnel_1_1dsp_1_1DelayLine_html"><div class="ttname"><a href="classshrapnel_1_1dsp_1_1DelayLine.html">shrapnel::dsp::DelayLine</a></div><div class="ttdef"><b>Definition:</b> <a href="delayline_8h_source.html#l00027">delayline.h:27</a></div></div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno"><a class="line" href="classshrapnel_1_1dsp_1_1DelayLine.html">   27</a></span><span class="keyword">class </span><a class="code hl_class" href="classshrapnel_1_1dsp_1_1DelayLine.html">DelayLine</a></div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>{</div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span><span class="keyword">public</span>:</div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>    <a class="code hl_function" href="classshrapnel_1_1dsp_1_1DelayLine.html#a0ccbcadc2f94e3c5ef89721decd107a7">DelayLine</a>(<span class="keywordtype">size_t</span> max_samples);</div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span> </div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classshrapnel_1_1dsp_1_1DelayLine.html#a705f083f7c8adf7bc7e32c0ed449a506">push_sample</a>(<span class="keywordtype">float</span> sample);</div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>    <span class="keywordtype">float</span> <a class="code hl_function" href="classshrapnel_1_1dsp_1_1DelayLine.html#a38d159691f182d38a31fbcaeb6ea48a6">pop_sample</a>(<span class="keywordtype">void</span>);</div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span> </div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classshrapnel_1_1dsp_1_1DelayLine.html#a20bc46b9e24e15cb8a6c91012c9f3a57">set_delay</a>(<span class="keywordtype">float</span> new_delay);</div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span> </div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span><span class="keyword">private</span>:</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>    std::vector&lt;float&gt; samples;</div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span> </div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>    <span class="keywordtype">size_t</span> writeIndex;</div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span> </div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>    <span class="keywordtype">float</span> delay;</div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>};</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span> </div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>} <span class="comment">// namespace dsp</span></div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>} <span class="comment">// namespace shrapnel</span></div>
+<div class="ttc" id="aclassshrapnel_1_1dsp_1_1DelayLine_html"><div class="ttname"><a href="classshrapnel_1_1dsp_1_1DelayLine.html">shrapnel::dsp::DelayLine</a></div><div class="ttdef"><b>Definition:</b> <a href="delayline_8h_source.html#l00027">delayline.h:28</a></div></div>
 <div class="ttc" id="aclassshrapnel_1_1dsp_1_1DelayLine_html_a0ccbcadc2f94e3c5ef89721decd107a7"><div class="ttname"><a href="classshrapnel_1_1dsp_1_1DelayLine.html#a0ccbcadc2f94e3c5ef89721decd107a7">shrapnel::dsp::DelayLine::DelayLine</a></div><div class="ttdeci">DelayLine(size_t max_samples)</div><div class="ttdef"><b>Definition:</b> <a href="delayline_8cpp_source.html#l00026">delayline.cpp:26</a></div></div>
-<div class="ttc" id="aclassshrapnel_1_1dsp_1_1DelayLine_html_a20bc46b9e24e15cb8a6c91012c9f3a57"><div class="ttname"><a href="classshrapnel_1_1dsp_1_1DelayLine.html#a20bc46b9e24e15cb8a6c91012c9f3a57">shrapnel::dsp::DelayLine::set_delay</a></div><div class="ttdeci">void set_delay(float new_delay)</div><div class="ttdef"><b>Definition:</b> <a href="delayline_8cpp_source.html#l00055">delayline.cpp:55</a></div></div>
-<div class="ttc" id="aclassshrapnel_1_1dsp_1_1DelayLine_html_a38d159691f182d38a31fbcaeb6ea48a6"><div class="ttname"><a href="classshrapnel_1_1dsp_1_1DelayLine.html#a38d159691f182d38a31fbcaeb6ea48a6">shrapnel::dsp::DelayLine::pop_sample</a></div><div class="ttdeci">float pop_sample(void)</div><div class="ttdef"><b>Definition:</b> <a href="delayline_8cpp_source.html#l00039">delayline.cpp:39</a></div></div>
-<div class="ttc" id="aclassshrapnel_1_1dsp_1_1DelayLine_html_a705f083f7c8adf7bc7e32c0ed449a506"><div class="ttname"><a href="classshrapnel_1_1dsp_1_1DelayLine.html#a705f083f7c8adf7bc7e32c0ed449a506">shrapnel::dsp::DelayLine::push_sample</a></div><div class="ttdeci">void push_sample(float sample)</div><div class="ttdef"><b>Definition:</b> <a href="delayline_8cpp_source.html#l00031">delayline.cpp:31</a></div></div>
+<div class="ttc" id="aclassshrapnel_1_1dsp_1_1DelayLine_html_a20bc46b9e24e15cb8a6c91012c9f3a57"><div class="ttname"><a href="classshrapnel_1_1dsp_1_1DelayLine.html#a20bc46b9e24e15cb8a6c91012c9f3a57">shrapnel::dsp::DelayLine::set_delay</a></div><div class="ttdeci">void set_delay(float new_delay)</div><div class="ttdef"><b>Definition:</b> <a href="delayline_8cpp_source.html#l00059">delayline.cpp:59</a></div></div>
+<div class="ttc" id="aclassshrapnel_1_1dsp_1_1DelayLine_html_a38d159691f182d38a31fbcaeb6ea48a6"><div class="ttname"><a href="classshrapnel_1_1dsp_1_1DelayLine.html#a38d159691f182d38a31fbcaeb6ea48a6">shrapnel::dsp::DelayLine::pop_sample</a></div><div class="ttdeci">float pop_sample(void)</div><div class="ttdef"><b>Definition:</b> <a href="delayline_8cpp_source.html#l00041">delayline.cpp:41</a></div></div>
+<div class="ttc" id="aclassshrapnel_1_1dsp_1_1DelayLine_html_a705f083f7c8adf7bc7e32c0ed449a506"><div class="ttname"><a href="classshrapnel_1_1dsp_1_1DelayLine.html#a705f083f7c8adf7bc7e32c0ed449a506">shrapnel::dsp::DelayLine::push_sample</a></div><div class="ttdeci">void push_sample(float sample)</div><div class="ttdef"><b>Definition:</b> <a href="delayline_8cpp_source.html#l00033">delayline.cpp:33</a></div></div>
 <div class="ttc" id="anamespaceshrapnel_html"><div class="ttname"><a href="namespaceshrapnel.html">shrapnel</a></div><div class="ttdef"><b>Definition:</b> <a href="api_8h_source.html#l00026">api.h:26</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->

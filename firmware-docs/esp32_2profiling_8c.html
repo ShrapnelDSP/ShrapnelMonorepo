@@ -163,19 +163,18 @@ Variables</h2></td></tr>
 <div class="fragment"><div class="line"><span class="lineno">   79</span>{</div>
 <div class="line"><span class="lineno">   80</span>    <span class="keywordtype">float</span> cycles_per_second = <a class="code hl_variable" href="esp32_2profiling_8c.html#a12d55287a43c286880f5a53b5433fce1">cpu_freq_mhz</a> * 1e6f;</div>
 <div class="line"><span class="lineno">   81</span> </div>
-<div class="line"><span class="lineno">   82</span>    <span class="keywordtype">float</span> ratio = cycles /</div>
-<div class="line"><span class="lineno">   83</span>        ((float)<a class="code hl_variable" href="esp32_2profiling_8c.html#a799a743b3abd553a37fc01ad3097df08">buffer_size</a> / <a class="code hl_variable" href="esp32_2profiling_8c.html#a63433fe701b4e06f2cfdd50509e660db">sample_rate</a>) /</div>
-<div class="line"><span class="lineno">   84</span>        (cycles_per_second);</div>
-<div class="line"><span class="lineno">   85</span> </div>
-<div class="line"><span class="lineno">   86</span>    <span class="keywordflow">return</span> (<span class="keywordtype">double</span>)(100 * ratio);</div>
-<div class="line"><span class="lineno">   87</span>}</div>
+<div class="line"><span class="lineno">   82</span>    <span class="keywordtype">float</span> ratio =</div>
+<div class="line"><span class="lineno">   83</span>        cycles / ((float)<a class="code hl_variable" href="esp32_2profiling_8c.html#a799a743b3abd553a37fc01ad3097df08">buffer_size</a> / <a class="code hl_variable" href="esp32_2profiling_8c.html#a63433fe701b4e06f2cfdd50509e660db">sample_rate</a>) / (cycles_per_second);</div>
+<div class="line"><span class="lineno">   84</span> </div>
+<div class="line"><span class="lineno">   85</span>    <span class="keywordflow">return</span> (<span class="keywordtype">double</span>)(100 * ratio);</div>
+<div class="line"><span class="lineno">   86</span>}</div>
 <div class="ttc" id="aesp32_2profiling_8c_html_a12d55287a43c286880f5a53b5433fce1"><div class="ttname"><a href="esp32_2profiling_8c.html#a12d55287a43c286880f5a53b5433fce1">cpu_freq_mhz</a></div><div class="ttdeci">static uint32_t cpu_freq_mhz</div><div class="ttdef"><b>Definition:</b> <a href="esp32_2profiling_8c_source.html#l00036">profiling.c:36</a></div></div>
 <div class="ttc" id="aesp32_2profiling_8c_html_a63433fe701b4e06f2cfdd50509e660db"><div class="ttname"><a href="esp32_2profiling_8c.html#a63433fe701b4e06f2cfdd50509e660db">sample_rate</a></div><div class="ttdeci">static float sample_rate</div><div class="ttdef"><b>Definition:</b> <a href="esp32_2profiling_8c_source.html#l00038">profiling.c:38</a></div></div>
 <div class="ttc" id="aesp32_2profiling_8c_html_a799a743b3abd553a37fc01ad3097df08"><div class="ttname"><a href="esp32_2profiling_8c.html#a799a743b3abd553a37fc01ad3097df08">buffer_size</a></div><div class="ttdeci">static size_t buffer_size</div><div class="ttdef"><b>Definition:</b> <a href="esp32_2profiling_8c_source.html#l00037">profiling.c:37</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="esp32_2profiling_8c_source.html#l00037">buffer_size</a>, <a class="el" href="esp32_2profiling_8c_source.html#l00036">cpu_freq_mhz</a>, and <a class="el" href="esp32_2profiling_8c_source.html#l00038">sample_rate</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="esp32_2profiling_8c_source.html#l00094">profiling_task()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="esp32_2profiling_8c_source.html#l00090">profiling_task()</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
@@ -209,14 +208,12 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="esp32_2profiling_8c_source.html#l00089">89</a> of file <a class="el" href="esp32_2profiling_8c_source.html">profiling.c</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   90</span>{</div>
-<div class="line"><span class="lineno">   91</span>    <span class="keywordflow">return</span> cycles / <a class="code hl_variable" href="esp32_2profiling_8c.html#a12d55287a43c286880f5a53b5433fce1">cpu_freq_mhz</a>;</div>
-<div class="line"><span class="lineno">   92</span>}</div>
+<p class="definition">Definition at line <a class="el" href="esp32_2profiling_8c_source.html#l00088">88</a> of file <a class="el" href="esp32_2profiling_8c_source.html">profiling.c</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   88</span>{ <span class="keywordflow">return</span> cycles / <a class="code hl_variable" href="esp32_2profiling_8c.html#a12d55287a43c286880f5a53b5433fce1">cpu_freq_mhz</a>; }</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="esp32_2profiling_8c_source.html#l00036">cpu_freq_mhz</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="esp32_2profiling_8c_source.html#l00094">profiling_task()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="esp32_2profiling_8c_source.html#l00090">profiling_task()</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
@@ -374,55 +371,61 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="esp32_2profiling_8c_source.html#l00094">94</a> of file <a class="el" href="esp32_2profiling_8c_source.html">profiling.c</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   95</span>{</div>
-<div class="line"><span class="lineno">   96</span>    (void) param;</div>
-<div class="line"><span class="lineno">   97</span>    <span class="keywordflow">while</span>(1)</div>
-<div class="line"><span class="lineno">   98</span>    {</div>
-<div class="line"><span class="lineno">   99</span>        vTaskDelay(1000 / portTICK_PERIOD_MS);</div>
+<p class="definition">Definition at line <a class="el" href="esp32_2profiling_8c_source.html#l00090">90</a> of file <a class="el" href="esp32_2profiling_8c_source.html">profiling.c</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   91</span>{</div>
+<div class="line"><span class="lineno">   92</span>    (void)param;</div>
+<div class="line"><span class="lineno">   93</span>    <span class="keywordflow">while</span>(1)</div>
+<div class="line"><span class="lineno">   94</span>    {</div>
+<div class="line"><span class="lineno">   95</span>        vTaskDelay(1000 / portTICK_PERIOD_MS);</div>
+<div class="line"><span class="lineno">   96</span> </div>
+<div class="line"><span class="lineno">   97</span>        <span class="keywordflow">if</span>(xSemaphoreTake(<a class="code hl_variable" href="esp32_2profiling_8c.html#a3b34b520123016210f0a0bb409286805">profiling_mutex</a>, 100 / portTICK_PERIOD_MS))</div>
+<div class="line"><span class="lineno">   98</span>        {</div>
+<div class="line"><span class="lineno">   99</span>            ESP_LOGI(TAG, <span class="stringliteral">&quot; ========= \n&quot;</span>);</div>
 <div class="line"><span class="lineno">  100</span> </div>
-<div class="line"><span class="lineno">  101</span>        <span class="keywordflow">if</span>(xSemaphoreTake(<a class="code hl_variable" href="esp32_2profiling_8c.html#a3b34b520123016210f0a0bb409286805">profiling_mutex</a>, 100 / portTICK_PERIOD_MS))</div>
-<div class="line"><span class="lineno">  102</span>        {</div>
-<div class="line"><span class="lineno">  103</span>            ESP_LOGI(TAG, <span class="stringliteral">&quot; ========= \n&quot;</span>);</div>
-<div class="line"><span class="lineno">  104</span> </div>
-<div class="line"><span class="lineno">  105</span>            int64_t total_cycles = 0;</div>
-<div class="line"><span class="lineno">  106</span>            <span class="keywordflow">for</span>(<span class="keywordtype">int</span> i = 0; i &lt; NUMBER_OF_STAGES; i++)</div>
-<div class="line"><span class="lineno">  107</span>            {</div>
-<div class="line"><span class="lineno">  108</span>                <span class="comment">//if the stage has not been assigned, stop printing</span></div>
-<div class="line"><span class="lineno">  109</span>                <span class="keywordflow">if</span>(<a class="code hl_variable" href="esp32_2profiling_8c.html#ade2d6f84e5a6696fba128c5769eef4db">stage_cycles</a>[i] == 0)</div>
-<div class="line"><span class="lineno">  110</span>                {</div>
-<div class="line"><span class="lineno">  111</span>                    <span class="keywordflow">break</span>;</div>
-<div class="line"><span class="lineno">  112</span>                }</div>
-<div class="line"><span class="lineno">  113</span> </div>
-<div class="line"><span class="lineno">  114</span>                int64_t current_stage_cycles = <a class="code hl_variable" href="esp32_2profiling_8c.html#ade2d6f84e5a6696fba128c5769eef4db">stage_cycles</a>[i] - ((i == 0) ? <a class="code hl_variable" href="esp32_2profiling_8c.html#abbb1d59d5361eaadca69523f17e12a25">start_cycles</a> : <a class="code hl_variable" href="esp32_2profiling_8c.html#ade2d6f84e5a6696fba128c5769eef4db">stage_cycles</a>[i - 1]);</div>
-<div class="line"><span class="lineno">  115</span>                ESP_LOGI(TAG, <span class="stringliteral">&quot;Stage %3d processing took %7lld cycles %4lld us (%03.1f %%)&quot;</span>,</div>
-<div class="line"><span class="lineno">  116</span>                        i,</div>
-<div class="line"><span class="lineno">  117</span>                        current_stage_cycles,</div>
-<div class="line"><span class="lineno">  118</span>                        <a class="code hl_function" href="esp32_2profiling_8c.html#ab43df9ddabf19beb65958fe84cac89b5">cycles_to_us</a>(current_stage_cycles),</div>
-<div class="line"><span class="lineno">  119</span>                        <a class="code hl_function" href="esp32_2profiling_8c.html#a96b462c18367729bd8d5e19d7d98a619">cycles_to_percent</a>(current_stage_cycles));</div>
+<div class="line"><span class="lineno">  101</span>            int64_t total_cycles = 0;</div>
+<div class="line"><span class="lineno">  102</span>            <span class="keywordflow">for</span>(<span class="keywordtype">int</span> i = 0; i &lt; NUMBER_OF_STAGES; i++)</div>
+<div class="line"><span class="lineno">  103</span>            {</div>
+<div class="line"><span class="lineno">  104</span>                <span class="comment">//if the stage has not been assigned, stop printing</span></div>
+<div class="line"><span class="lineno">  105</span>                <span class="keywordflow">if</span>(<a class="code hl_variable" href="esp32_2profiling_8c.html#ade2d6f84e5a6696fba128c5769eef4db">stage_cycles</a>[i] == 0)</div>
+<div class="line"><span class="lineno">  106</span>                {</div>
+<div class="line"><span class="lineno">  107</span>                    <span class="keywordflow">break</span>;</div>
+<div class="line"><span class="lineno">  108</span>                }</div>
+<div class="line"><span class="lineno">  109</span> </div>
+<div class="line"><span class="lineno">  110</span>                int64_t current_stage_cycles =</div>
+<div class="line"><span class="lineno">  111</span>                    <a class="code hl_variable" href="esp32_2profiling_8c.html#ade2d6f84e5a6696fba128c5769eef4db">stage_cycles</a>[i] -</div>
+<div class="line"><span class="lineno">  112</span>                    ((i == 0) ? <a class="code hl_variable" href="esp32_2profiling_8c.html#abbb1d59d5361eaadca69523f17e12a25">start_cycles</a> : <a class="code hl_variable" href="esp32_2profiling_8c.html#ade2d6f84e5a6696fba128c5769eef4db">stage_cycles</a>[i - 1]);</div>
+<div class="line"><span class="lineno">  113</span>                ESP_LOGI(TAG,</div>
+<div class="line"><span class="lineno">  114</span>                         <span class="stringliteral">&quot;Stage %3d processing took %7lld cycles %4lld us &quot;</span></div>
+<div class="line"><span class="lineno">  115</span>                         <span class="stringliteral">&quot;(%03.1f %%)&quot;</span>,</div>
+<div class="line"><span class="lineno">  116</span>                         i,</div>
+<div class="line"><span class="lineno">  117</span>                         current_stage_cycles,</div>
+<div class="line"><span class="lineno">  118</span>                         <a class="code hl_function" href="esp32_2profiling_8c.html#ab43df9ddabf19beb65958fe84cac89b5">cycles_to_us</a>(current_stage_cycles),</div>
+<div class="line"><span class="lineno">  119</span>                         <a class="code hl_function" href="esp32_2profiling_8c.html#a96b462c18367729bd8d5e19d7d98a619">cycles_to_percent</a>(current_stage_cycles));</div>
 <div class="line"><span class="lineno">  120</span> </div>
 <div class="line"><span class="lineno">  121</span>                total_cycles += current_stage_cycles;</div>
 <div class="line"><span class="lineno">  122</span>            }</div>
 <div class="line"><span class="lineno">  123</span> </div>
-<div class="line"><span class="lineno">  124</span>            ESP_LOGI(TAG, <span class="stringliteral">&quot;Total processing took     %7lld cycles %4lld us (%03.1f %%)&quot;</span>,</div>
-<div class="line"><span class="lineno">  125</span>                    total_cycles,</div>
-<div class="line"><span class="lineno">  126</span>                    <a class="code hl_function" href="esp32_2profiling_8c.html#ab43df9ddabf19beb65958fe84cac89b5">cycles_to_us</a>(total_cycles),</div>
-<div class="line"><span class="lineno">  127</span>                    <a class="code hl_function" href="esp32_2profiling_8c.html#a96b462c18367729bd8d5e19d7d98a619">cycles_to_percent</a>(total_cycles));</div>
-<div class="line"><span class="lineno">  128</span> </div>
-<div class="line"><span class="lineno">  129</span>            ESP_LOGI(TAG, <span class="stringliteral">&quot; ========= \n&quot;</span>);</div>
+<div class="line"><span class="lineno">  124</span>            ESP_LOGI(</div>
+<div class="line"><span class="lineno">  125</span>                TAG,</div>
+<div class="line"><span class="lineno">  126</span>                <span class="stringliteral">&quot;Total processing took     %7lld cycles %4lld us (%03.1f %%)&quot;</span>,</div>
+<div class="line"><span class="lineno">  127</span>                total_cycles,</div>
+<div class="line"><span class="lineno">  128</span>                <a class="code hl_function" href="esp32_2profiling_8c.html#ab43df9ddabf19beb65958fe84cac89b5">cycles_to_us</a>(total_cycles),</div>
+<div class="line"><span class="lineno">  129</span>                <a class="code hl_function" href="esp32_2profiling_8c.html#a96b462c18367729bd8d5e19d7d98a619">cycles_to_percent</a>(total_cycles));</div>
 <div class="line"><span class="lineno">  130</span> </div>
-<div class="line"><span class="lineno">  131</span>            xSemaphoreGive(<a class="code hl_variable" href="esp32_2profiling_8c.html#a3b34b520123016210f0a0bb409286805">profiling_mutex</a>);</div>
-<div class="line"><span class="lineno">  132</span>        }</div>
-<div class="line"><span class="lineno">  133</span>        <span class="keywordflow">else</span></div>
-<div class="line"><span class="lineno">  134</span>        {</div>
-<div class="line"><span class="lineno">  135</span>            ESP_LOGE(TAG, <span class="stringliteral">&quot;%s failed to take semaphore&quot;</span>, __FUNCTION__);</div>
-<div class="line"><span class="lineno">  136</span>        }</div>
-<div class="line"><span class="lineno">  137</span>    }</div>
-<div class="line"><span class="lineno">  138</span>}</div>
+<div class="line"><span class="lineno">  131</span>            ESP_LOGI(TAG, <span class="stringliteral">&quot; ========= \n&quot;</span>);</div>
+<div class="line"><span class="lineno">  132</span> </div>
+<div class="line"><span class="lineno">  133</span>            xSemaphoreGive(<a class="code hl_variable" href="esp32_2profiling_8c.html#a3b34b520123016210f0a0bb409286805">profiling_mutex</a>);</div>
+<div class="line"><span class="lineno">  134</span>        }</div>
+<div class="line"><span class="lineno">  135</span>        <span class="keywordflow">else</span></div>
+<div class="line"><span class="lineno">  136</span>        {</div>
+<div class="line"><span class="lineno">  137</span>            ESP_LOGE(TAG, <span class="stringliteral">&quot;%s failed to take semaphore&quot;</span>, __FUNCTION__);</div>
+<div class="line"><span class="lineno">  138</span>        }</div>
+<div class="line"><span class="lineno">  139</span>    }</div>
+<div class="line"><span class="lineno">  140</span>}</div>
 <div class="ttc" id="aesp32_2profiling_8c_html_a96b462c18367729bd8d5e19d7d98a619"><div class="ttname"><a href="esp32_2profiling_8c.html#a96b462c18367729bd8d5e19d7d98a619">cycles_to_percent</a></div><div class="ttdeci">static double cycles_to_percent(int64_t cycles)</div><div class="ttdef"><b>Definition:</b> <a href="esp32_2profiling_8c_source.html#l00078">profiling.c:78</a></div></div>
-<div class="ttc" id="aesp32_2profiling_8c_html_ab43df9ddabf19beb65958fe84cac89b5"><div class="ttname"><a href="esp32_2profiling_8c.html#ab43df9ddabf19beb65958fe84cac89b5">cycles_to_us</a></div><div class="ttdeci">static int64_t cycles_to_us(int64_t cycles)</div><div class="ttdef"><b>Definition:</b> <a href="esp32_2profiling_8c_source.html#l00089">profiling.c:89</a></div></div>
+<div class="ttc" id="aesp32_2profiling_8c_html_ab43df9ddabf19beb65958fe84cac89b5"><div class="ttname"><a href="esp32_2profiling_8c.html#ab43df9ddabf19beb65958fe84cac89b5">cycles_to_us</a></div><div class="ttdeci">static int64_t cycles_to_us(int64_t cycles)</div><div class="ttdef"><b>Definition:</b> <a href="esp32_2profiling_8c_source.html#l00088">profiling.c:88</a></div></div>
 </div><!-- fragment -->
-<p class="reference">References <a class="el" href="esp32_2profiling_8c_source.html#l00078">cycles_to_percent()</a>, <a class="el" href="esp32_2profiling_8c_source.html#l00089">cycles_to_us()</a>, <a class="el" href="esp32_2profiling_8c_source.html#l00034">profiling_mutex</a>, <a class="el" href="esp32_2profiling_8c_source.html#l00033">stage_cycles</a>, and <a class="el" href="esp32_2profiling_8c_source.html#l00032">start_cycles</a>.</p>
+<p class="reference">References <a class="el" href="esp32_2profiling_8c_source.html#l00078">cycles_to_percent()</a>, <a class="el" href="esp32_2profiling_8c_source.html#l00088">cycles_to_us()</a>, <a class="el" href="esp32_2profiling_8c_source.html#l00034">profiling_mutex</a>, <a class="el" href="esp32_2profiling_8c_source.html#l00033">stage_cycles</a>, and <a class="el" href="esp32_2profiling_8c_source.html#l00032">start_cycles</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -455,7 +458,7 @@ Here is the call graph for this function:</div>
 
 <p class="definition">Definition at line <a class="el" href="esp32_2profiling_8c_source.html#l00037">37</a> of file <a class="el" href="esp32_2profiling_8c_source.html">profiling.c</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="esp32_2profiling_8c_source.html#l00078">cycles_to_percent()</a>, <a class="el" href="audio__processor_8cpp_source.html#l00045">shrapnel::AudioProcessor::prepare()</a>, and <a class="el" href="desktop_2profiling_8c_source.html#l00022">profiling_init()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="esp32_2profiling_8c_source.html#l00078">cycles_to_percent()</a>, <a class="el" href="audio__processor_8cpp_source.html#l00046">shrapnel::AudioProcessor::prepare()</a>, and <a class="el" href="desktop_2profiling_8c_source.html#l00022">profiling_init()</a>.</p>
 
 </div>
 </div>
@@ -481,7 +484,7 @@ Here is the call graph for this function:</div>
 
 <p class="definition">Definition at line <a class="el" href="esp32_2profiling_8c_source.html#l00036">36</a> of file <a class="el" href="esp32_2profiling_8c_source.html">profiling.c</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="esp32_2profiling_8c_source.html#l00078">cycles_to_percent()</a>, <a class="el" href="esp32_2profiling_8c_source.html#l00089">cycles_to_us()</a>, and <a class="el" href="esp32_2profiling_8c_source.html#l00040">profiling_init()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="esp32_2profiling_8c_source.html#l00078">cycles_to_percent()</a>, <a class="el" href="esp32_2profiling_8c_source.html#l00088">cycles_to_us()</a>, and <a class="el" href="esp32_2profiling_8c_source.html#l00040">profiling_init()</a>.</p>
 
 </div>
 </div>
@@ -533,7 +536,7 @@ Here is the call graph for this function:</div>
 
 <p class="definition">Definition at line <a class="el" href="esp32_2profiling_8c_source.html#l00034">34</a> of file <a class="el" href="esp32_2profiling_8c_source.html">profiling.c</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="esp32_2profiling_8c_source.html#l00040">profiling_init()</a>, <a class="el" href="esp32_2profiling_8c_source.html#l00050">profiling_start()</a>, <a class="el" href="esp32_2profiling_8c_source.html#l00069">profiling_stop()</a>, and <a class="el" href="esp32_2profiling_8c_source.html#l00094">profiling_task()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="esp32_2profiling_8c_source.html#l00040">profiling_init()</a>, <a class="el" href="esp32_2profiling_8c_source.html#l00050">profiling_start()</a>, <a class="el" href="esp32_2profiling_8c_source.html#l00069">profiling_stop()</a>, and <a class="el" href="esp32_2profiling_8c_source.html#l00090">profiling_task()</a>.</p>
 
 </div>
 </div>
@@ -559,7 +562,7 @@ Here is the call graph for this function:</div>
 
 <p class="definition">Definition at line <a class="el" href="esp32_2profiling_8c_source.html#l00038">38</a> of file <a class="el" href="esp32_2profiling_8c_source.html">profiling.c</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="esp32_2profiling_8c_source.html#l00078">cycles_to_percent()</a>, <a class="el" href="i2s_8cpp_source.html#l00090">shrapnel::audio::i2s_processing_task()</a>, <a class="el" href="audio__processor_8cpp_source.html#l00045">shrapnel::AudioProcessor::prepare()</a>, and <a class="el" href="desktop_2profiling_8c_source.html#l00022">profiling_init()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="esp32_2profiling_8c_source.html#l00078">cycles_to_percent()</a>, <a class="el" href="i2s_8cpp_source.html#l00089">shrapnel::audio::i2s_processing_task()</a>, <a class="el" href="audio__processor_8cpp_source.html#l00046">shrapnel::AudioProcessor::prepare()</a>, and <a class="el" href="desktop_2profiling_8c_source.html#l00022">profiling_init()</a>.</p>
 
 </div>
 </div>
@@ -585,7 +588,7 @@ Here is the call graph for this function:</div>
 
 <p class="definition">Definition at line <a class="el" href="esp32_2profiling_8c_source.html#l00033">33</a> of file <a class="el" href="esp32_2profiling_8c_source.html">profiling.c</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="esp32_2profiling_8c_source.html#l00059">profiling_mark_stage()</a>, and <a class="el" href="esp32_2profiling_8c_source.html#l00094">profiling_task()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="esp32_2profiling_8c_source.html#l00059">profiling_mark_stage()</a>, and <a class="el" href="esp32_2profiling_8c_source.html#l00090">profiling_task()</a>.</p>
 
 </div>
 </div>
@@ -611,7 +614,7 @@ Here is the call graph for this function:</div>
 
 <p class="definition">Definition at line <a class="el" href="esp32_2profiling_8c_source.html#l00032">32</a> of file <a class="el" href="esp32_2profiling_8c_source.html">profiling.c</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="esp32_2profiling_8c_source.html#l00050">profiling_start()</a>, and <a class="el" href="esp32_2profiling_8c_source.html#l00094">profiling_task()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="esp32_2profiling_8c_source.html#l00050">profiling_start()</a>, and <a class="el" href="esp32_2profiling_8c_source.html#l00090">profiling_task()</a>.</p>
 
 </div>
 </div>

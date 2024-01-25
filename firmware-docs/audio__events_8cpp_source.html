@@ -114,8 +114,8 @@ $(document).ready(function(){initNavTree('audio__events_8cpp_source.html',''); i
 <div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><span class="comment"> */</span></div>
 <div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span> </div>
 <div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="preprocessor">#include &quot;<a class="code" href="audio__events_8h.html">audio_events.h</a>&quot;</span></div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span><span class="preprocessor">#include &quot;esp_log.h&quot;</span></div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="preprocessor">#include &quot;audio_events.pb.h&quot;</span></div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span><span class="preprocessor">#include &quot;audio_events.pb.h&quot;</span></div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="preprocessor">#include &quot;esp_log.h&quot;</span></div>
 <div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span> </div>
 <div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="preprocessor">#define TAG &quot;audio_events&quot;</span></div>
 <div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span> </div>
@@ -141,20 +141,20 @@ $(document).ready(function(){initNavTree('audio__events_8cpp_source.html',''); i
 <div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>    std::visit(</div>
 <div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>        [&amp;](<span class="keyword">const</span> <span class="keyword">auto</span> &amp;message)</div>
 <div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>        {</div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>          <span class="keyword">using </span>T = std::decay_t&lt;<span class="keyword">decltype</span>(message)&gt;;</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>            <span class="keyword">using </span>T = std::decay_t&lt;<span class="keyword">decltype</span>(message)&gt;;</div>
 <div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span> </div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>          <span class="keywordflow">if</span> <span class="keyword">constexpr</span>(std::is_same_v&lt;T, InputClipped&gt;)</div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>          {</div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>              out &lt;&lt; <span class="stringliteral">&quot;&lt;InputClipped&gt;&quot;</span> &lt;&lt; message;</div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>          }</div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>          <span class="keywordflow">else</span> <span class="keywordflow">if</span> <span class="keyword">constexpr</span>(std::is_same_v&lt;T, OutputClipped&gt;)</div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>          {</div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>              out &lt;&lt; <span class="stringliteral">&quot;&lt;OutputClipped&gt;&quot;</span> &lt;&lt; message;</div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>          }</div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>          <span class="keywordflow">else</span></div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>          {</div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>              out &lt;&lt; <span class="stringliteral">&quot;&lt;Unknown&gt;&quot;</span>;</div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>          }</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>            <span class="keywordflow">if</span> <span class="keyword">constexpr</span>(std::is_same_v&lt;T, InputClipped&gt;)</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>            {</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>                out &lt;&lt; <span class="stringliteral">&quot;&lt;InputClipped&gt;&quot;</span> &lt;&lt; message;</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>            }</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>            <span class="keywordflow">else</span> <span class="keywordflow">if</span> <span class="keyword">constexpr</span>(std::is_same_v&lt;T, OutputClipped&gt;)</div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>            {</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>                out &lt;&lt; <span class="stringliteral">&quot;&lt;OutputClipped&gt;&quot;</span> &lt;&lt; message;</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>            }</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>            <span class="keywordflow">else</span></div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>            {</div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>                out &lt;&lt; <span class="stringliteral">&quot;&lt;Unknown&gt;&quot;</span>;</div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>            }</div>
 <div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>        },</div>
 <div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>        self);</div>
 <div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span> </div>

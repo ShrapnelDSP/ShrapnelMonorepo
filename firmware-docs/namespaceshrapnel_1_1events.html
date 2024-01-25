@@ -177,20 +177,20 @@ Variables</h2></td></tr>
 <div class="line"><span class="lineno">   45</span>    std::visit(</div>
 <div class="line"><span class="lineno">   46</span>        [&amp;](<span class="keyword">const</span> <span class="keyword">auto</span> &amp;message)</div>
 <div class="line"><span class="lineno">   47</span>        {</div>
-<div class="line"><span class="lineno">   48</span>          <span class="keyword">using </span>T = std::decay_t&lt;<span class="keyword">decltype</span>(message)&gt;;</div>
+<div class="line"><span class="lineno">   48</span>            <span class="keyword">using </span>T = std::decay_t&lt;<span class="keyword">decltype</span>(message)&gt;;</div>
 <div class="line"><span class="lineno">   49</span> </div>
-<div class="line"><span class="lineno">   50</span>          <span class="keywordflow">if</span> <span class="keyword">constexpr</span>(std::is_same_v&lt;T, InputClipped&gt;)</div>
-<div class="line"><span class="lineno">   51</span>          {</div>
-<div class="line"><span class="lineno">   52</span>              out &lt;&lt; <span class="stringliteral">&quot;&lt;InputClipped&gt;&quot;</span> &lt;&lt; message;</div>
-<div class="line"><span class="lineno">   53</span>          }</div>
-<div class="line"><span class="lineno">   54</span>          <span class="keywordflow">else</span> <span class="keywordflow">if</span> <span class="keyword">constexpr</span>(std::is_same_v&lt;T, OutputClipped&gt;)</div>
-<div class="line"><span class="lineno">   55</span>          {</div>
-<div class="line"><span class="lineno">   56</span>              out &lt;&lt; <span class="stringliteral">&quot;&lt;OutputClipped&gt;&quot;</span> &lt;&lt; message;</div>
-<div class="line"><span class="lineno">   57</span>          }</div>
-<div class="line"><span class="lineno">   58</span>          <span class="keywordflow">else</span></div>
-<div class="line"><span class="lineno">   59</span>          {</div>
-<div class="line"><span class="lineno">   60</span>              out &lt;&lt; <span class="stringliteral">&quot;&lt;Unknown&gt;&quot;</span>;</div>
-<div class="line"><span class="lineno">   61</span>          }</div>
+<div class="line"><span class="lineno">   50</span>            <span class="keywordflow">if</span> <span class="keyword">constexpr</span>(std::is_same_v&lt;T, InputClipped&gt;)</div>
+<div class="line"><span class="lineno">   51</span>            {</div>
+<div class="line"><span class="lineno">   52</span>                out &lt;&lt; <span class="stringliteral">&quot;&lt;InputClipped&gt;&quot;</span> &lt;&lt; message;</div>
+<div class="line"><span class="lineno">   53</span>            }</div>
+<div class="line"><span class="lineno">   54</span>            <span class="keywordflow">else</span> <span class="keywordflow">if</span> <span class="keyword">constexpr</span>(std::is_same_v&lt;T, OutputClipped&gt;)</div>
+<div class="line"><span class="lineno">   55</span>            {</div>
+<div class="line"><span class="lineno">   56</span>                out &lt;&lt; <span class="stringliteral">&quot;&lt;OutputClipped&gt;&quot;</span> &lt;&lt; message;</div>
+<div class="line"><span class="lineno">   57</span>            }</div>
+<div class="line"><span class="lineno">   58</span>            <span class="keywordflow">else</span></div>
+<div class="line"><span class="lineno">   59</span>            {</div>
+<div class="line"><span class="lineno">   60</span>                out &lt;&lt; <span class="stringliteral">&quot;&lt;Unknown&gt;&quot;</span>;</div>
+<div class="line"><span class="lineno">   61</span>            }</div>
 <div class="line"><span class="lineno">   62</span>        },</div>
 <div class="line"><span class="lineno">   63</span>        self);</div>
 <div class="line"><span class="lineno">   64</span> </div>

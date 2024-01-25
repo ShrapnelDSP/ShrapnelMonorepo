@@ -145,16 +145,16 @@ Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p class="definition">Definition at line <a class="el" href="wah_8cpp_source.html#l00036">36</a> of file <a class="el" href="wah_8cpp_source.html">wah.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   36</span>                                    {</div>
-<div class="line"><span class="lineno">   37</span>    <span class="keywordtype">float</span> p = 0.9;</div>
-<div class="line"><span class="lineno">   38</span>    std::array&lt;float, 6&gt; coefficients{1 - p, 0, 0, 1, -p, 0};</div>
-<div class="line"><span class="lineno">   39</span>    position_filter.<a class="code hl_function" href="classshrapnel_1_1dsp_1_1IirFilter.html#aa09e7c1ab99d85c0fdd1c98c80636550">set_coefficients</a>(coefficients );</div>
-<div class="line"><span class="lineno">   40</span>    vocal_filter.<a class="code hl_function" href="classshrapnel_1_1dsp_1_1IirFilter.html#aa09e7c1ab99d85c0fdd1c98c80636550">set_coefficients</a>(coefficients );</div>
-<div class="line"><span class="lineno">   41</span>    sample_rate = rate;</div>
-<div class="line"><span class="lineno">   42</span>}</div>
-<div class="ttc" id="aclassshrapnel_1_1dsp_1_1IirFilter_html_aa09e7c1ab99d85c0fdd1c98c80636550"><div class="ttname"><a href="classshrapnel_1_1dsp_1_1IirFilter.html#aa09e7c1ab99d85c0fdd1c98c80636550">shrapnel::dsp::IirFilter::set_coefficients</a></div><div class="ttdeci">void set_coefficients(std::array&lt; float, 6 &gt; new_coefficients) override</div><div class="ttdef"><b>Definition:</b> <a href="desktop_2include_2iir__concrete_8h_source.html#l00059">iir_concrete.h:59</a></div></div>
+<div class="fragment"><div class="line"><span class="lineno">   37</span>{</div>
+<div class="line"><span class="lineno">   38</span>    <span class="keywordtype">float</span> p = 0.9;</div>
+<div class="line"><span class="lineno">   39</span>    std::array&lt;float, 6&gt; coefficients{1 - p, 0, 0, 1, -p, 0};</div>
+<div class="line"><span class="lineno">   40</span>    position_filter.<a class="code hl_function" href="classshrapnel_1_1dsp_1_1IirFilter.html#aa09e7c1ab99d85c0fdd1c98c80636550">set_coefficients</a>(coefficients);</div>
+<div class="line"><span class="lineno">   41</span>    vocal_filter.<a class="code hl_function" href="classshrapnel_1_1dsp_1_1IirFilter.html#aa09e7c1ab99d85c0fdd1c98c80636550">set_coefficients</a>(coefficients);</div>
+<div class="line"><span class="lineno">   42</span>    sample_rate = rate;</div>
+<div class="line"><span class="lineno">   43</span>}</div>
+<div class="ttc" id="aclassshrapnel_1_1dsp_1_1IirFilter_html_aa09e7c1ab99d85c0fdd1c98c80636550"><div class="ttname"><a href="classshrapnel_1_1dsp_1_1IirFilter.html#aa09e7c1ab99d85c0fdd1c98c80636550">shrapnel::dsp::IirFilter::set_coefficients</a></div><div class="ttdeci">void set_coefficients(std::array&lt; float, 6 &gt; new_coefficients) override</div><div class="ttdef"><b>Definition:</b> <a href="desktop_2include_2iir__concrete_8h_source.html#l00056">iir_concrete.h:56</a></div></div>
 </div><!-- fragment -->
-<p class="reference">References <a class="el" href="desktop_2include_2iir__concrete_8h_source.html#l00059">shrapnel::dsp::IirFilter::set_coefficients()</a>.</p>
+<p class="reference">References <a class="el" href="desktop_2include_2iir__concrete_8h_source.html#l00056">shrapnel::dsp::IirFilter::set_coefficients()</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -180,46 +180,44 @@ Here is the call graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="wah_8cpp_source.html#l00044">44</a> of file <a class="el" href="wah_8cpp_source.html">wah.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   45</span>{</div>
-<div class="line"><span class="lineno">   46</span>    <span class="keywordtype">float</span> <a class="code hl_namespace" href="namespacewah.html">wah</a>;</div>
-<div class="line"><span class="lineno">   47</span>    position_filter.<a class="code hl_function" href="classshrapnel_1_1dsp_1_1IirFilter.html#a53cb5a72d2a310cd4b35d4329af682f0">process</a>(&amp;position_parameter, &amp;<a class="code hl_namespace" href="namespacewah.html">wah</a>, 1);</div>
-<div class="line"><span class="lineno">   48</span> </div>
-<div class="line"><span class="lineno">   49</span>    <span class="keywordtype">float</span> vocal;</div>
-<div class="line"><span class="lineno">   50</span>    vocal_filter.<a class="code hl_function" href="classshrapnel_1_1dsp_1_1IirFilter.html#a53cb5a72d2a310cd4b35d4329af682f0">process</a>(&amp;vocal_parameter, &amp;vocal, 1);</div>
-<div class="line"><span class="lineno">   51</span> </div>
-<div class="line"><span class="lineno">   52</span>    <span class="keyword">constexpr</span> <span class="keyword">auto</span> base_gain = 14.f * std::pow(10.f, -1.f / 20.f);</div>
-<div class="line"><span class="lineno">   53</span>    <span class="keyword">constexpr</span> <span class="keyword">auto</span> gain_factor_wah = -1.2f;</div>
-<div class="line"><span class="lineno">   54</span>    <span class="keyword">constexpr</span> <span class="keyword">auto</span> gain_factor_vocal = -1.f;</div>
-<div class="line"><span class="lineno">   55</span>    <span class="keyword">constexpr</span> <span class="keyword">auto</span> vocal_range = 2.f;</div>
-<div class="line"><span class="lineno">   56</span> </div>
-<div class="line"><span class="lineno">   57</span>    <span class="keyword">auto</span> gain =</div>
-<div class="line"><span class="lineno">   58</span>        base_gain * expf(gain_factor_wah * <a class="code hl_namespace" href="namespacewah.html">wah</a> + gain_factor_vocal * vocal);</div>
-<div class="line"><span class="lineno">   59</span>    <span class="keyword">auto</span> resonance_frequency_hz = 450.f * powf(2, 2.3f * <a class="code hl_namespace" href="namespacewah.html">wah</a>);</div>
-<div class="line"><span class="lineno">   60</span>    <span class="keyword">auto</span> quality = powf(2, 2 * (1 - <a class="code hl_namespace" href="namespacewah.html">wah</a>) + 1 - vocal_range * vocal);</div>
-<div class="line"><span class="lineno">   61</span> </div>
-<div class="line"><span class="lineno">   62</span>    <span class="keywordtype">float</span> coefficients[5];</div>
-<div class="line"><span class="lineno">   63</span> </div>
-<div class="line"><span class="lineno">   64</span>    <span class="comment">// XXX: Slight inefficiency here. This function converts from denormalised</span></div>
-<div class="line"><span class="lineno">   65</span>    <span class="comment">// to normalised, then set_coefficients does the same again</span></div>
-<div class="line"><span class="lineno">   66</span>    dsps_biquad_gen_bpf0db_f32(</div>
-<div class="line"><span class="lineno">   67</span>        coefficients, resonance_frequency_hz / sample_rate, quality);</div>
-<div class="line"><span class="lineno">   68</span> </div>
-<div class="line"><span class="lineno">   69</span>    wah_filter.<a class="code hl_function" href="classshrapnel_1_1dsp_1_1IirFilter.html#aa09e7c1ab99d85c0fdd1c98c80636550">set_coefficients</a>(</div>
-<div class="line"><span class="lineno">   70</span>        std::array&lt;float, 6&gt;{</div>
-<div class="line"><span class="lineno">   71</span>            coefficients[0] * gain,</div>
-<div class="line"><span class="lineno">   72</span>            coefficients[1] * gain,</div>
-<div class="line"><span class="lineno">   73</span>            coefficients[2] * gain,</div>
-<div class="line"><span class="lineno">   74</span>            1,</div>
-<div class="line"><span class="lineno">   75</span>            coefficients[3],</div>
-<div class="line"><span class="lineno">   76</span>            coefficients[4]});</div>
-<div class="line"><span class="lineno">   77</span> </div>
-<div class="line"><span class="lineno">   78</span>    wah_filter.<a class="code hl_function" href="classshrapnel_1_1dsp_1_1IirFilter.html#a53cb5a72d2a310cd4b35d4329af682f0">process</a>(samples.data(), samples.data(), samples.size());</div>
-<div class="line"><span class="lineno">   79</span>}</div>
-<div class="ttc" id="aclassshrapnel_1_1dsp_1_1IirFilter_html_a53cb5a72d2a310cd4b35d4329af682f0"><div class="ttname"><a href="classshrapnel_1_1dsp_1_1IirFilter.html#a53cb5a72d2a310cd4b35d4329af682f0">shrapnel::dsp::IirFilter::process</a></div><div class="ttdeci">void process(const float *in, float *out, size_t buf_size) override</div><div class="ttdef"><b>Definition:</b> <a href="desktop_2include_2iir__concrete_8h_source.html#l00037">iir_concrete.h:37</a></div></div>
+<p class="definition">Definition at line <a class="el" href="wah_8cpp_source.html#l00045">45</a> of file <a class="el" href="wah_8cpp_source.html">wah.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   46</span>{</div>
+<div class="line"><span class="lineno">   47</span>    <span class="keywordtype">float</span> <a class="code hl_namespace" href="namespacewah.html">wah</a>;</div>
+<div class="line"><span class="lineno">   48</span>    position_filter.<a class="code hl_function" href="classshrapnel_1_1dsp_1_1IirFilter.html#a53cb5a72d2a310cd4b35d4329af682f0">process</a>(&amp;position_parameter, &amp;<a class="code hl_namespace" href="namespacewah.html">wah</a>, 1);</div>
+<div class="line"><span class="lineno">   49</span> </div>
+<div class="line"><span class="lineno">   50</span>    <span class="keywordtype">float</span> vocal;</div>
+<div class="line"><span class="lineno">   51</span>    vocal_filter.<a class="code hl_function" href="classshrapnel_1_1dsp_1_1IirFilter.html#a53cb5a72d2a310cd4b35d4329af682f0">process</a>(&amp;vocal_parameter, &amp;vocal, 1);</div>
+<div class="line"><span class="lineno">   52</span> </div>
+<div class="line"><span class="lineno">   53</span>    <span class="keyword">constexpr</span> <span class="keyword">auto</span> base_gain = 14.f * std::pow(10.f, -1.f / 20.f);</div>
+<div class="line"><span class="lineno">   54</span>    <span class="keyword">constexpr</span> <span class="keyword">auto</span> gain_factor_wah = -1.2f;</div>
+<div class="line"><span class="lineno">   55</span>    <span class="keyword">constexpr</span> <span class="keyword">auto</span> gain_factor_vocal = -1.f;</div>
+<div class="line"><span class="lineno">   56</span>    <span class="keyword">constexpr</span> <span class="keyword">auto</span> vocal_range = 2.f;</div>
+<div class="line"><span class="lineno">   57</span> </div>
+<div class="line"><span class="lineno">   58</span>    <span class="keyword">auto</span> gain =</div>
+<div class="line"><span class="lineno">   59</span>        base_gain * expf(gain_factor_wah * <a class="code hl_namespace" href="namespacewah.html">wah</a> + gain_factor_vocal * vocal);</div>
+<div class="line"><span class="lineno">   60</span>    <span class="keyword">auto</span> resonance_frequency_hz = 450.f * powf(2, 2.3f * <a class="code hl_namespace" href="namespacewah.html">wah</a>);</div>
+<div class="line"><span class="lineno">   61</span>    <span class="keyword">auto</span> quality = powf(2, 2 * (1 - <a class="code hl_namespace" href="namespacewah.html">wah</a>) + 1 - vocal_range * vocal);</div>
+<div class="line"><span class="lineno">   62</span> </div>
+<div class="line"><span class="lineno">   63</span>    <span class="keywordtype">float</span> coefficients[5];</div>
+<div class="line"><span class="lineno">   64</span> </div>
+<div class="line"><span class="lineno">   65</span>    <span class="comment">// XXX: Slight inefficiency here. This function converts from denormalised</span></div>
+<div class="line"><span class="lineno">   66</span>    <span class="comment">// to normalised, then set_coefficients does the same again</span></div>
+<div class="line"><span class="lineno">   67</span>    dsps_biquad_gen_bpf0db_f32(</div>
+<div class="line"><span class="lineno">   68</span>        coefficients, resonance_frequency_hz / sample_rate, quality);</div>
+<div class="line"><span class="lineno">   69</span> </div>
+<div class="line"><span class="lineno">   70</span>    wah_filter.<a class="code hl_function" href="classshrapnel_1_1dsp_1_1IirFilter.html#aa09e7c1ab99d85c0fdd1c98c80636550">set_coefficients</a>(std::array&lt;float, 6&gt;{coefficients[0] * gain,</div>
+<div class="line"><span class="lineno">   71</span>                                                     coefficients[1] * gain,</div>
+<div class="line"><span class="lineno">   72</span>                                                     coefficients[2] * gain,</div>
+<div class="line"><span class="lineno">   73</span>                                                     1,</div>
+<div class="line"><span class="lineno">   74</span>                                                     coefficients[3],</div>
+<div class="line"><span class="lineno">   75</span>                                                     coefficients[4]});</div>
+<div class="line"><span class="lineno">   76</span> </div>
+<div class="line"><span class="lineno">   77</span>    wah_filter.<a class="code hl_function" href="classshrapnel_1_1dsp_1_1IirFilter.html#a53cb5a72d2a310cd4b35d4329af682f0">process</a>(samples.data(), samples.data(), samples.size());</div>
+<div class="line"><span class="lineno">   78</span>}</div>
+<div class="ttc" id="aclassshrapnel_1_1dsp_1_1IirFilter_html_a53cb5a72d2a310cd4b35d4329af682f0"><div class="ttname"><a href="classshrapnel_1_1dsp_1_1IirFilter.html#a53cb5a72d2a310cd4b35d4329af682f0">shrapnel::dsp::IirFilter::process</a></div><div class="ttdeci">void process(const float *in, float *out, size_t buf_size) override</div><div class="ttdef"><b>Definition:</b> <a href="desktop_2include_2iir__concrete_8h_source.html#l00035">iir_concrete.h:35</a></div></div>
 <div class="ttc" id="anamespacewah_html"><div class="ttname"><a href="namespacewah.html">wah</a></div><div class="ttdef"><b>Definition:</b> <a href="wah_8py_source.html#l00001">wah.py:1</a></div></div>
 </div><!-- fragment -->
-<p class="reference">References <a class="el" href="desktop_2include_2iir__concrete_8h_source.html#l00037">shrapnel::dsp::IirFilter::process()</a>, and <a class="el" href="desktop_2include_2iir__concrete_8h_source.html#l00059">shrapnel::dsp::IirFilter::set_coefficients()</a>.</p>
+<p class="reference">References <a class="el" href="desktop_2include_2iir__concrete_8h_source.html#l00035">shrapnel::dsp::IirFilter::process()</a>, and <a class="el" href="desktop_2include_2iir__concrete_8h_source.html#l00056">shrapnel::dsp::IirFilter::set_coefficients()</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -245,8 +243,8 @@ Here is the call graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="wah_8cpp_source.html#l00081">81</a> of file <a class="el" href="wah_8cpp_source.html">wah.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   81</span>                {</div>
+<p class="definition">Definition at line <a class="el" href="wah_8cpp_source.html#l00080">80</a> of file <a class="el" href="wah_8cpp_source.html">wah.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   81</span>{</div>
 <div class="line"><span class="lineno">   82</span>    wah_filter.<a class="code hl_function" href="classshrapnel_1_1dsp_1_1IirFilter.html#a0849f4c727beedd3b29f6b8ff50f6b02">reset</a>();</div>
 <div class="line"><span class="lineno">   83</span>    position_filter.<a class="code hl_function" href="classshrapnel_1_1dsp_1_1IirFilter.html#a0849f4c727beedd3b29f6b8ff50f6b02">reset</a>();</div>
 <div class="line"><span class="lineno">   84</span>    vocal_filter.<a class="code hl_function" href="classshrapnel_1_1dsp_1_1IirFilter.html#a0849f4c727beedd3b29f6b8ff50f6b02">reset</a>();</div>

@@ -114,9 +114,9 @@ $(document).ready(function(){initNavTree('pcm3060_8c_source.html',''); initResiz
 <div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><span class="comment"> */</span></div>
 <div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span> </div>
 <div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="preprocessor">#include &quot;<a class="code" href="pcm3060_8h.html">pcm3060.h</a>&quot;</span></div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span><span class="preprocessor">#include &lt;stdint.h&gt;</span></div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="preprocessor">#include &quot;<a class="code" href="i2c_8h.html">i2c.h</a>&quot;</span></div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="preprocessor">#include &lt;esp_log.h&gt;</span></div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span><span class="preprocessor">#include &quot;<a class="code" href="i2c_8h.html">i2c.h</a>&quot;</span></div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="preprocessor">#include &lt;esp_log.h&gt;</span></div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="preprocessor">#include &lt;stdint.h&gt;</span></div>
 <div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span> </div>
 <div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="preprocessor">#define TAG &quot;pcm3060&quot;</span></div>
 <div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="preprocessor">#define I2C_ADDRESS 0x8C</span></div>
@@ -124,67 +124,63 @@ $(document).ready(function(){initNavTree('pcm3060_8c_source.html',''); initResiz
 <div class="line"><a id="l00028" name="l00028"></a><span class="lineno"><a class="line" href="pcm3060_8c.html#a759ea42c79be4c238e3106ea4b53c27a">   28</a></span><span class="keyword">static</span> uint8_t <a class="code hl_variable" href="pcm3060_8c.html#a759ea42c79be4c238e3106ea4b53c27a">_address</a>;</div>
 <div class="line"><a id="l00029" name="l00029"></a><span class="lineno"><a class="line" href="pcm3060_8c.html#a71b6997ffef11829ebada7d54261e2f3">   29</a></span><span class="keyword">static</span> i2c_port_t <a class="code hl_variable" href="pcm3060_8c.html#a71b6997ffef11829ebada7d54261e2f3">_port</a> = -1;</div>
 <div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span> </div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno"><a class="line" href="pcm3060_8c.html#a7a286e614c8a6c8e30f9408395cbd4cc">   31</a></span><span class="keyword">static</span> <span class="keywordtype">bool</span> <a class="code hl_function" href="pcm3060_8c.html#a7a286e614c8a6c8e30f9408395cbd4cc">_initialised</a>(<span class="keywordtype">void</span>)</div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>{</div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>    <span class="keywordflow">return</span> <a class="code hl_variable" href="pcm3060_8c.html#a71b6997ffef11829ebada7d54261e2f3">_port</a> != -1;</div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>}</div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span> </div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno"><a class="line" href="pcm3060_8c.html#a7a286e614c8a6c8e30f9408395cbd4cc">   31</a></span><span class="keyword">static</span> <span class="keywordtype">bool</span> <a class="code hl_function" href="pcm3060_8c.html#a7a286e614c8a6c8e30f9408395cbd4cc">_initialised</a>(<span class="keywordtype">void</span>) { <span class="keywordflow">return</span> <a class="code hl_variable" href="pcm3060_8c.html#a71b6997ffef11829ebada7d54261e2f3">_port</a> != -1; }</div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span> </div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno"><a class="line" href="pcm3060_8c.html#aea1e9d4122342b16a072fc515ed9c4a2">   33</a></span>esp_err_t <a class="code hl_function" href="pcm3060_8c.html#aea1e9d4122342b16a072fc515ed9c4a2">_i2c_write</a>(uint8_t reg_adr, uint8_t data)</div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>{</div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>    esp_err_t err = <a class="code hl_function" href="i2c_8c.html#a45e8e37789f0b27a7fe24b58795787f7">i2c_write_byte</a>(<a class="code hl_variable" href="pcm3060_8c.html#a71b6997ffef11829ebada7d54261e2f3">_port</a>, <a class="code hl_variable" href="pcm3060_8c.html#a759ea42c79be4c238e3106ea4b53c27a">_address</a>, reg_adr, data);</div>
 <div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span> </div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno"><a class="line" href="pcm3060_8c.html#aea1e9d4122342b16a072fc515ed9c4a2">   37</a></span>esp_err_t <a class="code hl_function" href="pcm3060_8c.html#aea1e9d4122342b16a072fc515ed9c4a2">_i2c_write</a>(uint8_t reg_adr, uint8_t data)</div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>{</div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>    esp_err_t err = <a class="code hl_function" href="i2c_8c.html#a45e8e37789f0b27a7fe24b58795787f7">i2c_write_byte</a>(<a class="code hl_variable" href="pcm3060_8c.html#a71b6997ffef11829ebada7d54261e2f3">_port</a>, <a class="code hl_variable" href="pcm3060_8c.html#a759ea42c79be4c238e3106ea4b53c27a">_address</a>, reg_adr, data);</div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span> </div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>    <span class="keywordflow">if</span>(err != ESP_OK)</div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>    {</div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>        ESP_LOGE(TAG, <span class="stringliteral">&quot;Write to reg 0x%02x failed&quot;</span>, reg_adr);</div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>    }</div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span> </div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>    <span class="keywordflow">return</span> err;</div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>}</div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span> </div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno"><a class="line" href="pcm3060_8h.html#ae4f3fcba29da4e434a2fb51e429c156b">   49</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="pcm3060_8c.html#ae4f3fcba29da4e434a2fb51e429c156b">pcm3060_init</a>(i2c_port_t port, <span class="keywordtype">bool</span> adr)</div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>{</div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>    <a class="code hl_variable" href="pcm3060_8c.html#a71b6997ffef11829ebada7d54261e2f3">_port</a> = port;</div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>    <a class="code hl_variable" href="pcm3060_8c.html#a759ea42c79be4c238e3106ea4b53c27a">_address</a> = I2C_ADDRESS | (adr &lt;&lt; 1);</div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>}</div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>    <span class="keywordflow">if</span>(err != ESP_OK)</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>    {</div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>        ESP_LOGE(TAG, <span class="stringliteral">&quot;Write to reg 0x%02x failed&quot;</span>, reg_adr);</div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>    }</div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span> </div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>    <span class="keywordflow">return</span> err;</div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>}</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span> </div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno"><a class="line" href="pcm3060_8h.html#ae4f3fcba29da4e434a2fb51e429c156b">   45</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="pcm3060_8c.html#ae4f3fcba29da4e434a2fb51e429c156b">pcm3060_init</a>(i2c_port_t port, <span class="keywordtype">bool</span> adr)</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>{</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>    <a class="code hl_variable" href="pcm3060_8c.html#a71b6997ffef11829ebada7d54261e2f3">_port</a> = port;</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>    <a class="code hl_variable" href="pcm3060_8c.html#a759ea42c79be4c238e3106ea4b53c27a">_address</a> = I2C_ADDRESS | (adr &lt;&lt; 1);</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>}</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span> </div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno"><a class="line" href="pcm3060_8h.html#a4b08ec86eb0407470554c4e5c5759521">   51</a></span>esp_err_t <a class="code hl_function" href="pcm3060_8c.html#a4b08ec86eb0407470554c4e5c5759521">pcm3060_power_up</a>(<span class="keywordtype">void</span>)</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>{</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>    esp_err_t err;</div>
 <div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span> </div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno"><a class="line" href="pcm3060_8h.html#a4b08ec86eb0407470554c4e5c5759521">   55</a></span>esp_err_t <a class="code hl_function" href="pcm3060_8c.html#a4b08ec86eb0407470554c4e5c5759521">pcm3060_power_up</a>(<span class="keywordtype">void</span>)</div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>{</div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>    esp_err_t err;</div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span> </div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>    <span class="keywordflow">if</span>(!<a class="code hl_function" href="pcm3060_8c.html#a7a286e614c8a6c8e30f9408395cbd4cc">_initialised</a>())</div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>    {</div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>        <span class="keywordflow">return</span> ESP_FAIL;</div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>    }</div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span> </div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>    err = <a class="code hl_function" href="pcm3060_8c.html#aea1e9d4122342b16a072fc515ed9c4a2">_i2c_write</a>(0x43, 0x80);<span class="comment">//use clock1 for DAC, slave mode, 24-bit I2S</span></div>
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>    <span class="keywordflow">if</span>(err != ESP_OK)</div>
-<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>    {</div>
-<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>        <span class="keywordflow">return</span> err;</div>
-<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>    }</div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>    <span class="keywordflow">if</span>(!<a class="code hl_function" href="pcm3060_8c.html#a7a286e614c8a6c8e30f9408395cbd4cc">_initialised</a>())</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>    {</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>        <span class="keywordflow">return</span> ESP_FAIL;</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>    }</div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span> </div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>    err = <a class="code hl_function" href="pcm3060_8c.html#aea1e9d4122342b16a072fc515ed9c4a2">_i2c_write</a>(0x43, 0x80); <span class="comment">//use clock1 for DAC, slave mode, 24-bit I2S</span></div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>    <span class="keywordflow">if</span>(err != ESP_OK)</div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>    {</div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>        <span class="keywordflow">return</span> err;</div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>    }</div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span> </div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>    err = <a class="code hl_function" href="pcm3060_8c.html#aea1e9d4122342b16a072fc515ed9c4a2">_i2c_write</a>(0x40, 0xC0); <span class="comment">//differential output, power save release</span></div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>    <span class="keywordflow">return</span> err;</div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>}</div>
 <div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span> </div>
-<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>    err = <a class="code hl_function" href="pcm3060_8c.html#aea1e9d4122342b16a072fc515ed9c4a2">_i2c_write</a>(0x40, 0xC0);<span class="comment">//differential output, power save release</span></div>
-<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>    <span class="keywordflow">return</span> err;</div>
-<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>}</div>
-<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span> </div>
-<div class="line"><a id="l00074" name="l00074"></a><span class="lineno"><a class="line" href="pcm3060_8h.html#aeb6fe9adda371fdebd72a04b21ed5eb3">   74</a></span>esp_err_t <a class="code hl_function" href="pcm3060_8c.html#aeb6fe9adda371fdebd72a04b21ed5eb3">pcm3060_power_down</a>(<span class="keywordtype">void</span>)</div>
-<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>{</div>
-<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>    <span class="keywordflow">if</span>(!<a class="code hl_function" href="pcm3060_8c.html#a7a286e614c8a6c8e30f9408395cbd4cc">_initialised</a>())</div>
-<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>    {</div>
-<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>        <span class="keywordflow">return</span> ESP_FAIL;</div>
-<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>    }</div>
-<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span> </div>
-<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>    <span class="keywordflow">return</span> <a class="code hl_function" href="pcm3060_8c.html#aea1e9d4122342b16a072fc515ed9c4a2">_i2c_write</a>(0x40, 0xF1);<span class="comment">//single ended output, power save enable</span></div>
-<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>}</div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno"><a class="line" href="pcm3060_8h.html#aeb6fe9adda371fdebd72a04b21ed5eb3">   70</a></span>esp_err_t <a class="code hl_function" href="pcm3060_8c.html#aeb6fe9adda371fdebd72a04b21ed5eb3">pcm3060_power_down</a>(<span class="keywordtype">void</span>)</div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>{</div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>    <span class="keywordflow">if</span>(!<a class="code hl_function" href="pcm3060_8c.html#a7a286e614c8a6c8e30f9408395cbd4cc">_initialised</a>())</div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>    {</div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>        <span class="keywordflow">return</span> ESP_FAIL;</div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>    }</div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span> </div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>    <span class="keywordflow">return</span> <a class="code hl_function" href="pcm3060_8c.html#aea1e9d4122342b16a072fc515ed9c4a2">_i2c_write</a>(0x40, 0xF1); <span class="comment">//single ended output, power save enable</span></div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>}</div>
 <div class="ttc" id="ai2c_8c_html_a45e8e37789f0b27a7fe24b58795787f7"><div class="ttname"><a href="i2c_8c.html#a45e8e37789f0b27a7fe24b58795787f7">i2c_write_byte</a></div><div class="ttdeci">esp_err_t i2c_write_byte(i2c_port_t port, uint8_t slave_address, uint8_t reg_address, uint8_t data)</div><div class="ttdef"><b>Definition:</b> <a href="i2c_8c_source.html#l00025">i2c.c:25</a></div></div>
 <div class="ttc" id="ai2c_8h_html"><div class="ttname"><a href="i2c_8h.html">i2c.h</a></div></div>
-<div class="ttc" id="apcm3060_8c_html_a4b08ec86eb0407470554c4e5c5759521"><div class="ttname"><a href="pcm3060_8c.html#a4b08ec86eb0407470554c4e5c5759521">pcm3060_power_up</a></div><div class="ttdeci">esp_err_t pcm3060_power_up(void)</div><div class="ttdoc">perform power up sequence</div><div class="ttdef"><b>Definition:</b> <a href="pcm3060_8c_source.html#l00055">pcm3060.c:55</a></div></div>
+<div class="ttc" id="apcm3060_8c_html_a4b08ec86eb0407470554c4e5c5759521"><div class="ttname"><a href="pcm3060_8c.html#a4b08ec86eb0407470554c4e5c5759521">pcm3060_power_up</a></div><div class="ttdeci">esp_err_t pcm3060_power_up(void)</div><div class="ttdoc">perform power up sequence</div><div class="ttdef"><b>Definition:</b> <a href="pcm3060_8c_source.html#l00051">pcm3060.c:51</a></div></div>
 <div class="ttc" id="apcm3060_8c_html_a71b6997ffef11829ebada7d54261e2f3"><div class="ttname"><a href="pcm3060_8c.html#a71b6997ffef11829ebada7d54261e2f3">_port</a></div><div class="ttdeci">static i2c_port_t _port</div><div class="ttdef"><b>Definition:</b> <a href="pcm3060_8c_source.html#l00029">pcm3060.c:29</a></div></div>
 <div class="ttc" id="apcm3060_8c_html_a759ea42c79be4c238e3106ea4b53c27a"><div class="ttname"><a href="pcm3060_8c.html#a759ea42c79be4c238e3106ea4b53c27a">_address</a></div><div class="ttdeci">static uint8_t _address</div><div class="ttdef"><b>Definition:</b> <a href="pcm3060_8c_source.html#l00028">pcm3060.c:28</a></div></div>
 <div class="ttc" id="apcm3060_8c_html_a7a286e614c8a6c8e30f9408395cbd4cc"><div class="ttname"><a href="pcm3060_8c.html#a7a286e614c8a6c8e30f9408395cbd4cc">_initialised</a></div><div class="ttdeci">static bool _initialised(void)</div><div class="ttdef"><b>Definition:</b> <a href="pcm3060_8c_source.html#l00031">pcm3060.c:31</a></div></div>
-<div class="ttc" id="apcm3060_8c_html_ae4f3fcba29da4e434a2fb51e429c156b"><div class="ttname"><a href="pcm3060_8c.html#ae4f3fcba29da4e434a2fb51e429c156b">pcm3060_init</a></div><div class="ttdeci">void pcm3060_init(i2c_port_t port, bool adr)</div><div class="ttdoc">Initialise the driver.</div><div class="ttdef"><b>Definition:</b> <a href="pcm3060_8c_source.html#l00049">pcm3060.c:49</a></div></div>
-<div class="ttc" id="apcm3060_8c_html_aea1e9d4122342b16a072fc515ed9c4a2"><div class="ttname"><a href="pcm3060_8c.html#aea1e9d4122342b16a072fc515ed9c4a2">_i2c_write</a></div><div class="ttdeci">esp_err_t _i2c_write(uint8_t reg_adr, uint8_t data)</div><div class="ttdef"><b>Definition:</b> <a href="pcm3060_8c_source.html#l00037">pcm3060.c:37</a></div></div>
-<div class="ttc" id="apcm3060_8c_html_aeb6fe9adda371fdebd72a04b21ed5eb3"><div class="ttname"><a href="pcm3060_8c.html#aeb6fe9adda371fdebd72a04b21ed5eb3">pcm3060_power_down</a></div><div class="ttdeci">esp_err_t pcm3060_power_down(void)</div><div class="ttdoc">perform power down sequence</div><div class="ttdef"><b>Definition:</b> <a href="pcm3060_8c_source.html#l00074">pcm3060.c:74</a></div></div>
+<div class="ttc" id="apcm3060_8c_html_ae4f3fcba29da4e434a2fb51e429c156b"><div class="ttname"><a href="pcm3060_8c.html#ae4f3fcba29da4e434a2fb51e429c156b">pcm3060_init</a></div><div class="ttdeci">void pcm3060_init(i2c_port_t port, bool adr)</div><div class="ttdoc">Initialise the driver.</div><div class="ttdef"><b>Definition:</b> <a href="pcm3060_8c_source.html#l00045">pcm3060.c:45</a></div></div>
+<div class="ttc" id="apcm3060_8c_html_aea1e9d4122342b16a072fc515ed9c4a2"><div class="ttname"><a href="pcm3060_8c.html#aea1e9d4122342b16a072fc515ed9c4a2">_i2c_write</a></div><div class="ttdeci">esp_err_t _i2c_write(uint8_t reg_adr, uint8_t data)</div><div class="ttdef"><b>Definition:</b> <a href="pcm3060_8c_source.html#l00033">pcm3060.c:33</a></div></div>
+<div class="ttc" id="apcm3060_8c_html_aeb6fe9adda371fdebd72a04b21ed5eb3"><div class="ttname"><a href="pcm3060_8c.html#aeb6fe9adda371fdebd72a04b21ed5eb3">pcm3060_power_down</a></div><div class="ttdeci">esp_err_t pcm3060_power_down(void)</div><div class="ttdoc">perform power down sequence</div><div class="ttdef"><b>Definition:</b> <a href="pcm3060_8c_source.html#l00070">pcm3060.c:70</a></div></div>
 <div class="ttc" id="apcm3060_8h_html"><div class="ttname"><a href="pcm3060_8h.html">pcm3060.h</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->

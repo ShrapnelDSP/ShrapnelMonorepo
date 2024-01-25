@@ -125,34 +125,34 @@ $(document).ready(function(){initNavTree('hardware_8h_source.html',''); initResi
 <div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span> </div>
 <div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span><span class="preprocessor">#if HARDWARE == HW_BREADBOARD</span></div>
 <div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span> </div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span><span class="preprocessor">#   define PROFILING_GPIO GPIO_NUM_23</span></div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span><span class="preprocessor">#define PROFILING_GPIO GPIO_NUM_23</span></div>
 <div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span> </div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span><span class="preprocessor">#   define GPIO_I2C_SDA GPIO_NUM_13</span></div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span><span class="preprocessor">#   define GPIO_I2C_SCL GPIO_NUM_12</span></div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span><span class="preprocessor">#define GPIO_I2C_SDA GPIO_NUM_13</span></div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span><span class="preprocessor">#define GPIO_I2C_SCL GPIO_NUM_12</span></div>
 <div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span> </div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span><span class="preprocessor">#   define I2S_NUM         (1)             </span><span class="comment">//PCM3060 pin</span></div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span><span class="preprocessor">#define I2S_NUM (1) </span><span class="comment">//PCM3060 pin</span></div>
 <div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span><span class="comment">/* The only other option conflicts with the UART0 used for debugging */</span></div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span><span class="preprocessor">#   define I2S_MCK_IO      (GPIO_NUM_0)    </span><span class="comment">//6/9</span></div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span><span class="preprocessor">#   define I2S_BCK_IO      (GPIO_NUM_2)    </span><span class="comment">//5/10</span></div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span><span class="preprocessor">#   define I2S_WS_IO       (GPIO_NUM_4)    </span><span class="comment">//4/11</span></div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span><span class="preprocessor">#   define I2S_DO_IO       (GPIO_NUM_5)    </span><span class="comment">//12</span></div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span><span class="preprocessor">#   define I2S_DI_IO       (GPIO_NUM_19)   </span><span class="comment">//3</span></div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span><span class="preprocessor">#define I2S_MCK_IO (GPIO_NUM_0) </span><span class="comment">//6/9</span></div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span><span class="preprocessor">#define I2S_BCK_IO (GPIO_NUM_2) </span><span class="comment">//5/10</span></div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span><span class="preprocessor">#define I2S_WS_IO (GPIO_NUM_4)  </span><span class="comment">//4/11</span></div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span><span class="preprocessor">#define I2S_DO_IO (GPIO_NUM_5)  </span><span class="comment">//12</span></div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span><span class="preprocessor">#define I2S_DI_IO (GPIO_NUM_19) </span><span class="comment">//3</span></div>
 <div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span> </div>
 <div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span><span class="preprocessor">#elif HARDWARE == HW_PCB_REV1</span></div>
 <div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span> </div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span><span class="preprocessor">#   define PROFILING_GPIO GPIO_NUM_15</span></div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span><span class="preprocessor">#define PROFILING_GPIO GPIO_NUM_15</span></div>
 <div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span> </div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span><span class="preprocessor">#   define GPIO_I2C_SDA GPIO_NUM_22</span></div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span><span class="preprocessor">#   define GPIO_I2C_SCL GPIO_NUM_23</span></div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span><span class="preprocessor">#define GPIO_I2C_SDA GPIO_NUM_22</span></div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span><span class="preprocessor">#define GPIO_I2C_SCL GPIO_NUM_23</span></div>
 <div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span> </div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span><span class="preprocessor">#   define I2S_NUM         (1)             </span><span class="comment">//PCM3060 pin</span></div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span><span class="preprocessor">#define I2S_NUM (1)                   </span><span class="comment">//PCM3060 pin</span></div>
 <div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span><span class="comment">/* The only other option conflicts with the UART0 used for debugging */</span></div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span><span class="preprocessor">#   define I2S_MCK_IO      (GPIO_NUM_0)    </span><span class="comment">//6</span></div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span><span class="preprocessor">#   define I2S_BCK_IO      (GPIO_NUM_18)   </span><span class="comment">//5</span></div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span><span class="preprocessor">#   define I2S_WS_IO       (GPIO_NUM_19)   </span><span class="comment">//4</span></div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span><span class="preprocessor">#   define I2S_DO_IO       (GPIO_NUM_2)    </span><span class="comment">//12</span></div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span><span class="preprocessor">#   define I2S_DI_IO       (GPIO_NUM_21)   </span><span class="comment">//3</span></div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span><span class="preprocessor">#   define GPIO_CODEC_NRESET GPIO_NUM_27   </span><span class="comment">//15</span></div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span><span class="preprocessor">#define I2S_MCK_IO (GPIO_NUM_0)       </span><span class="comment">//6</span></div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span><span class="preprocessor">#define I2S_BCK_IO (GPIO_NUM_18)      </span><span class="comment">//5</span></div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span><span class="preprocessor">#define I2S_WS_IO (GPIO_NUM_19)       </span><span class="comment">//4</span></div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span><span class="preprocessor">#define I2S_DO_IO (GPIO_NUM_2)        </span><span class="comment">//12</span></div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span><span class="preprocessor">#define I2S_DI_IO (GPIO_NUM_21)       </span><span class="comment">//3</span></div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span><span class="preprocessor">#define GPIO_CODEC_NRESET GPIO_NUM_27 </span><span class="comment">//15</span></div>
 <div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span> </div>
 <div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span><span class="preprocessor">#else</span></div>
 <div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span><span class="preprocessor">#error Invalid hardware define</span></div>
@@ -161,7 +161,6 @@ $(document).ready(function(){initNavTree('hardware_8h_source.html',''); initResi
 <div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span><span class="preprocessor">#define I2C_NUM I2C_NUM_0</span></div>
 <div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span><span class="preprocessor">#define UART_NUM_MIDI UART_NUM_1</span></div>
 <div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span><span class="preprocessor">#define GPIO_NUM_MIDI GPIO_NUM_26</span></div>
-<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span> </div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

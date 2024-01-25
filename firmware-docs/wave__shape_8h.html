@@ -143,11 +143,12 @@ Functions</h2></td></tr>
 <div class="line"><span class="lineno">   68</span>        <span class="comment">// linear interpolation between two nearest elements in shape.</span></div>
 <div class="line"><span class="lineno">   69</span>        <span class="comment">// conversion to int rounds down</span></div>
 <div class="line"><span class="lineno">   70</span>        <span class="keywordtype">float</span> ratio = index - ((int)index);</div>
-<div class="line"><span class="lineno">   71</span>        output = <a class="code hl_variable" href="wave__shape_8cpp.html#ac90590641d80fb6ee53567544ae1e32c">shape</a>[(int)index] + ratio*(<a class="code hl_variable" href="wave__shape_8cpp.html#ac90590641d80fb6ee53567544ae1e32c">shape</a>[((<span class="keywordtype">int</span>)index) + 1] - <a class="code hl_variable" href="wave__shape_8cpp.html#ac90590641d80fb6ee53567544ae1e32c">shape</a>[(int)index]);</div>
-<div class="line"><span class="lineno">   72</span>    }</div>
-<div class="line"><span class="lineno">   73</span> </div>
-<div class="line"><span class="lineno">   74</span>    <span class="keywordflow">return</span> (output - <a class="code hl_variable" href="wave__shape_8cpp.html#ac90590641d80fb6ee53567544ae1e32c">shape</a>[<a class="code hl_variable" href="wave__shape_8cpp.html#abfe121fe4182d1620e2846cffd98f268">shape_size</a>/2]) * (1.f/300.0f);</div>
-<div class="line"><span class="lineno">   75</span>}</div>
+<div class="line"><span class="lineno">   71</span>        output = <a class="code hl_variable" href="wave__shape_8cpp.html#ac90590641d80fb6ee53567544ae1e32c">shape</a>[(int)index] +</div>
+<div class="line"><span class="lineno">   72</span>                 ratio * (<a class="code hl_variable" href="wave__shape_8cpp.html#ac90590641d80fb6ee53567544ae1e32c">shape</a>[((<span class="keywordtype">int</span>)index) + 1] - <a class="code hl_variable" href="wave__shape_8cpp.html#ac90590641d80fb6ee53567544ae1e32c">shape</a>[(int)index]);</div>
+<div class="line"><span class="lineno">   73</span>    }</div>
+<div class="line"><span class="lineno">   74</span> </div>
+<div class="line"><span class="lineno">   75</span>    <span class="keywordflow">return</span> (output - <a class="code hl_variable" href="wave__shape_8cpp.html#ac90590641d80fb6ee53567544ae1e32c">shape</a>[<a class="code hl_variable" href="wave__shape_8cpp.html#abfe121fe4182d1620e2846cffd98f268">shape_size</a> / 2]) * (1.f / 300.0f);</div>
+<div class="line"><span class="lineno">   76</span>}</div>
 <div class="ttc" id="awave__shape_8cpp_html_abfe121fe4182d1620e2846cffd98f268"><div class="ttname"><a href="wave__shape_8cpp.html#abfe121fe4182d1620e2846cffd98f268">shape_size</a></div><div class="ttdeci">const int shape_size</div><div class="ttdef"><b>Definition:</b> <a href="wave__shape_8cpp_source.html#l00047">wave_shape.cpp:47</a></div></div>
 <div class="ttc" id="awave__shape_8cpp_html_ac90590641d80fb6ee53567544ae1e32c"><div class="ttname"><a href="wave__shape_8cpp.html#ac90590641d80fb6ee53567544ae1e32c">shape</a></div><div class="ttdeci">static const float shape[100]</div><div class="ttdef"><b>Definition:</b> <a href="wave__shape_8cpp_source.html#l00024">wave_shape.cpp:24</a></div></div>
 </div><!-- fragment -->

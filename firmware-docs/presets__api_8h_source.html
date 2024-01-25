@@ -216,22 +216,21 @@ $(document).ready(function(){initNavTree('presets__api_8h_source.html',''); init
 <div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespaceshrapnel_1_1api.html">shrapnel::api</a> {</div>
 <div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span> </div>
 <div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span><span class="keyword">template</span> &lt;&gt;</div>
-<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>std::optional&lt;std::span&lt;uint8_t&gt;&gt;</div>
-<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span><a class="code hl_function" href="namespaceshrapnel_1_1api.html#a4eb6fa3c5ed2f9fe0bce8d80e4479a32">to_bytes</a>(<span class="keyword">const</span> <a class="code hl_struct" href="structshrapnel_1_1presets_1_1PresetData.html">presets::PresetData</a> &amp;message, std::span&lt;uint8_t&gt; buffer);</div>
+<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>std::optional&lt;std::span&lt;uint8_t&gt;&gt; <a class="code hl_function" href="namespaceshrapnel_1_1api.html#a4eb6fa3c5ed2f9fe0bce8d80e4479a32">to_bytes</a>(<span class="keyword">const</span> <a class="code hl_struct" href="structshrapnel_1_1presets_1_1PresetData.html">presets::PresetData</a> &amp;message,</div>
+<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>                                           std::span&lt;uint8_t&gt; buffer);</div>
 <div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span> </div>
 <div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span><span class="keyword">template</span> &lt;&gt;</div>
-<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span>std::optional&lt;presets::PresetData&gt;</div>
-<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span><a class="code hl_function" href="namespaceshrapnel_1_1api.html#a714cc0eaf10c88e19166e483ee0f6ea1">from_bytes</a>(std::span&lt;const uint8_t&gt; buffer);</div>
-<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span> </div>
-<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span><span class="keyword">template</span> &lt;&gt;</div>
-<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span><span class="keywordtype">int</span></div>
-<div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span><a class="code hl_function" href="namespaceshrapnel_1_1api.html#a8fc768e74a62eb09f96ae1ca9f18199b">to_proto</a>(<span class="keyword">const</span> <a class="code hl_typedef" href="namespaceshrapnel_1_1presets.html#a3aad46f3b372f79479fa1bb977320e56">presets::PresetsApiMessage</a> &amp;message, shrapnel_presets_Message &amp;out);</div>
-<div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span> </div>
-<div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span><span class="keyword">template</span> &lt;&gt;</div>
-<div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span><span class="keywordtype">int</span></div>
-<div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span><a class="code hl_function" href="namespaceshrapnel_1_1api.html#a3fe25beb5fb138338c66392d3788da02">from_proto</a>(<span class="keyword">const</span> shrapnel_presets_Message &amp;message, <a class="code hl_typedef" href="namespaceshrapnel_1_1presets.html#a3aad46f3b372f79479fa1bb977320e56">presets::PresetsApiMessage</a> &amp;out);</div>
-<div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span> </div>
-<div class="line"><a id="l00138" name="l00138"></a><span class="lineno">  138</span>} <span class="comment">// namespace shrapnel::api</span></div>
+<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span>std::optional&lt;presets::PresetData&gt; <a class="code hl_function" href="namespaceshrapnel_1_1api.html#a714cc0eaf10c88e19166e483ee0f6ea1">from_bytes</a>(std::span&lt;const uint8_t&gt; buffer);</div>
+<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span> </div>
+<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span><span class="keyword">template</span> &lt;&gt;</div>
+<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span><span class="keywordtype">int</span> <a class="code hl_function" href="namespaceshrapnel_1_1api.html#a8fc768e74a62eb09f96ae1ca9f18199b">to_proto</a>(<span class="keyword">const</span> <a class="code hl_typedef" href="namespaceshrapnel_1_1presets.html#a3aad46f3b372f79479fa1bb977320e56">presets::PresetsApiMessage</a> &amp;message,</div>
+<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span>             shrapnel_presets_Message &amp;out);</div>
+<div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span> </div>
+<div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span><span class="keyword">template</span> &lt;&gt;</div>
+<div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span><span class="keywordtype">int</span> <a class="code hl_function" href="namespaceshrapnel_1_1api.html#a3fe25beb5fb138338c66392d3788da02">from_proto</a>(<span class="keyword">const</span> shrapnel_presets_Message &amp;message,</div>
+<div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span>               <a class="code hl_typedef" href="namespaceshrapnel_1_1presets.html#a3aad46f3b372f79479fa1bb977320e56">presets::PresetsApiMessage</a> &amp;out);</div>
+<div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span> </div>
+<div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span>} <span class="comment">// namespace shrapnel::api</span></div>
 <div class="ttc" id="aapi_8h_html"><div class="ttname"><a href="api_8h.html">api.h</a></div></div>
 <div class="ttc" id="anamespaceshrapnel_1_1api_html"><div class="ttname"><a href="namespaceshrapnel_1_1api.html">shrapnel::api</a></div><div class="ttdef"><b>Definition:</b> <a href="api_8h_source.html#l00026">api.h:26</a></div></div>
 <div class="ttc" id="anamespaceshrapnel_1_1api_html_a3fe25beb5fb138338c66392d3788da02"><div class="ttname"><a href="namespaceshrapnel_1_1api.html#a3fe25beb5fb138338c66392d3788da02">shrapnel::api::from_proto</a></div><div class="ttdeci">int from_proto(const ProtoT &amp;message, T &amp;out)</div><div class="ttdoc">Convert a message from proto struct.</div></div>

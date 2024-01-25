@@ -179,9 +179,10 @@ template&lt;typename AudioParametersT &gt; </div>
 </dl>
 
 <p class="definition">Definition at line <a class="el" href="cmd__handling_8h_source.html#l00050">50</a> of file <a class="el" href="cmd__handling_8h_source.html">cmd_handling.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   52</span>            : param(a_param),</div>
-<div class="line"><span class="lineno">   53</span>              send_message(a_send_message)</div>
-<div class="line"><span class="lineno">   54</span>        {}</div>
+<div class="fragment"><div class="line"><span class="lineno">   52</span>        : param(a_param),</div>
+<div class="line"><span class="lineno">   53</span>          send_message(a_send_message)</div>
+<div class="line"><span class="lineno">   54</span>    {</div>
+<div class="line"><span class="lineno">   55</span>    }</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -222,32 +223,35 @@ template&lt;typename AudioParametersT &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="cmd__handling_8h_source.html#l00056">56</a> of file <a class="el" href="cmd__handling_8h_source.html">cmd_handling.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   57</span>        {</div>
-<div class="line"><span class="lineno">   58</span><span class="preprocessor">#if !defined(TESTING)</span></div>
-<div class="line"><span class="lineno">   59</span>        ESP_LOGI(TAG, <span class="stringliteral">&quot;%s stack %d&quot;</span>, __FUNCTION__, uxTaskGetStackHighWaterMark(NULL));</div>
-<div class="line"><span class="lineno">   60</span><span class="preprocessor">#endif</span></div>
-<div class="line"><span class="lineno">   61</span> </div>
-<div class="line"><span class="lineno">   62</span>        std::visit(</div>
-<div class="line"><span class="lineno">   63</span>            [&amp;](<span class="keyword">const</span> <span class="keyword">auto</span> &amp;message) -&gt; <span class="keywordtype">void</span></div>
-<div class="line"><span class="lineno">   64</span>            {</div>
-<div class="line"><span class="lineno">   65</span>                <span class="keyword">using </span>T = std::decay_t&lt;<span class="keyword">decltype</span>(message)&gt;;</div>
-<div class="line"><span class="lineno">   66</span> </div>
-<div class="line"><span class="lineno">   67</span>                <span class="keywordflow">if</span> <span class="keyword">constexpr</span>(std::is_same_v&lt;T, Update&gt;)</div>
-<div class="line"><span class="lineno">   68</span>                {</div>
-<div class="line"><span class="lineno">   69</span>                    parameter_update(message, fd);</div>
-<div class="line"><span class="lineno">   70</span>                }</div>
-<div class="line"><span class="lineno">   71</span>                <span class="keywordflow">else</span> <span class="keywordflow">if</span> <span class="keyword">constexpr</span>(std::is_same_v&lt;T, Initialise&gt;)</div>
+<p class="definition">Definition at line <a class="el" href="cmd__handling_8h_source.html#l00057">57</a> of file <a class="el" href="cmd__handling_8h_source.html">cmd_handling.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   58</span>    {</div>
+<div class="line"><span class="lineno">   59</span><span class="preprocessor">#if !defined(TESTING)</span></div>
+<div class="line"><span class="lineno">   60</span>        ESP_LOGI(TAG,</div>
+<div class="line"><span class="lineno">   61</span>                 <span class="stringliteral">&quot;%s stack %d&quot;</span>,</div>
+<div class="line"><span class="lineno">   62</span>                 __FUNCTION__,</div>
+<div class="line"><span class="lineno">   63</span>                 uxTaskGetStackHighWaterMark(NULL));</div>
+<div class="line"><span class="lineno">   64</span><span class="preprocessor">#endif</span></div>
+<div class="line"><span class="lineno">   65</span> </div>
+<div class="line"><span class="lineno">   66</span>        std::visit(</div>
+<div class="line"><span class="lineno">   67</span>            [&amp;](<span class="keyword">const</span> <span class="keyword">auto</span> &amp;message) -&gt; <span class="keywordtype">void</span></div>
+<div class="line"><span class="lineno">   68</span>            {</div>
+<div class="line"><span class="lineno">   69</span>                <span class="keyword">using </span>T = std::decay_t&lt;<span class="keyword">decltype</span>(message)&gt;;</div>
+<div class="line"><span class="lineno">   70</span> </div>
+<div class="line"><span class="lineno">   71</span>                <span class="keywordflow">if</span> <span class="keyword">constexpr</span>(std::is_same_v&lt;T, Update&gt;)</div>
 <div class="line"><span class="lineno">   72</span>                {</div>
-<div class="line"><span class="lineno">   73</span>                    initialise_parameters();</div>
+<div class="line"><span class="lineno">   73</span>                    parameter_update(message, fd);</div>
 <div class="line"><span class="lineno">   74</span>                }</div>
-<div class="line"><span class="lineno">   75</span>                <span class="keywordflow">else</span></div>
+<div class="line"><span class="lineno">   75</span>                <span class="keywordflow">else</span> <span class="keywordflow">if</span> <span class="keyword">constexpr</span>(std::is_same_v&lt;T, Initialise&gt;)</div>
 <div class="line"><span class="lineno">   76</span>                {</div>
-<div class="line"><span class="lineno">   77</span>                    ESP_LOGE(TAG, <span class="stringliteral">&quot;Unhandled message type&quot;</span>);</div>
+<div class="line"><span class="lineno">   77</span>                    initialise_parameters();</div>
 <div class="line"><span class="lineno">   78</span>                }</div>
-<div class="line"><span class="lineno">   79</span>            },</div>
-<div class="line"><span class="lineno">   80</span>            a_message);</div>
-<div class="line"><span class="lineno">   81</span>        }</div>
+<div class="line"><span class="lineno">   79</span>                <span class="keywordflow">else</span></div>
+<div class="line"><span class="lineno">   80</span>                {</div>
+<div class="line"><span class="lineno">   81</span>                    ESP_LOGE(TAG, <span class="stringliteral">&quot;Unhandled message type&quot;</span>);</div>
+<div class="line"><span class="lineno">   82</span>                }</div>
+<div class="line"><span class="lineno">   83</span>            },</div>
+<div class="line"><span class="lineno">   84</span>            a_message);</div>
+<div class="line"><span class="lineno">   85</span>    }</div>
 </div><!-- fragment -->
 </div>
 </div>

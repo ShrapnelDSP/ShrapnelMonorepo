@@ -145,17 +145,17 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="i2c_8c_source.html#l00062">62</a> of file <a class="el" href="i2c_8c_source.html">i2c.c</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   63</span>{</div>
-<div class="line"><span class="lineno">   64</span>    (void) port;</div>
-<div class="line"><span class="lineno">   65</span>    (void) slave_address;</div>
-<div class="line"><span class="lineno">   66</span>    (void) reg_address;</div>
-<div class="line"><span class="lineno">   67</span>    (void) data;</div>
-<div class="line"><span class="lineno">   68</span> </div>
-<div class="line"><span class="lineno">   69</span>    <span class="comment">/* PCM3060 datasheet has no read operation, maybe it&#39;s not supported ? */</span></div>
-<div class="line"><span class="lineno">   70</span>    ESP_LOGE(TAG, <span class="stringliteral">&quot;Read is not implemented&quot;</span>);</div>
-<div class="line"><span class="lineno">   71</span>    <span class="keywordflow">return</span> ESP_FAIL;</div>
-<div class="line"><span class="lineno">   72</span>}</div>
+<p class="definition">Definition at line <a class="el" href="i2c_8c_source.html#l00071">71</a> of file <a class="el" href="i2c_8c_source.html">i2c.c</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   75</span>{</div>
+<div class="line"><span class="lineno">   76</span>    (void)port;</div>
+<div class="line"><span class="lineno">   77</span>    (void)slave_address;</div>
+<div class="line"><span class="lineno">   78</span>    (void)reg_address;</div>
+<div class="line"><span class="lineno">   79</span>    (void)data;</div>
+<div class="line"><span class="lineno">   80</span> </div>
+<div class="line"><span class="lineno">   81</span>    <span class="comment">/* PCM3060 datasheet has no read operation, maybe it&#39;s not supported ? */</span></div>
+<div class="line"><span class="lineno">   82</span>    ESP_LOGE(TAG, <span class="stringliteral">&quot;Read is not implemented&quot;</span>);</div>
+<div class="line"><span class="lineno">   83</span>    <span class="keywordflow">return</span> ESP_FAIL;</div>
+<div class="line"><span class="lineno">   84</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -198,43 +198,49 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p class="definition">Definition at line <a class="el" href="i2c_8c_source.html#l00025">25</a> of file <a class="el" href="i2c_8c_source.html">i2c.c</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   26</span>{</div>
-<div class="line"><span class="lineno">   27</span>    esp_err_t err = ESP_OK;</div>
-<div class="line"><span class="lineno">   28</span>    i2c_cmd_handle_t cmd = i2c_cmd_link_create();</div>
-<div class="line"><span class="lineno">   29</span> </div>
-<div class="line"><span class="lineno">   30</span>    <span class="keywordflow">if</span>(cmd == NULL)</div>
-<div class="line"><span class="lineno">   31</span>    {</div>
-<div class="line"><span class="lineno">   32</span>        <span class="keywordflow">goto</span> cleanup;</div>
-<div class="line"><span class="lineno">   33</span>        err = ESP_ERR_NO_MEM;</div>
-<div class="line"><span class="lineno">   34</span>    }</div>
-<div class="line"><span class="lineno">   35</span> </div>
-<div class="line"><span class="lineno">   36</span>    err = i2c_master_start(cmd);</div>
-<div class="line"><span class="lineno">   37</span>    <span class="keywordflow">if</span>(err != ESP_OK) <span class="keywordflow">goto</span> cleanup;</div>
+<div class="fragment"><div class="line"><span class="lineno">   29</span>{</div>
+<div class="line"><span class="lineno">   30</span>    esp_err_t err = ESP_OK;</div>
+<div class="line"><span class="lineno">   31</span>    i2c_cmd_handle_t cmd = i2c_cmd_link_create();</div>
+<div class="line"><span class="lineno">   32</span> </div>
+<div class="line"><span class="lineno">   33</span>    <span class="keywordflow">if</span>(cmd == NULL)</div>
+<div class="line"><span class="lineno">   34</span>    {</div>
+<div class="line"><span class="lineno">   35</span>        <span class="keywordflow">goto</span> cleanup;</div>
+<div class="line"><span class="lineno">   36</span>        err = ESP_ERR_NO_MEM;</div>
+<div class="line"><span class="lineno">   37</span>    }</div>
 <div class="line"><span class="lineno">   38</span> </div>
-<div class="line"><span class="lineno">   39</span>    err = i2c_master_write_byte(cmd, slave_address, <span class="keyword">true</span>);</div>
-<div class="line"><span class="lineno">   40</span>    <span class="keywordflow">if</span>(err != ESP_OK) <span class="keywordflow">goto</span> cleanup;</div>
-<div class="line"><span class="lineno">   41</span> </div>
-<div class="line"><span class="lineno">   42</span>    err = i2c_master_write_byte(cmd, reg_address, <span class="keyword">true</span>);</div>
-<div class="line"><span class="lineno">   43</span>    <span class="keywordflow">if</span>(err != ESP_OK) <span class="keywordflow">goto</span> cleanup;</div>
-<div class="line"><span class="lineno">   44</span> </div>
-<div class="line"><span class="lineno">   45</span>    err = i2c_master_write_byte(cmd, data, <span class="keyword">true</span>);</div>
-<div class="line"><span class="lineno">   46</span>    <span class="keywordflow">if</span>(err != ESP_OK) <span class="keywordflow">goto</span> cleanup;</div>
-<div class="line"><span class="lineno">   47</span> </div>
-<div class="line"><span class="lineno">   48</span>    err = i2c_master_stop(cmd);</div>
-<div class="line"><span class="lineno">   49</span>    <span class="keywordflow">if</span>(err != ESP_OK) <span class="keywordflow">goto</span> cleanup;</div>
+<div class="line"><span class="lineno">   39</span>    err = i2c_master_start(cmd);</div>
+<div class="line"><span class="lineno">   40</span>    <span class="keywordflow">if</span>(err != ESP_OK)</div>
+<div class="line"><span class="lineno">   41</span>        <span class="keywordflow">goto</span> cleanup;</div>
+<div class="line"><span class="lineno">   42</span> </div>
+<div class="line"><span class="lineno">   43</span>    err = i2c_master_write_byte(cmd, slave_address, <span class="keyword">true</span>);</div>
+<div class="line"><span class="lineno">   44</span>    <span class="keywordflow">if</span>(err != ESP_OK)</div>
+<div class="line"><span class="lineno">   45</span>        <span class="keywordflow">goto</span> cleanup;</div>
+<div class="line"><span class="lineno">   46</span> </div>
+<div class="line"><span class="lineno">   47</span>    err = i2c_master_write_byte(cmd, reg_address, <span class="keyword">true</span>);</div>
+<div class="line"><span class="lineno">   48</span>    <span class="keywordflow">if</span>(err != ESP_OK)</div>
+<div class="line"><span class="lineno">   49</span>        <span class="keywordflow">goto</span> cleanup;</div>
 <div class="line"><span class="lineno">   50</span> </div>
-<div class="line"><span class="lineno">   51</span>    err = i2c_master_cmd_begin(port, cmd, 100 / portTICK_PERIOD_MS);</div>
-<div class="line"><span class="lineno">   52</span>    <span class="keywordflow">if</span>(err != ESP_OK) <span class="keywordflow">goto</span> cleanup;</div>
-<div class="line"><span class="lineno">   53</span> </div>
-<div class="line"><span class="lineno">   54</span>cleanup:</div>
-<div class="line"><span class="lineno">   55</span>    <span class="keywordflow">if</span>(cmd)</div>
-<div class="line"><span class="lineno">   56</span>    {</div>
-<div class="line"><span class="lineno">   57</span>        i2c_cmd_link_delete(cmd);</div>
-<div class="line"><span class="lineno">   58</span>    }</div>
-<div class="line"><span class="lineno">   59</span>    <span class="keywordflow">return</span> err;</div>
-<div class="line"><span class="lineno">   60</span>}</div>
+<div class="line"><span class="lineno">   51</span>    err = i2c_master_write_byte(cmd, data, <span class="keyword">true</span>);</div>
+<div class="line"><span class="lineno">   52</span>    <span class="keywordflow">if</span>(err != ESP_OK)</div>
+<div class="line"><span class="lineno">   53</span>        <span class="keywordflow">goto</span> cleanup;</div>
+<div class="line"><span class="lineno">   54</span> </div>
+<div class="line"><span class="lineno">   55</span>    err = i2c_master_stop(cmd);</div>
+<div class="line"><span class="lineno">   56</span>    <span class="keywordflow">if</span>(err != ESP_OK)</div>
+<div class="line"><span class="lineno">   57</span>        <span class="keywordflow">goto</span> cleanup;</div>
+<div class="line"><span class="lineno">   58</span> </div>
+<div class="line"><span class="lineno">   59</span>    err = i2c_master_cmd_begin(port, cmd, 100 / portTICK_PERIOD_MS);</div>
+<div class="line"><span class="lineno">   60</span>    <span class="keywordflow">if</span>(err != ESP_OK)</div>
+<div class="line"><span class="lineno">   61</span>        <span class="keywordflow">goto</span> cleanup;</div>
+<div class="line"><span class="lineno">   62</span> </div>
+<div class="line"><span class="lineno">   63</span>cleanup:</div>
+<div class="line"><span class="lineno">   64</span>    <span class="keywordflow">if</span>(cmd)</div>
+<div class="line"><span class="lineno">   65</span>    {</div>
+<div class="line"><span class="lineno">   66</span>        i2c_cmd_link_delete(cmd);</div>
+<div class="line"><span class="lineno">   67</span>    }</div>
+<div class="line"><span class="lineno">   68</span>    <span class="keywordflow">return</span> err;</div>
+<div class="line"><span class="lineno">   69</span>}</div>
 </div><!-- fragment -->
-<p class="reference">Referenced by <a class="el" href="pcm3060_8c_source.html#l00037">_i2c_write()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="pcm3060_8c_source.html#l00033">_i2c_write()</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">

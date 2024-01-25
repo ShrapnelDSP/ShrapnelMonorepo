@@ -157,328 +157,327 @@ $(document).ready(function(){initNavTree('i2s_8cpp_source.html',''); initResizab
 <div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span><span class="keywordtype">void</span> process_samples(std::span&lt;int32_t, 2 * DMA_BUF_SIZE&gt; buf,</div>
 <div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>                     <a class="code hl_class" href="classshrapnel_1_1AudioProcessor.html">AudioProcessor</a> &amp;processor);</div>
 <div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span> </div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span> </div>
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>} <span class="comment">// namespace</span></div>
-<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span> </div>
-<div class="line"><a id="l00067" name="l00067"></a><span class="lineno"><a class="line" href="namespaceshrapnel_1_1audio.html#a5e4994d9de1b430ad5473efe241521aa">   67</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="namespaceshrapnel_1_1audio.html#a5e4994d9de1b430ad5473efe241521aa">log_i2s_event</a>(<span class="keyword">const</span> i2s_event_t &amp;e)</div>
-<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>{</div>
-<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>    <span class="keywordflow">switch</span>(e.type)</div>
-<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>    {</div>
-<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>    <span class="keywordflow">case</span> I2S_EVENT_DMA_ERROR:</div>
-<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>        ESP_LOGE(TAG, <span class="stringliteral">&quot;Something went wrong with DMA&quot;</span>);</div>
-<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>        <span class="keywordflow">break</span>;</div>
-<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>    <span class="keywordflow">case</span> I2S_EVENT_TX_DONE:</div>
-<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>    <span class="keywordflow">case</span> I2S_EVENT_RX_DONE:</div>
-<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>        <span class="comment">//do nothing</span></div>
-<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>        <span class="keywordflow">break</span>;</div>
-<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>    <span class="keywordflow">case</span> I2S_EVENT_TX_Q_OVF:</div>
-<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>        ESP_LOGE(TAG, <span class="stringliteral">&quot;TX queue overflowed&quot;</span>);</div>
-<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>        <span class="keywordflow">break</span>;</div>
-<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>    <span class="keywordflow">case</span> I2S_EVENT_RX_Q_OVF:</div>
-<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>        ESP_LOGE(TAG, <span class="stringliteral">&quot;RX queue overflowed&quot;</span>);</div>
-<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>        <span class="keywordflow">break</span>;</div>
-<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>    <span class="keywordflow">default</span>:</div>
-<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>        ESP_LOGE(TAG, <span class="stringliteral">&quot;Unhandled type: %d&quot;</span>, e.type);</div>
-<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>        <span class="keywordflow">break</span>;</div>
-<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>    }</div>
-<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>}</div>
-<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span> </div>
-<div class="line"><a id="l00090" name="l00090"></a><span class="lineno"><a class="line" href="namespaceshrapnel_1_1audio.html#af73614d414adf5014704433913ee11db">   90</a></span><span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code hl_function" href="namespaceshrapnel_1_1audio.html#af73614d414adf5014704433913ee11db">i2s_processing_task</a>(<span class="keywordtype">void</span> *param)</div>
-<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>{</div>
-<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>    (void)param;</div>
-<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>    <span class="keyword">auto</span> audio_param =</div>
-<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>        <span class="keyword">reinterpret_cast&lt;</span><a class="code hl_class" href="classshrapnel_1_1parameters_1_1AudioParametersBase.html">shrapnel::parameters::AudioParametersBase</a> *<span class="keyword">&gt;</span>(param);</div>
-<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>    <span class="keywordtype">size_t</span> tx_rx_size;</div>
-<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span> </div>
-<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>    i2s_config_t i2s_config = {</div>
-<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>        .mode = <span class="keyword">static_cast&lt;</span>i2s_mode_t<span class="keyword">&gt;</span>(I2S_MODE_MASTER | I2S_MODE_TX |</div>
-<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>                                        I2S_MODE_RX),</div>
-<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>        .<a class="code hl_variable" href="esp32_2profiling_8c.html#a63433fe701b4e06f2cfdd50509e660db">sample_rate</a> = SAMPLE_RATE,</div>
-<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>        .bits_per_sample = I2S_BITS_PER_SAMPLE_24BIT,</div>
-<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>        .channel_format = I2S_CHANNEL_FMT_RIGHT_LEFT,</div>
-<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>        .communication_format = I2S_COMM_FORMAT_STAND_I2S,</div>
-<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>        .intr_alloc_flags = ESP_INTR_FLAG_LEVEL1,</div>
-<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>        .dma_buf_count = DMA_BUF_COUNT,</div>
-<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>        .dma_buf_len = DMA_BUF_SIZE,</div>
-<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>        .use_apll = <span class="keyword">true</span>,</div>
-<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>        .tx_desc_auto_clear =</div>
-<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>            <span class="keyword">true</span>,        <span class="comment">//this will clear the tx buffer when we overrun</span></div>
-<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>        .fixed_mclk = 0, <span class="comment">// Use mclk_multiple</span></div>
-<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>        .mclk_multiple = I2S_MCLK_MULTIPLE_384,</div>
-<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>        .bits_per_chan = I2S_BITS_PER_CHAN_DEFAULT,</div>
-<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>    };</div>
-<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span> </div>
-<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>    i2s_pin_config_t pin_config = {.mck_io_num = I2S_MCK_IO,</div>
-<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>                                   .bck_io_num = I2S_BCK_IO,</div>
-<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>                                   .ws_io_num = I2S_WS_IO,</div>
-<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>                                   .data_out_num = I2S_DO_IO,</div>
-<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span>                                   .data_in_num = I2S_DI_IO};</div>
-<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span> </div>
-<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>    esp_err_t err = i2s_driver_install(<span class="keyword">static_cast&lt;</span>i2s_port_t<span class="keyword">&gt;</span>(I2S_NUM),</div>
-<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>                                       &amp;i2s_config,</div>
-<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>                                       I2S_QUEUE_SIZE,</div>
-<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>                                       &amp;<a class="code hl_variable" href="namespaceshrapnel_1_1audio.html#ab7793cdc1c2c73fcdcba8fea2f35c9c8">i2s_queue</a>);</div>
-<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>    <span class="keywordflow">if</span>(err != ESP_OK)</div>
-<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span>    {</div>
-<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span>        ESP_LOGE(</div>
-<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span>            TAG, <span class="stringliteral">&quot;i2s_driver_install failed %d, %s&quot;</span>, err, esp_err_to_name(err));</div>
-<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>        <span class="keywordflow">return</span>;</div>
-<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span>    }</div>
-<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span>    ESP_LOGD(TAG, <span class="stringliteral">&quot;queue address: %p&quot;</span>, (<span class="keywordtype">void</span> *)<a class="code hl_variable" href="namespaceshrapnel_1_1audio.html#ab7793cdc1c2c73fcdcba8fea2f35c9c8">i2s_queue</a>);</div>
-<div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span> </div>
-<div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span>    err = i2s_set_pin(<span class="keyword">static_cast&lt;</span>i2s_port_t<span class="keyword">&gt;</span>(I2S_NUM), &amp;pin_config);</div>
-<div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span>    <span class="keywordflow">if</span>(err != ESP_OK)</div>
-<div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span>    {</div>
-<div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span>        ESP_LOGE(TAG, <span class="stringliteral">&quot;i2s_set_pin failed %d, %s&quot;</span>, err, esp_err_to_name(err));</div>
-<div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span>        <span class="keywordflow">return</span>;</div>
-<div class="line"><a id="l00138" name="l00138"></a><span class="lineno">  138</span>    }</div>
-<div class="line"><a id="l00139" name="l00139"></a><span class="lineno">  139</span> </div>
-<div class="line"><a id="l00140" name="l00140"></a><span class="lineno">  140</span>    <span class="keyword">auto</span> processor_parameters = parameter_init(audio_param);</div>
-<div class="line"><a id="l00141" name="l00141"></a><span class="lineno">  141</span>    <span class="keyword">auto</span> processor = <a class="code hl_class" href="classshrapnel_1_1AudioProcessor.html">shrapnel::AudioProcessor</a>(processor_parameters);</div>
-<div class="line"><a id="l00142" name="l00142"></a><span class="lineno">  142</span>    processor.prepare(SAMPLE_RATE, DMA_BUF_SIZE);</div>
-<div class="line"><a id="l00143" name="l00143"></a><span class="lineno">  143</span> </div>
-<div class="line"><a id="l00144" name="l00144"></a><span class="lineno">  144</span>    <span class="comment">/* Get the DMA buffers into their initial states</span></div>
-<div class="line"><a id="l00145" name="l00145"></a><span class="lineno">  145</span><span class="comment">     *</span></div>
-<div class="line"><a id="l00146" name="l00146"></a><span class="lineno">  146</span><span class="comment">     * The RX buffers should be all empty, and the TX buffers should all be</span></div>
-<div class="line"><a id="l00147" name="l00147"></a><span class="lineno">  147</span><span class="comment">     * full.</span></div>
-<div class="line"><a id="l00148" name="l00148"></a><span class="lineno">  148</span><span class="comment">     */</span></div>
-<div class="line"><a id="l00149" name="l00149"></a><span class="lineno">  149</span>    err = i2s_stop(<span class="keyword">static_cast&lt;</span>i2s_port_t<span class="keyword">&gt;</span>(I2S_NUM));</div>
-<div class="line"><a id="l00150" name="l00150"></a><span class="lineno">  150</span>    <span class="keywordflow">if</span>(err != ESP_OK)</div>
-<div class="line"><a id="l00151" name="l00151"></a><span class="lineno">  151</span>    {</div>
-<div class="line"><a id="l00152" name="l00152"></a><span class="lineno">  152</span>        ESP_LOGE(TAG, <span class="stringliteral">&quot;i2s_stop failed %d, %s&quot;</span>, err, esp_err_to_name(err));</div>
-<div class="line"><a id="l00153" name="l00153"></a><span class="lineno">  153</span>        <span class="keywordflow">return</span>;</div>
-<div class="line"><a id="l00154" name="l00154"></a><span class="lineno">  154</span>    }</div>
-<div class="line"><a id="l00155" name="l00155"></a><span class="lineno">  155</span> </div>
-<div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span>    <span class="keywordtype">size_t</span> read_count;</div>
-<div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span>    <span class="keywordflow">do</span></div>
-<div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span>    {</div>
-<div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span>        err = i2s_read(<span class="keyword">static_cast&lt;</span>i2s_port_t<span class="keyword">&gt;</span>(I2S_NUM),</div>
-<div class="line"><a id="l00160" name="l00160"></a><span class="lineno">  160</span>                       rx_buf,</div>
-<div class="line"><a id="l00161" name="l00161"></a><span class="lineno">  161</span>                       DMA_BUF_SIZE,</div>
-<div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span>                       &amp;read_count,</div>
-<div class="line"><a id="l00163" name="l00163"></a><span class="lineno">  163</span>                       100);</div>
-<div class="line"><a id="l00164" name="l00164"></a><span class="lineno">  164</span>        <span class="keywordflow">if</span>(err != ESP_OK)</div>
-<div class="line"><a id="l00165" name="l00165"></a><span class="lineno">  165</span>        {</div>
-<div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span>            ESP_LOGE(TAG, <span class="stringliteral">&quot;i2s_read failed %d, %s&quot;</span>, err, esp_err_to_name(err));</div>
-<div class="line"><a id="l00167" name="l00167"></a><span class="lineno">  167</span>            <span class="keywordflow">return</span>;</div>
-<div class="line"><a id="l00168" name="l00168"></a><span class="lineno">  168</span>        }</div>
-<div class="line"><a id="l00169" name="l00169"></a><span class="lineno">  169</span>        ESP_LOGI(TAG, <span class="stringliteral">&quot;discarded %zu samples from RX buffer&quot;</span>, read_count);</div>
-<div class="line"><a id="l00170" name="l00170"></a><span class="lineno">  170</span>    } <span class="keywordflow">while</span>(read_count != 0);</div>
-<div class="line"><a id="l00171" name="l00171"></a><span class="lineno">  171</span> </div>
-<div class="line"><a id="l00172" name="l00172"></a><span class="lineno">  172</span>    err = i2s_zero_dma_buffer(<span class="keyword">static_cast&lt;</span>i2s_port_t<span class="keyword">&gt;</span>(I2S_NUM));</div>
-<div class="line"><a id="l00173" name="l00173"></a><span class="lineno">  173</span>    <span class="keywordflow">if</span>(err != ESP_OK)</div>
-<div class="line"><a id="l00174" name="l00174"></a><span class="lineno">  174</span>    {</div>
-<div class="line"><a id="l00175" name="l00175"></a><span class="lineno">  175</span>        ESP_LOGE(TAG,</div>
-<div class="line"><a id="l00176" name="l00176"></a><span class="lineno">  176</span>                 <span class="stringliteral">&quot;i2s_zero_dma_buffer failed %d, %s&quot;</span>,</div>
-<div class="line"><a id="l00177" name="l00177"></a><span class="lineno">  177</span>                 err,</div>
-<div class="line"><a id="l00178" name="l00178"></a><span class="lineno">  178</span>                 esp_err_to_name(err));</div>
-<div class="line"><a id="l00179" name="l00179"></a><span class="lineno">  179</span>        <span class="keywordflow">return</span>;</div>
-<div class="line"><a id="l00180" name="l00180"></a><span class="lineno">  180</span>    }</div>
-<div class="line"><a id="l00181" name="l00181"></a><span class="lineno">  181</span> </div>
-<div class="line"><a id="l00182" name="l00182"></a><span class="lineno">  182</span>    err = i2s_start(<span class="keyword">static_cast&lt;</span>i2s_port_t<span class="keyword">&gt;</span>(I2S_NUM));</div>
-<div class="line"><a id="l00183" name="l00183"></a><span class="lineno">  183</span>    <span class="keywordflow">if</span>(err != ESP_OK)</div>
-<div class="line"><a id="l00184" name="l00184"></a><span class="lineno">  184</span>    {</div>
-<div class="line"><a id="l00185" name="l00185"></a><span class="lineno">  185</span>        ESP_LOGE(TAG, <span class="stringliteral">&quot;i2s_start failed %d, %s&quot;</span>, err, esp_err_to_name(err));</div>
-<div class="line"><a id="l00186" name="l00186"></a><span class="lineno">  186</span>        <span class="keywordflow">return</span>;</div>
-<div class="line"><a id="l00187" name="l00187"></a><span class="lineno">  187</span>    }</div>
-<div class="line"><a id="l00188" name="l00188"></a><span class="lineno">  188</span> </div>
-<div class="line"><a id="l00189" name="l00189"></a><span class="lineno">  189</span>    <span class="keywordflow">while</span>(<span class="keyword">true</span>)</div>
-<div class="line"><a id="l00190" name="l00190"></a><span class="lineno">  190</span>    {</div>
-<div class="line"><a id="l00191" name="l00191"></a><span class="lineno">  191</span><span class="preprocessor">#if !defined(GENERATE_SINE_WAVE) &amp;&amp; !defined(GENERATE_RAMP)</span></div>
-<div class="line"><a id="l00192" name="l00192"></a><span class="lineno">  192</span>        i2s_read(<span class="keyword">static_cast&lt;</span>i2s_port_t<span class="keyword">&gt;</span>(I2S_NUM),</div>
-<div class="line"><a id="l00193" name="l00193"></a><span class="lineno">  193</span>                 rx_buf,</div>
-<div class="line"><a id="l00194" name="l00194"></a><span class="lineno">  194</span>                 <span class="keyword">sizeof</span>(rx_buf),</div>
-<div class="line"><a id="l00195" name="l00195"></a><span class="lineno">  195</span>                 &amp;tx_rx_size,</div>
-<div class="line"><a id="l00196" name="l00196"></a><span class="lineno">  196</span>                 100 / portTICK_PERIOD_MS);</div>
-<div class="line"><a id="l00197" name="l00197"></a><span class="lineno">  197</span>        <span class="keywordflow">if</span>(tx_rx_size != <span class="keyword">sizeof</span>(rx_buf))</div>
-<div class="line"><a id="l00198" name="l00198"></a><span class="lineno">  198</span>        {</div>
-<div class="line"><a id="l00199" name="l00199"></a><span class="lineno">  199</span>            ESP_LOGE(TAG,</div>
-<div class="line"><a id="l00200" name="l00200"></a><span class="lineno">  200</span>                     <span class="stringliteral">&quot;Got the wrong number of bytes %zu/%zu&quot;</span>,</div>
-<div class="line"><a id="l00201" name="l00201"></a><span class="lineno">  201</span>                     tx_rx_size,</div>
-<div class="line"><a id="l00202" name="l00202"></a><span class="lineno">  202</span>                     <span class="keyword">sizeof</span>(rx_buf));</div>
-<div class="line"><a id="l00203" name="l00203"></a><span class="lineno">  203</span>        }</div>
-<div class="line"><a id="l00204" name="l00204"></a><span class="lineno">  204</span><span class="preprocessor">#elif defined(GENERATE_SINE_WAVE)</span></div>
-<div class="line"><a id="l00205" name="l00205"></a><span class="lineno">  205</span>        <span class="keywordtype">int</span> len = <span class="keyword">sizeof</span>(rx_buf) / <span class="keyword">sizeof</span>(rx_buf[0]);</div>
-<div class="line"><a id="l00206" name="l00206"></a><span class="lineno">  206</span>        <span class="keywordflow">for</span>(<span class="keywordtype">int</span> i = 0; i &lt; len; i++)</div>
-<div class="line"><a id="l00207" name="l00207"></a><span class="lineno">  207</span>        {</div>
-<div class="line"><a id="l00208" name="l00208"></a><span class="lineno">  208</span>            rx_buf[i] =</div>
-<div class="line"><a id="l00209" name="l00209"></a><span class="lineno">  209</span>                <a class="code hl_function" href="float__convert_8h.html#ae9b18f6b920e3401ec41278b57e6817b">float_to_int32</a>(sinf(2 * ((<span class="keywordtype">float</span>)M_PI) * i / (<span class="keywordtype">float</span>)len));</div>
-<div class="line"><a id="l00210" name="l00210"></a><span class="lineno">  210</span>        }</div>
-<div class="line"><a id="l00211" name="l00211"></a><span class="lineno">  211</span><span class="preprocessor">#elif defined(GENERATE_RAMP)</span></div>
-<div class="line"><a id="l00212" name="l00212"></a><span class="lineno">  212</span>        <span class="keywordtype">int</span> len = <span class="keyword">sizeof</span>(rx_buf) / <span class="keyword">sizeof</span>(rx_buf[0]);</div>
-<div class="line"><a id="l00213" name="l00213"></a><span class="lineno">  213</span>        <span class="keywordflow">for</span>(<span class="keywordtype">int</span> i = 0; i &lt; len; i++)</div>
-<div class="line"><a id="l00214" name="l00214"></a><span class="lineno">  214</span>        {</div>
-<div class="line"><a id="l00215" name="l00215"></a><span class="lineno">  215</span>            rx_buf[i] = (i - len / 2) * (INT32_MAX / (len / 2));</div>
-<div class="line"><a id="l00216" name="l00216"></a><span class="lineno">  216</span>        }</div>
-<div class="line"><a id="l00217" name="l00217"></a><span class="lineno">  217</span><span class="preprocessor">#endif</span></div>
-<div class="line"><a id="l00218" name="l00218"></a><span class="lineno">  218</span> </div>
-<div class="line"><a id="l00219" name="l00219"></a><span class="lineno">  219</span>        process_samples(rx_buf, processor);</div>
-<div class="line"><a id="l00220" name="l00220"></a><span class="lineno">  220</span> </div>
-<div class="line"><a id="l00221" name="l00221"></a><span class="lineno">  221</span>        i2s_write(<span class="keyword">static_cast&lt;</span>i2s_port_t<span class="keyword">&gt;</span>(I2S_NUM),</div>
-<div class="line"><a id="l00222" name="l00222"></a><span class="lineno">  222</span>                  rx_buf,</div>
-<div class="line"><a id="l00223" name="l00223"></a><span class="lineno">  223</span>                  <span class="keyword">sizeof</span>(rx_buf),</div>
-<div class="line"><a id="l00224" name="l00224"></a><span class="lineno">  224</span>                  &amp;tx_rx_size,</div>
-<div class="line"><a id="l00225" name="l00225"></a><span class="lineno">  225</span>                  100 / portTICK_PERIOD_MS);</div>
-<div class="line"><a id="l00226" name="l00226"></a><span class="lineno">  226</span>        <span class="keywordflow">if</span>(tx_rx_size != <span class="keyword">sizeof</span>(rx_buf))</div>
-<div class="line"><a id="l00227" name="l00227"></a><span class="lineno">  227</span>        {</div>
-<div class="line"><a id="l00228" name="l00228"></a><span class="lineno">  228</span>            ESP_LOGE(TAG,</div>
-<div class="line"><a id="l00229" name="l00229"></a><span class="lineno">  229</span>                     <span class="stringliteral">&quot;Sent the wrong number of bytes %zu/%zu&quot;</span>,</div>
-<div class="line"><a id="l00230" name="l00230"></a><span class="lineno">  230</span>                     tx_rx_size,</div>
-<div class="line"><a id="l00231" name="l00231"></a><span class="lineno">  231</span>                     <span class="keyword">sizeof</span>(rx_buf));</div>
-<div class="line"><a id="l00232" name="l00232"></a><span class="lineno">  232</span>        }</div>
-<div class="line"><a id="l00233" name="l00233"></a><span class="lineno">  233</span>    }</div>
-<div class="line"><a id="l00234" name="l00234"></a><span class="lineno">  234</span>}</div>
-<div class="line"><a id="l00235" name="l00235"></a><span class="lineno">  235</span> </div>
-<div class="line"><a id="l00236" name="l00236"></a><span class="lineno"><a class="line" href="namespaceshrapnel_1_1audio.html#a53d05b5ded7bb39aff7189392d0566c9">  236</a></span>esp_err_t <a class="code hl_function" href="namespaceshrapnel_1_1audio.html#a53d05b5ded7bb39aff7189392d0566c9">i2s_setup</a>(gpio_num_t profiling_gpio,</div>
-<div class="line"><a id="l00237" name="l00237"></a><span class="lineno">  237</span>                    <a class="code hl_class" href="classshrapnel_1_1parameters_1_1AudioParametersBase.html">shrapnel::parameters::AudioParametersBase</a> *audio_param)</div>
-<div class="line"><a id="l00238" name="l00238"></a><span class="lineno">  238</span>{</div>
-<div class="line"><a id="l00239" name="l00239"></a><span class="lineno">  239</span>    esp_err_t err;</div>
-<div class="line"><a id="l00240" name="l00240"></a><span class="lineno">  240</span> </div>
-<div class="line"><a id="l00241" name="l00241"></a><span class="lineno">  241</span>    <a class="code hl_variable" href="namespaceshrapnel_1_1audio.html#a82e419da4aa6e86ef0a168ea7fe0e797">g_profiling_gpio</a> = profiling_gpio;</div>
-<div class="line"><a id="l00242" name="l00242"></a><span class="lineno">  242</span>    gpio_config_t io_conf = {</div>
-<div class="line"><a id="l00243" name="l00243"></a><span class="lineno">  243</span>        .pin_bit_mask = 1ULL &lt;&lt; profiling_gpio,</div>
-<div class="line"><a id="l00244" name="l00244"></a><span class="lineno">  244</span>        .mode = GPIO_MODE_OUTPUT,</div>
-<div class="line"><a id="l00245" name="l00245"></a><span class="lineno">  245</span>        .pull_up_en = GPIO_PULLUP_DISABLE,</div>
-<div class="line"><a id="l00246" name="l00246"></a><span class="lineno">  246</span>        .pull_down_en = GPIO_PULLDOWN_DISABLE,</div>
-<div class="line"><a id="l00247" name="l00247"></a><span class="lineno">  247</span>        .intr_type = GPIO_INTR_DISABLE,</div>
-<div class="line"><a id="l00248" name="l00248"></a><span class="lineno">  248</span>    };</div>
-<div class="line"><a id="l00249" name="l00249"></a><span class="lineno">  249</span> </div>
-<div class="line"><a id="l00250" name="l00250"></a><span class="lineno">  250</span>    err = gpio_config(&amp;io_conf);</div>
-<div class="line"><a id="l00251" name="l00251"></a><span class="lineno">  251</span>    <span class="keywordflow">if</span>(err != ESP_OK)</div>
-<div class="line"><a id="l00252" name="l00252"></a><span class="lineno">  252</span>    {</div>
-<div class="line"><a id="l00253" name="l00253"></a><span class="lineno">  253</span>        ESP_LOGE(TAG, <span class="stringliteral">&quot;gpio_config failed %d, %s&quot;</span>, err, esp_err_to_name(err));</div>
-<div class="line"><a id="l00254" name="l00254"></a><span class="lineno">  254</span>        <span class="keywordflow">return</span> err;</div>
-<div class="line"><a id="l00255" name="l00255"></a><span class="lineno">  255</span>    }</div>
-<div class="line"><a id="l00256" name="l00256"></a><span class="lineno">  256</span>    err = gpio_set_level(profiling_gpio, 0);</div>
-<div class="line"><a id="l00257" name="l00257"></a><span class="lineno">  257</span>    <span class="keywordflow">if</span>(err != ESP_OK)</div>
-<div class="line"><a id="l00258" name="l00258"></a><span class="lineno">  258</span>    {</div>
-<div class="line"><a id="l00259" name="l00259"></a><span class="lineno">  259</span>        ESP_LOGE(</div>
-<div class="line"><a id="l00260" name="l00260"></a><span class="lineno">  260</span>            TAG, <span class="stringliteral">&quot;gpio_set_level failed %d, %s&quot;</span>, err, esp_err_to_name(err));</div>
-<div class="line"><a id="l00261" name="l00261"></a><span class="lineno">  261</span>        <span class="keywordflow">return</span> err;</div>
-<div class="line"><a id="l00262" name="l00262"></a><span class="lineno">  262</span>    }</div>
-<div class="line"><a id="l00263" name="l00263"></a><span class="lineno">  263</span> </div>
-<div class="line"><a id="l00264" name="l00264"></a><span class="lineno">  264</span>    <span class="comment">// This task must be pinned as CPU cycle count is used for profiling</span></div>
-<div class="line"><a id="l00265" name="l00265"></a><span class="lineno">  265</span>    <span class="keywordtype">int</span> ret = xTaskCreatePinnedToCore(<a class="code hl_function" href="namespaceshrapnel_1_1audio.html#af73614d414adf5014704433913ee11db">i2s_processing_task</a>,</div>
-<div class="line"><a id="l00266" name="l00266"></a><span class="lineno">  266</span>                                      <span class="stringliteral">&quot;i2s proc&quot;</span>,</div>
-<div class="line"><a id="l00267" name="l00267"></a><span class="lineno">  267</span>                                      TASK_STACK,</div>
-<div class="line"><a id="l00268" name="l00268"></a><span class="lineno">  268</span>                                      audio_param,</div>
-<div class="line"><a id="l00269" name="l00269"></a><span class="lineno">  269</span>                                      TASK_PRIO,</div>
-<div class="line"><a id="l00270" name="l00270"></a><span class="lineno">  270</span>                                      NULL,</div>
-<div class="line"><a id="l00271" name="l00271"></a><span class="lineno">  271</span>                                      1);</div>
-<div class="line"><a id="l00272" name="l00272"></a><span class="lineno">  272</span>    <span class="keywordflow">if</span>(ret != pdPASS)</div>
-<div class="line"><a id="l00273" name="l00273"></a><span class="lineno">  273</span>    {</div>
-<div class="line"><a id="l00274" name="l00274"></a><span class="lineno">  274</span>        ESP_LOGE(TAG, <span class="stringliteral">&quot;Processing task create failed %d&quot;</span>, ret);</div>
-<div class="line"><a id="l00275" name="l00275"></a><span class="lineno">  275</span>    }</div>
-<div class="line"><a id="l00276" name="l00276"></a><span class="lineno">  276</span> </div>
-<div class="line"><a id="l00277" name="l00277"></a><span class="lineno">  277</span>    <span class="keywordflow">return</span> ESP_OK;</div>
-<div class="line"><a id="l00278" name="l00278"></a><span class="lineno">  278</span>}</div>
-<div class="line"><a id="l00279" name="l00279"></a><span class="lineno">  279</span> </div>
-<div class="line"><a id="l00280" name="l00280"></a><span class="lineno">  280</span><span class="keyword">namespace </span>{</div>
-<div class="line"><a id="l00281" name="l00281"></a><span class="lineno">  281</span><span class="keywordtype">void</span> process_samples(std::span&lt;int32_t, 2 * DMA_BUF_SIZE&gt; buf,</div>
-<div class="line"><a id="l00282" name="l00282"></a><span class="lineno">  282</span>                     <a class="code hl_class" href="classshrapnel_1_1AudioProcessor.html">AudioProcessor</a> &amp;processor)</div>
-<div class="line"><a id="l00283" name="l00283"></a><span class="lineno">  283</span>{</div>
-<div class="line"><a id="l00284" name="l00284"></a><span class="lineno">  284</span>    assert(<a class="code hl_variable" href="namespaceshrapnel_1_1audio.html#a82e419da4aa6e86ef0a168ea7fe0e797">g_profiling_gpio</a> != -1 &amp;&amp; <span class="stringliteral">&quot;I2S task has not been initialised&quot;</span>);</div>
-<div class="line"><a id="l00285" name="l00285"></a><span class="lineno">  285</span>    <span class="keyword">static</span> <span class="keywordtype">float</span> fbuf[DMA_BUF_SIZE];</div>
-<div class="line"><a id="l00286" name="l00286"></a><span class="lineno">  286</span> </div>
-<div class="line"><a id="l00287" name="l00287"></a><span class="lineno">  287</span>    gpio_set_level(<a class="code hl_variable" href="namespaceshrapnel_1_1audio.html#a82e419da4aa6e86ef0a168ea7fe0e797">g_profiling_gpio</a>, 1);</div>
-<div class="line"><a id="l00288" name="l00288"></a><span class="lineno">  288</span>    <a class="code hl_function" href="desktop_2profiling_8c.html#ac05fdc10ded37340f2ab202bbc184d20">profiling_start</a>();</div>
-<div class="line"><a id="l00289" name="l00289"></a><span class="lineno">  289</span>    <span class="comment">/* Copy samples, skipping every second one. These correspond to the left</span></div>
-<div class="line"><a id="l00290" name="l00290"></a><span class="lineno">  290</span><span class="comment">     * channel of the ADC and DAC, which are not used here</span></div>
-<div class="line"><a id="l00291" name="l00291"></a><span class="lineno">  291</span><span class="comment">     * XXX not sure why the right channel is not at index 0 */</span></div>
-<div class="line"><a id="l00292" name="l00292"></a><span class="lineno">  292</span>    <span class="keywordflow">for</span>(<span class="keywordtype">size_t</span> i = 1; i &lt; buf.size(); i += 2)</div>
-<div class="line"><a id="l00293" name="l00293"></a><span class="lineno">  293</span>    {</div>
-<div class="line"><a id="l00294" name="l00294"></a><span class="lineno">  294</span>        <span class="keywordflow">if</span>(buf[i] == INT32_MIN || buf[i] == INT32_MAX)</div>
-<div class="line"><a id="l00295" name="l00295"></a><span class="lineno">  295</span>        {</div>
-<div class="line"><a id="l00296" name="l00296"></a><span class="lineno">  296</span>            <a class="code hl_variable" href="namespaceshrapnel_1_1events.html#a63fd47484f0f2560469429a7b28b7a0e">shrapnel::events::input_clipped</a>.clear();</div>
-<div class="line"><a id="l00297" name="l00297"></a><span class="lineno">  297</span>            <a class="code hl_variable" href="namespaceshrapnel_1_1events.html#a63fd47484f0f2560469429a7b28b7a0e">shrapnel::events::input_clipped</a>.notify_all();</div>
-<div class="line"><a id="l00298" name="l00298"></a><span class="lineno">  298</span>        }</div>
-<div class="line"><a id="l00299" name="l00299"></a><span class="lineno">  299</span>        fbuf[i / 2] = buf[i] / (float)INT32_MAX;</div>
-<div class="line"><a id="l00300" name="l00300"></a><span class="lineno">  300</span>    }</div>
-<div class="line"><a id="l00301" name="l00301"></a><span class="lineno">  301</span> </div>
-<div class="line"><a id="l00302" name="l00302"></a><span class="lineno">  302</span>    <span class="comment">// call process on processor</span></div>
-<div class="line"><a id="l00303" name="l00303"></a><span class="lineno">  303</span>    processor.<a class="code hl_function" href="classshrapnel_1_1AudioProcessor.html#a58ee6267bed11fd14aaf9a44627554e7">process</a>(fbuf);</div>
-<div class="line"><a id="l00304" name="l00304"></a><span class="lineno">  304</span> </div>
-<div class="line"><a id="l00305" name="l00305"></a><span class="lineno">  305</span>    <span class="keywordflow">for</span>(<span class="keywordtype">size_t</span> i = 1; i &lt; buf.size(); i += 2)</div>
-<div class="line"><a id="l00306" name="l00306"></a><span class="lineno">  306</span>    {</div>
-<div class="line"><a id="l00307" name="l00307"></a><span class="lineno">  307</span>        <span class="keywordflow">if</span>(fbuf[i / 2] &gt; 1.f || fbuf[i / 2] &lt; -1.f)</div>
-<div class="line"><a id="l00308" name="l00308"></a><span class="lineno">  308</span>        {</div>
-<div class="line"><a id="l00309" name="l00309"></a><span class="lineno">  309</span>            <a class="code hl_variable" href="namespaceshrapnel_1_1events.html#ad28eee14b7b281e8580c0ca9f14adda2">shrapnel::events::output_clipped</a>.clear();</div>
-<div class="line"><a id="l00310" name="l00310"></a><span class="lineno">  310</span>            <a class="code hl_variable" href="namespaceshrapnel_1_1events.html#ad28eee14b7b281e8580c0ca9f14adda2">shrapnel::events::output_clipped</a>.notify_all();</div>
-<div class="line"><a id="l00311" name="l00311"></a><span class="lineno">  311</span>        }</div>
-<div class="line"><a id="l00312" name="l00312"></a><span class="lineno">  312</span> </div>
-<div class="line"><a id="l00313" name="l00313"></a><span class="lineno">  313</span>        <span class="keywordflow">if</span>(fbuf[i / 2] != fbuf[i / 2])</div>
-<div class="line"><a id="l00314" name="l00314"></a><span class="lineno">  314</span>        {</div>
-<div class="line"><a id="l00315" name="l00315"></a><span class="lineno">  315</span>            ESP_LOGE(TAG, <span class="stringliteral">&quot;Not a number at index %d&quot;</span>, i);</div>
-<div class="line"><a id="l00316" name="l00316"></a><span class="lineno">  316</span>            assert(0);</div>
-<div class="line"><a id="l00317" name="l00317"></a><span class="lineno">  317</span>        }</div>
-<div class="line"><a id="l00318" name="l00318"></a><span class="lineno">  318</span> </div>
-<div class="line"><a id="l00319" name="l00319"></a><span class="lineno">  319</span>        buf[i] = <a class="code hl_function" href="float__convert_8h.html#ae9b18f6b920e3401ec41278b57e6817b">float_to_int32</a>(fbuf[i / 2]);</div>
-<div class="line"><a id="l00320" name="l00320"></a><span class="lineno">  320</span>    }</div>
-<div class="line"><a id="l00321" name="l00321"></a><span class="lineno">  321</span>    <a class="code hl_function" href="desktop_2profiling_8c.html#a3171d2be3fbf00e49982243e9869735a">profiling_mark_stage</a>(20);</div>
-<div class="line"><a id="l00322" name="l00322"></a><span class="lineno">  322</span> </div>
-<div class="line"><a id="l00323" name="l00323"></a><span class="lineno">  323</span>    <a class="code hl_function" href="desktop_2profiling_8c.html#a9f4516d77db32a65ee99933c6c9d3802">profiling_stop</a>();</div>
-<div class="line"><a id="l00324" name="l00324"></a><span class="lineno">  324</span>    gpio_set_level(<a class="code hl_variable" href="namespaceshrapnel_1_1audio.html#a82e419da4aa6e86ef0a168ea7fe0e797">g_profiling_gpio</a>, 0);</div>
-<div class="line"><a id="l00325" name="l00325"></a><span class="lineno">  325</span> </div>
-<div class="line"><a id="l00326" name="l00326"></a><span class="lineno">  326</span>    ESP_LOGD(TAG, <span class="stringliteral">&quot;stack: %d&quot;</span>, uxTaskGetStackHighWaterMark(<span class="keyword">nullptr</span>));</div>
-<div class="line"><a id="l00327" name="l00327"></a><span class="lineno">  327</span>}</div>
-<div class="line"><a id="l00328" name="l00328"></a><span class="lineno">  328</span> </div>
-<div class="line"><a id="l00329" name="l00329"></a><span class="lineno">  329</span>AudioProcessorParameters</div>
-<div class="line"><a id="l00330" name="l00330"></a><span class="lineno">  330</span>parameter_init(<a class="code hl_class" href="classshrapnel_1_1parameters_1_1AudioParametersBase.html">shrapnel::parameters::AudioParametersBase</a> *audio_params)</div>
-<div class="line"><a id="l00331" name="l00331"></a><span class="lineno">  331</span>{</div>
-<div class="line"><a id="l00332" name="l00332"></a><span class="lineno">  332</span>    <span class="keywordflow">return</span> {</div>
-<div class="line"><a id="l00333" name="l00333"></a><span class="lineno">  333</span>        .amplifier{</div>
-<div class="line"><a id="l00334" name="l00334"></a><span class="lineno">  334</span>            .gain{audio_params-&gt;<a class="code hl_function" href="classshrapnel_1_1parameters_1_1AudioParametersBase.html#a64be66aabe04db4524a64df0ba03f7fd">get_raw_parameter</a>(<span class="stringliteral">&quot;ampGain&quot;</span>)},</div>
-<div class="line"><a id="l00335" name="l00335"></a><span class="lineno">  335</span>            .channel{audio_params-&gt;<a class="code hl_function" href="classshrapnel_1_1parameters_1_1AudioParametersBase.html#a64be66aabe04db4524a64df0ba03f7fd">get_raw_parameter</a>(<span class="stringliteral">&quot;ampChannel&quot;</span>)},</div>
-<div class="line"><a id="l00336" name="l00336"></a><span class="lineno">  336</span>            .bass{audio_params-&gt;<a class="code hl_function" href="classshrapnel_1_1parameters_1_1AudioParametersBase.html#a64be66aabe04db4524a64df0ba03f7fd">get_raw_parameter</a>(<span class="stringliteral">&quot;bass&quot;</span>)},</div>
-<div class="line"><a id="l00337" name="l00337"></a><span class="lineno">  337</span>            .middle{audio_params-&gt;<a class="code hl_function" href="classshrapnel_1_1parameters_1_1AudioParametersBase.html#a64be66aabe04db4524a64df0ba03f7fd">get_raw_parameter</a>(<span class="stringliteral">&quot;middle&quot;</span>)},</div>
-<div class="line"><a id="l00338" name="l00338"></a><span class="lineno">  338</span>            .treble{audio_params-&gt;<a class="code hl_function" href="classshrapnel_1_1parameters_1_1AudioParametersBase.html#a64be66aabe04db4524a64df0ba03f7fd">get_raw_parameter</a>(<span class="stringliteral">&quot;treble&quot;</span>)},</div>
-<div class="line"><a id="l00339" name="l00339"></a><span class="lineno">  339</span>            .contour{audio_params-&gt;<a class="code hl_function" href="classshrapnel_1_1parameters_1_1AudioParametersBase.html#a64be66aabe04db4524a64df0ba03f7fd">get_raw_parameter</a>(<span class="stringliteral">&quot;contour&quot;</span>)},</div>
-<div class="line"><a id="l00340" name="l00340"></a><span class="lineno">  340</span>            .volume{audio_params-&gt;<a class="code hl_function" href="classshrapnel_1_1parameters_1_1AudioParametersBase.html#a64be66aabe04db4524a64df0ba03f7fd">get_raw_parameter</a>(<span class="stringliteral">&quot;volume&quot;</span>)},</div>
-<div class="line"><a id="l00341" name="l00341"></a><span class="lineno">  341</span>        },</div>
-<div class="line"><a id="l00342" name="l00342"></a><span class="lineno">  342</span>        .gate{</div>
-<div class="line"><a id="l00343" name="l00343"></a><span class="lineno">  343</span>            .threshold{audio_params-&gt;<a class="code hl_function" href="classshrapnel_1_1parameters_1_1AudioParametersBase.html#a64be66aabe04db4524a64df0ba03f7fd">get_raw_parameter</a>(<span class="stringliteral">&quot;noiseGateThreshold&quot;</span>)},</div>
-<div class="line"><a id="l00344" name="l00344"></a><span class="lineno">  344</span>            .hysteresis{audio_params-&gt;<a class="code hl_function" href="classshrapnel_1_1parameters_1_1AudioParametersBase.html#a64be66aabe04db4524a64df0ba03f7fd">get_raw_parameter</a>(<span class="stringliteral">&quot;noiseGateHysteresis&quot;</span>)},</div>
-<div class="line"><a id="l00345" name="l00345"></a><span class="lineno">  345</span>            .attack{audio_params-&gt;<a class="code hl_function" href="classshrapnel_1_1parameters_1_1AudioParametersBase.html#a64be66aabe04db4524a64df0ba03f7fd">get_raw_parameter</a>(<span class="stringliteral">&quot;noiseGateAttack&quot;</span>)},</div>
-<div class="line"><a id="l00346" name="l00346"></a><span class="lineno">  346</span>            .hold{audio_params-&gt;<a class="code hl_function" href="classshrapnel_1_1parameters_1_1AudioParametersBase.html#a64be66aabe04db4524a64df0ba03f7fd">get_raw_parameter</a>(<span class="stringliteral">&quot;noiseGateHold&quot;</span>)},</div>
-<div class="line"><a id="l00347" name="l00347"></a><span class="lineno">  347</span>            .release{audio_params-&gt;<a class="code hl_function" href="classshrapnel_1_1parameters_1_1AudioParametersBase.html#a64be66aabe04db4524a64df0ba03f7fd">get_raw_parameter</a>(<span class="stringliteral">&quot;noiseGateRelease&quot;</span>)},</div>
-<div class="line"><a id="l00348" name="l00348"></a><span class="lineno">  348</span>            .bypass{audio_params-&gt;<a class="code hl_function" href="classshrapnel_1_1parameters_1_1AudioParametersBase.html#a64be66aabe04db4524a64df0ba03f7fd">get_raw_parameter</a>(<span class="stringliteral">&quot;noiseGateBypass&quot;</span>)},</div>
-<div class="line"><a id="l00349" name="l00349"></a><span class="lineno">  349</span>        },</div>
-<div class="line"><a id="l00350" name="l00350"></a><span class="lineno">  350</span>        .chorus{</div>
-<div class="line"><a id="l00351" name="l00351"></a><span class="lineno">  351</span>            .rate{audio_params-&gt;<a class="code hl_function" href="classshrapnel_1_1parameters_1_1AudioParametersBase.html#a64be66aabe04db4524a64df0ba03f7fd">get_raw_parameter</a>(<span class="stringliteral">&quot;chorusRate&quot;</span>)},</div>
-<div class="line"><a id="l00352" name="l00352"></a><span class="lineno">  352</span>            .depth{audio_params-&gt;<a class="code hl_function" href="classshrapnel_1_1parameters_1_1AudioParametersBase.html#a64be66aabe04db4524a64df0ba03f7fd">get_raw_parameter</a>(<span class="stringliteral">&quot;chorusDepth&quot;</span>)},</div>
-<div class="line"><a id="l00353" name="l00353"></a><span class="lineno">  353</span>            .mix{audio_params-&gt;<a class="code hl_function" href="classshrapnel_1_1parameters_1_1AudioParametersBase.html#a64be66aabe04db4524a64df0ba03f7fd">get_raw_parameter</a>(<span class="stringliteral">&quot;chorusMix&quot;</span>)},</div>
-<div class="line"><a id="l00354" name="l00354"></a><span class="lineno">  354</span>            .bypass{audio_params-&gt;<a class="code hl_function" href="classshrapnel_1_1parameters_1_1AudioParametersBase.html#a64be66aabe04db4524a64df0ba03f7fd">get_raw_parameter</a>(<span class="stringliteral">&quot;chorusBypass&quot;</span>)},</div>
-<div class="line"><a id="l00355" name="l00355"></a><span class="lineno">  355</span>        },</div>
-<div class="line"><a id="l00356" name="l00356"></a><span class="lineno">  356</span>        .wah{</div>
-<div class="line"><a id="l00357" name="l00357"></a><span class="lineno">  357</span>            .position{audio_params-&gt;<a class="code hl_function" href="classshrapnel_1_1parameters_1_1AudioParametersBase.html#a64be66aabe04db4524a64df0ba03f7fd">get_raw_parameter</a>(<span class="stringliteral">&quot;wahPosition&quot;</span>)},</div>
-<div class="line"><a id="l00358" name="l00358"></a><span class="lineno">  358</span>            .vocal{audio_params-&gt;<a class="code hl_function" href="classshrapnel_1_1parameters_1_1AudioParametersBase.html#a64be66aabe04db4524a64df0ba03f7fd">get_raw_parameter</a>(<span class="stringliteral">&quot;wahVocal&quot;</span>)},</div>
-<div class="line"><a id="l00359" name="l00359"></a><span class="lineno">  359</span>            .bypass{audio_params-&gt;<a class="code hl_function" href="classshrapnel_1_1parameters_1_1AudioParametersBase.html#a64be66aabe04db4524a64df0ba03f7fd">get_raw_parameter</a>(<span class="stringliteral">&quot;wahBypass&quot;</span>)},</div>
-<div class="line"><a id="l00360" name="l00360"></a><span class="lineno">  360</span>        },</div>
-<div class="line"><a id="l00361" name="l00361"></a><span class="lineno">  361</span>    };</div>
-<div class="line"><a id="l00362" name="l00362"></a><span class="lineno">  362</span>}</div>
-<div class="line"><a id="l00363" name="l00363"></a><span class="lineno">  363</span>} <span class="comment">// namespace</span></div>
-<div class="line"><a id="l00364" name="l00364"></a><span class="lineno">  364</span> </div>
-<div class="line"><a id="l00365" name="l00365"></a><span class="lineno">  365</span>} <span class="comment">// namespace shrapnel</span></div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>} <span class="comment">// namespace</span></div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span> </div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno"><a class="line" href="namespaceshrapnel_1_1audio.html#a5e4994d9de1b430ad5473efe241521aa">   66</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="namespaceshrapnel_1_1audio.html#a5e4994d9de1b430ad5473efe241521aa">log_i2s_event</a>(<span class="keyword">const</span> i2s_event_t &amp;e)</div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>{</div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>    <span class="keywordflow">switch</span>(e.type)</div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>    {</div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>    <span class="keywordflow">case</span> I2S_EVENT_DMA_ERROR:</div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>        ESP_LOGE(TAG, <span class="stringliteral">&quot;Something went wrong with DMA&quot;</span>);</div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>        <span class="keywordflow">break</span>;</div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>    <span class="keywordflow">case</span> I2S_EVENT_TX_DONE:</div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>    <span class="keywordflow">case</span> I2S_EVENT_RX_DONE:</div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>        <span class="comment">//do nothing</span></div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>        <span class="keywordflow">break</span>;</div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>    <span class="keywordflow">case</span> I2S_EVENT_TX_Q_OVF:</div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>        ESP_LOGE(TAG, <span class="stringliteral">&quot;TX queue overflowed&quot;</span>);</div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>        <span class="keywordflow">break</span>;</div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>    <span class="keywordflow">case</span> I2S_EVENT_RX_Q_OVF:</div>
+<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>        ESP_LOGE(TAG, <span class="stringliteral">&quot;RX queue overflowed&quot;</span>);</div>
+<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>        <span class="keywordflow">break</span>;</div>
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>    <span class="keywordflow">default</span>:</div>
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>        ESP_LOGE(TAG, <span class="stringliteral">&quot;Unhandled type: %d&quot;</span>, e.type);</div>
+<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>        <span class="keywordflow">break</span>;</div>
+<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>    }</div>
+<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>}</div>
+<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span> </div>
+<div class="line"><a id="l00089" name="l00089"></a><span class="lineno"><a class="line" href="namespaceshrapnel_1_1audio.html#af73614d414adf5014704433913ee11db">   89</a></span><span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code hl_function" href="namespaceshrapnel_1_1audio.html#af73614d414adf5014704433913ee11db">i2s_processing_task</a>(<span class="keywordtype">void</span> *param)</div>
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>{</div>
+<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>    (void)param;</div>
+<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>    <span class="keyword">auto</span> audio_param =</div>
+<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>        <span class="keyword">reinterpret_cast&lt;</span><a class="code hl_class" href="classshrapnel_1_1parameters_1_1AudioParametersBase.html">shrapnel::parameters::AudioParametersBase</a> *<span class="keyword">&gt;</span>(param);</div>
+<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>    <span class="keywordtype">size_t</span> tx_rx_size;</div>
+<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span> </div>
+<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>    i2s_config_t i2s_config = {</div>
+<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>        .mode = <span class="keyword">static_cast&lt;</span>i2s_mode_t<span class="keyword">&gt;</span>(I2S_MODE_MASTER | I2S_MODE_TX |</div>
+<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>                                        I2S_MODE_RX),</div>
+<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>        .<a class="code hl_variable" href="esp32_2profiling_8c.html#a63433fe701b4e06f2cfdd50509e660db">sample_rate</a> = SAMPLE_RATE,</div>
+<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>        .bits_per_sample = I2S_BITS_PER_SAMPLE_24BIT,</div>
+<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>        .channel_format = I2S_CHANNEL_FMT_RIGHT_LEFT,</div>
+<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>        .communication_format = I2S_COMM_FORMAT_STAND_I2S,</div>
+<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>        .intr_alloc_flags = ESP_INTR_FLAG_LEVEL1,</div>
+<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>        .dma_buf_count = DMA_BUF_COUNT,</div>
+<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>        .dma_buf_len = DMA_BUF_SIZE,</div>
+<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>        .use_apll = <span class="keyword">true</span>,</div>
+<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>        .tx_desc_auto_clear =</div>
+<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>            <span class="keyword">true</span>,        <span class="comment">//this will clear the tx buffer when we overrun</span></div>
+<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>        .fixed_mclk = 0, <span class="comment">// Use mclk_multiple</span></div>
+<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>        .mclk_multiple = I2S_MCLK_MULTIPLE_384,</div>
+<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>        .bits_per_chan = I2S_BITS_PER_CHAN_DEFAULT,</div>
+<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>    };</div>
+<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span> </div>
+<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>    i2s_pin_config_t pin_config = {.mck_io_num = I2S_MCK_IO,</div>
+<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>                                   .bck_io_num = I2S_BCK_IO,</div>
+<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>                                   .ws_io_num = I2S_WS_IO,</div>
+<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>                                   .data_out_num = I2S_DO_IO,</div>
+<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>                                   .data_in_num = I2S_DI_IO};</div>
+<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span> </div>
+<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>    esp_err_t err = i2s_driver_install(<span class="keyword">static_cast&lt;</span>i2s_port_t<span class="keyword">&gt;</span>(I2S_NUM),</div>
+<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>                                       &amp;i2s_config,</div>
+<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>                                       I2S_QUEUE_SIZE,</div>
+<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>                                       &amp;<a class="code hl_variable" href="namespaceshrapnel_1_1audio.html#ab7793cdc1c2c73fcdcba8fea2f35c9c8">i2s_queue</a>);</div>
+<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>    <span class="keywordflow">if</span>(err != ESP_OK)</div>
+<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>    {</div>
+<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span>        ESP_LOGE(</div>
+<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span>            TAG, <span class="stringliteral">&quot;i2s_driver_install failed %d, %s&quot;</span>, err, esp_err_to_name(err));</div>
+<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span>        <span class="keywordflow">return</span>;</div>
+<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>    }</div>
+<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span>    ESP_LOGD(TAG, <span class="stringliteral">&quot;queue address: %p&quot;</span>, (<span class="keywordtype">void</span> *)<a class="code hl_variable" href="namespaceshrapnel_1_1audio.html#ab7793cdc1c2c73fcdcba8fea2f35c9c8">i2s_queue</a>);</div>
+<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span> </div>
+<div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span>    err = i2s_set_pin(<span class="keyword">static_cast&lt;</span>i2s_port_t<span class="keyword">&gt;</span>(I2S_NUM), &amp;pin_config);</div>
+<div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span>    <span class="keywordflow">if</span>(err != ESP_OK)</div>
+<div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span>    {</div>
+<div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span>        ESP_LOGE(TAG, <span class="stringliteral">&quot;i2s_set_pin failed %d, %s&quot;</span>, err, esp_err_to_name(err));</div>
+<div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span>        <span class="keywordflow">return</span>;</div>
+<div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span>    }</div>
+<div class="line"><a id="l00138" name="l00138"></a><span class="lineno">  138</span> </div>
+<div class="line"><a id="l00139" name="l00139"></a><span class="lineno">  139</span>    <span class="keyword">auto</span> processor_parameters = parameter_init(audio_param);</div>
+<div class="line"><a id="l00140" name="l00140"></a><span class="lineno">  140</span>    <span class="keyword">auto</span> processor = <a class="code hl_class" href="classshrapnel_1_1AudioProcessor.html">shrapnel::AudioProcessor</a>(processor_parameters);</div>
+<div class="line"><a id="l00141" name="l00141"></a><span class="lineno">  141</span>    processor.prepare(SAMPLE_RATE, DMA_BUF_SIZE);</div>
+<div class="line"><a id="l00142" name="l00142"></a><span class="lineno">  142</span> </div>
+<div class="line"><a id="l00143" name="l00143"></a><span class="lineno">  143</span>    <span class="comment">/* Get the DMA buffers into their initial states</span></div>
+<div class="line"><a id="l00144" name="l00144"></a><span class="lineno">  144</span><span class="comment">     *</span></div>
+<div class="line"><a id="l00145" name="l00145"></a><span class="lineno">  145</span><span class="comment">     * The RX buffers should be all empty, and the TX buffers should all be</span></div>
+<div class="line"><a id="l00146" name="l00146"></a><span class="lineno">  146</span><span class="comment">     * full.</span></div>
+<div class="line"><a id="l00147" name="l00147"></a><span class="lineno">  147</span><span class="comment">     */</span></div>
+<div class="line"><a id="l00148" name="l00148"></a><span class="lineno">  148</span>    err = i2s_stop(<span class="keyword">static_cast&lt;</span>i2s_port_t<span class="keyword">&gt;</span>(I2S_NUM));</div>
+<div class="line"><a id="l00149" name="l00149"></a><span class="lineno">  149</span>    <span class="keywordflow">if</span>(err != ESP_OK)</div>
+<div class="line"><a id="l00150" name="l00150"></a><span class="lineno">  150</span>    {</div>
+<div class="line"><a id="l00151" name="l00151"></a><span class="lineno">  151</span>        ESP_LOGE(TAG, <span class="stringliteral">&quot;i2s_stop failed %d, %s&quot;</span>, err, esp_err_to_name(err));</div>
+<div class="line"><a id="l00152" name="l00152"></a><span class="lineno">  152</span>        <span class="keywordflow">return</span>;</div>
+<div class="line"><a id="l00153" name="l00153"></a><span class="lineno">  153</span>    }</div>
+<div class="line"><a id="l00154" name="l00154"></a><span class="lineno">  154</span> </div>
+<div class="line"><a id="l00155" name="l00155"></a><span class="lineno">  155</span>    <span class="keywordtype">size_t</span> read_count;</div>
+<div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span>    <span class="keywordflow">do</span></div>
+<div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span>    {</div>
+<div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span>        err = i2s_read(<span class="keyword">static_cast&lt;</span>i2s_port_t<span class="keyword">&gt;</span>(I2S_NUM),</div>
+<div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span>                       rx_buf,</div>
+<div class="line"><a id="l00160" name="l00160"></a><span class="lineno">  160</span>                       DMA_BUF_SIZE,</div>
+<div class="line"><a id="l00161" name="l00161"></a><span class="lineno">  161</span>                       &amp;read_count,</div>
+<div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span>                       100);</div>
+<div class="line"><a id="l00163" name="l00163"></a><span class="lineno">  163</span>        <span class="keywordflow">if</span>(err != ESP_OK)</div>
+<div class="line"><a id="l00164" name="l00164"></a><span class="lineno">  164</span>        {</div>
+<div class="line"><a id="l00165" name="l00165"></a><span class="lineno">  165</span>            ESP_LOGE(TAG, <span class="stringliteral">&quot;i2s_read failed %d, %s&quot;</span>, err, esp_err_to_name(err));</div>
+<div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span>            <span class="keywordflow">return</span>;</div>
+<div class="line"><a id="l00167" name="l00167"></a><span class="lineno">  167</span>        }</div>
+<div class="line"><a id="l00168" name="l00168"></a><span class="lineno">  168</span>        ESP_LOGI(TAG, <span class="stringliteral">&quot;discarded %zu samples from RX buffer&quot;</span>, read_count);</div>
+<div class="line"><a id="l00169" name="l00169"></a><span class="lineno">  169</span>    } <span class="keywordflow">while</span>(read_count != 0);</div>
+<div class="line"><a id="l00170" name="l00170"></a><span class="lineno">  170</span> </div>
+<div class="line"><a id="l00171" name="l00171"></a><span class="lineno">  171</span>    err = i2s_zero_dma_buffer(<span class="keyword">static_cast&lt;</span>i2s_port_t<span class="keyword">&gt;</span>(I2S_NUM));</div>
+<div class="line"><a id="l00172" name="l00172"></a><span class="lineno">  172</span>    <span class="keywordflow">if</span>(err != ESP_OK)</div>
+<div class="line"><a id="l00173" name="l00173"></a><span class="lineno">  173</span>    {</div>
+<div class="line"><a id="l00174" name="l00174"></a><span class="lineno">  174</span>        ESP_LOGE(TAG,</div>
+<div class="line"><a id="l00175" name="l00175"></a><span class="lineno">  175</span>                 <span class="stringliteral">&quot;i2s_zero_dma_buffer failed %d, %s&quot;</span>,</div>
+<div class="line"><a id="l00176" name="l00176"></a><span class="lineno">  176</span>                 err,</div>
+<div class="line"><a id="l00177" name="l00177"></a><span class="lineno">  177</span>                 esp_err_to_name(err));</div>
+<div class="line"><a id="l00178" name="l00178"></a><span class="lineno">  178</span>        <span class="keywordflow">return</span>;</div>
+<div class="line"><a id="l00179" name="l00179"></a><span class="lineno">  179</span>    }</div>
+<div class="line"><a id="l00180" name="l00180"></a><span class="lineno">  180</span> </div>
+<div class="line"><a id="l00181" name="l00181"></a><span class="lineno">  181</span>    err = i2s_start(<span class="keyword">static_cast&lt;</span>i2s_port_t<span class="keyword">&gt;</span>(I2S_NUM));</div>
+<div class="line"><a id="l00182" name="l00182"></a><span class="lineno">  182</span>    <span class="keywordflow">if</span>(err != ESP_OK)</div>
+<div class="line"><a id="l00183" name="l00183"></a><span class="lineno">  183</span>    {</div>
+<div class="line"><a id="l00184" name="l00184"></a><span class="lineno">  184</span>        ESP_LOGE(TAG, <span class="stringliteral">&quot;i2s_start failed %d, %s&quot;</span>, err, esp_err_to_name(err));</div>
+<div class="line"><a id="l00185" name="l00185"></a><span class="lineno">  185</span>        <span class="keywordflow">return</span>;</div>
+<div class="line"><a id="l00186" name="l00186"></a><span class="lineno">  186</span>    }</div>
+<div class="line"><a id="l00187" name="l00187"></a><span class="lineno">  187</span> </div>
+<div class="line"><a id="l00188" name="l00188"></a><span class="lineno">  188</span>    <span class="keywordflow">while</span>(<span class="keyword">true</span>)</div>
+<div class="line"><a id="l00189" name="l00189"></a><span class="lineno">  189</span>    {</div>
+<div class="line"><a id="l00190" name="l00190"></a><span class="lineno">  190</span><span class="preprocessor">#if !defined(GENERATE_SINE_WAVE) &amp;&amp; !defined(GENERATE_RAMP)</span></div>
+<div class="line"><a id="l00191" name="l00191"></a><span class="lineno">  191</span>        i2s_read(<span class="keyword">static_cast&lt;</span>i2s_port_t<span class="keyword">&gt;</span>(I2S_NUM),</div>
+<div class="line"><a id="l00192" name="l00192"></a><span class="lineno">  192</span>                 rx_buf,</div>
+<div class="line"><a id="l00193" name="l00193"></a><span class="lineno">  193</span>                 <span class="keyword">sizeof</span>(rx_buf),</div>
+<div class="line"><a id="l00194" name="l00194"></a><span class="lineno">  194</span>                 &amp;tx_rx_size,</div>
+<div class="line"><a id="l00195" name="l00195"></a><span class="lineno">  195</span>                 100 / portTICK_PERIOD_MS);</div>
+<div class="line"><a id="l00196" name="l00196"></a><span class="lineno">  196</span>        <span class="keywordflow">if</span>(tx_rx_size != <span class="keyword">sizeof</span>(rx_buf))</div>
+<div class="line"><a id="l00197" name="l00197"></a><span class="lineno">  197</span>        {</div>
+<div class="line"><a id="l00198" name="l00198"></a><span class="lineno">  198</span>            ESP_LOGE(TAG,</div>
+<div class="line"><a id="l00199" name="l00199"></a><span class="lineno">  199</span>                     <span class="stringliteral">&quot;Got the wrong number of bytes %zu/%zu&quot;</span>,</div>
+<div class="line"><a id="l00200" name="l00200"></a><span class="lineno">  200</span>                     tx_rx_size,</div>
+<div class="line"><a id="l00201" name="l00201"></a><span class="lineno">  201</span>                     <span class="keyword">sizeof</span>(rx_buf));</div>
+<div class="line"><a id="l00202" name="l00202"></a><span class="lineno">  202</span>        }</div>
+<div class="line"><a id="l00203" name="l00203"></a><span class="lineno">  203</span><span class="preprocessor">#elif defined(GENERATE_SINE_WAVE)</span></div>
+<div class="line"><a id="l00204" name="l00204"></a><span class="lineno">  204</span>        <span class="keywordtype">int</span> len = <span class="keyword">sizeof</span>(rx_buf) / <span class="keyword">sizeof</span>(rx_buf[0]);</div>
+<div class="line"><a id="l00205" name="l00205"></a><span class="lineno">  205</span>        <span class="keywordflow">for</span>(<span class="keywordtype">int</span> i = 0; i &lt; len; i++)</div>
+<div class="line"><a id="l00206" name="l00206"></a><span class="lineno">  206</span>        {</div>
+<div class="line"><a id="l00207" name="l00207"></a><span class="lineno">  207</span>            rx_buf[i] =</div>
+<div class="line"><a id="l00208" name="l00208"></a><span class="lineno">  208</span>                <a class="code hl_function" href="float__convert_8h.html#ae9b18f6b920e3401ec41278b57e6817b">float_to_int32</a>(sinf(2 * ((<span class="keywordtype">float</span>)M_PI) * i / (<span class="keywordtype">float</span>)len));</div>
+<div class="line"><a id="l00209" name="l00209"></a><span class="lineno">  209</span>        }</div>
+<div class="line"><a id="l00210" name="l00210"></a><span class="lineno">  210</span><span class="preprocessor">#elif defined(GENERATE_RAMP)</span></div>
+<div class="line"><a id="l00211" name="l00211"></a><span class="lineno">  211</span>        <span class="keywordtype">int</span> len = <span class="keyword">sizeof</span>(rx_buf) / <span class="keyword">sizeof</span>(rx_buf[0]);</div>
+<div class="line"><a id="l00212" name="l00212"></a><span class="lineno">  212</span>        <span class="keywordflow">for</span>(<span class="keywordtype">int</span> i = 0; i &lt; len; i++)</div>
+<div class="line"><a id="l00213" name="l00213"></a><span class="lineno">  213</span>        {</div>
+<div class="line"><a id="l00214" name="l00214"></a><span class="lineno">  214</span>            rx_buf[i] = (i - len / 2) * (INT32_MAX / (len / 2));</div>
+<div class="line"><a id="l00215" name="l00215"></a><span class="lineno">  215</span>        }</div>
+<div class="line"><a id="l00216" name="l00216"></a><span class="lineno">  216</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00217" name="l00217"></a><span class="lineno">  217</span> </div>
+<div class="line"><a id="l00218" name="l00218"></a><span class="lineno">  218</span>        process_samples(rx_buf, processor);</div>
+<div class="line"><a id="l00219" name="l00219"></a><span class="lineno">  219</span> </div>
+<div class="line"><a id="l00220" name="l00220"></a><span class="lineno">  220</span>        i2s_write(<span class="keyword">static_cast&lt;</span>i2s_port_t<span class="keyword">&gt;</span>(I2S_NUM),</div>
+<div class="line"><a id="l00221" name="l00221"></a><span class="lineno">  221</span>                  rx_buf,</div>
+<div class="line"><a id="l00222" name="l00222"></a><span class="lineno">  222</span>                  <span class="keyword">sizeof</span>(rx_buf),</div>
+<div class="line"><a id="l00223" name="l00223"></a><span class="lineno">  223</span>                  &amp;tx_rx_size,</div>
+<div class="line"><a id="l00224" name="l00224"></a><span class="lineno">  224</span>                  100 / portTICK_PERIOD_MS);</div>
+<div class="line"><a id="l00225" name="l00225"></a><span class="lineno">  225</span>        <span class="keywordflow">if</span>(tx_rx_size != <span class="keyword">sizeof</span>(rx_buf))</div>
+<div class="line"><a id="l00226" name="l00226"></a><span class="lineno">  226</span>        {</div>
+<div class="line"><a id="l00227" name="l00227"></a><span class="lineno">  227</span>            ESP_LOGE(TAG,</div>
+<div class="line"><a id="l00228" name="l00228"></a><span class="lineno">  228</span>                     <span class="stringliteral">&quot;Sent the wrong number of bytes %zu/%zu&quot;</span>,</div>
+<div class="line"><a id="l00229" name="l00229"></a><span class="lineno">  229</span>                     tx_rx_size,</div>
+<div class="line"><a id="l00230" name="l00230"></a><span class="lineno">  230</span>                     <span class="keyword">sizeof</span>(rx_buf));</div>
+<div class="line"><a id="l00231" name="l00231"></a><span class="lineno">  231</span>        }</div>
+<div class="line"><a id="l00232" name="l00232"></a><span class="lineno">  232</span>    }</div>
+<div class="line"><a id="l00233" name="l00233"></a><span class="lineno">  233</span>}</div>
+<div class="line"><a id="l00234" name="l00234"></a><span class="lineno">  234</span> </div>
+<div class="line"><a id="l00235" name="l00235"></a><span class="lineno"><a class="line" href="namespaceshrapnel_1_1audio.html#a53d05b5ded7bb39aff7189392d0566c9">  235</a></span>esp_err_t <a class="code hl_function" href="namespaceshrapnel_1_1audio.html#a53d05b5ded7bb39aff7189392d0566c9">i2s_setup</a>(gpio_num_t profiling_gpio,</div>
+<div class="line"><a id="l00236" name="l00236"></a><span class="lineno">  236</span>                    <a class="code hl_class" href="classshrapnel_1_1parameters_1_1AudioParametersBase.html">shrapnel::parameters::AudioParametersBase</a> *audio_param)</div>
+<div class="line"><a id="l00237" name="l00237"></a><span class="lineno">  237</span>{</div>
+<div class="line"><a id="l00238" name="l00238"></a><span class="lineno">  238</span>    esp_err_t err;</div>
+<div class="line"><a id="l00239" name="l00239"></a><span class="lineno">  239</span> </div>
+<div class="line"><a id="l00240" name="l00240"></a><span class="lineno">  240</span>    <a class="code hl_variable" href="namespaceshrapnel_1_1audio.html#a82e419da4aa6e86ef0a168ea7fe0e797">g_profiling_gpio</a> = profiling_gpio;</div>
+<div class="line"><a id="l00241" name="l00241"></a><span class="lineno">  241</span>    gpio_config_t io_conf = {</div>
+<div class="line"><a id="l00242" name="l00242"></a><span class="lineno">  242</span>        .pin_bit_mask = 1ULL &lt;&lt; profiling_gpio,</div>
+<div class="line"><a id="l00243" name="l00243"></a><span class="lineno">  243</span>        .mode = GPIO_MODE_OUTPUT,</div>
+<div class="line"><a id="l00244" name="l00244"></a><span class="lineno">  244</span>        .pull_up_en = GPIO_PULLUP_DISABLE,</div>
+<div class="line"><a id="l00245" name="l00245"></a><span class="lineno">  245</span>        .pull_down_en = GPIO_PULLDOWN_DISABLE,</div>
+<div class="line"><a id="l00246" name="l00246"></a><span class="lineno">  246</span>        .intr_type = GPIO_INTR_DISABLE,</div>
+<div class="line"><a id="l00247" name="l00247"></a><span class="lineno">  247</span>    };</div>
+<div class="line"><a id="l00248" name="l00248"></a><span class="lineno">  248</span> </div>
+<div class="line"><a id="l00249" name="l00249"></a><span class="lineno">  249</span>    err = gpio_config(&amp;io_conf);</div>
+<div class="line"><a id="l00250" name="l00250"></a><span class="lineno">  250</span>    <span class="keywordflow">if</span>(err != ESP_OK)</div>
+<div class="line"><a id="l00251" name="l00251"></a><span class="lineno">  251</span>    {</div>
+<div class="line"><a id="l00252" name="l00252"></a><span class="lineno">  252</span>        ESP_LOGE(TAG, <span class="stringliteral">&quot;gpio_config failed %d, %s&quot;</span>, err, esp_err_to_name(err));</div>
+<div class="line"><a id="l00253" name="l00253"></a><span class="lineno">  253</span>        <span class="keywordflow">return</span> err;</div>
+<div class="line"><a id="l00254" name="l00254"></a><span class="lineno">  254</span>    }</div>
+<div class="line"><a id="l00255" name="l00255"></a><span class="lineno">  255</span>    err = gpio_set_level(profiling_gpio, 0);</div>
+<div class="line"><a id="l00256" name="l00256"></a><span class="lineno">  256</span>    <span class="keywordflow">if</span>(err != ESP_OK)</div>
+<div class="line"><a id="l00257" name="l00257"></a><span class="lineno">  257</span>    {</div>
+<div class="line"><a id="l00258" name="l00258"></a><span class="lineno">  258</span>        ESP_LOGE(</div>
+<div class="line"><a id="l00259" name="l00259"></a><span class="lineno">  259</span>            TAG, <span class="stringliteral">&quot;gpio_set_level failed %d, %s&quot;</span>, err, esp_err_to_name(err));</div>
+<div class="line"><a id="l00260" name="l00260"></a><span class="lineno">  260</span>        <span class="keywordflow">return</span> err;</div>
+<div class="line"><a id="l00261" name="l00261"></a><span class="lineno">  261</span>    }</div>
+<div class="line"><a id="l00262" name="l00262"></a><span class="lineno">  262</span> </div>
+<div class="line"><a id="l00263" name="l00263"></a><span class="lineno">  263</span>    <span class="comment">// This task must be pinned as CPU cycle count is used for profiling</span></div>
+<div class="line"><a id="l00264" name="l00264"></a><span class="lineno">  264</span>    <span class="keywordtype">int</span> ret = xTaskCreatePinnedToCore(<a class="code hl_function" href="namespaceshrapnel_1_1audio.html#af73614d414adf5014704433913ee11db">i2s_processing_task</a>,</div>
+<div class="line"><a id="l00265" name="l00265"></a><span class="lineno">  265</span>                                      <span class="stringliteral">&quot;i2s proc&quot;</span>,</div>
+<div class="line"><a id="l00266" name="l00266"></a><span class="lineno">  266</span>                                      TASK_STACK,</div>
+<div class="line"><a id="l00267" name="l00267"></a><span class="lineno">  267</span>                                      audio_param,</div>
+<div class="line"><a id="l00268" name="l00268"></a><span class="lineno">  268</span>                                      TASK_PRIO,</div>
+<div class="line"><a id="l00269" name="l00269"></a><span class="lineno">  269</span>                                      NULL,</div>
+<div class="line"><a id="l00270" name="l00270"></a><span class="lineno">  270</span>                                      1);</div>
+<div class="line"><a id="l00271" name="l00271"></a><span class="lineno">  271</span>    <span class="keywordflow">if</span>(ret != pdPASS)</div>
+<div class="line"><a id="l00272" name="l00272"></a><span class="lineno">  272</span>    {</div>
+<div class="line"><a id="l00273" name="l00273"></a><span class="lineno">  273</span>        ESP_LOGE(TAG, <span class="stringliteral">&quot;Processing task create failed %d&quot;</span>, ret);</div>
+<div class="line"><a id="l00274" name="l00274"></a><span class="lineno">  274</span>    }</div>
+<div class="line"><a id="l00275" name="l00275"></a><span class="lineno">  275</span> </div>
+<div class="line"><a id="l00276" name="l00276"></a><span class="lineno">  276</span>    <span class="keywordflow">return</span> ESP_OK;</div>
+<div class="line"><a id="l00277" name="l00277"></a><span class="lineno">  277</span>}</div>
+<div class="line"><a id="l00278" name="l00278"></a><span class="lineno">  278</span> </div>
+<div class="line"><a id="l00279" name="l00279"></a><span class="lineno">  279</span><span class="keyword">namespace </span>{</div>
+<div class="line"><a id="l00280" name="l00280"></a><span class="lineno">  280</span><span class="keywordtype">void</span> process_samples(std::span&lt;int32_t, 2 * DMA_BUF_SIZE&gt; buf,</div>
+<div class="line"><a id="l00281" name="l00281"></a><span class="lineno">  281</span>                     <a class="code hl_class" href="classshrapnel_1_1AudioProcessor.html">AudioProcessor</a> &amp;processor)</div>
+<div class="line"><a id="l00282" name="l00282"></a><span class="lineno">  282</span>{</div>
+<div class="line"><a id="l00283" name="l00283"></a><span class="lineno">  283</span>    assert(<a class="code hl_variable" href="namespaceshrapnel_1_1audio.html#a82e419da4aa6e86ef0a168ea7fe0e797">g_profiling_gpio</a> != -1 &amp;&amp; <span class="stringliteral">&quot;I2S task has not been initialised&quot;</span>);</div>
+<div class="line"><a id="l00284" name="l00284"></a><span class="lineno">  284</span>    <span class="keyword">static</span> <span class="keywordtype">float</span> fbuf[DMA_BUF_SIZE];</div>
+<div class="line"><a id="l00285" name="l00285"></a><span class="lineno">  285</span> </div>
+<div class="line"><a id="l00286" name="l00286"></a><span class="lineno">  286</span>    gpio_set_level(<a class="code hl_variable" href="namespaceshrapnel_1_1audio.html#a82e419da4aa6e86ef0a168ea7fe0e797">g_profiling_gpio</a>, 1);</div>
+<div class="line"><a id="l00287" name="l00287"></a><span class="lineno">  287</span>    <a class="code hl_function" href="desktop_2profiling_8c.html#ac05fdc10ded37340f2ab202bbc184d20">profiling_start</a>();</div>
+<div class="line"><a id="l00288" name="l00288"></a><span class="lineno">  288</span>    <span class="comment">/* Copy samples, skipping every second one. These correspond to the left</span></div>
+<div class="line"><a id="l00289" name="l00289"></a><span class="lineno">  289</span><span class="comment">     * channel of the ADC and DAC, which are not used here</span></div>
+<div class="line"><a id="l00290" name="l00290"></a><span class="lineno">  290</span><span class="comment">     * XXX not sure why the right channel is not at index 0 */</span></div>
+<div class="line"><a id="l00291" name="l00291"></a><span class="lineno">  291</span>    <span class="keywordflow">for</span>(<span class="keywordtype">size_t</span> i = 1; i &lt; buf.size(); i += 2)</div>
+<div class="line"><a id="l00292" name="l00292"></a><span class="lineno">  292</span>    {</div>
+<div class="line"><a id="l00293" name="l00293"></a><span class="lineno">  293</span>        <span class="keywordflow">if</span>(buf[i] == INT32_MIN || buf[i] == INT32_MAX)</div>
+<div class="line"><a id="l00294" name="l00294"></a><span class="lineno">  294</span>        {</div>
+<div class="line"><a id="l00295" name="l00295"></a><span class="lineno">  295</span>            <a class="code hl_variable" href="namespaceshrapnel_1_1events.html#a63fd47484f0f2560469429a7b28b7a0e">shrapnel::events::input_clipped</a>.clear();</div>
+<div class="line"><a id="l00296" name="l00296"></a><span class="lineno">  296</span>            <a class="code hl_variable" href="namespaceshrapnel_1_1events.html#a63fd47484f0f2560469429a7b28b7a0e">shrapnel::events::input_clipped</a>.notify_all();</div>
+<div class="line"><a id="l00297" name="l00297"></a><span class="lineno">  297</span>        }</div>
+<div class="line"><a id="l00298" name="l00298"></a><span class="lineno">  298</span>        fbuf[i / 2] = buf[i] / (float)INT32_MAX;</div>
+<div class="line"><a id="l00299" name="l00299"></a><span class="lineno">  299</span>    }</div>
+<div class="line"><a id="l00300" name="l00300"></a><span class="lineno">  300</span> </div>
+<div class="line"><a id="l00301" name="l00301"></a><span class="lineno">  301</span>    <span class="comment">// call process on processor</span></div>
+<div class="line"><a id="l00302" name="l00302"></a><span class="lineno">  302</span>    processor.<a class="code hl_function" href="classshrapnel_1_1AudioProcessor.html#a58ee6267bed11fd14aaf9a44627554e7">process</a>(fbuf);</div>
+<div class="line"><a id="l00303" name="l00303"></a><span class="lineno">  303</span> </div>
+<div class="line"><a id="l00304" name="l00304"></a><span class="lineno">  304</span>    <span class="keywordflow">for</span>(<span class="keywordtype">size_t</span> i = 1; i &lt; buf.size(); i += 2)</div>
+<div class="line"><a id="l00305" name="l00305"></a><span class="lineno">  305</span>    {</div>
+<div class="line"><a id="l00306" name="l00306"></a><span class="lineno">  306</span>        <span class="keywordflow">if</span>(fbuf[i / 2] &gt; 1.f || fbuf[i / 2] &lt; -1.f)</div>
+<div class="line"><a id="l00307" name="l00307"></a><span class="lineno">  307</span>        {</div>
+<div class="line"><a id="l00308" name="l00308"></a><span class="lineno">  308</span>            <a class="code hl_variable" href="namespaceshrapnel_1_1events.html#ad28eee14b7b281e8580c0ca9f14adda2">shrapnel::events::output_clipped</a>.clear();</div>
+<div class="line"><a id="l00309" name="l00309"></a><span class="lineno">  309</span>            <a class="code hl_variable" href="namespaceshrapnel_1_1events.html#ad28eee14b7b281e8580c0ca9f14adda2">shrapnel::events::output_clipped</a>.notify_all();</div>
+<div class="line"><a id="l00310" name="l00310"></a><span class="lineno">  310</span>        }</div>
+<div class="line"><a id="l00311" name="l00311"></a><span class="lineno">  311</span> </div>
+<div class="line"><a id="l00312" name="l00312"></a><span class="lineno">  312</span>        <span class="keywordflow">if</span>(fbuf[i / 2] != fbuf[i / 2])</div>
+<div class="line"><a id="l00313" name="l00313"></a><span class="lineno">  313</span>        {</div>
+<div class="line"><a id="l00314" name="l00314"></a><span class="lineno">  314</span>            ESP_LOGE(TAG, <span class="stringliteral">&quot;Not a number at index %d&quot;</span>, i);</div>
+<div class="line"><a id="l00315" name="l00315"></a><span class="lineno">  315</span>            assert(0);</div>
+<div class="line"><a id="l00316" name="l00316"></a><span class="lineno">  316</span>        }</div>
+<div class="line"><a id="l00317" name="l00317"></a><span class="lineno">  317</span> </div>
+<div class="line"><a id="l00318" name="l00318"></a><span class="lineno">  318</span>        buf[i] = <a class="code hl_function" href="float__convert_8h.html#ae9b18f6b920e3401ec41278b57e6817b">float_to_int32</a>(fbuf[i / 2]);</div>
+<div class="line"><a id="l00319" name="l00319"></a><span class="lineno">  319</span>    }</div>
+<div class="line"><a id="l00320" name="l00320"></a><span class="lineno">  320</span>    <a class="code hl_function" href="desktop_2profiling_8c.html#a3171d2be3fbf00e49982243e9869735a">profiling_mark_stage</a>(20);</div>
+<div class="line"><a id="l00321" name="l00321"></a><span class="lineno">  321</span> </div>
+<div class="line"><a id="l00322" name="l00322"></a><span class="lineno">  322</span>    <a class="code hl_function" href="desktop_2profiling_8c.html#a9f4516d77db32a65ee99933c6c9d3802">profiling_stop</a>();</div>
+<div class="line"><a id="l00323" name="l00323"></a><span class="lineno">  323</span>    gpio_set_level(<a class="code hl_variable" href="namespaceshrapnel_1_1audio.html#a82e419da4aa6e86ef0a168ea7fe0e797">g_profiling_gpio</a>, 0);</div>
+<div class="line"><a id="l00324" name="l00324"></a><span class="lineno">  324</span> </div>
+<div class="line"><a id="l00325" name="l00325"></a><span class="lineno">  325</span>    ESP_LOGD(TAG, <span class="stringliteral">&quot;stack: %d&quot;</span>, uxTaskGetStackHighWaterMark(<span class="keyword">nullptr</span>));</div>
+<div class="line"><a id="l00326" name="l00326"></a><span class="lineno">  326</span>}</div>
+<div class="line"><a id="l00327" name="l00327"></a><span class="lineno">  327</span> </div>
+<div class="line"><a id="l00328" name="l00328"></a><span class="lineno">  328</span>AudioProcessorParameters</div>
+<div class="line"><a id="l00329" name="l00329"></a><span class="lineno">  329</span>parameter_init(<a class="code hl_class" href="classshrapnel_1_1parameters_1_1AudioParametersBase.html">shrapnel::parameters::AudioParametersBase</a> *audio_params)</div>
+<div class="line"><a id="l00330" name="l00330"></a><span class="lineno">  330</span>{</div>
+<div class="line"><a id="l00331" name="l00331"></a><span class="lineno">  331</span>    <span class="keywordflow">return</span> {</div>
+<div class="line"><a id="l00332" name="l00332"></a><span class="lineno">  332</span>        .amplifier{</div>
+<div class="line"><a id="l00333" name="l00333"></a><span class="lineno">  333</span>            .gain{audio_params-&gt;<a class="code hl_function" href="classshrapnel_1_1parameters_1_1AudioParametersBase.html#a64be66aabe04db4524a64df0ba03f7fd">get_raw_parameter</a>(<span class="stringliteral">&quot;ampGain&quot;</span>)},</div>
+<div class="line"><a id="l00334" name="l00334"></a><span class="lineno">  334</span>            .channel{audio_params-&gt;<a class="code hl_function" href="classshrapnel_1_1parameters_1_1AudioParametersBase.html#a64be66aabe04db4524a64df0ba03f7fd">get_raw_parameter</a>(<span class="stringliteral">&quot;ampChannel&quot;</span>)},</div>
+<div class="line"><a id="l00335" name="l00335"></a><span class="lineno">  335</span>            .bass{audio_params-&gt;<a class="code hl_function" href="classshrapnel_1_1parameters_1_1AudioParametersBase.html#a64be66aabe04db4524a64df0ba03f7fd">get_raw_parameter</a>(<span class="stringliteral">&quot;bass&quot;</span>)},</div>
+<div class="line"><a id="l00336" name="l00336"></a><span class="lineno">  336</span>            .middle{audio_params-&gt;<a class="code hl_function" href="classshrapnel_1_1parameters_1_1AudioParametersBase.html#a64be66aabe04db4524a64df0ba03f7fd">get_raw_parameter</a>(<span class="stringliteral">&quot;middle&quot;</span>)},</div>
+<div class="line"><a id="l00337" name="l00337"></a><span class="lineno">  337</span>            .treble{audio_params-&gt;<a class="code hl_function" href="classshrapnel_1_1parameters_1_1AudioParametersBase.html#a64be66aabe04db4524a64df0ba03f7fd">get_raw_parameter</a>(<span class="stringliteral">&quot;treble&quot;</span>)},</div>
+<div class="line"><a id="l00338" name="l00338"></a><span class="lineno">  338</span>            .contour{audio_params-&gt;<a class="code hl_function" href="classshrapnel_1_1parameters_1_1AudioParametersBase.html#a64be66aabe04db4524a64df0ba03f7fd">get_raw_parameter</a>(<span class="stringliteral">&quot;contour&quot;</span>)},</div>
+<div class="line"><a id="l00339" name="l00339"></a><span class="lineno">  339</span>            .volume{audio_params-&gt;<a class="code hl_function" href="classshrapnel_1_1parameters_1_1AudioParametersBase.html#a64be66aabe04db4524a64df0ba03f7fd">get_raw_parameter</a>(<span class="stringliteral">&quot;volume&quot;</span>)},</div>
+<div class="line"><a id="l00340" name="l00340"></a><span class="lineno">  340</span>        },</div>
+<div class="line"><a id="l00341" name="l00341"></a><span class="lineno">  341</span>        .gate{</div>
+<div class="line"><a id="l00342" name="l00342"></a><span class="lineno">  342</span>            .threshold{audio_params-&gt;<a class="code hl_function" href="classshrapnel_1_1parameters_1_1AudioParametersBase.html#a64be66aabe04db4524a64df0ba03f7fd">get_raw_parameter</a>(<span class="stringliteral">&quot;noiseGateThreshold&quot;</span>)},</div>
+<div class="line"><a id="l00343" name="l00343"></a><span class="lineno">  343</span>            .hysteresis{audio_params-&gt;<a class="code hl_function" href="classshrapnel_1_1parameters_1_1AudioParametersBase.html#a64be66aabe04db4524a64df0ba03f7fd">get_raw_parameter</a>(<span class="stringliteral">&quot;noiseGateHysteresis&quot;</span>)},</div>
+<div class="line"><a id="l00344" name="l00344"></a><span class="lineno">  344</span>            .attack{audio_params-&gt;<a class="code hl_function" href="classshrapnel_1_1parameters_1_1AudioParametersBase.html#a64be66aabe04db4524a64df0ba03f7fd">get_raw_parameter</a>(<span class="stringliteral">&quot;noiseGateAttack&quot;</span>)},</div>
+<div class="line"><a id="l00345" name="l00345"></a><span class="lineno">  345</span>            .hold{audio_params-&gt;<a class="code hl_function" href="classshrapnel_1_1parameters_1_1AudioParametersBase.html#a64be66aabe04db4524a64df0ba03f7fd">get_raw_parameter</a>(<span class="stringliteral">&quot;noiseGateHold&quot;</span>)},</div>
+<div class="line"><a id="l00346" name="l00346"></a><span class="lineno">  346</span>            .release{audio_params-&gt;<a class="code hl_function" href="classshrapnel_1_1parameters_1_1AudioParametersBase.html#a64be66aabe04db4524a64df0ba03f7fd">get_raw_parameter</a>(<span class="stringliteral">&quot;noiseGateRelease&quot;</span>)},</div>
+<div class="line"><a id="l00347" name="l00347"></a><span class="lineno">  347</span>            .bypass{audio_params-&gt;<a class="code hl_function" href="classshrapnel_1_1parameters_1_1AudioParametersBase.html#a64be66aabe04db4524a64df0ba03f7fd">get_raw_parameter</a>(<span class="stringliteral">&quot;noiseGateBypass&quot;</span>)},</div>
+<div class="line"><a id="l00348" name="l00348"></a><span class="lineno">  348</span>        },</div>
+<div class="line"><a id="l00349" name="l00349"></a><span class="lineno">  349</span>        .chorus{</div>
+<div class="line"><a id="l00350" name="l00350"></a><span class="lineno">  350</span>            .rate{audio_params-&gt;<a class="code hl_function" href="classshrapnel_1_1parameters_1_1AudioParametersBase.html#a64be66aabe04db4524a64df0ba03f7fd">get_raw_parameter</a>(<span class="stringliteral">&quot;chorusRate&quot;</span>)},</div>
+<div class="line"><a id="l00351" name="l00351"></a><span class="lineno">  351</span>            .depth{audio_params-&gt;<a class="code hl_function" href="classshrapnel_1_1parameters_1_1AudioParametersBase.html#a64be66aabe04db4524a64df0ba03f7fd">get_raw_parameter</a>(<span class="stringliteral">&quot;chorusDepth&quot;</span>)},</div>
+<div class="line"><a id="l00352" name="l00352"></a><span class="lineno">  352</span>            .mix{audio_params-&gt;<a class="code hl_function" href="classshrapnel_1_1parameters_1_1AudioParametersBase.html#a64be66aabe04db4524a64df0ba03f7fd">get_raw_parameter</a>(<span class="stringliteral">&quot;chorusMix&quot;</span>)},</div>
+<div class="line"><a id="l00353" name="l00353"></a><span class="lineno">  353</span>            .bypass{audio_params-&gt;<a class="code hl_function" href="classshrapnel_1_1parameters_1_1AudioParametersBase.html#a64be66aabe04db4524a64df0ba03f7fd">get_raw_parameter</a>(<span class="stringliteral">&quot;chorusBypass&quot;</span>)},</div>
+<div class="line"><a id="l00354" name="l00354"></a><span class="lineno">  354</span>        },</div>
+<div class="line"><a id="l00355" name="l00355"></a><span class="lineno">  355</span>        .wah{</div>
+<div class="line"><a id="l00356" name="l00356"></a><span class="lineno">  356</span>            .position{audio_params-&gt;<a class="code hl_function" href="classshrapnel_1_1parameters_1_1AudioParametersBase.html#a64be66aabe04db4524a64df0ba03f7fd">get_raw_parameter</a>(<span class="stringliteral">&quot;wahPosition&quot;</span>)},</div>
+<div class="line"><a id="l00357" name="l00357"></a><span class="lineno">  357</span>            .vocal{audio_params-&gt;<a class="code hl_function" href="classshrapnel_1_1parameters_1_1AudioParametersBase.html#a64be66aabe04db4524a64df0ba03f7fd">get_raw_parameter</a>(<span class="stringliteral">&quot;wahVocal&quot;</span>)},</div>
+<div class="line"><a id="l00358" name="l00358"></a><span class="lineno">  358</span>            .bypass{audio_params-&gt;<a class="code hl_function" href="classshrapnel_1_1parameters_1_1AudioParametersBase.html#a64be66aabe04db4524a64df0ba03f7fd">get_raw_parameter</a>(<span class="stringliteral">&quot;wahBypass&quot;</span>)},</div>
+<div class="line"><a id="l00359" name="l00359"></a><span class="lineno">  359</span>        },</div>
+<div class="line"><a id="l00360" name="l00360"></a><span class="lineno">  360</span>    };</div>
+<div class="line"><a id="l00361" name="l00361"></a><span class="lineno">  361</span>}</div>
+<div class="line"><a id="l00362" name="l00362"></a><span class="lineno">  362</span>} <span class="comment">// namespace</span></div>
+<div class="line"><a id="l00363" name="l00363"></a><span class="lineno">  363</span> </div>
+<div class="line"><a id="l00364" name="l00364"></a><span class="lineno">  364</span>} <span class="comment">// namespace shrapnel::audio</span></div>
 <div class="ttc" id="aaudio__events_8h_html"><div class="ttname"><a href="audio__events_8h.html">audio_events.h</a></div></div>
 <div class="ttc" id="aaudio__processor_8h_html"><div class="ttname"><a href="audio__processor_8h.html">audio_processor.h</a></div></div>
 <div class="ttc" id="aclassshrapnel_1_1AudioProcessor_html"><div class="ttname"><a href="classshrapnel_1_1AudioProcessor.html">shrapnel::AudioProcessor</a></div><div class="ttdef"><b>Definition:</b> <a href="audio__processor_8h_source.html#l00073">audio_processor.h:74</a></div></div>
-<div class="ttc" id="aclassshrapnel_1_1AudioProcessor_html_a58ee6267bed11fd14aaf9a44627554e7"><div class="ttname"><a href="classshrapnel_1_1AudioProcessor.html#a58ee6267bed11fd14aaf9a44627554e7">shrapnel::AudioProcessor::process</a></div><div class="ttdeci">void process(std::span&lt; float, 512 &gt; samples)</div><div class="ttdef"><b>Definition:</b> <a href="audio__processor_8cpp_source.html#l00055">audio_processor.cpp:55</a></div></div>
-<div class="ttc" id="aclassshrapnel_1_1parameters_1_1AudioParametersBase_html"><div class="ttname"><a href="classshrapnel_1_1parameters_1_1AudioParametersBase.html">shrapnel::parameters::AudioParametersBase</a></div><div class="ttdef"><b>Definition:</b> <a href="audio__param_8h_source.html#l00063">audio_param.h:63</a></div></div>
+<div class="ttc" id="aclassshrapnel_1_1AudioProcessor_html_a58ee6267bed11fd14aaf9a44627554e7"><div class="ttname"><a href="classshrapnel_1_1AudioProcessor.html#a58ee6267bed11fd14aaf9a44627554e7">shrapnel::AudioProcessor::process</a></div><div class="ttdeci">void process(std::span&lt; float, 512 &gt; samples)</div><div class="ttdef"><b>Definition:</b> <a href="audio__processor_8cpp_source.html#l00056">audio_processor.cpp:56</a></div></div>
+<div class="ttc" id="aclassshrapnel_1_1parameters_1_1AudioParametersBase_html"><div class="ttname"><a href="classshrapnel_1_1parameters_1_1AudioParametersBase.html">shrapnel::parameters::AudioParametersBase</a></div><div class="ttdef"><b>Definition:</b> <a href="audio__param_8h_source.html#l00067">audio_param.h:68</a></div></div>
 <div class="ttc" id="aclassshrapnel_1_1parameters_1_1AudioParametersBase_html_a64be66aabe04db4524a64df0ba03f7fd"><div class="ttname"><a href="classshrapnel_1_1parameters_1_1AudioParametersBase.html#a64be66aabe04db4524a64df0ba03f7fd">shrapnel::parameters::AudioParametersBase::get_raw_parameter</a></div><div class="ttdeci">virtual std::atomic&lt; float &gt; * get_raw_parameter(const id_t &amp;param)=0</div></div>
-<div class="ttc" id="adesktop_2profiling_8c_html_a3171d2be3fbf00e49982243e9869735a"><div class="ttname"><a href="desktop_2profiling_8c.html#a3171d2be3fbf00e49982243e9869735a">profiling_mark_stage</a></div><div class="ttdeci">void profiling_mark_stage(unsigned int stage)</div><div class="ttdef"><b>Definition:</b> <a href="desktop_2profiling_8c_source.html#l00027">profiling.c:27</a></div></div>
-<div class="ttc" id="adesktop_2profiling_8c_html_a9f4516d77db32a65ee99933c6c9d3802"><div class="ttname"><a href="desktop_2profiling_8c.html#a9f4516d77db32a65ee99933c6c9d3802">profiling_stop</a></div><div class="ttdeci">void profiling_stop(void)</div><div class="ttdef"><b>Definition:</b> <a href="desktop_2profiling_8c_source.html#l00030">profiling.c:30</a></div></div>
-<div class="ttc" id="adesktop_2profiling_8c_html_ac05fdc10ded37340f2ab202bbc184d20"><div class="ttname"><a href="desktop_2profiling_8c.html#ac05fdc10ded37340f2ab202bbc184d20">profiling_start</a></div><div class="ttdeci">void profiling_start(void)</div><div class="ttdef"><b>Definition:</b> <a href="desktop_2profiling_8c_source.html#l00026">profiling.c:26</a></div></div>
+<div class="ttc" id="adesktop_2profiling_8c_html_a3171d2be3fbf00e49982243e9869735a"><div class="ttname"><a href="desktop_2profiling_8c.html#a3171d2be3fbf00e49982243e9869735a">profiling_mark_stage</a></div><div class="ttdeci">void profiling_mark_stage(unsigned int stage)</div><div class="ttdef"><b>Definition:</b> <a href="desktop_2profiling_8c_source.html#l00028">profiling.c:28</a></div></div>
+<div class="ttc" id="adesktop_2profiling_8c_html_a9f4516d77db32a65ee99933c6c9d3802"><div class="ttname"><a href="desktop_2profiling_8c.html#a9f4516d77db32a65ee99933c6c9d3802">profiling_stop</a></div><div class="ttdeci">void profiling_stop(void)</div><div class="ttdef"><b>Definition:</b> <a href="desktop_2profiling_8c_source.html#l00029">profiling.c:29</a></div></div>
+<div class="ttc" id="adesktop_2profiling_8c_html_ac05fdc10ded37340f2ab202bbc184d20"><div class="ttname"><a href="desktop_2profiling_8c.html#ac05fdc10ded37340f2ab202bbc184d20">profiling_start</a></div><div class="ttdeci">void profiling_start(void)</div><div class="ttdef"><b>Definition:</b> <a href="desktop_2profiling_8c_source.html#l00027">profiling.c:27</a></div></div>
 <div class="ttc" id="aesp32_2profiling_8c_html_a63433fe701b4e06f2cfdd50509e660db"><div class="ttname"><a href="esp32_2profiling_8c.html#a63433fe701b4e06f2cfdd50509e660db">sample_rate</a></div><div class="ttdeci">static float sample_rate</div><div class="ttdef"><b>Definition:</b> <a href="esp32_2profiling_8c_source.html#l00038">profiling.c:38</a></div></div>
 <div class="ttc" id="afloat__convert_8h_html"><div class="ttname"><a href="float__convert_8h.html">float_convert.h</a></div></div>
 <div class="ttc" id="afloat__convert_8h_html_ae9b18f6b920e3401ec41278b57e6817b"><div class="ttname"><a href="float__convert_8h.html#ae9b18f6b920e3401ec41278b57e6817b">float_to_int32</a></div><div class="ttdeci">static int32_t float_to_int32(float f)</div><div class="ttdef"><b>Definition:</b> <a href="float__convert_8h_source.html#l00031">float_convert.h:31</a></div></div>
 <div class="ttc" id="ahardware_8h_html"><div class="ttname"><a href="hardware_8h.html">hardware.h</a></div></div>
 <div class="ttc" id="ai2s_8h_html"><div class="ttname"><a href="i2s_8h.html">i2s.h</a></div></div>
 <div class="ttc" id="anamespaceshrapnel_1_1audio_html"><div class="ttname"><a href="namespaceshrapnel_1_1audio.html">shrapnel::audio</a></div><div class="ttdef"><b>Definition:</b> <a href="i2s_8h_source.html#l00033">i2s.h:33</a></div></div>
-<div class="ttc" id="anamespaceshrapnel_1_1audio_html_a53d05b5ded7bb39aff7189392d0566c9"><div class="ttname"><a href="namespaceshrapnel_1_1audio.html#a53d05b5ded7bb39aff7189392d0566c9">shrapnel::audio::i2s_setup</a></div><div class="ttdeci">esp_err_t i2s_setup(gpio_num_t profiling_gpio, shrapnel::parameters::AudioParametersBase *audio_params)</div><div class="ttdef"><b>Definition:</b> <a href="i2s_8cpp_source.html#l00236">i2s.cpp:236</a></div></div>
-<div class="ttc" id="anamespaceshrapnel_1_1audio_html_a5e4994d9de1b430ad5473efe241521aa"><div class="ttname"><a href="namespaceshrapnel_1_1audio.html#a5e4994d9de1b430ad5473efe241521aa">shrapnel::audio::log_i2s_event</a></div><div class="ttdeci">void log_i2s_event(const i2s_event_t &amp;event)</div><div class="ttdef"><b>Definition:</b> <a href="i2s_8cpp_source.html#l00067">i2s.cpp:67</a></div></div>
+<div class="ttc" id="anamespaceshrapnel_1_1audio_html_a53d05b5ded7bb39aff7189392d0566c9"><div class="ttname"><a href="namespaceshrapnel_1_1audio.html#a53d05b5ded7bb39aff7189392d0566c9">shrapnel::audio::i2s_setup</a></div><div class="ttdeci">esp_err_t i2s_setup(gpio_num_t profiling_gpio, shrapnel::parameters::AudioParametersBase *audio_params)</div><div class="ttdef"><b>Definition:</b> <a href="i2s_8cpp_source.html#l00235">i2s.cpp:235</a></div></div>
+<div class="ttc" id="anamespaceshrapnel_1_1audio_html_a5e4994d9de1b430ad5473efe241521aa"><div class="ttname"><a href="namespaceshrapnel_1_1audio.html#a5e4994d9de1b430ad5473efe241521aa">shrapnel::audio::log_i2s_event</a></div><div class="ttdeci">void log_i2s_event(const i2s_event_t &amp;event)</div><div class="ttdef"><b>Definition:</b> <a href="i2s_8cpp_source.html#l00066">i2s.cpp:66</a></div></div>
 <div class="ttc" id="anamespaceshrapnel_1_1audio_html_a82e419da4aa6e86ef0a168ea7fe0e797"><div class="ttname"><a href="namespaceshrapnel_1_1audio.html#a82e419da4aa6e86ef0a168ea7fe0e797">shrapnel::audio::g_profiling_gpio</a></div><div class="ttdeci">gpio_num_t g_profiling_gpio</div><div class="ttdef"><b>Definition:</b> <a href="i2s_8cpp_source.html#l00053">i2s.cpp:53</a></div></div>
 <div class="ttc" id="anamespaceshrapnel_1_1audio_html_ab7793cdc1c2c73fcdcba8fea2f35c9c8"><div class="ttname"><a href="namespaceshrapnel_1_1audio.html#ab7793cdc1c2c73fcdcba8fea2f35c9c8">shrapnel::audio::i2s_queue</a></div><div class="ttdeci">QueueHandle_t i2s_queue</div><div class="ttdef"><b>Definition:</b> <a href="i2s_8cpp_source.html#l00052">i2s.cpp:52</a></div></div>
-<div class="ttc" id="anamespaceshrapnel_1_1audio_html_af73614d414adf5014704433913ee11db"><div class="ttname"><a href="namespaceshrapnel_1_1audio.html#af73614d414adf5014704433913ee11db">shrapnel::audio::i2s_processing_task</a></div><div class="ttdeci">static void i2s_processing_task(void *param)</div><div class="ttdef"><b>Definition:</b> <a href="i2s_8cpp_source.html#l00090">i2s.cpp:90</a></div></div>
+<div class="ttc" id="anamespaceshrapnel_1_1audio_html_af73614d414adf5014704433913ee11db"><div class="ttname"><a href="namespaceshrapnel_1_1audio.html#af73614d414adf5014704433913ee11db">shrapnel::audio::i2s_processing_task</a></div><div class="ttdeci">static void i2s_processing_task(void *param)</div><div class="ttdef"><b>Definition:</b> <a href="i2s_8cpp_source.html#l00089">i2s.cpp:89</a></div></div>
 <div class="ttc" id="anamespaceshrapnel_1_1events_html_a63fd47484f0f2560469429a7b28b7a0e"><div class="ttname"><a href="namespaceshrapnel_1_1events.html#a63fd47484f0f2560469429a7b28b7a0e">shrapnel::events::input_clipped</a></div><div class="ttdeci">std::atomic_flag input_clipped</div><div class="ttdef"><b>Definition:</b> <a href="audio__events_8cpp_source.html#l00028">audio_events.cpp:28</a></div></div>
 <div class="ttc" id="anamespaceshrapnel_1_1events_html_ad28eee14b7b281e8580c0ca9f14adda2"><div class="ttname"><a href="namespaceshrapnel_1_1events.html#ad28eee14b7b281e8580c0ca9f14adda2">shrapnel::events::output_clipped</a></div><div class="ttdeci">std::atomic_flag output_clipped</div><div class="ttdef"><b>Definition:</b> <a href="audio__events_8cpp_source.html#l00029">audio_events.cpp:29</a></div></div>
 <div class="ttc" id="aprofiling_8h_html"><div class="ttname"><a href="profiling_8h.html">profiling.h</a></div></div>

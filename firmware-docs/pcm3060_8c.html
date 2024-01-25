@@ -150,24 +150,24 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="pcm3060_8c_source.html#l00037">37</a> of file <a class="el" href="pcm3060_8c_source.html">pcm3060.c</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   38</span>{</div>
-<div class="line"><span class="lineno">   39</span>    esp_err_t err = <a class="code hl_function" href="i2c_8c.html#a45e8e37789f0b27a7fe24b58795787f7">i2c_write_byte</a>(<a class="code hl_variable" href="pcm3060_8c.html#a71b6997ffef11829ebada7d54261e2f3">_port</a>, <a class="code hl_variable" href="pcm3060_8c.html#a759ea42c79be4c238e3106ea4b53c27a">_address</a>, reg_adr, data);</div>
-<div class="line"><span class="lineno">   40</span> </div>
-<div class="line"><span class="lineno">   41</span>    <span class="keywordflow">if</span>(err != ESP_OK)</div>
-<div class="line"><span class="lineno">   42</span>    {</div>
-<div class="line"><span class="lineno">   43</span>        ESP_LOGE(TAG, <span class="stringliteral">&quot;Write to reg 0x%02x failed&quot;</span>, reg_adr);</div>
-<div class="line"><span class="lineno">   44</span>    }</div>
-<div class="line"><span class="lineno">   45</span> </div>
-<div class="line"><span class="lineno">   46</span>    <span class="keywordflow">return</span> err;</div>
-<div class="line"><span class="lineno">   47</span>}</div>
+<p class="definition">Definition at line <a class="el" href="pcm3060_8c_source.html#l00033">33</a> of file <a class="el" href="pcm3060_8c_source.html">pcm3060.c</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   34</span>{</div>
+<div class="line"><span class="lineno">   35</span>    esp_err_t err = <a class="code hl_function" href="i2c_8c.html#a45e8e37789f0b27a7fe24b58795787f7">i2c_write_byte</a>(<a class="code hl_variable" href="pcm3060_8c.html#a71b6997ffef11829ebada7d54261e2f3">_port</a>, <a class="code hl_variable" href="pcm3060_8c.html#a759ea42c79be4c238e3106ea4b53c27a">_address</a>, reg_adr, data);</div>
+<div class="line"><span class="lineno">   36</span> </div>
+<div class="line"><span class="lineno">   37</span>    <span class="keywordflow">if</span>(err != ESP_OK)</div>
+<div class="line"><span class="lineno">   38</span>    {</div>
+<div class="line"><span class="lineno">   39</span>        ESP_LOGE(TAG, <span class="stringliteral">&quot;Write to reg 0x%02x failed&quot;</span>, reg_adr);</div>
+<div class="line"><span class="lineno">   40</span>    }</div>
+<div class="line"><span class="lineno">   41</span> </div>
+<div class="line"><span class="lineno">   42</span>    <span class="keywordflow">return</span> err;</div>
+<div class="line"><span class="lineno">   43</span>}</div>
 <div class="ttc" id="ai2c_8c_html_a45e8e37789f0b27a7fe24b58795787f7"><div class="ttname"><a href="i2c_8c.html#a45e8e37789f0b27a7fe24b58795787f7">i2c_write_byte</a></div><div class="ttdeci">esp_err_t i2c_write_byte(i2c_port_t port, uint8_t slave_address, uint8_t reg_address, uint8_t data)</div><div class="ttdef"><b>Definition:</b> <a href="i2c_8c_source.html#l00025">i2c.c:25</a></div></div>
 <div class="ttc" id="apcm3060_8c_html_a71b6997ffef11829ebada7d54261e2f3"><div class="ttname"><a href="pcm3060_8c.html#a71b6997ffef11829ebada7d54261e2f3">_port</a></div><div class="ttdeci">static i2c_port_t _port</div><div class="ttdef"><b>Definition:</b> <a href="pcm3060_8c_source.html#l00029">pcm3060.c:29</a></div></div>
 <div class="ttc" id="apcm3060_8c_html_a759ea42c79be4c238e3106ea4b53c27a"><div class="ttname"><a href="pcm3060_8c.html#a759ea42c79be4c238e3106ea4b53c27a">_address</a></div><div class="ttdeci">static uint8_t _address</div><div class="ttdef"><b>Definition:</b> <a href="pcm3060_8c_source.html#l00028">pcm3060.c:28</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="pcm3060_8c_source.html#l00028">_address</a>, <a class="el" href="pcm3060_8c_source.html#l00029">_port</a>, and <a class="el" href="i2c_8c_source.html#l00025">i2c_write_byte()</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="pcm3060_8c_source.html#l00074">pcm3060_power_down()</a>, and <a class="el" href="pcm3060_8c_source.html#l00055">pcm3060_power_up()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="pcm3060_8c_source.html#l00070">pcm3060_power_down()</a>, and <a class="el" href="pcm3060_8c_source.html#l00051">pcm3060_power_up()</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -208,13 +208,11 @@ Here is the caller graph for this function:</div>
 </div><div class="memdoc">
 
 <p class="definition">Definition at line <a class="el" href="pcm3060_8c_source.html#l00031">31</a> of file <a class="el" href="pcm3060_8c_source.html">pcm3060.c</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   32</span>{</div>
-<div class="line"><span class="lineno">   33</span>    <span class="keywordflow">return</span> <a class="code hl_variable" href="pcm3060_8c.html#a71b6997ffef11829ebada7d54261e2f3">_port</a> != -1;</div>
-<div class="line"><span class="lineno">   34</span>}</div>
+<div class="fragment"><div class="line"><span class="lineno">   31</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="pcm3060_8c.html#a71b6997ffef11829ebada7d54261e2f3">_port</a> != -1; }</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="pcm3060_8c_source.html#l00029">_port</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="pcm3060_8c_source.html#l00074">pcm3060_power_down()</a>, and <a class="el" href="pcm3060_8c_source.html#l00055">pcm3060_power_up()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="pcm3060_8c_source.html#l00070">pcm3060_power_down()</a>, and <a class="el" href="pcm3060_8c_source.html#l00051">pcm3060_power_up()</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
@@ -252,15 +250,15 @@ Here is the caller graph for this function:</div>
 
 <p>Initialise the driver. </p>
 
-<p class="definition">Definition at line <a class="el" href="pcm3060_8c_source.html#l00049">49</a> of file <a class="el" href="pcm3060_8c_source.html">pcm3060.c</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   50</span>{</div>
-<div class="line"><span class="lineno">   51</span>    <a class="code hl_variable" href="pcm3060_8c.html#a71b6997ffef11829ebada7d54261e2f3">_port</a> = port;</div>
-<div class="line"><span class="lineno">   52</span>    <a class="code hl_variable" href="pcm3060_8c.html#a759ea42c79be4c238e3106ea4b53c27a">_address</a> = I2C_ADDRESS | (adr &lt;&lt; 1);</div>
-<div class="line"><span class="lineno">   53</span>}</div>
+<p class="definition">Definition at line <a class="el" href="pcm3060_8c_source.html#l00045">45</a> of file <a class="el" href="pcm3060_8c_source.html">pcm3060.c</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   46</span>{</div>
+<div class="line"><span class="lineno">   47</span>    <a class="code hl_variable" href="pcm3060_8c.html#a71b6997ffef11829ebada7d54261e2f3">_port</a> = port;</div>
+<div class="line"><span class="lineno">   48</span>    <a class="code hl_variable" href="pcm3060_8c.html#a759ea42c79be4c238e3106ea4b53c27a">_address</a> = I2C_ADDRESS | (adr &lt;&lt; 1);</div>
+<div class="line"><span class="lineno">   49</span>}</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="pcm3060_8c_source.html#l00028">_address</a>, and <a class="el" href="pcm3060_8c_source.html#l00029">_port</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="main_8cpp_source.html#l00206">shrapnel::app_main()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="main_8cpp_source.html#l00238">shrapnel::app_main()</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
@@ -288,19 +286,19 @@ Here is the caller graph for this function:</div>
 
 <p>perform power down sequence </p>
 
-<p class="definition">Definition at line <a class="el" href="pcm3060_8c_source.html#l00074">74</a> of file <a class="el" href="pcm3060_8c_source.html">pcm3060.c</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   75</span>{</div>
-<div class="line"><span class="lineno">   76</span>    <span class="keywordflow">if</span>(!<a class="code hl_function" href="pcm3060_8c.html#a7a286e614c8a6c8e30f9408395cbd4cc">_initialised</a>())</div>
-<div class="line"><span class="lineno">   77</span>    {</div>
-<div class="line"><span class="lineno">   78</span>        <span class="keywordflow">return</span> ESP_FAIL;</div>
-<div class="line"><span class="lineno">   79</span>    }</div>
-<div class="line"><span class="lineno">   80</span> </div>
-<div class="line"><span class="lineno">   81</span>    <span class="keywordflow">return</span> <a class="code hl_function" href="pcm3060_8c.html#aea1e9d4122342b16a072fc515ed9c4a2">_i2c_write</a>(0x40, 0xF1);<span class="comment">//single ended output, power save enable</span></div>
-<div class="line"><span class="lineno">   82</span>}</div>
+<p class="definition">Definition at line <a class="el" href="pcm3060_8c_source.html#l00070">70</a> of file <a class="el" href="pcm3060_8c_source.html">pcm3060.c</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   71</span>{</div>
+<div class="line"><span class="lineno">   72</span>    <span class="keywordflow">if</span>(!<a class="code hl_function" href="pcm3060_8c.html#a7a286e614c8a6c8e30f9408395cbd4cc">_initialised</a>())</div>
+<div class="line"><span class="lineno">   73</span>    {</div>
+<div class="line"><span class="lineno">   74</span>        <span class="keywordflow">return</span> ESP_FAIL;</div>
+<div class="line"><span class="lineno">   75</span>    }</div>
+<div class="line"><span class="lineno">   76</span> </div>
+<div class="line"><span class="lineno">   77</span>    <span class="keywordflow">return</span> <a class="code hl_function" href="pcm3060_8c.html#aea1e9d4122342b16a072fc515ed9c4a2">_i2c_write</a>(0x40, 0xF1); <span class="comment">//single ended output, power save enable</span></div>
+<div class="line"><span class="lineno">   78</span>}</div>
 <div class="ttc" id="apcm3060_8c_html_a7a286e614c8a6c8e30f9408395cbd4cc"><div class="ttname"><a href="pcm3060_8c.html#a7a286e614c8a6c8e30f9408395cbd4cc">_initialised</a></div><div class="ttdeci">static bool _initialised(void)</div><div class="ttdef"><b>Definition:</b> <a href="pcm3060_8c_source.html#l00031">pcm3060.c:31</a></div></div>
-<div class="ttc" id="apcm3060_8c_html_aea1e9d4122342b16a072fc515ed9c4a2"><div class="ttname"><a href="pcm3060_8c.html#aea1e9d4122342b16a072fc515ed9c4a2">_i2c_write</a></div><div class="ttdeci">esp_err_t _i2c_write(uint8_t reg_adr, uint8_t data)</div><div class="ttdef"><b>Definition:</b> <a href="pcm3060_8c_source.html#l00037">pcm3060.c:37</a></div></div>
+<div class="ttc" id="apcm3060_8c_html_aea1e9d4122342b16a072fc515ed9c4a2"><div class="ttname"><a href="pcm3060_8c.html#aea1e9d4122342b16a072fc515ed9c4a2">_i2c_write</a></div><div class="ttdeci">esp_err_t _i2c_write(uint8_t reg_adr, uint8_t data)</div><div class="ttdef"><b>Definition:</b> <a href="pcm3060_8c_source.html#l00033">pcm3060.c:33</a></div></div>
 </div><!-- fragment -->
-<p class="reference">References <a class="el" href="pcm3060_8c_source.html#l00037">_i2c_write()</a>, and <a class="el" href="pcm3060_8c_source.html#l00031">_initialised()</a>.</p>
+<p class="reference">References <a class="el" href="pcm3060_8c_source.html#l00033">_i2c_write()</a>, and <a class="el" href="pcm3060_8c_source.html#l00031">_initialised()</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -328,28 +326,28 @@ Here is the call graph for this function:</div>
 
 <p>perform power up sequence </p>
 
-<p class="definition">Definition at line <a class="el" href="pcm3060_8c_source.html#l00055">55</a> of file <a class="el" href="pcm3060_8c_source.html">pcm3060.c</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   56</span>{</div>
-<div class="line"><span class="lineno">   57</span>    esp_err_t err;</div>
-<div class="line"><span class="lineno">   58</span> </div>
-<div class="line"><span class="lineno">   59</span>    <span class="keywordflow">if</span>(!<a class="code hl_function" href="pcm3060_8c.html#a7a286e614c8a6c8e30f9408395cbd4cc">_initialised</a>())</div>
-<div class="line"><span class="lineno">   60</span>    {</div>
-<div class="line"><span class="lineno">   61</span>        <span class="keywordflow">return</span> ESP_FAIL;</div>
-<div class="line"><span class="lineno">   62</span>    }</div>
-<div class="line"><span class="lineno">   63</span> </div>
-<div class="line"><span class="lineno">   64</span>    err = <a class="code hl_function" href="pcm3060_8c.html#aea1e9d4122342b16a072fc515ed9c4a2">_i2c_write</a>(0x43, 0x80);<span class="comment">//use clock1 for DAC, slave mode, 24-bit I2S</span></div>
-<div class="line"><span class="lineno">   65</span>    <span class="keywordflow">if</span>(err != ESP_OK)</div>
-<div class="line"><span class="lineno">   66</span>    {</div>
-<div class="line"><span class="lineno">   67</span>        <span class="keywordflow">return</span> err;</div>
-<div class="line"><span class="lineno">   68</span>    }</div>
-<div class="line"><span class="lineno">   69</span> </div>
-<div class="line"><span class="lineno">   70</span>    err = <a class="code hl_function" href="pcm3060_8c.html#aea1e9d4122342b16a072fc515ed9c4a2">_i2c_write</a>(0x40, 0xC0);<span class="comment">//differential output, power save release</span></div>
-<div class="line"><span class="lineno">   71</span>    <span class="keywordflow">return</span> err;</div>
-<div class="line"><span class="lineno">   72</span>}</div>
+<p class="definition">Definition at line <a class="el" href="pcm3060_8c_source.html#l00051">51</a> of file <a class="el" href="pcm3060_8c_source.html">pcm3060.c</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   52</span>{</div>
+<div class="line"><span class="lineno">   53</span>    esp_err_t err;</div>
+<div class="line"><span class="lineno">   54</span> </div>
+<div class="line"><span class="lineno">   55</span>    <span class="keywordflow">if</span>(!<a class="code hl_function" href="pcm3060_8c.html#a7a286e614c8a6c8e30f9408395cbd4cc">_initialised</a>())</div>
+<div class="line"><span class="lineno">   56</span>    {</div>
+<div class="line"><span class="lineno">   57</span>        <span class="keywordflow">return</span> ESP_FAIL;</div>
+<div class="line"><span class="lineno">   58</span>    }</div>
+<div class="line"><span class="lineno">   59</span> </div>
+<div class="line"><span class="lineno">   60</span>    err = <a class="code hl_function" href="pcm3060_8c.html#aea1e9d4122342b16a072fc515ed9c4a2">_i2c_write</a>(0x43, 0x80); <span class="comment">//use clock1 for DAC, slave mode, 24-bit I2S</span></div>
+<div class="line"><span class="lineno">   61</span>    <span class="keywordflow">if</span>(err != ESP_OK)</div>
+<div class="line"><span class="lineno">   62</span>    {</div>
+<div class="line"><span class="lineno">   63</span>        <span class="keywordflow">return</span> err;</div>
+<div class="line"><span class="lineno">   64</span>    }</div>
+<div class="line"><span class="lineno">   65</span> </div>
+<div class="line"><span class="lineno">   66</span>    err = <a class="code hl_function" href="pcm3060_8c.html#aea1e9d4122342b16a072fc515ed9c4a2">_i2c_write</a>(0x40, 0xC0); <span class="comment">//differential output, power save release</span></div>
+<div class="line"><span class="lineno">   67</span>    <span class="keywordflow">return</span> err;</div>
+<div class="line"><span class="lineno">   68</span>}</div>
 </div><!-- fragment -->
-<p class="reference">References <a class="el" href="pcm3060_8c_source.html#l00037">_i2c_write()</a>, and <a class="el" href="pcm3060_8c_source.html#l00031">_initialised()</a>.</p>
+<p class="reference">References <a class="el" href="pcm3060_8c_source.html#l00033">_i2c_write()</a>, and <a class="el" href="pcm3060_8c_source.html#l00031">_initialised()</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="main_8cpp_source.html#l00206">shrapnel::app_main()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="main_8cpp_source.html#l00238">shrapnel::app_main()</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -388,7 +386,7 @@ Here is the caller graph for this function:</div>
 
 <p class="definition">Definition at line <a class="el" href="pcm3060_8c_source.html#l00028">28</a> of file <a class="el" href="pcm3060_8c_source.html">pcm3060.c</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="pcm3060_8c_source.html#l00037">_i2c_write()</a>, and <a class="el" href="pcm3060_8c_source.html#l00049">pcm3060_init()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="pcm3060_8c_source.html#l00033">_i2c_write()</a>, and <a class="el" href="pcm3060_8c_source.html#l00045">pcm3060_init()</a>.</p>
 
 </div>
 </div>
@@ -414,7 +412,7 @@ Here is the caller graph for this function:</div>
 
 <p class="definition">Definition at line <a class="el" href="pcm3060_8c_source.html#l00029">29</a> of file <a class="el" href="pcm3060_8c_source.html">pcm3060.c</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="pcm3060_8c_source.html#l00037">_i2c_write()</a>, <a class="el" href="pcm3060_8c_source.html#l00031">_initialised()</a>, and <a class="el" href="pcm3060_8c_source.html#l00049">pcm3060_init()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="pcm3060_8c_source.html#l00033">_i2c_write()</a>, <a class="el" href="pcm3060_8c_source.html#l00031">_initialised()</a>, and <a class="el" href="pcm3060_8c_source.html#l00045">pcm3060_init()</a>.</p>
 
 </div>
 </div>

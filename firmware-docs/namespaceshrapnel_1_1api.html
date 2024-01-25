@@ -732,22 +732,22 @@ template&lt;&gt; </div>
 </div><div class="memdoc">
 
 <p class="definition">Definition at line <a class="el" href="presets__api_8cpp_source.html#l00336">336</a> of file <a class="el" href="presets__api_8cpp_source.html">presets_api.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  336</span>                                          {</div>
-<div class="line"><span class="lineno">  337</span>    <span class="keyword">auto</span> proto = from_bytes&lt;shrapnel_presets_Preset&gt;(buffer);</div>
-<div class="line"><span class="lineno">  338</span>    <span class="keywordflow">if</span>(!proto.has_value())</div>
-<div class="line"><span class="lineno">  339</span>    {</div>
-<div class="line"><span class="lineno">  340</span>        <span class="keywordflow">return</span> std::nullopt;</div>
-<div class="line"><span class="lineno">  341</span>    }</div>
-<div class="line"><span class="lineno">  342</span> </div>
-<div class="line"><span class="lineno">  343</span>    <a class="code hl_struct" href="structshrapnel_1_1presets_1_1PresetData.html">presets::PresetData</a> out{};</div>
-<div class="line"><span class="lineno">  344</span>    <span class="keywordtype">int</span> rc = from_proto&lt;presets::PresetData&gt;(*proto, out);</div>
-<div class="line"><span class="lineno">  345</span>    <span class="keywordflow">if</span>(rc != 0)</div>
-<div class="line"><span class="lineno">  346</span>    {</div>
-<div class="line"><span class="lineno">  347</span>        <span class="keywordflow">return</span> std::nullopt;</div>
-<div class="line"><span class="lineno">  348</span>    }</div>
-<div class="line"><span class="lineno">  349</span> </div>
-<div class="line"><span class="lineno">  350</span>    <span class="keywordflow">return</span> out;</div>
-<div class="line"><span class="lineno">  351</span>}</div>
+<div class="fragment"><div class="line"><span class="lineno">  337</span>{</div>
+<div class="line"><span class="lineno">  338</span>    <span class="keyword">auto</span> proto = from_bytes&lt;shrapnel_presets_Preset&gt;(buffer);</div>
+<div class="line"><span class="lineno">  339</span>    <span class="keywordflow">if</span>(!proto.has_value())</div>
+<div class="line"><span class="lineno">  340</span>    {</div>
+<div class="line"><span class="lineno">  341</span>        <span class="keywordflow">return</span> std::nullopt;</div>
+<div class="line"><span class="lineno">  342</span>    }</div>
+<div class="line"><span class="lineno">  343</span> </div>
+<div class="line"><span class="lineno">  344</span>    <a class="code hl_struct" href="structshrapnel_1_1presets_1_1PresetData.html">presets::PresetData</a> out{};</div>
+<div class="line"><span class="lineno">  345</span>    <span class="keywordtype">int</span> rc = from_proto&lt;presets::PresetData&gt;(*proto, out);</div>
+<div class="line"><span class="lineno">  346</span>    <span class="keywordflow">if</span>(rc != 0)</div>
+<div class="line"><span class="lineno">  347</span>    {</div>
+<div class="line"><span class="lineno">  348</span>        <span class="keywordflow">return</span> std::nullopt;</div>
+<div class="line"><span class="lineno">  349</span>    }</div>
+<div class="line"><span class="lineno">  350</span> </div>
+<div class="line"><span class="lineno">  351</span>    <span class="keywordflow">return</span> out;</div>
+<div class="line"><span class="lineno">  352</span>}</div>
 <div class="ttc" id="astructshrapnel_1_1presets_1_1PresetData_html"><div class="ttname"><a href="structshrapnel_1_1presets_1_1PresetData.html">shrapnel::presets::PresetData</a></div><div class="ttdef"><b>Definition:</b> <a href="presets__api_8h_source.html#l00061">presets_api.h:62</a></div></div>
 </div><!-- fragment -->
 </div>
@@ -1719,11 +1719,11 @@ template&lt;&gt; </div>
 <div class="line"><span class="lineno">  454</span>        <span class="keywordflow">return</span> -1;</div>
 <div class="line"><span class="lineno">  455</span>    }</div>
 <div class="line"><span class="lineno">  456</span>}</div>
-<div class="ttc" id="astructshrapnel_1_1midi_1_1Message_1_1NoteOn_html"><div class="ttname"><a href="structshrapnel_1_1midi_1_1Message_1_1NoteOn.html">shrapnel::midi::Message::NoteOn</a></div><div class="ttdef"><b>Definition:</b> <a href="midi__protocol_8h_source.html#l00043">midi_protocol.h:43</a></div></div>
-<div class="ttc" id="astructshrapnel_1_1midi_1_1Message_html_a29581869e25f31ea15d28e332262b160"><div class="ttname"><a href="structshrapnel_1_1midi_1_1Message.html#a29581869e25f31ea15d28e332262b160">shrapnel::midi::Message::channel</a></div><div class="ttdeci">midi_channel_t channel</div><div class="ttdef"><b>Definition:</b> <a href="midi__protocol_8h_source.html#l00070">midi_protocol.h:70</a></div></div>
-<div class="ttc" id="astructshrapnel_1_1midi_1_1Message_html_aed40e3ab3220667ba38796866604cbb7"><div class="ttname"><a href="structshrapnel_1_1midi_1_1Message.html#aed40e3ab3220667ba38796866604cbb7">shrapnel::midi::Message::parameters</a></div><div class="ttdeci">std::variant&lt; NoteOn, NoteOff, ControlChange, ProgramChange &gt; parameters</div><div class="ttdef"><b>Definition:</b> <a href="midi__protocol_8h_source.html#l00071">midi_protocol.h:71</a></div></div>
+<div class="ttc" id="astructshrapnel_1_1midi_1_1Message_1_1NoteOn_html"><div class="ttname"><a href="structshrapnel_1_1midi_1_1Message_1_1NoteOn.html">shrapnel::midi::Message::NoteOn</a></div><div class="ttdef"><b>Definition:</b> <a href="midi__protocol_8h_source.html#l00045">midi_protocol.h:46</a></div></div>
+<div class="ttc" id="astructshrapnel_1_1midi_1_1Message_html_a29581869e25f31ea15d28e332262b160"><div class="ttname"><a href="structshrapnel_1_1midi_1_1Message.html#a29581869e25f31ea15d28e332262b160">shrapnel::midi::Message::channel</a></div><div class="ttdeci">midi_channel_t channel</div><div class="ttdef"><b>Definition:</b> <a href="midi__protocol_8h_source.html#l00078">midi_protocol.h:78</a></div></div>
+<div class="ttc" id="astructshrapnel_1_1midi_1_1Message_html_aed40e3ab3220667ba38796866604cbb7"><div class="ttname"><a href="structshrapnel_1_1midi_1_1Message.html#aed40e3ab3220667ba38796866604cbb7">shrapnel::midi::Message::parameters</a></div><div class="ttdeci">std::variant&lt; NoteOn, NoteOff, ControlChange, ProgramChange &gt; parameters</div><div class="ttdef"><b>Definition:</b> <a href="midi__protocol_8h_source.html#l00079">midi_protocol.h:79</a></div></div>
 </div><!-- fragment -->
-<p class="reference">References <a class="el" href="midi__protocol_8h_source.html#l00070">shrapnel::midi::Message::channel</a>, and <a class="el" href="midi__protocol_8h_source.html#l00071">shrapnel::midi::Message::parameters</a>.</p>
+<p class="reference">References <a class="el" href="midi__protocol_8h_source.html#l00078">shrapnel::midi::Message::channel</a>, and <a class="el" href="midi__protocol_8h_source.html#l00079">shrapnel::midi::Message::parameters</a>.</p>
 
 </div>
 </div>
@@ -1761,10 +1761,10 @@ template&lt;&gt; </div>
 <div class="line"><span class="lineno">  342</span>    out.<a class="code hl_variable" href="structshrapnel_1_1midi_1_1Message_1_1ControlChange.html#a2615450c8f2f31fc8c4298f8363d076c">value</a> = message.value;</div>
 <div class="line"><span class="lineno">  343</span>    <span class="keywordflow">return</span> 0;</div>
 <div class="line"><span class="lineno">  344</span>}</div>
-<div class="ttc" id="astructshrapnel_1_1midi_1_1Message_1_1ControlChange_html_a2615450c8f2f31fc8c4298f8363d076c"><div class="ttname"><a href="structshrapnel_1_1midi_1_1Message_1_1ControlChange.html#a2615450c8f2f31fc8c4298f8363d076c">shrapnel::midi::Message::ControlChange::value</a></div><div class="ttdeci">uint8_t value</div><div class="ttdef"><b>Definition:</b> <a href="midi__protocol_8h_source.html#l00059">midi_protocol.h:59</a></div></div>
-<div class="ttc" id="astructshrapnel_1_1midi_1_1Message_1_1ControlChange_html_a63472623103c98ec18cc0f2ff0cd67e5"><div class="ttname"><a href="structshrapnel_1_1midi_1_1Message_1_1ControlChange.html#a63472623103c98ec18cc0f2ff0cd67e5">shrapnel::midi::Message::ControlChange::control</a></div><div class="ttdeci">uint8_t control</div><div class="ttdef"><b>Definition:</b> <a href="midi__protocol_8h_source.html#l00058">midi_protocol.h:58</a></div></div>
+<div class="ttc" id="astructshrapnel_1_1midi_1_1Message_1_1ControlChange_html_a2615450c8f2f31fc8c4298f8363d076c"><div class="ttname"><a href="structshrapnel_1_1midi_1_1Message_1_1ControlChange.html#a2615450c8f2f31fc8c4298f8363d076c">shrapnel::midi::Message::ControlChange::value</a></div><div class="ttdeci">uint8_t value</div><div class="ttdef"><b>Definition:</b> <a href="midi__protocol_8h_source.html#l00064">midi_protocol.h:64</a></div></div>
+<div class="ttc" id="astructshrapnel_1_1midi_1_1Message_1_1ControlChange_html_a63472623103c98ec18cc0f2ff0cd67e5"><div class="ttname"><a href="structshrapnel_1_1midi_1_1Message_1_1ControlChange.html#a63472623103c98ec18cc0f2ff0cd67e5">shrapnel::midi::Message::ControlChange::control</a></div><div class="ttdeci">uint8_t control</div><div class="ttdef"><b>Definition:</b> <a href="midi__protocol_8h_source.html#l00063">midi_protocol.h:63</a></div></div>
 </div><!-- fragment -->
-<p class="reference">References <a class="el" href="midi__protocol_8h_source.html#l00058">shrapnel::midi::Message::ControlChange::control</a>, and <a class="el" href="midi__protocol_8h_source.html#l00059">shrapnel::midi::Message::ControlChange::value</a>.</p>
+<p class="reference">References <a class="el" href="midi__protocol_8h_source.html#l00063">shrapnel::midi::Message::ControlChange::control</a>, and <a class="el" href="midi__protocol_8h_source.html#l00064">shrapnel::midi::Message::ControlChange::value</a>.</p>
 
 </div>
 </div>
@@ -1802,10 +1802,10 @@ template&lt;&gt; </div>
 <div class="line"><span class="lineno">  324</span>    out.<a class="code hl_variable" href="structshrapnel_1_1midi_1_1Message_1_1NoteOff.html#a854bc5ff80d66e047c66678ca281df8d">velocity</a> = message.velocity;</div>
 <div class="line"><span class="lineno">  325</span>    <span class="keywordflow">return</span> 0;</div>
 <div class="line"><span class="lineno">  326</span>}</div>
-<div class="ttc" id="astructshrapnel_1_1midi_1_1Message_1_1NoteOff_html_a854bc5ff80d66e047c66678ca281df8d"><div class="ttname"><a href="structshrapnel_1_1midi_1_1Message_1_1NoteOff.html#a854bc5ff80d66e047c66678ca281df8d">shrapnel::midi::Message::NoteOff::velocity</a></div><div class="ttdeci">uint8_t velocity</div><div class="ttdef"><b>Definition:</b> <a href="midi__protocol_8h_source.html#l00052">midi_protocol.h:52</a></div></div>
-<div class="ttc" id="astructshrapnel_1_1midi_1_1Message_1_1NoteOff_html_a956f0f53e35e1dfda0e40c53b3e4c346"><div class="ttname"><a href="structshrapnel_1_1midi_1_1Message_1_1NoteOff.html#a956f0f53e35e1dfda0e40c53b3e4c346">shrapnel::midi::Message::NoteOff::note</a></div><div class="ttdeci">uint8_t note</div><div class="ttdef"><b>Definition:</b> <a href="midi__protocol_8h_source.html#l00051">midi_protocol.h:51</a></div></div>
+<div class="ttc" id="astructshrapnel_1_1midi_1_1Message_1_1NoteOff_html_a854bc5ff80d66e047c66678ca281df8d"><div class="ttname"><a href="structshrapnel_1_1midi_1_1Message_1_1NoteOff.html#a854bc5ff80d66e047c66678ca281df8d">shrapnel::midi::Message::NoteOff::velocity</a></div><div class="ttdeci">uint8_t velocity</div><div class="ttdef"><b>Definition:</b> <a href="midi__protocol_8h_source.html#l00056">midi_protocol.h:56</a></div></div>
+<div class="ttc" id="astructshrapnel_1_1midi_1_1Message_1_1NoteOff_html_a956f0f53e35e1dfda0e40c53b3e4c346"><div class="ttname"><a href="structshrapnel_1_1midi_1_1Message_1_1NoteOff.html#a956f0f53e35e1dfda0e40c53b3e4c346">shrapnel::midi::Message::NoteOff::note</a></div><div class="ttdeci">uint8_t note</div><div class="ttdef"><b>Definition:</b> <a href="midi__protocol_8h_source.html#l00055">midi_protocol.h:55</a></div></div>
 </div><!-- fragment -->
-<p class="reference">References <a class="el" href="midi__protocol_8h_source.html#l00051">shrapnel::midi::Message::NoteOff::note</a>, and <a class="el" href="midi__protocol_8h_source.html#l00052">shrapnel::midi::Message::NoteOff::velocity</a>.</p>
+<p class="reference">References <a class="el" href="midi__protocol_8h_source.html#l00055">shrapnel::midi::Message::NoteOff::note</a>, and <a class="el" href="midi__protocol_8h_source.html#l00056">shrapnel::midi::Message::NoteOff::velocity</a>.</p>
 
 </div>
 </div>
@@ -1843,10 +1843,10 @@ template&lt;&gt; </div>
 <div class="line"><span class="lineno">  306</span>    out.<a class="code hl_variable" href="structshrapnel_1_1midi_1_1Message_1_1NoteOn.html#a3377e69df50e588b93683fd3c3aa8a43">velocity</a> = message.velocity;</div>
 <div class="line"><span class="lineno">  307</span>    <span class="keywordflow">return</span> 0;</div>
 <div class="line"><span class="lineno">  308</span>}</div>
-<div class="ttc" id="astructshrapnel_1_1midi_1_1Message_1_1NoteOn_html_a3377e69df50e588b93683fd3c3aa8a43"><div class="ttname"><a href="structshrapnel_1_1midi_1_1Message_1_1NoteOn.html#a3377e69df50e588b93683fd3c3aa8a43">shrapnel::midi::Message::NoteOn::velocity</a></div><div class="ttdeci">uint8_t velocity</div><div class="ttdef"><b>Definition:</b> <a href="midi__protocol_8h_source.html#l00045">midi_protocol.h:45</a></div></div>
-<div class="ttc" id="astructshrapnel_1_1midi_1_1Message_1_1NoteOn_html_ae16150bffaedd0c9c1ce7dd767b463eb"><div class="ttname"><a href="structshrapnel_1_1midi_1_1Message_1_1NoteOn.html#ae16150bffaedd0c9c1ce7dd767b463eb">shrapnel::midi::Message::NoteOn::note</a></div><div class="ttdeci">uint8_t note</div><div class="ttdef"><b>Definition:</b> <a href="midi__protocol_8h_source.html#l00044">midi_protocol.h:44</a></div></div>
+<div class="ttc" id="astructshrapnel_1_1midi_1_1Message_1_1NoteOn_html_a3377e69df50e588b93683fd3c3aa8a43"><div class="ttname"><a href="structshrapnel_1_1midi_1_1Message_1_1NoteOn.html#a3377e69df50e588b93683fd3c3aa8a43">shrapnel::midi::Message::NoteOn::velocity</a></div><div class="ttdeci">uint8_t velocity</div><div class="ttdef"><b>Definition:</b> <a href="midi__protocol_8h_source.html#l00048">midi_protocol.h:48</a></div></div>
+<div class="ttc" id="astructshrapnel_1_1midi_1_1Message_1_1NoteOn_html_ae16150bffaedd0c9c1ce7dd767b463eb"><div class="ttname"><a href="structshrapnel_1_1midi_1_1Message_1_1NoteOn.html#ae16150bffaedd0c9c1ce7dd767b463eb">shrapnel::midi::Message::NoteOn::note</a></div><div class="ttdeci">uint8_t note</div><div class="ttdef"><b>Definition:</b> <a href="midi__protocol_8h_source.html#l00047">midi_protocol.h:47</a></div></div>
 </div><!-- fragment -->
-<p class="reference">References <a class="el" href="midi__protocol_8h_source.html#l00044">shrapnel::midi::Message::NoteOn::note</a>, and <a class="el" href="midi__protocol_8h_source.html#l00045">shrapnel::midi::Message::NoteOn::velocity</a>.</p>
+<p class="reference">References <a class="el" href="midi__protocol_8h_source.html#l00047">shrapnel::midi::Message::NoteOn::note</a>, and <a class="el" href="midi__protocol_8h_source.html#l00048">shrapnel::midi::Message::NoteOn::velocity</a>.</p>
 
 </div>
 </div>
@@ -1883,9 +1883,9 @@ template&lt;&gt; </div>
 <div class="line"><span class="lineno">  358</span>    out.<a class="code hl_variable" href="structshrapnel_1_1midi_1_1Message_1_1ProgramChange.html#aa410a2e8f7c2338ad6cc7545ad5d93c8">number</a> = message.number;</div>
 <div class="line"><span class="lineno">  359</span>    <span class="keywordflow">return</span> 0;</div>
 <div class="line"><span class="lineno">  360</span>}</div>
-<div class="ttc" id="astructshrapnel_1_1midi_1_1Message_1_1ProgramChange_html_aa410a2e8f7c2338ad6cc7545ad5d93c8"><div class="ttname"><a href="structshrapnel_1_1midi_1_1Message_1_1ProgramChange.html#aa410a2e8f7c2338ad6cc7545ad5d93c8">shrapnel::midi::Message::ProgramChange::number</a></div><div class="ttdeci">uint8_t number</div><div class="ttdef"><b>Definition:</b> <a href="midi__protocol_8h_source.html#l00065">midi_protocol.h:65</a></div></div>
+<div class="ttc" id="astructshrapnel_1_1midi_1_1Message_1_1ProgramChange_html_aa410a2e8f7c2338ad6cc7545ad5d93c8"><div class="ttname"><a href="structshrapnel_1_1midi_1_1Message_1_1ProgramChange.html#aa410a2e8f7c2338ad6cc7545ad5d93c8">shrapnel::midi::Message::ProgramChange::number</a></div><div class="ttdeci">uint8_t number</div><div class="ttdef"><b>Definition:</b> <a href="midi__protocol_8h_source.html#l00072">midi_protocol.h:72</a></div></div>
 </div><!-- fragment -->
-<p class="reference">References <a class="el" href="midi__protocol_8h_source.html#l00065">shrapnel::midi::Message::ProgramChange::number</a>.</p>
+<p class="reference">References <a class="el" href="midi__protocol_8h_source.html#l00072">shrapnel::midi::Message::ProgramChange::number</a>.</p>
 
 </div>
 </div>
@@ -2893,19 +2893,19 @@ template&lt;&gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="presets__api_8cpp_source.html#l00323">323</a> of file <a class="el" href="presets__api_8cpp_source.html">presets_api.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  323</span>                                                                    {</div>
-<div class="line"><span class="lineno">  324</span>    shrapnel_presets_Preset proto = shrapnel_presets_Preset_init_zero;</div>
-<div class="line"><span class="lineno">  325</span>    <span class="keywordtype">int</span> rc = <a class="code hl_function" href="namespaceshrapnel_1_1api.html#a246f0880e01145ca6db6b29f5bf36139">to_proto</a>(message, proto);</div>
-<div class="line"><span class="lineno">  326</span>    <span class="keywordflow">if</span>(rc != 0)</div>
-<div class="line"><span class="lineno">  327</span>    {</div>
-<div class="line"><span class="lineno">  328</span>        <span class="keywordflow">return</span> std::nullopt;</div>
-<div class="line"><span class="lineno">  329</span>    }</div>
-<div class="line"><span class="lineno">  330</span> </div>
-<div class="line"><span class="lineno">  331</span>    <span class="keywordflow">return</span> <a class="code hl_function" href="namespaceshrapnel_1_1api.html#a2fc133b98abea575e4db058abe2cd314">to_bytes</a>(proto, buffer);</div>
-<div class="line"><span class="lineno">  332</span>}</div>
+<p class="definition">Definition at line <a class="el" href="presets__api_8cpp_source.html#l00322">322</a> of file <a class="el" href="presets__api_8cpp_source.html">presets_api.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  324</span>{</div>
+<div class="line"><span class="lineno">  325</span>    shrapnel_presets_Preset proto = shrapnel_presets_Preset_init_zero;</div>
+<div class="line"><span class="lineno">  326</span>    <span class="keywordtype">int</span> rc = <a class="code hl_function" href="namespaceshrapnel_1_1api.html#a246f0880e01145ca6db6b29f5bf36139">to_proto</a>(message, proto);</div>
+<div class="line"><span class="lineno">  327</span>    <span class="keywordflow">if</span>(rc != 0)</div>
+<div class="line"><span class="lineno">  328</span>    {</div>
+<div class="line"><span class="lineno">  329</span>        <span class="keywordflow">return</span> std::nullopt;</div>
+<div class="line"><span class="lineno">  330</span>    }</div>
+<div class="line"><span class="lineno">  331</span> </div>
+<div class="line"><span class="lineno">  332</span>    <span class="keywordflow">return</span> <a class="code hl_function" href="namespaceshrapnel_1_1api.html#a2fc133b98abea575e4db058abe2cd314">to_bytes</a>(proto, buffer);</div>
+<div class="line"><span class="lineno">  333</span>}</div>
 <div class="ttc" id="anamespaceshrapnel_1_1api_html_a246f0880e01145ca6db6b29f5bf36139"><div class="ttname"><a href="namespaceshrapnel_1_1api.html#a246f0880e01145ca6db6b29f5bf36139">shrapnel::api::to_proto</a></div><div class="ttdeci">int to_proto(const presets::PresetsApiMessage &amp;message, shrapnel_presets_Message &amp;out)</div><div class="ttdef"><b>Definition:</b> <a href="presets__api_8cpp_source.html#l00178">presets_api.cpp:178</a></div></div>
-<div class="ttc" id="anamespaceshrapnel_1_1api_html_a2fc133b98abea575e4db058abe2cd314"><div class="ttname"><a href="namespaceshrapnel_1_1api.html#a2fc133b98abea575e4db058abe2cd314">shrapnel::api::to_bytes</a></div><div class="ttdeci">std::optional&lt; std::span&lt; uint8_t &gt; &gt; to_bytes(const presets::PresetData &amp;message, std::span&lt; uint8_t &gt; buffer)</div><div class="ttdef"><b>Definition:</b> <a href="presets__api_8cpp_source.html#l00323">presets_api.cpp:323</a></div></div>
+<div class="ttc" id="anamespaceshrapnel_1_1api_html_a2fc133b98abea575e4db058abe2cd314"><div class="ttname"><a href="namespaceshrapnel_1_1api.html#a2fc133b98abea575e4db058abe2cd314">shrapnel::api::to_bytes</a></div><div class="ttdeci">std::optional&lt; std::span&lt; uint8_t &gt; &gt; to_bytes(const presets::PresetData &amp;message, std::span&lt; uint8_t &gt; buffer)</div><div class="ttdef"><b>Definition:</b> <a href="presets__api_8cpp_source.html#l00322">presets_api.cpp:322</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="namespaceshrapnel_1_1api.html#a4eb6fa3c5ed2f9fe0bce8d80e4479a32">to_bytes()</a>, and <a class="el" href="namespaceshrapnel_1_1api.html#a8fc768e74a62eb09f96ae1ca9f18199b">to_proto()</a>.</p>
 <div class="dynheader">
@@ -2945,17 +2945,17 @@ template&lt;&gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="presets__api_8cpp_source.html#l00323">323</a> of file <a class="el" href="presets__api_8cpp_source.html">presets_api.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  323</span>                                                                    {</div>
-<div class="line"><span class="lineno">  324</span>    shrapnel_presets_Preset proto = shrapnel_presets_Preset_init_zero;</div>
-<div class="line"><span class="lineno">  325</span>    <span class="keywordtype">int</span> rc = <a class="code hl_function" href="namespaceshrapnel_1_1api.html#a246f0880e01145ca6db6b29f5bf36139">to_proto</a>(message, proto);</div>
-<div class="line"><span class="lineno">  326</span>    <span class="keywordflow">if</span>(rc != 0)</div>
-<div class="line"><span class="lineno">  327</span>    {</div>
-<div class="line"><span class="lineno">  328</span>        <span class="keywordflow">return</span> std::nullopt;</div>
-<div class="line"><span class="lineno">  329</span>    }</div>
-<div class="line"><span class="lineno">  330</span> </div>
-<div class="line"><span class="lineno">  331</span>    <span class="keywordflow">return</span> <a class="code hl_function" href="namespaceshrapnel_1_1api.html#a2fc133b98abea575e4db058abe2cd314">to_bytes</a>(proto, buffer);</div>
-<div class="line"><span class="lineno">  332</span>}</div>
+<p class="definition">Definition at line <a class="el" href="presets__api_8cpp_source.html#l00322">322</a> of file <a class="el" href="presets__api_8cpp_source.html">presets_api.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  324</span>{</div>
+<div class="line"><span class="lineno">  325</span>    shrapnel_presets_Preset proto = shrapnel_presets_Preset_init_zero;</div>
+<div class="line"><span class="lineno">  326</span>    <span class="keywordtype">int</span> rc = <a class="code hl_function" href="namespaceshrapnel_1_1api.html#a246f0880e01145ca6db6b29f5bf36139">to_proto</a>(message, proto);</div>
+<div class="line"><span class="lineno">  327</span>    <span class="keywordflow">if</span>(rc != 0)</div>
+<div class="line"><span class="lineno">  328</span>    {</div>
+<div class="line"><span class="lineno">  329</span>        <span class="keywordflow">return</span> std::nullopt;</div>
+<div class="line"><span class="lineno">  330</span>    }</div>
+<div class="line"><span class="lineno">  331</span> </div>
+<div class="line"><span class="lineno">  332</span>    <span class="keywordflow">return</span> <a class="code hl_function" href="namespaceshrapnel_1_1api.html#a2fc133b98abea575e4db058abe2cd314">to_bytes</a>(proto, buffer);</div>
+<div class="line"><span class="lineno">  333</span>}</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="namespaceshrapnel_1_1api.html#a4eb6fa3c5ed2f9fe0bce8d80e4479a32">to_bytes()</a>, and <a class="el" href="namespaceshrapnel_1_1api.html#a8fc768e74a62eb09f96ae1ca9f18199b">to_proto()</a>.</p>
 <div class="dynheader">
@@ -3881,7 +3881,7 @@ template&lt;&gt; </div>
 <div class="line"><span class="lineno">  408</span>        message.<a class="code hl_variable" href="structshrapnel_1_1midi_1_1Message.html#aed40e3ab3220667ba38796866604cbb7">parameters</a>);</div>
 <div class="line"><span class="lineno">  409</span>}</div>
 </div><!-- fragment -->
-<p class="reference">References <a class="el" href="midi__protocol_8h_source.html#l00070">shrapnel::midi::Message::channel</a>, <a class="el" href="midi__protocol_8h_source.html#l00071">shrapnel::midi::Message::parameters</a>, and <a class="el" href="namespaceshrapnel_1_1api.html#a8fc768e74a62eb09f96ae1ca9f18199b">to_proto()</a>.</p>
+<p class="reference">References <a class="el" href="midi__protocol_8h_source.html#l00078">shrapnel::midi::Message::channel</a>, <a class="el" href="midi__protocol_8h_source.html#l00079">shrapnel::midi::Message::parameters</a>, and <a class="el" href="namespaceshrapnel_1_1api.html#a8fc768e74a62eb09f96ae1ca9f18199b">to_proto()</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -3926,7 +3926,7 @@ template&lt;&gt; </div>
 <div class="line"><span class="lineno">  334</span>    <span class="keywordflow">return</span> 0;</div>
 <div class="line"><span class="lineno">  335</span>}</div>
 </div><!-- fragment -->
-<p class="reference">References <a class="el" href="midi__protocol_8h_source.html#l00058">shrapnel::midi::Message::ControlChange::control</a>, and <a class="el" href="midi__protocol_8h_source.html#l00059">shrapnel::midi::Message::ControlChange::value</a>.</p>
+<p class="reference">References <a class="el" href="midi__protocol_8h_source.html#l00063">shrapnel::midi::Message::ControlChange::control</a>, and <a class="el" href="midi__protocol_8h_source.html#l00064">shrapnel::midi::Message::ControlChange::value</a>.</p>
 
 </div>
 </div>
@@ -3965,7 +3965,7 @@ template&lt;&gt; </div>
 <div class="line"><span class="lineno">  316</span>    <span class="keywordflow">return</span> 0;</div>
 <div class="line"><span class="lineno">  317</span>}</div>
 </div><!-- fragment -->
-<p class="reference">References <a class="el" href="midi__protocol_8h_source.html#l00051">shrapnel::midi::Message::NoteOff::note</a>, and <a class="el" href="midi__protocol_8h_source.html#l00052">shrapnel::midi::Message::NoteOff::velocity</a>.</p>
+<p class="reference">References <a class="el" href="midi__protocol_8h_source.html#l00055">shrapnel::midi::Message::NoteOff::note</a>, and <a class="el" href="midi__protocol_8h_source.html#l00056">shrapnel::midi::Message::NoteOff::velocity</a>.</p>
 
 </div>
 </div>
@@ -4004,7 +4004,7 @@ template&lt;&gt; </div>
 <div class="line"><span class="lineno">  298</span>    <span class="keywordflow">return</span> 0;</div>
 <div class="line"><span class="lineno">  299</span>}</div>
 </div><!-- fragment -->
-<p class="reference">References <a class="el" href="midi__protocol_8h_source.html#l00044">shrapnel::midi::Message::NoteOn::note</a>, and <a class="el" href="midi__protocol_8h_source.html#l00045">shrapnel::midi::Message::NoteOn::velocity</a>.</p>
+<p class="reference">References <a class="el" href="midi__protocol_8h_source.html#l00047">shrapnel::midi::Message::NoteOn::note</a>, and <a class="el" href="midi__protocol_8h_source.html#l00048">shrapnel::midi::Message::NoteOn::velocity</a>.</p>
 
 </div>
 </div>
@@ -4042,7 +4042,7 @@ template&lt;&gt; </div>
 <div class="line"><span class="lineno">  351</span>    <span class="keywordflow">return</span> 0;</div>
 <div class="line"><span class="lineno">  352</span>}</div>
 </div><!-- fragment -->
-<p class="reference">References <a class="el" href="midi__protocol_8h_source.html#l00065">shrapnel::midi::Message::ProgramChange::number</a>.</p>
+<p class="reference">References <a class="el" href="midi__protocol_8h_source.html#l00072">shrapnel::midi::Message::ProgramChange::number</a>.</p>
 
 </div>
 </div>
@@ -4593,8 +4593,8 @@ template&lt;&gt; </div>
 
 <p class="definition">Definition at line <a class="el" href="presets__api_8cpp_source.html#l00082">82</a> of file <a class="el" href="presets__api_8cpp_source.html">presets_api.cpp</a>.</p>
 <div class="fragment"><div class="line"><span class="lineno">   83</span>{</div>
-<div class="line"><span class="lineno">   84</span>    <span class="keywordtype">int</span> rc = to_proto&lt;shrapnel_presets_PresetParameters&gt;(</div>
-<div class="line"><span class="lineno">   85</span>        preset.<a class="code hl_variable" href="structshrapnel_1_1presets_1_1PresetData.html#a1cd85cf34c4e356960862195b609d31d">parameters</a>, out.parameters);</div>
+<div class="line"><span class="lineno">   84</span>    <span class="keywordtype">int</span> rc = to_proto&lt;shrapnel_presets_PresetParameters&gt;(preset.<a class="code hl_variable" href="structshrapnel_1_1presets_1_1PresetData.html#a1cd85cf34c4e356960862195b609d31d">parameters</a>,</div>
+<div class="line"><span class="lineno">   85</span>                                                         out.parameters);</div>
 <div class="line"><span class="lineno">   86</span>    <span class="keywordflow">if</span>(rc != 0)</div>
 <div class="line"><span class="lineno">   87</span>    {</div>
 <div class="line"><span class="lineno">   88</span>        <span class="keywordflow">return</span> -1;</div>

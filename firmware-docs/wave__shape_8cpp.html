@@ -109,7 +109,7 @@ Functions</h2></td></tr>
 Variables</h2></td></tr>
 <tr class="memitem:ac90590641d80fb6ee53567544ae1e32c"><td class="memItemLeft" align="right" valign="top">static const float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="wave__shape_8cpp.html#ac90590641d80fb6ee53567544ae1e32c">shape</a> [100]</td></tr>
 <tr class="separator:ac90590641d80fb6ee53567544ae1e32c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abfe121fe4182d1620e2846cffd98f268"><td class="memItemLeft" align="right" valign="top">const int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="wave__shape_8cpp.html#abfe121fe4182d1620e2846cffd98f268">shape_size</a> = sizeof(<a class="el" href="wave__shape_8cpp.html#ac90590641d80fb6ee53567544ae1e32c">shape</a>)/sizeof(<a class="el" href="wave__shape_8cpp.html#ac90590641d80fb6ee53567544ae1e32c">shape</a>[0])</td></tr>
+<tr class="memitem:abfe121fe4182d1620e2846cffd98f268"><td class="memItemLeft" align="right" valign="top">const int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="wave__shape_8cpp.html#abfe121fe4182d1620e2846cffd98f268">shape_size</a> = sizeof(<a class="el" href="wave__shape_8cpp.html#ac90590641d80fb6ee53567544ae1e32c">shape</a>) / sizeof(<a class="el" href="wave__shape_8cpp.html#ac90590641d80fb6ee53567544ae1e32c">shape</a>[0])</td></tr>
 <tr class="separator:abfe121fe4182d1620e2846cffd98f268"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Function Documentation</h2>
@@ -151,11 +151,12 @@ Variables</h2></td></tr>
 <div class="line"><span class="lineno">   68</span>        <span class="comment">// linear interpolation between two nearest elements in shape.</span></div>
 <div class="line"><span class="lineno">   69</span>        <span class="comment">// conversion to int rounds down</span></div>
 <div class="line"><span class="lineno">   70</span>        <span class="keywordtype">float</span> ratio = index - ((int)index);</div>
-<div class="line"><span class="lineno">   71</span>        output = <a class="code hl_variable" href="wave__shape_8cpp.html#ac90590641d80fb6ee53567544ae1e32c">shape</a>[(int)index] + ratio*(<a class="code hl_variable" href="wave__shape_8cpp.html#ac90590641d80fb6ee53567544ae1e32c">shape</a>[((<span class="keywordtype">int</span>)index) + 1] - <a class="code hl_variable" href="wave__shape_8cpp.html#ac90590641d80fb6ee53567544ae1e32c">shape</a>[(int)index]);</div>
-<div class="line"><span class="lineno">   72</span>    }</div>
-<div class="line"><span class="lineno">   73</span> </div>
-<div class="line"><span class="lineno">   74</span>    <span class="keywordflow">return</span> (output - <a class="code hl_variable" href="wave__shape_8cpp.html#ac90590641d80fb6ee53567544ae1e32c">shape</a>[<a class="code hl_variable" href="wave__shape_8cpp.html#abfe121fe4182d1620e2846cffd98f268">shape_size</a>/2]) * (1.f/300.0f);</div>
-<div class="line"><span class="lineno">   75</span>}</div>
+<div class="line"><span class="lineno">   71</span>        output = <a class="code hl_variable" href="wave__shape_8cpp.html#ac90590641d80fb6ee53567544ae1e32c">shape</a>[(int)index] +</div>
+<div class="line"><span class="lineno">   72</span>                 ratio * (<a class="code hl_variable" href="wave__shape_8cpp.html#ac90590641d80fb6ee53567544ae1e32c">shape</a>[((<span class="keywordtype">int</span>)index) + 1] - <a class="code hl_variable" href="wave__shape_8cpp.html#ac90590641d80fb6ee53567544ae1e32c">shape</a>[(int)index]);</div>
+<div class="line"><span class="lineno">   73</span>    }</div>
+<div class="line"><span class="lineno">   74</span> </div>
+<div class="line"><span class="lineno">   75</span>    <span class="keywordflow">return</span> (output - <a class="code hl_variable" href="wave__shape_8cpp.html#ac90590641d80fb6ee53567544ae1e32c">shape</a>[<a class="code hl_variable" href="wave__shape_8cpp.html#abfe121fe4182d1620e2846cffd98f268">shape_size</a> / 2]) * (1.f / 300.0f);</div>
+<div class="line"><span class="lineno">   76</span>}</div>
 <div class="ttc" id="awave__shape_8cpp_html_abfe121fe4182d1620e2846cffd98f268"><div class="ttname"><a href="wave__shape_8cpp.html#abfe121fe4182d1620e2846cffd98f268">shape_size</a></div><div class="ttdeci">const int shape_size</div><div class="ttdef"><b>Definition:</b> <a href="wave__shape_8cpp_source.html#l00047">wave_shape.cpp:47</a></div></div>
 <div class="ttc" id="awave__shape_8cpp_html_ac90590641d80fb6ee53567544ae1e32c"><div class="ttname"><a href="wave__shape_8cpp.html#ac90590641d80fb6ee53567544ae1e32c">shape</a></div><div class="ttdeci">static const float shape[100]</div><div class="ttdef"><b>Definition:</b> <a href="wave__shape_8cpp_source.html#l00024">wave_shape.cpp:24</a></div></div>
 </div><!-- fragment -->
@@ -192,26 +193,26 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 <b>Initial value:</b><div class="fragment"><div class="line">= {</div>
-<div class="line">        260.874, 260.7859598, 260.6953072,  260.601432, 260.5041537,</div>
-<div class="line">    260.4031856, 260.2985207, 260.1896056,  260.076319, 259.9582966,</div>
+<div class="line">    260.874,     260.7859598, 260.6953072, 260.601432,  260.5041537,</div>
+<div class="line">    260.4031856, 260.2985207, 260.1896056, 260.076319,  259.9582966,</div>
 <div class="line">    259.8351546, 259.7065092, 259.5718914, 259.4308215, 259.2828199,</div>
 <div class="line">    259.1270814, 258.9629027, 258.7895337, 258.6060523, 258.4113474,</div>
-<div class="line">    258.2040441, 257.9827768, 257.7457712, 257.4909677,  257.215841,</div>
+<div class="line">    258.2040441, 257.9827768, 257.7457712, 257.4909677, 257.215841,</div>
 <div class="line">    256.9175018, 256.5922455, 256.2355875, 255.8419352, 255.4041851,</div>
 <div class="line">    254.9131986, 254.3570307, 253.7197414, 252.9797121, 252.1071154,</div>
 <div class="line">    251.0601723, 249.8186298, 248.2374011, 246.2379769, 243.6984809,</div>
 <div class="line">    240.5224287, 236.6969109, 232.3051762, 227.4657723, 222.2539886,</div>
 <div class="line">    216.6160464, 210.1628519, 202.9424278, 195.5356801, 188.0209338,</div>
-<div class="line">    180.4120106, 172.7204129, 164.9578739,  157.138341, 149.2820719,</div>
+<div class="line">    180.4120106, 172.7204129, 164.9578739, 157.138341,  149.2820719,</div>
 <div class="line">    141.4227325, 133.6224484, 125.9975098, 118.7442167, 112.1250619,</div>
-<div class="line">    106.3720184,  101.573245,  97.7060744, 94.80219447, 92.84731645,</div>
-<div class="line">     91.5876897, 90.69125858,  90.0247106, 89.50066273, 89.07172653,</div>
+<div class="line">    106.3720184, 101.573245,  97.7060744,  94.80219447, 92.84731645,</div>
+<div class="line">    91.5876897,  90.69125858, 90.0247106,  89.50066273, 89.07172653,</div>
 <div class="line">    88.71016277, 88.39855163, 88.12531192, 87.88239154, 87.66399733,</div>
 <div class="line">    87.46582419, 87.28474325, 87.11794571, 86.96342626, 86.81954855,</div>
-<div class="line">    86.68498918, 86.55863586,  86.4395753, 86.32702159, 86.22032926,</div>
+<div class="line">    86.68498918, 86.55863586, 86.4395753,  86.32702159, 86.22032926,</div>
 <div class="line">    86.11890837, 86.02227577, 85.93001157, 85.84172799, 85.75711414,</div>
-<div class="line">    85.67586468,  85.5977274, 85.52247784, 85.44990292, 85.37981384,</div>
-<div class="line">    85.31205745, 85.24646844, 85.18291616, 85.12127864,    85.06124,</div>
+<div class="line">    85.67586468, 85.5977274,  85.52247784, 85.44990292, 85.37981384,</div>
+<div class="line">    85.31205745, 85.24646844, 85.18291616, 85.12127864, 85.06124,</div>
 <div class="line">}</div>
 </div><!-- fragment -->
 <p class="definition">Definition at line <a class="el" href="wave__shape_8cpp_source.html#l00024">24</a> of file <a class="el" href="wave__shape_8cpp_source.html">wave_shape.cpp</a>.</p>
@@ -227,7 +228,7 @@ Here is the caller graph for this function:</div>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">const int shape_size = sizeof(<a class="el" href="wave__shape_8cpp.html#ac90590641d80fb6ee53567544ae1e32c">shape</a>)/sizeof(<a class="el" href="wave__shape_8cpp.html#ac90590641d80fb6ee53567544ae1e32c">shape</a>[0])</td>
+          <td class="memname">const int shape_size = sizeof(<a class="el" href="wave__shape_8cpp.html#ac90590641d80fb6ee53567544ae1e32c">shape</a>) / sizeof(<a class="el" href="wave__shape_8cpp.html#ac90590641d80fb6ee53567544ae1e32c">shape</a>[0])</td>
         </tr>
       </table>
 </div><div class="memdoc">
