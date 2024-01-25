@@ -23,18 +23,24 @@
 
 namespace shrapnel::presets {
 
+PresetsManager::PresetsManager(
+    std::unique_ptr<persistence::Crud<std::span<uint8_t>>> a_storage)
+    : storage{std::move(a_storage)}
+{
+}
+
 int PresetsManager::create(const PresetData &preset, id_t &id_out)
 {
     std::array<uint8_t, 100> buffer;
     auto data = std::span<uint8_t, std::dynamic_extent>(buffer);
 
-    int rc = serialise_preset(preset, data);
-    if(rc != 0)
+    auto encoded = api::to_bytes(preset, data);
+    if(!encoded.has_value())
     {
         return -1;
     }
 
-    rc = storage->create(data, id_out);
+    int rc = storage->create(*encoded, id_out);
     if(rc != 0)
     {
         return -1;
@@ -43,24 +49,25 @@ int PresetsManager::create(const PresetData &preset, id_t &id_out)
     return 0;
 }
 
-std::optional<PresetData> PresetsManager::read(id_t id)
+int PresetsManager::read(id_t id, PresetData &preset)
 {
     std::array<uint8_t, 100> buffer;
-    auto data = std::span<uint8_t, std::dynamic_extent>(buffer);
-    int rc = storage->load(id, data);
+    auto data = std::span<uint8_t>(buffer);
+    int rc = storage->read(id, data);
     if(rc != 0)
     {
-        return std::nullopt;
+        return -1;
     }
 
-    PresetData preset;
-    rc = deserialise_preset(data, preset);
-    if(rc != 0)
+    auto decoded = api::from_bytes<PresetData>(data);
+    if(!decoded.has_value())
     {
-        return std::nullopt;
+        return -1;
     }
 
-    return preset;
+    preset = *decoded;
+
+    return 0;
 }
 
 int PresetsManager::update(id_t id, const PresetData &preset)
@@ -68,13 +75,13 @@ int PresetsManager::update(id_t id, const PresetData &preset)
     std::array<uint8_t, 100> buffer;
     auto data = std::span<uint8_t, std::dynamic_extent>(buffer);
 
-    int rc = serialise_preset(preset, data);
-    if(rc != 0)
+    auto encoded = api::to_bytes(preset, data);
+    if(!encoded.has_value())
     {
         return -1;
     }
 
-    rc = storage->save(id, data);
+    int rc = storage->update(id, *encoded);
     if(rc != 0)
     {
         return -1;
@@ -83,9 +90,9 @@ int PresetsManager::update(id_t id, const PresetData &preset)
     return 0;
 }
 
-int PresetsManager::remove(id_t id)
+int PresetsManager::destroy(id_t id)
 {
-    int rc = storage->remove(id);
+    int rc = storage->destroy(id);
     if(rc != 0)
     {
         return -1;
@@ -97,17 +104,17 @@ int PresetsManager::remove(id_t id)
 void PresetsManager::for_each(
     etl::delegate<void(id_t, const PresetData &)> callback)
 {
-    for(const auto &entry : *storage)
-    {
-        auto id = key_to_id(entry.key);
-        auto preset = read(id);
-        if(!preset.has_value())
+    storage->for_each(
+        [&callback](uint32_t id, std::span<uint8_t> data)
         {
-            ESP_LOGE(TAG, "Failed to read preset at key %s", entry.key);
-            continue;
-        }
-        callback(id, *preset);
-    }
+            auto decoded = api::from_bytes<PresetData>(data);
+            if(!decoded.has_value())
+            {
+                return;
+            }
+
+            callback(id, *decoded);
+        });
 }
 
 } // namespace shrapnel::presets

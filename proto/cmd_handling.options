@@ -1,0 +1,3 @@
+# nanopb-specific options for the messages defined in cmd_handling.proto.
+
+shrapnel.cmd_handling.Update.id max_size:32

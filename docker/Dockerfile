@@ -30,6 +30,7 @@ RUN apt-get install -y \
     bison \
     gperf \
     python3 \
+    python3-pip \
     python3-venv \
     ninja-build \
     ccache \
@@ -37,7 +38,8 @@ RUN apt-get install -y \
     libssl-dev \
     dfu-util \
     libusb-1.0-0 \
-    lcov
+    lcov \
+    protobuf-compiler
 
 RUN rm -rf /var/lib/apt/lists/* && \
     apt-get clean

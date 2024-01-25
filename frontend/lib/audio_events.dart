@@ -18,15 +18,23 @@
  */
 
 import 'package:flutter/material.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logging/logging.dart';
 import 'package:pausable_timer/pausable_timer.dart';
 
-import 'json_websocket.dart';
+part 'audio_events.freezed.dart';
 
 final _log = Logger('shrapnel.audio_events');
 
+@freezed
+sealed class AudioEventMessage with _$AudioEventMessage {
+  factory AudioEventMessage.inputClipped() = AudioEventMessageInputClipped;
+
+  factory AudioEventMessage.outputClipped() = AudioEventMessageOutputClipped;
+}
+
 class AudioClippingService extends ChangeNotifier {
-  AudioClippingService({required JsonWebsocket websocket}) {
+  AudioClippingService({required Stream<AudioEventMessage> stream}) {
     _outputClippingTimer = PausableTimer(
       const Duration(milliseconds: 1100),
       _clearOutputClipping,
@@ -37,7 +45,7 @@ class AudioClippingService extends ChangeNotifier {
       _clearInputClipping,
     );
 
-    websocket.dataStream.listen(_handleMessage);
+    stream.listen(_handleMessage);
   }
 
   bool inputIsClipped = false;
@@ -57,22 +65,23 @@ class AudioClippingService extends ChangeNotifier {
     notifyListeners();
   }
 
-  void _handleMessage(Map<String, dynamic> message) {
-    if (message['messageType'] == 'Event::input_clipped') {
-      inputIsClipped = true;
-      notifyListeners();
+  void _handleMessage(AudioEventMessage message) {
+    switch (message) {
+      case AudioEventMessageInputClipped():
+        inputIsClipped = true;
+        notifyListeners();
 
-      _inputClippingTimer
-        ..reset()
-        ..start();
-    } else if (message['messageType'] == 'Event::output_clipped') {
-      outputIsClipped = true;
-      _log.finer('clipped');
-      notifyListeners();
+        _inputClippingTimer
+          ..reset()
+          ..start();
+      case AudioEventMessageOutputClipped():
+        outputIsClipped = true;
+        _log.finer('clipped');
+        notifyListeners();
 
-      _outputClippingTimer
-        ..reset()
-        ..start();
+        _outputClippingTimer
+          ..reset()
+          ..start();
     }
   }
 }

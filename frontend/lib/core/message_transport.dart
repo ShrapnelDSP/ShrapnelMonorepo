@@ -30,6 +30,9 @@ abstract class MessageTransport<T1, T2> {
   /// A null is emitted every time a connection is successfully created
   Stream<void> get connectionStream;
 
+  /// Returns true if the connection is alive at the moment
+  bool get isAlive;
+
   /// Must be called to clean up resource after the transport is no longer in
   /// use.
   void dispose();

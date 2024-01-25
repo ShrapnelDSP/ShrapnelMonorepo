@@ -17,51 +17,37 @@
  * ShrapnelDSP. If not, see <https://www.gnu.org/licenses/>.
  */
 
-// ignore_for_file: invalid_annotation_target
-// freezed and JsonKey generate this warning when used together correctly
-
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'models.freezed.dart';
 
-part 'models.g.dart';
+typedef MidiMappingId = int;
 
-@Freezed(unionKey: 'messageType')
-class MidiApiMessage with _$MidiApiMessage {
-  @FreezedUnionValue('MidiMap::get::request')
-  const factory MidiApiMessage.getRequest() = GetRequest;
+@freezed
+sealed class MidiApiMessage with _$MidiApiMessage {
+  const factory MidiApiMessage.getRequest() = MidiGetRequest;
 
-  @MidiMappingJsonConverter()
-  @FreezedUnionValue('MidiMap::get::response')
-  const factory MidiApiMessage.getResponse({
-    required Map<String, MidiMapping> mappings,
-  }) = GetResponse;
-
-  @FreezedUnionValue('MidiMap::create::request')
   const factory MidiApiMessage.createRequest({
-    required MidiMappingEntry mapping,
-  }) = CreateRequest;
+    required MidiMapping mapping,
+  }) = MidiCreateRequest;
 
-  @FreezedUnionValue('MidiMap::create::response')
+
   const factory MidiApiMessage.createResponse({
     required MidiMappingEntry mapping,
-  }) = CreateResponse;
+  }) = MidiCreateResponse;
 
-  @FreezedUnionValue('MidiMap::update')
+
   const factory MidiApiMessage.update({
     required MidiMappingEntry mapping,
-  }) = Update;
+  }) = MidiUpdate;
 
-  @FreezedUnionValue('MidiMap::remove')
-  const factory MidiApiMessage.remove({required String id}) = Remove;
 
-  @FreezedUnionValue('MidiMap::midi_message_received')
+  const factory MidiApiMessage.remove({required MidiMappingId id}) = MidiRemove;
+
+
   const factory MidiApiMessage.midiMessageReceived({
     required MidiMessage message,
   }) = MidiMessageReceived;
-
-  factory MidiApiMessage.fromJson(Map<String, dynamic> json) =>
-      _$MidiApiMessageFromJson(json);
 }
 
 @freezed
@@ -89,151 +75,37 @@ sealed class MidiMapping with _$MidiMapping {
 
 /// Midi mapping that is encodable to JSON. Used to communicate between the
 /// firmware and the frontend.
+// TODO remove if not needed any more
 @freezed
 class MidiMappingDto with _$MidiMappingDto {
   const factory MidiMappingDto({
-    @JsonKey(name: 'midi_channel') required int midiChannel,
-    @JsonKey(name: 'cc_number') required int ccNumber,
-    @JsonKey(name: 'parameter_id') required String? parameterId,
-    @JsonKey(name: 'mode') required MidiMappingMode mode,
-    @JsonKey(name: 'preset_id') required int? presetId,
+    required int midiChannel,
+    required int ccNumber,
+    required String? parameterId,
+    required MidiMappingMode mode,
+    required int? presetId,
   }) = _MidiMappingDto;
 
   const MidiMappingDto._();
-
-  factory MidiMappingDto.fromJson(Map<String, dynamic> json) {
-    // Early versions of firmware do not include the mode field. Set it to a
-    // default value (parameter), which behaves the same as those firmware
-    // versions.
-    final mode = json.containsKey('mode')
-        ? MidiMappingMode.values.firstWhere((v) => v.apiName == json['mode'])
-        : MidiMappingMode.parameter;
-
-    return MidiMappingDto(
-      midiChannel: json['midi_channel'] as int,
-      ccNumber: json['cc_number'] as int,
-      parameterId: json['parameter_id'] as String?,
-      mode: mode,
-      presetId: json['preset_id'] as int?,
-    );
-  }
-
-  Map<String, dynamic> toJson() => <String, dynamic>{
-        'midi_channel': midiChannel,
-        'cc_number': ccNumber,
-        if (parameterId != null) 'parameter_id': parameterId,
-        'mode': mode.apiName,
-        if (presetId != null) 'preset_id': presetId,
-      };
-}
-
-class MidiMappingJsonConverter
-    implements JsonConverter<MidiMapping, Map<String, dynamic>> {
-  const MidiMappingJsonConverter();
-
-  @override
-  MidiMapping fromJson(Map<String, dynamic> json) {
-    final dto = MidiMappingDto.fromJson(json);
-
-    return switch (dto.mode) {
-      MidiMappingMode.toggle => MidiMapping.toggle(
-          midiChannel: dto.midiChannel,
-          ccNumber: dto.ccNumber,
-          parameterId: dto.parameterId!,
-        ),
-      MidiMappingMode.parameter => MidiMapping.parameter(
-          midiChannel: dto.midiChannel,
-          ccNumber: dto.ccNumber,
-          parameterId: dto.parameterId!,
-        ),
-      MidiMappingMode.button => MidiMapping.button(
-          midiChannel: dto.midiChannel,
-          ccNumber: dto.ccNumber,
-          presetId: dto.presetId!,
-        ),
-    };
-  }
-
-  @override
-  Map<String, dynamic> toJson(MidiMapping object) {
-    return switch (object) {
-      MidiMappingToggle(
-        :final midiChannel,
-        :final ccNumber,
-        :final parameterId
-      ) =>
-        MidiMappingDto(
-          midiChannel: midiChannel,
-          ccNumber: ccNumber,
-          parameterId: parameterId,
-          mode: MidiMappingMode.toggle,
-          presetId: null,
-        ),
-      MidiMappingParameter(
-        :final midiChannel,
-        :final ccNumber,
-        :final parameterId
-      ) =>
-        MidiMappingDto(
-          midiChannel: midiChannel,
-          ccNumber: ccNumber,
-          parameterId: parameterId,
-          mode: MidiMappingMode.parameter,
-          presetId: null,
-        ),
-      MidiMappingButton(:final midiChannel, :final ccNumber, :final presetId) =>
-        MidiMappingDto(
-          midiChannel: midiChannel,
-          ccNumber: ccNumber,
-          parameterId: null,
-          mode: MidiMappingMode.button,
-          presetId: presetId,
-        ),
-    }
-        .toJson();
-  }
 }
 
 @freezed
 class MidiMappingEntry with _$MidiMappingEntry {
-  @MidiMappingJsonConverter()
   const factory MidiMappingEntry({
-    required String id,
+    required MidiMappingId id,
     required MidiMapping mapping,
   }) = _MidiMappingEntry;
 
   const MidiMappingEntry._();
-
-  factory MidiMappingEntry.fromJson(Map<String, dynamic> json) {
-    if (json.length != 1) {
-      throw FormatException(
-        'Expected a single entry in map, but got ${json.length}',
-        json,
-      );
-    }
-
-    return MidiMappingEntry(
-      id: json.keys.first,
-      mapping: const MidiMappingJsonConverter()
-          .fromJson(json.values.first as Map<String, dynamic>),
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return <String, dynamic>{
-      id: const MidiMappingJsonConverter().toJson(mapping),
-    };
-  }
 }
 
 enum MidiMappingMode {
-  toggle(apiName: 'toggle', uiName: 'Toggle'),
-  parameter(apiName: 'parameter', uiName: 'Knob'),
-  button(apiName: 'button', uiName: 'Button');
+  toggle(uiName: 'Toggle'),
+  parameter(uiName: 'Knob'),
+  button(uiName: 'Button');
 
-  const MidiMappingMode({required this.apiName, required this.uiName});
+  const MidiMappingMode({required this.uiName});
 
-  final String apiName;
   final String uiName;
 }
 
@@ -243,25 +115,22 @@ class MidiMessage with _$MidiMessage {
     required int channel,
     required int note,
     required int velocity,
-  }) = _NoteOn;
+  }) = MidiMessageNoteOn;
 
   const factory MidiMessage.noteOff({
     required int channel,
     required int note,
     required int velocity,
-  }) = _NoteOff;
+  }) = MidiMessageNoteOff;
 
   const factory MidiMessage.controlChange({
     required int channel,
     required int control,
     required int value,
-  }) = _ControlChange;
+  }) = MidiMessageControlChange;
 
   const factory MidiMessage.programChange({
     required int channel,
     required int number,
-  }) = _ProgramChange;
-
-  factory MidiMessage.fromJson(Map<String, dynamic> json) =>
-      _$MidiMessageFromJson(json);
+  }) = MidiMessageProgramChange;
 }

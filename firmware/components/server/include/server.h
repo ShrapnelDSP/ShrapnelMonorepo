@@ -53,6 +53,7 @@ private:
     SemaphoreHandle_t work_semaphore;
     friend esp_err_t websocket_get_handler(httpd_req_t *req);
     friend void websocket_send(void *arg);
+    friend void send_websocket_message(Server &self, const AppMessage &message);
 };
 
 } // namespace shrapnel

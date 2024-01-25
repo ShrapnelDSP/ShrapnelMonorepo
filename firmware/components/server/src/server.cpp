@@ -17,29 +17,22 @@
  * ShrapnelDSP. If not, see <https://www.gnu.org/licenses/>.
  */
 
-// #define LOG_LOCAL_LEVEL ESP_LOG_VERBOSE
+#define LOG_LOCAL_LEVEL ESP_LOG_DEBUG
 #include "server.h"
-#include "cmd_handling_json.h"
-#include "cmd_handling_json_builder.h"
 #include "esp_http_server.h"
 #include "esp_log.h"
 #include "messages.h"
-#include "midi_mapping_json_builder.h"
-#include "midi_mapping_json_parser.h"
 #include "os/debug.h"
-#include "presets_json_builder.h"
-#include "presets_json_parser.h"
-#include "rapidjson/writer.h"
-#include "selected_preset_json_builder.h"
-#include "selected_preset_json_parser.h"
 #include <etl/string_stream.h>
-#include <rapidjson/document.h>
 
 #define MAX_CLIENTS 3
 #define TAG "server"
 #define ARRAY_LENGTH(a) (sizeof(a) / sizeof(a[0]))
 
 namespace shrapnel {
+
+static void debug_print_sent_message(const ApiMessage &message);
+static void debug_print_received_message(const ApiMessage &message);
 
 Server::Server(QueueBase<AppMessage> *a_in_queue,
                QueueBase<AppMessage> *a_out_queue)
@@ -62,7 +55,7 @@ void Server::start()
     config.server_port = 8080;
     config.ctrl_port = 8081;
     config.max_open_sockets = MAX_CLIENTS;
-    config.stack_size = 5000;
+    config.stack_size = 5700;
 
     // Start the httpd server
     ESP_LOGI(TAG, "Starting server on port: '%d'", config.server_port);
@@ -102,26 +95,29 @@ void Server::stop()
 esp_err_t websocket_get_handler(httpd_req_t *req)
 {
     auto self = reinterpret_cast<Server *>(req->user_ctx);
-    /* Largest incoming message is a MidiMap::create::response which has a maximum size about 200 bytes */
-    char json[256] = {0};
+    std::array<uint8_t, 1024> buffer_data = {0};
 
     httpd_ws_frame_t pkt = {
         .final = false,
         .fragmented = false,
-        .type = HTTPD_WS_TYPE_TEXT,
-        .payload = reinterpret_cast<uint8_t *>(json),
+        .type = HTTPD_WS_TYPE_BINARY,
+        .payload = buffer_data.data(),
         .len = 0,
     };
 
     if(req->method == HTTP_GET)
     {
         ESP_LOGI(TAG, "Got websocket upgrade request");
+        ESP_LOGI(TAG,
+                 "%s stack %d",
+                 __FUNCTION__,
+                 uxTaskGetStackHighWaterMark(nullptr));
         heap_caps_print_heap_info(MALLOC_CAP_DEFAULT);
         debug_dump_task_list();
         return ESP_OK;
     }
 
-    esp_err_t rc = httpd_ws_recv_frame(req, &pkt, sizeof(json));
+    esp_err_t rc = httpd_ws_recv_frame(req, &pkt, buffer_data.size());
     if(rc != ESP_OK)
     {
         ESP_LOGE(TAG, "websocket parse failed");
@@ -130,106 +126,39 @@ esp_err_t websocket_get_handler(httpd_req_t *req)
 
     /* We should never see any of these packets */
     assert(pkt.type != HTTPD_WS_TYPE_CONTINUE);
-    assert(pkt.type != HTTPD_WS_TYPE_BINARY);
+    assert(pkt.type != HTTPD_WS_TYPE_TEXT);
     assert(pkt.type != HTTPD_WS_TYPE_CLOSE);
     assert(pkt.type != HTTPD_WS_TYPE_PING);
     assert(pkt.type != HTTPD_WS_TYPE_PONG);
     assert(pkt.final);
     assert(!pkt.fragmented);
-    assert(pkt.len <= sizeof(json));
-
-    ESP_LOGD(TAG, "%s len = %zd", __FUNCTION__, pkt.len);
-    ESP_LOG_BUFFER_HEXDUMP(TAG, json, sizeof(json), ESP_LOG_VERBOSE);
+    assert(pkt.len <= buffer_data.size());
 
     int fd = httpd_req_to_sockfd(req);
 
-    rapidjson::Document document;
-    document.Parse(json);
-    if(document.HasParseError())
-    {
-        ESP_LOGE(TAG, "Failed to parse incoming JSON");
-        return ESP_FAIL;
-    }
+    auto buffer = std::span<uint8_t>(buffer_data.data(), pkt.len);
 
+    ESP_LOGD(TAG, "%s len = %zd", __FUNCTION__, buffer.size());
+    ESP_LOG_BUFFER_HEXDUMP(TAG, buffer.data(), buffer.size(), ESP_LOG_VERBOSE);
+
+    auto message = api::from_bytes<ApiMessage>(buffer);
+    if(message.has_value())
     {
-        auto message =
-            parameters::from_json<parameters::ApiMessage>(document.GetObject());
-        if(message.has_value())
+        debug_print_received_message(*message);
+        auto out = AppMessage{*message, fd};
+        int queue_rc = self->in_queue->send(&out, pdMS_TO_TICKS(100));
+        if(queue_rc != pdPASS)
         {
-            auto out = AppMessage{*message, fd};
-            int queue_rc = self->in_queue->send(&out, pdMS_TO_TICKS(100));
-            if(queue_rc != pdPASS)
-            {
-                ESP_LOGE(TAG, "in_queue message dropped");
-            }
-            goto out;
+            ESP_LOGE(TAG, "in_queue message dropped");
         }
     }
-
+    else
     {
-        auto message =
-            midi::from_json<midi::MappingApiMessage>(document.GetObject());
-        if(message.has_value())
-        {
-            auto out = AppMessage{*message, fd};
-            int queue_rc = self->in_queue->send(&out, pdMS_TO_TICKS(100));
-            if(queue_rc != pdPASS)
-            {
-                ESP_LOGE(TAG, "in_queue message dropped");
-            }
-
-            etl::string<256> buffer;
-            etl::string_stream stream{buffer};
-            stream << *message;
-            ESP_LOGI(TAG, "decoded %s", buffer.data());
-
-            goto out;
-        }
+        ESP_LOGE(TAG, "failed to parse received message");
+        ESP_LOG_BUFFER_HEXDUMP(
+            TAG, buffer.data(), buffer.size(), ESP_LOG_ERROR);
     }
 
-    {
-        auto message = presets::from_json<presets::PresetsApiMessage>(
-            document.GetObject());
-        if(message.has_value())
-        {
-            auto out = AppMessage{*message, fd};
-            int queue_rc = self->in_queue->send(&out, pdMS_TO_TICKS(100));
-            if(queue_rc != pdPASS)
-            {
-                ESP_LOGE(TAG, "in_queue message dropped");
-            }
-
-            etl::string<256> buffer;
-            etl::string_stream stream{buffer};
-            stream << *message;
-            ESP_LOGI(TAG, "decoded PresetsApiMessage %s", buffer.data());
-
-            goto out;
-        }
-    }
-
-    {
-        auto message = selected_preset::from_json<
-            selected_preset::SelectedPresetApiMessage>(document.GetObject());
-        if(message.has_value())
-        {
-            auto out = AppMessage{*message, fd};
-            int queue_rc = self->in_queue->send(&out, pdMS_TO_TICKS(100));
-            if(queue_rc != pdPASS)
-            {
-                ESP_LOGE(TAG, "in_queue message dropped");
-            }
-
-            etl::string<256> buffer;
-            etl::string_stream stream{buffer};
-            stream << *message;
-            ESP_LOGI(TAG, "decoded SelectedPresetApiMessage %s", buffer.data());
-
-            goto out;
-        }
-    }
-
-out:
     ESP_LOGI(
         TAG, "%s stack %d", __FUNCTION__, uxTaskGetStackHighWaterMark(nullptr));
     return ESP_OK;
@@ -256,38 +185,41 @@ void websocket_send(void *arg)
         ESP_LOGD(TAG, "%s source fd = %d", __FUNCTION__, *message.second);
     }
 
-    rapidjson::Document document;
+    debug_print_sent_message(message.first);
 
-    auto json = std::visit([&](const auto &message) -> rapidjson::Value
-                           { return to_json(document, message); },
-                           message.first);
+    send_websocket_message(*self, message);
 
-    rapidjson::GenericStringBuffer<rapidjson::UTF8<>,
-                                   rapidjson::MemoryPoolAllocator<>>
-        buffer;
-    rapidjson::Writer writer{buffer};
-    json.Swap(document);
-    document.Accept(writer);
+    xSemaphoreGive(self->work_semaphore);
+}
 
-    const char *payload = buffer.GetString();
-    std::size_t payload_len = strlen(payload);
+void send_websocket_message(Server &self, const AppMessage &message)
+{
+    std::array<uint8_t, 1024> memory{};
+    auto buffer = std::span<uint8_t>{memory};
 
-    ESP_LOGD(TAG, "%s len = %zd", __FUNCTION__, payload_len);
-    ESP_LOG_BUFFER_HEXDUMP(TAG, payload, payload_len, ESP_LOG_VERBOSE);
+    auto encoded = api::to_bytes(message.first, buffer);
+    if(!encoded.has_value())
+    {
+        ESP_LOGE(TAG, "Failed to encode message");
+        return;
+    }
+
+    ESP_LOGD(TAG, "%s len = %zd", __FUNCTION__, encoded->size());
+    ESP_LOG_BUFFER_HEXDUMP(
+        TAG, encoded->data(), encoded->size(), ESP_LOG_VERBOSE);
 
     httpd_ws_frame_t pkt = {
         .final = false,
         .fragmented = false,
-        .type = HTTPD_WS_TYPE_TEXT,
-        // XXX: casting away const, but esp-idf does not modify the buffer
-        .payload = reinterpret_cast<uint8_t *>(const_cast<char *>(payload)),
-        .len = payload_len,
+        .type = HTTPD_WS_TYPE_BINARY,
+        .payload = encoded->data(),
+        .len = encoded->size(),
     };
 
     int client_fds[MAX_CLIENTS];
     size_t number_of_clients = ARRAY_LENGTH(client_fds);
 
-    rc = httpd_get_client_list(self->server, &number_of_clients, client_fds);
+    int rc = httpd_get_client_list(self.server, &number_of_clients, client_fds);
     if(rc != ESP_OK)
     {
         ESP_LOGE(
@@ -305,7 +237,7 @@ void websocket_send(void *arg)
 
         ESP_LOGD(TAG, "fd = %d", fd);
 
-        if(HTTPD_WS_CLIENT_WEBSOCKET != httpd_ws_get_fd_info(self->server, fd))
+        if(HTTPD_WS_CLIENT_WEBSOCKET != httpd_ws_get_fd_info(self.server, fd))
         {
             continue;
         }
@@ -315,19 +247,44 @@ void websocket_send(void *arg)
             continue;
         }
 
-        rc = httpd_ws_send_frame_async(self->server, fd, &pkt);
+        rc = httpd_ws_send_frame_async(self.server, fd, &pkt);
         if(ESP_OK != rc)
         {
             ESP_LOGE(TAG, "failed to send to fd %d rc %d", fd, rc);
         }
     }
+}
 
-    xSemaphoreGive(self->work_semaphore);
+static void debug_print_sent_message(const ApiMessage &message)
+{
+    etl::string<128> debug;
+    etl::string_stream debug_stream{debug};
+    std::visit(
+        [&](const auto &message) -> void
+        {
+            debug_stream << message;
+            ESP_LOGD(TAG, "sending message: %s", debug.data());
+        },
+        message);
+}
+
+static void debug_print_received_message(const ApiMessage &message)
+{
+    etl::string<128> debug;
+    etl::string_stream debug_stream{debug};
+    std::visit(
+        [&](const auto &message) -> void
+        {
+            debug_stream << message;
+            ESP_LOGD(TAG, "received message: %s", debug.data());
+        },
+        message);
 }
 
 void Server::send_message(const AppMessage &message)
 {
-    ESP_LOGD(TAG, "%s %s", __FUNCTION__, pcTaskGetName(nullptr));
+    ESP_LOGD(
+        TAG, "%s called from task: %s", __FUNCTION__, pcTaskGetName(nullptr));
 
     if(errQUEUE_FULL == out_queue->send(&message, pdMS_TO_TICKS(100)))
     {

@@ -21,6 +21,7 @@
 
 #include "etl/string.h"
 #include "etl/string_view.h"
+#include <span>
 
 namespace shrapnel::persistence {
 
@@ -33,11 +34,17 @@ class Storage
 {
 public:
     /// \return  non-zero on error
+    [[nodiscard]] virtual int save(const char *key,
+                                   std::span<uint8_t> data) = 0;
     [[nodiscard]] virtual int save(const char *key, etl::string_view data) = 0;
     [[nodiscard]] virtual int save(const char *key, uint32_t data) = 0;
+    [[nodiscard]] virtual int save(const char *key, float data) = 0;
     /// \return  non-zero on error
+    [[nodiscard]] virtual int load(const char *key,
+                                   std::span<uint8_t> &data) = 0;
     [[nodiscard]] virtual int load(const char *key, etl::istring &data) = 0;
     [[nodiscard]] virtual int load(const char *key, uint32_t &data) = 0;
+    [[nodiscard]] virtual int load(const char *key, float &data) = 0;
 };
 
 } // namespace shrapnel::persistence

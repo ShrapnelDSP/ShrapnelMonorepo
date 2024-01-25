@@ -24,7 +24,6 @@ import 'package:provider/provider.dart';
 
 import '../../parameter.dart';
 import '../../presets/model/presets.dart';
-import '../../util/uuid.dart';
 import '../model/models.dart';
 import '../model/service.dart';
 
@@ -405,9 +404,7 @@ class CreateMappingDialogState extends State<CreateMappingDialog> {
                     Navigator.pop(context);
                     unawaited(
                       mappings.createMapping(
-                        MidiMappingEntry(
-                          id: context.read<UuidService>().v4(),
-                          mapping: switch (mode) {
+                          switch (mode) {
                             null =>
                               throw StateError('Mode has not been selected'),
                             MidiMappingMode.toggle => MidiMapping.toggle(
@@ -427,7 +424,6 @@ class CreateMappingDialogState extends State<CreateMappingDialog> {
                               ),
                           },
                         ),
-                      ),
                     );
                   }
                 },

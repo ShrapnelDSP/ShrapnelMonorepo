@@ -18,212 +18,155 @@
  */
 
 import 'dart:async';
-import 'dart:convert';
+import 'dart:collection';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
-import 'package:shrapnel/json_websocket.dart';
+import 'package:shrapnel/core/message_transport.dart';
 import 'package:shrapnel/midi_mapping/model/models.dart';
 import 'package:shrapnel/midi_mapping/model/service.dart';
 import 'service_test.mocks.dart';
 
-@GenerateMocks([JsonWebsocket])
+@GenerateMocks([MessageTransport])
 void main() {
   group('Get MIDI mapping: ', () {
     test('success', () async {
       var listenerCount = 0;
-      final controller = StreamController<Map<String, dynamic>>.broadcast(
+      final controller = StreamController<MidiApiMessage>.broadcast(
         onListen: () => listenerCount++,
         onCancel: () => listenerCount--,
       );
 
-      final fakeWebsocket = MockJsonWebsocket();
+      final outputMessages = Queue<MidiApiMessage>();
+      final sinkController = StreamController<MidiApiMessage>();
+
+      final fakeWebsocket =
+          MockMessageTransport<MidiApiMessage, MidiApiMessage>();
       when(fakeWebsocket.connectionStream)
           .thenAnswer((_) => Stream.fromIterable([]));
       when(fakeWebsocket.isAlive).thenReturn(false);
+
+      const response = MidiApiMessage.update(
+        mapping: MidiMappingEntry(
+          id: 123,
+          mapping: MidiMapping.parameter(
+            midiChannel: 1,
+            ccNumber: 2,
+            parameterId: 'gain',
+          ),
+        ),
+      );
+
+      const request = MidiApiMessage.getRequest();
+
+      sinkController.stream.listen((event) {
+        outputMessages.add(event);
+
+        if (event == request) {
+          controller.add(response);
+        }
+      });
+
+      when(fakeWebsocket.sink).thenAnswer((_) => sinkController);
+      when(fakeWebsocket.stream).thenAnswer((_) => controller.stream);
+
       final uut = MidiMappingService(websocket: fakeWebsocket);
 
-      final responseJson = json.decode(
-        '''
-        {
-          "messageType": "MidiMap::get::response",
-          "mappings": {
-            "123": { "midi_channel": 1, "cc_number": 2, "parameter_id": "gain" }
-          }
-        }
-        ''',
-      ) as Map<String, dynamic>;
-
-      final requestJson = json.decode(
-        '''
-        {
-          "messageType": "MidiMap::get::request"
-        }
-        ''',
-      ) as Map<String, dynamic>;
-
-      when(fakeWebsocket.send(requestJson))
-          .thenAnswer((_) => controller.add(responseJson));
-      when(fakeWebsocket.dataStream).thenAnswer((_) => controller.stream);
-
-      expect(listenerCount, 0);
+      expect(listenerCount, 1);
       expect(uut.mappings, isEmpty);
 
       await uut.getMapping();
-      verify(fakeWebsocket.send(requestJson));
+      await pumpEventQueue();
+
+      expect(outputMessages.removeLast(), request);
+      expect(outputMessages, isEmpty);
       expect(uut.mappings, {
-        '123': const MidiMapping.parameter(
+        123: const MidiMapping.parameter(
           midiChannel: 1,
           ccNumber: 2,
           parameterId: 'gain',
         ),
       });
 
-      await pumpEventQueue();
-      expect(listenerCount, 0);
-
-      await controller.close();
-    });
-
-    test('timeout', () async {
-      var listenerCount = 0;
-      final controller = StreamController<Map<String, dynamic>>.broadcast(
-        onListen: () => listenerCount++,
-        onCancel: () => listenerCount--,
-      );
-
-      final fakeWebsocket = MockJsonWebsocket();
-      when(fakeWebsocket.connectionStream)
-          .thenAnswer((_) => Stream.fromIterable([]));
-      when(fakeWebsocket.isAlive).thenReturn(false);
-      final uut = MidiMappingService(websocket: fakeWebsocket);
-
-      when(fakeWebsocket.dataStream).thenAnswer((_) => controller.stream);
-
-      expect(listenerCount, 0);
-      expect(uut.mappings, isEmpty);
-
-      await uut.getMapping();
-      expect(uut.mappings, isEmpty);
-
-      // wait for timeout
-      await Future<void>.delayed(const Duration(seconds: 1));
+      uut.dispose();
 
       expect(listenerCount, 0);
 
       await controller.close();
+      await sinkController.close();
     });
   });
 
   group('Create MIDI mapping: ', () {
     test('success', () async {
       var listenerCount = 0;
-      final controller = StreamController<Map<String, dynamic>>.broadcast(
+      final controller = StreamController<MidiApiMessage>.broadcast(
         onListen: () => listenerCount++,
         onCancel: () => listenerCount--,
       );
 
-      final fakeWebsocket = MockJsonWebsocket();
+      final outputMessages = Queue<MidiApiMessage>();
+      final sinkController = StreamController<MidiApiMessage>();
+
+      final fakeWebsocket =
+          MockMessageTransport<MidiApiMessage, MidiApiMessage>();
       when(fakeWebsocket.connectionStream)
           .thenAnswer((_) => Stream.fromIterable([]));
       when(fakeWebsocket.isAlive).thenReturn(false);
+
+      const response = MidiApiMessage.createResponse(
+        mapping: MidiMappingEntry(
+          id: 123,
+          mapping: MidiMapping.parameter(
+            midiChannel: 1,
+            ccNumber: 2,
+            parameterId: 'gain',
+          ),
+        ),
+      );
+
+      const request = MidiApiMessage.createRequest(
+        mapping: MidiMapping.parameter(
+          midiChannel: 1,
+          ccNumber: 2,
+          parameterId: 'gain',
+        ),
+      );
+
+      sinkController.stream.listen((event) {
+        outputMessages.add(event);
+
+        if (event == request) {
+          controller.add(response);
+        }
+      });
+      when(fakeWebsocket.sink).thenAnswer((_) => sinkController);
+      when(fakeWebsocket.stream).thenAnswer((_) => controller.stream);
+
       final uut = MidiMappingService(websocket: fakeWebsocket);
 
-      final responseJson = json.decode(
-        '''
-        {
-          "messageType": "MidiMap::create::response",
-          "mapping" : {
-            "123": {
-              "midi_channel": 1,
-              "cc_number": 2,
-              "mode": "parameter",
-              "parameter_id": "gain"
-            }
-          }
-        }
-        ''',
-      ) as Map<String, dynamic>;
-
-      final requestJson = json.decode(
-        '''
-        {
-          "messageType": "MidiMap::create::request",
-          "mapping" : {
-            "123": {
-              "midi_channel": 1,
-              "cc_number": 2,
-              "mode": "parameter",
-              "parameter_id": "gain"
-            }
-          }
-        }
-        ''',
-      ) as Map<String, dynamic>;
-
-      when(fakeWebsocket.send(requestJson))
-          .thenAnswer((_) => controller.add(responseJson));
-      when(fakeWebsocket.dataStream).thenAnswer((_) => controller.stream);
-
-      expect(listenerCount, 0);
+      expect(listenerCount, 1);
       expect(uut.mappings, isEmpty);
 
       await uut.createMapping(
-        const MidiMappingEntry(
-          id: '123',
-          mapping: MidiMapping.parameter(
+        const MidiMapping.parameter(
             midiChannel: 1,
             ccNumber: 2,
-            parameterId: 'gain',
-          ),
+          parameterId: 'gain',
         ),
       );
-      verify(fakeWebsocket.send(requestJson));
+      await pumpEventQueue();
+
+      expect(outputMessages.removeLast(), request);
+      expect(outputMessages, isEmpty);
       expect(uut.mappings, hasLength(1));
 
-      await pumpEventQueue();
+      uut.dispose();
       expect(listenerCount, 0);
 
       await controller.close();
-    });
-
-    test('timeout', () async {
-      var listenerCount = 0;
-      final controller = StreamController<Map<String, dynamic>>.broadcast(
-        onListen: () => listenerCount++,
-        onCancel: () => listenerCount--,
-      );
-
-      final fakeWebsocket = MockJsonWebsocket();
-      when(fakeWebsocket.connectionStream)
-          .thenAnswer((_) => Stream.fromIterable([]));
-      when(fakeWebsocket.isAlive).thenReturn(false);
-      final uut = MidiMappingService(websocket: fakeWebsocket);
-
-      when(fakeWebsocket.dataStream).thenAnswer((_) => controller.stream);
-
-      expect(listenerCount, 0);
-      expect(uut.mappings, isEmpty);
-
-      final result = uut.createMapping(
-        const MidiMappingEntry(
-          id: '123',
-          mapping: MidiMapping.parameter(
-            midiChannel: 1,
-            ccNumber: 2,
-            parameterId: 'gain',
-          ),
-        ),
-      );
-      expect(uut.mappings, hasLength(1));
-      await result;
-
-      await pumpEventQueue();
-      expect(uut.mappings, isEmpty);
-      expect(listenerCount, 0);
-
-      await controller.close();
+      await sinkController.close();
     });
   });
 }

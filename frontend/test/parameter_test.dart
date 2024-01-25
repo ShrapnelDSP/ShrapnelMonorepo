@@ -26,47 +26,6 @@ import 'parameter_test.mocks.dart';
 
 @GenerateMocks([ParameterService])
 void main() {
-  test('Convert parameter update to json', () {
-    final expected = <String, dynamic>{
-      'messageType': 'parameterUpdate',
-      'value': 0.0,
-      'id': 'test',
-    };
-
-    final actual = ParameterServiceOutputMessage.parameterUpdate(
-      value: 0,
-      id: 'test',
-    ).toJson();
-
-    expect(actual, expected);
-  });
-
-  test('Parameter update from json', () {
-    final expected = ParameterServiceInputMessageParameterUpdate(
-      id: 'test',
-      value: 0.0,
-    );
-
-    final actual = ParameterServiceInputMessage.fromJson(<String, dynamic>{
-      'messageType': 'parameterUpdate',
-      'value': 0.0,
-      'id': 'test',
-    });
-
-    expect(actual, expected);
-  });
-
-  test('Convert initialise parameters to json', () {
-    final expected = <String, dynamic>{
-      'messageType': 'initialiseParameters',
-    };
-
-    final actual =
-        ParameterServiceOutputMessage.requestInitialisation().toJson();
-
-    expect(actual, expected);
-  });
-
   test(
     'Notifies ParameterService onUserChanged',
     () async {

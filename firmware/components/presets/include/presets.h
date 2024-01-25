@@ -19,7 +19,6 @@
 
 #pragma once
 
-#include "uuid.h"
 #include <cstdint>
 
 namespace shrapnel::presets {

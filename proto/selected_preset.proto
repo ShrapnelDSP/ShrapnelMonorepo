@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+package shrapnel.selected_preset;
+
+message Read {}
+
+message Notify {
+  uint32 id = 1;
+}
+
+message Write {
+  uint32 id = 1;
+}
+
+message Message {
+  oneof message {
+    Read read = 1;
+    Notify notify = 2;
+    Write write = 3;
+  }
+}

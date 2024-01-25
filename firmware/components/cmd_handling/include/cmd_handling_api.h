@@ -19,7 +19,10 @@
 
 #pragma once
 
+#include "api.h"
 #include "audio_param.h"
+#include "cmd_handling.pb.h"
+#include <etl/string_stream.h>
 #include <variant>
 
 namespace shrapnel::parameters {
@@ -39,4 +42,20 @@ struct Initialise final
 
 using ApiMessage = std::variant<Update, Initialise>;
 
+etl::string_stream &operator<<(etl::string_stream &out, const Update &self);
+etl::string_stream &operator<<(etl::string_stream &out, const Initialise &self);
+etl::string_stream &operator<<(etl::string_stream &out, const ApiMessage &self);
+
 } // namespace shrapnel::parameters
+
+namespace shrapnel::api {
+
+template <>
+int to_proto(const parameters::ApiMessage &message,
+             shrapnel_cmd_handling_Message &out);
+
+template <>
+int from_proto(const shrapnel_cmd_handling_Message &message,
+               parameters::ApiMessage &out);
+
+} // namespace shrapnel::api

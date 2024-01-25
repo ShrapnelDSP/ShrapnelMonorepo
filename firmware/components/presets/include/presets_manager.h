@@ -18,26 +18,30 @@
  */
 #pragma once
 
+#include "crud.h"
 #include "preset_serialisation.h"
 #include "presets_api.h"
-#include "presets_storage.h"
 #include <etl/delegate.h>
 #include <memory>
 
 namespace shrapnel::presets {
 
-class PresetsManager
+class PresetsManager : public persistence::Crud<PresetData>
 {
 public:
-    [[nodiscard]] int create(const PresetData &preset, id_t &id_out);
-    [[nodiscard]] std::optional<PresetData> read(id_t id);
-    [[nodiscard]] int update(id_t id, const PresetData &preset);
-    [[nodiscard]] int remove(id_t id);
+    explicit PresetsManager(
+        std::unique_ptr<persistence::Crud<std::span<uint8_t>>> a_storage);
 
-    void for_each(etl::delegate<void(id_t, const PresetData &)> callback);
+    [[nodiscard]] int create(const PresetData &preset, id_t &id_out) override;
+    [[nodiscard]] int read(id_t id, PresetData &data) override;
+    [[nodiscard]] int update(id_t id, const PresetData &preset) override;
+    [[nodiscard]] int destroy(id_t id) override;
+
+    void
+    for_each(etl::delegate<void(id_t, const PresetData &)> callback) override;
 
 private:
-    std::unique_ptr<presets_storage::Storage> storage;
+    std::unique_ptr<persistence::Crud<std::span<uint8_t>>> storage;
 };
 
 } // namespace shrapnel::presets

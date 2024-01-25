@@ -1,45 +1,34 @@
+include(../../../thirdparty/esp-idf-components/nanopb/nanopb-generate-cpp.cmake)
+
 add_library(presets STATIC)
 add_library(shrapnel::presets ALIAS presets)
 
+set(NANOPB_GENERATE_CPP_APPEND_PATH ON)
+nanopb_generate_cpp(PROTO_SRCS PROTO_HDRS
+                    ../../../proto/presets.proto
+                    ../../../proto/selected_preset.proto)
+
 target_sources(presets
                PRIVATE
-               proto/generated/presets.pb-c.c
+               ${PROTO_SRCS}
                src/preset_manager.cpp
-               src/presets_json_builder.cpp
-               src/presets_json_parser.cpp
+               src/presets_api.cpp
                src/presets_to_string.cpp
-               src/selected_preset_json_builder.cpp
-               src/selected_preset_json_parser.cpp
+               src/selected_preset_api.cpp
                src/selected_preset_manager.cpp
                src/selected_preset_to_string.cpp)
-target_include_directories(presets PUBLIC proto/generated include)
+               
+target_include_directories(presets PUBLIC
+                           include
+                           # for generated proto headers
+                           ${CMAKE_CURRENT_BINARY_DIR})
 
 target_link_libraries(presets
                       PUBLIC
                       idf::log
-                      idf::protobuf-c
+                      shrapnel::api
                       shrapnel::etl
                       shrapnel::persistence
-                      shrapnel::presets_storage
-                      shrapnel::rapidjson
-                      shrapnel::uuid
+                      shrapnel::nanopb
                       PRIVATE
                       cppcodec)
-
-if(DEFINED TESTING)
-    add_executable(presets_test
-                   test/presets_json_builder.cpp
-                   test/presets_json_parser.cpp
-                   test/selected_preset_json_builder.cpp
-                   test/selected_preset_json_parser.cpp)
-
-    target_include_directories(presets_test PRIVATE include)
-
-    target_link_libraries(presets_test
-                          PRIVATE
-                          presets
-                          GTest::gtest_main
-                          GTest::gmock
-                          shrapnel::compiler_warning_flags)
-    gtest_discover_tests(presets_test)
-endif()

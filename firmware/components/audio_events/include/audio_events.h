@@ -19,22 +19,14 @@
 
 #pragma once
 
-// Disable warning inside rapidjson
-// https://github.com/Tencent/rapidjson/issues/1700
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wclass-memaccess"
-#pragma GCC diagnostic ignored "-Wzero-as-null-pointer-constant"
-#pragma GCC diagnostic ignored "-Wsign-conversion"
-#pragma GCC diagnostic ignored "-Wswitch-enum"
-#include "rapidjson/document.h"
-#pragma GCC diagnostic pop
+#include "api.h"
+#include "audio_events.pb.h"
+
 #include <atomic>
+#include <etl/string_stream.h>
 #include <variant>
 
 namespace shrapnel::events {
-
-template <typename T>
-rapidjson::Value to_json(rapidjson::Document &document, const T &object);
 
 struct InputClipped
 {
@@ -51,8 +43,22 @@ using ApiMessage = std::variant<InputClipped, OutputClipped>;
 extern std::atomic_flag input_clipped;
 extern std::atomic_flag output_clipped;
 
-template <>
-rapidjson::Value to_json(rapidjson::Document &document,
-                         const ApiMessage &object);
+etl::string_stream &operator<<(etl::string_stream &out,
+                               const InputClipped &self);
+etl::string_stream &operator<<(etl::string_stream &out,
+                               const OutputClipped &self);
+etl::string_stream &operator<<(etl::string_stream &out, const ApiMessage &self);
 
 } // namespace shrapnel::events
+
+namespace shrapnel::api {
+
+template <>
+int to_proto(const events::ApiMessage &message,
+             shrapnel_audio_events_Message &out);
+
+template <>
+int from_proto(const shrapnel_audio_events_Message &message,
+               events::ApiMessage &out);
+
+} // namespace shrapnel::api

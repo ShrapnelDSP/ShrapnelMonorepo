@@ -1,4 +1,8 @@
 if(ESP_PLATFORM)
+    # FIXME: move the main_thread to a separate component so the build system can
+    # be used more effectively to keep it free from hardware dependencies
+    # It should link to no idf:: targets, or any espressif specific targets from
+    # shrapnel::
     idf_component_register(SRCS main.cpp
                            INCLUDE_DIRS include
                            REQUIRES
@@ -14,6 +18,7 @@ if(ESP_PLATFORM)
                           shrapnel::abstract_dsp
                           shrapnel::audio_events
                           shrapnel::cmd_handling
+                          shrapnel::esp_persistence
                           shrapnel::etl
                           shrapnel::hardware
                           shrapnel::heap_tracing

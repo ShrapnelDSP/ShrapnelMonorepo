@@ -19,6 +19,7 @@
 
 #pragma once
 
+#include <api.h>
 #include <audio_events.h>
 #include <cmd_handling_api.h>
 #include <midi_mapping_api.h>
@@ -35,3 +36,14 @@ using ApiMessage =
                  shrapnel::presets::PresetsApiMessage>;
 using FileDescriptor = std::optional<int>;
 using AppMessage = std::pair<ApiMessage, FileDescriptor>;
+
+namespace shrapnel::api {
+
+template <>
+std::optional<std::span<uint8_t>> to_bytes(const ApiMessage &message,
+                                           std::span<uint8_t> buffer);
+
+template <>
+std::optional<ApiMessage> from_bytes(std::span<const uint8_t> buffer);
+
+} // namespace shrapnel::api

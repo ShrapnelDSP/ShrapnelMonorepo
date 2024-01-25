@@ -24,9 +24,8 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logging/logging.dart';
 import 'package:rxdart/rxdart.dart';
 
-import 'json_websocket.dart';
-
-part 'parameter.g.dart';
+import 'api/api_websocket.dart';
+import 'core/message_transport.dart';
 
 part 'parameter.freezed.dart';
 
@@ -38,9 +37,6 @@ class AudioParameterDoubleData with _$AudioParameterDoubleData {
     required String id,
     required double value,
   }) = _AudioParameterDoubleData;
-
-  factory AudioParameterDoubleData.fromJson(Map<String, dynamic> json) =>
-      _$AudioParameterDoubleDataFromJson(json);
 }
 
 class AudioParameterDoubleModel {
@@ -74,10 +70,9 @@ class AudioParameterDoubleModel {
   ValueStream<double> get value => _controller;
 }
 
-@Freezed(unionKey: 'messageType')
+@freezed
 sealed class ParameterServiceOutputMessage
     with _$ParameterServiceOutputMessage {
-  @FreezedUnionValue('initialiseParameters')
   factory ParameterServiceOutputMessage.requestInitialisation() =
       ParameterServiceOutputMessageRequestInitialisation;
 
@@ -85,36 +80,29 @@ sealed class ParameterServiceOutputMessage
     required String id,
     required double value,
   }) = ParameterServiceOutputMessageParameterUpdate;
-
-  factory ParameterServiceOutputMessage.fromJson(Map<String, dynamic> json) =>
-      _$ParameterServiceOutputMessageFromJson(json);
 }
 
-@Freezed(unionKey: 'messageType')
+@freezed
 sealed class ParameterServiceInputMessage with _$ParameterServiceInputMessage {
   factory ParameterServiceInputMessage.parameterUpdate({
     required String id,
     required double value,
   }) = ParameterServiceInputMessageParameterUpdate;
-
-  factory ParameterServiceInputMessage.fromJson(Map<String, dynamic> json) =>
-      _$ParameterServiceInputMessageFromJson(json);
 }
 
-abstract class ParameterRepositoryBase {
-  bool get isAlive;
+class ParameterTransport
+    implements
+        MessageTransport<ParameterServiceOutputMessage,
+            ParameterServiceInputMessage> {
+  ParameterTransport({required this.websocket}) {
+    _controller.stream.listen((message) {
+      websocket.send(ApiMessage.parameterOutput(message: message));
+    });
+  }
 
-  void sendMessage(ParameterServiceOutputMessage message);
+  ApiWebsocket websocket;
 
-  Stream<ParameterServiceInputMessage> get stream;
-
-  Stream<void> get connectionStream;
-}
-
-class ParameterRepository implements ParameterRepositoryBase {
-  ParameterRepository({required this.websocket});
-
-  JsonWebsocket websocket;
+  final _controller = StreamController<ParameterServiceOutputMessage>();
 
   @override
   Stream<void> get connectionStream => websocket.connectionStream;
@@ -123,43 +111,41 @@ class ParameterRepository implements ParameterRepositoryBase {
   bool get isAlive => websocket.isAlive;
 
   @override
-  void sendMessage(ParameterServiceOutputMessage message) {
-    websocket.send(message.toJson());
+  Stream<ParameterServiceInputMessage> get stream => websocket.stream
+      .whereType<ApiMessageParameterInput>()
+      .map((event) => event.message);
+
+  @override
+  void dispose() {
+    unawaited(_controller.close());
   }
 
   @override
-  Stream<ParameterServiceInputMessage> get stream =>
-      websocket.dataStream.transform(
-        StreamTransformer.fromBind((input) async* {
-          await for (final event in input) {
-            try {
-              yield ParameterServiceInputMessage.fromJson(event);
-            } catch (_) {
-              // ignore
-            }
-          }
-        }),
-      );
+  StreamSink<ParameterServiceOutputMessage> get sink => _controller;
 }
 
 class ParameterService extends ChangeNotifier {
-  ParameterService({required ParameterRepositoryBase repository})
-      : _repository = repository {
-    // TODO is this adding noticable latency when adjusting parameters?
-    _sink.stream
-        .throttleTime(
+  ParameterService({
+    required MessageTransport<ParameterServiceOutputMessage,
+            ParameterServiceInputMessage>
+        transport,
+  }) : _transport = transport {
+    unawaited(
+      _transport.sink.addStream(
+        _sink.stream.throttleTime(
           const Duration(milliseconds: 100),
           trailing: true,
           leading: false,
-        )
-        .listen(_repository.sendMessage);
+        ),
+      ),
+    );
 
-    _repository.stream.listen(_handleIncomingMessage);
+    _transport.stream.listen(_handleIncomingMessage);
 
-    if (_repository.isAlive) {
+    if (_transport.isAlive) {
       _requestParameterInitialisation();
     }
-    _repository.connectionStream
+    _transport.connectionStream
         .listen((_) => _requestParameterInitialisation());
   }
 
@@ -176,7 +162,8 @@ class ParameterService extends ChangeNotifier {
 
   final _parameters = <String, AudioParameterDoubleModel>{};
 
-  final ParameterRepositoryBase _repository;
+  final MessageTransport<ParameterServiceOutputMessage,
+      ParameterServiceInputMessage> _transport;
 
   void registerParameter(AudioParameterDoubleModel parameter) {
     assert(!_parameters.containsKey(parameter.id));

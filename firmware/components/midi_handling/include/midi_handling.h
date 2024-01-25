@@ -73,7 +73,7 @@ public:
             switch(mapping.mode)
             {
             case midi::Mapping::Mode::PARAMETER:
-                parameters->update(*mapping.parameter_name,
+                parameters->update(mapping.parameter_name,
                                    cc_params->value /
                                        float(midi::CC_VALUE_MAX));
                 break;
@@ -84,9 +84,9 @@ public:
                     continue;
                 }
 
-                auto old_value = parameters->get(*mapping.parameter_name);
+                auto old_value = parameters->get(mapping.parameter_name);
 
-                parameters->update(*mapping.parameter_name,
+                parameters->update(mapping.parameter_name,
                                    old_value < 0.5f ? 1.f : 0.f);
                 break;
             }
@@ -98,20 +98,22 @@ public:
                     continue;
                 }
 
-                auto id = *mapping.preset_id;
+                auto id = mapping.preset_id;
                 int rc = selected_preset_manager->set(id);
                 if(rc != 0)
                 {
                     continue;
                 }
 
-                auto preset = presets_manager->read(id);
-                if(!preset.has_value())
+                presets::PresetData preset{};
+                rc = presets_manager->read(id, preset);
+                if(rc != 0)
                 {
                     continue;
                 }
 
-                deserialise_live_parameters(*parameters, preset->parameters);
+                presets::deserialise_live_parameters(*parameters,
+                                                     preset.parameters);
 
                 send_message({selected_preset::Notify{
                                   .selectedPresetId = id,

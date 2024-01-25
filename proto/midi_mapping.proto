@@ -1,0 +1,95 @@
+syntax = "proto3";
+
+package shrapnel.midi_mapping;
+
+message Mapping {
+  enum Mode {
+    parameter = 0;
+    toggle = 1;
+    button = 2;
+  }
+
+  uint32 midi_channel = 1;
+  uint32 cc_number = 2;
+  Mode mode = 3;
+  string parameterName = 4;
+  uint32 presetId = 5;
+}
+
+// A MIDI message that was received by the firmware
+message MidiMessage {
+  message NoteOn {
+    uint32 note = 1;
+    uint32 velocity = 2;
+  }
+
+  message NoteOff {
+    uint32 note = 1;
+    uint32 velocity = 2;
+  }
+
+  message ControlChange {
+    uint32 control = 1;
+    uint32 value = 2;
+  }
+  
+  message ProgramChange {
+    uint32 number = 1;
+  }
+  
+  // The MIDI channel where the message was received
+  uint32 channel = 1;
+  oneof parameters {
+    NoteOn note_on = 2;
+    NoteOff note_off = 3;
+    ControlChange control_change = 4;
+    ProgramChange program_change = 5;
+  }
+}
+
+message MappingRecord {
+  uint32 id = 1;
+  Mapping mapping = 2;
+}
+
+// Send from the frontend to the firmware. When received, the firmware will send
+// an update for each midi mapping that currently exists.
+message GetRequest {};
+
+// Firmware creates a new MIDI mapping according to the parameters.
+message CreateRequest {
+  Mapping mapping = 1;
+};
+
+// Indicates that a new MIDI mapping was created successfully.
+message CreateResponse {
+  MappingRecord mapping = 1;
+};
+
+// Firmware updates an existing MIDI mapping according to the parameters.
+message Update {
+  MappingRecord mapping = 1;
+};
+
+// Firmware removes the specified MIDI mapping .
+message Remove {
+  uint32 id = 1;
+};
+
+// Firmware notifies this periodically, so that the frontend can react
+// to MIDI messages, for example to connect a parameter to the MIDI
+// message.
+message MessageReceived {
+  MidiMessage received_message = 1;
+};
+
+message Message {
+  oneof message {
+    GetRequest get_request = 1;
+    CreateRequest create_request = 2;
+    CreateResponse create_response = 3;
+    Update update = 4;
+    Remove remove = 5;
+    MessageReceived message_received = 6;
+  }
+}
