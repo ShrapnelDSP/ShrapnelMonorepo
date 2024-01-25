@@ -29,10 +29,10 @@ namespace valvestate {
 
 class Clipping
 {
-    public:
-        void process(std::span<float> buffer);
+public:
+    void process(std::span<float> buffer);
 };
 
-}
-}
-}
+} // namespace valvestate
+} // namespace effect
+} // namespace shrapnel

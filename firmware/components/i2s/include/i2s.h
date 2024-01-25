@@ -20,15 +20,15 @@
 #pragma once
 
 #include "driver/gpio.h"
+#include "driver/i2s.h"
 #include "esp_err.h"
 #include "freertos/FreeRTOS.h"
 #include "freertos/queue.h"
-#include "driver/i2s.h"
 
 #include "audio_param.h"
 
-#define DMA_BUF_SIZE    (512)
-#define SAMPLE_RATE     (48000)
+#define DMA_BUF_SIZE (512)
+#define SAMPLE_RATE (48000)
 
 namespace shrapnel::audio {
 
@@ -46,4 +46,4 @@ esp_err_t i2s_setup(gpio_num_t profiling_gpio,
 
 void log_i2s_event(const i2s_event_t &event);
 
-}
+} // namespace shrapnel::audio

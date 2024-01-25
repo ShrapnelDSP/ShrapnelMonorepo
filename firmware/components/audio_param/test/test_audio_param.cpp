@@ -17,8 +17,8 @@
  * ShrapnelDSP. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include "gtest/gtest.h"
 #include "gmock/gmock.h"
+#include "gtest/gtest.h"
 
 #include "audio_param.h"
 #include <memory>
@@ -27,8 +27,7 @@ using namespace shrapnel;
 
 class AudioParams : public ::testing::Test
 {
-    protected:
-
+protected:
     using AudioParameters = parameters::AudioParameters<3, 1>;
 
     AudioParams()
@@ -106,27 +105,24 @@ TEST_F(AudioParams, Iterate)
     (void)uut.create_and_add_parameter("test2", 0, 10, 2);
 
     std::map<parameters::id_t, float> expected{
-       {"test", 5}, // defined in test fixture
-       {"test1", 1},
-       {"test2", 2},
+        {"test", 5}, // defined in test fixture
+        {"test1", 1},
+        {"test2", 2},
     };
 
     std::map<parameters::id_t, float> actual{};
 
-    for(const auto& [key, value] : uut)
+    for(const auto &[key, value] : uut)
     {
         actual[key] = *value->get_raw_parameter();
     }
 
     EXPECT_EQ(expected.size(), actual.size());
 
-    for(const auto& [key, value] : expected)
+    for(const auto &[key, value] : expected)
     {
         EXPECT_EQ(value, actual[key]);
     }
 }
 
-TEST_F(AudioParams, GetNormalised)
-{
-    EXPECT_EQ(0.5, uut.get("test"));
-}
+TEST_F(AudioParams, GetNormalised) { EXPECT_EQ(0.5, uut.get("test")); }

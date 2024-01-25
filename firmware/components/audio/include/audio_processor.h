@@ -25,9 +25,9 @@
 #include "valvestate.h"
 #include "wah.h"
 
+#include <atomic>
 #include <cstddef>
 #include <cstdint>
-#include <atomic>
 
 namespace shrapnel {
 
@@ -88,9 +88,8 @@ private:
     effect::Chorus chorus;
     effect::Wah wah;
 
-    shrapnel::dsp::FastFir<512,
-                           1024,
-                           shrapnel::dsp::FastConvolution<1024, 512>> speaker;
+    shrapnel::dsp::FastFir<512, 1024, shrapnel::dsp::FastConvolution<1024, 512>>
+        speaker;
 };
 
 static_assert(dsp::Processor<AudioProcessor, 512>);

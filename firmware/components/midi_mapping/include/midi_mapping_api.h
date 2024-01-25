@@ -110,18 +110,19 @@ etl::string_stream &operator<<(etl::string_stream &out,
 namespace api {
 
 template <>
-std::optional<std::span<uint8_t>> to_bytes(const midi::Mapping &message, std::span<uint8_t> buffer);
+std::optional<std::span<uint8_t>> to_bytes(const midi::Mapping &message,
+                                           std::span<uint8_t> buffer);
 
 template <>
 std::optional<midi::Mapping> from_bytes(std::span<const uint8_t> buffer);
 
 template <>
-int
-to_proto(const midi::MappingApiMessage &message, shrapnel_midi_mapping_Message &out);
+int to_proto(const midi::MappingApiMessage &message,
+             shrapnel_midi_mapping_Message &out);
 
 template <>
-int
-from_proto(const shrapnel_midi_mapping_Message &message, midi::MappingApiMessage &out);
+int from_proto(const shrapnel_midi_mapping_Message &message,
+               midi::MappingApiMessage &out);
 
 } // namespace api
 } // namespace shrapnel

@@ -106,8 +106,7 @@ public:
     }
 
     /// \return  non-zero on error
-    [[nodiscard]] int read(uint32_t id,
-                           std::span<uint8_t> &buffer) override
+    [[nodiscard]] int read(uint32_t id, std::span<uint8_t> &buffer) override
     {
         nvs_handle_t nvs_handle;
         esp_err_t err;
@@ -409,4 +408,4 @@ private:
     static_assert(std::input_iterator<EspCrud::Iterator>);
 };
 
-} // namespace shrapnel::presets_storage
+} // namespace shrapnel::persistence

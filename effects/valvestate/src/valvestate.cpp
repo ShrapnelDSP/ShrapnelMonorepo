@@ -40,10 +40,7 @@ void Valvestate::set_contour(float a_contour)
     contour.set_parameter(a_contour);
 }
 
-void Valvestate::set_volume(float a_volume)
-{
-    volume = a_volume;
-}
+void Valvestate::set_volume(float a_volume) { volume = a_volume; }
 
 void Valvestate::process(std::span<float> buffer)
 {
@@ -75,4 +72,4 @@ void Valvestate::reset()
     contour.reset();
 }
 
-}
+} // namespace shrapnel::effect::valvestate

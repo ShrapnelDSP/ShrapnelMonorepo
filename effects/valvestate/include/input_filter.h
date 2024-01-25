@@ -20,22 +20,22 @@
 
 #pragma once
 
-#include "iir_concrete.h"
 #include "dsp_concepts.h"
+#include "iir_concrete.h"
 
 namespace shrapnel::effect::valvestate {
 
 class InputFilter
 {
-    public:
+public:
     void prepare(float samplerate, size_t);
     void process(std::span<float> buffer);
     void reset();
 
-    private:
+private:
     shrapnel::dsp::IirFilter filter;
 };
 
 static_assert(dsp::Processor<InputFilter>);
 
-}
+} // namespace shrapnel::effect::valvestate

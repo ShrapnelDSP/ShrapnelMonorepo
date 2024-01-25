@@ -26,8 +26,9 @@
 namespace shrapnel {
 namespace dsp {
 
-class IirFilterBase {
-    public:
+class IirFilterBase
+{
+public:
     virtual void process(const float *in, float *out, std::size_t buf_size) = 0;
 
     virtual void reset(void) = 0;
@@ -37,5 +38,5 @@ class IirFilterBase {
     virtual void set_coefficients(std::array<float, 10> new_coefficients) = 0;
 };
 
-}
-}
+} // namespace dsp
+} // namespace shrapnel

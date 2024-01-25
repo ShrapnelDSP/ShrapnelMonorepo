@@ -43,8 +43,10 @@ using ApiMessage = std::variant<InputClipped, OutputClipped>;
 extern std::atomic_flag input_clipped;
 extern std::atomic_flag output_clipped;
 
-etl::string_stream &operator<<(etl::string_stream &out, const InputClipped &self);
-etl::string_stream &operator<<(etl::string_stream &out, const OutputClipped &self);
+etl::string_stream &operator<<(etl::string_stream &out,
+                               const InputClipped &self);
+etl::string_stream &operator<<(etl::string_stream &out,
+                               const OutputClipped &self);
 etl::string_stream &operator<<(etl::string_stream &out, const ApiMessage &self);
 
 } // namespace shrapnel::events
@@ -56,7 +58,7 @@ int to_proto(const events::ApiMessage &message,
              shrapnel_audio_events_Message &out);
 
 template <>
-int
-from_proto(const shrapnel_audio_events_Message &message, events::ApiMessage &out);
+int from_proto(const shrapnel_audio_events_Message &message,
+               events::ApiMessage &out);
 
 } // namespace shrapnel::api

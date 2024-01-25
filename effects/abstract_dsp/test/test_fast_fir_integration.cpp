@@ -17,30 +17,40 @@
  * ShrapnelDSP. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include "gtest/gtest.h"
 #include "gmock/gmock.h"
+#include "gtest/gtest.h"
 
 #include "fast_convolution.h"
 #include "fast_fir.h"
 
-void _esp_error_check_failed(esp_err_t rc, const char *file, int line, const char *function, const char *expression)
+void _esp_error_check_failed(esp_err_t rc,
+                             const char *file,
+                             int line,
+                             const char *function,
+                             const char *expression)
 {
     printf("ESP_ERROR_CHECK failed: esp_err_t 0x%x", rc);
 #ifdef CONFIG_ESP_ERR_TO_NAME_LOOKUP
     printf(" (%s)", esp_err_to_name(rc));
 #endif //CONFIG_ESP_ERR_TO_NAME_LOOKUP
     printf(" at %p\n", __builtin_return_address(0));
-    printf("file: \"%s\" line %d\nfunc: %s\nexpression: %s\n", file, line, function, expression);
+    printf("file: \"%s\" line %d\nfunc: %s\nexpression: %s\n",
+           file,
+           line,
+           function,
+           expression);
     abort();
 }
 
-void profiling_mark_stage(unsigned int stage) {(void)stage;}
+void profiling_mark_stage(unsigned int stage) { (void)stage; }
 
 using ::testing::ElementsAre;
 using ::testing::FloatEq;
 using ::testing::FloatNear;
 
-class FastFirIntegration : public ::testing::Test {};
+class FastFirIntegration : public ::testing::Test
+{
+};
 
 TEST_F(FastFirIntegration, ImpulseZeroDelayIsIdentity)
 {
@@ -55,17 +65,15 @@ TEST_F(FastFirIntegration, ImpulseZeroDelayIsIdentity)
         1,
     };
 
-    auto convolution = std::make_unique<shrapnel::dsp::FastConvolution<16, 1>>(coefficients);
-    shrapnel::dsp::FastFir<4, 16, shrapnel::dsp::FastConvolution<16, 1>> uut(std::move(convolution));
+    auto convolution =
+        std::make_unique<shrapnel::dsp::FastConvolution<16, 1>>(coefficients);
+    shrapnel::dsp::FastFir<4, 16, shrapnel::dsp::FastConvolution<16, 1>> uut(
+        std::move(convolution));
 
     uut.process(input);
 
-    EXPECT_THAT(input, ElementsAre(
-                FloatEq(1),
-                FloatEq(2),
-                FloatEq(3),
-                FloatEq(4)
-                ));
+    EXPECT_THAT(input,
+                ElementsAre(FloatEq(1), FloatEq(2), FloatEq(3), FloatEq(4)));
 }
 
 TEST_F(FastFirIntegration, ImpulseNonZeroDelay)
@@ -82,17 +90,16 @@ TEST_F(FastFirIntegration, ImpulseNonZeroDelay)
         1,
     };
 
-    auto convolution = std::make_unique<shrapnel::dsp::FastConvolution<16, 2>>(coefficients);
-    shrapnel::dsp::FastFir<4, 16, shrapnel::dsp::FastConvolution<16, 2>> uut(std::move(convolution));
+    auto convolution =
+        std::make_unique<shrapnel::dsp::FastConvolution<16, 2>>(coefficients);
+    shrapnel::dsp::FastFir<4, 16, shrapnel::dsp::FastConvolution<16, 2>> uut(
+        std::move(convolution));
 
     uut.process(input);
 
-    EXPECT_THAT(input, ElementsAre(
-                FloatNear(0, 1e-6),
-                FloatEq(1),
-                FloatEq(2),
-                FloatEq(3)
-                ));
+    EXPECT_THAT(
+        input,
+        ElementsAre(FloatNear(0, 1e-6), FloatEq(1), FloatEq(2), FloatEq(3)));
 }
 
 TEST_F(FastFirIntegration, IsCommutative)
@@ -111,12 +118,15 @@ TEST_F(FastFirIntegration, IsCommutative)
         8,
     };
 
+    auto convolution_a =
+        std::make_unique<shrapnel::dsp::FastConvolution<16, 4>>(input_a);
+    shrapnel::dsp::FastFir<4, 16, shrapnel::dsp::FastConvolution<16, 4>> uut_a(
+        std::move(convolution_a));
 
-    auto convolution_a = std::make_unique<shrapnel::dsp::FastConvolution<16, 4>>(input_a);
-    shrapnel::dsp::FastFir<4, 16, shrapnel::dsp::FastConvolution<16, 4>> uut_a(std::move(convolution_a));
-
-    auto convolution_b = std::make_unique<shrapnel::dsp::FastConvolution<16, 4>>(input_b);
-    shrapnel::dsp::FastFir<4, 16, shrapnel::dsp::FastConvolution<16, 4>> uut_b(std::move(convolution_b));
+    auto convolution_b =
+        std::make_unique<shrapnel::dsp::FastConvolution<16, 4>>(input_b);
+    shrapnel::dsp::FastFir<4, 16, shrapnel::dsp::FastConvolution<16, 4>> uut_b(
+        std::move(convolution_b));
 
     uut_a.process(input_b);
     uut_b.process(input_a);
@@ -136,21 +146,20 @@ TEST_F(FastFirIntegration, IsLinear)
         4,
     };
 
-
     std::array<float, 2> coefficients{
         1,
         1,
     };
 
-    auto convolution = std::make_unique<shrapnel::dsp::FastConvolution<16, 2>>(coefficients);
-    shrapnel::dsp::FastFir<4, 16, shrapnel::dsp::FastConvolution<16, 2>> uut(std::move(convolution));
+    auto convolution =
+        std::make_unique<shrapnel::dsp::FastConvolution<16, 2>>(coefficients);
+    shrapnel::dsp::FastFir<4, 16, shrapnel::dsp::FastConvolution<16, 2>> uut(
+        std::move(convolution));
 
     uut.process(input);
 
-    EXPECT_THAT(input, ElementsAre(
-                FloatEq(1 + 0),
-                FloatEq(2 + 1),
-                FloatEq(3 + 2),
-                FloatEq(4 + 3)
-                ));
+    EXPECT_THAT(
+        input,
+        ElementsAre(
+            FloatEq(1 + 0), FloatEq(2 + 1), FloatEq(3 + 2), FloatEq(4 + 3)));
 }

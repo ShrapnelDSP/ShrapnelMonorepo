@@ -19,30 +19,32 @@
 
 #pragma once
 
-#include <cstdint>
-#include <driver/uart.h>
-#include <driver/gpio.h>
 #include "freertos/FreeRTOS.h"
+#include <cstdint>
+#include <driver/gpio.h>
+#include <driver/uart.h>
 #include <memory>
 #include <optional>
 
 namespace shrapnel {
 namespace midi {
 
-class MidiUartBase {
-    public:
+class MidiUartBase
+{
+public:
     virtual std::optional<uint8_t> get_byte(TickType_t timeout) = 0;
 };
 
-class EspMidiUart final : public MidiUartBase {
-    public:
+class EspMidiUart final : public MidiUartBase
+{
+public:
     EspMidiUart(uart_port_t uart, gpio_num_t rx_io);
 
     std::optional<uint8_t> get_byte(TickType_t timeout) override;
 
-    private:
+private:
     uart_port_t uart;
 };
 
-}
-}
+} // namespace midi
+} // namespace shrapnel
