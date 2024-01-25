@@ -30,7 +30,8 @@
 
 typedef struct dspal_delayline *dspal_delayline_t;
 
-typedef enum {
+typedef enum
+{
     DSPAL_OK,
     DSPAL_FAIL,
 } dspal_err_t;
@@ -41,7 +42,10 @@ extern "C" {
 
 dspal_err_t dspal_biquad_design_lowpass(float *coeffs, float f, float q_factor);
 
-void dspal_multiply(const float *in1, const float *in2, float *out, size_t buf_size);
+void dspal_multiply(const float *in1,
+                    const float *in2,
+                    float *out,
+                    size_t buf_size);
 
 dspal_delayline_t dspal_delayline_create(size_t max_samples);
 void dspal_delayline_destroy(dspal_delayline_t delayline);

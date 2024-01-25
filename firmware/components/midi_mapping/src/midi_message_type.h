@@ -24,50 +24,50 @@
 namespace shrapnel {
 namespace midi {
 
-template<typename T>
+template <typename T>
 constexpr const char *get_message_type();
 
-template<>
+template <>
 constexpr const char *get_message_type<GetRequest>()
 {
     return "MidiMap::get::request";
 }
 
-template<>
+template <>
 constexpr const char *get_message_type<GetResponse>()
 {
     return "MidiMap::get::response";
 }
 
-template<>
+template <>
 constexpr const char *get_message_type<CreateRequest>()
 {
     return "MidiMap::create::request";
 }
 
-template<>
+template <>
 constexpr const char *get_message_type<CreateResponse>()
 {
     return "MidiMap::create::response";
 }
 
-template<>
+template <>
 constexpr const char *get_message_type<Update>()
 {
     return "MidiMap::update";
 }
 
-template<>
+template <>
 constexpr const char *get_message_type<Remove>()
 {
     return "MidiMap::remove";
 }
 
-template<>
+template <>
 constexpr const char *get_message_type<MessageReceived>()
 {
     return "MidiMap::midi_message_received";
 }
 
-}
-}
+} // namespace midi
+} // namespace shrapnel

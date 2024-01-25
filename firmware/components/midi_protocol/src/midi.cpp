@@ -17,18 +17,20 @@
  * ShrapnelDSP. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include "midi_protocol.h"
 #include "esp_log.h"
+#include "midi_protocol.h"
 #include <etl/delegate.h>
 
 namespace shrapnel {
 namespace midi {
 
-Decoder::Decoder(Callback _on_message_decoded) :
-    on_message_decoded{_on_message_decoded},
-    state{IDLE},
-    current_status{0},
-    data_count{0} {}
+Decoder::Decoder(Callback _on_message_decoded)
+    : on_message_decoded{_on_message_decoded},
+      state{IDLE},
+      current_status{0},
+      data_count{0}
+{
+}
 
 void Decoder::decode(uint8_t byte)
 {
@@ -46,7 +48,7 @@ void Decoder::decode(uint8_t byte)
         break;
     }
 
-   state = new_state;
+    state = new_state;
 }
 
 Decoder::State Decoder::decode_idle(uint8_t byte)
@@ -110,14 +112,12 @@ void Decoder::output_message()
     case NOTE_ON:
         // TODO how to use a designated initialiser here? This is pretty hard
         //      to read.
-        message.parameters = Message::NoteOn{
-            .note = received_data[0],
-            .velocity = received_data[1]};
+        message.parameters = Message::NoteOn{.note = received_data[0],
+                                             .velocity = received_data[1]};
         break;
     case NOTE_OFF:
-        message.parameters = Message::NoteOff{
-            .note = received_data[0],
-            .velocity = received_data[1]};
+        message.parameters = Message::NoteOff{.note = received_data[0],
+                                              .velocity = received_data[1]};
         break;
     case CONTROL_CHANGE:
         // Channel Mode messages should be ignored
@@ -126,9 +126,8 @@ void Decoder::output_message()
             return;
         }
 
-        message.parameters = Message::ControlChange{
-            .control = received_data[0],
-            .value = received_data[1]};
+        message.parameters = Message::ControlChange{.control = received_data[0],
+                                                    .value = received_data[1]};
         break;
     case PROGRAM_CHANGE:
         message.parameters = Message::ProgramChange{.number = received_data[0]};
@@ -142,5 +141,5 @@ void Decoder::output_message()
     on_message_decoded(message);
 }
 
-}
-}
+} // namespace midi
+} // namespace shrapnel

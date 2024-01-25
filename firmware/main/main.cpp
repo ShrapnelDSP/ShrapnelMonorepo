@@ -30,31 +30,31 @@
 
 #include "cmd_handling_api.h"
 #include "esp_heap_caps.h"
-#include "midi_mapping.h"
-#include "rapidjson/writer.h"
 #include "esp_log.h"
 #include "freertos/projdefs.h"
+#include "midi_mapping.h"
+#include "rapidjson/writer.h"
 
 #include "freertos/FreeRTOS.h"
+#include "freertos/FreeRTOSConfig.h"
+#include "freertos/semphr.h"
 #include "freertos/task.h"
 #include "freertos/timers.h"
-#include "freertos/semphr.h"
-#include "freertos/FreeRTOSConfig.h"
 
+#include "esp_debug_helpers.h"
+#include "esp_netif.h"
+#include "mdns.h"
+#include "nvs_flash.h"
 #include <assert.h>
-#include <esp_wifi.h>
+#include <driver/gpio.h>
+#include <driver/i2c.h>
 #include <esp_event.h>
 #include <esp_system.h>
-#include <nvs_flash.h>
-#include <sys/param.h>
-#include <driver/i2c.h>
-#include <driver/gpio.h>
+#include <esp_wifi.h>
 #include <etl/string.h>
 #include <etl/string_stream.h>
-#include "nvs_flash.h"
-#include "esp_netif.h"
-#include "esp_debug_helpers.h"
-#include "mdns.h"
+#include <nvs_flash.h>
+#include <sys/param.h>
 
 #include "audio_events.h"
 #include "audio_param.h"
@@ -80,7 +80,7 @@
 
 #define TAG "main"
 #define QUEUE_LEN 4
-#define ARRAY_LENGTH(a) (sizeof(a)/sizeof(a[0]))
+#define ARRAY_LENGTH(a) (sizeof(a) / sizeof(a[0]))
 
 using WifiQueue = shrapnel::Queue<shrapnel::wifi::InternalEvent, 3>;
 
@@ -88,16 +88,22 @@ namespace shrapnel {
 
 extern "C" {
 
-static void disconnect_handler(void* arg, esp_event_base_t event_base,
-                               int32_t event_id, void* event_data);
-static void connect_handler(void* arg, esp_event_base_t event_base,
-                            int32_t event_id, void* event_data);
+static void disconnect_handler(void *arg,
+                               esp_event_base_t event_base,
+                               int32_t event_id,
+                               void *event_data);
+static void connect_handler(void *arg,
+                            esp_event_base_t event_base,
+                            int32_t event_id,
+                            void *event_data);
 static void start_mdns(void);
 static void i2c_setup(void);
 }
 
-static void disconnect_handler(void* arg, esp_event_base_t event_base,
-                               int32_t event_id, void* event_data)
+static void disconnect_handler(void *arg,
+                               esp_event_base_t event_base,
+                               int32_t event_id,
+                               void *event_data)
 {
     (void)event_base;
     (void)event_id;
@@ -113,8 +119,10 @@ static void disconnect_handler(void* arg, esp_event_base_t event_base,
     }
 }
 
-static void connect_handler(void* arg, esp_event_base_t event_base,
-                            int32_t event_id, void* event_data)
+static void connect_handler(void *arg,
+                            esp_event_base_t event_base,
+                            int32_t event_id,
+                            void *event_data)
 {
     (void)event_base;
     (void)event_id;
@@ -130,8 +138,10 @@ static void connect_handler(void* arg, esp_event_base_t event_base,
     }
 }
 
-static void wifi_start_handler(void *arg, esp_event_base_t event_base,
-                               int32_t event_id, void* event_data)
+static void wifi_start_handler(void *arg,
+                               esp_event_base_t event_base,
+                               int32_t event_id,
+                               void *event_data)
 {
     (void)event_data;
     assert(event_base == WIFI_EVENT);
@@ -149,30 +159,46 @@ static void wifi_start_handler(void *arg, esp_event_base_t event_base,
 static void start_mdns(void)
 {
     esp_err_t err = mdns_init();
-    if (err) {
+    if(err)
+    {
         ESP_LOGE(TAG, "MDNS Init failed: %d %s", err, esp_err_to_name(err));
         return;
     }
 
     err = mdns_hostname_set("guitar-dsp");
-    if(err) {
-        ESP_LOGE(TAG, "MDNS failed to set host name %d %s", err, esp_err_to_name(err));
+    if(err)
+    {
+        ESP_LOGE(TAG,
+                 "MDNS failed to set host name %d %s",
+                 err,
+                 esp_err_to_name(err));
         return;
     }
     err = mdns_instance_name_set("Barabas' Guitar Processor");
-    if(err) {
-        ESP_LOGE(TAG, "MDNS failed to set instance name %d %s", err, esp_err_to_name(err));
+    if(err)
+    {
+        ESP_LOGE(TAG,
+                 "MDNS failed to set instance name %d %s",
+                 err,
+                 esp_err_to_name(err));
         return;
     }
 
     err = mdns_service_add(NULL, "_http", "_tcp", 80, NULL, 0);
-    if(err) {
-        ESP_LOGE(TAG, "MDNS failed to add service %d %s", err, esp_err_to_name(err));
+    if(err)
+    {
+        ESP_LOGE(
+            TAG, "MDNS failed to add service %d %s", err, esp_err_to_name(err));
         return;
     }
-    err = mdns_service_instance_name_set("_http", "_tcp", "Barabas' Guitar Processor Web Server");
-    if(err) {
-        ESP_LOGE(TAG, "MDNS failed to set service name %d %s", err, esp_err_to_name(err));
+    err = mdns_service_instance_name_set(
+        "_http", "_tcp", "Barabas' Guitar Processor Web Server");
+    if(err)
+    {
+        ESP_LOGE(TAG,
+                 "MDNS failed to set service name %d %s",
+                 err,
+                 esp_err_to_name(err));
         return;
     }
 }
@@ -185,9 +211,10 @@ static void i2c_setup(void)
         .scl_io_num = GPIO_I2C_SCL,
         .sda_pullup_en = true,
         .scl_pullup_en = true,
-        .master = {
-            .clk_speed = 100 * 1000,
-        },
+        .master =
+            {
+                .clk_speed = 100 * 1000,
+            },
         .clk_flags = 0,
     };
 
@@ -195,9 +222,14 @@ static void i2c_setup(void)
     ESP_ERROR_CHECK(i2c_driver_install(I2C_NUM, I2C_MODE_MASTER, 0, 0, 0));
 }
 
-static void failed_alloc_callback(size_t size, uint32_t caps, const char *function_name)
+static void
+failed_alloc_callback(size_t size, uint32_t caps, const char *function_name)
 {
-    ESP_LOGE(TAG, "allocation failed. size=%zu caps=%08" PRIx32 "h, function=%s", size, caps, function_name);
+    ESP_LOGE(TAG,
+             "allocation failed. size=%zu caps=%08" PRIx32 "h, function=%s",
+             size,
+             caps,
+             function_name);
     heap_caps_print_heap_info(caps);
     abort();
 }
@@ -206,7 +238,8 @@ void nvs_debug_print();
 
 extern "C" void app_main(void)
 {
-    ESP_ERROR_CHECK(heap_caps_register_failed_alloc_callback(failed_alloc_callback));
+    ESP_ERROR_CHECK(
+        heap_caps_register_failed_alloc_callback(failed_alloc_callback));
 
     ESP_ERROR_CHECK(nvs_flash_init());
     nvs_debug_print();
@@ -216,7 +249,8 @@ extern "C" void app_main(void)
     auto persistence = std::make_shared<persistence::EspStorage>();
     auto audio_params = std::make_shared<AudioParameters>();
     auto presets_manager = std::make_shared<presets::PresetsManager>();
-    auto selected_preset_manager = std::make_shared<selected_preset::SelectedPresetManager>(persistence);
+    auto selected_preset_manager =
+        std::make_shared<selected_preset::SelectedPresetManager>(persistence);
 
     i2c_setup();
     profiling_init(DMA_BUF_SIZE, SAMPLE_RATE);
@@ -283,7 +317,8 @@ extern "C" void app_main(void)
 
     auto wifi_queue = WifiQueue();
 
-    auto wifi_send_event = [&] (wifi::InternalEvent event) {
+    auto wifi_send_event = [&](wifi::InternalEvent event)
+    {
         auto rc = wifi_queue.send(&event, 0);
         if(rc != pdPASS)
         {
@@ -295,62 +330,53 @@ extern "C" void app_main(void)
     auto out_queue = new Queue<AppMessage, QUEUE_LEN>;
     auto server = new Server(in_queue, out_queue);
 
-    auto app_send_event = [&] (wifi::UserEvent event) {
+    auto app_send_event = [&](wifi::UserEvent event)
+    {
         switch(event)
         {
-            case wifi::UserEvent::CONNECTED:
-                ESP_LOGI(TAG, "Starting webserver");
-                server->start();
-                break;
-            case wifi::UserEvent::DISCONNECTED:
-                ESP_LOGI(TAG, "Stopping webserver");
-                server->stop();
-                break;
-            default:
-                ESP_LOGE(TAG, "Unhandled event %d", event.get_value());
-                break;
+        case wifi::UserEvent::CONNECTED:
+            ESP_LOGI(TAG, "Starting webserver");
+            server->start();
+            break;
+        case wifi::UserEvent::DISCONNECTED:
+            ESP_LOGI(TAG, "Stopping webserver");
+            server->stop();
+            break;
+        default:
+            ESP_LOGE(TAG, "Unhandled event %d", event.get_value());
+            break;
         }
     };
 
-    static auto wifi = wifi::WifiStateMachine(
-            wifi_send_event,
-            app_send_event);
+    static auto wifi = wifi::WifiStateMachine(wifi_send_event, app_send_event);
 
-    auto wifi_state_chart = etl::state_chart_ct<
-        wifi::WifiStateMachine,
-        wifi,
-        wifi::WifiStateMachine::transition_table,
-        ARRAY_LENGTH(wifi::WifiStateMachine::transition_table),
-        wifi::WifiStateMachine::state_table,
-        ARRAY_LENGTH(wifi::WifiStateMachine::state_table),
-        wifi::State::INIT>();
+    auto wifi_state_chart =
+        etl::state_chart_ct<wifi::WifiStateMachine,
+                            wifi,
+                            wifi::WifiStateMachine::transition_table,
+                            ARRAY_LENGTH(
+                                wifi::WifiStateMachine::transition_table),
+                            wifi::WifiStateMachine::state_table,
+                            ARRAY_LENGTH(wifi::WifiStateMachine::state_table),
+                            wifi::State::INIT>();
     wifi_state_chart.start();
 
     /* Register event handlers to send events on to wifi state machine */
     ESP_ERROR_CHECK(esp_event_handler_register(
-                IP_EVENT,
-                IP_EVENT_STA_GOT_IP,
-                connect_handler,
-                &wifi_queue));
+        IP_EVENT, IP_EVENT_STA_GOT_IP, connect_handler, &wifi_queue));
+    ESP_ERROR_CHECK(esp_event_handler_register(WIFI_EVENT,
+                                               WIFI_EVENT_STA_DISCONNECTED,
+                                               disconnect_handler,
+                                               &wifi_queue));
     ESP_ERROR_CHECK(esp_event_handler_register(
-                WIFI_EVENT,
-                WIFI_EVENT_STA_DISCONNECTED,
-                disconnect_handler,
-                &wifi_queue));
-    ESP_ERROR_CHECK(esp_event_handler_register(
-                WIFI_EVENT,
-                WIFI_EVENT_STA_START,
-                wifi_start_handler,
-                &wifi_queue));
+        WIFI_EVENT, WIFI_EVENT_STA_START, wifi_start_handler, &wifi_queue));
 
     auto midi_uart = new midi::EspMidiUart(UART_NUM_MIDI, GPIO_NUM_MIDI);
 
     debug_dump_task_list();
 
     auto send_message = [&](const AppMessage &message)
-    {
-        server->send_message(message);
-    };
+    { server->send_message(message); };
 
     auto main_thread =
         MainThread<MAX_PARAMETERS, QUEUE_LEN>(send_message,
@@ -410,7 +436,9 @@ extern "C" void app_main(void)
         auto tick_count_iteration = xTaskGetTickCount() - tick_count_start;
         if(tick_count_iteration > pdMS_TO_TICKS(5))
         {
-            ESP_LOGW(TAG, "slow iteration: %d ms", (int)pdTICKS_TO_MS(tick_count_iteration));
+            ESP_LOGW(TAG,
+                     "slow iteration: %d ms",
+                     (int)pdTICKS_TO_MS(tick_count_iteration));
         }
     }
 }
@@ -420,17 +448,21 @@ void nvs_debug_print()
     ESP_LOGI(TAG, "dumping NVS using C interface");
     nvs_iterator_t it = NULL;
     esp_err_t res = nvs_entry_find("nvs", "persistence", NVS_TYPE_ANY, &it);
-    while(res == ESP_OK) {
+    while(res == ESP_OK)
+    {
         nvs_entry_info_t info;
-        nvs_entry_info(it, &info); // Can omit error check if parameters are guaranteed to be non-NULL
+        nvs_entry_info(
+            it,
+            &info); // Can omit error check if parameters are guaranteed to be non-NULL
         ESP_LOGI(TAG, "key '%s', type '%d'", info.key, info.type);
         res = nvs_entry_next(&it);
     }
     nvs_release_iterator(it);
-    
+
     ESP_LOGI(TAG, "dumping NVS using C++ abstraction");
     auto storage = presets_storage::Storage();
-    for(const auto& info : storage ) {
+    for(const auto &info : storage)
+    {
         ESP_LOGI(TAG, "key '%s', type '%d'", info.key, info.type);
     }
 }

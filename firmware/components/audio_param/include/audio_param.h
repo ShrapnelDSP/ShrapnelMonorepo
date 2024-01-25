@@ -19,13 +19,13 @@
 
 #pragma once
 
+#include "esp_log.h"
 #include "etl/map.h"
 #include "etl/observer.h"
 #include "etl/string.h"
-#include "esp_log.h"
 #include <atomic>
-#include <string>
 #include <memory>
+#include <string>
 #include <vector>
 
 namespace shrapnel {
@@ -33,9 +33,13 @@ namespace parameters {
 
 using id_t = etl::string<32>;
 
-class AudioParameterFloat {
-    public:
-    AudioParameterFloat(const id_t &name, float minimum, float maximum, float default_value);
+class AudioParameterFloat
+{
+public:
+    AudioParameterFloat(const id_t &name,
+                        float minimum,
+                        float maximum,
+                        float default_value);
 
     /** Update a parameter
      *
@@ -52,7 +56,7 @@ class AudioParameterFloat {
 
     id_t name;
 
-    private:
+private:
     std::atomic<float> value;
     float minimum;
     float maximum;
@@ -60,15 +64,20 @@ class AudioParameterFloat {
 
 using ParameterObserver = etl::observer<std::pair<const id_t &, float>>;
 
-class AudioParametersBase {
+class AudioParametersBase
+{
 public:
     virtual std::atomic<float> *get_raw_parameter(const id_t &param) = 0;
 };
 
-template<const std::size_t MAX_PARAMETERS, const std::size_t MAX_OBSERVERS>
-class AudioParameters final : public etl::observable<ParameterObserver, MAX_OBSERVERS>, public AudioParametersBase {
-    public:
-    using MapType = etl::map<id_t, std::unique_ptr<AudioParameterFloat>, MAX_PARAMETERS>;
+template <const std::size_t MAX_PARAMETERS, const std::size_t MAX_OBSERVERS>
+class AudioParameters final
+    : public etl::observable<ParameterObserver, MAX_OBSERVERS>,
+      public AudioParametersBase
+{
+public:
+    using MapType =
+        etl::map<id_t, std::unique_ptr<AudioParameterFloat>, MAX_PARAMETERS>;
 
     /** Update a parameter
      *
@@ -127,37 +136,31 @@ class AudioParameters final : public etl::observable<ParameterObserver, MAX_OBSE
         return parameters[param]->get_raw_parameter();
     }
 
-    [[nodiscard]] int create_and_add_parameter(
-        const id_t &name,
-        float minimum,
-        float maximum,
-        float default_value)
+    [[nodiscard]] int create_and_add_parameter(const id_t &name,
+                                               float minimum,
+                                               float maximum,
+                                               float default_value)
     {
         if(parameters.full())
         {
             return -1;
         }
 
-        parameters[name] = std::make_unique<AudioParameterFloat>(name, minimum, maximum, default_value);
+        parameters[name] = std::make_unique<AudioParameterFloat>(
+            name, minimum, maximum, default_value);
 
         ESP_LOGI(TAG, "%zu parameters are registered", parameters.size());
         return 0;
     }
 
-    MapType::iterator begin()
-    {
-        return parameters.begin();
-    }
+    MapType::iterator begin() { return parameters.begin(); }
 
-    MapType::iterator end()
-    {
-        return parameters.end();
-    }
+    MapType::iterator end() { return parameters.end(); }
 
-    private:
-        static constexpr const char *TAG = "audio_param";
-        MapType parameters;
+private:
+    static constexpr const char *TAG = "audio_param";
+    MapType parameters;
 };
 
-}
-}
+} // namespace parameters
+} // namespace shrapnel

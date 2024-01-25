@@ -20,13 +20,13 @@
 
 #pragma once
 
-#include <cstddef>
-#include "input_filter.h"
-#include "gain_control.h"
 #include "clipping.h"
-#include "fmv.h"
 #include "contour.h"
 #include "dsp_concepts.h"
+#include "fmv.h"
+#include "gain_control.h"
+#include "input_filter.h"
+#include <cstddef>
 
 namespace shrapnel {
 namespace effect {
@@ -34,7 +34,7 @@ namespace valvestate {
 
 class Valvestate
 {
-    public:
+public:
     Valvestate();
 
     void set_gain(float gain, float channel);
@@ -49,7 +49,7 @@ class Valvestate
     void process(std::span<float> buffer);
     void reset();
 
-    private:
+private:
     InputFilter input;
     GainControl gaincontrol;
     Clipping clipping;
@@ -59,6 +59,6 @@ class Valvestate
 };
 static_assert(dsp::Processor<Valvestate>);
 
-}
-}
-}
+} // namespace valvestate
+} // namespace effect
+} // namespace shrapnel

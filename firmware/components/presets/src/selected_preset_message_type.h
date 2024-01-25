@@ -23,26 +23,25 @@
 
 namespace shrapnel::selected_preset {
 
-template<typename T>
+template <typename T>
 constexpr const char *get_message_type();
 
-template<>
+template <>
 constexpr const char *get_message_type<Read>()
 {
     return "SelectedPreset::read";
 }
 
-template<>
+template <>
 constexpr const char *get_message_type<Notify>()
 {
     return "SelectedPreset::notify";
 }
 
-template<>
+template <>
 constexpr const char *get_message_type<Write>()
 {
     return "SelectedPreset::write";
 }
 
-}
-
+} // namespace shrapnel::selected_preset

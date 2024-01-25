@@ -17,8 +17,8 @@
  * ShrapnelDSP. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include "gtest/gtest.h"
 #include "gmock/gmock.h"
+#include "gtest/gtest.h"
 
 #include "audio_param.h"
 #include "cmd_handling.h"
@@ -35,16 +35,18 @@ class MockAudioParameterFloat;
 
 class MockAudioParameters
 {
-    public:
+public:
     using MapType = std::map<id_t, std::unique_ptr<MockAudioParameterFloat>>;
 
     MOCK_METHOD(int, update, (id_t param, float value), ());
-    MOCK_METHOD(int, create_and_add_parameter, (
-        id_t name,
-        float minimum,
-        float maximum,
-        float default_value), ());
-    MOCK_METHOD(std::atomic<float> *, get_raw_parameter, (const std::string param), ());
+    MOCK_METHOD(int,
+                create_and_add_parameter,
+                (id_t name, float minimum, float maximum, float default_value),
+                ());
+    MOCK_METHOD(std::atomic<float> *,
+                get_raw_parameter,
+                (const std::string param),
+                ());
 
     MapType::iterator begin() { return parameters.begin(); };
     MapType::iterator end() { return parameters.end(); };
@@ -54,37 +56,38 @@ class MockAudioParameters
 
 class MockEventSend
 {
-    public:
-        MOCK_METHOD(void, send, (const char *json, std::optional<int> fd));
+public:
+    MOCK_METHOD(void, send, (const char *json, std::optional<int> fd));
 };
 
-class EventSendAdapter final {
-    public:
-        explicit EventSendAdapter(MockEventSend &a_event) : event(a_event) {}
+class EventSendAdapter final
+{
+public:
+    explicit EventSendAdapter(MockEventSend &a_event) : event(a_event) {}
 
-        void send(const shrapnel::parameters::ApiMessage &message,
-                  std::optional<int> fd)
-        {
-            rapidjson::Document document;
-            auto json = to_json(document, message);
-            document.Swap(json);
+    void send(const shrapnel::parameters::ApiMessage &message,
+              std::optional<int> fd)
+    {
+        rapidjson::Document document;
+        auto json = to_json(document, message);
+        document.Swap(json);
 
-            rapidjson::StringBuffer buffer;
-            rapidjson::Writer writer{buffer};
-            document.Accept(writer);
+        rapidjson::StringBuffer buffer;
+        rapidjson::Writer writer{buffer};
+        document.Accept(writer);
 
-            event.send(buffer.GetString(), fd);
-        }
+        event.send(buffer.GetString(), fd);
+    }
 
-    private:
+private:
     MockEventSend &event;
 };
 
 class MockAudioParameterFloat
 {
-    public:
-    MockAudioParameterFloat(std::string name, float default_value) :
-        value(default_value)
+public:
+    MockAudioParameterFloat(std::string name, float default_value)
+        : value(default_value)
     {
         (void)name;
     }
@@ -139,7 +142,8 @@ TEST_F(CmdHandling, ValidMessage)
         .Times(1)
         .WillRepeatedly(Return(0));
 
-    const char *json = R"({"id":"tight","value":1.0,"messageType":"parameterUpdate"})";
+    const char *json =
+        R"({"id":"tight","value":1.0,"messageType":"parameterUpdate"})";
     EXPECT_CALL(event, send(StrEq(json), testing::Optional(42))).Times(1);
 
     parseAndDispatch(json, 42);
@@ -154,7 +158,8 @@ TEST_F(CmdHandling, InitialiseParameters)
     param->parameters["test0"] = std::move(parameter0);
     param->parameters["test1"] = std::move(parameter1);
 
-    const char *expected = R"({"id":"test0","value":0.0,"messageType":"parameterUpdate"})";
+    const char *expected =
+        R"({"id":"test0","value":0.0,"messageType":"parameterUpdate"})";
     EXPECT_CALL(event, send(StrEq(expected), testing::Eq(std::nullopt)))
         .Times(1);
     expected = R"({"id":"test1","value":1.0,"messageType":"parameterUpdate"})";
@@ -164,4 +169,4 @@ TEST_F(CmdHandling, InitialiseParameters)
     parseAndDispatch(R"({"messageType": "initialiseParameters"})", 0);
 }
 
-}
+} // namespace

@@ -48,7 +48,7 @@ std::optional<ParametersData> from_json(const rapidjson::Value &json)
                                       json.GetString(),
                                       json.GetStringLength(),
                                       decoded_size);
-                                     
+
     if(!std::holds_alternative<std::monostate>(error))
     {
         return std::nullopt;

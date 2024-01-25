@@ -17,8 +17,8 @@
  * ShrapnelDSP. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include "gtest/gtest.h"
 #include "gmock/gmock.h"
+#include "gtest/gtest.h"
 #include <bits/ranges_util.h>
 #include <variant>
 
@@ -27,7 +27,7 @@
 namespace shrapnel {
 namespace midi {
 
-std::ostream& operator <<(std::ostream& out, const CreateRequest& message)
+std::ostream &operator<<(std::ostream &out, const CreateRequest &message)
 {
     etl::string<128> buffer;
     etl::string_stream stream{buffer};
@@ -36,7 +36,7 @@ std::ostream& operator <<(std::ostream& out, const CreateRequest& message)
     return out << buffer.data();
 }
 
-std::ostream& operator <<(std::ostream& out, const Mapping& message)
+std::ostream &operator<<(std::ostream &out, const Mapping &message)
 {
     etl::string<128> buffer;
     etl::string_stream stream{buffer};
@@ -45,8 +45,8 @@ std::ostream& operator <<(std::ostream& out, const Mapping& message)
     return out << buffer.data();
 }
 
-}
-}
+} // namespace midi
+} // namespace shrapnel
 
 namespace {
 
@@ -58,15 +58,15 @@ std::optional<MappingApiMessage> parse_json(const char *json)
     rapidjson::Document document;
     document.Parse(json);
 
-    assert(!document.HasParseError() && "Testing with invalid documents will "
-            "not excercise the function under test");
+    assert(!document.HasParseError() &&
+           "Testing with invalid documents will "
+           "not excercise the function under test");
     return from_json<MappingApiMessage>(document);
 }
 
 class MappingApiMessageTest : public ::testing::Test
 {
-    protected:
-
+protected:
     MappingApiMessageTest() {}
 };
 
@@ -156,7 +156,6 @@ TEST_F(MappingApiMessageTest, MappingButtonMode)
     EXPECT_THAT(*result, expected);
 }
 
-
 TEST_F(MappingApiMessageTest, CreateRequest)
 {
     auto json = R"({
@@ -175,7 +174,8 @@ TEST_F(MappingApiMessageTest, CreateRequest)
     EXPECT_THAT(result.has_value(), true);
     EXPECT_THAT(std::holds_alternative<CreateRequest>(*result), true);
 
-    if (auto message = std::get_if<CreateRequest>(&(*result))) {
+    if(auto message = std::get_if<CreateRequest>(&(*result)))
+    {
         CreateRequest expected{
             {Mapping::id_t{
                  0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15},
@@ -183,7 +183,9 @@ TEST_F(MappingApiMessageTest, CreateRequest)
                  1, 2, Mapping::Mode::PARAMETER, parameters::id_t("gain")}}};
 
         EXPECT_THAT(*message, expected);
-    } else {
+    }
+    else
+    {
         assert(false);
     }
 }
@@ -206,7 +208,8 @@ TEST_F(MappingApiMessageTest, Update)
     EXPECT_THAT(result.has_value(), true);
     EXPECT_THAT(std::holds_alternative<Update>(*result), true);
 
-    if (auto message = std::get_if<Update>(&(*result))) {
+    if(auto message = std::get_if<Update>(&(*result)))
+    {
         Update expected{
             {Mapping::id_t{
                  0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15},
@@ -214,7 +217,9 @@ TEST_F(MappingApiMessageTest, Update)
                  1, 2, Mapping::Mode::PARAMETER, parameters::id_t("gain")}}};
 
         EXPECT_THAT(*message, expected);
-    } else {
+    }
+    else
+    {
         assert(false);
     }
 }
@@ -230,14 +235,15 @@ TEST_F(MappingApiMessageTest, Remove)
     EXPECT_THAT(result.has_value(), true);
     EXPECT_THAT(std::holds_alternative<Remove>(*result), true);
 
-    if (auto message = std::get_if<Remove>(&(*result))) {
+    if(auto message = std::get_if<Remove>(&(*result)))
+    {
         Remove expected = {Mapping::id_t{
-                0, 1,  2,  3,  4,  5,  6,  7,
-                8, 9, 10, 11, 12, 13, 14, 15
-            }};
+            0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15}};
 
         EXPECT_THAT(*message, expected);
-    } else {
+    }
+    else
+    {
         assert(false);
     }
 }
@@ -298,4 +304,4 @@ TEST_F(MappingApiMessageTest, EtlMapOfIdToMappingTooSmall)
 // - The field is present, and contains a value of the correct type that is out
 //   of range or invalid for the field
 
-}
+} // namespace

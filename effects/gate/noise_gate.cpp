@@ -21,14 +21,21 @@
 #include "abstract_dsp.h"
 #include "iir_concrete.h"
 #include <array>
+#include <assert.h>
 #include <math.h>
 #include <stdlib.h>
 #include <string.h>
-#include <assert.h>
 
 #define TAG "noise_gate"
 
-typedef enum { INIT, CLOSED, ATTACK, OPEN, RELEASE } state_t;
+typedef enum
+{
+    INIT,
+    CLOSED,
+    ATTACK,
+    OPEN,
+    RELEASE
+} state_t;
 
 static state_t state;
 
@@ -69,12 +76,12 @@ void gate_reset(void)
 
     if(gain_buffer)
     {
-        memset(gain_buffer, 0, sizeof(*gain_buffer)*buffer_size);
+        memset(gain_buffer, 0, sizeof(*gain_buffer) * buffer_size);
     }
 
     if(filter_buffer)
     {
-        memset(filter_buffer, 0, sizeof(*filter_buffer)*buffer_size);
+        memset(filter_buffer, 0, sizeof(*filter_buffer) * buffer_size);
     }
 }
 
@@ -88,7 +95,8 @@ void gate_set_buffer_size(size_t a_buffer_size)
         gain_buffer = NULL;
     }
 
-    gain_buffer = static_cast<float *>(calloc(a_buffer_size, sizeof(*gain_buffer)));
+    gain_buffer =
+        static_cast<float *>(calloc(a_buffer_size, sizeof(*gain_buffer)));
     if(gain_buffer == NULL)
     {
         return;
@@ -100,7 +108,8 @@ void gate_set_buffer_size(size_t a_buffer_size)
         filter_buffer = NULL;
     }
 
-    filter_buffer = static_cast<float *>(calloc(a_buffer_size, sizeof(*filter_buffer)));
+    filter_buffer =
+        static_cast<float *>(calloc(a_buffer_size, sizeof(*filter_buffer)));
     if(filter_buffer == NULL)
     {
         return;
@@ -112,9 +121,9 @@ void gate_set_buffer_size(size_t a_buffer_size)
 void gate_set_sample_rate(float a_sample_rate)
 {
     std::array<float, 6> coeffs = {0};
-    dspal_biquad_design_lowpass(coeffs.data(), 10.f/a_sample_rate, M_SQRT1_2);
+    dspal_biquad_design_lowpass(coeffs.data(), 10.f / a_sample_rate, M_SQRT1_2);
 
-    memmove(&coeffs.data()[4], &coeffs.data()[3], 2*sizeof(*coeffs.data()));
+    memmove(&coeffs.data()[4], &coeffs.data()[3], 2 * sizeof(*coeffs.data()));
     coeffs[3] = 1.f;
 
     envelope_detect_filter->set_coefficients(coeffs);
@@ -122,10 +131,7 @@ void gate_set_sample_rate(float a_sample_rate)
     sample_rate = a_sample_rate;
 }
 
-static float db_to_ratio(float db)
-{
-    return powf(10.f, db/20.f);
-}
+static float db_to_ratio(float db) { return powf(10.f, db / 20.f); }
 
 void gate_set_threshold(float a_threshold, float a_hysteresis)
 {
@@ -174,75 +180,75 @@ void gate_analyse(const float *buf, size_t sample_count)
     {
         switch(state)
         {
-            case INIT:
-                //don't need to init hold_count, it will be initialised when
-                //leaving the attack state
-                gain = 0;
+        case INIT:
+            //don't need to init hold_count, it will be initialised when
+            //leaving the attack state
+            gain = 0;
+            next_state = CLOSED;
+            break;
+        case CLOSED:
+            if(filter_buffer[i] > threshold)
+            {
+                next_state = ATTACK;
+            }
+            else
+            {
                 next_state = CLOSED;
-                break;
-            case CLOSED:
-                if(filter_buffer[i] > threshold)
+            }
+            break;
+        case ATTACK:
+            if(filter_buffer[i] > threshold)
+            {
+                gain = gain + 1.f / attack_samples;
+                if(gain > 1)
                 {
-                    next_state = ATTACK;
-                }
-                else
-                {
-                    next_state = CLOSED;
-                }
-                break;
-            case ATTACK:
-                if(filter_buffer[i] > threshold)
-                {
-                    gain = gain + 1.f/attack_samples;
-                    if(gain > 1)
-                    {
-                        gain = 1;
-                        hold_count = 0;
-                        next_state = OPEN;
-                    }
-                }
-                else
-                {
-                    next_state = RELEASE;
-                }
-                break;
-            case OPEN:
-                if(filter_buffer[i] > threshold_low)
-                {
+                    gain = 1;
                     hold_count = 0;
                     next_state = OPEN;
                 }
+            }
+            else
+            {
+                next_state = RELEASE;
+            }
+            break;
+        case OPEN:
+            if(filter_buffer[i] > threshold_low)
+            {
+                hold_count = 0;
+                next_state = OPEN;
+            }
+            else
+            {
+                hold_count = hold_count + 1;
+                if(hold_count > hold_samples)
+                {
+                    next_state = RELEASE;
+                }
                 else
                 {
-                    hold_count = hold_count + 1;
-                    if(hold_count > hold_samples)
-                    {
-                        next_state = RELEASE;
-                    }
-                    else
-                    {
-                        next_state = OPEN;
-                    }
+                    next_state = OPEN;
                 }
-                break;
-            case RELEASE:
-                if(filter_buffer[i] > threshold_low)
+            }
+            break;
+        case RELEASE:
+            if(filter_buffer[i] > threshold_low)
+            {
+                next_state = ATTACK;
+            }
+            else
+            {
+                gain = gain - 1.f / release_samples;
+                if(gain < 0)
                 {
-                    next_state = ATTACK;
+                    gain = 0;
+                    next_state = CLOSED;
                 }
-                else
-                {
-                    gain = gain - 1.f/release_samples;
-                    if(gain < 0)
-                    {
-                        gain = 0;
-                        next_state = CLOSED;
-                    }
-                }
-                break;
-            default:
-                next_state = INIT;
-                break;
+            }
+            break;
+        default:
+            next_state = INIT;
+            break;
         }
 
         state = next_state;

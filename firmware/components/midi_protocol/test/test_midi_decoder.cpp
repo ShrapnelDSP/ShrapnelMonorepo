@@ -17,25 +17,25 @@
  * ShrapnelDSP. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include "gtest/gtest.h"
-#include "gmock/gmock.h"
 #include "midi_util.h"
+#include "gmock/gmock.h"
+#include "gtest/gtest.h"
 
 #include "midi_protocol.h"
 
-using testing::InSequence;
 using testing::_;
+using testing::InSequence;
 
 using namespace shrapnel::midi;
 
 class MidiDecoder : public ::testing::Test
 {
-    protected:
-
+protected:
     MidiDecoder() : sut(receiver_fn) {}
 
     testing::MockFunction<void(shrapnel::midi::Message)> receiver;
-    std::function<void(shrapnel::midi::Message)> receiver_fn = receiver.AsStdFunction();
+    std::function<void(shrapnel::midi::Message)> receiver_fn =
+        receiver.AsStdFunction();
     Decoder sut;
 };
 
@@ -50,13 +50,14 @@ TEST_F(MidiDecoder, NoteOn)
 
     EXPECT_CALL(receiver, Call(expected)).Times(1);
 
-    std::vector<uint8_t> bytes {
+    std::vector<uint8_t> bytes{
         0x90,
         0x00,
         0x01,
     };
 
-    for (auto byte : bytes) {
+    for(auto byte : bytes)
+    {
         sut.decode(byte);
     }
 }
@@ -72,13 +73,14 @@ TEST_F(MidiDecoder, NoteOff)
 
     EXPECT_CALL(receiver, Call(expected)).Times(1);
 
-    std::vector<uint8_t> bytes {
+    std::vector<uint8_t> bytes{
         0x80,
         0x00,
         0x01,
     };
 
-    for (auto byte : bytes) {
+    for(auto byte : bytes)
+    {
         sut.decode(byte);
     }
 }
@@ -94,12 +96,13 @@ TEST_F(MidiDecoder, ProgramChange)
 
     EXPECT_CALL(receiver, Call(expected)).Times(1);
 
-    std::vector<uint8_t> bytes {
+    std::vector<uint8_t> bytes{
         0xC0,
         0x00,
     };
 
-    for (auto byte : bytes) {
+    for(auto byte : bytes)
+    {
         sut.decode(byte);
     }
 }
@@ -125,7 +128,7 @@ TEST_F(MidiDecoder, NoteOnRunningStatus)
     EXPECT_CALL(receiver, Call(expected_first)).Times(1);
     EXPECT_CALL(receiver, Call(expected_second)).Times(1);
 
-    std::vector<uint8_t> bytes {
+    std::vector<uint8_t> bytes{
         0x90,
         0x00,
         0x01,
@@ -133,7 +136,8 @@ TEST_F(MidiDecoder, NoteOnRunningStatus)
         0x03,
     };
 
-    for (auto byte : bytes) {
+    for(auto byte : bytes)
+    {
         sut.decode(byte);
     }
 }
@@ -149,13 +153,14 @@ TEST_F(MidiDecoder, ControlChange)
 
     EXPECT_CALL(receiver, Call(expected)).Times(1);
 
-    std::vector<uint8_t> bytes {
+    std::vector<uint8_t> bytes{
         0xB0,
         0x00,
         0x01,
     };
 
-    for (auto byte : bytes) {
+    for(auto byte : bytes)
+    {
         sut.decode(byte);
     }
 }
@@ -164,15 +169,16 @@ TEST_F(MidiDecoder, ChannelModeIsNotControlChange)
 {
     EXPECT_CALL(receiver, Call(_)).Times(0);
 
-    for (uint8_t second_byte = 0x78; second_byte <= 0x7F; second_byte++)
+    for(uint8_t second_byte = 0x78; second_byte <= 0x7F; second_byte++)
     {
-        std::vector<uint8_t> bytes {
+        std::vector<uint8_t> bytes{
             0xB0,
             second_byte,
             0x01,
         };
 
-        for (auto byte : bytes) {
+        for(auto byte : bytes)
+        {
             sut.decode(byte);
         }
     }
@@ -189,13 +195,14 @@ TEST_F(MidiDecoder, ChannelNumber)
 
     EXPECT_CALL(receiver, Call(expected)).Times(1);
 
-    std::vector<uint8_t> bytes {
+    std::vector<uint8_t> bytes{
         0x9F,
         0x00,
         0x01,
     };
 
-    for (auto byte : bytes) {
+    for(auto byte : bytes)
+    {
         sut.decode(byte);
     }
 }
@@ -211,7 +218,7 @@ TEST_F(MidiDecoder, IgnoresUnimplementedMessages)
 
     EXPECT_CALL(receiver, Call(expected)).Times(1);
 
-    std::vector<uint8_t> bytes {
+    std::vector<uint8_t> bytes{
         0xE0,
         0x00,
         0x90,
@@ -219,7 +226,8 @@ TEST_F(MidiDecoder, IgnoresUnimplementedMessages)
         0x01,
     };
 
-    for (auto byte : bytes) {
+    for(auto byte : bytes)
+    {
         sut.decode(byte);
     }
 }
@@ -236,7 +244,7 @@ TEST_F(MidiDecoder, DISABLED_UnimplementedMessageDoesNotUpsetRunningStatus)
 
     EXPECT_CALL(receiver, Call(expected)).Times(1);
 
-    std::vector<uint8_t> bytes {
+    std::vector<uint8_t> bytes{
         0x90,
         0x00,
         0x01,
@@ -246,7 +254,8 @@ TEST_F(MidiDecoder, DISABLED_UnimplementedMessageDoesNotUpsetRunningStatus)
         0x01,
     };
 
-    for (auto byte : bytes) {
+    for(auto byte : bytes)
+    {
         sut.decode(byte);
     }
 }

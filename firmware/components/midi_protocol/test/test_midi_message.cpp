@@ -17,22 +17,21 @@
  * ShrapnelDSP. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include "gtest/gtest.h"
-#include "gmock/gmock.h"
-#include <utility>
 #include "midi_util.h"
+#include "gmock/gmock.h"
+#include "gtest/gtest.h"
+#include <utility>
 
 #include "midi_protocol.h"
 
-using testing::Not;
 using testing::Eq;
+using testing::Not;
 
 using namespace shrapnel::midi;
 
 class MidiMessage : public ::testing::Test
 {
-    protected:
-
+protected:
     MidiMessage() {}
 };
 
@@ -40,9 +39,7 @@ TEST_F(MidiMessage, Matcher)
 {
     Message message{
         .channel{1},
-        .parameters{
-            Message::NoteOff{.note = 2, .velocity = 3}
-        },
+        .parameters{Message::NoteOff{.note = 2, .velocity = 3}},
     };
 
     Message copy = message;

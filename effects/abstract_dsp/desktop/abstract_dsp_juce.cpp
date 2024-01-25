@@ -26,7 +26,8 @@ extern "C" {
 dspal_err_t dspal_biquad_design_lowpass(float *coeffs, float f, float q_factor)
 {
     // TODO check if the frequency is scaled correctly
-    auto juce_coeffs = juce::dsp::IIR::Coefficients<float>::makeLowPass(1, f, q_factor);
+    auto juce_coeffs =
+        juce::dsp::IIR::Coefficients<float>::makeLowPass(1, f, q_factor);
     auto raw_coeffs = juce_coeffs->getRawCoefficients();
 
     assert(2 == juce_coeffs->getFilterOrder());
@@ -34,17 +35,19 @@ dspal_err_t dspal_biquad_design_lowpass(float *coeffs, float f, float q_factor)
     // These coefficients are expected to be normalised
     assert(5 == juce_coeffs->coefficients.size());
 
-    memcpy(coeffs, raw_coeffs, 5*sizeof(float));
+    memcpy(coeffs, raw_coeffs, 5 * sizeof(float));
 
     return DSPAL_OK;
 }
 
-void dspal_multiply(const float *in1, const float *in2, float *out, size_t buf_size)
+void dspal_multiply(const float *in1,
+                    const float *in2,
+                    float *out,
+                    size_t buf_size)
 {
     for(size_t i = 0; i < buf_size; i++)
     {
         out[i] = in1[i] * in2[i];
     }
 }
-
 };

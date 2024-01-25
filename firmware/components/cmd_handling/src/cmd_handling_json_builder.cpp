@@ -19,13 +19,13 @@
 
 #include "cmd_handling_json_builder.h"
 
-#include "cmd_handling_json.h"
 #include "cmd_handling_api.h"
+#include "cmd_handling_json.h"
 #include "esp_log.h"
 
 namespace shrapnel::parameters {
 
-template<>
+template <>
 rapidjson::Value to_json(rapidjson::Document &document, const Update &object)
 {
     rapidjson::Value json;
@@ -42,22 +42,29 @@ rapidjson::Value to_json(rapidjson::Document &document, const Update &object)
     return json;
 }
 
-template<>
-rapidjson::Value to_json(rapidjson::Document &document, const ApiMessage &object)
+template <>
+rapidjson::Value to_json(rapidjson::Document &document,
+                         const ApiMessage &object)
 {
     static constexpr char TAG[] = "parameters::ApiMessage to json";
     rapidjson::Value json;
 
-    auto visitor = [&](const auto &message) {
+    auto visitor = [&](const auto &message)
+    {
         using T = std::decay_t<decltype(message)>;
 
-        if constexpr (std::is_same_v<T, Update>) {
+        if constexpr(std::is_same_v<T, Update>)
+        {
             json = to_json(document, message);
-        } else {
+        }
+        else
+        {
             ESP_LOGE(TAG, "No handler registered for message");
         }
 
-        json.AddMember("messageType", rapidjson::StringRef(get_message_type<T>()), document.GetAllocator());
+        json.AddMember("messageType",
+                       rapidjson::StringRef(get_message_type<T>()),
+                       document.GetAllocator());
     };
 
     std::visit(visitor, object);
@@ -65,4 +72,4 @@ rapidjson::Value to_json(rapidjson::Document &document, const ApiMessage &object
     return json;
 }
 
-}
+} // namespace shrapnel::parameters

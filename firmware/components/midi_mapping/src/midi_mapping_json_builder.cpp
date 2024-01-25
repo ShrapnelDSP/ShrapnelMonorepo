@@ -24,13 +24,13 @@
 #include <variant>
 
 namespace {
-    constexpr char TAG[] = "midi_mapping_json_builder";
+constexpr char TAG[] = "midi_mapping_json_builder";
 };
 
 namespace shrapnel {
 namespace midi {
 
-template<>
+template <>
 rapidjson::Value to_json(rapidjson::Document &document, const Message &object)
 {
     rapidjson::Value json;
@@ -87,7 +87,7 @@ rapidjson::Value to_json(rapidjson::Document &document, const Message &object)
     return json;
 }
 
-template<>
+template <>
 rapidjson::Value to_json(rapidjson::Document &document, const Mapping &object)
 {
     rapidjson::Value json;
@@ -119,20 +119,24 @@ rapidjson::Value to_json(rapidjson::Document &document, const Mapping &object)
     if(object.parameter_name.has_value())
     {
         rapidjson::Value parameter_id;
-        parameter_id.SetString(object.parameter_name->data(), object.parameter_name->size(), document.GetAllocator());
+        parameter_id.SetString(object.parameter_name->data(),
+                               object.parameter_name->size(),
+                               document.GetAllocator());
         json.AddMember("parameter_id", parameter_id, document.GetAllocator());
     }
 
     if(object.preset_id.has_value())
     {
-        json.AddMember<unsigned int>("preset_id", *object.preset_id, document.GetAllocator());
+        json.AddMember<unsigned int>(
+            "preset_id", *object.preset_id, document.GetAllocator());
     }
 
     return json;
 }
 
-template<>
-rapidjson::Value to_json(rapidjson::Document &document, const std::pair<Mapping::id_t, Mapping> &object)
+template <>
+rapidjson::Value to_json(rapidjson::Document &document,
+                         const std::pair<Mapping::id_t, Mapping> &object)
 {
     rapidjson::Value json;
     json.SetObject();
@@ -143,8 +147,9 @@ rapidjson::Value to_json(rapidjson::Document &document, const std::pair<Mapping:
     return json;
 }
 
-template<>
-rapidjson::Value to_json(rapidjson::Document &document, const CreateResponse &object)
+template <>
+rapidjson::Value to_json(rapidjson::Document &document,
+                         const CreateResponse &object)
 {
     rapidjson::Value json;
     json.SetObject();
@@ -154,8 +159,9 @@ rapidjson::Value to_json(rapidjson::Document &document, const CreateResponse &ob
     return json;
 }
 
-template<>
-rapidjson::Value to_json(rapidjson::Document &document, const GetResponse &object)
+template <>
+rapidjson::Value to_json(rapidjson::Document &document,
+                         const GetResponse &object)
 {
     rapidjson::Value json;
     json.SetObject();
@@ -165,8 +171,9 @@ rapidjson::Value to_json(rapidjson::Document &document, const GetResponse &objec
     return json;
 }
 
-template<>
-rapidjson::Value to_json(rapidjson::Document &document, const MessageReceived &object)
+template <>
+rapidjson::Value to_json(rapidjson::Document &document,
+                         const MessageReceived &object)
 {
     rapidjson::Value json;
     json.SetObject();
@@ -176,23 +183,30 @@ rapidjson::Value to_json(rapidjson::Document &document, const MessageReceived &o
     return json;
 }
 
-template<>
-rapidjson::Value to_json(rapidjson::Document &document, const MappingApiMessage &object)
+template <>
+rapidjson::Value to_json(rapidjson::Document &document,
+                         const MappingApiMessage &object)
 {
     rapidjson::Value json;
 
-    auto visitor = [&](const auto &message) {
+    auto visitor = [&](const auto &message)
+    {
         using T = std::decay_t<decltype(message)>;
 
-        if constexpr (std::is_same_v<T, CreateResponse> ||
-                      std::is_same_v<T, GetResponse> ||
-                      std::is_same_v<T, MessageReceived>) {
+        if constexpr(std::is_same_v<T, CreateResponse> ||
+                     std::is_same_v<T, GetResponse> ||
+                     std::is_same_v<T, MessageReceived>)
+        {
             json = to_json(document, message);
-        } else {
+        }
+        else
+        {
             ESP_LOGE(TAG, "No handler registered for message");
         }
 
-        json.AddMember("messageType", rapidjson::StringRef(get_message_type<T>()), document.GetAllocator());
+        json.AddMember("messageType",
+                       rapidjson::StringRef(get_message_type<T>()),
+                       document.GetAllocator());
     };
 
     std::visit(visitor, object);
@@ -200,8 +214,9 @@ rapidjson::Value to_json(rapidjson::Document &document, const MappingApiMessage 
     return json;
 }
 
-template<>
-rapidjson::Value to_json(rapidjson::Document &document, const etl::imap<Mapping::id_t, Mapping> &object)
+template <>
+rapidjson::Value to_json(rapidjson::Document &document,
+                         const etl::imap<Mapping::id_t, Mapping> &object)
 {
     rapidjson::Value json;
     json.SetObject();
@@ -216,5 +231,5 @@ rapidjson::Value to_json(rapidjson::Document &document, const etl::imap<Mapping:
     return json;
 }
 
-}
-}
+} // namespace midi
+} // namespace shrapnel

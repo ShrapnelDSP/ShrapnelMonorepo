@@ -20,11 +20,11 @@
 #include "midi_mapping_api.h"
 #include "etl_utility.h"
 
-
 namespace shrapnel {
 namespace midi {
 
-etl::string_stream& operator<<(etl::string_stream&  out, const Mapping& self) {
+etl::string_stream &operator<<(etl::string_stream &out, const Mapping &self)
+{
     out << "{";
     out << " channel " << self.midi_channel;
     out << " cc number " << self.cc_number;
@@ -36,7 +36,8 @@ etl::string_stream& operator<<(etl::string_stream&  out, const Mapping& self) {
     return out;
 }
 
-etl::string_stream& operator<<(etl::string_stream&  out, const GetRequest&) {
+etl::string_stream &operator<<(etl::string_stream &out, const GetRequest &)
+{
     out << "{}";
     return out;
 }
@@ -46,22 +47,25 @@ etl::string_stream &operator<<(etl::string_stream &out, const GetResponse &)
     return out << "{ TODO }";
 }
 
-etl::string_stream& operator<<(etl::string_stream&  out, const CreateRequest& self) {
+etl::string_stream &operator<<(etl::string_stream &out,
+                               const CreateRequest &self)
+{
     out << "{ " << self.mapping << " }";
     return out;
 }
 
-etl::string_stream& operator<<(etl::string_stream&  out, const CreateResponse& self)
+etl::string_stream &operator<<(etl::string_stream &out,
+                               const CreateResponse &self)
 {
     return out << "{ " << self.mapping << " }";
 }
 
-etl::string_stream& operator<<(etl::string_stream&  out, const Update& self)
+etl::string_stream &operator<<(etl::string_stream &out, const Update &self)
 {
     return out << "{ " << self.mapping << " }";
 }
 
-etl::string_stream& operator<<(etl::string_stream&  out, const Remove& self)
+etl::string_stream &operator<<(etl::string_stream &out, const Remove &self)
 {
     return out << "{ " << self.id << " }";
 }
@@ -72,25 +76,40 @@ etl::string_stream &operator<<(etl::string_stream &out,
     return out << "{ " << self.message << " }";
 }
 
-etl::string_stream& operator<<(etl::string_stream&  out, const MappingApiMessage& self)
+etl::string_stream &operator<<(etl::string_stream &out,
+                               const MappingApiMessage &self)
 {
 #if 1
-    auto print = [&](const auto &message) {
+    auto print = [&](const auto &message)
+    {
         using T = std::decay_t<decltype(message)>;
 
-        if constexpr (std::is_same_v<T, GetRequest>) {
+        if constexpr(std::is_same_v<T, GetRequest>)
+        {
             out << "<GetRequest>" << message;
-        } else if constexpr (std::is_same_v<T, GetResponse>) {
+        }
+        else if constexpr(std::is_same_v<T, GetResponse>)
+        {
             out << "<GetResponse>" << message;
-        } else if constexpr (std::is_same_v<T, CreateRequest>) {
+        }
+        else if constexpr(std::is_same_v<T, CreateRequest>)
+        {
             out << "<CreateRequest>" << message;
-        } else if constexpr (std::is_same_v<T, CreateResponse>) {
+        }
+        else if constexpr(std::is_same_v<T, CreateResponse>)
+        {
             out << "<CreateResponse>" << message;
-        } else if constexpr (std::is_same_v<T, Update>) {
+        }
+        else if constexpr(std::is_same_v<T, Update>)
+        {
             out << "<Update>" << message;
-        } else if constexpr (std::is_same_v<T, Remove>) {
+        }
+        else if constexpr(std::is_same_v<T, Remove>)
+        {
             out << "<Remove>" << message;
-        } else {
+        }
+        else
+        {
             out << "Unknown";
         }
     };
@@ -99,19 +118,32 @@ etl::string_stream& operator<<(etl::string_stream&  out, const MappingApiMessage
 
 #else
 
-    if (auto message = std::get_if<GetRequest>(&self)) {
+    if(auto message = std::get_if<GetRequest>(&self))
+    {
         out << "<GetRequest>" << *message;
-    } else if (auto message = std::get_if<GetResponse>(&self)) {
+    }
+    else if(auto message = std::get_if<GetResponse>(&self))
+    {
         out << "<GetResponse>" << *message;
-    } else if (auto message = std::get_if<CreateRequest>(&self)) {
+    }
+    else if(auto message = std::get_if<CreateRequest>(&self))
+    {
         out << "<CreateRequest>" << *message;
-    } else if (auto message = std::get_if<CreateResponse>(&self)) {
+    }
+    else if(auto message = std::get_if<CreateResponse>(&self))
+    {
         out << "<CreateResponse>" << *message;
-    } else if (auto message = std::get_if<Update>(&self)) {
+    }
+    else if(auto message = std::get_if<Update>(&self))
+    {
         out << "<Update>" << *message;
-    } else if (auto message = std::get_if<Remove>(&self)) {
+    }
+    else if(auto message = std::get_if<Remove>(&self))
+    {
         out << "<Remove>" << *message;
-    } else {
+    }
+    else
+    {
         out << "Unknown";
     }
 
@@ -120,5 +152,5 @@ etl::string_stream& operator<<(etl::string_stream&  out, const MappingApiMessage
     return out;
 }
 
-}
-}
+} // namespace midi
+} // namespace shrapnel

@@ -364,14 +364,13 @@ public:
                     : std::make_unique<MidiMappingManager>();
         }();
 
-        midi_message_handler =
-            std::make_shared<MidiMessageHandler<ParameterUpdateNotifier,
-                MidiMappingManager>>(
-                parameter_notifier,
-                midi_mapping_manager,
-                presets_manager,
-                selected_preset_manager,
-                send_message);
+        midi_message_handler = std::make_shared<
+            MidiMessageHandler<ParameterUpdateNotifier, MidiMappingManager>>(
+            parameter_notifier,
+            midi_mapping_manager,
+            presets_manager,
+            selected_preset_manager,
+            send_message);
 
         mapping_observer =
             std::make_unique<MidiMappingObserver<MidiMappingManager>>(

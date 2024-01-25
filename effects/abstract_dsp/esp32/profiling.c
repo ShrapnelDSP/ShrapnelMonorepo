@@ -20,10 +20,10 @@
 #include "profiling.h"
 
 #include "esp_log.h"
-#include "hal/cpu_hal.h"
-#include "rom/ets_sys.h"
 #include "freertos/FreeRTOS.h"
 #include "freertos/semphr.h"
+#include "hal/cpu_hal.h"
+#include "rom/ets_sys.h"
 
 #define TAG "profiling"
 
@@ -79,21 +79,17 @@ static double cycles_to_percent(int64_t cycles)
 {
     float cycles_per_second = cpu_freq_mhz * 1e6f;
 
-    float ratio = cycles /
-        ((float)buffer_size / sample_rate) /
-        (cycles_per_second);
+    float ratio =
+        cycles / ((float)buffer_size / sample_rate) / (cycles_per_second);
 
     return (double)(100 * ratio);
 }
 
-static int64_t cycles_to_us(int64_t cycles)
-{
-    return cycles / cpu_freq_mhz;
-}
+static int64_t cycles_to_us(int64_t cycles) { return cycles / cpu_freq_mhz; }
 
 void profiling_task(void *param)
 {
-    (void) param;
+    (void)param;
     while(1)
     {
         vTaskDelay(1000 / portTICK_PERIOD_MS);
@@ -111,20 +107,26 @@ void profiling_task(void *param)
                     break;
                 }
 
-                int64_t current_stage_cycles = stage_cycles[i] - ((i == 0) ? start_cycles : stage_cycles[i - 1]);
-                ESP_LOGI(TAG, "Stage %3d processing took %7lld cycles %4lld us (%03.1f %%)",
-                        i,
-                        current_stage_cycles,
-                        cycles_to_us(current_stage_cycles),
-                        cycles_to_percent(current_stage_cycles));
+                int64_t current_stage_cycles =
+                    stage_cycles[i] -
+                    ((i == 0) ? start_cycles : stage_cycles[i - 1]);
+                ESP_LOGI(TAG,
+                         "Stage %3d processing took %7lld cycles %4lld us "
+                         "(%03.1f %%)",
+                         i,
+                         current_stage_cycles,
+                         cycles_to_us(current_stage_cycles),
+                         cycles_to_percent(current_stage_cycles));
 
                 total_cycles += current_stage_cycles;
             }
 
-            ESP_LOGI(TAG, "Total processing took     %7lld cycles %4lld us (%03.1f %%)",
-                    total_cycles,
-                    cycles_to_us(total_cycles),
-                    cycles_to_percent(total_cycles));
+            ESP_LOGI(
+                TAG,
+                "Total processing took     %7lld cycles %4lld us (%03.1f %%)",
+                total_cycles,
+                cycles_to_us(total_cycles),
+                cycles_to_percent(total_cycles));
 
             ESP_LOGI(TAG, " ========= \n");
 

@@ -17,53 +17,62 @@
  * ShrapnelDSP. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include "gtest/gtest.h"
 #include "gmock/gmock.h"
+#include "gtest/gtest.h"
 
-#include <complex>
 #include "fast_convolution.h"
+#include <complex>
 
-
-void _esp_error_check_failed(esp_err_t rc, const char *file, int line, const char *function, const char *expression)
+void _esp_error_check_failed(esp_err_t rc,
+                             const char *file,
+                             int line,
+                             const char *function,
+                             const char *expression)
 {
     printf("ESP_ERROR_CHECK failed: esp_err_t 0x%x", rc);
 #ifdef CONFIG_ESP_ERR_TO_NAME_LOOKUP
     printf(" (%s)", esp_err_to_name(rc));
 #endif //CONFIG_ESP_ERR_TO_NAME_LOOKUP
     printf(" at %p\n", __builtin_return_address(0));
-    printf("file: \"%s\" line %d\nfunc: %s\nexpression: %s\n", file, line, function, expression);
+    printf("file: \"%s\" line %d\nfunc: %s\nexpression: %s\n",
+           file,
+           line,
+           function,
+           expression);
     abort();
 }
 
-void profiling_mark_stage(unsigned int stage) {(void)stage;}
+void profiling_mark_stage(unsigned int stage) { (void)stage; }
 
 using ::testing::ElementsAre;
 using ::testing::FloatEq;
 
-class FastConvolution : public ::testing::Test {};
+class FastConvolution : public ::testing::Test
+{
+};
 
 TEST_F(FastConvolution, ComplexMultiply)
 {
     using namespace std::complex_literals;
 
     std::array<std::complex<float>, 8> in_a{
-         0.f +  0if,
-         1.f +  0if,
-         0.f +  2if,
-         1.f +  2if,
-        -1.f +  0if,
-         0.f + -2if,
+        0.f + 0if,
+        1.f + 0if,
+        0.f + 2if,
+        1.f + 2if,
+        -1.f + 0if,
+        0.f + -2if,
         -1.f + -2if,
     };
 
     std::array<std::complex<float>, 8> in_b{
-         1.f + 1if,
-         1.f + 1if,
-         1.f + 1if,
-         1.f + 1if,
-         1.f + 1if,
-         1.f + 1if,
-         1.f + 1if,
+        1.f + 1if,
+        1.f + 1if,
+        1.f + 1if,
+        1.f + 1if,
+        1.f + 1if,
+        1.f + 1if,
+        1.f + 1if,
     };
 
     std::array<std::complex<float>, 8> out_uut;
@@ -74,10 +83,10 @@ TEST_F(FastConvolution, ComplexMultiply)
     {
         auto ref = in_a[i] * in_b[i];
 
-        EXPECT_FLOAT_EQ(ref.real(), out_uut[i].real()) <<
-            "i: " << i << " in_a: " << in_a[i] << " in_b: " << in_b[i];
-        EXPECT_FLOAT_EQ(ref.imag(), out_uut[i].imag()) <<
-            "i: " << i << " in_a: " << in_a[i] << " in_b: " << in_b[i];
+        EXPECT_FLOAT_EQ(ref.real(), out_uut[i].real())
+            << "i: " << i << " in_a: " << in_a[i] << " in_b: " << in_b[i];
+        EXPECT_FLOAT_EQ(ref.imag(), out_uut[i].imag())
+            << "i: " << i << " in_a: " << in_a[i] << " in_b: " << in_b[i];
     }
 }
 
@@ -99,12 +108,8 @@ TEST_F(FastConvolution, ImpulseZeroDelayIsIdentity)
 
     uut.process(input_b, out);
 
-    EXPECT_THAT(out, ElementsAre(
-                FloatEq(1),
-                FloatEq(2),
-                FloatEq(3),
-                FloatEq(4)
-                ));
+    EXPECT_THAT(out,
+                ElementsAre(FloatEq(1), FloatEq(2), FloatEq(3), FloatEq(4)));
 }
 
 TEST_F(FastConvolution, ImpulseNonZeroDelay)
@@ -125,12 +130,8 @@ TEST_F(FastConvolution, ImpulseNonZeroDelay)
 
     uut.process(input_b, out);
 
-    EXPECT_THAT(out, ElementsAre(
-                FloatEq(4),
-                FloatEq(1),
-                FloatEq(2),
-                FloatEq(3)
-                ));
+    EXPECT_THAT(out,
+                ElementsAre(FloatEq(4), FloatEq(1), FloatEq(2), FloatEq(3)));
 }
 
 TEST_F(FastConvolution, IsCommutative)
@@ -182,10 +183,8 @@ TEST_F(FastConvolution, IsLinear)
 
     uut.process(input_b, out);
 
-    EXPECT_THAT(out, ElementsAre(
-                FloatEq(1 + 4),
-                FloatEq(2 + 1),
-                FloatEq(3 + 2),
-                FloatEq(4 + 3)
-                ));
+    EXPECT_THAT(
+        out,
+        ElementsAre(
+            FloatEq(1 + 4), FloatEq(2 + 1), FloatEq(3 + 2), FloatEq(4 + 3)));
 }

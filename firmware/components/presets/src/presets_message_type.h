@@ -23,38 +23,37 @@
 
 namespace shrapnel::presets {
 
-template<typename T>
+template <typename T>
 constexpr const char *get_message_type();
 
-template<>
+template <>
 constexpr const char *get_message_type<Initialise>()
 {
     return "Presets::initialise";
 }
 
-template<>
+template <>
 constexpr const char *get_message_type<Create>()
 {
     return "Presets::create";
 }
 
-template<>
+template <>
 constexpr const char *get_message_type<Notify>()
 {
     return "Presets::notify";
 }
 
-template<>
+template <>
 constexpr const char *get_message_type<Update>()
 {
     return "Presets::update";
 }
 
-template<>
+template <>
 constexpr const char *get_message_type<Delete>()
 {
     return "Presets::delete";
 }
 
-}
-
+} // namespace shrapnel::presets

@@ -33,10 +33,10 @@
 
 namespace shrapnel::parameters {
 
-template<typename T>
+template <typename T>
 rapidjson::Value to_json(rapidjson::Document &document, const T &object);
 
-template<>
+template <>
 rapidjson::Value to_json(rapidjson::Document &document, const Update &object);
 
-}
+} // namespace shrapnel::parameters

@@ -42,18 +42,15 @@ public:
         processor.prepare(spec.sampleRate, block_size);
     }
 
-    void reset() override
-    {
-        processor.reset();
-    }
+    void reset() override { processor.reset(); }
 
-    void process(const juce::dsp::ProcessContextReplacing<float> &context) override
+    void
+    process(const juce::dsp::ProcessContextReplacing<float> &context) override
     {
         jassert(context.getOutputBlock().getNumSamples() == block_size);
 
         auto samples = context.getOutputBlock().getChannelPointer(0);
         processor.process(std::span<float, block_size>(samples, block_size));
-
     }
 
 private:

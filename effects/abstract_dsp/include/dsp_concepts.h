@@ -29,13 +29,13 @@ concept Resetable = requires(T processor) { processor.reset(); };
 
 template <typename T>
 concept Preparable = requires(T processor, float sample_rate, size_t max_size) {
-                         processor.prepare(sample_rate, max_size);
-                     };
+    processor.prepare(sample_rate, max_size);
+};
 
 template <typename T, size_t N>
 concept Processable = requires(T processor, std::span<float, N> samples) {
-                          processor.process(samples);
-                      };
+    processor.process(samples);
+};
 
 } // namespace
 

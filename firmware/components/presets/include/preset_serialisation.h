@@ -66,11 +66,14 @@ void deserialise_live_parameters(T &parameters_service,
     parameters_service.update("treble", parameters.treble);
     parameters_service.update("contour", parameters.contour);
     parameters_service.update("volume", parameters.volume);
-    parameters_service.update("noiseGateThreshold", parameters.noise_gate_threshold);
-    parameters_service.update("noiseGateHysteresis", parameters.noise_gate_hysteresis);
+    parameters_service.update("noiseGateThreshold",
+                              parameters.noise_gate_threshold);
+    parameters_service.update("noiseGateHysteresis",
+                              parameters.noise_gate_hysteresis);
     parameters_service.update("noiseGateAttack", parameters.noise_gate_attack);
     parameters_service.update("noiseGateHold", parameters.noise_gate_hold);
-    parameters_service.update("noiseGateRelease", parameters.noise_gate_release);
+    parameters_service.update("noiseGateRelease",
+                              parameters.noise_gate_release);
     parameters_service.update("noiseGateBypass", parameters.noise_gate_bypass);
     parameters_service.update("chorusRate", parameters.chorus_rate);
     parameters_service.update("chorusDepth", parameters.chorus_depth);

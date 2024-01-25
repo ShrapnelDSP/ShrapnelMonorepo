@@ -17,8 +17,8 @@
  * ShrapnelDSP. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include "gtest/gtest.h"
 #include "gmock/gmock.h"
+#include "gtest/gtest.h"
 #include <memory>
 
 #include "midi_mapping.h"
@@ -36,8 +36,8 @@ using ::testing::Return;
 
 class MidiHandling : public ::testing::Test
 {
-    protected:
-        MidiHandling() : sut() {}
+protected:
+    MidiHandling() : sut() {}
 
     MappingManager<2, 1> sut;
 };
@@ -68,7 +68,7 @@ TEST_F(MidiHandling, Update)
 
     EXPECT_THAT(sut.update({{1}, {5, 6, Mapping::Mode::PARAMETER, "tone"}}), 0);
     EXPECT_THAT(sut.get()->size(), 2);
-    
+
     // TODO should we verify iteration here or something?
 }
 
@@ -81,15 +81,16 @@ TEST_F(MidiHandling, Remove)
 
 TEST_F(MidiHandling, Notifications)
 {
-    class Observer final : public midi::MappingObserver {
+    class Observer final : public midi::MappingObserver
+    {
     public:
-        void notification(const Mapping::id_t &) override {
+        void notification(const Mapping::id_t &) override
+        {
             notification_count++;
         }
 
         int notification_count = 0;
     };
-
 
     Observer observer;
     sut.add_observer(observer);
@@ -114,7 +115,8 @@ TEST(MidiMappingPod, ToString)
     stream << mapping;
 
     EXPECT_THAT(std::string(buffer.data()),
-                "{ channel 1 cc number 2 mode parameter name optional with value test preset optional with no value }");
+                "{ channel 1 cc number 2 mode parameter name optional with "
+                "value test preset optional with no value }");
 }
 
-}
+} // namespace

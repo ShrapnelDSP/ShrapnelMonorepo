@@ -55,4 +55,4 @@ std::optional<Update> from_json(const rapidjson::Value &json);
 template <>
 std::optional<PresetsApiMessage> from_json(const rapidjson::Value &json);
 
-} // namespace shrapnel::selected_preset
+} // namespace shrapnel::presets

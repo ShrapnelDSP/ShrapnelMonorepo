@@ -17,8 +17,8 @@
  * ShrapnelDSP. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include "gtest/gtest.h"
 #include "gmock/gmock.h"
+#include "gtest/gtest.h"
 #include <variant>
 
 #include "audio_param.h"
@@ -35,8 +35,8 @@
 #pragma GCC diagnostic ignored "-Wsign-conversion"
 #pragma GCC diagnostic ignored "-Wswitch-enum"
 #include "rapidjson/document.h"
-#include "rapidjson/stringbuffer.h"
 #include "rapidjson/prettywriter.h"
+#include "rapidjson/stringbuffer.h"
 #pragma GCC diagnostic pop
 
 namespace {
@@ -44,7 +44,7 @@ namespace {
 using namespace shrapnel;
 using namespace shrapnel::midi;
 
-template<typename T>
+template <typename T>
 std::string write_json(const T &object)
 {
     rapidjson::Document document;
@@ -159,12 +159,11 @@ TEST(MappingJsonBuilder, VariantGetResponse)
     etl::map<Mapping::id_t, Mapping, 3> mapping{
         {Mapping::id_t{0}, Mapping{1, 2, Mapping::Mode::PARAMETER, "foo"}},
         {Mapping::id_t{1}, Mapping{3, 4, Mapping::Mode::TOGGLE, "bar"}},
-        {Mapping::id_t{2}, Mapping{5, 6, Mapping::Mode::BUTTON, std::nullopt, 42}},
-        };
-
-    MappingApiMessage input{
-        GetResponse{&mapping}
+        {Mapping::id_t{2},
+         Mapping{5, 6, Mapping::Mode::BUTTON, std::nullopt, 42}},
     };
+
+    MappingApiMessage input{GetResponse{&mapping}};
 
     auto reference = normalise_json(R"({
           "mappings": {

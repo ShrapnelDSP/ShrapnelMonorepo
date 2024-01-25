@@ -36,30 +36,31 @@
 
 namespace shrapnel::parameters {
 
-template<typename T>
+template <typename T>
 std::optional<T> from_json(const rapidjson::Value &json);
 
-template<>
+template <>
 std::optional<Update> from_json(const rapidjson::Value &json);
 
-template<>
+template <>
 std::optional<Initialise> from_json(const rapidjson::Value &json);
 
-template<>
+template <>
 std::optional<ApiMessage> from_json(const rapidjson::Value &json);
 
-
-template<typename T>
+template <typename T>
 constexpr const char *get_message_type();
 
-template<>
-constexpr const char *get_message_type<Update>() {
+template <>
+constexpr const char *get_message_type<Update>()
+{
     return "parameterUpdate";
 }
 
-template<>
-constexpr const char *get_message_type<Initialise>() {
+template <>
+constexpr const char *get_message_type<Initialise>()
+{
     return "initialiseParameters";
 }
 
-}
+} // namespace shrapnel::parameters

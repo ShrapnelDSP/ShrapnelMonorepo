@@ -19,9 +19,9 @@
 
 #pragma once
 
+#include "dsp_concepts.h"
 #include "iir_concrete.h"
 #include <cstddef>
-#include "dsp_concepts.h"
 
 namespace shrapnel::effect {
 
@@ -58,4 +58,4 @@ private:
 };
 static_assert(dsp::Processor<Wah, std::dynamic_extent>);
 
-}
+} // namespace shrapnel::effect

@@ -19,13 +19,13 @@
 
 #pragma once
 
-#include <ostream>
 #include "midi_protocol.h"
+#include <ostream>
 
 namespace shrapnel {
 namespace midi {
 
-std::ostream& operator <<(std::ostream& out, const Message& message);
+std::ostream &operator<<(std::ostream &out, const Message &message);
 
 }
-}
+} // namespace shrapnel

@@ -17,9 +17,9 @@
  * ShrapnelDSP. If not, see <https://www.gnu.org/licenses/>.
  */
 
+#include "esp_log.h"
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
-#include "esp_log.h"
 
 #define TAG "os_debug"
 
@@ -35,4 +35,3 @@ void debug_dump_task_list()
     ESP_LOGI(TAG, "Task list:\n%s", buffer);
 #endif
 }
-

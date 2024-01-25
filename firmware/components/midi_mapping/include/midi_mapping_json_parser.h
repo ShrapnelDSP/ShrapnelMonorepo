@@ -37,39 +37,40 @@
 namespace shrapnel {
 namespace midi {
 
-template<typename T>
+template <typename T>
 std::optional<T> from_json(const rapidjson::Value &);
 
-template<>
+template <>
 std::optional<GetRequest> from_json(const rapidjson::Value &json);
 
-template<>
+template <>
 std::optional<Mapping> from_json(const rapidjson::Value &json);
 
-template<>
-std::optional<std::pair<Mapping::id_t, Mapping>> from_json(const rapidjson::Value &json);
+template <>
+std::optional<std::pair<Mapping::id_t, Mapping>>
+from_json(const rapidjson::Value &json);
 
-template<>
+template <>
 std::optional<CreateRequest> from_json(const rapidjson::Value &json);
 
-template<>
+template <>
 std::optional<Update> from_json(const rapidjson::Value &json);
 
-template<>
+template <>
 std::optional<Remove> from_json(const rapidjson::Value &json);
 
-template<>
+template <>
 std::optional<Mapping::id_t> from_json(const rapidjson::Value &json);
-
 
 /** Convert the message into a object representing it.
  */
-template<>
+template <>
 std::optional<MappingApiMessage> from_json(const rapidjson::Value &json);
 
 template <typename MapType>
     requires std::derived_from<MapType, etl::imap<Mapping::id_t, Mapping>>
-std::optional<MapType> from_json(const rapidjson::Value &json) {
+std::optional<MapType> from_json(const rapidjson::Value &json)
+{
     constexpr char TAG[] = "etl::map<Mapping::id_t, Mapping> from_json";
     MapType out;
 
@@ -85,7 +86,7 @@ std::optional<MapType> from_json(const rapidjson::Value &json) {
         return std::nullopt;
     }
 
-    for (const auto &entry : json.GetObject())
+    for(const auto &entry : json.GetObject())
     {
         auto mapping = from_json<Mapping>(entry.value);
         if(!mapping.has_value())
@@ -107,5 +108,5 @@ std::optional<MapType> from_json(const rapidjson::Value &json) {
     return out;
 }
 
-}
-}
+} // namespace midi
+} // namespace shrapnel

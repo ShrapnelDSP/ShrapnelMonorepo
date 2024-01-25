@@ -248,8 +248,8 @@
 
 #include <array>
 #include <cstdint>
-#include <utility>
 #include <esp_log.h>
+#include <utility>
 
 #include "audio_param.h"
 #include "midi_protocol.h"
@@ -260,7 +260,8 @@
 
 namespace shrapnel::midi {
 
-struct Mapping {
+struct Mapping
+{
     using id_t = uuid::uuid_t;
 
     enum class Mode
@@ -279,11 +280,13 @@ struct Mapping {
     std::strong_ordering operator<=>(const Mapping &other) const = default;
 };
 
-using MappingObserver = etl::observer<const Mapping::id_t&>;
+using MappingObserver = etl::observer<const Mapping::id_t &>;
 
-template<std::size_t MAX_MAPPINGS, std::size_t MAX_OBSERVERS>
-class MappingManager final : public etl::observable<MappingObserver, MAX_OBSERVERS> {
-    public:
+template <std::size_t MAX_MAPPINGS, std::size_t MAX_OBSERVERS>
+class MappingManager final
+    : public etl::observable<MappingObserver, MAX_OBSERVERS>
+{
+public:
     using MapType = etl::map<Mapping::id_t, Mapping, MAX_MAPPINGS>;
 
     MappingManager() = default;
@@ -296,10 +299,13 @@ class MappingManager final : public etl::observable<MappingObserver, MAX_OBSERVE
     {
         return &mappings;
     }
-    
+
     /// \return non-zero on failure
-    [[nodiscard]] int create(const std::pair<const Mapping::id_t, Mapping> &mapping) {
-        if(mappings.full()) {
+    [[nodiscard]] int
+    create(const std::pair<const Mapping::id_t, Mapping> &mapping)
+    {
+        if(mappings.full())
+        {
             ESP_LOGE(TAG, "Failed to create new midi mapping, map is full");
             return -1;
         }
@@ -309,11 +315,14 @@ class MappingManager final : public etl::observable<MappingObserver, MAX_OBSERVE
         return 0;
     }
     /// \return non-zero on failure
-    [[nodiscard]] int update(const std::pair<const Mapping::id_t, Mapping> &mapping) {
+    [[nodiscard]] int
+    update(const std::pair<const Mapping::id_t, Mapping> &mapping)
+    {
         if(!mappings.contains(mapping.first))
         {
             ESP_LOGE(TAG, "Does not contain key");
-            ESP_LOG_BUFFER_HEX_LEVEL(TAG, mapping.first.data(), mapping.first.size(), ESP_LOG_ERROR);
+            ESP_LOG_BUFFER_HEX_LEVEL(
+                TAG, mapping.first.data(), mapping.first.size(), ESP_LOG_ERROR);
             return -1;
         }
 
@@ -322,25 +331,20 @@ class MappingManager final : public etl::observable<MappingObserver, MAX_OBSERVE
         this->notify_observers(mapping.first);
         return 0;
     }
-    void remove(const Mapping::id_t &id) {
+    void remove(const Mapping::id_t &id)
+    {
         mappings.erase(id);
         this->notify_observers(id);
     }
 
-    MapType::iterator begin()
-    {
-        return mappings.begin();
-    }
+    MapType::iterator begin() { return mappings.begin(); }
 
-    MapType::iterator end()
-    {
-        return mappings.end();
-    }
+    MapType::iterator end() { return mappings.end(); }
 
-    private:
+private:
     MapType mappings;
 
     static constexpr char TAG[] = "midi_mapping";
 };
 
-}
+} // namespace shrapnel::midi

@@ -20,16 +20,17 @@
 
 #pragma once
 
-#include <array>
 #include "dsps_biquad.h"
 #include "iir.h"
 #include "iir_universal.h"
+#include <array>
 
 namespace shrapnel {
 namespace dsp {
 
-class IirFilter final : public IirFilterBase {
-    public:
+class IirFilter final : public IirFilterBase
+{
+public:
     IirFilter(void) : order(2)
     {
         coefficients.fill(0);
@@ -40,18 +41,21 @@ class IirFilter final : public IirFilterBase {
     {
         if(order == 2)
         {
-            dsps_biquad_f32_ae32(in, out, buf_size, coefficients.data(), delay.data());
+            dsps_biquad_f32_ae32(
+                in, out, buf_size, coefficients.data(), delay.data());
         }
         else
         {
-            iir_process(in, out, buf_size, coefficients.data(), delay.data(), order * 2 + 2);
+            iir_process(in,
+                        out,
+                        buf_size,
+                        coefficients.data(),
+                        delay.data(),
+                        order * 2 + 2);
         }
     }
 
-    void reset(void) override
-    {
-        delay.fill(0);
-    }
+    void reset(void) override { delay.fill(0); }
 
     void set_coefficients(std::array<float, 6> new_coefficients) override
     {
@@ -85,11 +89,11 @@ class IirFilter final : public IirFilterBase {
         coefficients = new_coefficients;
     }
 
-    private:
+private:
     std::array<float, 10> coefficients;
     std::array<float, 4> delay;
     int order;
 };
 
-}
-}
+} // namespace dsp
+} // namespace shrapnel

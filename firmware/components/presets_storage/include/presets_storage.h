@@ -72,7 +72,8 @@ public:
               namespace_name(namespace_name),
               type(type)
         {
-            esp_err_t rc = nvs_entry_find(part_name, namespace_name, type, &self);
+            esp_err_t rc =
+                nvs_entry_find(part_name, namespace_name, type, &self);
             if(rc == ESP_ERR_NVS_NOT_FOUND)
             {
                 assert(self == nullptr);

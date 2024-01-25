@@ -30,41 +30,49 @@ namespace midi {
 
 int constexpr CC_VALUE_MAX = 127;
 
-enum MessageType {
+enum MessageType
+{
     NOTE_OFF = 0x80,
     NOTE_ON = 0x90,
     CONTROL_CHANGE = 0xB0,
     PROGRAM_CHANGE = 0xC0,
 };
 
-struct Message {
-    using midi_channel_t = uint8_t ;
+struct Message
+{
+    using midi_channel_t = uint8_t;
 
-    struct NoteOn {
+    struct NoteOn
+    {
         uint8_t note;
         uint8_t velocity;
 
         std::strong_ordering operator<=>(const NoteOn &other) const = default;
     };
 
-    struct NoteOff {
+    struct NoteOff
+    {
         uint8_t note;
         uint8_t velocity;
 
         std::strong_ordering operator<=>(const NoteOff &other) const = default;
     };
 
-    struct ControlChange {
+    struct ControlChange
+    {
         uint8_t control;
         uint8_t value;
 
-        std::strong_ordering operator<=>(const ControlChange &other) const = default;
+        std::strong_ordering
+        operator<=>(const ControlChange &other) const = default;
     };
 
-    struct ProgramChange {
+    struct ProgramChange
+    {
         uint8_t number;
 
-        std::strong_ordering operator<=>(const ProgramChange &other) const = default;
+        std::strong_ordering
+        operator<=>(const ProgramChange &other) const = default;
     };
 
     midi_channel_t channel;
@@ -72,21 +80,34 @@ struct Message {
 
     std::weak_ordering operator<=>(const Message &other) const = default;
 
-    friend etl::string_stream& operator<<(etl::string_stream&  out, const Message& message) {
+    friend etl::string_stream &operator<<(etl::string_stream &out,
+                                          const Message &message)
+    {
         out << "{ channel " << message.channel << " ";
 
-        auto print_parameters = [&](auto &param) {
+        auto print_parameters = [&](auto &param)
+        {
             using T = std::decay_t<decltype(param)>;
 
-            if constexpr (std::is_same_v<T, NoteOn>) {
+            if constexpr(std::is_same_v<T, NoteOn>)
+            {
                 out << "note on " << +param.note << " " << +param.velocity;
-            } else if constexpr (std::is_same_v<T, NoteOff>) {
+            }
+            else if constexpr(std::is_same_v<T, NoteOff>)
+            {
                 out << "note off " << +param.note << " " << +param.velocity;
-            } else if constexpr (std::is_same_v<T, ControlChange>) {
-                out << "control change " << +param.control << " " << +param.value;
-            } else if constexpr (std::is_same_v<T, ProgramChange>) {
+            }
+            else if constexpr(std::is_same_v<T, ControlChange>)
+            {
+                out << "control change " << +param.control << " "
+                    << +param.value;
+            }
+            else if constexpr(std::is_same_v<T, ProgramChange>)
+            {
                 out << "program change " << +param.number;
-            } else {
+            }
+            else
+            {
                 // TODO is there any way to turn this into a compiler error?
                 out << "unknown";
             }
@@ -99,8 +120,9 @@ struct Message {
     }
 };
 
-class Decoder {
-    public:
+class Decoder
+{
+public:
     using Callback = etl::delegate<void(Message)>;
 
     /**
@@ -114,18 +136,15 @@ class Decoder {
      */
     void decode(uint8_t byte);
 
-    private:
-
+private:
     void output_message();
-
 
     Callback on_message_decoded;
 
-    static inline bool is_status_byte(uint8_t byte) {
-        return byte & (1 << 7);
-    };
+    static inline bool is_status_byte(uint8_t byte) { return byte & (1 << 7); };
 
-    enum State {
+    enum State
+    {
         IDLE,
         GOT_MESSAGE,
     };
@@ -142,5 +161,5 @@ class Decoder {
     constexpr static const char *TAG = "midi";
 };
 
-}
-}
+} // namespace midi
+} // namespace shrapnel

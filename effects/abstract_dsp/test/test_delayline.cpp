@@ -17,8 +17,8 @@
  * ShrapnelDSP. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include "gtest/gtest.h"
 #include "gmock/gmock.h"
+#include "gtest/gtest.h"
 
 #include "delayline.h"
 
@@ -26,7 +26,7 @@
 
 class DelayLine : public ::testing::Test
 {
-    protected:
+protected:
     DelayLine() : uut(DELAY_LENGTH) {}
 
     shrapnel::dsp::DelayLine uut;
@@ -139,7 +139,8 @@ TEST_F(DelayLine, MaxDelay)
     {
         uut.push_sample(i);
 
-        EXPECT_FLOAT_EQ(std::max(0.f, static_cast<float>(i - DELAY_LENGTH)), uut.pop_sample());
+        EXPECT_FLOAT_EQ(std::max(0.f, static_cast<float>(i - DELAY_LENGTH)),
+                        uut.pop_sample());
     }
 }
 
@@ -153,6 +154,7 @@ TEST_F(DelayLine, TooGreatDelayIsClippedToMax)
     {
         uut.push_sample(i);
 
-        EXPECT_FLOAT_EQ(std::max(0.f, static_cast<float>(i - DELAY_LENGTH)), uut.pop_sample());
+        EXPECT_FLOAT_EQ(std::max(0.f, static_cast<float>(i - DELAY_LENGTH)),
+                        uut.pop_sample());
     }
 }

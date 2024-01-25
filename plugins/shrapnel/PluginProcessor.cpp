@@ -223,7 +223,8 @@ void AudioPluginAudioProcessor::processBlock(juce::AudioBuffer<float> &buffer,
     // Sum input channels
     buffer.addFrom(0, 0, buffer.getReadPointer(1), buffer.getNumSamples());
     auto samples = buffer.getWritePointer(0);
-    juce::dsp::AudioBlock<float> block{&samples, 1, static_cast<size_t>(buffer.getNumSamples())};
+    juce::dsp::AudioBlock<float> block{
+        &samples, 1, static_cast<size_t>(buffer.getNumSamples())};
 
     processor.process(block);
 

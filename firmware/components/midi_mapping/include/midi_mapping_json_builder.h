@@ -40,32 +40,38 @@ namespace midi {
  * \note The \p document must not by modified by this function. It is only
  *       passed in so that its allocator member can be accessed.
  */
-template<typename T>
+template <typename T>
 rapidjson::Value to_json(rapidjson::Document &document, const T &object);
 
-template<>
+template <>
 rapidjson::Value to_json(rapidjson::Document &document, const Message &object);
 
-template<>
+template <>
 rapidjson::Value to_json(rapidjson::Document &document, const Mapping &object);
 
-template<>
-rapidjson::Value to_json(rapidjson::Document &document, const std::pair<Mapping::id_t, Mapping> &object);
+template <>
+rapidjson::Value to_json(rapidjson::Document &document,
+                         const std::pair<Mapping::id_t, Mapping> &object);
 
-template<>
-rapidjson::Value to_json(rapidjson::Document &document, const CreateResponse &object);
+template <>
+rapidjson::Value to_json(rapidjson::Document &document,
+                         const CreateResponse &object);
 
-template<>
-rapidjson::Value to_json(rapidjson::Document &document, const GetResponse &object);
+template <>
+rapidjson::Value to_json(rapidjson::Document &document,
+                         const GetResponse &object);
 
-template<>
-rapidjson::Value to_json(rapidjson::Document &document, const MessageReceived &object);
+template <>
+rapidjson::Value to_json(rapidjson::Document &document,
+                         const MessageReceived &object);
 
-template<>
-rapidjson::Value to_json(rapidjson::Document &document, const MappingApiMessage &object);
+template <>
+rapidjson::Value to_json(rapidjson::Document &document,
+                         const MappingApiMessage &object);
 
-template<>
-rapidjson::Value to_json(rapidjson::Document &document, const etl::imap<Mapping::id_t, Mapping> &object);
+template <>
+rapidjson::Value to_json(rapidjson::Document &document,
+                         const etl::imap<Mapping::id_t, Mapping> &object);
 
-}
-}
+} // namespace midi
+} // namespace shrapnel
