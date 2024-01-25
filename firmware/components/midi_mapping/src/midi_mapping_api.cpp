@@ -160,6 +160,9 @@ int to_proto(const midi::Mapping &message, shrapnel_midi_mapping_Mapping &out)
     case midi::Mapping::Mode::TOGGLE:
         out.mode = shrapnel_midi_mapping_Mapping_Mode_toggle;
         break;
+    case midi::Mapping::Mode::BUTTON:
+        out.mode = shrapnel_midi_mapping_Mapping_Mode_button;
+        break;
     default:
         return -1;
     }
@@ -184,6 +187,9 @@ int from_proto(const shrapnel_midi_mapping_Mapping &message, midi::Mapping &out)
         break;
     case shrapnel_midi_mapping_Mapping_Mode_toggle:
         out.mode = midi::Mapping::Mode::TOGGLE;
+        break;
+    case shrapnel_midi_mapping_Mapping_Mode_button:
+        out.mode = midi::Mapping::Mode::BUTTON;
         break;
     default:
         return -1;
