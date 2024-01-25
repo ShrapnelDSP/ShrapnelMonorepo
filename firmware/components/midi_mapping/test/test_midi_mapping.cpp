@@ -35,19 +35,19 @@ using ::testing::FloatEq;
 using ::testing::Not;
 using ::testing::Return;
 
-class MidiHandling : public ::testing::Test
+class MidiMapping : public ::testing::Test
 {
     using SutType = MappingManager<2, 1>;
 
 protected:
-    MidiHandling() {}
+    MidiMapping() {}
 
-    SutType create_sut() { return {std::move(storage_mock)}; }
+    SutType create_sut() { return SutType{std::move(storage_mock)}; }
 
     std::unique_ptr<MockStorage> storage_mock = std::make_unique<MockStorage>();
 };
 
-TEST_F(MidiHandling, Create)
+TEST_F(MidiMapping, Create)
 {
     auto sut = create_sut();
     EXPECT_THAT(sut.get()->size(), 0);
@@ -79,7 +79,7 @@ TEST_F(MidiMapping, Update)
     // TODO should we verify iteration here or something?
 }
 
-TEST_F(MidiHandling, Destroy)
+TEST_F(MidiMapping, Destroy)
 {
     uint32_t id;
     auto sut = create_sut();
@@ -88,7 +88,7 @@ TEST_F(MidiHandling, Destroy)
     EXPECT_THAT(sut.get()->size(), 0);
 }
 
-TEST_F(MidiHandling, Notifications)
+TEST_F(MidiMapping, Notifications)
 {
     class Observer final : public midi::MappingObserver
     {
@@ -227,79 +227,3 @@ TEST(MidiMappingPod, RemoveToString)
 }
 
 } // namespace
-
-// TODO still need these new tests?
-TEST_F(MidiMapping, ProcessParameter)
-{
-uint32_t id;
-auto sut = create_sut();
-EXPECT_EQ(0, sut.create({1, 2, Mapping::Mode::PARAMETER, "gain"}, id));
-
-EXPECT_CALL(*parameters_mock, update(id_t("gain"), 0.f));
-sut.process_message({
-.channel{1},
-.parameters{Message::ControlChange{.control = 2, .value = 0}},
-});
-
-EXPECT_CALL(*parameters_mock, update(id_t("gain"), 1.f));
-sut.process_message({
-.channel{1},
-.parameters{
-Message::ControlChange{.control = 2, .value = CC_VALUE_MAX}},
-});
-
-EXPECT_CALL(*parameters_mock, update).Times(0);
-sut.process_message({
-.channel{99},
-.parameters{Message::ControlChange{.control = 2, .value = 0}},
-});
-
-sut.process_message({
-.channel{1},
-.parameters{Message::ControlChange{.control = 99, .value = 0}},
-});
-}
-
-TEST_F(MidiMapping, ProcessToggle)
-{
-auto sut = create_sut();
-
-auto process_message_with_value = [&](uint8_t value)
-{
-  sut.process_message({
-                          .channel{1},
-                          .parameters{Message::ControlChange{.control = 2, .value = value}},
-                      });
-};
-
-// FIXME: use a mock for this, rather than setting up here
-uint32_t id;
-EXPECT_EQ(0, sut.create({1, 2, Mapping::Mode::TOGGLE, "bypass"}, id));
-
-EXPECT_CALL(*parameters_mock, get(id_t{"bypass"}))
-.WillRepeatedly(Return(0.f));
-{
-::testing::InSequence seq;
-
-// update is called for every event with non-zero value
-// mock always returns 0, so call should be with 1 always
-EXPECT_CALL(*parameters_mock, update(id_t("bypass"), FloatEq(1.f)))
-.Times(2);
-EXPECT_CALL(*parameters_mock, update).Times(0);
-}
-
-process_message_with_value(0);
-process_message_with_value(1);
-process_message_with_value(2);
-
-sut.process_message({
-.channel{99},
-.parameters{Message::ControlChange{.control = 2, .value = 1}},
-});
-
-sut.process_message({
-.channel{1},
-.parameters{Message::ControlChange{.control = 99, .value = 1}},
-});
-}
-
