@@ -20,8 +20,8 @@
 #pragma once
 
 #include "crud.h"
-#include <span>
 #include <cstdint>
+#include <span>
 
 namespace shrapnel {
 

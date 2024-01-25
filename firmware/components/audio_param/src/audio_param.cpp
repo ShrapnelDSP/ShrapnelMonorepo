@@ -20,19 +20,19 @@
 #include "audio_param.h"
 #include "esp_log.h"
 
-
 namespace shrapnel {
 namespace parameters {
 
-AudioParameterFloat::AudioParameterFloat(
-        const id_t &a_name,
-        float a_minimum,
-        float a_maximum,
-        float default_value) :
-    name(a_name),
-    value(default_value),
-    minimum(a_minimum),
-    maximum(a_maximum) {}
+AudioParameterFloat::AudioParameterFloat(const id_t &a_name,
+                                         float a_minimum,
+                                         float a_maximum,
+                                         float default_value)
+    : name(a_name),
+      value(default_value),
+      minimum(a_minimum),
+      maximum(a_maximum)
+{
+}
 
 void AudioParameterFloat::update(float a_value)
 {
@@ -61,5 +61,5 @@ std::atomic<float> *AudioParameterFloat::get_raw_parameter(void)
     return &value;
 }
 
-}
-}
+} // namespace parameters
+} // namespace shrapnel

@@ -20,30 +20,30 @@
 
 #pragma once
 
-#include "iir_concrete.h"
 #include "dsp_concepts.h"
+#include "iir_concrete.h"
 
 namespace shrapnel::effect::valvestate {
 
 class GainControl
 {
-    public:
-        /**
+public:
+    /**
          * \param g The value of gain from 0 to 1.
          * \param channel 0 for OD1, 1 for OD2
          */
-        void set_parameters(float g, float channel);
+    void set_parameters(float g, float channel);
 
-        void prepare(float samplerate, size_t);
-        void process(std::span<float> buffer);
-        void reset();
+    void prepare(float samplerate, size_t);
+    void process(std::span<float> buffer);
+    void reset();
 
-    private:
-        float samplerate;
+private:
+    float samplerate;
 
-        shrapnel::dsp::IirFilter filter;
+    shrapnel::dsp::IirFilter filter;
 };
 
 static_assert(dsp::Processor<GainControl>);
 
-}
+} // namespace shrapnel::effect::valvestate

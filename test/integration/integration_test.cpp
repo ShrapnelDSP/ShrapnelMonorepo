@@ -108,6 +108,7 @@ public:
 class Integration : public ::testing::Test
 {
     using UutType = shrapnel::MainThread<shrapnel::MAX_PARAMETERS, QUEUE_LEN>;
+
 protected:
     Integration()
         : audio_params(std::make_unique<shrapnel::AudioParameters>()),
@@ -142,7 +143,7 @@ protected:
         auto rc = in_queue.send(&message, 0);
         ASSERT_THAT(rc, pdPASS);
     }
-    
+
     testing::MockFunction<void(const AppMessage &)> send_message;
     std::function<void(const AppMessage &)> send_message_fn =
         send_message.AsStdFunction();

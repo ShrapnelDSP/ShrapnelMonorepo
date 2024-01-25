@@ -27,7 +27,8 @@ namespace shrapnel::persistence {
  *
  * \note Key will be truncated to 15 characters due to limitation of NVS
  */
-class EspStorage final : public Storage {
+class EspStorage final : public Storage
+{
 public:
     [[nodiscard]] int save(const char *key, std::span<uint8_t> data) override;
     [[nodiscard]] int save(const char *key, etl::string_view data) override;
@@ -40,4 +41,4 @@ public:
     [[nodiscard]] int load(const char *key, float &data) override;
 };
 
-}
+} // namespace shrapnel::persistence

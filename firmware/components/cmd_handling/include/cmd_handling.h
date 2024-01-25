@@ -38,25 +38,29 @@ namespace shrapnel::parameters {
 template <typename AudioParametersT>
 class CommandHandling final
 {
-    public:
-        using SendMessageCallback =
-            etl::delegate<void(const ApiMessage &, std::optional<int>)>;
+public:
+    using SendMessageCallback =
+        etl::delegate<void(const ApiMessage &, std::optional<int>)>;
 
-        /** \brief
+    /** \brief
      *
      * \param[in] a_param Data received through \ref dispatch() is
      * translated to binary and sent to this object.
      */
-        CommandHandling(std::shared_ptr<AudioParametersT> a_param,
-                        SendMessageCallback a_send_message)
-            : param(a_param),
-              send_message(a_send_message)
-        {}
+    CommandHandling(std::shared_ptr<AudioParametersT> a_param,
+                    SendMessageCallback a_send_message)
+        : param(a_param),
+          send_message(a_send_message)
+    {
+    }
 
-        void dispatch(const ApiMessage &a_message, int fd)
-        {
+    void dispatch(const ApiMessage &a_message, int fd)
+    {
 #if !defined(TESTING)
-        ESP_LOGI(TAG, "%s stack %d", __FUNCTION__, uxTaskGetStackHighWaterMark(NULL));
+        ESP_LOGI(TAG,
+                 "%s stack %d",
+                 __FUNCTION__,
+                 uxTaskGetStackHighWaterMark(NULL));
 #endif
 
         std::visit(
@@ -78,15 +82,18 @@ class CommandHandling final
                 }
             },
             a_message);
-        }
+    }
 
-    private:
+private:
     void parameter_update(const Update &message, int fd)
     {
         int rc = param->update(message.id, message.value);
         if(rc != 0)
         {
-            ESP_LOGE(TAG, "Failed to update parameter (%s) with value %f", message.id.data(), message.value);
+            ESP_LOGE(TAG,
+                     "Failed to update parameter (%s) with value %f",
+                     message.id.data(),
+                     message.value);
         }
 
         send_message(message, fd);
@@ -94,11 +101,11 @@ class CommandHandling final
 
     void initialise_parameters()
     {
-        for(const auto& [key, value] : *param)
+        for(const auto &[key, value] : *param)
         {
             Update message = {
-                    .id{id_t{key}},
-                    .value{value->get()},
+                .id{id_t{key}},
+                .value{value->get()},
             };
 
             send_message(message, std::nullopt);
@@ -111,4 +118,4 @@ class CommandHandling final
     static inline const char *TAG = "cmd_handling";
 };
 
-}
+} // namespace shrapnel::parameters

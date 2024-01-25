@@ -80,7 +80,8 @@ void Chorus::prepare(float rate, size_t)
     sample_rate = rate;
 }
 
-void Chorus::reset() {
+void Chorus::reset()
+{
     if(delayline)
     {
         dspal_delayline_destroy(delayline);

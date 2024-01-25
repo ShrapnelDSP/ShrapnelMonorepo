@@ -20,13 +20,14 @@
 #pragma once
 
 #include "abstract_dsp.h"
-#include "dsp_concepts.h"
 #include "cstddef"
+#include "dsp_concepts.h"
 
 namespace shrapnel::effect {
 
-class Chorus {
-    public:
+class Chorus
+{
+public:
     /** Set the rate of modulation
      *
      * This parameter is in units of Hz.
@@ -49,7 +50,7 @@ class Chorus {
     void process(std::span<float> samples);
     void reset();
 
-    private:
+private:
     float modulation_rate = 0;
     float modulation_depth = 0;
     float modulation_mix = 0;
@@ -63,4 +64,4 @@ class Chorus {
 
 static_assert(dsp::Processor<Chorus>);
 
-}
+} // namespace shrapnel::effect

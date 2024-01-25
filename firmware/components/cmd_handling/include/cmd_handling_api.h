@@ -51,11 +51,11 @@ etl::string_stream &operator<<(etl::string_stream &out, const ApiMessage &self);
 namespace shrapnel::api {
 
 template <>
-int
-to_proto(const parameters::ApiMessage &message, shrapnel_cmd_handling_Message &out);
+int to_proto(const parameters::ApiMessage &message,
+             shrapnel_cmd_handling_Message &out);
 
 template <>
-int
-from_proto(const shrapnel_cmd_handling_Message &message, parameters::ApiMessage &out);
+int from_proto(const shrapnel_cmd_handling_Message &message,
+               parameters::ApiMessage &out);
 
 } // namespace shrapnel::api

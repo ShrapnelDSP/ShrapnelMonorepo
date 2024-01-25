@@ -20,8 +20,8 @@
 
 #pragma once
 
-#include "iir_concrete.h"
 #include "dsp_concepts.h"
+#include "iir_concrete.h"
 
 namespace shrapnel {
 namespace effect {
@@ -29,20 +29,20 @@ namespace valvestate {
 
 class FMVFilter
 {
-    public:
+public:
     void set_parameters(float l, float m, float t);
 
     void prepare(float samplerate, size_t);
     void process(std::span<float> buffer);
     void reset();
 
-    private:
+private:
     shrapnel::dsp::IirFilter filter;
     float samplerate;
 };
 
 static_assert(dsp::Processor<FMVFilter>);
 
-}
-}
-}
+} // namespace valvestate
+} // namespace effect
+} // namespace shrapnel

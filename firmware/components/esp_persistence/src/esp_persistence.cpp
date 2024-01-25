@@ -138,7 +138,7 @@ int EspStorage::save(const char *key, float data)
 
     rc = 0;
 
-    out:
+out:
     nvs_close(nvs_handle);
     return rc;
 }
@@ -273,7 +273,7 @@ int EspStorage::load(const char *key, float &data)
     memcpy(&data, &value, sizeof value);
 
     rc = 0;
-    out:
+out:
     nvs_close(nvs_handle);
     return rc;
 }

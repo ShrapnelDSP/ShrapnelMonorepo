@@ -19,9 +19,9 @@
 
 #include "wah.h"
 
-#include <cmath>
 #include "dsps_biquad_gen.h"
 #include "dsps_mulc.h"
+#include <cmath>
 #include <numbers>
 
 namespace shrapnel::effect {
@@ -33,11 +33,12 @@ void Wah::set_expression_position(float position)
 
 void Wah::set_vocal(float vocal) { vocal_parameter = vocal; }
 
-void Wah::prepare(float rate, size_t) {
+void Wah::prepare(float rate, size_t)
+{
     float p = 0.9;
     std::array<float, 6> coefficients{1 - p, 0, 0, 1, -p, 0};
-    position_filter.set_coefficients(coefficients );
-    vocal_filter.set_coefficients(coefficients );
+    position_filter.set_coefficients(coefficients);
+    vocal_filter.set_coefficients(coefficients);
     sample_rate = rate;
 }
 
@@ -66,22 +67,21 @@ void Wah::process(std::span<float> samples)
     dsps_biquad_gen_bpf0db_f32(
         coefficients, resonance_frequency_hz / sample_rate, quality);
 
-    wah_filter.set_coefficients(
-        std::array<float, 6>{
-            coefficients[0] * gain,
-            coefficients[1] * gain,
-            coefficients[2] * gain,
-            1,
-            coefficients[3],
-            coefficients[4]});
+    wah_filter.set_coefficients(std::array<float, 6>{coefficients[0] * gain,
+                                                     coefficients[1] * gain,
+                                                     coefficients[2] * gain,
+                                                     1,
+                                                     coefficients[3],
+                                                     coefficients[4]});
 
     wah_filter.process(samples.data(), samples.data(), samples.size());
 }
 
-void Wah::reset() {
+void Wah::reset()
+{
     wah_filter.reset();
     position_filter.reset();
     vocal_filter.reset();
 }
 
-}
+} // namespace shrapnel::effect

@@ -61,7 +61,6 @@ parameter_init(parameters::AudioParametersBase *audio_params);
 void process_samples(std::span<int32_t, 2 * DMA_BUF_SIZE> buf,
                      AudioProcessor &processor);
 
-
 } // namespace
 
 void log_i2s_event(const i2s_event_t &e)
@@ -362,4 +361,4 @@ parameter_init(shrapnel::parameters::AudioParametersBase *audio_params)
 }
 } // namespace
 
-} // namespace shrapnel
+} // namespace shrapnel::audio

@@ -18,8 +18,8 @@
  */
 
 #include "audio_events.h"
-#include "esp_log.h"
 #include "audio_events.pb.h"
+#include "esp_log.h"
 
 #define TAG "audio_events"
 
@@ -45,20 +45,20 @@ etl::string_stream &operator<<(etl::string_stream &out, const ApiMessage &self)
     std::visit(
         [&](const auto &message)
         {
-          using T = std::decay_t<decltype(message)>;
+            using T = std::decay_t<decltype(message)>;
 
-          if constexpr(std::is_same_v<T, InputClipped>)
-          {
-              out << "<InputClipped>" << message;
-          }
-          else if constexpr(std::is_same_v<T, OutputClipped>)
-          {
-              out << "<OutputClipped>" << message;
-          }
-          else
-          {
-              out << "<Unknown>";
-          }
+            if constexpr(std::is_same_v<T, InputClipped>)
+            {
+                out << "<InputClipped>" << message;
+            }
+            else if constexpr(std::is_same_v<T, OutputClipped>)
+            {
+                out << "<OutputClipped>" << message;
+            }
+            else
+            {
+                out << "<Unknown>";
+            }
         },
         self);
 

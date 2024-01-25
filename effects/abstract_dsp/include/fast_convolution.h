@@ -30,9 +30,10 @@
 
 namespace shrapnel::dsp {
 
-template<std::size_t N, std::size_t K>
-class FastConvolution final {
-    public:
+template <std::size_t N, std::size_t K>
+class FastConvolution final
+{
+public:
     // TODO move the definition of A into the prepare method
     // Resample A to the current sample rate in the prepare method
     FastConvolution(const std::array<float, K> &a)
@@ -54,14 +55,13 @@ class FastConvolution final {
      *
      * \f$ out = a \circledast b \f$
      */
-    void process(
-            const std::array<float, N> &b,
-            std::array<float, N> &out)
+    void process(const std::array<float, N> &b, std::array<float, N> &out)
     {
         // transform b
         auto b_complex = real_to_complex(b);
         profiling_mark_stage(7);
-        int rc = dsps_fft4r_fc32(reinterpret_cast<float *>(b_complex.data()), N);
+        int rc =
+            dsps_fft4r_fc32(reinterpret_cast<float *>(b_complex.data()), N);
         assert(rc == ESP_OK);
         profiling_mark_stage(8);
         dsps_bit_rev4r_fc32(reinterpret_cast<float *>(b_complex.data()), N);
@@ -95,11 +95,12 @@ class FastConvolution final {
         profiling_mark_stage(15);
     }
 
-    private:
-    static constexpr float scale_factor = 1.f/N;
+private:
+    static constexpr float scale_factor = 1.f / N;
     std::array<std::complex<float>, N> a_complex;
 
-    std::array<std::complex<float>, N> real_to_complex(const std::array<float, N> &real)
+    std::array<std::complex<float>, N>
+    real_to_complex(const std::array<float, N> &real)
     {
         std::array<std::complex<float>, N> _complex{};
 
@@ -111,9 +112,8 @@ class FastConvolution final {
         return _complex;
     }
 
-    void complex_to_real(
-            const std::array<std::complex<float>, N> &_complex,
-            std::array<float, N> &real)
+    void complex_to_real(const std::array<std::complex<float>, N> &_complex,
+                         std::array<float, N> &real)
     {
         for(std::size_t i = 0; i < N; i++)
         {
@@ -121,11 +121,10 @@ class FastConvolution final {
         }
     }
 
-    public:
-    static void complex_multiply(
-            const std::array<std::complex<float>, N> &a,
-            const std::array<std::complex<float>, N> &b,
-            std::array<std::complex<float>, N> &out)
+public:
+    static void complex_multiply(const std::array<std::complex<float>, N> &a,
+                                 const std::array<std::complex<float>, N> &b,
+                                 std::array<std::complex<float>, N> &out)
     {
         // We want to compute (r_a + im_a j) * (r_b + im_b j)
         // This can be rewritten as follows:
@@ -140,22 +139,22 @@ class FastConvolution final {
         // TODO we multiply then add here, could we use the MADD.S instruction
         // to speed it up?
 
-        auto a_ptr = reinterpret_cast<const float*>(a.data());
-        auto b_ptr = reinterpret_cast<const float*>(b.data());
-        auto out_ptr = reinterpret_cast<float*>(out.data());
+        auto a_ptr = reinterpret_cast<const float *>(a.data());
+        auto b_ptr = reinterpret_cast<const float *>(b.data());
+        auto out_ptr = reinterpret_cast<float *>(out.data());
         // part 1
         dsps_mul_f32(a_ptr, b_ptr, out_ptr, N, 2, 2, 2);
         dsps_mul_f32(a_ptr, b_ptr + 1, out_ptr + 1, N, 2, 2, 2);
 
         // part 2
         std::array<std::complex<float>, N> out2;
-        auto out2_ptr = reinterpret_cast<float*>(out2.data());
+        auto out2_ptr = reinterpret_cast<float *>(out2.data());
         dsps_mul_f32(a_ptr + 1, b_ptr + 1, out2_ptr, N, 2, 2, 2);
         dsps_mul_f32(a_ptr + 1, b_ptr, out2_ptr + 1, N, 2, 2, 2);
         dsps_mulc_f32(out2_ptr, out2_ptr, N, -1, 2, 2);
 
-        dsps_add_f32(out_ptr, out2_ptr, out_ptr, 2*out.size(), 1, 1, 1);
+        dsps_add_f32(out_ptr, out2_ptr, out_ptr, 2 * out.size(), 1, 1, 1);
     }
 };
 
-}
+} // namespace shrapnel::dsp

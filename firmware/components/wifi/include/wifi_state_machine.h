@@ -27,8 +27,10 @@
 namespace shrapnel {
 namespace wifi {
 
-struct InternalEvent {
-    enum enum_type {
+struct InternalEvent
+{
+    enum enum_type
+    {
         IS_PROVISIONED,
         IS_NOT_PROVISIONED,
         STARTED,
@@ -55,8 +57,10 @@ struct InternalEvent {
     ETL_END_ENUM_TYPE
 };
 
-struct UserEvent {
-    enum enum_type {
+struct UserEvent
+{
+    enum enum_type
+    {
         CONNECTED,
         DISCONNECTED,
     };
@@ -67,8 +71,10 @@ struct UserEvent {
     ETL_END_ENUM_TYPE
 };
 
-struct State {
-    enum enum_type {
+struct State
+{
+    enum enum_type
+    {
         INIT,
         STARTING,
         CONNECTING,
@@ -115,15 +121,14 @@ struct State {
  *
  * \enduml
  */
-class WifiStateMachine {
-    public:
-
+class WifiStateMachine
+{
+public:
     using internal_event_callback_t = etl::delegate<void(InternalEvent)>;
     using user_event_callback_t = etl::delegate<void(UserEvent)>;
 
-    WifiStateMachine(
-            internal_event_callback_t a_send_event_internal,
-            user_event_callback_t a_send_event_user);
+    WifiStateMachine(internal_event_callback_t a_send_event_internal,
+                     user_event_callback_t a_send_event_user);
 
     using transition = etl::state_chart_traits::transition<WifiStateMachine>;
     using state = etl::state_chart_traits::state<WifiStateMachine>;
@@ -131,7 +136,7 @@ class WifiStateMachine {
     static const transition transition_table[12];
     static const state state_table[7];
 
-    private:
+private:
     void check_if_provisioned();
     void provisioning_init();
     void provisioning_start();
@@ -150,5 +155,5 @@ class WifiStateMachine {
     TickType_t connect_start_tick_count = 0;
 };
 
-}
-}
+} // namespace wifi
+} // namespace shrapnel

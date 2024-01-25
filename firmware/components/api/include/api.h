@@ -27,7 +27,8 @@ namespace shrapnel::api {
 
 /// Convert a message to bytes to be sent over the network to the frontend
 template <typename T>
-std::optional<std::span<uint8_t>> to_bytes(const T &message, std::span<uint8_t> buffer);
+std::optional<std::span<uint8_t>> to_bytes(const T &message,
+                                           std::span<uint8_t> buffer);
 
 /// Parse a message from bytes received from the frontend
 template <typename T>
@@ -41,4 +42,4 @@ template <typename ProtoT, typename T>
 template <typename T, typename ProtoT>
 int from_proto(const ProtoT &message, T &out);
 
-}
+} // namespace shrapnel::api

@@ -81,8 +81,8 @@ int from_proto(const shrapnel_presets_PresetParameters &message,
 template <>
 int to_proto(const presets::PresetData &preset, shrapnel_presets_Preset &out)
 {
-    int rc = to_proto<shrapnel_presets_PresetParameters>(
-        preset.parameters, out.parameters);
+    int rc = to_proto<shrapnel_presets_PresetParameters>(preset.parameters,
+                                                         out.parameters);
     if(rc != 0)
     {
         return -1;
@@ -319,8 +319,9 @@ from_bytes(std::span<const uint8_t> buffer)
 }
 
 template <>
-std::optional<std::span<uint8_t>>
-to_bytes(const presets::PresetData &message, std::span<uint8_t> buffer) {
+std::optional<std::span<uint8_t>> to_bytes(const presets::PresetData &message,
+                                           std::span<uint8_t> buffer)
+{
     shrapnel_presets_Preset proto = shrapnel_presets_Preset_init_zero;
     int rc = to_proto(message, proto);
     if(rc != 0)
@@ -332,8 +333,8 @@ to_bytes(const presets::PresetData &message, std::span<uint8_t> buffer) {
 }
 
 template <>
-std::optional<presets::PresetData>
-from_bytes(std::span<const uint8_t> buffer) {
+std::optional<presets::PresetData> from_bytes(std::span<const uint8_t> buffer)
+{
     auto proto = from_bytes<shrapnel_presets_Preset>(buffer);
     if(!proto.has_value())
     {
@@ -349,6 +350,5 @@ from_bytes(std::span<const uint8_t> buffer) {
 
     return out;
 }
-
 
 } // namespace shrapnel::api

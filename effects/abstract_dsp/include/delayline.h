@@ -24,8 +24,9 @@
 namespace shrapnel {
 namespace dsp {
 
-class DelayLine {
-    public:
+class DelayLine
+{
+public:
     DelayLine(size_t max_samples);
 
     void push_sample(float sample);
@@ -33,7 +34,7 @@ class DelayLine {
 
     void set_delay(float new_delay);
 
-    private:
+private:
     std::vector<float> samples;
 
     size_t writeIndex;
@@ -41,5 +42,5 @@ class DelayLine {
     float delay;
 };
 
-}
-}
+} // namespace dsp
+} // namespace shrapnel

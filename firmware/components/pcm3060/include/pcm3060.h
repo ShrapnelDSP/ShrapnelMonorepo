@@ -23,9 +23,9 @@
 extern "C" {
 #endif
 
+#include <driver/i2c.h>
 #include <esp_err.h>
 #include <stdbool.h>
-#include <driver/i2c.h>
 
 /** \brief Initialise the driver */
 void pcm3060_init(i2c_port_t port, bool adr);

@@ -276,9 +276,9 @@ TEST(MidiMappingPod, CreateResponseToString)
     etl::string_stream stream{buffer};
     stream << message;
 
-    EXPECT_THAT(
-        std::string(buffer.data()),
-        "<CreateResponse>{ { 42, { channel 1 cc number 2 mode toggle name test } } }");
+    EXPECT_THAT(std::string(buffer.data()),
+                "<CreateResponse>{ { 42, { channel 1 cc number 2 mode toggle "
+                "name test } } }");
 }
 
 TEST(MidiMappingPod, UpdateToString)
@@ -316,9 +316,7 @@ TEST(MidiMappingPod, RemoveToString)
     etl::string_stream stream{buffer};
     stream << message;
 
-    EXPECT_THAT(
-        std::string(buffer.data()),
-        "<Remove>{ 42 }");
+    EXPECT_THAT(std::string(buffer.data()), "<Remove>{ 42 }");
 }
 
 } // namespace

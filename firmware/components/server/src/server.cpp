@@ -152,9 +152,11 @@ esp_err_t websocket_get_handler(httpd_req_t *req)
             ESP_LOGE(TAG, "in_queue message dropped");
         }
     }
-    else {
+    else
+    {
         ESP_LOGE(TAG, "failed to parse received message");
-        ESP_LOG_BUFFER_HEXDUMP(TAG, buffer.data(), buffer.size(), ESP_LOG_ERROR);
+        ESP_LOG_BUFFER_HEXDUMP(
+            TAG, buffer.data(), buffer.size(), ESP_LOG_ERROR);
     }
 
     ESP_LOGI(
@@ -281,7 +283,8 @@ static void debug_print_received_message(const ApiMessage &message)
 
 void Server::send_message(const AppMessage &message)
 {
-    ESP_LOGD(TAG, "%s called from task: %s", __FUNCTION__, pcTaskGetName(nullptr));
+    ESP_LOGD(
+        TAG, "%s called from task: %s", __FUNCTION__, pcTaskGetName(nullptr));
 
     if(errQUEUE_FULL == out_queue->send(&message, pdMS_TO_TICKS(100)))
     {

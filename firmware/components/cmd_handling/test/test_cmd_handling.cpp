@@ -17,8 +17,8 @@
  * ShrapnelDSP. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include "gtest/gtest.h"
 #include "gmock/gmock.h"
+#include "gtest/gtest.h"
 
 #include "audio_param.h"
 #include "cmd_handling.h"
@@ -35,16 +35,18 @@ class MockAudioParameterFloat;
 
 class MockAudioParameters
 {
-    public:
+public:
     using MapType = std::map<id_t, std::unique_ptr<MockAudioParameterFloat>>;
 
     MOCK_METHOD(int, update, (id_t param, float value), ());
-    MOCK_METHOD(int, create_and_add_parameter, (
-        id_t name,
-        float minimum,
-        float maximum,
-        float default_value), ());
-    MOCK_METHOD(std::atomic<float> *, get_raw_parameter, (const std::string param), ());
+    MOCK_METHOD(int,
+                create_and_add_parameter,
+                (id_t name, float minimum, float maximum, float default_value),
+                ());
+    MOCK_METHOD(std::atomic<float> *,
+                get_raw_parameter,
+                (const std::string param),
+                ());
 
     MapType::iterator begin() { return parameters.begin(); };
     MapType::iterator end() { return parameters.end(); };
@@ -54,29 +56,33 @@ class MockAudioParameters
 
 class MockEventSend
 {
-    public:
-        MOCK_METHOD(void, send, (const shrapnel::parameters::ApiMessage &message, std::optional<int> fd));
+public:
+    MOCK_METHOD(void,
+                send,
+                (const shrapnel::parameters::ApiMessage &message,
+                 std::optional<int> fd));
 };
 
-class EventSendAdapter final {
-    public:
-        explicit EventSendAdapter(MockEventSend &a_event) : event(a_event) {}
+class EventSendAdapter final
+{
+public:
+    explicit EventSendAdapter(MockEventSend &a_event) : event(a_event) {}
 
-        void send(const shrapnel::parameters::ApiMessage &message,
-                  std::optional<int> fd)
-        {
-            event.send(message, fd);
-        }
+    void send(const shrapnel::parameters::ApiMessage &message,
+              std::optional<int> fd)
+    {
+        event.send(message, fd);
+    }
 
-    private:
+private:
     MockEventSend &event;
 };
 
 class MockAudioParameterFloat
 {
-    public:
-    MockAudioParameterFloat(std::string name, float default_value) :
-        value(default_value)
+public:
+    MockAudioParameterFloat(std::string name, float default_value)
+        : value(default_value)
     {
         (void)name;
     }
@@ -120,7 +126,7 @@ TEST_F(CmdHandling, ValidMessage)
         .Times(1)
         .WillRepeatedly(Return(0));
 
-    shrapnel::parameters::Update message {
+    shrapnel::parameters::Update message{
         .id{"tight"},
         .value{1.f},
     };
@@ -142,17 +148,15 @@ TEST_F(CmdHandling, InitialiseParameters)
         .id{"test0"},
         .value{0.0f},
     };
-    EXPECT_CALL(event, send({expected}, testing::Eq(std::nullopt)))
-        .Times(1);
-        
-        expected = shrapnel::parameters::Update{
-            .id{"test1"},
-            .value{1.0f},
+    EXPECT_CALL(event, send({expected}, testing::Eq(std::nullopt))).Times(1);
+
+    expected = shrapnel::parameters::Update{
+        .id{"test1"},
+        .value{1.0f},
     };
-    EXPECT_CALL(event, send({expected}, testing::Eq(std::nullopt)))
-        .Times(1);
+    EXPECT_CALL(event, send({expected}, testing::Eq(std::nullopt))).Times(1);
 
     dispatch(shrapnel::parameters::Initialise{}, 0);
 }
 
-}
+} // namespace

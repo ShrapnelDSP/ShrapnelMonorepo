@@ -34,7 +34,8 @@ namespace shrapnel {
 
 AudioProcessor::AudioProcessor(AudioProcessorParameters a_parameters)
     : parameters{a_parameters},
-      speaker{{std::make_unique<shrapnel::dsp::FastConvolution<1024, 512>>(fir_coeff)}}
+      speaker{{std::make_unique<shrapnel::dsp::FastConvolution<1024, 512>>(
+          fir_coeff)}}
 {
     esp_err_t rc = gate_init();
     assert(rc == ESP_OK);
@@ -106,7 +107,8 @@ void AudioProcessor::process(std::span<float, 512> fbuf)
     }
 }
 
-void AudioProcessor::reset() {
+void AudioProcessor::reset()
+{
     valvestate.reset();
     chorus.reset();
     wah.reset();

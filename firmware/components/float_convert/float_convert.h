@@ -19,8 +19,8 @@
 
 #pragma once
 
-#include <stdint.h>
 #include <math.h>
+#include <stdint.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -31,10 +31,12 @@ extern "C" {
 static inline int32_t float_to_int32(float f)
 {
     f *= INT24_MAX;
-    if(f > 0.f) {
+    if(f > 0.f)
+    {
         return (int32_t)(f + 0.5f) << 8;
     }
-    else {
+    else
+    {
         return (int32_t)(f - 0.5f) << 8;
     }
 }

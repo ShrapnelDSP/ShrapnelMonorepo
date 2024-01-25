@@ -26,11 +26,11 @@
 #pragma once
 
 #include "dsp_concepts.h"
+#include "profiling.h"
 #include <algorithm>
 #include <array>
 #include <cstddef>
 #include <memory>
-#include "profiling.h"
 
 namespace {
 template <typename T, T value>
@@ -55,7 +55,8 @@ public:
      */
     explicit FastFir(std::unique_ptr<Convolution> a_convolution)
         requires(dsp::Processor<FastFir<N, M, Convolution>, N>)
-    : signal{}, convolution{std::move(a_convolution)}
+        : signal{},
+          convolution{std::move(a_convolution)}
     {
     }
 
@@ -84,10 +85,7 @@ public:
      *
      * \note Does not reset coefficients
      */
-    void reset()
-    {
-        signal.fill(0);
-    };
+    void reset() { signal.fill(0); };
 
 private:
     std::array<float, M> signal;

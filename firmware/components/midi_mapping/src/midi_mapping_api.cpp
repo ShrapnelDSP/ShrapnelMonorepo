@@ -17,8 +17,8 @@
  * ShrapnelDSP. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include "etl_utility.h"
 #include "midi_mapping_api.h"
+#include "etl_utility.h"
 #include <pb_decode.h>
 #include <pb_encode.h>
 
