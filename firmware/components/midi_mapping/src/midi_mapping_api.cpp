@@ -163,9 +163,10 @@ int to_proto(const midi::Mapping &message, shrapnel_midi_mapping_Mapping &out)
     default:
         return -1;
     }
-    strncpy(out.parameterName,
+    strncpy(out.parameter_name,
             message.parameter_name.data(),
-            sizeof out.parameterName);
+            sizeof out.parameter_name);
+    out.preset_id = message.preset_id;
     return 0;
 }
 
@@ -174,7 +175,8 @@ int from_proto(const shrapnel_midi_mapping_Mapping &message, midi::Mapping &out)
 {
     out.midi_channel = static_cast<uint8_t>(message.midi_channel);
     out.cc_number = static_cast<uint8_t>(message.cc_number);
-    out.parameter_name = message.parameterName;
+    out.parameter_name = message.parameter_name;
+    out.preset_id = message.preset_id;
     switch(message.mode)
     {
     case shrapnel_midi_mapping_Mapping_Mode_parameter:

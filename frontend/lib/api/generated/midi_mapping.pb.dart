@@ -51,8 +51,8 @@ class Mapping extends $pb.GeneratedMessage {
     ..a<$core.int>(1, _omitFieldNames ? '' : 'midiChannel', $pb.PbFieldType.OU3)
     ..a<$core.int>(2, _omitFieldNames ? '' : 'ccNumber', $pb.PbFieldType.OU3)
     ..e<Mapping_Mode>(3, _omitFieldNames ? '' : 'mode', $pb.PbFieldType.OE, defaultOrMaker: Mapping_Mode.parameter, valueOf: Mapping_Mode.valueOf, enumValues: Mapping_Mode.values)
-    ..aOS(4, _omitFieldNames ? '' : 'parameterName', protoName: 'parameterName')
-    ..a<$core.int>(5, _omitFieldNames ? '' : 'presetId', $pb.PbFieldType.OU3, protoName: 'presetId')
+    ..aOS(4, _omitFieldNames ? '' : 'parameterName')
+    ..a<$core.int>(5, _omitFieldNames ? '' : 'presetId', $pb.PbFieldType.OU3)
     ..hasRequiredFields = false
   ;
 
