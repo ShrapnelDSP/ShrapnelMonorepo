@@ -115,10 +115,17 @@ private:
     void complex_to_real(const std::array<std::complex<float>, N> &_complex,
                          std::array<float, N> &real)
     {
-        for(std::size_t i = 0; i < N; i++)
-        {
-            real[i] = _complex[i].real();
-        }
+        // https://en.cppreference.com/w/cpp/numeric/complex
+        //
+        // For any pointer to an element of an array of std::complex<T> named p
+        // and any valid array index i, reinterpret_cast<T*>(p)[2 * i] is the
+        // real part of the complex number p[i], and
+        // reinterpret_cast<T*>(p)[2 * i + 1] is the imaginary part of the
+        // complex number p[i].
+        const float *complex_data =
+            reinterpret_cast<const float *>(_complex.data());
+        float *real_data = real.data();
+        dsps_addc_f32_ae32(complex_data, real_data, N, 0, 2, 1);
     }
 
 public:
