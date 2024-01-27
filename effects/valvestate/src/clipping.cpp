@@ -25,9 +25,10 @@ namespace shrapnel::effect::valvestate {
 
 void Clipping::process(std::span<float> buffer)
 {
-    for(float &sample : buffer)
+    for(size_t i = 0; i < buffer.size(); i++)
     {
-        sample = waveshape(sample);
+        auto sample = &buffer.data()[i];
+        *sample = WaveShape::waveshape(*sample);
     }
 }
 

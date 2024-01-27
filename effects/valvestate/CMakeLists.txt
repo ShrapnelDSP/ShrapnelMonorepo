@@ -4,8 +4,7 @@ add_library(valvestate STATIC
             src/contour.cpp
             src/fmv.cpp
             src/gain_control.cpp
-            src/input_filter.cpp
-            src/wave_shape.cpp)
+            src/input_filter.cpp)
 add_library(shrapnel::valvestate ALIAS valvestate)
 
 target_include_directories(valvestate PUBLIC include)
