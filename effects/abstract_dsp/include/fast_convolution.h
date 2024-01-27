@@ -44,7 +44,7 @@ public:
         // transform a
         std::array<float, N> a_copy{};
         std::copy(a.cbegin(), a.cend(), a_copy.begin());
-        a_complex = real_to_complex(a_copy);
+        real_to_complex(a_copy, a_complex);
         rc = dsps_fft4r_fc32(reinterpret_cast<float *>(a_complex.data()), N);
         assert(rc == ESP_OK);
         dsps_bit_rev4r_fc32(reinterpret_cast<float *>(a_complex.data()), N);
@@ -58,7 +58,8 @@ public:
     void process(const std::array<float, N> &b, std::array<float, N> &out)
     {
         // transform b
-        auto b_complex = real_to_complex(b);
+        std::array<std::complex<float>, N> b_complex;
+        real_to_complex(b, b_complex);
         profiling_mark_stage("convolution real_to_complex");
         int rc =
             dsps_fft4r_fc32(reinterpret_cast<float *>(b_complex.data()), N);
@@ -99,17 +100,17 @@ private:
     static constexpr float scale_factor = 1.f / N;
     std::array<std::complex<float>, N> a_complex;
 
-    std::array<std::complex<float>, N>
-    real_to_complex(const std::array<float, N> &real)
+    void real_to_complex(const std::array<float, N> &real,
+                         std::array<std::complex<float>, N> &_complex)
     {
-        std::array<std::complex<float>, N> _complex{};
+        auto complex_data = reinterpret_cast<float *>(_complex.data());
+        const float *real_data = real.data();
 
-        for(std::size_t i = 0; i < N; i++)
+        dsps_addc_f32_ae32(real_data, complex_data, N, 0, 1, 2);
+        for(size_t i = i; i < 2 * N; i += 2)
         {
-            _complex[i] = real[i];
+            complex_data[i] = 0;
         }
-
-        return _complex;
     }
 
     void complex_to_real(const std::array<std::complex<float>, N> &_complex,
@@ -122,8 +123,7 @@ private:
         // real part of the complex number p[i], and
         // reinterpret_cast<T*>(p)[2 * i + 1] is the imaginary part of the
         // complex number p[i].
-        const float *complex_data =
-            reinterpret_cast<const float *>(_complex.data());
+        auto *complex_data = reinterpret_cast<const float *>(_complex.data());
         float *real_data = real.data();
         dsps_addc_f32_ae32(complex_data, real_data, N, 0, 2, 1);
     }
