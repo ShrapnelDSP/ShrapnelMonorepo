@@ -27,7 +27,7 @@
 
 #define TAG "profiling"
 
-#define NUMBER_OF_STAGES 25
+#define NUMBER_OF_STAGES 30
 
 static uint32_t count = 0;
 static uint32_t start_cycles = 0;

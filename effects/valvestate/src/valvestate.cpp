@@ -20,6 +20,7 @@
 
 #include "valvestate.h"
 #include "dsps_mulc.h"
+#include <profiling.h>
 
 namespace shrapnel::effect::valvestate {
 
@@ -45,15 +46,18 @@ void Valvestate::set_volume(float a_volume) { volume = a_volume; }
 void Valvestate::process(std::span<float> buffer)
 {
     input.process(buffer);
+    profiling_mark_stage("valvestate input");
     gaincontrol.process(buffer);
+    profiling_mark_stage("valvestate gain");
     clipping.process(buffer);
+    profiling_mark_stage("valvestate clipping");
     fmv.process(buffer);
+    profiling_mark_stage("valvestate fmv");
     contour.process(buffer);
+    profiling_mark_stage("valvestate contour");
 
-    for(float &sample : buffer)
-    {
-        sample *= volume;
-    }
+    dsps_mulc_f32(buffer.data(), buffer.data(), buffer.size(), volume, 1, 1);
+    profiling_mark_stage("valvestate volume");
 }
 
 void Valvestate::prepare(float samplerate, size_t size)

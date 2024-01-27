@@ -27,7 +27,7 @@ extern "C" {
 
 void profiling_init(size_t buffer_size, float sample_rate);
 void profiling_start(void);
-inline void profiling_mark_stage(const char *label);
+void profiling_mark_stage(const char *label);
 void profiling_stop(void);
 
 void profiling_task(void *param);
