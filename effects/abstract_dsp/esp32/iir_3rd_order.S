@@ -5,7 +5,7 @@
 	.type   dspal_esp32_3rd_order_iir,@function
 
 dspal_esp32_3rd_order_iir: 
-// esp_err_t dspal_esp32_3rd_order_iir(float *input, float *output, uint32_t len, float *coeffs, float *w);
+// void dspal_esp32_3rd_order_iir(float *input, float *output, uint32_t len, float *coeffs, float *w);
 // input    - a2
 // output   - a3
 // len      - a4
@@ -14,37 +14,72 @@ dspal_esp32_3rd_order_iir:
 
 	entry	a1, 16
 	
-	lsi   f0, a5, 0  // f0 = b0
-	lsi   f1, a5, 4  // f1 = b1
-	lsi   f2, a5, 8  // f2 = b2
-	lsi   f3, a5, 12 // f3 = b3
-	lsi   f4, a5, 16 // f4 = -a1
-	lsi   f5, a5, 20 // f5 = -a2
-	lsi   f6, a5, 24 // f6 = -a3
+	lsi     f0, a5, 0  // f0 = b0
+	lsi     f1, a5, 4  // f1 = b1
+	lsi     f2, a5, 8  // f2 = b2
+	lsi     f3, a5, 12 // f3 = b3
+	lsi     f4, a5, 16 // f4 = -a1
+	lsi     f5, a5, 20 // f5 = -a2
+	lsi     f6, a5, 24 // f6 = -a3
+	
+	lsi     f14, a6, 0 // f14 = w0
+	lsi     f13, a6, 4 // f13 = w1
+	lsi     f12, a6, 8 // f12 = w2
 	
 	// Preset output address, loop starts by incrementing it
 	addi    a3, a3, -4       // output-- 
-	lsi     f9, a2, 0        // f9 = input[i]
+	lsi     f9, a2, 0        // f9 = input[0]
 	loopnez a4, loop_end
+	    // TODO look into store with increment
+	    // output++
+	    addi a3, a3, 4
+	
         // out_tmp = (w[0] + b0 * input[i]);
-        lsi.s   f15, a6, 0  // out_tmp = w0
+        mov.s   f15, f14    // out_tmp = w[0]
         madd.s  f15, f0, f9 // out_tmp += b0 * input[i]
         
-// TODO remove, copied from esp-dsp for syntax reference
-#if 0
-		madd.s  f9, f7, f5   // f9 += -a1*w0
-		addi    a3, a3, 4    // out++;
-		mul.s   f10, f1, f7  // f10 = b1*w0
-		madd.s  f9, f8, f6   // f9 += -a2*w1
-		madd.s  f10, f9, f0  // f10 += b0*d0
-		addi    a2, a2, 4    // in++;
-		madd.s  f10, f2, f8  // f10+= b2*w1, f10 - result
-		mov.s   f8, f7       // w1 = w0
-		mov.s   f7, f9       // w0 = d0
-		lsi     f9, a2,  0   // f9 = x[i]
-		ssi	    f10, a3, 0   // y[i] = result
-#endif
+        /* manually unrolled loop follows: */
+        /* unrolled iteration 0 */
+        
+        // TODO chain of madd, add might be pipeline stall?
+        // result depends on previous value which is still in the pipe
+        
+        /* update the state */
+        // w[0] = -a[1] * out_tmp;
+        mul.s   f14, f4, f15
+        // w[0] += b[1] * input[i];
+        madd.s  f14, f1, f9
+        // w[0] += w[1];
+        add.s   f14, f14, f13
+        
+        /* unrolled iteration 1 */
+        
+        // w[1] = -a[2] * out_tmp;
+        mul.s   f13, f5, f15
+        // w[1] += b[2] * input[i];
+        madd.s  f13, f2, f9
+        // w[1] += w[2];
+        add.s   f13, f13, f12
+        
+        /* unrolled iteration 2 */
+        /* for the final stage, there is no delay element to add */
+        
+        // w[2] = -a[3] * out_tmp;
+        mul.s f12, f6, f15
+        // w[2] += b[3] * input[i];
+        madd.s f12, f3, f9
+        
+        /* finally, write the output */
+        // *output = out_tmp;
+		ssi	    f15, a3, 0 
+		
+		addi    a2, a2, 4   // input++;
+		lsi     f9, a2, 0   // f9 = *input 
 loop_end:
+    // write out delay line
+	ssi     f14, a6, 0
+	ssi     f13, a6, 4
+	ssi     f12, a6, 8
 
-	movi.n	a2, 0 // return status ESP_OK
+	movi.n	a2, 0
 	retw.n

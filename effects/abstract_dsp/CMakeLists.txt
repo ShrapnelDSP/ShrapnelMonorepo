@@ -23,6 +23,7 @@ if(ESP_PLATFORM)
     target_sources(abstract_dsp
                    PRIVATE
                    esp32/abstract_dsp_esp32.c
+                   esp32/iir_3rd_order.S
                    esp32/profiling.c)
 
     target_include_directories(abstract_dsp PUBLIC esp32/include)

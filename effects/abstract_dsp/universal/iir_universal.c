@@ -43,6 +43,7 @@ void iir_process(const float *input,
         //calculate output
         out_tmp = (w[0] + b[0] * input[i]);
 
+#pragma GCC unroll 4
         for(int j = 0; j < coeffs_len / 2 - 1; j++)
         {
             //update the state

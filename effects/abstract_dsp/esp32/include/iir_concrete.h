@@ -25,6 +25,9 @@
 #include "iir_universal.h"
 #include <array>
 
+extern "C" void dspal_esp32_3rd_order_iir(
+    const float *input, float *output, uint32_t len, float *coeffs, float *w);
+
 namespace shrapnel {
 namespace dsp {
 
@@ -42,6 +45,11 @@ public:
         if(order == 2)
         {
             dsps_biquad_f32_ae32(
+                in, out, buf_size, coefficients.data(), delay.data());
+        }
+        else if(order == 3)
+        {
+            dspal_esp32_3rd_order_iir(
                 in, out, buf_size, coefficients.data(), delay.data());
         }
         else
@@ -77,9 +85,16 @@ public:
     void set_coefficients(std::array<float, 8> new_coefficients) override
     {
         order = 3;
-        for(int i = 0; i < new_coefficients.size(); i++)
+
+        // normalise coefficients to [b0, b1, b2, b3, -a1, -a2, -a3]
+        for(int i = 0; i < new_coefficients.size() - 1; i++)
         {
-            coefficients[i] = new_coefficients[i] / new_coefficients[4];
+            auto coeff_i = i < 4 ? i : i + 1;
+            coefficients[i] = new_coefficients[coeff_i] / new_coefficients[4];
+            if(i >= 4)
+            {
+                coefficients[i] *= -1;
+            }
         }
     }
 
