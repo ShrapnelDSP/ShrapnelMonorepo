@@ -79,14 +79,17 @@ public:
         order = 3;
         for(int i = 0; i < new_coefficients.size(); i++)
         {
-            coefficients[i] = new_coefficients[i];
+            coefficients[i] = new_coefficients[i] / new_coefficients[4];
         }
     }
 
     void set_coefficients(std::array<float, 10> new_coefficients) override
     {
         order = 4;
-        coefficients = new_coefficients;
+        for(int i = 0; i < new_coefficients.size(); i++)
+        {
+            coefficients[i] = new_coefficients[i] / new_coefficients[5];
+        }
     }
 
 private:

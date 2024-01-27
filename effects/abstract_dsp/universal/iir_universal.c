@@ -18,6 +18,8 @@
  */
 
 #include "iir_universal.h"
+#include <assert.h>
+#include <stdbool.h>
 
 void iir_process(const float *input,
                  float *output,
@@ -29,10 +31,17 @@ void iir_process(const float *input,
     float out_tmp;
     float *b = coeffs;
     float *a = &coeffs[coeffs_len / 2];
+#if 0
+    if(a[0] != 1)
+    {
+        assert(false);
+    }
+#endif
+
     for(int i = 0; i < len; i++)
     {
         //calculate output
-        out_tmp = (w[0] + b[0] * input[i]) / a[0];
+        out_tmp = (w[0] + b[0] * input[i]);
 
         for(int j = 0; j < coeffs_len / 2 - 1; j++)
         {
