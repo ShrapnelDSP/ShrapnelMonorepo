@@ -25,8 +25,14 @@
 #include "iir_universal.h"
 #include <array>
 
+namespace internal {
+
 extern "C" void dspal_esp32_3rd_order_iir(
     const float *input, float *output, uint32_t len, float *coeffs, float *w);
+extern "C" void dspal_esp32_4th_order_iir(
+    const float *input, float *output, uint32_t len, float *coeffs, float *w);
+
+} // namespace internal
 
 namespace shrapnel {
 namespace dsp {
@@ -49,7 +55,12 @@ public:
         }
         else if(order == 3)
         {
-            dspal_esp32_3rd_order_iir(
+            internal::dspal_esp32_3rd_order_iir(
+                in, out, buf_size, coefficients.data(), delay.data());
+        }
+        else if(order == 4)
+        {
+            internal::dspal_esp32_4th_order_iir(
                 in, out, buf_size, coefficients.data(), delay.data());
         }
         else
@@ -101,9 +112,16 @@ public:
     void set_coefficients(std::array<float, 10> new_coefficients) override
     {
         order = 4;
-        for(int i = 0; i < new_coefficients.size(); i++)
+
+        // normalise coefficients to [b0, b1, b2, b3, b4, -a1, -a2, -a3, -a4]
+        for(int i = 0; i < new_coefficients.size() - 1; i++)
         {
-            coefficients[i] = new_coefficients[i] / new_coefficients[5];
+            auto coeff_i = i < 5 ? i : i + 1;
+            coefficients[i] = new_coefficients[coeff_i] / new_coefficients[5];
+            if(i >= 5)
+            {
+                coefficients[i] *= -1;
+            }
         }
     }
 
