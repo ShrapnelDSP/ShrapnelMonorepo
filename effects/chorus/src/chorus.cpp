@@ -22,25 +22,12 @@
 
 #define MAX_DELAY_MS 15.f
 
-namespace {
-
-float triangle(float phase)
-{
-    if(phase < (float)M_PI)
-    {
-        return 1 - 2 * phase / (float)M_PI;
-    }
-    else
-    {
-        return -3 + 2 * phase / (float)M_PI;
-    }
-}
-
-} // namespace
-
 namespace shrapnel::effect {
 
-void Chorus::set_modulation_rate_hz(float rate) { modulation_rate = rate; }
+void Chorus::set_modulation_rate_hz(float rate)
+{
+    lfo_increment = rate / sample_rate * -2;
+}
 
 void Chorus::set_modulation_depth(float depth) { modulation_depth = depth; }
 
@@ -49,17 +36,34 @@ void Chorus::set_modulation_mix(float mix) { modulation_mix = mix; }
 void Chorus::process(std::span<float> a_samples)
 {
     float *samples = a_samples.data();
+
+    // WTF, gcc is generating complete nonsense like:
+    // lfo_tmp += lfo_increment_tmp;
+    //
+    // lfo_tmp += lfo_increment_tmp;
+    // 4008b188:       fa1f00          mov.s   f1, f15
+    // 4008b18b:       fa0e00          mov.s   f0, f14
+    // 4008b18e:       0a0100          add.s   f0, f1, f0
+    // 4008b191:       faf000          mov.s   f15, f0
+    register float lfo_increment_tmp asm("f14") = lfo_increment;
+    register float lfo_tmp asm("f15") = lfo;
     for(int i = 0; i < a_samples.size(); i++)
     {
-        float lfo = 0.5f * triangle(phase);
-        phase += modulation_rate / sample_rate * 2 * (float)M_PI;
+        lfo_tmp += lfo_increment_tmp;
 
-        if(phase > 2 * (float)M_PI)
+        if(lfo_tmp > 0.5f)
         {
-            phase -= 2 * (float)M_PI;
+            lfo_tmp = 0.5f;
+            lfo_increment_tmp = -lfo_increment_tmp;
         }
 
-#if 1
+        if(lfo_tmp < -0.5f)
+        {
+            lfo_tmp = -0.5f;
+            lfo_increment_tmp = -lfo_increment_tmp;
+        }
+
+#if 0
         float delay = MAX_DELAY_MS / 1000 * sample_rate *
                       (0.5f + (modulation_depth * lfo));
 
@@ -67,9 +71,12 @@ void Chorus::process(std::span<float> a_samples)
         delayline->push_sample(samples[i]);
         samples[i] = samples[i] + (modulation_mix * delayline->pop_sample());
 #else
-        samples[i] = lfo;
+        samples[i] = lfo_tmp;
 #endif
     }
+
+    lfo = lfo_tmp;
+    lfo_increment = lfo_increment_tmp;
 }
 
 void Chorus::prepare(float rate, size_t)

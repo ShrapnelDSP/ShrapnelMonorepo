@@ -53,13 +53,13 @@ public:
     void reset();
 
 private:
-    float modulation_rate = 0;
     float modulation_depth = 0;
     float modulation_mix = 0;
 
     float sample_rate = 0;
 
-    float phase = 0;
+    float lfo = 0;
+    float lfo_increment = 0;
 
     std::unique_ptr<dsp::DelayLine> delayline;
 };
