@@ -4,7 +4,6 @@ add_library(shrapnel::abstract_dsp ALIAS abstract_dsp)
 target_sources(abstract_dsp
                PRIVATE
                universal/delayline.cpp
-               universal/delayline_c.cpp
                universal/fast_convolution.cpp
                universal/fast_fir.cpp
                universal/iir_universal.c)

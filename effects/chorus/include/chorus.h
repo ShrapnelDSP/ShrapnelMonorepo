@@ -22,6 +22,8 @@
 #include "abstract_dsp.h"
 #include "cstddef"
 #include "dsp_concepts.h"
+#include <delayline.h>
+#include <memory>
 
 namespace shrapnel::effect {
 
@@ -59,7 +61,7 @@ private:
 
     float phase = 0;
 
-    dspal_delayline_t delayline = nullptr;
+    std::unique_ptr<dsp::DelayLine> delayline;
 };
 
 static_assert(dsp::Processor<Chorus>);

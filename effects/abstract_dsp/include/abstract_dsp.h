@@ -28,8 +28,6 @@
 
 #include <stddef.h>
 
-typedef struct dspal_delayline *dspal_delayline_t;
-
 typedef enum
 {
     DSPAL_OK,
@@ -46,12 +44,6 @@ void dspal_multiply(const float *in1,
                     const float *in2,
                     float *out,
                     size_t buf_size);
-
-dspal_delayline_t dspal_delayline_create(size_t max_samples);
-void dspal_delayline_destroy(dspal_delayline_t delayline);
-void dspal_delayline_set_delay(dspal_delayline_t delayline, float delay);
-void dspal_delayline_push_sample(dspal_delayline_t delayline, float sample);
-float dspal_delayline_pop_sample(dspal_delayline_t delayline);
 
 #ifdef __cplusplus
 }

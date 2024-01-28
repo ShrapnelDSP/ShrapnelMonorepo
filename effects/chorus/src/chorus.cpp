@@ -46,9 +46,10 @@ void Chorus::set_modulation_depth(float depth) { modulation_depth = depth; }
 
 void Chorus::set_modulation_mix(float mix) { modulation_mix = mix; }
 
-void Chorus::process(std::span<float> samples)
+void Chorus::process(std::span<float> a_samples)
 {
-    for(float &sample : samples)
+    float *samples = a_samples.data();
+    for(int i = 0; i < a_samples.size(); i++)
     {
         float lfo = 0.5f * triangle(phase);
         phase += modulation_rate / sample_rate * 2 * (float)M_PI;
@@ -62,11 +63,9 @@ void Chorus::process(std::span<float> samples)
         float delay = MAX_DELAY_MS / 1000 * sample_rate *
                       (0.5f + (modulation_depth * lfo));
 
-        dspal_delayline_set_delay(delayline, delay);
-
-        dspal_delayline_push_sample(delayline, sample);
-        sample =
-            sample + (modulation_mix * dspal_delayline_pop_sample(delayline));
+        delayline->set_delay(delay);
+        delayline->push_sample(samples[i]);
+        samples[i] = samples[i] + (modulation_mix * delayline->pop_sample());
 #else
         samples[i] = lfo;
 #endif
@@ -76,17 +75,10 @@ void Chorus::process(std::span<float> samples)
 void Chorus::prepare(float rate, size_t)
 {
     reset();
-    delayline = dspal_delayline_create(rate * MAX_DELAY_MS / 1000);
+    delayline = std::make_unique<dsp::DelayLine>(rate * MAX_DELAY_MS / 1000);
     sample_rate = rate;
 }
 
-void Chorus::reset()
-{
-    if(delayline)
-    {
-        dspal_delayline_destroy(delayline);
-        delayline = nullptr;
-    }
-}
+void Chorus::reset() { delayline = nullptr; }
 
 } // namespace shrapnel::effect
