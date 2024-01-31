@@ -33,3 +33,7 @@ archive: libi2s.a
 entries:
     * (noflash)
 
+[mapping:audio]
+archive: libaudio.a
+entries:
+    * (noflash)

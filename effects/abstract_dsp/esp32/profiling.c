@@ -29,8 +29,10 @@
 
 #define NUMBER_OF_STAGES 25
 
+static uint32_t count = 0;
 static uint32_t start_cycles = 0;
 static uint32_t stage_cycles[NUMBER_OF_STAGES] = {};
+static const char *stage_names[NUMBER_OF_STAGES] = {};
 static SemaphoreHandle_t profiling_mutex;
 static bool got_semaphore = false;
 static uint32_t cpu_freq_mhz;
@@ -52,17 +54,20 @@ void profiling_start(void)
     if(xSemaphoreTake(profiling_mutex, 0))
     {
         got_semaphore = true;
+        count = 0;
         start_cycles = esp_cpu_get_cycle_count();
     }
 }
 
-void profiling_mark_stage(unsigned int stage)
+void profiling_mark_stage(const char *label)
 {
-    assert(stage < NUMBER_OF_STAGES);
+    assert(count < NUMBER_OF_STAGES);
 
     if(got_semaphore)
     {
-        stage_cycles[stage] = esp_cpu_get_cycle_count();
+        stage_cycles[count] = esp_cpu_get_cycle_count();
+        stage_names[count] = label;
+        count++;
     }
 }
 
@@ -99,24 +104,22 @@ void profiling_task(void *param)
             ESP_LOGI(TAG, " ========= \n");
 
             int64_t total_cycles = 0;
-            for(int i = 0; i < NUMBER_OF_STAGES; i++)
+            for(int i = 0; i < count; i++)
             {
-                //if the stage has not been assigned, stop printing
-                if(stage_cycles[i] == 0)
-                {
-                    break;
-                }
-
                 int64_t current_stage_cycles =
                     stage_cycles[i] -
                     ((i == 0) ? start_cycles : stage_cycles[i - 1]);
-                ESP_LOGI(TAG,
-                         "Stage %3d processing took %7lld cycles %4lld us "
-                         "(%03.1f %%)",
-                         i,
-                         current_stage_cycles,
-                         cycles_to_us(current_stage_cycles),
-                         cycles_to_percent(current_stage_cycles));
+
+                const char *name = stage_names[i];
+                ESP_LOGI(
+                    TAG,
+                    "Stage %40s (%3d) processing took %7lld cycles %4lld us "
+                    "(%03.1f %%)",
+                    name == NULL ? "" : name,
+                    i,
+                    current_stage_cycles,
+                    cycles_to_us(current_stage_cycles),
+                    cycles_to_percent(current_stage_cycles));
 
                 total_cycles += current_stage_cycles;
             }

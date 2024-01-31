@@ -70,13 +70,13 @@ public:
     void process(std::span<float, N> buffer)
     {
         std::copy(signal.begin() + N, signal.end(), signal.begin());
-        profiling_mark_stage(5);
+        profiling_mark_stage("fir copy signal");
         std::copy(buffer.data(), buffer.data() + N, signal.end() - N);
-        profiling_mark_stage(6);
+        profiling_mark_stage("fir copy buffer");
 
         std::array<float, M> out;
         convolution->process(signal, out);
-        profiling_mark_stage(16);
+        profiling_mark_stage("fir convolution");
 
         std::copy(out.end() - N, out.end(), buffer.data());
     }
