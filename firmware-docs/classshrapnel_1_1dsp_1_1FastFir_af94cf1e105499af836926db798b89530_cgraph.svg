@@ -21,7 +21,7 @@
 <!-- Node2 -->
 <g id="node2" class="node">
 <title>Node2</title>
-<g id="a_node2"><a xlink:href="desktop_2profiling_8c.html#a3171d2be3fbf00e49982243e9869735a" target="_top" xlink:title=" ">
+<g id="a_node2"><a xlink:href="desktop_2profiling_8c.html#a28c8072350ec5a481c4de96a942e606f" target="_top" xlink:title=" ">
 <polygon fill="none" stroke="black" points="145,-6 145,-25 251,-25 251,-6 145,-6"/>
 <text text-anchor="middle" x="198" y="-13" font-family="Helvetica,sans-Serif" font-size="10.00">profiling_mark_stage</text>
 </a>

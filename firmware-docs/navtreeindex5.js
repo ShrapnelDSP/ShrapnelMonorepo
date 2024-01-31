@@ -1,5 +1,7 @@
 var NAVTREEINDEX5 =
 {
+"selected__preset__manager_8cpp.html":[5,0,1,0,17,1,4],
+"selected__preset__manager_8cpp.html#a50121a55db7201a7ea50e37bb763fed3":[5,0,1,0,17,1,4,0],
 "selected__preset__manager_8cpp_source.html":[5,0,1,0,17,1,4],
 "selected__preset__manager_8h.html":[5,0,1,0,17,0,5],
 "selected__preset__manager_8h_source.html":[5,0,1,0,17,0,5],
@@ -247,7 +249,5 @@ var NAVTREEINDEX5 =
 "structshrapnel_1_1presets_1_1ParametersData.html#a37fd673e027b04797cbfbef7e7ab47cc":[2,0,0,9,4,11],
 "structshrapnel_1_1presets_1_1ParametersData.html#a391f81968f3c3fc789ced290c51b7b2d":[2,0,0,9,4,0],
 "structshrapnel_1_1presets_1_1ParametersData.html#a391f81968f3c3fc789ced290c51b7b2d":[4,0,0,7,4,0],
-"structshrapnel_1_1presets_1_1ParametersData.html#a3f29900feae894411329dcf66aef1657":[2,0,0,9,4,14],
-"structshrapnel_1_1presets_1_1ParametersData.html#a3f29900feae894411329dcf66aef1657":[4,0,0,7,4,14],
-"structshrapnel_1_1presets_1_1ParametersData.html#a4ff4dab5810834672b4008f778b437f7":[4,0,0,7,4,20]
+"structshrapnel_1_1presets_1_1ParametersData.html#a3f29900feae894411329dcf66aef1657":[2,0,0,9,4,14]
 };

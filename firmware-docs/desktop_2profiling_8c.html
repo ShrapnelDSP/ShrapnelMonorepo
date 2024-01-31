@@ -105,8 +105,8 @@ Functions</h2></td></tr>
 <tr class="separator:a58ceeae747d300e67b1ecf70a9b24526"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac05fdc10ded37340f2ab202bbc184d20"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="desktop_2profiling_8c.html#ac05fdc10ded37340f2ab202bbc184d20">profiling_start</a> (void)</td></tr>
 <tr class="separator:ac05fdc10ded37340f2ab202bbc184d20"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3171d2be3fbf00e49982243e9869735a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="desktop_2profiling_8c.html#a3171d2be3fbf00e49982243e9869735a">profiling_mark_stage</a> (unsigned int stage)</td></tr>
-<tr class="separator:a3171d2be3fbf00e49982243e9869735a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a28c8072350ec5a481c4de96a942e606f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="desktop_2profiling_8c.html#a28c8072350ec5a481c4de96a942e606f">profiling_mark_stage</a> (const char *stage)</td></tr>
+<tr class="separator:a28c8072350ec5a481c4de96a942e606f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9f4516d77db32a65ee99933c6c9d3802"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="desktop_2profiling_8c.html#a9f4516d77db32a65ee99933c6c9d3802">profiling_stop</a> (void)</td></tr>
 <tr class="separator:a9f4516d77db32a65ee99933c6c9d3802"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa8ff71a343036a362fc1953d5572d0ce"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="desktop_2profiling_8c.html#aa8ff71a343036a362fc1953d5572d0ce">profiling_task</a> (void *param)</td></tr>
@@ -144,10 +144,10 @@ Functions</h2></td></tr>
 <div class="line"><span class="lineno">   24</span>    (void)<a class="code hl_variable" href="esp32_2profiling_8c.html#a799a743b3abd553a37fc01ad3097df08">buffer_size</a>;</div>
 <div class="line"><span class="lineno">   25</span>    (void)<a class="code hl_variable" href="esp32_2profiling_8c.html#a63433fe701b4e06f2cfdd50509e660db">sample_rate</a>;</div>
 <div class="line"><span class="lineno">   26</span>}</div>
-<div class="ttc" id="aesp32_2profiling_8c_html_a63433fe701b4e06f2cfdd50509e660db"><div class="ttname"><a href="esp32_2profiling_8c.html#a63433fe701b4e06f2cfdd50509e660db">sample_rate</a></div><div class="ttdeci">static float sample_rate</div><div class="ttdef"><b>Definition:</b> <a href="esp32_2profiling_8c_source.html#l00038">profiling.c:38</a></div></div>
-<div class="ttc" id="aesp32_2profiling_8c_html_a799a743b3abd553a37fc01ad3097df08"><div class="ttname"><a href="esp32_2profiling_8c.html#a799a743b3abd553a37fc01ad3097df08">buffer_size</a></div><div class="ttdeci">static size_t buffer_size</div><div class="ttdef"><b>Definition:</b> <a href="esp32_2profiling_8c_source.html#l00037">profiling.c:37</a></div></div>
+<div class="ttc" id="aesp32_2profiling_8c_html_a63433fe701b4e06f2cfdd50509e660db"><div class="ttname"><a href="esp32_2profiling_8c.html#a63433fe701b4e06f2cfdd50509e660db">sample_rate</a></div><div class="ttdeci">static float sample_rate</div><div class="ttdef"><b>Definition:</b> <a href="esp32_2profiling_8c_source.html#l00040">profiling.c:40</a></div></div>
+<div class="ttc" id="aesp32_2profiling_8c_html_a799a743b3abd553a37fc01ad3097df08"><div class="ttname"><a href="esp32_2profiling_8c.html#a799a743b3abd553a37fc01ad3097df08">buffer_size</a></div><div class="ttdeci">static size_t buffer_size</div><div class="ttdef"><b>Definition:</b> <a href="esp32_2profiling_8c_source.html#l00039">profiling.c:39</a></div></div>
 </div><!-- fragment -->
-<p class="reference">References <a class="el" href="esp32_2profiling_8c_source.html#l00037">buffer_size</a>, and <a class="el" href="esp32_2profiling_8c_source.html#l00038">sample_rate</a>.</p>
+<p class="reference">References <a class="el" href="esp32_2profiling_8c_source.html#l00039">buffer_size</a>, and <a class="el" href="esp32_2profiling_8c_source.html#l00040">sample_rate</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="main_8cpp_source.html#l00238">shrapnel::app_main()</a>.</p>
 <div class="dynheader">
@@ -159,8 +159,8 @@ Here is the caller graph for this function:</div>
 
 </div>
 </div>
-<a id="a3171d2be3fbf00e49982243e9869735a" name="a3171d2be3fbf00e49982243e9869735a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3171d2be3fbf00e49982243e9869735a">&#9670;&nbsp;</a></span>profiling_mark_stage()</h2>
+<a id="a28c8072350ec5a481c4de96a942e606f" name="a28c8072350ec5a481c4de96a942e606f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a28c8072350ec5a481c4de96a942e606f">&#9670;&nbsp;</a></span>profiling_mark_stage()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -168,7 +168,7 @@ Here is the caller graph for this function:</div>
         <tr>
           <td class="memname">void profiling_mark_stage </td>
           <td>(</td>
-          <td class="paramtype">unsigned int&#160;</td>
+          <td class="paramtype">const char *&#160;</td>
           <td class="paramname"><em>stage</em></td><td>)</td>
           <td></td>
         </tr>
@@ -182,7 +182,7 @@ Here is the caller graph for this function:</div>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="desktop_2profiling_8c_a3171d2be3fbf00e49982243e9869735a_icgraph.svg" width="399" height="183"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+<div class="center"><iframe scrolling="no" frameborder="0" src="desktop_2profiling_8c_a28c8072350ec5a481c4de96a942e606f_icgraph.svg" width="399" height="183"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
 </div>
 </div>
 

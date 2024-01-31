@@ -242,17 +242,17 @@ template&lt;size_t N, size_t M, typename Convolution &gt; </div>
 <p class="definition">Definition at line <a class="el" href="fast__fir_8h_source.html#l00070">70</a> of file <a class="el" href="fast__fir_8h_source.html">fast_fir.h</a>.</p>
 <div class="fragment"><div class="line"><span class="lineno">   71</span>    {</div>
 <div class="line"><span class="lineno">   72</span>        std::copy(signal.begin() + N, signal.end(), signal.begin());</div>
-<div class="line"><span class="lineno">   73</span>        <a class="code hl_function" href="desktop_2profiling_8c.html#a3171d2be3fbf00e49982243e9869735a">profiling_mark_stage</a>(5);</div>
+<div class="line"><span class="lineno">   73</span>        <a class="code hl_function" href="desktop_2profiling_8c.html#a28c8072350ec5a481c4de96a942e606f">profiling_mark_stage</a>(<span class="stringliteral">&quot;fir copy signal&quot;</span>);</div>
 <div class="line"><span class="lineno">   74</span>        std::copy(buffer.data(), buffer.data() + N, signal.end() - N);</div>
-<div class="line"><span class="lineno">   75</span>        <a class="code hl_function" href="desktop_2profiling_8c.html#a3171d2be3fbf00e49982243e9869735a">profiling_mark_stage</a>(6);</div>
+<div class="line"><span class="lineno">   75</span>        <a class="code hl_function" href="desktop_2profiling_8c.html#a28c8072350ec5a481c4de96a942e606f">profiling_mark_stage</a>(<span class="stringliteral">&quot;fir copy buffer&quot;</span>);</div>
 <div class="line"><span class="lineno">   76</span> </div>
 <div class="line"><span class="lineno">   77</span>        std::array&lt;float, M&gt; out;</div>
 <div class="line"><span class="lineno">   78</span>        convolution-&gt;process(signal, out);</div>
-<div class="line"><span class="lineno">   79</span>        <a class="code hl_function" href="desktop_2profiling_8c.html#a3171d2be3fbf00e49982243e9869735a">profiling_mark_stage</a>(16);</div>
+<div class="line"><span class="lineno">   79</span>        <a class="code hl_function" href="desktop_2profiling_8c.html#a28c8072350ec5a481c4de96a942e606f">profiling_mark_stage</a>(<span class="stringliteral">&quot;fir convolution&quot;</span>);</div>
 <div class="line"><span class="lineno">   80</span> </div>
 <div class="line"><span class="lineno">   81</span>        std::copy(out.end() - N, out.end(), buffer.data());</div>
 <div class="line"><span class="lineno">   82</span>    }</div>
-<div class="ttc" id="adesktop_2profiling_8c_html_a3171d2be3fbf00e49982243e9869735a"><div class="ttname"><a href="desktop_2profiling_8c.html#a3171d2be3fbf00e49982243e9869735a">profiling_mark_stage</a></div><div class="ttdeci">void profiling_mark_stage(unsigned int stage)</div><div class="ttdef"><b>Definition:</b> <a href="desktop_2profiling_8c_source.html#l00028">profiling.c:28</a></div></div>
+<div class="ttc" id="adesktop_2profiling_8c_html_a28c8072350ec5a481c4de96a942e606f"><div class="ttname"><a href="desktop_2profiling_8c.html#a28c8072350ec5a481c4de96a942e606f">profiling_mark_stage</a></div><div class="ttdeci">void profiling_mark_stage(const char *stage)</div><div class="ttdef"><b>Definition:</b> <a href="desktop_2profiling_8c_source.html#l00028">profiling.c:28</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="desktop_2profiling_8c_source.html#l00028">profiling_mark_stage()</a>.</p>
 <div class="dynheader">

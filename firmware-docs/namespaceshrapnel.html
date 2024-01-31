@@ -336,159 +336,164 @@ Variables</h2></td></tr>
 <div class="line"><span class="lineno">  297</span>    <span class="comment">/* Start the mdns service */</span></div>
 <div class="line"><span class="lineno">  298</span>    <a class="code hl_function" href="namespaceshrapnel.html#a62ed101f04b8c40f7fdc427e6b169353">start_mdns</a>();</div>
 <div class="line"><span class="lineno">  299</span> </div>
-<div class="line"><span class="lineno">  300</span><span class="preprocessor">#if 0</span></div>
-<div class="line"><span class="lineno">  301</span>    rc = xTaskCreate(<a class="code hl_function" href="desktop_2profiling_8c.html#aa8ff71a343036a362fc1953d5572d0ce">profiling_task</a>, <span class="stringliteral">&quot;i2s profiling&quot;</span>, 2000, NULL, tskIDLE_PRIORITY + 2, NULL);</div>
-<div class="line"><span class="lineno">  302</span>    <span class="keywordflow">if</span>(rc != pdPASS)</div>
-<div class="line"><span class="lineno">  303</span>    {</div>
-<div class="line"><span class="lineno">  304</span>        ESP_LOGE(TAG, <span class="stringliteral">&quot;Profiling task create failed %d&quot;</span>, rc);</div>
-<div class="line"><span class="lineno">  305</span>    }</div>
-<div class="line"><span class="lineno">  306</span><span class="preprocessor">#endif</span></div>
-<div class="line"><span class="lineno">  307</span> </div>
-<div class="line"><span class="lineno">  308</span>    esp_netif_create_default_wifi_sta();</div>
-<div class="line"><span class="lineno">  309</span>    esp_netif_create_default_wifi_ap();</div>
-<div class="line"><span class="lineno">  310</span>    wifi_init_config_t cfg = WIFI_INIT_CONFIG_DEFAULT();</div>
-<div class="line"><span class="lineno">  311</span>    ESP_ERROR_CHECK(esp_wifi_init(&amp;cfg));</div>
-<div class="line"><span class="lineno">  312</span>    ESP_ERROR_CHECK(esp_wifi_set_ps(WIFI_PS_NONE));</div>
-<div class="line"><span class="lineno">  313</span> </div>
-<div class="line"><span class="lineno">  314</span>    <span class="keyword">auto</span> wifi_queue = <a class="code hl_typedef" href="main_8cpp.html#a69811aaa1a7fd4891677577d309248e6">WifiQueue</a>();</div>
-<div class="line"><span class="lineno">  315</span> </div>
-<div class="line"><span class="lineno">  316</span>    <span class="keyword">auto</span> wifi_send_event = [&amp;](wifi::InternalEvent event)</div>
-<div class="line"><span class="lineno">  317</span>    {</div>
-<div class="line"><span class="lineno">  318</span>        <span class="keyword">auto</span> rc = wifi_queue.send(&amp;event, 0);</div>
-<div class="line"><span class="lineno">  319</span>        <span class="keywordflow">if</span>(rc != pdPASS)</div>
-<div class="line"><span class="lineno">  320</span>        {</div>
-<div class="line"><span class="lineno">  321</span>            ESP_LOGE(TAG, <span class="stringliteral">&quot;Failed to post wifi event to queue&quot;</span>);</div>
-<div class="line"><span class="lineno">  322</span>        }</div>
-<div class="line"><span class="lineno">  323</span>    };</div>
-<div class="line"><span class="lineno">  324</span> </div>
-<div class="line"><span class="lineno">  325</span>    <span class="keyword">auto</span> in_queue = <span class="keyword">new</span> Queue&lt;AppMessage, QUEUE_LEN&gt;;</div>
-<div class="line"><span class="lineno">  326</span>    <span class="keyword">auto</span> out_queue = <span class="keyword">new</span> Queue&lt;AppMessage, QUEUE_LEN&gt;;</div>
-<div class="line"><span class="lineno">  327</span>    <span class="keyword">auto</span> server = <span class="keyword">new</span> Server(in_queue, out_queue);</div>
-<div class="line"><span class="lineno">  328</span> </div>
-<div class="line"><span class="lineno">  329</span>    <span class="keyword">auto</span> app_send_event = [&amp;](wifi::UserEvent event)</div>
-<div class="line"><span class="lineno">  330</span>    {</div>
-<div class="line"><span class="lineno">  331</span>        <span class="keywordflow">switch</span>(event)</div>
-<div class="line"><span class="lineno">  332</span>        {</div>
-<div class="line"><span class="lineno">  333</span>        <span class="keywordflow">case</span> wifi::UserEvent::CONNECTED:</div>
-<div class="line"><span class="lineno">  334</span>            ESP_LOGI(TAG, <span class="stringliteral">&quot;Starting webserver&quot;</span>);</div>
-<div class="line"><span class="lineno">  335</span>            server-&gt;start();</div>
-<div class="line"><span class="lineno">  336</span>            <span class="keywordflow">break</span>;</div>
-<div class="line"><span class="lineno">  337</span>        <span class="keywordflow">case</span> wifi::UserEvent::DISCONNECTED:</div>
-<div class="line"><span class="lineno">  338</span>            ESP_LOGI(TAG, <span class="stringliteral">&quot;Stopping webserver&quot;</span>);</div>
-<div class="line"><span class="lineno">  339</span>            server-&gt;stop();</div>
-<div class="line"><span class="lineno">  340</span>            <span class="keywordflow">break</span>;</div>
-<div class="line"><span class="lineno">  341</span>        <span class="keywordflow">default</span>:</div>
-<div class="line"><span class="lineno">  342</span>            ESP_LOGE(TAG, <span class="stringliteral">&quot;Unhandled event %d&quot;</span>, event.get_value());</div>
-<div class="line"><span class="lineno">  343</span>            <span class="keywordflow">break</span>;</div>
-<div class="line"><span class="lineno">  344</span>        }</div>
-<div class="line"><span class="lineno">  345</span>    };</div>
-<div class="line"><span class="lineno">  346</span> </div>
-<div class="line"><span class="lineno">  347</span>    <span class="keyword">static</span> <span class="keyword">auto</span> wifi = wifi::WifiStateMachine(wifi_send_event, app_send_event);</div>
-<div class="line"><span class="lineno">  348</span> </div>
-<div class="line"><span class="lineno">  349</span>    <span class="keyword">auto</span> wifi_state_chart =</div>
-<div class="line"><span class="lineno">  350</span>        etl::state_chart_ct&lt;wifi::WifiStateMachine,</div>
-<div class="line"><span class="lineno">  351</span>                            wifi,</div>
-<div class="line"><span class="lineno">  352</span>                            wifi::WifiStateMachine::transition_table,</div>
-<div class="line"><span class="lineno">  353</span>                            ARRAY_LENGTH(</div>
-<div class="line"><span class="lineno">  354</span>                                wifi::WifiStateMachine::transition_table),</div>
-<div class="line"><span class="lineno">  355</span>                            wifi::WifiStateMachine::state_table,</div>
-<div class="line"><span class="lineno">  356</span>                            ARRAY_LENGTH(wifi::WifiStateMachine::state_table),</div>
-<div class="line"><span class="lineno">  357</span>                            <a class="code hl_enumvalue" href="noise__gate_8cpp.html#aa0aafed44fec19806d8f9ad834be1248a0cb1b2c6a7db1f1084886c98909a3f36">wifi::State::INIT</a>&gt;();</div>
-<div class="line"><span class="lineno">  358</span>    wifi_state_chart.start();</div>
-<div class="line"><span class="lineno">  359</span> </div>
-<div class="line"><span class="lineno">  360</span>    <span class="comment">/* Register event handlers to send events on to wifi state machine */</span></div>
-<div class="line"><span class="lineno">  361</span>    ESP_ERROR_CHECK(esp_event_handler_register(</div>
-<div class="line"><span class="lineno">  362</span>        IP_EVENT, IP_EVENT_STA_GOT_IP, <a class="code hl_function" href="namespaceshrapnel.html#a4bf0b1d7c4fef2839a56059a237d1da6">connect_handler</a>, &amp;wifi_queue));</div>
-<div class="line"><span class="lineno">  363</span>    ESP_ERROR_CHECK(esp_event_handler_register(WIFI_EVENT,</div>
-<div class="line"><span class="lineno">  364</span>                                               WIFI_EVENT_STA_DISCONNECTED,</div>
-<div class="line"><span class="lineno">  365</span>                                               <a class="code hl_function" href="namespaceshrapnel.html#ae3cbca1e45f686a5790d51825e2754a2">disconnect_handler</a>,</div>
-<div class="line"><span class="lineno">  366</span>                                               &amp;wifi_queue));</div>
-<div class="line"><span class="lineno">  367</span>    ESP_ERROR_CHECK(esp_event_handler_register(</div>
-<div class="line"><span class="lineno">  368</span>        WIFI_EVENT, WIFI_EVENT_STA_START, <a class="code hl_function" href="namespaceshrapnel.html#ad3636f58faa95196bef6352b331ed3da">wifi_start_handler</a>, &amp;wifi_queue));</div>
-<div class="line"><span class="lineno">  369</span> </div>
-<div class="line"><span class="lineno">  370</span>    <span class="keyword">auto</span> midi_uart = <span class="keyword">new</span> midi::EspMidiUart(UART_NUM_MIDI, GPIO_NUM_MIDI);</div>
-<div class="line"><span class="lineno">  371</span> </div>
-<div class="line"><span class="lineno">  372</span>    <a class="code hl_function" href="debug_8cpp.html#a17e92714f3dc502fe3bae30fd4201a57">debug_dump_task_list</a>();</div>
-<div class="line"><span class="lineno">  373</span> </div>
-<div class="line"><span class="lineno">  374</span>    <span class="keyword">auto</span> send_message = [&amp;](<span class="keyword">const</span> <a class="code hl_typedef" href="messages_8h.html#a4a2a8445978c00038c4b9a0d35ca7a69">AppMessage</a> &amp;message)</div>
-<div class="line"><span class="lineno">  375</span>    { server-&gt;send_message(message); };</div>
+<div class="line"><span class="lineno">  300</span><span class="preprocessor">#if 1</span></div>
+<div class="line"><span class="lineno">  301</span>    rc = xTaskCreate(<a class="code hl_function" href="desktop_2profiling_8c.html#aa8ff71a343036a362fc1953d5572d0ce">profiling_task</a>,</div>
+<div class="line"><span class="lineno">  302</span>                     <span class="stringliteral">&quot;i2s profiling&quot;</span>,</div>
+<div class="line"><span class="lineno">  303</span>                     2000,</div>
+<div class="line"><span class="lineno">  304</span>                     NULL,</div>
+<div class="line"><span class="lineno">  305</span>                     tskIDLE_PRIORITY + 2,</div>
+<div class="line"><span class="lineno">  306</span>                     NULL);</div>
+<div class="line"><span class="lineno">  307</span>    <span class="keywordflow">if</span>(rc != pdPASS)</div>
+<div class="line"><span class="lineno">  308</span>    {</div>
+<div class="line"><span class="lineno">  309</span>        ESP_LOGE(TAG, <span class="stringliteral">&quot;Profiling task create failed %d&quot;</span>, rc);</div>
+<div class="line"><span class="lineno">  310</span>    }</div>
+<div class="line"><span class="lineno">  311</span><span class="preprocessor">#endif</span></div>
+<div class="line"><span class="lineno">  312</span> </div>
+<div class="line"><span class="lineno">  313</span>    esp_netif_create_default_wifi_sta();</div>
+<div class="line"><span class="lineno">  314</span>    esp_netif_create_default_wifi_ap();</div>
+<div class="line"><span class="lineno">  315</span>    wifi_init_config_t cfg = WIFI_INIT_CONFIG_DEFAULT();</div>
+<div class="line"><span class="lineno">  316</span>    ESP_ERROR_CHECK(esp_wifi_init(&amp;cfg));</div>
+<div class="line"><span class="lineno">  317</span>    ESP_ERROR_CHECK(esp_wifi_set_ps(WIFI_PS_NONE));</div>
+<div class="line"><span class="lineno">  318</span> </div>
+<div class="line"><span class="lineno">  319</span>    <span class="keyword">auto</span> wifi_queue = <a class="code hl_typedef" href="main_8cpp.html#a69811aaa1a7fd4891677577d309248e6">WifiQueue</a>();</div>
+<div class="line"><span class="lineno">  320</span> </div>
+<div class="line"><span class="lineno">  321</span>    <span class="keyword">auto</span> wifi_send_event = [&amp;](wifi::InternalEvent event)</div>
+<div class="line"><span class="lineno">  322</span>    {</div>
+<div class="line"><span class="lineno">  323</span>        <span class="keyword">auto</span> rc = wifi_queue.send(&amp;event, 0);</div>
+<div class="line"><span class="lineno">  324</span>        <span class="keywordflow">if</span>(rc != pdPASS)</div>
+<div class="line"><span class="lineno">  325</span>        {</div>
+<div class="line"><span class="lineno">  326</span>            ESP_LOGE(TAG, <span class="stringliteral">&quot;Failed to post wifi event to queue&quot;</span>);</div>
+<div class="line"><span class="lineno">  327</span>        }</div>
+<div class="line"><span class="lineno">  328</span>    };</div>
+<div class="line"><span class="lineno">  329</span> </div>
+<div class="line"><span class="lineno">  330</span>    <span class="keyword">auto</span> in_queue = <span class="keyword">new</span> Queue&lt;AppMessage, QUEUE_LEN&gt;;</div>
+<div class="line"><span class="lineno">  331</span>    <span class="keyword">auto</span> out_queue = <span class="keyword">new</span> Queue&lt;AppMessage, QUEUE_LEN&gt;;</div>
+<div class="line"><span class="lineno">  332</span>    <span class="keyword">auto</span> server = <span class="keyword">new</span> Server(in_queue, out_queue);</div>
+<div class="line"><span class="lineno">  333</span> </div>
+<div class="line"><span class="lineno">  334</span>    <span class="keyword">auto</span> app_send_event = [&amp;](wifi::UserEvent event)</div>
+<div class="line"><span class="lineno">  335</span>    {</div>
+<div class="line"><span class="lineno">  336</span>        <span class="keywordflow">switch</span>(event)</div>
+<div class="line"><span class="lineno">  337</span>        {</div>
+<div class="line"><span class="lineno">  338</span>        <span class="keywordflow">case</span> wifi::UserEvent::CONNECTED:</div>
+<div class="line"><span class="lineno">  339</span>            ESP_LOGI(TAG, <span class="stringliteral">&quot;Starting webserver&quot;</span>);</div>
+<div class="line"><span class="lineno">  340</span>            server-&gt;start();</div>
+<div class="line"><span class="lineno">  341</span>            <span class="keywordflow">break</span>;</div>
+<div class="line"><span class="lineno">  342</span>        <span class="keywordflow">case</span> wifi::UserEvent::DISCONNECTED:</div>
+<div class="line"><span class="lineno">  343</span>            ESP_LOGI(TAG, <span class="stringliteral">&quot;Stopping webserver&quot;</span>);</div>
+<div class="line"><span class="lineno">  344</span>            server-&gt;stop();</div>
+<div class="line"><span class="lineno">  345</span>            <span class="keywordflow">break</span>;</div>
+<div class="line"><span class="lineno">  346</span>        <span class="keywordflow">default</span>:</div>
+<div class="line"><span class="lineno">  347</span>            ESP_LOGE(TAG, <span class="stringliteral">&quot;Unhandled event %d&quot;</span>, event.get_value());</div>
+<div class="line"><span class="lineno">  348</span>            <span class="keywordflow">break</span>;</div>
+<div class="line"><span class="lineno">  349</span>        }</div>
+<div class="line"><span class="lineno">  350</span>    };</div>
+<div class="line"><span class="lineno">  351</span> </div>
+<div class="line"><span class="lineno">  352</span>    <span class="keyword">static</span> <span class="keyword">auto</span> wifi = wifi::WifiStateMachine(wifi_send_event, app_send_event);</div>
+<div class="line"><span class="lineno">  353</span> </div>
+<div class="line"><span class="lineno">  354</span>    <span class="keyword">auto</span> wifi_state_chart =</div>
+<div class="line"><span class="lineno">  355</span>        etl::state_chart_ct&lt;wifi::WifiStateMachine,</div>
+<div class="line"><span class="lineno">  356</span>                            wifi,</div>
+<div class="line"><span class="lineno">  357</span>                            wifi::WifiStateMachine::transition_table,</div>
+<div class="line"><span class="lineno">  358</span>                            ARRAY_LENGTH(</div>
+<div class="line"><span class="lineno">  359</span>                                wifi::WifiStateMachine::transition_table),</div>
+<div class="line"><span class="lineno">  360</span>                            wifi::WifiStateMachine::state_table,</div>
+<div class="line"><span class="lineno">  361</span>                            ARRAY_LENGTH(wifi::WifiStateMachine::state_table),</div>
+<div class="line"><span class="lineno">  362</span>                            <a class="code hl_enumvalue" href="noise__gate_8cpp.html#aa0aafed44fec19806d8f9ad834be1248a0cb1b2c6a7db1f1084886c98909a3f36">wifi::State::INIT</a>&gt;();</div>
+<div class="line"><span class="lineno">  363</span>    wifi_state_chart.start();</div>
+<div class="line"><span class="lineno">  364</span> </div>
+<div class="line"><span class="lineno">  365</span>    <span class="comment">/* Register event handlers to send events on to wifi state machine */</span></div>
+<div class="line"><span class="lineno">  366</span>    ESP_ERROR_CHECK(esp_event_handler_register(</div>
+<div class="line"><span class="lineno">  367</span>        IP_EVENT, IP_EVENT_STA_GOT_IP, <a class="code hl_function" href="namespaceshrapnel.html#a4bf0b1d7c4fef2839a56059a237d1da6">connect_handler</a>, &amp;wifi_queue));</div>
+<div class="line"><span class="lineno">  368</span>    ESP_ERROR_CHECK(esp_event_handler_register(WIFI_EVENT,</div>
+<div class="line"><span class="lineno">  369</span>                                               WIFI_EVENT_STA_DISCONNECTED,</div>
+<div class="line"><span class="lineno">  370</span>                                               <a class="code hl_function" href="namespaceshrapnel.html#ae3cbca1e45f686a5790d51825e2754a2">disconnect_handler</a>,</div>
+<div class="line"><span class="lineno">  371</span>                                               &amp;wifi_queue));</div>
+<div class="line"><span class="lineno">  372</span>    ESP_ERROR_CHECK(esp_event_handler_register(</div>
+<div class="line"><span class="lineno">  373</span>        WIFI_EVENT, WIFI_EVENT_STA_START, <a class="code hl_function" href="namespaceshrapnel.html#ad3636f58faa95196bef6352b331ed3da">wifi_start_handler</a>, &amp;wifi_queue));</div>
+<div class="line"><span class="lineno">  374</span> </div>
+<div class="line"><span class="lineno">  375</span>    <span class="keyword">auto</span> midi_uart = <span class="keyword">new</span> midi::EspMidiUart(UART_NUM_MIDI, GPIO_NUM_MIDI);</div>
 <div class="line"><span class="lineno">  376</span> </div>
-<div class="line"><span class="lineno">  377</span>    <span class="keyword">auto</span> main_thread = MainThread&lt;MAX_PARAMETERS, QUEUE_LEN&gt;(</div>
-<div class="line"><span class="lineno">  378</span>        send_message,</div>
-<div class="line"><span class="lineno">  379</span>        *in_queue,</div>
-<div class="line"><span class="lineno">  380</span>        midi_uart,</div>
-<div class="line"><span class="lineno">  381</span>        audio_params,</div>
-<div class="line"><span class="lineno">  382</span>        persistence,</div>
-<div class="line"><span class="lineno">  383</span>        std::make_unique&lt;Crud&gt;(<span class="stringliteral">&quot;nvs&quot;</span>, <span class="stringliteral">&quot;midi_mapping&quot;</span>),</div>
-<div class="line"><span class="lineno">  384</span>        std::make_unique&lt;Crud&gt;(<span class="stringliteral">&quot;nvs&quot;</span>, <span class="stringliteral">&quot;presets&quot;</span>));</div>
-<div class="line"><span class="lineno">  385</span> </div>
-<div class="line"><span class="lineno">  386</span>    <a class="code hl_function" href="namespaceshrapnel_1_1audio.html#a53d05b5ded7bb39aff7189392d0566c9">audio::i2s_setup</a>(PROFILING_GPIO, audio_params.get());</div>
-<div class="line"><span class="lineno">  387</span> </div>
-<div class="line"><span class="lineno">  388</span>    ESP_LOGI(TAG, <span class="stringliteral">&quot;setup done&quot;</span>);</div>
-<div class="line"><span class="lineno">  389</span>    ESP_LOGI(TAG, <span class="stringliteral">&quot;stack: %d&quot;</span>, uxTaskGetStackHighWaterMark(NULL));</div>
-<div class="line"><span class="lineno">  390</span>    heap_caps_print_heap_info(MALLOC_CAP_DEFAULT);</div>
-<div class="line"><span class="lineno">  391</span> </div>
-<div class="line"><span class="lineno">  392</span>    <span class="keywordflow">while</span>(1)</div>
-<div class="line"><span class="lineno">  393</span>    {</div>
-<div class="line"><span class="lineno">  394</span>        vTaskDelay(pdMS_TO_TICKS(10));</div>
-<div class="line"><span class="lineno">  395</span>        <span class="keyword">auto</span> tick_count_start = xTaskGetTickCount();</div>
+<div class="line"><span class="lineno">  377</span>    <a class="code hl_function" href="debug_8cpp.html#a17e92714f3dc502fe3bae30fd4201a57">debug_dump_task_list</a>();</div>
+<div class="line"><span class="lineno">  378</span> </div>
+<div class="line"><span class="lineno">  379</span>    <span class="keyword">auto</span> send_message = [&amp;](<span class="keyword">const</span> <a class="code hl_typedef" href="messages_8h.html#a4a2a8445978c00038c4b9a0d35ca7a69">AppMessage</a> &amp;message)</div>
+<div class="line"><span class="lineno">  380</span>    { server-&gt;send_message(message); };</div>
+<div class="line"><span class="lineno">  381</span> </div>
+<div class="line"><span class="lineno">  382</span>    <span class="keyword">auto</span> main_thread = MainThread&lt;MAX_PARAMETERS, QUEUE_LEN&gt;(</div>
+<div class="line"><span class="lineno">  383</span>        send_message,</div>
+<div class="line"><span class="lineno">  384</span>        *in_queue,</div>
+<div class="line"><span class="lineno">  385</span>        midi_uart,</div>
+<div class="line"><span class="lineno">  386</span>        audio_params,</div>
+<div class="line"><span class="lineno">  387</span>        persistence,</div>
+<div class="line"><span class="lineno">  388</span>        std::make_unique&lt;Crud&gt;(<span class="stringliteral">&quot;nvs&quot;</span>, <span class="stringliteral">&quot;midi_mapping&quot;</span>),</div>
+<div class="line"><span class="lineno">  389</span>        std::make_unique&lt;Crud&gt;(<span class="stringliteral">&quot;nvs&quot;</span>, <span class="stringliteral">&quot;presets&quot;</span>));</div>
+<div class="line"><span class="lineno">  390</span> </div>
+<div class="line"><span class="lineno">  391</span>    <a class="code hl_function" href="namespaceshrapnel_1_1audio.html#a53d05b5ded7bb39aff7189392d0566c9">audio::i2s_setup</a>(PROFILING_GPIO, audio_params.get());</div>
+<div class="line"><span class="lineno">  392</span> </div>
+<div class="line"><span class="lineno">  393</span>    ESP_LOGI(TAG, <span class="stringliteral">&quot;setup done&quot;</span>);</div>
+<div class="line"><span class="lineno">  394</span>    ESP_LOGI(TAG, <span class="stringliteral">&quot;stack: %d&quot;</span>, uxTaskGetStackHighWaterMark(NULL));</div>
+<div class="line"><span class="lineno">  395</span>    heap_caps_print_heap_info(MALLOC_CAP_DEFAULT);</div>
 <div class="line"><span class="lineno">  396</span> </div>
-<div class="line"><span class="lineno">  397</span>        main_thread.loop();</div>
-<div class="line"><span class="lineno">  398</span> </div>
-<div class="line"><span class="lineno">  399</span>        {</div>
-<div class="line"><span class="lineno">  400</span>            <span class="comment">// i2s produces an event on each buffer TX/RX. We process all the</span></div>
-<div class="line"><span class="lineno">  401</span>            <span class="comment">// events in the current iteration, so that the queue doesn&#39;t fill</span></div>
-<div class="line"><span class="lineno">  402</span>            <span class="comment">// up.</span></div>
-<div class="line"><span class="lineno">  403</span>            i2s_event_t event;</div>
-<div class="line"><span class="lineno">  404</span>            <span class="keywordflow">while</span>(xQueueReceive(<a class="code hl_variable" href="namespaceshrapnel_1_1audio.html#ab7793cdc1c2c73fcdcba8fea2f35c9c8">audio::i2s_queue</a>, &amp;event, 0))</div>
-<div class="line"><span class="lineno">  405</span>            {</div>
-<div class="line"><span class="lineno">  406</span>                <a class="code hl_function" href="namespaceshrapnel_1_1audio.html#a5e4994d9de1b430ad5473efe241521aa">audio::log_i2s_event</a>(event);</div>
-<div class="line"><span class="lineno">  407</span>            }</div>
-<div class="line"><span class="lineno">  408</span>        }</div>
-<div class="line"><span class="lineno">  409</span> </div>
-<div class="line"><span class="lineno">  410</span>        wifi::InternalEvent wifi_event;</div>
-<div class="line"><span class="lineno">  411</span>        <span class="keywordflow">while</span>(pdPASS == wifi_queue.receive(&amp;wifi_event, 0))</div>
-<div class="line"><span class="lineno">  412</span>        {</div>
-<div class="line"><span class="lineno">  413</span>            wifi::State <a class="code hl_variable" href="noise__gate_8cpp.html#a499e7824037af983d0524a98081e7f0b">state</a>{wifi_state_chart.get_state_id()};</div>
-<div class="line"><span class="lineno">  414</span>            ESP_LOGI(</div>
-<div class="line"><span class="lineno">  415</span>                TAG, <span class="stringliteral">&quot;state: %s event: %s&quot;</span>, <a class="code hl_variable" href="noise__gate_8cpp.html#a499e7824037af983d0524a98081e7f0b">state</a>.c_str(), wifi_event.c_str());</div>
-<div class="line"><span class="lineno">  416</span> </div>
-<div class="line"><span class="lineno">  417</span>            wifi_state_chart.process_event(wifi_event);</div>
-<div class="line"><span class="lineno">  418</span> </div>
-<div class="line"><span class="lineno">  419</span>            wifi::State new_state{wifi_state_chart.get_state_id()};</div>
-<div class="line"><span class="lineno">  420</span>            <span class="keywordflow">if</span>(new_state != <a class="code hl_variable" href="noise__gate_8cpp.html#a499e7824037af983d0524a98081e7f0b">state</a>)</div>
-<div class="line"><span class="lineno">  421</span>            {</div>
-<div class="line"><span class="lineno">  422</span>                ESP_LOGI(TAG, <span class="stringliteral">&quot;changed to state: %s&quot;</span>, new_state.c_str());</div>
-<div class="line"><span class="lineno">  423</span>            }</div>
-<div class="line"><span class="lineno">  424</span>        }</div>
-<div class="line"><span class="lineno">  425</span> </div>
-<div class="line"><span class="lineno">  426</span>        <span class="comment">/* Check if the current iteration of the main loop took too long. This</span></div>
-<div class="line"><span class="lineno">  427</span><span class="comment">         * might be caused by blocking while handling events.</span></div>
-<div class="line"><span class="lineno">  428</span><span class="comment">         *</span></div>
-<div class="line"><span class="lineno">  429</span><span class="comment">         * It can also be caused by another thread that has a higher priority</span></div>
-<div class="line"><span class="lineno">  430</span><span class="comment">         * than the main thread.</span></div>
-<div class="line"><span class="lineno">  431</span><span class="comment">         */</span></div>
-<div class="line"><span class="lineno">  432</span>        <span class="keyword">auto</span> tick_count_iteration = xTaskGetTickCount() - tick_count_start;</div>
-<div class="line"><span class="lineno">  433</span>        <span class="keywordflow">if</span>(tick_count_iteration &gt; pdMS_TO_TICKS(5))</div>
-<div class="line"><span class="lineno">  434</span>        {</div>
-<div class="line"><span class="lineno">  435</span>            ESP_LOGW(TAG,</div>
-<div class="line"><span class="lineno">  436</span>                     <span class="stringliteral">&quot;slow iteration: %d ms&quot;</span>,</div>
-<div class="line"><span class="lineno">  437</span>                     (<span class="keywordtype">int</span>)pdTICKS_TO_MS(tick_count_iteration));</div>
-<div class="line"><span class="lineno">  438</span>        }</div>
-<div class="line"><span class="lineno">  439</span>    }</div>
-<div class="line"><span class="lineno">  440</span>}</div>
+<div class="line"><span class="lineno">  397</span>    <span class="keywordflow">while</span>(1)</div>
+<div class="line"><span class="lineno">  398</span>    {</div>
+<div class="line"><span class="lineno">  399</span>        vTaskDelay(pdMS_TO_TICKS(10));</div>
+<div class="line"><span class="lineno">  400</span>        <span class="keyword">auto</span> tick_count_start = xTaskGetTickCount();</div>
+<div class="line"><span class="lineno">  401</span> </div>
+<div class="line"><span class="lineno">  402</span>        main_thread.loop();</div>
+<div class="line"><span class="lineno">  403</span> </div>
+<div class="line"><span class="lineno">  404</span>        {</div>
+<div class="line"><span class="lineno">  405</span>            <span class="comment">// i2s produces an event on each buffer TX/RX. We process all the</span></div>
+<div class="line"><span class="lineno">  406</span>            <span class="comment">// events in the current iteration, so that the queue doesn&#39;t fill</span></div>
+<div class="line"><span class="lineno">  407</span>            <span class="comment">// up.</span></div>
+<div class="line"><span class="lineno">  408</span>            i2s_event_t event;</div>
+<div class="line"><span class="lineno">  409</span>            <span class="keywordflow">while</span>(xQueueReceive(<a class="code hl_variable" href="namespaceshrapnel_1_1audio.html#ab7793cdc1c2c73fcdcba8fea2f35c9c8">audio::i2s_queue</a>, &amp;event, 0))</div>
+<div class="line"><span class="lineno">  410</span>            {</div>
+<div class="line"><span class="lineno">  411</span>                <a class="code hl_function" href="namespaceshrapnel_1_1audio.html#a5e4994d9de1b430ad5473efe241521aa">audio::log_i2s_event</a>(event);</div>
+<div class="line"><span class="lineno">  412</span>            }</div>
+<div class="line"><span class="lineno">  413</span>        }</div>
+<div class="line"><span class="lineno">  414</span> </div>
+<div class="line"><span class="lineno">  415</span>        wifi::InternalEvent wifi_event;</div>
+<div class="line"><span class="lineno">  416</span>        <span class="keywordflow">while</span>(pdPASS == wifi_queue.receive(&amp;wifi_event, 0))</div>
+<div class="line"><span class="lineno">  417</span>        {</div>
+<div class="line"><span class="lineno">  418</span>            wifi::State <a class="code hl_variable" href="noise__gate_8cpp.html#a499e7824037af983d0524a98081e7f0b">state</a>{wifi_state_chart.get_state_id()};</div>
+<div class="line"><span class="lineno">  419</span>            ESP_LOGI(</div>
+<div class="line"><span class="lineno">  420</span>                TAG, <span class="stringliteral">&quot;state: %s event: %s&quot;</span>, <a class="code hl_variable" href="noise__gate_8cpp.html#a499e7824037af983d0524a98081e7f0b">state</a>.c_str(), wifi_event.c_str());</div>
+<div class="line"><span class="lineno">  421</span> </div>
+<div class="line"><span class="lineno">  422</span>            wifi_state_chart.process_event(wifi_event);</div>
+<div class="line"><span class="lineno">  423</span> </div>
+<div class="line"><span class="lineno">  424</span>            wifi::State new_state{wifi_state_chart.get_state_id()};</div>
+<div class="line"><span class="lineno">  425</span>            <span class="keywordflow">if</span>(new_state != <a class="code hl_variable" href="noise__gate_8cpp.html#a499e7824037af983d0524a98081e7f0b">state</a>)</div>
+<div class="line"><span class="lineno">  426</span>            {</div>
+<div class="line"><span class="lineno">  427</span>                ESP_LOGI(TAG, <span class="stringliteral">&quot;changed to state: %s&quot;</span>, new_state.c_str());</div>
+<div class="line"><span class="lineno">  428</span>            }</div>
+<div class="line"><span class="lineno">  429</span>        }</div>
+<div class="line"><span class="lineno">  430</span> </div>
+<div class="line"><span class="lineno">  431</span>        <span class="comment">/* Check if the current iteration of the main loop took too long. This</span></div>
+<div class="line"><span class="lineno">  432</span><span class="comment">         * might be caused by blocking while handling events.</span></div>
+<div class="line"><span class="lineno">  433</span><span class="comment">         *</span></div>
+<div class="line"><span class="lineno">  434</span><span class="comment">         * It can also be caused by another thread that has a higher priority</span></div>
+<div class="line"><span class="lineno">  435</span><span class="comment">         * than the main thread.</span></div>
+<div class="line"><span class="lineno">  436</span><span class="comment">         */</span></div>
+<div class="line"><span class="lineno">  437</span>        <span class="keyword">auto</span> tick_count_iteration = xTaskGetTickCount() - tick_count_start;</div>
+<div class="line"><span class="lineno">  438</span>        <span class="keywordflow">if</span>(tick_count_iteration &gt; pdMS_TO_TICKS(5))</div>
+<div class="line"><span class="lineno">  439</span>        {</div>
+<div class="line"><span class="lineno">  440</span>            ESP_LOGW(TAG,</div>
+<div class="line"><span class="lineno">  441</span>                     <span class="stringliteral">&quot;slow iteration: %d ms&quot;</span>,</div>
+<div class="line"><span class="lineno">  442</span>                     (<span class="keywordtype">int</span>)pdTICKS_TO_MS(tick_count_iteration));</div>
+<div class="line"><span class="lineno">  443</span>        }</div>
+<div class="line"><span class="lineno">  444</span>    }</div>
+<div class="line"><span class="lineno">  445</span>}</div>
 <div class="ttc" id="adebug_8cpp_html_a17e92714f3dc502fe3bae30fd4201a57"><div class="ttname"><a href="debug_8cpp.html#a17e92714f3dc502fe3bae30fd4201a57">debug_dump_task_list</a></div><div class="ttdeci">void debug_dump_task_list()</div><div class="ttdef"><b>Definition:</b> <a href="debug_8cpp_source.html#l00026">debug.cpp:26</a></div></div>
 <div class="ttc" id="adesktop_2profiling_8c_html_a58ceeae747d300e67b1ecf70a9b24526"><div class="ttname"><a href="desktop_2profiling_8c.html#a58ceeae747d300e67b1ecf70a9b24526">profiling_init</a></div><div class="ttdeci">void profiling_init(size_t buffer_size, float sample_rate)</div><div class="ttdef"><b>Definition:</b> <a href="desktop_2profiling_8c_source.html#l00022">profiling.c:22</a></div></div>
 <div class="ttc" id="adesktop_2profiling_8c_html_aa8ff71a343036a362fc1953d5572d0ce"><div class="ttname"><a href="desktop_2profiling_8c.html#aa8ff71a343036a362fc1953d5572d0ce">profiling_task</a></div><div class="ttdeci">void profiling_task(void *param)</div><div class="ttdef"><b>Definition:</b> <a href="desktop_2profiling_8c_source.html#l00031">profiling.c:31</a></div></div>
 <div class="ttc" id="amain_8cpp_html_a69811aaa1a7fd4891677577d309248e6"><div class="ttname"><a href="main_8cpp.html#a69811aaa1a7fd4891677577d309248e6">WifiQueue</a></div><div class="ttdeci">shrapnel::Queue&lt; shrapnel::wifi::InternalEvent, 3 &gt; WifiQueue</div><div class="ttdef"><b>Definition:</b> <a href="main_8cpp_source.html#l00082">main.cpp:82</a></div></div>
 <div class="ttc" id="amessages_8h_html_a4a2a8445978c00038c4b9a0d35ca7a69"><div class="ttname"><a href="messages_8h.html#a4a2a8445978c00038c4b9a0d35ca7a69">AppMessage</a></div><div class="ttdeci">std::pair&lt; ApiMessage, FileDescriptor &gt; AppMessage</div><div class="ttdef"><b>Definition:</b> <a href="messages_8h_source.html#l00038">messages.h:38</a></div></div>
-<div class="ttc" id="anamespaceshrapnel_1_1audio_html_a53d05b5ded7bb39aff7189392d0566c9"><div class="ttname"><a href="namespaceshrapnel_1_1audio.html#a53d05b5ded7bb39aff7189392d0566c9">shrapnel::audio::i2s_setup</a></div><div class="ttdeci">esp_err_t i2s_setup(gpio_num_t profiling_gpio, shrapnel::parameters::AudioParametersBase *audio_params)</div><div class="ttdef"><b>Definition:</b> <a href="i2s_8cpp_source.html#l00235">i2s.cpp:235</a></div></div>
-<div class="ttc" id="anamespaceshrapnel_1_1audio_html_a5e4994d9de1b430ad5473efe241521aa"><div class="ttname"><a href="namespaceshrapnel_1_1audio.html#a5e4994d9de1b430ad5473efe241521aa">shrapnel::audio::log_i2s_event</a></div><div class="ttdeci">void log_i2s_event(const i2s_event_t &amp;event)</div><div class="ttdef"><b>Definition:</b> <a href="i2s_8cpp_source.html#l00066">i2s.cpp:66</a></div></div>
-<div class="ttc" id="anamespaceshrapnel_1_1audio_html_ab7793cdc1c2c73fcdcba8fea2f35c9c8"><div class="ttname"><a href="namespaceshrapnel_1_1audio.html#ab7793cdc1c2c73fcdcba8fea2f35c9c8">shrapnel::audio::i2s_queue</a></div><div class="ttdeci">QueueHandle_t i2s_queue</div><div class="ttdef"><b>Definition:</b> <a href="i2s_8cpp_source.html#l00052">i2s.cpp:52</a></div></div>
+<div class="ttc" id="anamespaceshrapnel_1_1audio_html_a53d05b5ded7bb39aff7189392d0566c9"><div class="ttname"><a href="namespaceshrapnel_1_1audio.html#a53d05b5ded7bb39aff7189392d0566c9">shrapnel::audio::i2s_setup</a></div><div class="ttdeci">esp_err_t i2s_setup(gpio_num_t profiling_gpio, shrapnel::parameters::AudioParametersBase *audio_params)</div><div class="ttdef"><b>Definition:</b> <a href="i2s_8cpp_source.html#l00239">i2s.cpp:239</a></div></div>
+<div class="ttc" id="anamespaceshrapnel_1_1audio_html_a5e4994d9de1b430ad5473efe241521aa"><div class="ttname"><a href="namespaceshrapnel_1_1audio.html#a5e4994d9de1b430ad5473efe241521aa">shrapnel::audio::log_i2s_event</a></div><div class="ttdeci">void log_i2s_event(const i2s_event_t &amp;event)</div><div class="ttdef"><b>Definition:</b> <a href="i2s_8cpp_source.html#l00067">i2s.cpp:67</a></div></div>
+<div class="ttc" id="anamespaceshrapnel_1_1audio_html_ab7793cdc1c2c73fcdcba8fea2f35c9c8"><div class="ttname"><a href="namespaceshrapnel_1_1audio.html#ab7793cdc1c2c73fcdcba8fea2f35c9c8">shrapnel::audio::i2s_queue</a></div><div class="ttdeci">QueueHandle_t i2s_queue</div><div class="ttdef"><b>Definition:</b> <a href="i2s_8cpp_source.html#l00053">i2s.cpp:53</a></div></div>
 <div class="ttc" id="anamespaceshrapnel_html_a2b47dde02734c93bbdabfd97cb23dd2a"><div class="ttname"><a href="namespaceshrapnel.html#a2b47dde02734c93bbdabfd97cb23dd2a">shrapnel::i2c_setup</a></div><div class="ttdeci">static void i2c_setup(void)</div><div class="ttdef"><b>Definition:</b> <a href="main_8cpp_source.html#l00205">main.cpp:205</a></div></div>
 <div class="ttc" id="anamespaceshrapnel_html_a4bf0b1d7c4fef2839a56059a237d1da6"><div class="ttname"><a href="namespaceshrapnel.html#a4bf0b1d7c4fef2839a56059a237d1da6">shrapnel::connect_handler</a></div><div class="ttdeci">static void connect_handler(void *arg, esp_event_base_t event_base, int32_t event_id, void *event_data)</div><div class="ttdef"><b>Definition:</b> <a href="main_8cpp_source.html#l00121">main.cpp:121</a></div></div>
 <div class="ttc" id="anamespaceshrapnel_html_a62ed101f04b8c40f7fdc427e6b169353"><div class="ttname"><a href="namespaceshrapnel.html#a62ed101f04b8c40f7fdc427e6b169353">shrapnel::start_mdns</a></div><div class="ttdeci">static void start_mdns(void)</div><div class="ttdef"><b>Definition:</b> <a href="main_8cpp_source.html#l00158">main.cpp:158</a></div></div>
-<div class="ttc" id="anamespaceshrapnel_html_a9c85fa6a77cfb97394c46cf0ebe10298"><div class="ttname"><a href="namespaceshrapnel.html#a9c85fa6a77cfb97394c46cf0ebe10298">shrapnel::nvs_debug_print</a></div><div class="ttdeci">void nvs_debug_print()</div><div class="ttdef"><b>Definition:</b> <a href="main_8cpp_source.html#l00442">main.cpp:442</a></div></div>
+<div class="ttc" id="anamespaceshrapnel_html_a9c85fa6a77cfb97394c46cf0ebe10298"><div class="ttname"><a href="namespaceshrapnel.html#a9c85fa6a77cfb97394c46cf0ebe10298">shrapnel::nvs_debug_print</a></div><div class="ttdeci">void nvs_debug_print()</div><div class="ttdef"><b>Definition:</b> <a href="main_8cpp_source.html#l00447">main.cpp:447</a></div></div>
 <div class="ttc" id="anamespaceshrapnel_html_a9f01b77156c5fc53346d256b9735e6f8"><div class="ttname"><a href="namespaceshrapnel.html#a9f01b77156c5fc53346d256b9735e6f8">shrapnel::failed_alloc_callback</a></div><div class="ttdeci">static void failed_alloc_callback(size_t size, uint32_t caps, const char *function_name)</div><div class="ttdef"><b>Definition:</b> <a href="main_8cpp_source.html#l00225">main.cpp:225</a></div></div>
 <div class="ttc" id="anamespaceshrapnel_html_ad3636f58faa95196bef6352b331ed3da"><div class="ttname"><a href="namespaceshrapnel.html#ad3636f58faa95196bef6352b331ed3da">shrapnel::wifi_start_handler</a></div><div class="ttdeci">static void wifi_start_handler(void *arg, esp_event_base_t event_base, int32_t event_id, void *event_data)</div><div class="ttdef"><b>Definition:</b> <a href="main_8cpp_source.html#l00140">main.cpp:140</a></div></div>
 <div class="ttc" id="anamespaceshrapnel_html_ae3cbca1e45f686a5790d51825e2754a2"><div class="ttname"><a href="namespaceshrapnel.html#ae3cbca1e45f686a5790d51825e2754a2">shrapnel::disconnect_handler</a></div><div class="ttdeci">static void disconnect_handler(void *arg, esp_event_base_t event_base, int32_t event_id, void *event_data)</div><div class="ttdef"><b>Definition:</b> <a href="main_8cpp_source.html#l00102">main.cpp:102</a></div></div>
@@ -497,7 +502,7 @@ Variables</h2></td></tr>
 <div class="ttc" id="apcm3060_8h_html_a4b08ec86eb0407470554c4e5c5759521"><div class="ttname"><a href="pcm3060_8h.html#a4b08ec86eb0407470554c4e5c5759521">pcm3060_power_up</a></div><div class="ttdeci">esp_err_t pcm3060_power_up(void)</div><div class="ttdoc">perform power up sequence</div><div class="ttdef"><b>Definition:</b> <a href="pcm3060_8c_source.html#l00051">pcm3060.c:51</a></div></div>
 <div class="ttc" id="apcm3060_8h_html_ae4f3fcba29da4e434a2fb51e429c156b"><div class="ttname"><a href="pcm3060_8h.html#ae4f3fcba29da4e434a2fb51e429c156b">pcm3060_init</a></div><div class="ttdeci">void pcm3060_init(i2c_port_t port, bool adr)</div><div class="ttdoc">Initialise the driver.</div><div class="ttdef"><b>Definition:</b> <a href="pcm3060_8c_source.html#l00045">pcm3060.c:45</a></div></div>
 </div><!-- fragment -->
-<p class="reference">References <a class="el" href="main_8cpp_source.html#l00121">connect_handler()</a>, <a class="el" href="wifi__state__machine_8h_source.html#l00064">shrapnel::wifi::UserEvent::CONNECTED</a>, <a class="el" href="debug_8cpp_source.html#l00026">debug_dump_task_list()</a>, <a class="el" href="main_8cpp_source.html#l00102">disconnect_handler()</a>, <a class="el" href="wifi__state__machine_8h_source.html#l00065">shrapnel::wifi::UserEvent::DISCONNECTED</a>, <a class="el" href="main_8cpp_source.html#l00225">failed_alloc_callback()</a>, <a class="el" href="main_8cpp_source.html#l00205">i2c_setup()</a>, <a class="el" href="i2s_8cpp_source.html#l00052">shrapnel::audio::i2s_queue</a>, <a class="el" href="i2s_8cpp_source.html#l00235">shrapnel::audio::i2s_setup()</a>, <a class="el" href="wifi__state__machine_8h_source.html#l00078">shrapnel::wifi::State::INIT</a>, <a class="el" href="i2s_8cpp_source.html#l00066">shrapnel::audio::log_i2s_event()</a>, <a class="el" href="main_8cpp_source.html#l00442">nvs_debug_print()</a>, <a class="el" href="pcm3060_8c_source.html#l00045">pcm3060_init()</a>, <a class="el" href="pcm3060_8c_source.html#l00051">pcm3060_power_up()</a>, <a class="el" href="desktop_2profiling_8c_source.html#l00022">profiling_init()</a>, <a class="el" href="desktop_2profiling_8c_source.html#l00031">profiling_task()</a>, <a class="el" href="main_8cpp_source.html#l00158">start_mdns()</a>, <a class="el" href="noise__gate_8cpp_source.html#l00040">state</a>, <a class="el" href="wifi__state__machine_8h_source.html#l00137">shrapnel::wifi::WifiStateMachine::state_table</a>, <a class="el" href="wifi__state__machine_8h_source.html#l00136">shrapnel::wifi::WifiStateMachine::transition_table</a>, and <a class="el" href="main_8cpp_source.html#l00140">wifi_start_handler()</a>.</p>
+<p class="reference">References <a class="el" href="main_8cpp_source.html#l00121">connect_handler()</a>, <a class="el" href="wifi__state__machine_8h_source.html#l00064">shrapnel::wifi::UserEvent::CONNECTED</a>, <a class="el" href="debug_8cpp_source.html#l00026">debug_dump_task_list()</a>, <a class="el" href="main_8cpp_source.html#l00102">disconnect_handler()</a>, <a class="el" href="wifi__state__machine_8h_source.html#l00065">shrapnel::wifi::UserEvent::DISCONNECTED</a>, <a class="el" href="main_8cpp_source.html#l00225">failed_alloc_callback()</a>, <a class="el" href="main_8cpp_source.html#l00205">i2c_setup()</a>, <a class="el" href="i2s_8cpp_source.html#l00053">shrapnel::audio::i2s_queue</a>, <a class="el" href="i2s_8cpp_source.html#l00239">shrapnel::audio::i2s_setup()</a>, <a class="el" href="wifi__state__machine_8h_source.html#l00078">shrapnel::wifi::State::INIT</a>, <a class="el" href="i2s_8cpp_source.html#l00067">shrapnel::audio::log_i2s_event()</a>, <a class="el" href="main_8cpp_source.html#l00447">nvs_debug_print()</a>, <a class="el" href="pcm3060_8c_source.html#l00045">pcm3060_init()</a>, <a class="el" href="pcm3060_8c_source.html#l00051">pcm3060_power_up()</a>, <a class="el" href="desktop_2profiling_8c_source.html#l00022">profiling_init()</a>, <a class="el" href="desktop_2profiling_8c_source.html#l00031">profiling_task()</a>, <a class="el" href="main_8cpp_source.html#l00158">start_mdns()</a>, <a class="el" href="noise__gate_8cpp_source.html#l00040">state</a>, <a class="el" href="wifi__state__machine_8h_source.html#l00137">shrapnel::wifi::WifiStateMachine::state_table</a>, <a class="el" href="wifi__state__machine_8h_source.html#l00136">shrapnel::wifi::WifiStateMachine::transition_table</a>, and <a class="el" href="main_8cpp_source.html#l00140">wifi_start_handler()</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -864,22 +869,22 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="main_8cpp_source.html#l00442">442</a> of file <a class="el" href="main_8cpp_source.html">main.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  443</span>{</div>
-<div class="line"><span class="lineno">  444</span>    ESP_LOGI(TAG, <span class="stringliteral">&quot;dumping NVS using C interface&quot;</span>);</div>
-<div class="line"><span class="lineno">  445</span>    nvs_iterator_t it = NULL;</div>
-<div class="line"><span class="lineno">  446</span>    esp_err_t res = nvs_entry_find(<span class="stringliteral">&quot;nvs&quot;</span>, <span class="stringliteral">&quot;persistence&quot;</span>, NVS_TYPE_ANY, &amp;it);</div>
-<div class="line"><span class="lineno">  447</span>    <span class="keywordflow">while</span>(res == ESP_OK)</div>
-<div class="line"><span class="lineno">  448</span>    {</div>
-<div class="line"><span class="lineno">  449</span>        nvs_entry_info_t info;</div>
-<div class="line"><span class="lineno">  450</span>        nvs_entry_info(</div>
-<div class="line"><span class="lineno">  451</span>            it,</div>
-<div class="line"><span class="lineno">  452</span>            &amp;info); <span class="comment">// Can omit error check if parameters are guaranteed to be non-NULL</span></div>
-<div class="line"><span class="lineno">  453</span>        ESP_LOGI(TAG, <span class="stringliteral">&quot;key &#39;%s&#39;, type &#39;%d&#39;&quot;</span>, info.key, info.type);</div>
-<div class="line"><span class="lineno">  454</span>        res = nvs_entry_next(&amp;it);</div>
-<div class="line"><span class="lineno">  455</span>    }</div>
-<div class="line"><span class="lineno">  456</span>    nvs_release_iterator(it);</div>
-<div class="line"><span class="lineno">  457</span>}</div>
+<p class="definition">Definition at line <a class="el" href="main_8cpp_source.html#l00447">447</a> of file <a class="el" href="main_8cpp_source.html">main.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  448</span>{</div>
+<div class="line"><span class="lineno">  449</span>    ESP_LOGI(TAG, <span class="stringliteral">&quot;dumping NVS using C interface&quot;</span>);</div>
+<div class="line"><span class="lineno">  450</span>    nvs_iterator_t it = NULL;</div>
+<div class="line"><span class="lineno">  451</span>    esp_err_t res = nvs_entry_find(<span class="stringliteral">&quot;nvs&quot;</span>, <span class="stringliteral">&quot;persistence&quot;</span>, NVS_TYPE_ANY, &amp;it);</div>
+<div class="line"><span class="lineno">  452</span>    <span class="keywordflow">while</span>(res == ESP_OK)</div>
+<div class="line"><span class="lineno">  453</span>    {</div>
+<div class="line"><span class="lineno">  454</span>        nvs_entry_info_t info;</div>
+<div class="line"><span class="lineno">  455</span>        nvs_entry_info(</div>
+<div class="line"><span class="lineno">  456</span>            it,</div>
+<div class="line"><span class="lineno">  457</span>            &amp;info); <span class="comment">// Can omit error check if parameters are guaranteed to be non-NULL</span></div>
+<div class="line"><span class="lineno">  458</span>        ESP_LOGI(TAG, <span class="stringliteral">&quot;key &#39;%s&#39;, type &#39;%d&#39;&quot;</span>, info.key, info.type);</div>
+<div class="line"><span class="lineno">  459</span>        res = nvs_entry_next(&amp;it);</div>
+<div class="line"><span class="lineno">  460</span>    }</div>
+<div class="line"><span class="lineno">  461</span>    nvs_release_iterator(it);</div>
+<div class="line"><span class="lineno">  462</span>}</div>
 </div><!-- fragment -->
 <p class="reference">Referenced by <a class="el" href="main_8cpp_source.html#l00238">app_main()</a>.</p>
 <div class="dynheader">

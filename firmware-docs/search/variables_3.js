@@ -10,5 +10,6 @@ var searchData=
   ['chorus_5frate_7',['chorus_rate',['../structshrapnel_1_1presets_1_1ParametersData.html#a913ce65ba0a936e4aef2c2701f8be53b',1,'shrapnel::presets::ParametersData']]],
   ['contour_8',['contour',['../structshrapnel_1_1AudioProcessorParameters.html#a851164453c452de2d1d50ac3a10350f2',1,'shrapnel::AudioProcessorParameters::contour()'],['../structshrapnel_1_1presets_1_1ParametersData.html#acef211c2a03e6442cd943fab4cbf8686',1,'shrapnel::presets::ParametersData::contour()']]],
   ['control_9',['control',['../structshrapnel_1_1midi_1_1Message_1_1ControlChange.html#a63472623103c98ec18cc0f2ff0cd67e5',1,'shrapnel::midi::Message::ControlChange']]],
-  ['cpu_5ffreq_5fmhz_10',['cpu_freq_mhz',['../esp32_2profiling_8c.html#a12d55287a43c286880f5a53b5433fce1',1,'profiling.c']]]
+  ['count_10',['count',['../esp32_2profiling_8c.html#a86988a65e0d3ece7990c032c159786d6',1,'profiling.c']]],
+  ['cpu_5ffreq_5fmhz_11',['cpu_freq_mhz',['../esp32_2profiling_8c.html#a12d55287a43c286880f5a53b5433fce1',1,'profiling.c']]]
 ];

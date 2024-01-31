@@ -294,18 +294,18 @@ template&lt;std::size_t N, std::size_t K&gt; </div>
 <div class="fragment"><div class="line"><span class="lineno">   59</span>    {</div>
 <div class="line"><span class="lineno">   60</span>        <span class="comment">// transform b</span></div>
 <div class="line"><span class="lineno">   61</span>        <span class="keyword">auto</span> b_complex = real_to_complex(<a class="code hl_variable" href="namespacewah-smoothing.html#ace613f5c1ec59de365093c823abb6fc7">b</a>);</div>
-<div class="line"><span class="lineno">   62</span>        <a class="code hl_function" href="desktop_2profiling_8c.html#a3171d2be3fbf00e49982243e9869735a">profiling_mark_stage</a>(7);</div>
+<div class="line"><span class="lineno">   62</span>        <a class="code hl_function" href="desktop_2profiling_8c.html#a28c8072350ec5a481c4de96a942e606f">profiling_mark_stage</a>(<span class="stringliteral">&quot;convolution real_to_complex&quot;</span>);</div>
 <div class="line"><span class="lineno">   63</span>        <span class="keywordtype">int</span> rc =</div>
 <div class="line"><span class="lineno">   64</span>            dsps_fft4r_fc32(<span class="keyword">reinterpret_cast&lt;</span><span class="keywordtype">float</span> *<span class="keyword">&gt;</span>(b_complex.data()), N);</div>
 <div class="line"><span class="lineno">   65</span>        assert(rc == ESP_OK);</div>
-<div class="line"><span class="lineno">   66</span>        <a class="code hl_function" href="desktop_2profiling_8c.html#a3171d2be3fbf00e49982243e9869735a">profiling_mark_stage</a>(8);</div>
+<div class="line"><span class="lineno">   66</span>        <a class="code hl_function" href="desktop_2profiling_8c.html#a28c8072350ec5a481c4de96a942e606f">profiling_mark_stage</a>(<span class="stringliteral">&quot;convolution dsps_fft4r_fc32&quot;</span>);</div>
 <div class="line"><span class="lineno">   67</span>        dsps_bit_rev4r_fc32(<span class="keyword">reinterpret_cast&lt;</span><span class="keywordtype">float</span> *<span class="keyword">&gt;</span>(b_complex.data()), N);</div>
-<div class="line"><span class="lineno">   68</span>        <a class="code hl_function" href="desktop_2profiling_8c.html#a3171d2be3fbf00e49982243e9869735a">profiling_mark_stage</a>(9);</div>
+<div class="line"><span class="lineno">   68</span>        <a class="code hl_function" href="desktop_2profiling_8c.html#a28c8072350ec5a481c4de96a942e606f">profiling_mark_stage</a>(<span class="stringliteral">&quot;convolution dsps_bit_rev4r_fc32&quot;</span>);</div>
 <div class="line"><span class="lineno">   69</span> </div>
 <div class="line"><span class="lineno">   70</span>        <span class="comment">// multiply A * B</span></div>
 <div class="line"><span class="lineno">   71</span>        std::array&lt;std::complex&lt;float&gt;, N&gt; multiplied;</div>
 <div class="line"><span class="lineno">   72</span>        <a class="code hl_function" href="classshrapnel_1_1dsp_1_1FastConvolution.html#af1edb28634e2a86d0223e4bf56234650">complex_multiply</a>(a_complex, b_complex, multiplied);</div>
-<div class="line"><span class="lineno">   73</span>        <a class="code hl_function" href="desktop_2profiling_8c.html#a3171d2be3fbf00e49982243e9869735a">profiling_mark_stage</a>(10);</div>
+<div class="line"><span class="lineno">   73</span>        <a class="code hl_function" href="desktop_2profiling_8c.html#a28c8072350ec5a481c4de96a942e606f">profiling_mark_stage</a>(<span class="stringliteral">&quot;convolution complex_multiply&quot;</span>);</div>
 <div class="line"><span class="lineno">   74</span> </div>
 <div class="line"><span class="lineno">   75</span>        <span class="comment">// transform result</span></div>
 <div class="line"><span class="lineno">   76</span>        <span class="comment">// Inverse transform achieved by complex conjugating the input and</span></div>
@@ -316,21 +316,21 @@ template&lt;std::size_t N, std::size_t K&gt; </div>
 <div class="line"><span class="lineno">   81</span>        <span class="comment">// There is no inverse transform provided by esp-dsp.</span></div>
 <div class="line"><span class="lineno">   82</span>        <span class="keyword">auto</span> multiplied_ptr = <span class="keyword">reinterpret_cast&lt;</span><span class="keywordtype">float</span> *<span class="keyword">&gt;</span>(multiplied.data());</div>
 <div class="line"><span class="lineno">   83</span>        dsps_mulc_f32(multiplied_ptr + 1, multiplied_ptr + 1, N, -1, 2, 2);</div>
-<div class="line"><span class="lineno">   84</span>        <a class="code hl_function" href="desktop_2profiling_8c.html#a3171d2be3fbf00e49982243e9869735a">profiling_mark_stage</a>(11);</div>
+<div class="line"><span class="lineno">   84</span>        <a class="code hl_function" href="desktop_2profiling_8c.html#a28c8072350ec5a481c4de96a942e606f">profiling_mark_stage</a>(<span class="stringliteral">&quot;convolution dsps_mulc_f32&quot;</span>);</div>
 <div class="line"><span class="lineno">   85</span>        rc = (dsps_fft4r_fc32(multiplied_ptr, N));</div>
 <div class="line"><span class="lineno">   86</span>        assert(rc == ESP_OK);</div>
-<div class="line"><span class="lineno">   87</span>        <a class="code hl_function" href="desktop_2profiling_8c.html#a3171d2be3fbf00e49982243e9869735a">profiling_mark_stage</a>(12);</div>
+<div class="line"><span class="lineno">   87</span>        <a class="code hl_function" href="desktop_2profiling_8c.html#a28c8072350ec5a481c4de96a942e606f">profiling_mark_stage</a>(<span class="stringliteral">&quot;convolution dsps_fft4r_fc32&quot;</span>);</div>
 <div class="line"><span class="lineno">   88</span>        dsps_bit_rev4r_fc32(multiplied_ptr, N);</div>
-<div class="line"><span class="lineno">   89</span>        <a class="code hl_function" href="desktop_2profiling_8c.html#a3171d2be3fbf00e49982243e9869735a">profiling_mark_stage</a>(13);</div>
+<div class="line"><span class="lineno">   89</span>        <a class="code hl_function" href="desktop_2profiling_8c.html#a28c8072350ec5a481c4de96a942e606f">profiling_mark_stage</a>(<span class="stringliteral">&quot;convolution dsps_fft4r_fc32&quot;</span>);</div>
 <div class="line"><span class="lineno">   90</span> </div>
 <div class="line"><span class="lineno">   91</span>        complex_to_real(multiplied, out);</div>
-<div class="line"><span class="lineno">   92</span>        <a class="code hl_function" href="desktop_2profiling_8c.html#a3171d2be3fbf00e49982243e9869735a">profiling_mark_stage</a>(14);</div>
+<div class="line"><span class="lineno">   92</span>        <a class="code hl_function" href="desktop_2profiling_8c.html#a28c8072350ec5a481c4de96a942e606f">profiling_mark_stage</a>(<span class="stringliteral">&quot;convolution complex_to_real&quot;</span>);</div>
 <div class="line"><span class="lineno">   93</span> </div>
 <div class="line"><span class="lineno">   94</span>        dsps_mulc_f32(out.data(), out.data(), N, scale_factor, 1, 1);</div>
-<div class="line"><span class="lineno">   95</span>        <a class="code hl_function" href="desktop_2profiling_8c.html#a3171d2be3fbf00e49982243e9869735a">profiling_mark_stage</a>(15);</div>
+<div class="line"><span class="lineno">   95</span>        <a class="code hl_function" href="desktop_2profiling_8c.html#a28c8072350ec5a481c4de96a942e606f">profiling_mark_stage</a>(<span class="stringliteral">&quot;dsps_mulc_f32&quot;</span>);</div>
 <div class="line"><span class="lineno">   96</span>    }</div>
 <div class="ttc" id="aclassshrapnel_1_1dsp_1_1FastConvolution_html_af1edb28634e2a86d0223e4bf56234650"><div class="ttname"><a href="classshrapnel_1_1dsp_1_1FastConvolution.html#af1edb28634e2a86d0223e4bf56234650">shrapnel::dsp::FastConvolution::complex_multiply</a></div><div class="ttdeci">static void complex_multiply(const std::array&lt; std::complex&lt; float &gt;, N &gt; &amp;a, const std::array&lt; std::complex&lt; float &gt;, N &gt; &amp;b, std::array&lt; std::complex&lt; float &gt;, N &gt; &amp;out)</div><div class="ttdef"><b>Definition:</b> <a href="fast__convolution_8h_source.html#l00125">fast_convolution.h:125</a></div></div>
-<div class="ttc" id="adesktop_2profiling_8c_html_a3171d2be3fbf00e49982243e9869735a"><div class="ttname"><a href="desktop_2profiling_8c.html#a3171d2be3fbf00e49982243e9869735a">profiling_mark_stage</a></div><div class="ttdeci">void profiling_mark_stage(unsigned int stage)</div><div class="ttdef"><b>Definition:</b> <a href="desktop_2profiling_8c_source.html#l00028">profiling.c:28</a></div></div>
+<div class="ttc" id="adesktop_2profiling_8c_html_a28c8072350ec5a481c4de96a942e606f"><div class="ttname"><a href="desktop_2profiling_8c.html#a28c8072350ec5a481c4de96a942e606f">profiling_mark_stage</a></div><div class="ttdeci">void profiling_mark_stage(const char *stage)</div><div class="ttdef"><b>Definition:</b> <a href="desktop_2profiling_8c_source.html#l00028">profiling.c:28</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="wah-smoothing_8py_source.html#l00033">wah-smoothing::b</a>, <a class="el" href="fast__convolution_8h_source.html#l00125">shrapnel::dsp::FastConvolution&lt; N, K &gt;::complex_multiply()</a>, and <a class="el" href="desktop_2profiling_8c_source.html#l00028">profiling_mark_stage()</a>.</p>
 <div class="dynheader">
