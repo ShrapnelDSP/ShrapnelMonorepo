@@ -1,6 +1,7 @@
 var classshrapnel_1_1persistence_1_1EspCrud =
 [
     [ "EspCrud", "classshrapnel_1_1persistence_1_1EspCrud.html#a618958ad06b98b3d6310383d949c683f", null ],
+    [ "~EspCrud", "classshrapnel_1_1persistence_1_1EspCrud.html#a917b1aeb36c9dc9cf3028c457c370cd0", null ],
     [ "create", "classshrapnel_1_1persistence_1_1EspCrud.html#aa8aa11ef4d54cb9915c2feadde7a74fe", null ],
     [ "destroy", "classshrapnel_1_1persistence_1_1EspCrud.html#a469359978bc57399024f0e7a42bc78e7", null ],
     [ "for_each", "classshrapnel_1_1persistence_1_1EspCrud.html#a049aedb40a63488e7caf3bfe8847d2b3", null ],

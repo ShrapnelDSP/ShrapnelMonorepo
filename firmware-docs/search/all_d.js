@@ -31,6 +31,6 @@ var searchData=
   ['midiuartbase_28',['MidiUartBase',['../classshrapnel_1_1midi_1_1MidiUartBase.html',1,'shrapnel::midi']]],
   ['minor_29',['minor',['../namespacewah.html#ad960e329d3b178d3fcf3bc0552a4f302',1,'wah']]],
   ['mix_30',['mix',['../structshrapnel_1_1AudioProcessorParameters.html#a9fb06b1c2a1949abbe9c19a0e83fe797',1,'shrapnel::AudioProcessorParameters']]],
-  ['mode_31',['mode',['../structshrapnel_1_1midi_1_1Mapping.html#ad02ebea6e6428980d752a6f3844bf21f',1,'shrapnel::midi::Mapping']]],
-  ['mode_32',['Mode',['../structshrapnel_1_1midi_1_1Mapping.html#a9d3978518402ec5df1963f1b8c0a7013',1,'shrapnel::midi::Mapping']]]
+  ['mode_31',['Mode',['../structshrapnel_1_1midi_1_1Mapping.html#a9d3978518402ec5df1963f1b8c0a7013',1,'shrapnel::midi::Mapping']]],
+  ['mode_32',['mode',['../structshrapnel_1_1midi_1_1Mapping.html#ad02ebea6e6428980d752a6f3844bf21f',1,'shrapnel::midi::Mapping']]]
 ];

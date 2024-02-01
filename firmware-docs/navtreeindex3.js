@@ -1,5 +1,11 @@
 var NAVTREEINDEX3 =
 {
+"globals_type.html":[5,1,3],
+"globals_vars.html":[5,1,2],
+"hardware_8h.html":[5,0,1,0,7,0,0],
+"hardware_8h_source.html":[5,0,1,0,7,0,0],
+"heap_8h.html":[5,0,1,0,8,0,0],
+"heap_8h_source.html":[5,0,1,0,8,0,0],
 "hierarchy.html":[4,2],
 "i2c_8c.html":[5,0,1,0,9,1],
 "i2c_8c.html#a45e8e37789f0b27a7fe24b58795787f7":[5,0,1,0,9,1,1],
@@ -243,11 +249,5 @@ var NAVTREEINDEX3 =
 "namespaceshrapnel_1_1api.html#aae4bead7e4f0feb41b93b10d00cd7e5e":[2,0,0,0,60],
 "namespaceshrapnel_1_1api.html#aae4bead7e4f0feb41b93b10d00cd7e5e":[2,0,0,0,61],
 "namespaceshrapnel_1_1api.html#ab86ddc038655bba356e0b1ad8a726d56":[2,0,0,0,8],
-"namespaceshrapnel_1_1api.html#aba8abd39b6c03ad3b39ea2cf6b72a8a7":[2,0,0,0,48],
-"namespaceshrapnel_1_1api.html#abb2daa1d7735e5b18dae9a8b2cfeb9fc":[2,0,0,0,50],
-"namespaceshrapnel_1_1api.html#abb2daa1d7735e5b18dae9a8b2cfeb9fc":[2,0,0,0,49],
-"namespaceshrapnel_1_1api.html#acaff6312d226c4d11a7dc6dccd673801":[2,0,0,0,20],
-"namespaceshrapnel_1_1api.html#acd612fcad8366cd6919f26a39e4a269f":[2,0,0,0,40],
-"namespaceshrapnel_1_1api.html#ad0d2a6c0ea0cb5a5dd87a24ee2360906":[2,0,0,0,7],
-"namespaceshrapnel_1_1api.html#ad0d2a6c0ea0cb5a5dd87a24ee2360906":[2,0,0,0,9]
+"namespaceshrapnel_1_1api.html#aba8abd39b6c03ad3b39ea2cf6b72a8a7":[2,0,0,0,48]
 };

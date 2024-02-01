@@ -1,5 +1,7 @@
 var classshrapnel_1_1persistence_1_1EspStorage =
 [
+    [ "EspStorage", "classshrapnel_1_1persistence_1_1EspStorage.html#ad278f5904bf3eb25ab9945dd479a6797", null ],
+    [ "~EspStorage", "classshrapnel_1_1persistence_1_1EspStorage.html#a29306deb4e4d455fbf6f210e15eaabb8", null ],
     [ "load", "classshrapnel_1_1persistence_1_1EspStorage.html#a40bb12639a1720734d4f72f7fd3496ce", null ],
     [ "load", "classshrapnel_1_1persistence_1_1EspStorage.html#a4e649b4c0cbe19d599f3bdeae86d675d", null ],
     [ "load", "classshrapnel_1_1persistence_1_1EspStorage.html#af0735fcd718150ffc6a67e44786c828d", null ],
