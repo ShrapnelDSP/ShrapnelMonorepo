@@ -20,6 +20,7 @@
 #pragma once
 
 #include "persistence.h"
+#include <nvs.h>
 
 namespace shrapnel::persistence {
 
@@ -30,15 +31,21 @@ namespace shrapnel::persistence {
 class EspStorage final : public Storage
 {
 public:
+    EspStorage();
+    ~EspStorage();
+
     [[nodiscard]] int save(const char *key, std::span<uint8_t> data) override;
     [[nodiscard]] int save(const char *key, etl::string_view data) override;
     [[nodiscard]] int save(const char *key, uint32_t data) override;
-    [[nodiscard]] virtual int save(const char *key, float data) override;
+    [[nodiscard]] int save(const char *key, float data) override;
 
     [[nodiscard]] int load(const char *key, std::span<uint8_t> &data) override;
     [[nodiscard]] int load(const char *key, etl::istring &data) override;
     [[nodiscard]] int load(const char *key, uint32_t &data) override;
     [[nodiscard]] int load(const char *key, float &data) override;
+
+private:
+    nvs_handle_t nvs_handle = 0;
 };
 
 } // namespace shrapnel::persistence

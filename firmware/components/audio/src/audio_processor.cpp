@@ -60,10 +60,10 @@ void AudioProcessor::process(std::span<float, 512> fbuf)
     gate_set_hold(*parameters.gate.hold);
     gate_set_release(*parameters.gate.release);
 
-    profiling_mark_stage(0);
+    profiling_mark_stage("start");
 
     gate_analyse(fbuf.data(), fbuf.size());
-    profiling_mark_stage(1);
+    profiling_mark_stage("gate_analyze");
 
     valvestate.set_gain(*parameters.amplifier.gain,
                         *parameters.amplifier.channel);
@@ -72,31 +72,31 @@ void AudioProcessor::process(std::span<float, 512> fbuf)
                        *parameters.amplifier.treble);
     valvestate.set_contour(*parameters.amplifier.contour);
     valvestate.set_volume(decibel_to_ratio(*parameters.amplifier.volume));
-    profiling_mark_stage(2);
+    profiling_mark_stage("valvestate parameters");
 
     valvestate.process(fbuf);
-    profiling_mark_stage(3);
+    profiling_mark_stage("valvestate process");
 
     if(*parameters.gate.bypass < 0.5f)
     {
         gate_process(fbuf.data(), fbuf.size());
     }
-    profiling_mark_stage(4);
+    profiling_mark_stage("gate done");
 
     /* speaker IR */
     speaker.process(fbuf);
-    profiling_mark_stage(17);
+    profiling_mark_stage("speaker done");
 
     chorus.set_modulation_rate_hz(*parameters.chorus.rate);
     chorus.set_modulation_depth(*parameters.chorus.depth);
     chorus.set_modulation_mix(*parameters.chorus.mix);
-    profiling_mark_stage(18);
+    profiling_mark_stage("chorus parameters");
 
     if(*parameters.chorus.bypass < 0.5f)
     {
         chorus.process(fbuf);
     }
-    profiling_mark_stage(19);
+    profiling_mark_stage("chorus done");
 
     wah.set_expression_position(*parameters.wah.position);
     wah.set_vocal(*parameters.wah.vocal);

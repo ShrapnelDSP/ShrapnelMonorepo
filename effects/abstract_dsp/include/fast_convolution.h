@@ -59,18 +59,18 @@ public:
     {
         // transform b
         auto b_complex = real_to_complex(b);
-        profiling_mark_stage(7);
+        profiling_mark_stage("convolution real_to_complex");
         int rc =
             dsps_fft4r_fc32(reinterpret_cast<float *>(b_complex.data()), N);
         assert(rc == ESP_OK);
-        profiling_mark_stage(8);
+        profiling_mark_stage("convolution dsps_fft4r_fc32");
         dsps_bit_rev4r_fc32(reinterpret_cast<float *>(b_complex.data()), N);
-        profiling_mark_stage(9);
+        profiling_mark_stage("convolution dsps_bit_rev4r_fc32");
 
         // multiply A * B
         std::array<std::complex<float>, N> multiplied;
         complex_multiply(a_complex, b_complex, multiplied);
-        profiling_mark_stage(10);
+        profiling_mark_stage("convolution complex_multiply");
 
         // transform result
         // Inverse transform achieved by complex conjugating the input and
@@ -81,18 +81,18 @@ public:
         // There is no inverse transform provided by esp-dsp.
         auto multiplied_ptr = reinterpret_cast<float *>(multiplied.data());
         dsps_mulc_f32(multiplied_ptr + 1, multiplied_ptr + 1, N, -1, 2, 2);
-        profiling_mark_stage(11);
+        profiling_mark_stage("convolution dsps_mulc_f32");
         rc = (dsps_fft4r_fc32(multiplied_ptr, N));
         assert(rc == ESP_OK);
-        profiling_mark_stage(12);
+        profiling_mark_stage("convolution dsps_fft4r_fc32");
         dsps_bit_rev4r_fc32(multiplied_ptr, N);
-        profiling_mark_stage(13);
+        profiling_mark_stage("convolution dsps_fft4r_fc32");
 
         complex_to_real(multiplied, out);
-        profiling_mark_stage(14);
+        profiling_mark_stage("convolution complex_to_real");
 
         dsps_mulc_f32(out.data(), out.data(), N, scale_factor, 1, 1);
-        profiling_mark_stage(15);
+        profiling_mark_stage("dsps_mulc_f32");
     }
 
 private:

@@ -17,6 +17,8 @@
  * ShrapnelDSP. If not, see <https://www.gnu.org/licenses/>.
  */
 
+// #define LOG_LOCAL_LEVEL ESP_LOG_VERBOSE
+
 #include "driver/i2s.h"
 #include "audio_processor.h"
 #include "float_convert.h"
@@ -25,7 +27,6 @@
 
 #include "esp_log.h"
 
-#include <math.h> //for roundf
 #include <stdint.h>
 #include <stdio.h>
 
@@ -35,7 +36,7 @@
 
 #define DMA_BUF_COUNT (3)
 
-#define TASK_STACK (35000)
+#define TASK_STACK (36000)
 
 /* Guarantee no preemption by esp-idf tasks.
  *
@@ -89,6 +90,9 @@ void log_i2s_event(const i2s_event_t &e)
 static void i2s_processing_task(void *param)
 {
     (void)param;
+
+    esp_log_level_set(TAG, ESP_LOG_VERBOSE);
+
     auto audio_param =
         reinterpret_cast<shrapnel::parameters::AudioParametersBase *>(param);
     size_t tx_rx_size;
@@ -317,7 +321,7 @@ void process_samples(std::span<int32_t, 2 * DMA_BUF_SIZE> buf,
 
         buf[i] = float_to_int32(fbuf[i / 2]);
     }
-    profiling_mark_stage(20);
+    profiling_mark_stage("end");
 
     profiling_stop();
     gpio_set_level(g_profiling_gpio, 0);
