@@ -297,7 +297,7 @@ extern "C" void app_main(void)
     /* Start the mdns service */
     start_mdns();
 
-#if 1
+#if 0
     rc = xTaskCreate(profiling_task,
                      "i2s profiling",
                      2000,
