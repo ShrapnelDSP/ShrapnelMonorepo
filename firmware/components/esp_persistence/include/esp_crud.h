@@ -58,27 +58,30 @@ public:
         : part_name{a_part_name},
           namespace_name{a_namespace_name}
     {
+        ESP_ERROR_CHECK(nvs_open(namespace_name, NVS_READWRITE, &nvs_handle));
+
+        ESP_LOGI(TAG,
+                 "Started EspCrud for partition %s namespace %s with handle "
+                 "%" PRIu32,
+                 part_name,
+                 namespace_name,
+                 nvs_handle);
     }
+
+    ~EspCrud() final { nvs_close(nvs_handle); }
 
     [[nodiscard]] int create(const std::span<uint8_t> &data,
                              uint32_t &id_out) override
     {
-        nvs_handle_t nvs_handle;
         esp_err_t err;
-        int rc = -1;
 
         // start at 0 in case last ID has not been saved to NVS
         uint32_t id = 0;
 
         ESP_ERROR_CHECK_WITHOUT_ABORT(
-            err = nvs_open(namespace_name, NVS_READWRITE, &nvs_handle));
-        if(err != ESP_OK)
-            goto out;
-
-        ESP_ERROR_CHECK_WITHOUT_ABORT(
             err = nvs_get_u32(nvs_handle, last_id_name, &id));
         if(err != ESP_OK && err != ESP_ERR_NVS_NOT_FOUND)
-            goto out;
+            return -1;
 
         id++;
         id_out = id;
@@ -87,43 +90,32 @@ public:
             err = nvs_set_blob(
                 nvs_handle, id_to_key(id).c_str(), data.data(), data.size()));
         if(err != ESP_OK)
-            goto out;
+            return -1;
 
         ESP_ERROR_CHECK_WITHOUT_ABORT(
             err = nvs_set_u32(nvs_handle, last_id_name, id));
         if(err != ESP_OK && err != ESP_ERR_NVS_NOT_FOUND)
-            goto out;
+            return -1;
 
         ESP_ERROR_CHECK_WITHOUT_ABORT(err = nvs_commit(nvs_handle));
         if(err != ESP_OK)
-            goto out;
+            return -1;
 
-        rc = 0;
-
-    out:
-        nvs_close(nvs_handle);
-        return rc;
+        return 0;
     }
 
     /// \return  non-zero on error
     [[nodiscard]] int read(uint32_t id, std::span<uint8_t> &buffer) override
     {
-        nvs_handle_t nvs_handle;
         esp_err_t err;
         std::size_t required_size = 0;
-        int rc = -1;
-
-        ESP_ERROR_CHECK_WITHOUT_ABORT(
-            err = nvs_open(namespace_name, NVS_READONLY, &nvs_handle));
-        if(err != ESP_OK)
-            goto out;
 
         // query the required size
         ESP_ERROR_CHECK_WITHOUT_ABORT(
             err = nvs_get_blob(
                 nvs_handle, id_to_key(id).c_str(), nullptr, &required_size));
         if(err != ESP_OK)
-            goto out;
+            return -1;
 
         if(required_size > buffer.size())
         {
@@ -131,7 +123,7 @@ public:
                      "Not enough space in the output buffer. Need %zu, got %zu",
                      required_size,
                      buffer.size());
-            goto out;
+            return -1;
         }
 
         ESP_ERROR_CHECK_WITHOUT_ABORT(err = nvs_get_blob(nvs_handle,
@@ -139,71 +131,46 @@ public:
                                                          buffer.data(),
                                                          &required_size));
         if(err != ESP_OK)
-            goto out;
+            return -1;
 
         buffer = buffer.subspan(0, required_size);
-        rc = 0;
-    out:
-        nvs_close(nvs_handle);
-        return rc;
+        return 0;
     };
 
     /// \return  non-zero on error
     [[nodiscard]] int update(uint32_t id,
                              const std::span<uint8_t> &data) override
     {
-        nvs_handle_t nvs_handle;
         esp_err_t err;
-        int rc = -1;
-
-        ESP_ERROR_CHECK_WITHOUT_ABORT(
-            err = nvs_open(namespace_name, NVS_READWRITE, &nvs_handle));
-        if(err != ESP_OK)
-            goto out;
 
         ESP_ERROR_CHECK_WITHOUT_ABORT(
             err = nvs_set_blob(
                 nvs_handle, id_to_key(id).c_str(), data.data(), data.size()));
         if(err != ESP_OK)
-            goto out;
+            return -1;
 
         ESP_ERROR_CHECK_WITHOUT_ABORT(err = nvs_commit(nvs_handle));
         if(err != ESP_OK)
-            goto out;
+            return -1;
 
-        rc = 0;
-
-    out:
-        nvs_close(nvs_handle);
-        return rc;
+        return 0;
     };
 
     /// \return  non-zero on error
     [[nodiscard]] int destroy(uint32_t id) override
     {
-        nvs_handle_t nvs_handle;
         esp_err_t err;
-        int rc = -1;
-
-        ESP_ERROR_CHECK_WITHOUT_ABORT(
-            err = nvs_open(namespace_name, NVS_READWRITE, &nvs_handle));
-        if(err != ESP_OK)
-            goto out;
 
         ESP_ERROR_CHECK_WITHOUT_ABORT(
             err = nvs_erase_key(nvs_handle, id_to_key(id).c_str()));
         if(err != ESP_OK)
-            goto out;
+            return -1;
 
         ESP_ERROR_CHECK_WITHOUT_ABORT(err = nvs_commit(nvs_handle));
         if(err != ESP_OK)
-            goto out;
+            return -1;
 
-        rc = 0;
-
-    out:
-        nvs_close(nvs_handle);
-        return rc;
+        return 0;
     };
 
     void for_each(etl::delegate<void(uint32_t, const std::span<uint8_t> &)>
@@ -401,6 +368,7 @@ private:
 
     const char *const part_name;
     const char *const namespace_name;
+    nvs_handle_t nvs_handle = 0;
 
     static constexpr char last_id_name[] = "last_id";
     static constexpr char TAG[] = "esp_crud";

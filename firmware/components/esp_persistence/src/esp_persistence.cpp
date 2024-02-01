@@ -29,6 +29,8 @@ namespace shrapnel::persistence {
 EspStorage::EspStorage()
 {
     ESP_ERROR_CHECK(nvs_open(STORAGE_NAMESPACE, NVS_READWRITE, &nvs_handle));
+
+    ESP_LOGI(TAG, "Started EspStorage for with handle %" PRIu32, nvs_handle);
 }
 
 EspStorage::~EspStorage() { nvs_close(nvs_handle); }
