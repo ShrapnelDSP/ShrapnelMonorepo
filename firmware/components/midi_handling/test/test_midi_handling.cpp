@@ -27,6 +27,8 @@
 namespace {
 
 using namespace shrapnel;
+using shrapnel::midi::Mapping;
+using shrapnel::midi::Message;
 
 using id_t = shrapnel::parameters::id_t;
 using ::testing::FloatEq;
@@ -40,6 +42,21 @@ public:
     MOCK_METHOD(float, get, (const id_t &param), ());
 };
 
+#if 0
+class MockMidiMappingManager
+{
+public:
+    using MapType = std::map<uint32_t, Mapping>;
+    
+    MapType::iterator begin() { return mappings.begin(); }
+
+    MapType::iterator end() { return mappings.end(); }
+    
+private:
+    MapType mappings;
+};
+#endif
+
 // FIXME: instead of loading the preset, then loading the parameters in the
 // handler, inject a preset loader and verify that that it calls the preset
 // loader correctly. It is doing too much low level stuff at the moment.
@@ -50,7 +67,7 @@ TEST(MidiHandling, ProcessParameter)
         std::make_shared<etl::map<midi::Mapping::id_t, midi::Mapping, 5>>();
     auto parameters_mock = std::make_shared<MockAudioParameters>();
 
-    auto sut = MidiMessageHandler(parameters_mock, mappings);
+    auto sut = MidiMessageHandler(parameters_mock, mappings, );
 
     EXPECT_CALL(*parameters_mock, update(id_t("gain"), 0.f));
     sut.process_message({
@@ -61,8 +78,8 @@ TEST(MidiHandling, ProcessParameter)
     EXPECT_CALL(*parameters_mock, update(id_t("gain"), 1.f));
     sut.process_message({
         .channel{1},
-        .parameters{
-            Message::ControlChange{.control = 2, .value = CC_VALUE_MAX}},
+        .parameters{Message::ControlChange{
+            .control = 2, .value = shrapnel::midi::CC_VALUE_MAX}},
     });
 
     EXPECT_CALL(*parameters_mock, update).Times(0);

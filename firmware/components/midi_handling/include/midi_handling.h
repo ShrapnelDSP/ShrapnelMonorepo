@@ -24,6 +24,7 @@
 #include "midi_protocol.h"
 #include "presets_manager.h"
 #include "selected_preset_manager.h"
+#include "messages.h"
 
 namespace shrapnel {
 
