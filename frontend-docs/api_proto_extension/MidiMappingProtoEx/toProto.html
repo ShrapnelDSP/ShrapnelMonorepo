@@ -76,12 +76,26 @@
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
   <pre class="language-dart"><code class="language-dart">midi_mapping_pb.Mapping toProto() {
-  return midi_mapping_pb.Mapping(
-    midiChannel: midiChannel,
-    ccNumber: ccNumber,
-    mode: mode.toProto(),
-    parameterName: parameterId,
-  );
+  return switch (this) {
+    MidiMappingToggle(:final parameterId) =&gt; midi_mapping_pb.Mapping(
+        midiChannel: midiChannel,
+        ccNumber: ccNumber,
+        mode: MidiMappingMode.toggle.toProto(),
+        parameterName: parameterId,
+      ),
+    MidiMappingParameter(:final parameterId) =&gt; midi_mapping_pb.Mapping(
+        midiChannel: midiChannel,
+        ccNumber: ccNumber,
+        mode: MidiMappingMode.parameter.toProto(),
+        parameterName: parameterId,
+      ),
+    MidiMappingButton(:final presetId) =&gt; midi_mapping_pb.Mapping(
+        midiChannel: midiChannel,
+        ccNumber: ccNumber,
+        mode: MidiMappingMode.button.toProto(),
+        presetId: presetId,
+      ),
+  };
 }</code></pre>
 </section>
 

@@ -574,20 +574,20 @@ template&lt;&gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="midi__mapping__api_8cpp_source.html#l00133">133</a> of file <a class="el" href="midi__mapping__api_8cpp_source.html">midi_mapping_api.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  134</span>{</div>
-<div class="line"><span class="lineno">  135</span>    <span class="keyword">auto</span> stream = pb_istream_from_buffer(buffer.data(), buffer.size());</div>
-<div class="line"><span class="lineno">  136</span>    shrapnel_midi_mapping_Mapping message =</div>
-<div class="line"><span class="lineno">  137</span>        shrapnel_midi_mapping_Mapping_init_zero;</div>
-<div class="line"><span class="lineno">  138</span>    <span class="keywordtype">bool</span> success =</div>
-<div class="line"><span class="lineno">  139</span>        pb_decode(&amp;stream, &amp;shrapnel_midi_mapping_Mapping_msg, &amp;message);</div>
-<div class="line"><span class="lineno">  140</span>    <span class="keywordflow">if</span>(!success)</div>
-<div class="line"><span class="lineno">  141</span>    {</div>
-<div class="line"><span class="lineno">  142</span>        <span class="keywordflow">return</span> std::nullopt;</div>
-<div class="line"><span class="lineno">  143</span>    }</div>
-<div class="line"><span class="lineno">  144</span> </div>
-<div class="line"><span class="lineno">  145</span>    <span class="keywordflow">return</span> message;</div>
-<div class="line"><span class="lineno">  146</span>}</div>
+<p class="definition">Definition at line <a class="el" href="midi__mapping__api_8cpp_source.html#l00135">135</a> of file <a class="el" href="midi__mapping__api_8cpp_source.html">midi_mapping_api.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  136</span>{</div>
+<div class="line"><span class="lineno">  137</span>    <span class="keyword">auto</span> stream = pb_istream_from_buffer(buffer.data(), buffer.size());</div>
+<div class="line"><span class="lineno">  138</span>    shrapnel_midi_mapping_Mapping message =</div>
+<div class="line"><span class="lineno">  139</span>        shrapnel_midi_mapping_Mapping_init_zero;</div>
+<div class="line"><span class="lineno">  140</span>    <span class="keywordtype">bool</span> success =</div>
+<div class="line"><span class="lineno">  141</span>        pb_decode(&amp;stream, &amp;shrapnel_midi_mapping_Mapping_msg, &amp;message);</div>
+<div class="line"><span class="lineno">  142</span>    <span class="keywordflow">if</span>(!success)</div>
+<div class="line"><span class="lineno">  143</span>    {</div>
+<div class="line"><span class="lineno">  144</span>        <span class="keywordflow">return</span> std::nullopt;</div>
+<div class="line"><span class="lineno">  145</span>    }</div>
+<div class="line"><span class="lineno">  146</span> </div>
+<div class="line"><span class="lineno">  147</span>    <span class="keywordflow">return</span> message;</div>
+<div class="line"><span class="lineno">  148</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -609,24 +609,24 @@ template&lt;&gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="midi__mapping__api_8cpp_source.html#l00633">633</a> of file <a class="el" href="midi__mapping__api_8cpp_source.html">midi_mapping_api.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  634</span>{</div>
-<div class="line"><span class="lineno">  635</span>    <span class="keyword">auto</span> proto = from_bytes&lt;shrapnel_midi_mapping_Mapping&gt;(buffer);</div>
-<div class="line"><span class="lineno">  636</span>    <span class="keywordflow">if</span>(!proto.has_value())</div>
-<div class="line"><span class="lineno">  637</span>    {</div>
-<div class="line"><span class="lineno">  638</span>        <span class="keywordflow">return</span> std::nullopt;</div>
-<div class="line"><span class="lineno">  639</span>    }</div>
-<div class="line"><span class="lineno">  640</span> </div>
-<div class="line"><span class="lineno">  641</span>    <a class="code hl_struct" href="structshrapnel_1_1midi_1_1Mapping.html">midi::Mapping</a> out{};</div>
-<div class="line"><span class="lineno">  642</span>    <span class="keywordtype">int</span> rc = <a class="code hl_function" href="namespaceshrapnel_1_1api.html#af21ae755eaf9ca3e8e385e5e4f436025">from_proto</a>(*proto, out);</div>
-<div class="line"><span class="lineno">  643</span>    <span class="keywordflow">if</span>(rc != 0)</div>
-<div class="line"><span class="lineno">  644</span>    {</div>
-<div class="line"><span class="lineno">  645</span>        <span class="keywordflow">return</span> std::nullopt;</div>
-<div class="line"><span class="lineno">  646</span>    }</div>
-<div class="line"><span class="lineno">  647</span>    <span class="keywordflow">return</span> out;</div>
-<div class="line"><span class="lineno">  648</span>}</div>
-<div class="ttc" id="anamespaceshrapnel_1_1api_html_af21ae755eaf9ca3e8e385e5e4f436025"><div class="ttname"><a href="namespaceshrapnel_1_1api.html#af21ae755eaf9ca3e8e385e5e4f436025">shrapnel::api::from_proto</a></div><div class="ttdeci">int from_proto(const shrapnel_midi_mapping_Message &amp;message, midi::MappingApiMessage &amp;out)</div><div class="ttdef"><b>Definition:</b> <a href="midi__mapping__api_8cpp_source.html#l00563">midi_mapping_api.cpp:563</a></div></div>
-<div class="ttc" id="astructshrapnel_1_1midi_1_1Mapping_html"><div class="ttname"><a href="structshrapnel_1_1midi_1_1Mapping.html">shrapnel::midi::Mapping</a></div><div class="ttdef"><b>Definition:</b> <a href="midi__mapping__api_8h_source.html#l00032">midi_mapping_api.h:33</a></div></div>
+<p class="definition">Definition at line <a class="el" href="midi__mapping__api_8cpp_source.html#l00643">643</a> of file <a class="el" href="midi__mapping__api_8cpp_source.html">midi_mapping_api.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  644</span>{</div>
+<div class="line"><span class="lineno">  645</span>    <span class="keyword">auto</span> proto = from_bytes&lt;shrapnel_midi_mapping_Mapping&gt;(buffer);</div>
+<div class="line"><span class="lineno">  646</span>    <span class="keywordflow">if</span>(!proto.has_value())</div>
+<div class="line"><span class="lineno">  647</span>    {</div>
+<div class="line"><span class="lineno">  648</span>        <span class="keywordflow">return</span> std::nullopt;</div>
+<div class="line"><span class="lineno">  649</span>    }</div>
+<div class="line"><span class="lineno">  650</span> </div>
+<div class="line"><span class="lineno">  651</span>    <a class="code hl_struct" href="structshrapnel_1_1midi_1_1Mapping.html">midi::Mapping</a> out{};</div>
+<div class="line"><span class="lineno">  652</span>    <span class="keywordtype">int</span> rc = <a class="code hl_function" href="namespaceshrapnel_1_1api.html#af21ae755eaf9ca3e8e385e5e4f436025">from_proto</a>(*proto, out);</div>
+<div class="line"><span class="lineno">  653</span>    <span class="keywordflow">if</span>(rc != 0)</div>
+<div class="line"><span class="lineno">  654</span>    {</div>
+<div class="line"><span class="lineno">  655</span>        <span class="keywordflow">return</span> std::nullopt;</div>
+<div class="line"><span class="lineno">  656</span>    }</div>
+<div class="line"><span class="lineno">  657</span>    <span class="keywordflow">return</span> out;</div>
+<div class="line"><span class="lineno">  658</span>}</div>
+<div class="ttc" id="anamespaceshrapnel_1_1api_html_af21ae755eaf9ca3e8e385e5e4f436025"><div class="ttname"><a href="namespaceshrapnel_1_1api.html#af21ae755eaf9ca3e8e385e5e4f436025">shrapnel::api::from_proto</a></div><div class="ttdeci">int from_proto(const shrapnel_midi_mapping_Message &amp;message, midi::MappingApiMessage &amp;out)</div><div class="ttdef"><b>Definition:</b> <a href="midi__mapping__api_8cpp_source.html#l00573">midi_mapping_api.cpp:573</a></div></div>
+<div class="ttc" id="astructshrapnel_1_1midi_1_1Mapping_html"><div class="ttname"><a href="structshrapnel_1_1midi_1_1Mapping.html">shrapnel::midi::Mapping</a></div><div class="ttdef"><b>Definition:</b> <a href="midi__mapping__api_8h_source.html#l00033">midi_mapping_api.h:34</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="namespaceshrapnel_1_1api.html#a3fe25beb5fb138338c66392d3788da02">from_proto()</a>.</p>
 <div class="dynheader">
@@ -782,7 +782,7 @@ template&lt;typename T , typename ProtoT &gt; </div>
 
 <p>Convert a message from proto struct. </p>
 
-<p class="reference">Referenced by <a class="el" href="midi__mapping__api_8cpp_source.html#l00633">from_bytes()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="midi__mapping__api_8cpp_source.html#l00643">from_bytes()</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
@@ -1231,7 +1231,7 @@ template&lt;&gt; </div>
 <div class="line"><span class="lineno">  152</span>    <span class="keywordflow">return</span> -1;</div>
 <div class="line"><span class="lineno">  153</span>}</div>
 <div class="ttc" id="anamespaceshrapnel_1_1events_html_a8dd3c21ae53adc98fc773a8c06ce300a"><div class="ttname"><a href="namespaceshrapnel_1_1events.html#a8dd3c21ae53adc98fc773a8c06ce300a">shrapnel::events::ApiMessage</a></div><div class="ttdeci">std::variant&lt; InputClipped, OutputClipped &gt; ApiMessage</div><div class="ttdef"><b>Definition:</b> <a href="audio__events_8h_source.html#l00041">audio_events.h:41</a></div></div>
-<div class="ttc" id="anamespaceshrapnel_1_1midi_html_a1f9618ba2a946f50c5d3decb14ad0a07"><div class="ttname"><a href="namespaceshrapnel_1_1midi.html#a1f9618ba2a946f50c5d3decb14ad0a07">shrapnel::midi::MappingApiMessage</a></div><div class="ttdeci">std::variant&lt; GetRequest, CreateRequest, CreateResponse, Update, Remove, MessageReceived &gt; MappingApiMessage</div><div class="ttdef"><b>Definition:</b> <a href="midi__mapping__api_8h_source.html#l00088">midi_mapping_api.h:93</a></div></div>
+<div class="ttc" id="anamespaceshrapnel_1_1midi_html_a1f9618ba2a946f50c5d3decb14ad0a07"><div class="ttname"><a href="namespaceshrapnel_1_1midi.html#a1f9618ba2a946f50c5d3decb14ad0a07">shrapnel::midi::MappingApiMessage</a></div><div class="ttdeci">std::variant&lt; GetRequest, CreateRequest, CreateResponse, Update, Remove, MessageReceived &gt; MappingApiMessage</div><div class="ttdef"><b>Definition:</b> <a href="midi__mapping__api_8h_source.html#l00092">midi_mapping_api.h:97</a></div></div>
 <div class="ttc" id="anamespaceshrapnel_1_1presets_html_a3aad46f3b372f79479fa1bb977320e56"><div class="ttname"><a href="namespaceshrapnel_1_1presets.html#a3aad46f3b372f79479fa1bb977320e56">shrapnel::presets::PresetsApiMessage</a></div><div class="ttdeci">std::variant&lt; Initialise, Notify, Create, Update, Delete &gt; PresetsApiMessage</div><div class="ttdef"><b>Definition:</b> <a href="presets__api_8h_source.html#l00104">presets_api.h:105</a></div></div>
 <div class="ttc" id="anamespaceshrapnel_1_1selected__preset_html_a221e4e23c863ba42a19c59d4ecd2a859"><div class="ttname"><a href="namespaceshrapnel_1_1selected__preset.html#a221e4e23c863ba42a19c59d4ecd2a859">shrapnel::selected_preset::SelectedPresetApiMessage</a></div><div class="ttdeci">std::variant&lt; Read, Notify, Write &gt; SelectedPresetApiMessage</div><div class="ttdef"><b>Definition:</b> <a href="selected__preset__api_8h_source.html#l00050">selected_preset_api.h:50</a></div></div>
 </div><!-- fragment -->
@@ -1265,13 +1265,13 @@ template&lt;&gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="midi__mapping__api_8cpp_source.html#l00235">235</a> of file <a class="el" href="midi__mapping__api_8cpp_source.html">midi_mapping_api.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  237</span>{</div>
-<div class="line"><span class="lineno">  238</span>    <span class="keywordflow">return</span> from_proto&lt;midi::Mapping&gt;(message.mapping, out.<a class="code hl_variable" href="structshrapnel_1_1midi_1_1CreateRequest.html#a328c690a44a674edcfd74e9098b553ab">mapping</a>);</div>
-<div class="line"><span class="lineno">  239</span>}</div>
-<div class="ttc" id="astructshrapnel_1_1midi_1_1CreateRequest_html_a328c690a44a674edcfd74e9098b553ab"><div class="ttname"><a href="structshrapnel_1_1midi_1_1CreateRequest.html#a328c690a44a674edcfd74e9098b553ab">shrapnel::midi::CreateRequest::mapping</a></div><div class="ttdeci">Mapping mapping</div><div class="ttdef"><b>Definition:</b> <a href="midi__mapping__api_8h_source.html#l00057">midi_mapping_api.h:57</a></div></div>
+<p class="definition">Definition at line <a class="el" href="midi__mapping__api_8cpp_source.html#l00245">245</a> of file <a class="el" href="midi__mapping__api_8cpp_source.html">midi_mapping_api.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  247</span>{</div>
+<div class="line"><span class="lineno">  248</span>    <span class="keywordflow">return</span> from_proto&lt;midi::Mapping&gt;(message.mapping, out.<a class="code hl_variable" href="structshrapnel_1_1midi_1_1CreateRequest.html#a328c690a44a674edcfd74e9098b553ab">mapping</a>);</div>
+<div class="line"><span class="lineno">  249</span>}</div>
+<div class="ttc" id="astructshrapnel_1_1midi_1_1CreateRequest_html_a328c690a44a674edcfd74e9098b553ab"><div class="ttname"><a href="structshrapnel_1_1midi_1_1CreateRequest.html#a328c690a44a674edcfd74e9098b553ab">shrapnel::midi::CreateRequest::mapping</a></div><div class="ttdeci">Mapping mapping</div><div class="ttdef"><b>Definition:</b> <a href="midi__mapping__api_8h_source.html#l00060">midi_mapping_api.h:60</a></div></div>
 </div><!-- fragment -->
-<p class="reference">References <a class="el" href="midi__mapping__api_8h_source.html#l00057">shrapnel::midi::CreateRequest::mapping</a>.</p>
+<p class="reference">References <a class="el" href="midi__mapping__api_8h_source.html#l00060">shrapnel::midi::CreateRequest::mapping</a>.</p>
 
 </div>
 </div>
@@ -1303,14 +1303,14 @@ template&lt;&gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="midi__mapping__api_8cpp_source.html#l00251">251</a> of file <a class="el" href="midi__mapping__api_8cpp_source.html">midi_mapping_api.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  253</span>{</div>
-<div class="line"><span class="lineno">  254</span>    <span class="keywordflow">return</span> from_proto&lt;std::pair&lt;midi::Mapping::id_t, midi::Mapping&gt;&gt;(</div>
-<div class="line"><span class="lineno">  255</span>        message.mapping, out.<a class="code hl_variable" href="structshrapnel_1_1midi_1_1CreateResponse.html#a9e3f73aa5d09af4a127809bcf53a758c">mapping</a>);</div>
-<div class="line"><span class="lineno">  256</span>}</div>
-<div class="ttc" id="astructshrapnel_1_1midi_1_1CreateResponse_html_a9e3f73aa5d09af4a127809bcf53a758c"><div class="ttname"><a href="structshrapnel_1_1midi_1_1CreateResponse.html#a9e3f73aa5d09af4a127809bcf53a758c">shrapnel::midi::CreateResponse::mapping</a></div><div class="ttdeci">std::pair&lt; Mapping::id_t, Mapping &gt; mapping</div><div class="ttdef"><b>Definition:</b> <a href="midi__mapping__api_8h_source.html#l00064">midi_mapping_api.h:64</a></div></div>
+<p class="definition">Definition at line <a class="el" href="midi__mapping__api_8cpp_source.html#l00261">261</a> of file <a class="el" href="midi__mapping__api_8cpp_source.html">midi_mapping_api.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  263</span>{</div>
+<div class="line"><span class="lineno">  264</span>    <span class="keywordflow">return</span> from_proto&lt;std::pair&lt;midi::Mapping::id_t, midi::Mapping&gt;&gt;(</div>
+<div class="line"><span class="lineno">  265</span>        message.mapping, out.<a class="code hl_variable" href="structshrapnel_1_1midi_1_1CreateResponse.html#a9e3f73aa5d09af4a127809bcf53a758c">mapping</a>);</div>
+<div class="line"><span class="lineno">  266</span>}</div>
+<div class="ttc" id="astructshrapnel_1_1midi_1_1CreateResponse_html_a9e3f73aa5d09af4a127809bcf53a758c"><div class="ttname"><a href="structshrapnel_1_1midi_1_1CreateResponse.html#a9e3f73aa5d09af4a127809bcf53a758c">shrapnel::midi::CreateResponse::mapping</a></div><div class="ttdeci">std::pair&lt; Mapping::id_t, Mapping &gt; mapping</div><div class="ttdef"><b>Definition:</b> <a href="midi__mapping__api_8h_source.html#l00067">midi_mapping_api.h:67</a></div></div>
 </div><!-- fragment -->
-<p class="reference">References <a class="el" href="midi__mapping__api_8h_source.html#l00064">shrapnel::midi::CreateResponse::mapping</a>.</p>
+<p class="reference">References <a class="el" href="midi__mapping__api_8h_source.html#l00067">shrapnel::midi::CreateResponse::mapping</a>.</p>
 
 </div>
 </div>
@@ -1342,10 +1342,10 @@ template&lt;&gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="midi__mapping__api_8cpp_source.html#l00220">220</a> of file <a class="el" href="midi__mapping__api_8cpp_source.html">midi_mapping_api.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  221</span>{</div>
-<div class="line"><span class="lineno">  222</span>    <span class="keywordflow">return</span> 0;</div>
-<div class="line"><span class="lineno">  223</span>}</div>
+<p class="definition">Definition at line <a class="el" href="midi__mapping__api_8cpp_source.html#l00230">230</a> of file <a class="el" href="midi__mapping__api_8cpp_source.html">midi_mapping_api.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  231</span>{</div>
+<div class="line"><span class="lineno">  232</span>    <span class="keywordflow">return</span> 0;</div>
+<div class="line"><span class="lineno">  233</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -1377,30 +1377,35 @@ template&lt;&gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="midi__mapping__api_8cpp_source.html#l00171">171</a> of file <a class="el" href="midi__mapping__api_8cpp_source.html">midi_mapping_api.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  172</span>{</div>
-<div class="line"><span class="lineno">  173</span>    out.<a class="code hl_variable" href="structshrapnel_1_1midi_1_1Mapping.html#a46fa239f0d9c9c4db85812d0f38b0f29">midi_channel</a> = <span class="keyword">static_cast&lt;</span>uint8_t<span class="keyword">&gt;</span>(message.midi_channel);</div>
-<div class="line"><span class="lineno">  174</span>    out.<a class="code hl_variable" href="structshrapnel_1_1midi_1_1Mapping.html#ae1bdd8e63717dbbf186158d915ab266d">cc_number</a> = <span class="keyword">static_cast&lt;</span>uint8_t<span class="keyword">&gt;</span>(message.cc_number);</div>
-<div class="line"><span class="lineno">  175</span>    out.<a class="code hl_variable" href="structshrapnel_1_1midi_1_1Mapping.html#ad1d90b2aa45178377665b16f88aa4433">parameter_name</a> = message.parameterName;</div>
-<div class="line"><span class="lineno">  176</span>    <span class="keywordflow">switch</span>(message.mode)</div>
-<div class="line"><span class="lineno">  177</span>    {</div>
-<div class="line"><span class="lineno">  178</span>    <span class="keywordflow">case</span> shrapnel_midi_mapping_Mapping_Mode_parameter:</div>
-<div class="line"><span class="lineno">  179</span>        out.<a class="code hl_variable" href="structshrapnel_1_1midi_1_1Mapping.html#ad02ebea6e6428980d752a6f3844bf21f">mode</a> = midi::Mapping::Mode::PARAMETER;</div>
-<div class="line"><span class="lineno">  180</span>        <span class="keywordflow">break</span>;</div>
-<div class="line"><span class="lineno">  181</span>    <span class="keywordflow">case</span> shrapnel_midi_mapping_Mapping_Mode_toggle:</div>
-<div class="line"><span class="lineno">  182</span>        out.<a class="code hl_variable" href="structshrapnel_1_1midi_1_1Mapping.html#ad02ebea6e6428980d752a6f3844bf21f">mode</a> = midi::Mapping::Mode::TOGGLE;</div>
-<div class="line"><span class="lineno">  183</span>        <span class="keywordflow">break</span>;</div>
-<div class="line"><span class="lineno">  184</span>    <span class="keywordflow">default</span>:</div>
-<div class="line"><span class="lineno">  185</span>        <span class="keywordflow">return</span> -1;</div>
-<div class="line"><span class="lineno">  186</span>    }</div>
-<div class="line"><span class="lineno">  187</span>    <span class="keywordflow">return</span> 0;</div>
-<div class="line"><span class="lineno">  188</span>}</div>
-<div class="ttc" id="astructshrapnel_1_1midi_1_1Mapping_html_a46fa239f0d9c9c4db85812d0f38b0f29"><div class="ttname"><a href="structshrapnel_1_1midi_1_1Mapping.html#a46fa239f0d9c9c4db85812d0f38b0f29">shrapnel::midi::Mapping::midi_channel</a></div><div class="ttdeci">uint8_t midi_channel</div><div class="ttdef"><b>Definition:</b> <a href="midi__mapping__api_8h_source.html#l00042">midi_mapping_api.h:42</a></div></div>
-<div class="ttc" id="astructshrapnel_1_1midi_1_1Mapping_html_ad02ebea6e6428980d752a6f3844bf21f"><div class="ttname"><a href="structshrapnel_1_1midi_1_1Mapping.html#ad02ebea6e6428980d752a6f3844bf21f">shrapnel::midi::Mapping::mode</a></div><div class="ttdeci">Mode mode</div><div class="ttdef"><b>Definition:</b> <a href="midi__mapping__api_8h_source.html#l00044">midi_mapping_api.h:44</a></div></div>
-<div class="ttc" id="astructshrapnel_1_1midi_1_1Mapping_html_ad1d90b2aa45178377665b16f88aa4433"><div class="ttname"><a href="structshrapnel_1_1midi_1_1Mapping.html#ad1d90b2aa45178377665b16f88aa4433">shrapnel::midi::Mapping::parameter_name</a></div><div class="ttdeci">parameters::id_t parameter_name</div><div class="ttdef"><b>Definition:</b> <a href="midi__mapping__api_8h_source.html#l00045">midi_mapping_api.h:45</a></div></div>
-<div class="ttc" id="astructshrapnel_1_1midi_1_1Mapping_html_ae1bdd8e63717dbbf186158d915ab266d"><div class="ttname"><a href="structshrapnel_1_1midi_1_1Mapping.html#ae1bdd8e63717dbbf186158d915ab266d">shrapnel::midi::Mapping::cc_number</a></div><div class="ttdeci">uint8_t cc_number</div><div class="ttdef"><b>Definition:</b> <a href="midi__mapping__api_8h_source.html#l00043">midi_mapping_api.h:43</a></div></div>
+<p class="definition">Definition at line <a class="el" href="midi__mapping__api_8cpp_source.html#l00177">177</a> of file <a class="el" href="midi__mapping__api_8cpp_source.html">midi_mapping_api.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  178</span>{</div>
+<div class="line"><span class="lineno">  179</span>    out.<a class="code hl_variable" href="structshrapnel_1_1midi_1_1Mapping.html#a46fa239f0d9c9c4db85812d0f38b0f29">midi_channel</a> = <span class="keyword">static_cast&lt;</span>uint8_t<span class="keyword">&gt;</span>(message.midi_channel);</div>
+<div class="line"><span class="lineno">  180</span>    out.<a class="code hl_variable" href="structshrapnel_1_1midi_1_1Mapping.html#ae1bdd8e63717dbbf186158d915ab266d">cc_number</a> = <span class="keyword">static_cast&lt;</span>uint8_t<span class="keyword">&gt;</span>(message.cc_number);</div>
+<div class="line"><span class="lineno">  181</span>    out.<a class="code hl_variable" href="structshrapnel_1_1midi_1_1Mapping.html#ad1d90b2aa45178377665b16f88aa4433">parameter_name</a> = message.parameter_name;</div>
+<div class="line"><span class="lineno">  182</span>    out.<a class="code hl_variable" href="structshrapnel_1_1midi_1_1Mapping.html#a47c1f4ba51dd78e8f8e7428b095b60c4">preset_id</a> = message.preset_id;</div>
+<div class="line"><span class="lineno">  183</span>    <span class="keywordflow">switch</span>(message.mode)</div>
+<div class="line"><span class="lineno">  184</span>    {</div>
+<div class="line"><span class="lineno">  185</span>    <span class="keywordflow">case</span> shrapnel_midi_mapping_Mapping_Mode_parameter:</div>
+<div class="line"><span class="lineno">  186</span>        out.<a class="code hl_variable" href="structshrapnel_1_1midi_1_1Mapping.html#ad02ebea6e6428980d752a6f3844bf21f">mode</a> = midi::Mapping::Mode::PARAMETER;</div>
+<div class="line"><span class="lineno">  187</span>        <span class="keywordflow">break</span>;</div>
+<div class="line"><span class="lineno">  188</span>    <span class="keywordflow">case</span> shrapnel_midi_mapping_Mapping_Mode_toggle:</div>
+<div class="line"><span class="lineno">  189</span>        out.<a class="code hl_variable" href="structshrapnel_1_1midi_1_1Mapping.html#ad02ebea6e6428980d752a6f3844bf21f">mode</a> = midi::Mapping::Mode::TOGGLE;</div>
+<div class="line"><span class="lineno">  190</span>        <span class="keywordflow">break</span>;</div>
+<div class="line"><span class="lineno">  191</span>    <span class="keywordflow">case</span> shrapnel_midi_mapping_Mapping_Mode_button:</div>
+<div class="line"><span class="lineno">  192</span>        out.<a class="code hl_variable" href="structshrapnel_1_1midi_1_1Mapping.html#ad02ebea6e6428980d752a6f3844bf21f">mode</a> = midi::Mapping::Mode::BUTTON;</div>
+<div class="line"><span class="lineno">  193</span>        <span class="keywordflow">break</span>;</div>
+<div class="line"><span class="lineno">  194</span>    <span class="keywordflow">default</span>:</div>
+<div class="line"><span class="lineno">  195</span>        <span class="keywordflow">return</span> -1;</div>
+<div class="line"><span class="lineno">  196</span>    }</div>
+<div class="line"><span class="lineno">  197</span>    <span class="keywordflow">return</span> 0;</div>
+<div class="line"><span class="lineno">  198</span>}</div>
+<div class="ttc" id="astructshrapnel_1_1midi_1_1Mapping_html_a46fa239f0d9c9c4db85812d0f38b0f29"><div class="ttname"><a href="structshrapnel_1_1midi_1_1Mapping.html#a46fa239f0d9c9c4db85812d0f38b0f29">shrapnel::midi::Mapping::midi_channel</a></div><div class="ttdeci">uint8_t midi_channel</div><div class="ttdef"><b>Definition:</b> <a href="midi__mapping__api_8h_source.html#l00044">midi_mapping_api.h:44</a></div></div>
+<div class="ttc" id="astructshrapnel_1_1midi_1_1Mapping_html_a47c1f4ba51dd78e8f8e7428b095b60c4"><div class="ttname"><a href="structshrapnel_1_1midi_1_1Mapping.html#a47c1f4ba51dd78e8f8e7428b095b60c4">shrapnel::midi::Mapping::preset_id</a></div><div class="ttdeci">presets::id_t preset_id</div><div class="ttdef"><b>Definition:</b> <a href="midi__mapping__api_8h_source.html#l00048">midi_mapping_api.h:48</a></div></div>
+<div class="ttc" id="astructshrapnel_1_1midi_1_1Mapping_html_ad02ebea6e6428980d752a6f3844bf21f"><div class="ttname"><a href="structshrapnel_1_1midi_1_1Mapping.html#ad02ebea6e6428980d752a6f3844bf21f">shrapnel::midi::Mapping::mode</a></div><div class="ttdeci">Mode mode</div><div class="ttdef"><b>Definition:</b> <a href="midi__mapping__api_8h_source.html#l00046">midi_mapping_api.h:46</a></div></div>
+<div class="ttc" id="astructshrapnel_1_1midi_1_1Mapping_html_ad1d90b2aa45178377665b16f88aa4433"><div class="ttname"><a href="structshrapnel_1_1midi_1_1Mapping.html#ad1d90b2aa45178377665b16f88aa4433">shrapnel::midi::Mapping::parameter_name</a></div><div class="ttdeci">parameters::id_t parameter_name</div><div class="ttdef"><b>Definition:</b> <a href="midi__mapping__api_8h_source.html#l00047">midi_mapping_api.h:47</a></div></div>
+<div class="ttc" id="astructshrapnel_1_1midi_1_1Mapping_html_ae1bdd8e63717dbbf186158d915ab266d"><div class="ttname"><a href="structshrapnel_1_1midi_1_1Mapping.html#ae1bdd8e63717dbbf186158d915ab266d">shrapnel::midi::Mapping::cc_number</a></div><div class="ttdeci">uint8_t cc_number</div><div class="ttdef"><b>Definition:</b> <a href="midi__mapping__api_8h_source.html#l00045">midi_mapping_api.h:45</a></div></div>
 </div><!-- fragment -->
-<p class="reference">References <a class="el" href="midi__mapping__api_8h_source.html#l00043">shrapnel::midi::Mapping::cc_number</a>, <a class="el" href="midi__mapping__api_8h_source.html#l00042">shrapnel::midi::Mapping::midi_channel</a>, <a class="el" href="midi__mapping__api_8h_source.html#l00044">shrapnel::midi::Mapping::mode</a>, <a class="el" href="structshrapnel_1_1midi_1_1Mapping.html#a9d3978518402ec5df1963f1b8c0a7013abf1d4bbf6ed8626603df4a7cac94ee8c">shrapnel::midi::Mapping::PARAMETER</a>, <a class="el" href="midi__mapping__api_8h_source.html#l00045">shrapnel::midi::Mapping::parameter_name</a>, and <a class="el" href="structshrapnel_1_1midi_1_1Mapping.html#a9d3978518402ec5df1963f1b8c0a7013a1252c45651289c0b553a30d27bb5ae9b">shrapnel::midi::Mapping::TOGGLE</a>.</p>
+<p class="reference">References <a class="el" href="structshrapnel_1_1midi_1_1Mapping.html#a9d3978518402ec5df1963f1b8c0a7013a57b35198356d373bcd2a6e08abcb3795">shrapnel::midi::Mapping::BUTTON</a>, <a class="el" href="midi__mapping__api_8h_source.html#l00045">shrapnel::midi::Mapping::cc_number</a>, <a class="el" href="midi__mapping__api_8h_source.html#l00044">shrapnel::midi::Mapping::midi_channel</a>, <a class="el" href="midi__mapping__api_8h_source.html#l00046">shrapnel::midi::Mapping::mode</a>, <a class="el" href="structshrapnel_1_1midi_1_1Mapping.html#a9d3978518402ec5df1963f1b8c0a7013abf1d4bbf6ed8626603df4a7cac94ee8c">shrapnel::midi::Mapping::PARAMETER</a>, <a class="el" href="midi__mapping__api_8h_source.html#l00047">shrapnel::midi::Mapping::parameter_name</a>, <a class="el" href="midi__mapping__api_8h_source.html#l00048">shrapnel::midi::Mapping::preset_id</a>, and <a class="el" href="structshrapnel_1_1midi_1_1Mapping.html#a9d3978518402ec5df1963f1b8c0a7013a1252c45651289c0b553a30d27bb5ae9b">shrapnel::midi::Mapping::TOGGLE</a>.</p>
 
 </div>
 </div>
@@ -1432,11 +1437,11 @@ template&lt;&gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="midi__mapping__api_8cpp_source.html#l00206">206</a> of file <a class="el" href="midi__mapping__api_8cpp_source.html">midi_mapping_api.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  208</span>{</div>
-<div class="line"><span class="lineno">  209</span>    out.first = message.id;</div>
-<div class="line"><span class="lineno">  210</span>    <span class="keywordflow">return</span> from_proto&lt;midi::Mapping&gt;(message.mapping, out.second);</div>
-<div class="line"><span class="lineno">  211</span>}</div>
+<p class="definition">Definition at line <a class="el" href="midi__mapping__api_8cpp_source.html#l00216">216</a> of file <a class="el" href="midi__mapping__api_8cpp_source.html">midi_mapping_api.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  218</span>{</div>
+<div class="line"><span class="lineno">  219</span>    out.first = message.id;</div>
+<div class="line"><span class="lineno">  220</span>    <span class="keywordflow">return</span> from_proto&lt;midi::Mapping&gt;(message.mapping, out.second);</div>
+<div class="line"><span class="lineno">  221</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -1468,60 +1473,60 @@ template&lt;&gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="midi__mapping__api_8cpp_source.html#l00563">563</a> of file <a class="el" href="midi__mapping__api_8cpp_source.html">midi_mapping_api.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  565</span>{</div>
-<div class="line"><span class="lineno">  566</span>    <span class="keywordflow">switch</span>(message.which_message)</div>
-<div class="line"><span class="lineno">  567</span>    {</div>
-<div class="line"><span class="lineno">  568</span>    <span class="keywordflow">case</span> shrapnel_midi_mapping_Message_get_request_tag:</div>
-<div class="line"><span class="lineno">  569</span>    {</div>
-<div class="line"><span class="lineno">  570</span>        <a class="code hl_struct" href="structshrapnel_1_1midi_1_1GetRequest.html">midi::GetRequest</a> tmp{};</div>
-<div class="line"><span class="lineno">  571</span>        <span class="keywordtype">int</span> rc = from_proto&lt;midi::GetRequest&gt;(message.message.get_request, tmp);</div>
-<div class="line"><span class="lineno">  572</span>        out = tmp;</div>
-<div class="line"><span class="lineno">  573</span>        <span class="keywordflow">return</span> rc;</div>
-<div class="line"><span class="lineno">  574</span>    }</div>
-<div class="line"><span class="lineno">  575</span>    <span class="keywordflow">case</span> shrapnel_midi_mapping_Message_create_request_tag:</div>
-<div class="line"><span class="lineno">  576</span>    {</div>
-<div class="line"><span class="lineno">  577</span>        midi::CreateRequest tmp{};</div>
-<div class="line"><span class="lineno">  578</span>        <span class="keywordtype">int</span> rc = from_proto&lt;midi::CreateRequest&gt;(message.message.create_request,</div>
-<div class="line"><span class="lineno">  579</span>                                                 tmp);</div>
-<div class="line"><span class="lineno">  580</span>        out = tmp;</div>
-<div class="line"><span class="lineno">  581</span>        <span class="keywordflow">return</span> rc;</div>
-<div class="line"><span class="lineno">  582</span>    }</div>
-<div class="line"><span class="lineno">  583</span>    <span class="keywordflow">case</span> shrapnel_midi_mapping_Message_create_response_tag:</div>
-<div class="line"><span class="lineno">  584</span>    {</div>
-<div class="line"><span class="lineno">  585</span>        midi::CreateResponse tmp{};</div>
-<div class="line"><span class="lineno">  586</span>        <span class="keywordtype">int</span> rc = from_proto&lt;midi::CreateResponse&gt;(</div>
-<div class="line"><span class="lineno">  587</span>            message.message.create_response, tmp);</div>
-<div class="line"><span class="lineno">  588</span>        out = tmp;</div>
-<div class="line"><span class="lineno">  589</span>        <span class="keywordflow">return</span> rc;</div>
-<div class="line"><span class="lineno">  590</span>    }</div>
-<div class="line"><span class="lineno">  591</span>    <span class="keywordflow">case</span> shrapnel_midi_mapping_Message_update_tag:</div>
-<div class="line"><span class="lineno">  592</span>    {</div>
-<div class="line"><span class="lineno">  593</span>        midi::Update tmp{};</div>
-<div class="line"><span class="lineno">  594</span>        <span class="keywordtype">int</span> rc = from_proto&lt;midi::Update&gt;(message.message.update, tmp);</div>
-<div class="line"><span class="lineno">  595</span>        out = tmp;</div>
-<div class="line"><span class="lineno">  596</span>        <span class="keywordflow">return</span> rc;</div>
-<div class="line"><span class="lineno">  597</span>    }</div>
-<div class="line"><span class="lineno">  598</span>    <span class="keywordflow">case</span> shrapnel_midi_mapping_Message_remove_tag:</div>
-<div class="line"><span class="lineno">  599</span>    {</div>
-<div class="line"><span class="lineno">  600</span>        midi::Remove tmp{};</div>
-<div class="line"><span class="lineno">  601</span>        <span class="keywordtype">int</span> rc = from_proto&lt;midi::Remove&gt;(message.message.remove, tmp);</div>
-<div class="line"><span class="lineno">  602</span>        out = tmp;</div>
-<div class="line"><span class="lineno">  603</span>        <span class="keywordflow">return</span> rc;</div>
-<div class="line"><span class="lineno">  604</span>    }</div>
-<div class="line"><span class="lineno">  605</span>    <span class="keywordflow">case</span> shrapnel_midi_mapping_Message_message_received_tag:</div>
-<div class="line"><span class="lineno">  606</span>    {</div>
-<div class="line"><span class="lineno">  607</span>        midi::MessageReceived tmp{};</div>
-<div class="line"><span class="lineno">  608</span>        <span class="keywordtype">int</span> rc = from_proto&lt;midi::MessageReceived&gt;(</div>
-<div class="line"><span class="lineno">  609</span>            message.message.message_received, tmp);</div>
-<div class="line"><span class="lineno">  610</span>        out = tmp;</div>
-<div class="line"><span class="lineno">  611</span>        <span class="keywordflow">return</span> rc;</div>
-<div class="line"><span class="lineno">  612</span>    }</div>
-<div class="line"><span class="lineno">  613</span>    }</div>
-<div class="line"><span class="lineno">  614</span> </div>
-<div class="line"><span class="lineno">  615</span>    <span class="keywordflow">return</span> -1;</div>
-<div class="line"><span class="lineno">  616</span>}</div>
-<div class="ttc" id="astructshrapnel_1_1midi_1_1GetRequest_html"><div class="ttname"><a href="structshrapnel_1_1midi_1_1GetRequest.html">shrapnel::midi::GetRequest</a></div><div class="ttdef"><b>Definition:</b> <a href="midi__mapping__api_8h_source.html#l00050">midi_mapping_api.h:51</a></div></div>
+<p class="definition">Definition at line <a class="el" href="midi__mapping__api_8cpp_source.html#l00573">573</a> of file <a class="el" href="midi__mapping__api_8cpp_source.html">midi_mapping_api.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  575</span>{</div>
+<div class="line"><span class="lineno">  576</span>    <span class="keywordflow">switch</span>(message.which_message)</div>
+<div class="line"><span class="lineno">  577</span>    {</div>
+<div class="line"><span class="lineno">  578</span>    <span class="keywordflow">case</span> shrapnel_midi_mapping_Message_get_request_tag:</div>
+<div class="line"><span class="lineno">  579</span>    {</div>
+<div class="line"><span class="lineno">  580</span>        <a class="code hl_struct" href="structshrapnel_1_1midi_1_1GetRequest.html">midi::GetRequest</a> tmp{};</div>
+<div class="line"><span class="lineno">  581</span>        <span class="keywordtype">int</span> rc = from_proto&lt;midi::GetRequest&gt;(message.message.get_request, tmp);</div>
+<div class="line"><span class="lineno">  582</span>        out = tmp;</div>
+<div class="line"><span class="lineno">  583</span>        <span class="keywordflow">return</span> rc;</div>
+<div class="line"><span class="lineno">  584</span>    }</div>
+<div class="line"><span class="lineno">  585</span>    <span class="keywordflow">case</span> shrapnel_midi_mapping_Message_create_request_tag:</div>
+<div class="line"><span class="lineno">  586</span>    {</div>
+<div class="line"><span class="lineno">  587</span>        midi::CreateRequest tmp{};</div>
+<div class="line"><span class="lineno">  588</span>        <span class="keywordtype">int</span> rc = from_proto&lt;midi::CreateRequest&gt;(message.message.create_request,</div>
+<div class="line"><span class="lineno">  589</span>                                                 tmp);</div>
+<div class="line"><span class="lineno">  590</span>        out = tmp;</div>
+<div class="line"><span class="lineno">  591</span>        <span class="keywordflow">return</span> rc;</div>
+<div class="line"><span class="lineno">  592</span>    }</div>
+<div class="line"><span class="lineno">  593</span>    <span class="keywordflow">case</span> shrapnel_midi_mapping_Message_create_response_tag:</div>
+<div class="line"><span class="lineno">  594</span>    {</div>
+<div class="line"><span class="lineno">  595</span>        midi::CreateResponse tmp{};</div>
+<div class="line"><span class="lineno">  596</span>        <span class="keywordtype">int</span> rc = from_proto&lt;midi::CreateResponse&gt;(</div>
+<div class="line"><span class="lineno">  597</span>            message.message.create_response, tmp);</div>
+<div class="line"><span class="lineno">  598</span>        out = tmp;</div>
+<div class="line"><span class="lineno">  599</span>        <span class="keywordflow">return</span> rc;</div>
+<div class="line"><span class="lineno">  600</span>    }</div>
+<div class="line"><span class="lineno">  601</span>    <span class="keywordflow">case</span> shrapnel_midi_mapping_Message_update_tag:</div>
+<div class="line"><span class="lineno">  602</span>    {</div>
+<div class="line"><span class="lineno">  603</span>        midi::Update tmp{};</div>
+<div class="line"><span class="lineno">  604</span>        <span class="keywordtype">int</span> rc = from_proto&lt;midi::Update&gt;(message.message.update, tmp);</div>
+<div class="line"><span class="lineno">  605</span>        out = tmp;</div>
+<div class="line"><span class="lineno">  606</span>        <span class="keywordflow">return</span> rc;</div>
+<div class="line"><span class="lineno">  607</span>    }</div>
+<div class="line"><span class="lineno">  608</span>    <span class="keywordflow">case</span> shrapnel_midi_mapping_Message_remove_tag:</div>
+<div class="line"><span class="lineno">  609</span>    {</div>
+<div class="line"><span class="lineno">  610</span>        midi::Remove tmp{};</div>
+<div class="line"><span class="lineno">  611</span>        <span class="keywordtype">int</span> rc = from_proto&lt;midi::Remove&gt;(message.message.remove, tmp);</div>
+<div class="line"><span class="lineno">  612</span>        out = tmp;</div>
+<div class="line"><span class="lineno">  613</span>        <span class="keywordflow">return</span> rc;</div>
+<div class="line"><span class="lineno">  614</span>    }</div>
+<div class="line"><span class="lineno">  615</span>    <span class="keywordflow">case</span> shrapnel_midi_mapping_Message_message_received_tag:</div>
+<div class="line"><span class="lineno">  616</span>    {</div>
+<div class="line"><span class="lineno">  617</span>        midi::MessageReceived tmp{};</div>
+<div class="line"><span class="lineno">  618</span>        <span class="keywordtype">int</span> rc = from_proto&lt;midi::MessageReceived&gt;(</div>
+<div class="line"><span class="lineno">  619</span>            message.message.message_received, tmp);</div>
+<div class="line"><span class="lineno">  620</span>        out = tmp;</div>
+<div class="line"><span class="lineno">  621</span>        <span class="keywordflow">return</span> rc;</div>
+<div class="line"><span class="lineno">  622</span>    }</div>
+<div class="line"><span class="lineno">  623</span>    }</div>
+<div class="line"><span class="lineno">  624</span> </div>
+<div class="line"><span class="lineno">  625</span>    <span class="keywordflow">return</span> -1;</div>
+<div class="line"><span class="lineno">  626</span>}</div>
+<div class="ttc" id="astructshrapnel_1_1midi_1_1GetRequest_html"><div class="ttname"><a href="structshrapnel_1_1midi_1_1GetRequest.html">shrapnel::midi::GetRequest</a></div><div class="ttdef"><b>Definition:</b> <a href="midi__mapping__api_8h_source.html#l00053">midi_mapping_api.h:54</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -1553,59 +1558,59 @@ template&lt;&gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="midi__mapping__api_8cpp_source.html#l00563">563</a> of file <a class="el" href="midi__mapping__api_8cpp_source.html">midi_mapping_api.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  565</span>{</div>
-<div class="line"><span class="lineno">  566</span>    <span class="keywordflow">switch</span>(message.which_message)</div>
-<div class="line"><span class="lineno">  567</span>    {</div>
-<div class="line"><span class="lineno">  568</span>    <span class="keywordflow">case</span> shrapnel_midi_mapping_Message_get_request_tag:</div>
-<div class="line"><span class="lineno">  569</span>    {</div>
-<div class="line"><span class="lineno">  570</span>        <a class="code hl_struct" href="structshrapnel_1_1midi_1_1GetRequest.html">midi::GetRequest</a> tmp{};</div>
-<div class="line"><span class="lineno">  571</span>        <span class="keywordtype">int</span> rc = from_proto&lt;midi::GetRequest&gt;(message.message.get_request, tmp);</div>
-<div class="line"><span class="lineno">  572</span>        out = tmp;</div>
-<div class="line"><span class="lineno">  573</span>        <span class="keywordflow">return</span> rc;</div>
-<div class="line"><span class="lineno">  574</span>    }</div>
-<div class="line"><span class="lineno">  575</span>    <span class="keywordflow">case</span> shrapnel_midi_mapping_Message_create_request_tag:</div>
-<div class="line"><span class="lineno">  576</span>    {</div>
-<div class="line"><span class="lineno">  577</span>        midi::CreateRequest tmp{};</div>
-<div class="line"><span class="lineno">  578</span>        <span class="keywordtype">int</span> rc = from_proto&lt;midi::CreateRequest&gt;(message.message.create_request,</div>
-<div class="line"><span class="lineno">  579</span>                                                 tmp);</div>
-<div class="line"><span class="lineno">  580</span>        out = tmp;</div>
-<div class="line"><span class="lineno">  581</span>        <span class="keywordflow">return</span> rc;</div>
-<div class="line"><span class="lineno">  582</span>    }</div>
-<div class="line"><span class="lineno">  583</span>    <span class="keywordflow">case</span> shrapnel_midi_mapping_Message_create_response_tag:</div>
-<div class="line"><span class="lineno">  584</span>    {</div>
-<div class="line"><span class="lineno">  585</span>        midi::CreateResponse tmp{};</div>
-<div class="line"><span class="lineno">  586</span>        <span class="keywordtype">int</span> rc = from_proto&lt;midi::CreateResponse&gt;(</div>
-<div class="line"><span class="lineno">  587</span>            message.message.create_response, tmp);</div>
-<div class="line"><span class="lineno">  588</span>        out = tmp;</div>
-<div class="line"><span class="lineno">  589</span>        <span class="keywordflow">return</span> rc;</div>
-<div class="line"><span class="lineno">  590</span>    }</div>
-<div class="line"><span class="lineno">  591</span>    <span class="keywordflow">case</span> shrapnel_midi_mapping_Message_update_tag:</div>
-<div class="line"><span class="lineno">  592</span>    {</div>
-<div class="line"><span class="lineno">  593</span>        midi::Update tmp{};</div>
-<div class="line"><span class="lineno">  594</span>        <span class="keywordtype">int</span> rc = from_proto&lt;midi::Update&gt;(message.message.update, tmp);</div>
-<div class="line"><span class="lineno">  595</span>        out = tmp;</div>
-<div class="line"><span class="lineno">  596</span>        <span class="keywordflow">return</span> rc;</div>
-<div class="line"><span class="lineno">  597</span>    }</div>
-<div class="line"><span class="lineno">  598</span>    <span class="keywordflow">case</span> shrapnel_midi_mapping_Message_remove_tag:</div>
-<div class="line"><span class="lineno">  599</span>    {</div>
-<div class="line"><span class="lineno">  600</span>        midi::Remove tmp{};</div>
-<div class="line"><span class="lineno">  601</span>        <span class="keywordtype">int</span> rc = from_proto&lt;midi::Remove&gt;(message.message.remove, tmp);</div>
-<div class="line"><span class="lineno">  602</span>        out = tmp;</div>
-<div class="line"><span class="lineno">  603</span>        <span class="keywordflow">return</span> rc;</div>
-<div class="line"><span class="lineno">  604</span>    }</div>
-<div class="line"><span class="lineno">  605</span>    <span class="keywordflow">case</span> shrapnel_midi_mapping_Message_message_received_tag:</div>
-<div class="line"><span class="lineno">  606</span>    {</div>
-<div class="line"><span class="lineno">  607</span>        midi::MessageReceived tmp{};</div>
-<div class="line"><span class="lineno">  608</span>        <span class="keywordtype">int</span> rc = from_proto&lt;midi::MessageReceived&gt;(</div>
-<div class="line"><span class="lineno">  609</span>            message.message.message_received, tmp);</div>
-<div class="line"><span class="lineno">  610</span>        out = tmp;</div>
-<div class="line"><span class="lineno">  611</span>        <span class="keywordflow">return</span> rc;</div>
-<div class="line"><span class="lineno">  612</span>    }</div>
-<div class="line"><span class="lineno">  613</span>    }</div>
-<div class="line"><span class="lineno">  614</span> </div>
-<div class="line"><span class="lineno">  615</span>    <span class="keywordflow">return</span> -1;</div>
-<div class="line"><span class="lineno">  616</span>}</div>
+<p class="definition">Definition at line <a class="el" href="midi__mapping__api_8cpp_source.html#l00573">573</a> of file <a class="el" href="midi__mapping__api_8cpp_source.html">midi_mapping_api.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  575</span>{</div>
+<div class="line"><span class="lineno">  576</span>    <span class="keywordflow">switch</span>(message.which_message)</div>
+<div class="line"><span class="lineno">  577</span>    {</div>
+<div class="line"><span class="lineno">  578</span>    <span class="keywordflow">case</span> shrapnel_midi_mapping_Message_get_request_tag:</div>
+<div class="line"><span class="lineno">  579</span>    {</div>
+<div class="line"><span class="lineno">  580</span>        <a class="code hl_struct" href="structshrapnel_1_1midi_1_1GetRequest.html">midi::GetRequest</a> tmp{};</div>
+<div class="line"><span class="lineno">  581</span>        <span class="keywordtype">int</span> rc = from_proto&lt;midi::GetRequest&gt;(message.message.get_request, tmp);</div>
+<div class="line"><span class="lineno">  582</span>        out = tmp;</div>
+<div class="line"><span class="lineno">  583</span>        <span class="keywordflow">return</span> rc;</div>
+<div class="line"><span class="lineno">  584</span>    }</div>
+<div class="line"><span class="lineno">  585</span>    <span class="keywordflow">case</span> shrapnel_midi_mapping_Message_create_request_tag:</div>
+<div class="line"><span class="lineno">  586</span>    {</div>
+<div class="line"><span class="lineno">  587</span>        midi::CreateRequest tmp{};</div>
+<div class="line"><span class="lineno">  588</span>        <span class="keywordtype">int</span> rc = from_proto&lt;midi::CreateRequest&gt;(message.message.create_request,</div>
+<div class="line"><span class="lineno">  589</span>                                                 tmp);</div>
+<div class="line"><span class="lineno">  590</span>        out = tmp;</div>
+<div class="line"><span class="lineno">  591</span>        <span class="keywordflow">return</span> rc;</div>
+<div class="line"><span class="lineno">  592</span>    }</div>
+<div class="line"><span class="lineno">  593</span>    <span class="keywordflow">case</span> shrapnel_midi_mapping_Message_create_response_tag:</div>
+<div class="line"><span class="lineno">  594</span>    {</div>
+<div class="line"><span class="lineno">  595</span>        midi::CreateResponse tmp{};</div>
+<div class="line"><span class="lineno">  596</span>        <span class="keywordtype">int</span> rc = from_proto&lt;midi::CreateResponse&gt;(</div>
+<div class="line"><span class="lineno">  597</span>            message.message.create_response, tmp);</div>
+<div class="line"><span class="lineno">  598</span>        out = tmp;</div>
+<div class="line"><span class="lineno">  599</span>        <span class="keywordflow">return</span> rc;</div>
+<div class="line"><span class="lineno">  600</span>    }</div>
+<div class="line"><span class="lineno">  601</span>    <span class="keywordflow">case</span> shrapnel_midi_mapping_Message_update_tag:</div>
+<div class="line"><span class="lineno">  602</span>    {</div>
+<div class="line"><span class="lineno">  603</span>        midi::Update tmp{};</div>
+<div class="line"><span class="lineno">  604</span>        <span class="keywordtype">int</span> rc = from_proto&lt;midi::Update&gt;(message.message.update, tmp);</div>
+<div class="line"><span class="lineno">  605</span>        out = tmp;</div>
+<div class="line"><span class="lineno">  606</span>        <span class="keywordflow">return</span> rc;</div>
+<div class="line"><span class="lineno">  607</span>    }</div>
+<div class="line"><span class="lineno">  608</span>    <span class="keywordflow">case</span> shrapnel_midi_mapping_Message_remove_tag:</div>
+<div class="line"><span class="lineno">  609</span>    {</div>
+<div class="line"><span class="lineno">  610</span>        midi::Remove tmp{};</div>
+<div class="line"><span class="lineno">  611</span>        <span class="keywordtype">int</span> rc = from_proto&lt;midi::Remove&gt;(message.message.remove, tmp);</div>
+<div class="line"><span class="lineno">  612</span>        out = tmp;</div>
+<div class="line"><span class="lineno">  613</span>        <span class="keywordflow">return</span> rc;</div>
+<div class="line"><span class="lineno">  614</span>    }</div>
+<div class="line"><span class="lineno">  615</span>    <span class="keywordflow">case</span> shrapnel_midi_mapping_Message_message_received_tag:</div>
+<div class="line"><span class="lineno">  616</span>    {</div>
+<div class="line"><span class="lineno">  617</span>        midi::MessageReceived tmp{};</div>
+<div class="line"><span class="lineno">  618</span>        <span class="keywordtype">int</span> rc = from_proto&lt;midi::MessageReceived&gt;(</div>
+<div class="line"><span class="lineno">  619</span>            message.message.message_received, tmp);</div>
+<div class="line"><span class="lineno">  620</span>        out = tmp;</div>
+<div class="line"><span class="lineno">  621</span>        <span class="keywordflow">return</span> rc;</div>
+<div class="line"><span class="lineno">  622</span>    }</div>
+<div class="line"><span class="lineno">  623</span>    }</div>
+<div class="line"><span class="lineno">  624</span> </div>
+<div class="line"><span class="lineno">  625</span>    <span class="keywordflow">return</span> -1;</div>
+<div class="line"><span class="lineno">  626</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -1637,13 +1642,13 @@ template&lt;&gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="midi__mapping__api_8cpp_source.html#l00474">474</a> of file <a class="el" href="midi__mapping__api_8cpp_source.html">midi_mapping_api.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  476</span>{</div>
-<div class="line"><span class="lineno">  477</span>    <span class="keywordflow">return</span> from_proto&lt;midi::Message&gt;(message.received_message, out.<a class="code hl_variable" href="structshrapnel_1_1midi_1_1MessageReceived.html#a83ae76bcd410b1836b0d319f1c8cef4a">message</a>);</div>
-<div class="line"><span class="lineno">  478</span>}</div>
-<div class="ttc" id="astructshrapnel_1_1midi_1_1MessageReceived_html_a83ae76bcd410b1836b0d319f1c8cef4a"><div class="ttname"><a href="structshrapnel_1_1midi_1_1MessageReceived.html#a83ae76bcd410b1836b0d319f1c8cef4a">shrapnel::midi::MessageReceived::message</a></div><div class="ttdeci">Message message</div><div class="ttdef"><b>Definition:</b> <a href="midi__mapping__api_8h_source.html#l00083">midi_mapping_api.h:83</a></div></div>
+<p class="definition">Definition at line <a class="el" href="midi__mapping__api_8cpp_source.html#l00484">484</a> of file <a class="el" href="midi__mapping__api_8cpp_source.html">midi_mapping_api.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  486</span>{</div>
+<div class="line"><span class="lineno">  487</span>    <span class="keywordflow">return</span> from_proto&lt;midi::Message&gt;(message.received_message, out.<a class="code hl_variable" href="structshrapnel_1_1midi_1_1MessageReceived.html#a83ae76bcd410b1836b0d319f1c8cef4a">message</a>);</div>
+<div class="line"><span class="lineno">  488</span>}</div>
+<div class="ttc" id="astructshrapnel_1_1midi_1_1MessageReceived_html_a83ae76bcd410b1836b0d319f1c8cef4a"><div class="ttname"><a href="structshrapnel_1_1midi_1_1MessageReceived.html#a83ae76bcd410b1836b0d319f1c8cef4a">shrapnel::midi::MessageReceived::message</a></div><div class="ttdeci">Message message</div><div class="ttdef"><b>Definition:</b> <a href="midi__mapping__api_8h_source.html#l00087">midi_mapping_api.h:87</a></div></div>
 </div><!-- fragment -->
-<p class="reference">References <a class="el" href="midi__mapping__api_8h_source.html#l00083">shrapnel::midi::MessageReceived::message</a>.</p>
+<p class="reference">References <a class="el" href="midi__mapping__api_8h_source.html#l00087">shrapnel::midi::MessageReceived::message</a>.</p>
 
 </div>
 </div>
@@ -1675,50 +1680,50 @@ template&lt;&gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="midi__mapping__api_8cpp_source.html#l00412">412</a> of file <a class="el" href="midi__mapping__api_8cpp_source.html">midi_mapping_api.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  414</span>{</div>
-<div class="line"><span class="lineno">  415</span>    out.<a class="code hl_variable" href="structshrapnel_1_1midi_1_1Message.html#a29581869e25f31ea15d28e332262b160">channel</a> = message.channel;</div>
-<div class="line"><span class="lineno">  416</span> </div>
-<div class="line"><span class="lineno">  417</span>    std::optional&lt;<span class="keyword">decltype</span>(out.<a class="code hl_variable" href="structshrapnel_1_1midi_1_1Message.html#aed40e3ab3220667ba38796866604cbb7">parameters</a>)&gt; parameters;</div>
-<div class="line"><span class="lineno">  418</span> </div>
-<div class="line"><span class="lineno">  419</span>    <span class="keywordflow">switch</span>(message.which_parameters)</div>
-<div class="line"><span class="lineno">  420</span>    {</div>
-<div class="line"><span class="lineno">  421</span>    <span class="keywordflow">case</span> shrapnel_midi_mapping_MidiMessage_note_on_tag:</div>
-<div class="line"><span class="lineno">  422</span>    {</div>
-<div class="line"><span class="lineno">  423</span>        <a class="code hl_struct" href="structshrapnel_1_1midi_1_1Message_1_1NoteOn.html">midi::Message::NoteOn</a> tmp{};</div>
-<div class="line"><span class="lineno">  424</span>        <span class="keywordtype">int</span> rc =</div>
-<div class="line"><span class="lineno">  425</span>            from_proto&lt;midi::Message::NoteOn&gt;(message.parameters.note_on, tmp);</div>
-<div class="line"><span class="lineno">  426</span>        out.<a class="code hl_variable" href="structshrapnel_1_1midi_1_1Message.html#aed40e3ab3220667ba38796866604cbb7">parameters</a> = tmp;</div>
-<div class="line"><span class="lineno">  427</span>        <span class="keywordflow">return</span> rc;</div>
-<div class="line"><span class="lineno">  428</span>    }</div>
-<div class="line"><span class="lineno">  429</span>    <span class="keywordflow">case</span> shrapnel_midi_mapping_MidiMessage_note_off_tag:</div>
+<p class="definition">Definition at line <a class="el" href="midi__mapping__api_8cpp_source.html#l00422">422</a> of file <a class="el" href="midi__mapping__api_8cpp_source.html">midi_mapping_api.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  424</span>{</div>
+<div class="line"><span class="lineno">  425</span>    out.<a class="code hl_variable" href="structshrapnel_1_1midi_1_1Message.html#a29581869e25f31ea15d28e332262b160">channel</a> = message.channel;</div>
+<div class="line"><span class="lineno">  426</span> </div>
+<div class="line"><span class="lineno">  427</span>    std::optional&lt;<span class="keyword">decltype</span>(out.<a class="code hl_variable" href="structshrapnel_1_1midi_1_1Message.html#aed40e3ab3220667ba38796866604cbb7">parameters</a>)&gt; parameters;</div>
+<div class="line"><span class="lineno">  428</span> </div>
+<div class="line"><span class="lineno">  429</span>    <span class="keywordflow">switch</span>(message.which_parameters)</div>
 <div class="line"><span class="lineno">  430</span>    {</div>
-<div class="line"><span class="lineno">  431</span>        midi::Message::NoteOff tmp{};</div>
-<div class="line"><span class="lineno">  432</span>        <span class="keywordtype">int</span> rc = from_proto&lt;midi::Message::NoteOff&gt;(message.parameters.note_off,</div>
-<div class="line"><span class="lineno">  433</span>                                                    tmp);</div>
-<div class="line"><span class="lineno">  434</span>        out.<a class="code hl_variable" href="structshrapnel_1_1midi_1_1Message.html#aed40e3ab3220667ba38796866604cbb7">parameters</a> = tmp;</div>
-<div class="line"><span class="lineno">  435</span>        <span class="keywordflow">return</span> rc;</div>
-<div class="line"><span class="lineno">  436</span>    }</div>
-<div class="line"><span class="lineno">  437</span>    <span class="keywordflow">case</span> shrapnel_midi_mapping_MidiMessage_control_change_tag:</div>
-<div class="line"><span class="lineno">  438</span>    {</div>
-<div class="line"><span class="lineno">  439</span>        midi::Message::ControlChange tmp{};</div>
-<div class="line"><span class="lineno">  440</span>        <span class="keywordtype">int</span> rc = from_proto&lt;midi::Message::ControlChange&gt;(</div>
-<div class="line"><span class="lineno">  441</span>            message.parameters.control_change, tmp);</div>
-<div class="line"><span class="lineno">  442</span>        out.<a class="code hl_variable" href="structshrapnel_1_1midi_1_1Message.html#aed40e3ab3220667ba38796866604cbb7">parameters</a> = tmp;</div>
-<div class="line"><span class="lineno">  443</span>        <span class="keywordflow">return</span> rc;</div>
-<div class="line"><span class="lineno">  444</span>    }</div>
-<div class="line"><span class="lineno">  445</span>    <span class="keywordflow">case</span> shrapnel_midi_mapping_MidiMessage_program_change_tag:</div>
-<div class="line"><span class="lineno">  446</span>    {</div>
-<div class="line"><span class="lineno">  447</span>        midi::Message::ProgramChange tmp{};</div>
-<div class="line"><span class="lineno">  448</span>        <span class="keywordtype">int</span> rc = from_proto&lt;midi::Message::ProgramChange&gt;(</div>
-<div class="line"><span class="lineno">  449</span>            message.parameters.program_change, tmp);</div>
-<div class="line"><span class="lineno">  450</span>        out.<a class="code hl_variable" href="structshrapnel_1_1midi_1_1Message.html#aed40e3ab3220667ba38796866604cbb7">parameters</a> = tmp;</div>
-<div class="line"><span class="lineno">  451</span>        <span class="keywordflow">return</span> rc;</div>
-<div class="line"><span class="lineno">  452</span>    }</div>
-<div class="line"><span class="lineno">  453</span>    <span class="keywordflow">default</span>:</div>
-<div class="line"><span class="lineno">  454</span>        <span class="keywordflow">return</span> -1;</div>
-<div class="line"><span class="lineno">  455</span>    }</div>
-<div class="line"><span class="lineno">  456</span>}</div>
+<div class="line"><span class="lineno">  431</span>    <span class="keywordflow">case</span> shrapnel_midi_mapping_MidiMessage_note_on_tag:</div>
+<div class="line"><span class="lineno">  432</span>    {</div>
+<div class="line"><span class="lineno">  433</span>        <a class="code hl_struct" href="structshrapnel_1_1midi_1_1Message_1_1NoteOn.html">midi::Message::NoteOn</a> tmp{};</div>
+<div class="line"><span class="lineno">  434</span>        <span class="keywordtype">int</span> rc =</div>
+<div class="line"><span class="lineno">  435</span>            from_proto&lt;midi::Message::NoteOn&gt;(message.parameters.note_on, tmp);</div>
+<div class="line"><span class="lineno">  436</span>        out.<a class="code hl_variable" href="structshrapnel_1_1midi_1_1Message.html#aed40e3ab3220667ba38796866604cbb7">parameters</a> = tmp;</div>
+<div class="line"><span class="lineno">  437</span>        <span class="keywordflow">return</span> rc;</div>
+<div class="line"><span class="lineno">  438</span>    }</div>
+<div class="line"><span class="lineno">  439</span>    <span class="keywordflow">case</span> shrapnel_midi_mapping_MidiMessage_note_off_tag:</div>
+<div class="line"><span class="lineno">  440</span>    {</div>
+<div class="line"><span class="lineno">  441</span>        midi::Message::NoteOff tmp{};</div>
+<div class="line"><span class="lineno">  442</span>        <span class="keywordtype">int</span> rc = from_proto&lt;midi::Message::NoteOff&gt;(message.parameters.note_off,</div>
+<div class="line"><span class="lineno">  443</span>                                                    tmp);</div>
+<div class="line"><span class="lineno">  444</span>        out.<a class="code hl_variable" href="structshrapnel_1_1midi_1_1Message.html#aed40e3ab3220667ba38796866604cbb7">parameters</a> = tmp;</div>
+<div class="line"><span class="lineno">  445</span>        <span class="keywordflow">return</span> rc;</div>
+<div class="line"><span class="lineno">  446</span>    }</div>
+<div class="line"><span class="lineno">  447</span>    <span class="keywordflow">case</span> shrapnel_midi_mapping_MidiMessage_control_change_tag:</div>
+<div class="line"><span class="lineno">  448</span>    {</div>
+<div class="line"><span class="lineno">  449</span>        midi::Message::ControlChange tmp{};</div>
+<div class="line"><span class="lineno">  450</span>        <span class="keywordtype">int</span> rc = from_proto&lt;midi::Message::ControlChange&gt;(</div>
+<div class="line"><span class="lineno">  451</span>            message.parameters.control_change, tmp);</div>
+<div class="line"><span class="lineno">  452</span>        out.<a class="code hl_variable" href="structshrapnel_1_1midi_1_1Message.html#aed40e3ab3220667ba38796866604cbb7">parameters</a> = tmp;</div>
+<div class="line"><span class="lineno">  453</span>        <span class="keywordflow">return</span> rc;</div>
+<div class="line"><span class="lineno">  454</span>    }</div>
+<div class="line"><span class="lineno">  455</span>    <span class="keywordflow">case</span> shrapnel_midi_mapping_MidiMessage_program_change_tag:</div>
+<div class="line"><span class="lineno">  456</span>    {</div>
+<div class="line"><span class="lineno">  457</span>        midi::Message::ProgramChange tmp{};</div>
+<div class="line"><span class="lineno">  458</span>        <span class="keywordtype">int</span> rc = from_proto&lt;midi::Message::ProgramChange&gt;(</div>
+<div class="line"><span class="lineno">  459</span>            message.parameters.program_change, tmp);</div>
+<div class="line"><span class="lineno">  460</span>        out.<a class="code hl_variable" href="structshrapnel_1_1midi_1_1Message.html#aed40e3ab3220667ba38796866604cbb7">parameters</a> = tmp;</div>
+<div class="line"><span class="lineno">  461</span>        <span class="keywordflow">return</span> rc;</div>
+<div class="line"><span class="lineno">  462</span>    }</div>
+<div class="line"><span class="lineno">  463</span>    <span class="keywordflow">default</span>:</div>
+<div class="line"><span class="lineno">  464</span>        <span class="keywordflow">return</span> -1;</div>
+<div class="line"><span class="lineno">  465</span>    }</div>
+<div class="line"><span class="lineno">  466</span>}</div>
 <div class="ttc" id="astructshrapnel_1_1midi_1_1Message_1_1NoteOn_html"><div class="ttname"><a href="structshrapnel_1_1midi_1_1Message_1_1NoteOn.html">shrapnel::midi::Message::NoteOn</a></div><div class="ttdef"><b>Definition:</b> <a href="midi__protocol_8h_source.html#l00045">midi_protocol.h:46</a></div></div>
 <div class="ttc" id="astructshrapnel_1_1midi_1_1Message_html_a29581869e25f31ea15d28e332262b160"><div class="ttname"><a href="structshrapnel_1_1midi_1_1Message.html#a29581869e25f31ea15d28e332262b160">shrapnel::midi::Message::channel</a></div><div class="ttdeci">midi_channel_t channel</div><div class="ttdef"><b>Definition:</b> <a href="midi__protocol_8h_source.html#l00078">midi_protocol.h:78</a></div></div>
 <div class="ttc" id="astructshrapnel_1_1midi_1_1Message_html_aed40e3ab3220667ba38796866604cbb7"><div class="ttname"><a href="structshrapnel_1_1midi_1_1Message.html#aed40e3ab3220667ba38796866604cbb7">shrapnel::midi::Message::parameters</a></div><div class="ttdeci">std::variant&lt; NoteOn, NoteOff, ControlChange, ProgramChange &gt; parameters</div><div class="ttdef"><b>Definition:</b> <a href="midi__protocol_8h_source.html#l00079">midi_protocol.h:79</a></div></div>
@@ -1755,12 +1760,12 @@ template&lt;&gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="midi__mapping__api_8cpp_source.html#l00338">338</a> of file <a class="el" href="midi__mapping__api_8cpp_source.html">midi_mapping_api.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  340</span>{</div>
-<div class="line"><span class="lineno">  341</span>    out.<a class="code hl_variable" href="structshrapnel_1_1midi_1_1Message_1_1ControlChange.html#a63472623103c98ec18cc0f2ff0cd67e5">control</a> = message.control;</div>
-<div class="line"><span class="lineno">  342</span>    out.<a class="code hl_variable" href="structshrapnel_1_1midi_1_1Message_1_1ControlChange.html#a2615450c8f2f31fc8c4298f8363d076c">value</a> = message.value;</div>
-<div class="line"><span class="lineno">  343</span>    <span class="keywordflow">return</span> 0;</div>
-<div class="line"><span class="lineno">  344</span>}</div>
+<p class="definition">Definition at line <a class="el" href="midi__mapping__api_8cpp_source.html#l00348">348</a> of file <a class="el" href="midi__mapping__api_8cpp_source.html">midi_mapping_api.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  350</span>{</div>
+<div class="line"><span class="lineno">  351</span>    out.<a class="code hl_variable" href="structshrapnel_1_1midi_1_1Message_1_1ControlChange.html#a63472623103c98ec18cc0f2ff0cd67e5">control</a> = message.control;</div>
+<div class="line"><span class="lineno">  352</span>    out.<a class="code hl_variable" href="structshrapnel_1_1midi_1_1Message_1_1ControlChange.html#a2615450c8f2f31fc8c4298f8363d076c">value</a> = message.value;</div>
+<div class="line"><span class="lineno">  353</span>    <span class="keywordflow">return</span> 0;</div>
+<div class="line"><span class="lineno">  354</span>}</div>
 <div class="ttc" id="astructshrapnel_1_1midi_1_1Message_1_1ControlChange_html_a2615450c8f2f31fc8c4298f8363d076c"><div class="ttname"><a href="structshrapnel_1_1midi_1_1Message_1_1ControlChange.html#a2615450c8f2f31fc8c4298f8363d076c">shrapnel::midi::Message::ControlChange::value</a></div><div class="ttdeci">uint8_t value</div><div class="ttdef"><b>Definition:</b> <a href="midi__protocol_8h_source.html#l00064">midi_protocol.h:64</a></div></div>
 <div class="ttc" id="astructshrapnel_1_1midi_1_1Message_1_1ControlChange_html_a63472623103c98ec18cc0f2ff0cd67e5"><div class="ttname"><a href="structshrapnel_1_1midi_1_1Message_1_1ControlChange.html#a63472623103c98ec18cc0f2ff0cd67e5">shrapnel::midi::Message::ControlChange::control</a></div><div class="ttdeci">uint8_t control</div><div class="ttdef"><b>Definition:</b> <a href="midi__protocol_8h_source.html#l00063">midi_protocol.h:63</a></div></div>
 </div><!-- fragment -->
@@ -1796,12 +1801,12 @@ template&lt;&gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="midi__mapping__api_8cpp_source.html#l00320">320</a> of file <a class="el" href="midi__mapping__api_8cpp_source.html">midi_mapping_api.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  322</span>{</div>
-<div class="line"><span class="lineno">  323</span>    out.<a class="code hl_variable" href="structshrapnel_1_1midi_1_1Message_1_1NoteOff.html#a956f0f53e35e1dfda0e40c53b3e4c346">note</a> = message.note;</div>
-<div class="line"><span class="lineno">  324</span>    out.<a class="code hl_variable" href="structshrapnel_1_1midi_1_1Message_1_1NoteOff.html#a854bc5ff80d66e047c66678ca281df8d">velocity</a> = message.velocity;</div>
-<div class="line"><span class="lineno">  325</span>    <span class="keywordflow">return</span> 0;</div>
-<div class="line"><span class="lineno">  326</span>}</div>
+<p class="definition">Definition at line <a class="el" href="midi__mapping__api_8cpp_source.html#l00330">330</a> of file <a class="el" href="midi__mapping__api_8cpp_source.html">midi_mapping_api.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  332</span>{</div>
+<div class="line"><span class="lineno">  333</span>    out.<a class="code hl_variable" href="structshrapnel_1_1midi_1_1Message_1_1NoteOff.html#a956f0f53e35e1dfda0e40c53b3e4c346">note</a> = message.note;</div>
+<div class="line"><span class="lineno">  334</span>    out.<a class="code hl_variable" href="structshrapnel_1_1midi_1_1Message_1_1NoteOff.html#a854bc5ff80d66e047c66678ca281df8d">velocity</a> = message.velocity;</div>
+<div class="line"><span class="lineno">  335</span>    <span class="keywordflow">return</span> 0;</div>
+<div class="line"><span class="lineno">  336</span>}</div>
 <div class="ttc" id="astructshrapnel_1_1midi_1_1Message_1_1NoteOff_html_a854bc5ff80d66e047c66678ca281df8d"><div class="ttname"><a href="structshrapnel_1_1midi_1_1Message_1_1NoteOff.html#a854bc5ff80d66e047c66678ca281df8d">shrapnel::midi::Message::NoteOff::velocity</a></div><div class="ttdeci">uint8_t velocity</div><div class="ttdef"><b>Definition:</b> <a href="midi__protocol_8h_source.html#l00056">midi_protocol.h:56</a></div></div>
 <div class="ttc" id="astructshrapnel_1_1midi_1_1Message_1_1NoteOff_html_a956f0f53e35e1dfda0e40c53b3e4c346"><div class="ttname"><a href="structshrapnel_1_1midi_1_1Message_1_1NoteOff.html#a956f0f53e35e1dfda0e40c53b3e4c346">shrapnel::midi::Message::NoteOff::note</a></div><div class="ttdeci">uint8_t note</div><div class="ttdef"><b>Definition:</b> <a href="midi__protocol_8h_source.html#l00055">midi_protocol.h:55</a></div></div>
 </div><!-- fragment -->
@@ -1837,12 +1842,12 @@ template&lt;&gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="midi__mapping__api_8cpp_source.html#l00302">302</a> of file <a class="el" href="midi__mapping__api_8cpp_source.html">midi_mapping_api.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  304</span>{</div>
-<div class="line"><span class="lineno">  305</span>    out.<a class="code hl_variable" href="structshrapnel_1_1midi_1_1Message_1_1NoteOn.html#ae16150bffaedd0c9c1ce7dd767b463eb">note</a> = message.note;</div>
-<div class="line"><span class="lineno">  306</span>    out.<a class="code hl_variable" href="structshrapnel_1_1midi_1_1Message_1_1NoteOn.html#a3377e69df50e588b93683fd3c3aa8a43">velocity</a> = message.velocity;</div>
-<div class="line"><span class="lineno">  307</span>    <span class="keywordflow">return</span> 0;</div>
-<div class="line"><span class="lineno">  308</span>}</div>
+<p class="definition">Definition at line <a class="el" href="midi__mapping__api_8cpp_source.html#l00312">312</a> of file <a class="el" href="midi__mapping__api_8cpp_source.html">midi_mapping_api.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  314</span>{</div>
+<div class="line"><span class="lineno">  315</span>    out.<a class="code hl_variable" href="structshrapnel_1_1midi_1_1Message_1_1NoteOn.html#ae16150bffaedd0c9c1ce7dd767b463eb">note</a> = message.note;</div>
+<div class="line"><span class="lineno">  316</span>    out.<a class="code hl_variable" href="structshrapnel_1_1midi_1_1Message_1_1NoteOn.html#a3377e69df50e588b93683fd3c3aa8a43">velocity</a> = message.velocity;</div>
+<div class="line"><span class="lineno">  317</span>    <span class="keywordflow">return</span> 0;</div>
+<div class="line"><span class="lineno">  318</span>}</div>
 <div class="ttc" id="astructshrapnel_1_1midi_1_1Message_1_1NoteOn_html_a3377e69df50e588b93683fd3c3aa8a43"><div class="ttname"><a href="structshrapnel_1_1midi_1_1Message_1_1NoteOn.html#a3377e69df50e588b93683fd3c3aa8a43">shrapnel::midi::Message::NoteOn::velocity</a></div><div class="ttdeci">uint8_t velocity</div><div class="ttdef"><b>Definition:</b> <a href="midi__protocol_8h_source.html#l00048">midi_protocol.h:48</a></div></div>
 <div class="ttc" id="astructshrapnel_1_1midi_1_1Message_1_1NoteOn_html_ae16150bffaedd0c9c1ce7dd767b463eb"><div class="ttname"><a href="structshrapnel_1_1midi_1_1Message_1_1NoteOn.html#ae16150bffaedd0c9c1ce7dd767b463eb">shrapnel::midi::Message::NoteOn::note</a></div><div class="ttdeci">uint8_t note</div><div class="ttdef"><b>Definition:</b> <a href="midi__protocol_8h_source.html#l00047">midi_protocol.h:47</a></div></div>
 </div><!-- fragment -->
@@ -1878,11 +1883,11 @@ template&lt;&gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="midi__mapping__api_8cpp_source.html#l00355">355</a> of file <a class="el" href="midi__mapping__api_8cpp_source.html">midi_mapping_api.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  357</span>{</div>
-<div class="line"><span class="lineno">  358</span>    out.<a class="code hl_variable" href="structshrapnel_1_1midi_1_1Message_1_1ProgramChange.html#aa410a2e8f7c2338ad6cc7545ad5d93c8">number</a> = message.number;</div>
-<div class="line"><span class="lineno">  359</span>    <span class="keywordflow">return</span> 0;</div>
-<div class="line"><span class="lineno">  360</span>}</div>
+<p class="definition">Definition at line <a class="el" href="midi__mapping__api_8cpp_source.html#l00365">365</a> of file <a class="el" href="midi__mapping__api_8cpp_source.html">midi_mapping_api.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  367</span>{</div>
+<div class="line"><span class="lineno">  368</span>    out.<a class="code hl_variable" href="structshrapnel_1_1midi_1_1Message_1_1ProgramChange.html#aa410a2e8f7c2338ad6cc7545ad5d93c8">number</a> = message.number;</div>
+<div class="line"><span class="lineno">  369</span>    <span class="keywordflow">return</span> 0;</div>
+<div class="line"><span class="lineno">  370</span>}</div>
 <div class="ttc" id="astructshrapnel_1_1midi_1_1Message_1_1ProgramChange_html_aa410a2e8f7c2338ad6cc7545ad5d93c8"><div class="ttname"><a href="structshrapnel_1_1midi_1_1Message_1_1ProgramChange.html#aa410a2e8f7c2338ad6cc7545ad5d93c8">shrapnel::midi::Message::ProgramChange::number</a></div><div class="ttdeci">uint8_t number</div><div class="ttdef"><b>Definition:</b> <a href="midi__protocol_8h_source.html#l00072">midi_protocol.h:72</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="midi__protocol_8h_source.html#l00072">shrapnel::midi::Message::ProgramChange::number</a>.</p>
@@ -1917,14 +1922,14 @@ template&lt;&gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="midi__mapping__api_8cpp_source.html#l00286">286</a> of file <a class="el" href="midi__mapping__api_8cpp_source.html">midi_mapping_api.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  287</span>{</div>
-<div class="line"><span class="lineno">  288</span>    out.<a class="code hl_variable" href="structshrapnel_1_1midi_1_1Remove.html#a117170210912dd5e3910ea1345e5dabe">id</a> = message.id;</div>
-<div class="line"><span class="lineno">  289</span>    <span class="keywordflow">return</span> 0;</div>
-<div class="line"><span class="lineno">  290</span>}</div>
-<div class="ttc" id="astructshrapnel_1_1midi_1_1Remove_html_a117170210912dd5e3910ea1345e5dabe"><div class="ttname"><a href="structshrapnel_1_1midi_1_1Remove.html#a117170210912dd5e3910ea1345e5dabe">shrapnel::midi::Remove::id</a></div><div class="ttdeci">Mapping::id_t id</div><div class="ttdef"><b>Definition:</b> <a href="midi__mapping__api_8h_source.html#l00077">midi_mapping_api.h:77</a></div></div>
+<p class="definition">Definition at line <a class="el" href="midi__mapping__api_8cpp_source.html#l00296">296</a> of file <a class="el" href="midi__mapping__api_8cpp_source.html">midi_mapping_api.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  297</span>{</div>
+<div class="line"><span class="lineno">  298</span>    out.<a class="code hl_variable" href="structshrapnel_1_1midi_1_1Remove.html#a117170210912dd5e3910ea1345e5dabe">id</a> = message.id;</div>
+<div class="line"><span class="lineno">  299</span>    <span class="keywordflow">return</span> 0;</div>
+<div class="line"><span class="lineno">  300</span>}</div>
+<div class="ttc" id="astructshrapnel_1_1midi_1_1Remove_html_a117170210912dd5e3910ea1345e5dabe"><div class="ttname"><a href="structshrapnel_1_1midi_1_1Remove.html#a117170210912dd5e3910ea1345e5dabe">shrapnel::midi::Remove::id</a></div><div class="ttdeci">Mapping::id_t id</div><div class="ttdef"><b>Definition:</b> <a href="midi__mapping__api_8h_source.html#l00081">midi_mapping_api.h:81</a></div></div>
 </div><!-- fragment -->
-<p class="reference">References <a class="el" href="midi__mapping__api_8h_source.html#l00077">shrapnel::midi::Remove::id</a>.</p>
+<p class="reference">References <a class="el" href="midi__mapping__api_8h_source.html#l00081">shrapnel::midi::Remove::id</a>.</p>
 
 </div>
 </div>
@@ -1956,14 +1961,14 @@ template&lt;&gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="midi__mapping__api_8cpp_source.html#l00272">272</a> of file <a class="el" href="midi__mapping__api_8cpp_source.html">midi_mapping_api.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  273</span>{</div>
-<div class="line"><span class="lineno">  274</span>    <span class="keywordflow">return</span> from_proto&lt;std::pair&lt;midi::Mapping::id_t, midi::Mapping&gt;&gt;(</div>
-<div class="line"><span class="lineno">  275</span>        message.mapping, out.<a class="code hl_variable" href="structshrapnel_1_1midi_1_1Update.html#a9dceb99ae11c395d675becd97f4a2fa5">mapping</a>);</div>
-<div class="line"><span class="lineno">  276</span>}</div>
-<div class="ttc" id="astructshrapnel_1_1midi_1_1Update_html_a9dceb99ae11c395d675becd97f4a2fa5"><div class="ttname"><a href="structshrapnel_1_1midi_1_1Update.html#a9dceb99ae11c395d675becd97f4a2fa5">shrapnel::midi::Update::mapping</a></div><div class="ttdeci">std::pair&lt; Mapping::id_t, Mapping &gt; mapping</div><div class="ttdef"><b>Definition:</b> <a href="midi__mapping__api_8h_source.html#l00071">midi_mapping_api.h:71</a></div></div>
+<p class="definition">Definition at line <a class="el" href="midi__mapping__api_8cpp_source.html#l00282">282</a> of file <a class="el" href="midi__mapping__api_8cpp_source.html">midi_mapping_api.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  283</span>{</div>
+<div class="line"><span class="lineno">  284</span>    <span class="keywordflow">return</span> from_proto&lt;std::pair&lt;midi::Mapping::id_t, midi::Mapping&gt;&gt;(</div>
+<div class="line"><span class="lineno">  285</span>        message.mapping, out.<a class="code hl_variable" href="structshrapnel_1_1midi_1_1Update.html#a9dceb99ae11c395d675becd97f4a2fa5">mapping</a>);</div>
+<div class="line"><span class="lineno">  286</span>}</div>
+<div class="ttc" id="astructshrapnel_1_1midi_1_1Update_html_a9dceb99ae11c395d675becd97f4a2fa5"><div class="ttname"><a href="structshrapnel_1_1midi_1_1Update.html#a9dceb99ae11c395d675becd97f4a2fa5">shrapnel::midi::Update::mapping</a></div><div class="ttdeci">std::pair&lt; Mapping::id_t, Mapping &gt; mapping</div><div class="ttdef"><b>Definition:</b> <a href="midi__mapping__api_8h_source.html#l00075">midi_mapping_api.h:75</a></div></div>
 </div><!-- fragment -->
-<p class="reference">References <a class="el" href="midi__mapping__api_8h_source.html#l00071">shrapnel::midi::Update::mapping</a>.</p>
+<p class="reference">References <a class="el" href="midi__mapping__api_8h_source.html#l00075">shrapnel::midi::Update::mapping</a>.</p>
 
 </div>
 </div>
@@ -2791,19 +2796,19 @@ template&lt;&gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="midi__mapping__api_8cpp_source.html#l00619">619</a> of file <a class="el" href="midi__mapping__api_8cpp_source.html">midi_mapping_api.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  621</span>{</div>
-<div class="line"><span class="lineno">  622</span>    shrapnel_midi_mapping_Mapping proto;</div>
-<div class="line"><span class="lineno">  623</span>    <span class="keywordtype">int</span> rc = <a class="code hl_function" href="namespaceshrapnel_1_1api.html#a17ffbcb76b6df3a9506ad50c3fe5f751">to_proto</a>(message, proto);</div>
-<div class="line"><span class="lineno">  624</span>    <span class="keywordflow">if</span>(rc != 0)</div>
-<div class="line"><span class="lineno">  625</span>    {</div>
-<div class="line"><span class="lineno">  626</span>        <span class="keywordflow">return</span> std::nullopt;</div>
-<div class="line"><span class="lineno">  627</span>    }</div>
-<div class="line"><span class="lineno">  628</span> </div>
-<div class="line"><span class="lineno">  629</span>    <span class="keywordflow">return</span> <a class="code hl_function" href="namespaceshrapnel_1_1api.html#a3b494d4866d913ed460e84c8c1d0f181">to_bytes</a>(proto, buffer);</div>
-<div class="line"><span class="lineno">  630</span>}</div>
-<div class="ttc" id="anamespaceshrapnel_1_1api_html_a17ffbcb76b6df3a9506ad50c3fe5f751"><div class="ttname"><a href="namespaceshrapnel_1_1api.html#a17ffbcb76b6df3a9506ad50c3fe5f751">shrapnel::api::to_proto</a></div><div class="ttdeci">int to_proto(const midi::MappingApiMessage &amp;message, shrapnel_midi_mapping_Message &amp;out)</div><div class="ttdef"><b>Definition:</b> <a href="midi__mapping__api_8cpp_source.html#l00481">midi_mapping_api.cpp:481</a></div></div>
-<div class="ttc" id="anamespaceshrapnel_1_1api_html_a3b494d4866d913ed460e84c8c1d0f181"><div class="ttname"><a href="namespaceshrapnel_1_1api.html#a3b494d4866d913ed460e84c8c1d0f181">shrapnel::api::to_bytes</a></div><div class="ttdeci">std::optional&lt; std::span&lt; uint8_t &gt; &gt; to_bytes(const midi::Mapping &amp;message, std::span&lt; uint8_t &gt; buffer)</div><div class="ttdef"><b>Definition:</b> <a href="midi__mapping__api_8cpp_source.html#l00619">midi_mapping_api.cpp:619</a></div></div>
+<p class="definition">Definition at line <a class="el" href="midi__mapping__api_8cpp_source.html#l00629">629</a> of file <a class="el" href="midi__mapping__api_8cpp_source.html">midi_mapping_api.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  631</span>{</div>
+<div class="line"><span class="lineno">  632</span>    shrapnel_midi_mapping_Mapping proto;</div>
+<div class="line"><span class="lineno">  633</span>    <span class="keywordtype">int</span> rc = <a class="code hl_function" href="namespaceshrapnel_1_1api.html#a17ffbcb76b6df3a9506ad50c3fe5f751">to_proto</a>(message, proto);</div>
+<div class="line"><span class="lineno">  634</span>    <span class="keywordflow">if</span>(rc != 0)</div>
+<div class="line"><span class="lineno">  635</span>    {</div>
+<div class="line"><span class="lineno">  636</span>        <span class="keywordflow">return</span> std::nullopt;</div>
+<div class="line"><span class="lineno">  637</span>    }</div>
+<div class="line"><span class="lineno">  638</span> </div>
+<div class="line"><span class="lineno">  639</span>    <span class="keywordflow">return</span> <a class="code hl_function" href="namespaceshrapnel_1_1api.html#a3b494d4866d913ed460e84c8c1d0f181">to_bytes</a>(proto, buffer);</div>
+<div class="line"><span class="lineno">  640</span>}</div>
+<div class="ttc" id="anamespaceshrapnel_1_1api_html_a17ffbcb76b6df3a9506ad50c3fe5f751"><div class="ttname"><a href="namespaceshrapnel_1_1api.html#a17ffbcb76b6df3a9506ad50c3fe5f751">shrapnel::api::to_proto</a></div><div class="ttdeci">int to_proto(const midi::MappingApiMessage &amp;message, shrapnel_midi_mapping_Message &amp;out)</div><div class="ttdef"><b>Definition:</b> <a href="midi__mapping__api_8cpp_source.html#l00491">midi_mapping_api.cpp:491</a></div></div>
+<div class="ttc" id="anamespaceshrapnel_1_1api_html_a3b494d4866d913ed460e84c8c1d0f181"><div class="ttname"><a href="namespaceshrapnel_1_1api.html#a3b494d4866d913ed460e84c8c1d0f181">shrapnel::api::to_bytes</a></div><div class="ttdeci">std::optional&lt; std::span&lt; uint8_t &gt; &gt; to_bytes(const midi::Mapping &amp;message, std::span&lt; uint8_t &gt; buffer)</div><div class="ttdef"><b>Definition:</b> <a href="midi__mapping__api_8cpp_source.html#l00629">midi_mapping_api.cpp:629</a></div></div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="namespaceshrapnel_1_1api.html#a4eb6fa3c5ed2f9fe0bce8d80e4479a32">to_bytes()</a>, and <a class="el" href="namespaceshrapnel_1_1api.html#a8fc768e74a62eb09f96ae1ca9f18199b">to_proto()</a>.</p>
 <div class="dynheader">
@@ -2843,17 +2848,17 @@ template&lt;&gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="midi__mapping__api_8cpp_source.html#l00619">619</a> of file <a class="el" href="midi__mapping__api_8cpp_source.html">midi_mapping_api.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  621</span>{</div>
-<div class="line"><span class="lineno">  622</span>    shrapnel_midi_mapping_Mapping proto;</div>
-<div class="line"><span class="lineno">  623</span>    <span class="keywordtype">int</span> rc = <a class="code hl_function" href="namespaceshrapnel_1_1api.html#a17ffbcb76b6df3a9506ad50c3fe5f751">to_proto</a>(message, proto);</div>
-<div class="line"><span class="lineno">  624</span>    <span class="keywordflow">if</span>(rc != 0)</div>
-<div class="line"><span class="lineno">  625</span>    {</div>
-<div class="line"><span class="lineno">  626</span>        <span class="keywordflow">return</span> std::nullopt;</div>
-<div class="line"><span class="lineno">  627</span>    }</div>
-<div class="line"><span class="lineno">  628</span> </div>
-<div class="line"><span class="lineno">  629</span>    <span class="keywordflow">return</span> <a class="code hl_function" href="namespaceshrapnel_1_1api.html#a3b494d4866d913ed460e84c8c1d0f181">to_bytes</a>(proto, buffer);</div>
-<div class="line"><span class="lineno">  630</span>}</div>
+<p class="definition">Definition at line <a class="el" href="midi__mapping__api_8cpp_source.html#l00629">629</a> of file <a class="el" href="midi__mapping__api_8cpp_source.html">midi_mapping_api.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  631</span>{</div>
+<div class="line"><span class="lineno">  632</span>    shrapnel_midi_mapping_Mapping proto;</div>
+<div class="line"><span class="lineno">  633</span>    <span class="keywordtype">int</span> rc = <a class="code hl_function" href="namespaceshrapnel_1_1api.html#a17ffbcb76b6df3a9506ad50c3fe5f751">to_proto</a>(message, proto);</div>
+<div class="line"><span class="lineno">  634</span>    <span class="keywordflow">if</span>(rc != 0)</div>
+<div class="line"><span class="lineno">  635</span>    {</div>
+<div class="line"><span class="lineno">  636</span>        <span class="keywordflow">return</span> std::nullopt;</div>
+<div class="line"><span class="lineno">  637</span>    }</div>
+<div class="line"><span class="lineno">  638</span> </div>
+<div class="line"><span class="lineno">  639</span>    <span class="keywordflow">return</span> <a class="code hl_function" href="namespaceshrapnel_1_1api.html#a3b494d4866d913ed460e84c8c1d0f181">to_bytes</a>(proto, buffer);</div>
+<div class="line"><span class="lineno">  640</span>}</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="namespaceshrapnel_1_1api.html#a4eb6fa3c5ed2f9fe0bce8d80e4479a32">to_bytes()</a>, and <a class="el" href="namespaceshrapnel_1_1api.html#a8fc768e74a62eb09f96ae1ca9f18199b">to_proto()</a>.</p>
 <div class="dynheader">
@@ -3038,19 +3043,19 @@ template&lt;&gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="midi__mapping__api_8cpp_source.html#l00116">116</a> of file <a class="el" href="midi__mapping__api_8cpp_source.html">midi_mapping_api.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  118</span>{</div>
-<div class="line"><span class="lineno">  119</span>    pb_ostream_t stream = pb_ostream_from_buffer(buffer.data(), buffer.size());</div>
-<div class="line"><span class="lineno">  120</span> </div>
-<div class="line"><span class="lineno">  121</span>    <span class="keywordtype">bool</span> success =</div>
-<div class="line"><span class="lineno">  122</span>        pb_encode(&amp;stream, &amp;shrapnel_midi_mapping_Mapping_msg, &amp;message);</div>
-<div class="line"><span class="lineno">  123</span>    <span class="keywordflow">if</span>(!success)</div>
-<div class="line"><span class="lineno">  124</span>    {</div>
-<div class="line"><span class="lineno">  125</span>        <span class="keywordflow">return</span> std::nullopt;</div>
-<div class="line"><span class="lineno">  126</span>    }</div>
-<div class="line"><span class="lineno">  127</span> </div>
-<div class="line"><span class="lineno">  128</span>    <span class="keywordflow">return</span> buffer.subspan(0, stream.bytes_written);</div>
-<div class="line"><span class="lineno">  129</span>}</div>
+<p class="definition">Definition at line <a class="el" href="midi__mapping__api_8cpp_source.html#l00118">118</a> of file <a class="el" href="midi__mapping__api_8cpp_source.html">midi_mapping_api.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  120</span>{</div>
+<div class="line"><span class="lineno">  121</span>    pb_ostream_t stream = pb_ostream_from_buffer(buffer.data(), buffer.size());</div>
+<div class="line"><span class="lineno">  122</span> </div>
+<div class="line"><span class="lineno">  123</span>    <span class="keywordtype">bool</span> success =</div>
+<div class="line"><span class="lineno">  124</span>        pb_encode(&amp;stream, &amp;shrapnel_midi_mapping_Mapping_msg, &amp;message);</div>
+<div class="line"><span class="lineno">  125</span>    <span class="keywordflow">if</span>(!success)</div>
+<div class="line"><span class="lineno">  126</span>    {</div>
+<div class="line"><span class="lineno">  127</span>        <span class="keywordflow">return</span> std::nullopt;</div>
+<div class="line"><span class="lineno">  128</span>    }</div>
+<div class="line"><span class="lineno">  129</span> </div>
+<div class="line"><span class="lineno">  130</span>    <span class="keywordflow">return</span> buffer.subspan(0, stream.bytes_written);</div>
+<div class="line"><span class="lineno">  131</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -3127,7 +3132,7 @@ template&lt;typename T &gt; </div>
 
 <p>Convert a message to bytes to be sent over the network to the frontend. </p>
 
-<p class="reference">Referenced by <a class="el" href="midi__mapping_8h_source.html#l00087">shrapnel::midi::MappingManager&lt; AudioParametersT, MAX_MAPPINGS, MAX_OBSERVERS &gt;::create()</a>, <a class="el" href="preset__manager_8cpp_source.html#l00032">shrapnel::presets::PresetsManager::create()</a>, <a class="el" href="messages_8cpp_source.html#l00156">to_bytes()</a>, <a class="el" href="preset__manager_8cpp_source.html#l00073">shrapnel::presets::PresetsManager::update()</a>, and <a class="el" href="midi__mapping_8h_source.html#l00140">shrapnel::midi::MappingManager&lt; AudioParametersT, MAX_MAPPINGS, MAX_OBSERVERS &gt;::update()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="midi__mapping_8h_source.html#l00087">shrapnel::midi::MappingManager&lt; MAX_MAPPINGS, MAX_OBSERVERS &gt;::create()</a>, <a class="el" href="preset__manager_8cpp_source.html#l00032">shrapnel::presets::PresetsManager::create()</a>, <a class="el" href="messages_8cpp_source.html#l00156">to_bytes()</a>, <a class="el" href="preset__manager_8cpp_source.html#l00073">shrapnel::presets::PresetsManager::update()</a>, and <a class="el" href="midi__mapping_8h_source.html#l00140">shrapnel::midi::MappingManager&lt; MAX_MAPPINGS, MAX_OBSERVERS &gt;::update()</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
@@ -3448,14 +3453,14 @@ template&lt;&gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="midi__mapping__api_8cpp_source.html#l00226">226</a> of file <a class="el" href="midi__mapping__api_8cpp_source.html">midi_mapping_api.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  228</span>{</div>
-<div class="line"><span class="lineno">  229</span>    out.has_mapping = <span class="keyword">true</span>;</div>
-<div class="line"><span class="lineno">  230</span>    <span class="keywordflow">return</span> to_proto&lt;shrapnel_midi_mapping_Mapping&gt;(message.<a class="code hl_variable" href="structshrapnel_1_1midi_1_1CreateRequest.html#a328c690a44a674edcfd74e9098b553ab">mapping</a>,</div>
-<div class="line"><span class="lineno">  231</span>                                                   out.mapping);</div>
-<div class="line"><span class="lineno">  232</span>}</div>
+<p class="definition">Definition at line <a class="el" href="midi__mapping__api_8cpp_source.html#l00236">236</a> of file <a class="el" href="midi__mapping__api_8cpp_source.html">midi_mapping_api.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  238</span>{</div>
+<div class="line"><span class="lineno">  239</span>    out.has_mapping = <span class="keyword">true</span>;</div>
+<div class="line"><span class="lineno">  240</span>    <span class="keywordflow">return</span> to_proto&lt;shrapnel_midi_mapping_Mapping&gt;(message.<a class="code hl_variable" href="structshrapnel_1_1midi_1_1CreateRequest.html#a328c690a44a674edcfd74e9098b553ab">mapping</a>,</div>
+<div class="line"><span class="lineno">  241</span>                                                   out.mapping);</div>
+<div class="line"><span class="lineno">  242</span>}</div>
 </div><!-- fragment -->
-<p class="reference">References <a class="el" href="midi__mapping__api_8h_source.html#l00057">shrapnel::midi::CreateRequest::mapping</a>.</p>
+<p class="reference">References <a class="el" href="midi__mapping__api_8h_source.html#l00060">shrapnel::midi::CreateRequest::mapping</a>.</p>
 
 </div>
 </div>
@@ -3487,14 +3492,14 @@ template&lt;&gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="midi__mapping__api_8cpp_source.html#l00242">242</a> of file <a class="el" href="midi__mapping__api_8cpp_source.html">midi_mapping_api.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  244</span>{</div>
-<div class="line"><span class="lineno">  245</span>    out.has_mapping = <span class="keyword">true</span>;</div>
-<div class="line"><span class="lineno">  246</span>    <span class="keywordflow">return</span> to_proto&lt;shrapnel_midi_mapping_MappingRecord&gt;(message.<a class="code hl_variable" href="structshrapnel_1_1midi_1_1CreateResponse.html#a9e3f73aa5d09af4a127809bcf53a758c">mapping</a>,</div>
-<div class="line"><span class="lineno">  247</span>                                                         out.mapping);</div>
-<div class="line"><span class="lineno">  248</span>}</div>
+<p class="definition">Definition at line <a class="el" href="midi__mapping__api_8cpp_source.html#l00252">252</a> of file <a class="el" href="midi__mapping__api_8cpp_source.html">midi_mapping_api.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  254</span>{</div>
+<div class="line"><span class="lineno">  255</span>    out.has_mapping = <span class="keyword">true</span>;</div>
+<div class="line"><span class="lineno">  256</span>    <span class="keywordflow">return</span> to_proto&lt;shrapnel_midi_mapping_MappingRecord&gt;(message.<a class="code hl_variable" href="structshrapnel_1_1midi_1_1CreateResponse.html#a9e3f73aa5d09af4a127809bcf53a758c">mapping</a>,</div>
+<div class="line"><span class="lineno">  257</span>                                                         out.mapping);</div>
+<div class="line"><span class="lineno">  258</span>}</div>
 </div><!-- fragment -->
-<p class="reference">References <a class="el" href="midi__mapping__api_8h_source.html#l00064">shrapnel::midi::CreateResponse::mapping</a>.</p>
+<p class="reference">References <a class="el" href="midi__mapping__api_8h_source.html#l00067">shrapnel::midi::CreateResponse::mapping</a>.</p>
 
 </div>
 </div>
@@ -3526,10 +3531,10 @@ template&lt;&gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="midi__mapping__api_8cpp_source.html#l00214">214</a> of file <a class="el" href="midi__mapping__api_8cpp_source.html">midi_mapping_api.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  215</span>{</div>
-<div class="line"><span class="lineno">  216</span>    <span class="keywordflow">return</span> 0;</div>
-<div class="line"><span class="lineno">  217</span>}</div>
+<p class="definition">Definition at line <a class="el" href="midi__mapping__api_8cpp_source.html#l00224">224</a> of file <a class="el" href="midi__mapping__api_8cpp_source.html">midi_mapping_api.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  225</span>{</div>
+<div class="line"><span class="lineno">  226</span>    <span class="keywordflow">return</span> 0;</div>
+<div class="line"><span class="lineno">  227</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -3561,28 +3566,32 @@ template&lt;&gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="midi__mapping__api_8cpp_source.html#l00149">149</a> of file <a class="el" href="midi__mapping__api_8cpp_source.html">midi_mapping_api.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  150</span>{</div>
-<div class="line"><span class="lineno">  151</span>    out.midi_channel = message.<a class="code hl_variable" href="structshrapnel_1_1midi_1_1Mapping.html#a46fa239f0d9c9c4db85812d0f38b0f29">midi_channel</a>;</div>
-<div class="line"><span class="lineno">  152</span>    out.cc_number = message.<a class="code hl_variable" href="structshrapnel_1_1midi_1_1Mapping.html#ae1bdd8e63717dbbf186158d915ab266d">cc_number</a>;</div>
-<div class="line"><span class="lineno">  153</span>    <span class="keywordflow">switch</span>(message.<a class="code hl_variable" href="structshrapnel_1_1midi_1_1Mapping.html#ad02ebea6e6428980d752a6f3844bf21f">mode</a>)</div>
-<div class="line"><span class="lineno">  154</span>    {</div>
-<div class="line"><span class="lineno">  155</span>    <span class="keywordflow">case</span> midi::Mapping::Mode::PARAMETER:</div>
-<div class="line"><span class="lineno">  156</span>        out.mode = shrapnel_midi_mapping_Mapping_Mode_parameter;</div>
-<div class="line"><span class="lineno">  157</span>        <span class="keywordflow">break</span>;</div>
-<div class="line"><span class="lineno">  158</span>    <span class="keywordflow">case</span> midi::Mapping::Mode::TOGGLE:</div>
-<div class="line"><span class="lineno">  159</span>        out.mode = shrapnel_midi_mapping_Mapping_Mode_toggle;</div>
-<div class="line"><span class="lineno">  160</span>        <span class="keywordflow">break</span>;</div>
-<div class="line"><span class="lineno">  161</span>    <span class="keywordflow">default</span>:</div>
-<div class="line"><span class="lineno">  162</span>        <span class="keywordflow">return</span> -1;</div>
-<div class="line"><span class="lineno">  163</span>    }</div>
-<div class="line"><span class="lineno">  164</span>    strncpy(out.parameterName,</div>
-<div class="line"><span class="lineno">  165</span>            message.<a class="code hl_variable" href="structshrapnel_1_1midi_1_1Mapping.html#ad1d90b2aa45178377665b16f88aa4433">parameter_name</a>.data(),</div>
-<div class="line"><span class="lineno">  166</span>            <span class="keyword">sizeof</span> out.parameterName);</div>
-<div class="line"><span class="lineno">  167</span>    <span class="keywordflow">return</span> 0;</div>
-<div class="line"><span class="lineno">  168</span>}</div>
+<p class="definition">Definition at line <a class="el" href="midi__mapping__api_8cpp_source.html#l00151">151</a> of file <a class="el" href="midi__mapping__api_8cpp_source.html">midi_mapping_api.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  152</span>{</div>
+<div class="line"><span class="lineno">  153</span>    out.midi_channel = message.<a class="code hl_variable" href="structshrapnel_1_1midi_1_1Mapping.html#a46fa239f0d9c9c4db85812d0f38b0f29">midi_channel</a>;</div>
+<div class="line"><span class="lineno">  154</span>    out.cc_number = message.<a class="code hl_variable" href="structshrapnel_1_1midi_1_1Mapping.html#ae1bdd8e63717dbbf186158d915ab266d">cc_number</a>;</div>
+<div class="line"><span class="lineno">  155</span>    <span class="keywordflow">switch</span>(message.<a class="code hl_variable" href="structshrapnel_1_1midi_1_1Mapping.html#ad02ebea6e6428980d752a6f3844bf21f">mode</a>)</div>
+<div class="line"><span class="lineno">  156</span>    {</div>
+<div class="line"><span class="lineno">  157</span>    <span class="keywordflow">case</span> midi::Mapping::Mode::PARAMETER:</div>
+<div class="line"><span class="lineno">  158</span>        out.mode = shrapnel_midi_mapping_Mapping_Mode_parameter;</div>
+<div class="line"><span class="lineno">  159</span>        <span class="keywordflow">break</span>;</div>
+<div class="line"><span class="lineno">  160</span>    <span class="keywordflow">case</span> midi::Mapping::Mode::TOGGLE:</div>
+<div class="line"><span class="lineno">  161</span>        out.mode = shrapnel_midi_mapping_Mapping_Mode_toggle;</div>
+<div class="line"><span class="lineno">  162</span>        <span class="keywordflow">break</span>;</div>
+<div class="line"><span class="lineno">  163</span>    <span class="keywordflow">case</span> midi::Mapping::Mode::BUTTON:</div>
+<div class="line"><span class="lineno">  164</span>        out.mode = shrapnel_midi_mapping_Mapping_Mode_button;</div>
+<div class="line"><span class="lineno">  165</span>        <span class="keywordflow">break</span>;</div>
+<div class="line"><span class="lineno">  166</span>    <span class="keywordflow">default</span>:</div>
+<div class="line"><span class="lineno">  167</span>        <span class="keywordflow">return</span> -1;</div>
+<div class="line"><span class="lineno">  168</span>    }</div>
+<div class="line"><span class="lineno">  169</span>    strncpy(out.parameter_name,</div>
+<div class="line"><span class="lineno">  170</span>            message.<a class="code hl_variable" href="structshrapnel_1_1midi_1_1Mapping.html#ad1d90b2aa45178377665b16f88aa4433">parameter_name</a>.data(),</div>
+<div class="line"><span class="lineno">  171</span>            <span class="keyword">sizeof</span> out.parameter_name);</div>
+<div class="line"><span class="lineno">  172</span>    out.preset_id = message.<a class="code hl_variable" href="structshrapnel_1_1midi_1_1Mapping.html#a47c1f4ba51dd78e8f8e7428b095b60c4">preset_id</a>;</div>
+<div class="line"><span class="lineno">  173</span>    <span class="keywordflow">return</span> 0;</div>
+<div class="line"><span class="lineno">  174</span>}</div>
 </div><!-- fragment -->
-<p class="reference">References <a class="el" href="midi__mapping__api_8h_source.html#l00043">shrapnel::midi::Mapping::cc_number</a>, <a class="el" href="midi__mapping__api_8h_source.html#l00042">shrapnel::midi::Mapping::midi_channel</a>, <a class="el" href="midi__mapping__api_8h_source.html#l00044">shrapnel::midi::Mapping::mode</a>, <a class="el" href="structshrapnel_1_1midi_1_1Mapping.html#a9d3978518402ec5df1963f1b8c0a7013abf1d4bbf6ed8626603df4a7cac94ee8c">shrapnel::midi::Mapping::PARAMETER</a>, <a class="el" href="midi__mapping__api_8h_source.html#l00045">shrapnel::midi::Mapping::parameter_name</a>, and <a class="el" href="structshrapnel_1_1midi_1_1Mapping.html#a9d3978518402ec5df1963f1b8c0a7013a1252c45651289c0b553a30d27bb5ae9b">shrapnel::midi::Mapping::TOGGLE</a>.</p>
+<p class="reference">References <a class="el" href="structshrapnel_1_1midi_1_1Mapping.html#a9d3978518402ec5df1963f1b8c0a7013a57b35198356d373bcd2a6e08abcb3795">shrapnel::midi::Mapping::BUTTON</a>, <a class="el" href="midi__mapping__api_8h_source.html#l00045">shrapnel::midi::Mapping::cc_number</a>, <a class="el" href="midi__mapping__api_8h_source.html#l00044">shrapnel::midi::Mapping::midi_channel</a>, <a class="el" href="midi__mapping__api_8h_source.html#l00046">shrapnel::midi::Mapping::mode</a>, <a class="el" href="structshrapnel_1_1midi_1_1Mapping.html#a9d3978518402ec5df1963f1b8c0a7013abf1d4bbf6ed8626603df4a7cac94ee8c">shrapnel::midi::Mapping::PARAMETER</a>, <a class="el" href="midi__mapping__api_8h_source.html#l00047">shrapnel::midi::Mapping::parameter_name</a>, <a class="el" href="midi__mapping__api_8h_source.html#l00048">shrapnel::midi::Mapping::preset_id</a>, and <a class="el" href="structshrapnel_1_1midi_1_1Mapping.html#a9d3978518402ec5df1963f1b8c0a7013a1252c45651289c0b553a30d27bb5ae9b">shrapnel::midi::Mapping::TOGGLE</a>.</p>
 
 </div>
 </div>
@@ -3614,85 +3623,85 @@ template&lt;&gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="midi__mapping__api_8cpp_source.html#l00481">481</a> of file <a class="el" href="midi__mapping__api_8cpp_source.html">midi_mapping_api.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  483</span>{</div>
-<div class="line"><span class="lineno">  484</span>    <span class="keywordflow">return</span> std::visit(</div>
-<div class="line"><span class="lineno">  485</span>        [&amp;out](<span class="keyword">const</span> <span class="keyword">auto</span> &amp;message) -&gt; <span class="keywordtype">int</span></div>
-<div class="line"><span class="lineno">  486</span>        {</div>
-<div class="line"><span class="lineno">  487</span>            <span class="keyword">using </span>T = std::decay_t&lt;<span class="keyword">decltype</span>(message)&gt;;</div>
-<div class="line"><span class="lineno">  488</span>            <span class="keywordflow">if</span> <span class="keyword">constexpr</span>(std::is_same_v&lt;T, midi::GetRequest&gt;)</div>
-<div class="line"><span class="lineno">  489</span>            {</div>
-<div class="line"><span class="lineno">  490</span>                out.which_message =</div>
-<div class="line"><span class="lineno">  491</span>                    shrapnel_midi_mapping_Message_get_request_tag;</div>
-<div class="line"><span class="lineno">  492</span>                <span class="keywordtype">int</span> rc = to_proto&lt;shrapnel_midi_mapping_GetRequest&gt;(</div>
-<div class="line"><span class="lineno">  493</span>                    message, out.message.get_request);</div>
-<div class="line"><span class="lineno">  494</span>                <span class="keywordflow">if</span>(rc != 0)</div>
-<div class="line"><span class="lineno">  495</span>                {</div>
-<div class="line"><span class="lineno">  496</span>                    <span class="keywordflow">return</span> -1;</div>
-<div class="line"><span class="lineno">  497</span>                }</div>
-<div class="line"><span class="lineno">  498</span>            }</div>
-<div class="line"><span class="lineno">  499</span>            <span class="keywordflow">else</span> <span class="keywordflow">if</span> <span class="keyword">constexpr</span>(std::is_same_v&lt;T, midi::CreateRequest&gt;)</div>
-<div class="line"><span class="lineno">  500</span>            {</div>
-<div class="line"><span class="lineno">  501</span>                out.which_message =</div>
-<div class="line"><span class="lineno">  502</span>                    shrapnel_midi_mapping_Message_create_request_tag;</div>
-<div class="line"><span class="lineno">  503</span>                <span class="keywordtype">int</span> rc = to_proto&lt;shrapnel_midi_mapping_CreateRequest&gt;(</div>
-<div class="line"><span class="lineno">  504</span>                    message, out.message.create_request);</div>
-<div class="line"><span class="lineno">  505</span>                <span class="keywordflow">if</span>(rc != 0)</div>
-<div class="line"><span class="lineno">  506</span>                {</div>
-<div class="line"><span class="lineno">  507</span>                    <span class="keywordflow">return</span> -1;</div>
-<div class="line"><span class="lineno">  508</span>                }</div>
-<div class="line"><span class="lineno">  509</span>            }</div>
-<div class="line"><span class="lineno">  510</span>            <span class="keywordflow">else</span> <span class="keywordflow">if</span> <span class="keyword">constexpr</span>(std::is_same_v&lt;T, midi::CreateResponse&gt;)</div>
-<div class="line"><span class="lineno">  511</span>            {</div>
-<div class="line"><span class="lineno">  512</span>                out.which_message =</div>
-<div class="line"><span class="lineno">  513</span>                    shrapnel_midi_mapping_Message_create_response_tag;</div>
-<div class="line"><span class="lineno">  514</span>                <span class="keywordtype">int</span> rc = to_proto&lt;shrapnel_midi_mapping_CreateResponse&gt;(</div>
-<div class="line"><span class="lineno">  515</span>                    message, out.message.create_response);</div>
-<div class="line"><span class="lineno">  516</span>                <span class="keywordflow">if</span>(rc != 0)</div>
-<div class="line"><span class="lineno">  517</span>                {</div>
-<div class="line"><span class="lineno">  518</span>                    <span class="keywordflow">return</span> -1;</div>
-<div class="line"><span class="lineno">  519</span>                }</div>
-<div class="line"><span class="lineno">  520</span>            }</div>
-<div class="line"><span class="lineno">  521</span>            <span class="keywordflow">else</span> <span class="keywordflow">if</span> <span class="keyword">constexpr</span>(std::is_same_v&lt;T, midi::Update&gt;)</div>
-<div class="line"><span class="lineno">  522</span>            {</div>
-<div class="line"><span class="lineno">  523</span>                out.which_message = shrapnel_midi_mapping_Message_update_tag;</div>
-<div class="line"><span class="lineno">  524</span>                <span class="keywordtype">int</span> rc = to_proto&lt;shrapnel_midi_mapping_Update&gt;(</div>
-<div class="line"><span class="lineno">  525</span>                    message, out.message.update);</div>
+<p class="definition">Definition at line <a class="el" href="midi__mapping__api_8cpp_source.html#l00491">491</a> of file <a class="el" href="midi__mapping__api_8cpp_source.html">midi_mapping_api.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  493</span>{</div>
+<div class="line"><span class="lineno">  494</span>    <span class="keywordflow">return</span> std::visit(</div>
+<div class="line"><span class="lineno">  495</span>        [&amp;out](<span class="keyword">const</span> <span class="keyword">auto</span> &amp;message) -&gt; <span class="keywordtype">int</span></div>
+<div class="line"><span class="lineno">  496</span>        {</div>
+<div class="line"><span class="lineno">  497</span>            <span class="keyword">using </span>T = std::decay_t&lt;<span class="keyword">decltype</span>(message)&gt;;</div>
+<div class="line"><span class="lineno">  498</span>            <span class="keywordflow">if</span> <span class="keyword">constexpr</span>(std::is_same_v&lt;T, midi::GetRequest&gt;)</div>
+<div class="line"><span class="lineno">  499</span>            {</div>
+<div class="line"><span class="lineno">  500</span>                out.which_message =</div>
+<div class="line"><span class="lineno">  501</span>                    shrapnel_midi_mapping_Message_get_request_tag;</div>
+<div class="line"><span class="lineno">  502</span>                <span class="keywordtype">int</span> rc = to_proto&lt;shrapnel_midi_mapping_GetRequest&gt;(</div>
+<div class="line"><span class="lineno">  503</span>                    message, out.message.get_request);</div>
+<div class="line"><span class="lineno">  504</span>                <span class="keywordflow">if</span>(rc != 0)</div>
+<div class="line"><span class="lineno">  505</span>                {</div>
+<div class="line"><span class="lineno">  506</span>                    <span class="keywordflow">return</span> -1;</div>
+<div class="line"><span class="lineno">  507</span>                }</div>
+<div class="line"><span class="lineno">  508</span>            }</div>
+<div class="line"><span class="lineno">  509</span>            <span class="keywordflow">else</span> <span class="keywordflow">if</span> <span class="keyword">constexpr</span>(std::is_same_v&lt;T, midi::CreateRequest&gt;)</div>
+<div class="line"><span class="lineno">  510</span>            {</div>
+<div class="line"><span class="lineno">  511</span>                out.which_message =</div>
+<div class="line"><span class="lineno">  512</span>                    shrapnel_midi_mapping_Message_create_request_tag;</div>
+<div class="line"><span class="lineno">  513</span>                <span class="keywordtype">int</span> rc = to_proto&lt;shrapnel_midi_mapping_CreateRequest&gt;(</div>
+<div class="line"><span class="lineno">  514</span>                    message, out.message.create_request);</div>
+<div class="line"><span class="lineno">  515</span>                <span class="keywordflow">if</span>(rc != 0)</div>
+<div class="line"><span class="lineno">  516</span>                {</div>
+<div class="line"><span class="lineno">  517</span>                    <span class="keywordflow">return</span> -1;</div>
+<div class="line"><span class="lineno">  518</span>                }</div>
+<div class="line"><span class="lineno">  519</span>            }</div>
+<div class="line"><span class="lineno">  520</span>            <span class="keywordflow">else</span> <span class="keywordflow">if</span> <span class="keyword">constexpr</span>(std::is_same_v&lt;T, midi::CreateResponse&gt;)</div>
+<div class="line"><span class="lineno">  521</span>            {</div>
+<div class="line"><span class="lineno">  522</span>                out.which_message =</div>
+<div class="line"><span class="lineno">  523</span>                    shrapnel_midi_mapping_Message_create_response_tag;</div>
+<div class="line"><span class="lineno">  524</span>                <span class="keywordtype">int</span> rc = to_proto&lt;shrapnel_midi_mapping_CreateResponse&gt;(</div>
+<div class="line"><span class="lineno">  525</span>                    message, out.message.create_response);</div>
 <div class="line"><span class="lineno">  526</span>                <span class="keywordflow">if</span>(rc != 0)</div>
 <div class="line"><span class="lineno">  527</span>                {</div>
 <div class="line"><span class="lineno">  528</span>                    <span class="keywordflow">return</span> -1;</div>
 <div class="line"><span class="lineno">  529</span>                }</div>
 <div class="line"><span class="lineno">  530</span>            }</div>
-<div class="line"><span class="lineno">  531</span>            <span class="keywordflow">else</span> <span class="keywordflow">if</span> <span class="keyword">constexpr</span>(std::is_same_v&lt;T, midi::Remove&gt;)</div>
+<div class="line"><span class="lineno">  531</span>            <span class="keywordflow">else</span> <span class="keywordflow">if</span> <span class="keyword">constexpr</span>(std::is_same_v&lt;T, midi::Update&gt;)</div>
 <div class="line"><span class="lineno">  532</span>            {</div>
-<div class="line"><span class="lineno">  533</span>                out.which_message = shrapnel_midi_mapping_Message_remove_tag;</div>
-<div class="line"><span class="lineno">  534</span>                <span class="keywordtype">int</span> rc = to_proto&lt;shrapnel_midi_mapping_Remove&gt;(</div>
-<div class="line"><span class="lineno">  535</span>                    message, out.message.remove);</div>
+<div class="line"><span class="lineno">  533</span>                out.which_message = shrapnel_midi_mapping_Message_update_tag;</div>
+<div class="line"><span class="lineno">  534</span>                <span class="keywordtype">int</span> rc = to_proto&lt;shrapnel_midi_mapping_Update&gt;(</div>
+<div class="line"><span class="lineno">  535</span>                    message, out.message.update);</div>
 <div class="line"><span class="lineno">  536</span>                <span class="keywordflow">if</span>(rc != 0)</div>
 <div class="line"><span class="lineno">  537</span>                {</div>
 <div class="line"><span class="lineno">  538</span>                    <span class="keywordflow">return</span> -1;</div>
 <div class="line"><span class="lineno">  539</span>                }</div>
 <div class="line"><span class="lineno">  540</span>            }</div>
-<div class="line"><span class="lineno">  541</span>            <span class="keywordflow">else</span> <span class="keywordflow">if</span> <span class="keyword">constexpr</span>(std::is_same_v&lt;T, midi::MessageReceived&gt;)</div>
+<div class="line"><span class="lineno">  541</span>            <span class="keywordflow">else</span> <span class="keywordflow">if</span> <span class="keyword">constexpr</span>(std::is_same_v&lt;T, midi::Remove&gt;)</div>
 <div class="line"><span class="lineno">  542</span>            {</div>
-<div class="line"><span class="lineno">  543</span>                out.which_message =</div>
-<div class="line"><span class="lineno">  544</span>                    shrapnel_midi_mapping_Message_message_received_tag;</div>
-<div class="line"><span class="lineno">  545</span>                <span class="keywordtype">int</span> rc = to_proto&lt;shrapnel_midi_mapping_MessageReceived&gt;(</div>
-<div class="line"><span class="lineno">  546</span>                    message, out.message.message_received);</div>
-<div class="line"><span class="lineno">  547</span>                <span class="keywordflow">if</span>(rc != 0)</div>
-<div class="line"><span class="lineno">  548</span>                {</div>
-<div class="line"><span class="lineno">  549</span>                    <span class="keywordflow">return</span> -1;</div>
-<div class="line"><span class="lineno">  550</span>                }</div>
-<div class="line"><span class="lineno">  551</span>            }</div>
-<div class="line"><span class="lineno">  552</span>            <span class="keywordflow">else</span></div>
-<div class="line"><span class="lineno">  553</span>            {</div>
-<div class="line"><span class="lineno">  554</span>                <span class="keywordflow">return</span> -1;</div>
-<div class="line"><span class="lineno">  555</span>            }</div>
-<div class="line"><span class="lineno">  556</span> </div>
-<div class="line"><span class="lineno">  557</span>            <span class="keywordflow">return</span> 0;</div>
-<div class="line"><span class="lineno">  558</span>        },</div>
-<div class="line"><span class="lineno">  559</span>        message);</div>
-<div class="line"><span class="lineno">  560</span>}</div>
+<div class="line"><span class="lineno">  543</span>                out.which_message = shrapnel_midi_mapping_Message_remove_tag;</div>
+<div class="line"><span class="lineno">  544</span>                <span class="keywordtype">int</span> rc = to_proto&lt;shrapnel_midi_mapping_Remove&gt;(</div>
+<div class="line"><span class="lineno">  545</span>                    message, out.message.remove);</div>
+<div class="line"><span class="lineno">  546</span>                <span class="keywordflow">if</span>(rc != 0)</div>
+<div class="line"><span class="lineno">  547</span>                {</div>
+<div class="line"><span class="lineno">  548</span>                    <span class="keywordflow">return</span> -1;</div>
+<div class="line"><span class="lineno">  549</span>                }</div>
+<div class="line"><span class="lineno">  550</span>            }</div>
+<div class="line"><span class="lineno">  551</span>            <span class="keywordflow">else</span> <span class="keywordflow">if</span> <span class="keyword">constexpr</span>(std::is_same_v&lt;T, midi::MessageReceived&gt;)</div>
+<div class="line"><span class="lineno">  552</span>            {</div>
+<div class="line"><span class="lineno">  553</span>                out.which_message =</div>
+<div class="line"><span class="lineno">  554</span>                    shrapnel_midi_mapping_Message_message_received_tag;</div>
+<div class="line"><span class="lineno">  555</span>                <span class="keywordtype">int</span> rc = to_proto&lt;shrapnel_midi_mapping_MessageReceived&gt;(</div>
+<div class="line"><span class="lineno">  556</span>                    message, out.message.message_received);</div>
+<div class="line"><span class="lineno">  557</span>                <span class="keywordflow">if</span>(rc != 0)</div>
+<div class="line"><span class="lineno">  558</span>                {</div>
+<div class="line"><span class="lineno">  559</span>                    <span class="keywordflow">return</span> -1;</div>
+<div class="line"><span class="lineno">  560</span>                }</div>
+<div class="line"><span class="lineno">  561</span>            }</div>
+<div class="line"><span class="lineno">  562</span>            <span class="keywordflow">else</span></div>
+<div class="line"><span class="lineno">  563</span>            {</div>
+<div class="line"><span class="lineno">  564</span>                <span class="keywordflow">return</span> -1;</div>
+<div class="line"><span class="lineno">  565</span>            }</div>
+<div class="line"><span class="lineno">  566</span> </div>
+<div class="line"><span class="lineno">  567</span>            <span class="keywordflow">return</span> 0;</div>
+<div class="line"><span class="lineno">  568</span>        },</div>
+<div class="line"><span class="lineno">  569</span>        message);</div>
+<div class="line"><span class="lineno">  570</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -3724,85 +3733,85 @@ template&lt;&gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="midi__mapping__api_8cpp_source.html#l00481">481</a> of file <a class="el" href="midi__mapping__api_8cpp_source.html">midi_mapping_api.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  483</span>{</div>
-<div class="line"><span class="lineno">  484</span>    <span class="keywordflow">return</span> std::visit(</div>
-<div class="line"><span class="lineno">  485</span>        [&amp;out](<span class="keyword">const</span> <span class="keyword">auto</span> &amp;message) -&gt; <span class="keywordtype">int</span></div>
-<div class="line"><span class="lineno">  486</span>        {</div>
-<div class="line"><span class="lineno">  487</span>            <span class="keyword">using </span>T = std::decay_t&lt;<span class="keyword">decltype</span>(message)&gt;;</div>
-<div class="line"><span class="lineno">  488</span>            <span class="keywordflow">if</span> <span class="keyword">constexpr</span>(std::is_same_v&lt;T, midi::GetRequest&gt;)</div>
-<div class="line"><span class="lineno">  489</span>            {</div>
-<div class="line"><span class="lineno">  490</span>                out.which_message =</div>
-<div class="line"><span class="lineno">  491</span>                    shrapnel_midi_mapping_Message_get_request_tag;</div>
-<div class="line"><span class="lineno">  492</span>                <span class="keywordtype">int</span> rc = to_proto&lt;shrapnel_midi_mapping_GetRequest&gt;(</div>
-<div class="line"><span class="lineno">  493</span>                    message, out.message.get_request);</div>
-<div class="line"><span class="lineno">  494</span>                <span class="keywordflow">if</span>(rc != 0)</div>
-<div class="line"><span class="lineno">  495</span>                {</div>
-<div class="line"><span class="lineno">  496</span>                    <span class="keywordflow">return</span> -1;</div>
-<div class="line"><span class="lineno">  497</span>                }</div>
-<div class="line"><span class="lineno">  498</span>            }</div>
-<div class="line"><span class="lineno">  499</span>            <span class="keywordflow">else</span> <span class="keywordflow">if</span> <span class="keyword">constexpr</span>(std::is_same_v&lt;T, midi::CreateRequest&gt;)</div>
-<div class="line"><span class="lineno">  500</span>            {</div>
-<div class="line"><span class="lineno">  501</span>                out.which_message =</div>
-<div class="line"><span class="lineno">  502</span>                    shrapnel_midi_mapping_Message_create_request_tag;</div>
-<div class="line"><span class="lineno">  503</span>                <span class="keywordtype">int</span> rc = to_proto&lt;shrapnel_midi_mapping_CreateRequest&gt;(</div>
-<div class="line"><span class="lineno">  504</span>                    message, out.message.create_request);</div>
-<div class="line"><span class="lineno">  505</span>                <span class="keywordflow">if</span>(rc != 0)</div>
-<div class="line"><span class="lineno">  506</span>                {</div>
-<div class="line"><span class="lineno">  507</span>                    <span class="keywordflow">return</span> -1;</div>
-<div class="line"><span class="lineno">  508</span>                }</div>
-<div class="line"><span class="lineno">  509</span>            }</div>
-<div class="line"><span class="lineno">  510</span>            <span class="keywordflow">else</span> <span class="keywordflow">if</span> <span class="keyword">constexpr</span>(std::is_same_v&lt;T, midi::CreateResponse&gt;)</div>
-<div class="line"><span class="lineno">  511</span>            {</div>
-<div class="line"><span class="lineno">  512</span>                out.which_message =</div>
-<div class="line"><span class="lineno">  513</span>                    shrapnel_midi_mapping_Message_create_response_tag;</div>
-<div class="line"><span class="lineno">  514</span>                <span class="keywordtype">int</span> rc = to_proto&lt;shrapnel_midi_mapping_CreateResponse&gt;(</div>
-<div class="line"><span class="lineno">  515</span>                    message, out.message.create_response);</div>
-<div class="line"><span class="lineno">  516</span>                <span class="keywordflow">if</span>(rc != 0)</div>
-<div class="line"><span class="lineno">  517</span>                {</div>
-<div class="line"><span class="lineno">  518</span>                    <span class="keywordflow">return</span> -1;</div>
-<div class="line"><span class="lineno">  519</span>                }</div>
-<div class="line"><span class="lineno">  520</span>            }</div>
-<div class="line"><span class="lineno">  521</span>            <span class="keywordflow">else</span> <span class="keywordflow">if</span> <span class="keyword">constexpr</span>(std::is_same_v&lt;T, midi::Update&gt;)</div>
-<div class="line"><span class="lineno">  522</span>            {</div>
-<div class="line"><span class="lineno">  523</span>                out.which_message = shrapnel_midi_mapping_Message_update_tag;</div>
-<div class="line"><span class="lineno">  524</span>                <span class="keywordtype">int</span> rc = to_proto&lt;shrapnel_midi_mapping_Update&gt;(</div>
-<div class="line"><span class="lineno">  525</span>                    message, out.message.update);</div>
+<p class="definition">Definition at line <a class="el" href="midi__mapping__api_8cpp_source.html#l00491">491</a> of file <a class="el" href="midi__mapping__api_8cpp_source.html">midi_mapping_api.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  493</span>{</div>
+<div class="line"><span class="lineno">  494</span>    <span class="keywordflow">return</span> std::visit(</div>
+<div class="line"><span class="lineno">  495</span>        [&amp;out](<span class="keyword">const</span> <span class="keyword">auto</span> &amp;message) -&gt; <span class="keywordtype">int</span></div>
+<div class="line"><span class="lineno">  496</span>        {</div>
+<div class="line"><span class="lineno">  497</span>            <span class="keyword">using </span>T = std::decay_t&lt;<span class="keyword">decltype</span>(message)&gt;;</div>
+<div class="line"><span class="lineno">  498</span>            <span class="keywordflow">if</span> <span class="keyword">constexpr</span>(std::is_same_v&lt;T, midi::GetRequest&gt;)</div>
+<div class="line"><span class="lineno">  499</span>            {</div>
+<div class="line"><span class="lineno">  500</span>                out.which_message =</div>
+<div class="line"><span class="lineno">  501</span>                    shrapnel_midi_mapping_Message_get_request_tag;</div>
+<div class="line"><span class="lineno">  502</span>                <span class="keywordtype">int</span> rc = to_proto&lt;shrapnel_midi_mapping_GetRequest&gt;(</div>
+<div class="line"><span class="lineno">  503</span>                    message, out.message.get_request);</div>
+<div class="line"><span class="lineno">  504</span>                <span class="keywordflow">if</span>(rc != 0)</div>
+<div class="line"><span class="lineno">  505</span>                {</div>
+<div class="line"><span class="lineno">  506</span>                    <span class="keywordflow">return</span> -1;</div>
+<div class="line"><span class="lineno">  507</span>                }</div>
+<div class="line"><span class="lineno">  508</span>            }</div>
+<div class="line"><span class="lineno">  509</span>            <span class="keywordflow">else</span> <span class="keywordflow">if</span> <span class="keyword">constexpr</span>(std::is_same_v&lt;T, midi::CreateRequest&gt;)</div>
+<div class="line"><span class="lineno">  510</span>            {</div>
+<div class="line"><span class="lineno">  511</span>                out.which_message =</div>
+<div class="line"><span class="lineno">  512</span>                    shrapnel_midi_mapping_Message_create_request_tag;</div>
+<div class="line"><span class="lineno">  513</span>                <span class="keywordtype">int</span> rc = to_proto&lt;shrapnel_midi_mapping_CreateRequest&gt;(</div>
+<div class="line"><span class="lineno">  514</span>                    message, out.message.create_request);</div>
+<div class="line"><span class="lineno">  515</span>                <span class="keywordflow">if</span>(rc != 0)</div>
+<div class="line"><span class="lineno">  516</span>                {</div>
+<div class="line"><span class="lineno">  517</span>                    <span class="keywordflow">return</span> -1;</div>
+<div class="line"><span class="lineno">  518</span>                }</div>
+<div class="line"><span class="lineno">  519</span>            }</div>
+<div class="line"><span class="lineno">  520</span>            <span class="keywordflow">else</span> <span class="keywordflow">if</span> <span class="keyword">constexpr</span>(std::is_same_v&lt;T, midi::CreateResponse&gt;)</div>
+<div class="line"><span class="lineno">  521</span>            {</div>
+<div class="line"><span class="lineno">  522</span>                out.which_message =</div>
+<div class="line"><span class="lineno">  523</span>                    shrapnel_midi_mapping_Message_create_response_tag;</div>
+<div class="line"><span class="lineno">  524</span>                <span class="keywordtype">int</span> rc = to_proto&lt;shrapnel_midi_mapping_CreateResponse&gt;(</div>
+<div class="line"><span class="lineno">  525</span>                    message, out.message.create_response);</div>
 <div class="line"><span class="lineno">  526</span>                <span class="keywordflow">if</span>(rc != 0)</div>
 <div class="line"><span class="lineno">  527</span>                {</div>
 <div class="line"><span class="lineno">  528</span>                    <span class="keywordflow">return</span> -1;</div>
 <div class="line"><span class="lineno">  529</span>                }</div>
 <div class="line"><span class="lineno">  530</span>            }</div>
-<div class="line"><span class="lineno">  531</span>            <span class="keywordflow">else</span> <span class="keywordflow">if</span> <span class="keyword">constexpr</span>(std::is_same_v&lt;T, midi::Remove&gt;)</div>
+<div class="line"><span class="lineno">  531</span>            <span class="keywordflow">else</span> <span class="keywordflow">if</span> <span class="keyword">constexpr</span>(std::is_same_v&lt;T, midi::Update&gt;)</div>
 <div class="line"><span class="lineno">  532</span>            {</div>
-<div class="line"><span class="lineno">  533</span>                out.which_message = shrapnel_midi_mapping_Message_remove_tag;</div>
-<div class="line"><span class="lineno">  534</span>                <span class="keywordtype">int</span> rc = to_proto&lt;shrapnel_midi_mapping_Remove&gt;(</div>
-<div class="line"><span class="lineno">  535</span>                    message, out.message.remove);</div>
+<div class="line"><span class="lineno">  533</span>                out.which_message = shrapnel_midi_mapping_Message_update_tag;</div>
+<div class="line"><span class="lineno">  534</span>                <span class="keywordtype">int</span> rc = to_proto&lt;shrapnel_midi_mapping_Update&gt;(</div>
+<div class="line"><span class="lineno">  535</span>                    message, out.message.update);</div>
 <div class="line"><span class="lineno">  536</span>                <span class="keywordflow">if</span>(rc != 0)</div>
 <div class="line"><span class="lineno">  537</span>                {</div>
 <div class="line"><span class="lineno">  538</span>                    <span class="keywordflow">return</span> -1;</div>
 <div class="line"><span class="lineno">  539</span>                }</div>
 <div class="line"><span class="lineno">  540</span>            }</div>
-<div class="line"><span class="lineno">  541</span>            <span class="keywordflow">else</span> <span class="keywordflow">if</span> <span class="keyword">constexpr</span>(std::is_same_v&lt;T, midi::MessageReceived&gt;)</div>
+<div class="line"><span class="lineno">  541</span>            <span class="keywordflow">else</span> <span class="keywordflow">if</span> <span class="keyword">constexpr</span>(std::is_same_v&lt;T, midi::Remove&gt;)</div>
 <div class="line"><span class="lineno">  542</span>            {</div>
-<div class="line"><span class="lineno">  543</span>                out.which_message =</div>
-<div class="line"><span class="lineno">  544</span>                    shrapnel_midi_mapping_Message_message_received_tag;</div>
-<div class="line"><span class="lineno">  545</span>                <span class="keywordtype">int</span> rc = to_proto&lt;shrapnel_midi_mapping_MessageReceived&gt;(</div>
-<div class="line"><span class="lineno">  546</span>                    message, out.message.message_received);</div>
-<div class="line"><span class="lineno">  547</span>                <span class="keywordflow">if</span>(rc != 0)</div>
-<div class="line"><span class="lineno">  548</span>                {</div>
-<div class="line"><span class="lineno">  549</span>                    <span class="keywordflow">return</span> -1;</div>
-<div class="line"><span class="lineno">  550</span>                }</div>
-<div class="line"><span class="lineno">  551</span>            }</div>
-<div class="line"><span class="lineno">  552</span>            <span class="keywordflow">else</span></div>
-<div class="line"><span class="lineno">  553</span>            {</div>
-<div class="line"><span class="lineno">  554</span>                <span class="keywordflow">return</span> -1;</div>
-<div class="line"><span class="lineno">  555</span>            }</div>
-<div class="line"><span class="lineno">  556</span> </div>
-<div class="line"><span class="lineno">  557</span>            <span class="keywordflow">return</span> 0;</div>
-<div class="line"><span class="lineno">  558</span>        },</div>
-<div class="line"><span class="lineno">  559</span>        message);</div>
-<div class="line"><span class="lineno">  560</span>}</div>
+<div class="line"><span class="lineno">  543</span>                out.which_message = shrapnel_midi_mapping_Message_remove_tag;</div>
+<div class="line"><span class="lineno">  544</span>                <span class="keywordtype">int</span> rc = to_proto&lt;shrapnel_midi_mapping_Remove&gt;(</div>
+<div class="line"><span class="lineno">  545</span>                    message, out.message.remove);</div>
+<div class="line"><span class="lineno">  546</span>                <span class="keywordflow">if</span>(rc != 0)</div>
+<div class="line"><span class="lineno">  547</span>                {</div>
+<div class="line"><span class="lineno">  548</span>                    <span class="keywordflow">return</span> -1;</div>
+<div class="line"><span class="lineno">  549</span>                }</div>
+<div class="line"><span class="lineno">  550</span>            }</div>
+<div class="line"><span class="lineno">  551</span>            <span class="keywordflow">else</span> <span class="keywordflow">if</span> <span class="keyword">constexpr</span>(std::is_same_v&lt;T, midi::MessageReceived&gt;)</div>
+<div class="line"><span class="lineno">  552</span>            {</div>
+<div class="line"><span class="lineno">  553</span>                out.which_message =</div>
+<div class="line"><span class="lineno">  554</span>                    shrapnel_midi_mapping_Message_message_received_tag;</div>
+<div class="line"><span class="lineno">  555</span>                <span class="keywordtype">int</span> rc = to_proto&lt;shrapnel_midi_mapping_MessageReceived&gt;(</div>
+<div class="line"><span class="lineno">  556</span>                    message, out.message.message_received);</div>
+<div class="line"><span class="lineno">  557</span>                <span class="keywordflow">if</span>(rc != 0)</div>
+<div class="line"><span class="lineno">  558</span>                {</div>
+<div class="line"><span class="lineno">  559</span>                    <span class="keywordflow">return</span> -1;</div>
+<div class="line"><span class="lineno">  560</span>                }</div>
+<div class="line"><span class="lineno">  561</span>            }</div>
+<div class="line"><span class="lineno">  562</span>            <span class="keywordflow">else</span></div>
+<div class="line"><span class="lineno">  563</span>            {</div>
+<div class="line"><span class="lineno">  564</span>                <span class="keywordflow">return</span> -1;</div>
+<div class="line"><span class="lineno">  565</span>            }</div>
+<div class="line"><span class="lineno">  566</span> </div>
+<div class="line"><span class="lineno">  567</span>            <span class="keywordflow">return</span> 0;</div>
+<div class="line"><span class="lineno">  568</span>        },</div>
+<div class="line"><span class="lineno">  569</span>        message);</div>
+<div class="line"><span class="lineno">  570</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -3834,52 +3843,52 @@ template&lt;&gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="midi__mapping__api_8cpp_source.html#l00363">363</a> of file <a class="el" href="midi__mapping__api_8cpp_source.html">midi_mapping_api.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  365</span>{</div>
-<div class="line"><span class="lineno">  366</span>    <span class="keyword">auto</span> channel = message.<a class="code hl_variable" href="structshrapnel_1_1midi_1_1Message.html#a29581869e25f31ea15d28e332262b160">channel</a>;</div>
-<div class="line"><span class="lineno">  367</span>    <span class="keywordflow">return</span> std::visit(</div>
-<div class="line"><span class="lineno">  368</span>        [channel, &amp;out](<span class="keyword">const</span> <span class="keyword">auto</span> &amp;message) -&gt; <span class="keywordtype">int</span></div>
-<div class="line"><span class="lineno">  369</span>        {</div>
-<div class="line"><span class="lineno">  370</span>            <span class="keyword">using </span>T = std::decay_t&lt;<span class="keyword">decltype</span>(message)&gt;;</div>
-<div class="line"><span class="lineno">  371</span> </div>
-<div class="line"><span class="lineno">  372</span>            out.channel = channel;</div>
-<div class="line"><span class="lineno">  373</span> </div>
-<div class="line"><span class="lineno">  374</span>            <span class="keyword">using </span>T = std::decay_t&lt;<span class="keyword">decltype</span>(message)&gt;;</div>
-<div class="line"><span class="lineno">  375</span>            <span class="keywordflow">if</span> <span class="keyword">constexpr</span>(std::is_same_v&lt;T, midi::Message::NoteOn&gt;)</div>
-<div class="line"><span class="lineno">  376</span>            {</div>
-<div class="line"><span class="lineno">  377</span>                out.which_parameters =</div>
-<div class="line"><span class="lineno">  378</span>                    shrapnel_midi_mapping_MidiMessage_note_on_tag;</div>
-<div class="line"><span class="lineno">  379</span>                <span class="keywordflow">return</span> to_proto&lt;shrapnel_midi_mapping_MidiMessage_NoteOn&gt;(</div>
-<div class="line"><span class="lineno">  380</span>                    message, out.parameters.note_on);</div>
-<div class="line"><span class="lineno">  381</span>            }</div>
-<div class="line"><span class="lineno">  382</span>            <span class="keywordflow">else</span> <span class="keywordflow">if</span> <span class="keyword">constexpr</span>(std::is_same_v&lt;T, midi::Message::NoteOff&gt;)</div>
-<div class="line"><span class="lineno">  383</span>            {</div>
-<div class="line"><span class="lineno">  384</span>                out.which_parameters =</div>
-<div class="line"><span class="lineno">  385</span>                    shrapnel_midi_mapping_MidiMessage_note_off_tag;</div>
-<div class="line"><span class="lineno">  386</span>                <span class="keywordflow">return</span> to_proto&lt;shrapnel_midi_mapping_MidiMessage_NoteOff&gt;(</div>
-<div class="line"><span class="lineno">  387</span>                    message, out.parameters.note_off);</div>
-<div class="line"><span class="lineno">  388</span>            }</div>
-<div class="line"><span class="lineno">  389</span>            <span class="keywordflow">else</span> <span class="keywordflow">if</span> <span class="keyword">constexpr</span>(std::is_same_v&lt;T, midi::Message::ControlChange&gt;)</div>
-<div class="line"><span class="lineno">  390</span>            {</div>
-<div class="line"><span class="lineno">  391</span>                out.which_parameters =</div>
-<div class="line"><span class="lineno">  392</span>                    shrapnel_midi_mapping_MidiMessage_control_change_tag;</div>
-<div class="line"><span class="lineno">  393</span>                <span class="keywordflow">return</span> <a class="code hl_function" href="namespaceshrapnel_1_1api.html#a17ffbcb76b6df3a9506ad50c3fe5f751">to_proto</a>&lt;</div>
-<div class="line"><span class="lineno">  394</span>                    shrapnel_midi_mapping_MidiMessage_ControlChange&gt;(</div>
-<div class="line"><span class="lineno">  395</span>                    message, out.<a class="code hl_variable" href="structshrapnel_1_1midi_1_1Message.html#aed40e3ab3220667ba38796866604cbb7">parameters</a>.control_change);</div>
-<div class="line"><span class="lineno">  396</span>            }</div>
-<div class="line"><span class="lineno">  397</span>            <span class="keywordflow">else</span> <span class="keywordflow">if</span> <span class="keyword">constexpr</span>(std::is_same_v&lt;T, midi::Message::ProgramChange&gt;)</div>
-<div class="line"><span class="lineno">  398</span>            {</div>
-<div class="line"><span class="lineno">  399</span>                out.which_parameters =</div>
-<div class="line"><span class="lineno">  400</span>                    shrapnel_midi_mapping_MidiMessage_program_change_tag;</div>
-<div class="line"><span class="lineno">  401</span>                <span class="keywordflow">return</span> <a class="code hl_function" href="namespaceshrapnel_1_1api.html#a17ffbcb76b6df3a9506ad50c3fe5f751">to_proto</a>&lt;</div>
-<div class="line"><span class="lineno">  402</span>                    shrapnel_midi_mapping_MidiMessage_ProgramChange&gt;(</div>
-<div class="line"><span class="lineno">  403</span>                    message, out.<a class="code hl_variable" href="structshrapnel_1_1midi_1_1Message.html#aed40e3ab3220667ba38796866604cbb7">parameters</a>.program_change);</div>
-<div class="line"><span class="lineno">  404</span>            }</div>
-<div class="line"><span class="lineno">  405</span> </div>
-<div class="line"><span class="lineno">  406</span>            <span class="keywordflow">return</span> -1;</div>
-<div class="line"><span class="lineno">  407</span>        },</div>
-<div class="line"><span class="lineno">  408</span>        message.<a class="code hl_variable" href="structshrapnel_1_1midi_1_1Message.html#aed40e3ab3220667ba38796866604cbb7">parameters</a>);</div>
-<div class="line"><span class="lineno">  409</span>}</div>
+<p class="definition">Definition at line <a class="el" href="midi__mapping__api_8cpp_source.html#l00373">373</a> of file <a class="el" href="midi__mapping__api_8cpp_source.html">midi_mapping_api.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  375</span>{</div>
+<div class="line"><span class="lineno">  376</span>    <span class="keyword">auto</span> channel = message.<a class="code hl_variable" href="structshrapnel_1_1midi_1_1Message.html#a29581869e25f31ea15d28e332262b160">channel</a>;</div>
+<div class="line"><span class="lineno">  377</span>    <span class="keywordflow">return</span> std::visit(</div>
+<div class="line"><span class="lineno">  378</span>        [channel, &amp;out](<span class="keyword">const</span> <span class="keyword">auto</span> &amp;message) -&gt; <span class="keywordtype">int</span></div>
+<div class="line"><span class="lineno">  379</span>        {</div>
+<div class="line"><span class="lineno">  380</span>            <span class="keyword">using </span>T = std::decay_t&lt;<span class="keyword">decltype</span>(message)&gt;;</div>
+<div class="line"><span class="lineno">  381</span> </div>
+<div class="line"><span class="lineno">  382</span>            out.channel = channel;</div>
+<div class="line"><span class="lineno">  383</span> </div>
+<div class="line"><span class="lineno">  384</span>            <span class="keyword">using </span>T = std::decay_t&lt;<span class="keyword">decltype</span>(message)&gt;;</div>
+<div class="line"><span class="lineno">  385</span>            <span class="keywordflow">if</span> <span class="keyword">constexpr</span>(std::is_same_v&lt;T, midi::Message::NoteOn&gt;)</div>
+<div class="line"><span class="lineno">  386</span>            {</div>
+<div class="line"><span class="lineno">  387</span>                out.which_parameters =</div>
+<div class="line"><span class="lineno">  388</span>                    shrapnel_midi_mapping_MidiMessage_note_on_tag;</div>
+<div class="line"><span class="lineno">  389</span>                <span class="keywordflow">return</span> to_proto&lt;shrapnel_midi_mapping_MidiMessage_NoteOn&gt;(</div>
+<div class="line"><span class="lineno">  390</span>                    message, out.parameters.note_on);</div>
+<div class="line"><span class="lineno">  391</span>            }</div>
+<div class="line"><span class="lineno">  392</span>            <span class="keywordflow">else</span> <span class="keywordflow">if</span> <span class="keyword">constexpr</span>(std::is_same_v&lt;T, midi::Message::NoteOff&gt;)</div>
+<div class="line"><span class="lineno">  393</span>            {</div>
+<div class="line"><span class="lineno">  394</span>                out.which_parameters =</div>
+<div class="line"><span class="lineno">  395</span>                    shrapnel_midi_mapping_MidiMessage_note_off_tag;</div>
+<div class="line"><span class="lineno">  396</span>                <span class="keywordflow">return</span> to_proto&lt;shrapnel_midi_mapping_MidiMessage_NoteOff&gt;(</div>
+<div class="line"><span class="lineno">  397</span>                    message, out.parameters.note_off);</div>
+<div class="line"><span class="lineno">  398</span>            }</div>
+<div class="line"><span class="lineno">  399</span>            <span class="keywordflow">else</span> <span class="keywordflow">if</span> <span class="keyword">constexpr</span>(std::is_same_v&lt;T, midi::Message::ControlChange&gt;)</div>
+<div class="line"><span class="lineno">  400</span>            {</div>
+<div class="line"><span class="lineno">  401</span>                out.which_parameters =</div>
+<div class="line"><span class="lineno">  402</span>                    shrapnel_midi_mapping_MidiMessage_control_change_tag;</div>
+<div class="line"><span class="lineno">  403</span>                <span class="keywordflow">return</span> <a class="code hl_function" href="namespaceshrapnel_1_1api.html#a17ffbcb76b6df3a9506ad50c3fe5f751">to_proto</a>&lt;</div>
+<div class="line"><span class="lineno">  404</span>                    shrapnel_midi_mapping_MidiMessage_ControlChange&gt;(</div>
+<div class="line"><span class="lineno">  405</span>                    message, out.<a class="code hl_variable" href="structshrapnel_1_1midi_1_1Message.html#aed40e3ab3220667ba38796866604cbb7">parameters</a>.control_change);</div>
+<div class="line"><span class="lineno">  406</span>            }</div>
+<div class="line"><span class="lineno">  407</span>            <span class="keywordflow">else</span> <span class="keywordflow">if</span> <span class="keyword">constexpr</span>(std::is_same_v&lt;T, midi::Message::ProgramChange&gt;)</div>
+<div class="line"><span class="lineno">  408</span>            {</div>
+<div class="line"><span class="lineno">  409</span>                out.which_parameters =</div>
+<div class="line"><span class="lineno">  410</span>                    shrapnel_midi_mapping_MidiMessage_program_change_tag;</div>
+<div class="line"><span class="lineno">  411</span>                <span class="keywordflow">return</span> <a class="code hl_function" href="namespaceshrapnel_1_1api.html#a17ffbcb76b6df3a9506ad50c3fe5f751">to_proto</a>&lt;</div>
+<div class="line"><span class="lineno">  412</span>                    shrapnel_midi_mapping_MidiMessage_ProgramChange&gt;(</div>
+<div class="line"><span class="lineno">  413</span>                    message, out.<a class="code hl_variable" href="structshrapnel_1_1midi_1_1Message.html#aed40e3ab3220667ba38796866604cbb7">parameters</a>.program_change);</div>
+<div class="line"><span class="lineno">  414</span>            }</div>
+<div class="line"><span class="lineno">  415</span> </div>
+<div class="line"><span class="lineno">  416</span>            <span class="keywordflow">return</span> -1;</div>
+<div class="line"><span class="lineno">  417</span>        },</div>
+<div class="line"><span class="lineno">  418</span>        message.<a class="code hl_variable" href="structshrapnel_1_1midi_1_1Message.html#aed40e3ab3220667ba38796866604cbb7">parameters</a>);</div>
+<div class="line"><span class="lineno">  419</span>}</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="midi__protocol_8h_source.html#l00078">shrapnel::midi::Message::channel</a>, <a class="el" href="midi__protocol_8h_source.html#l00079">shrapnel::midi::Message::parameters</a>, and <a class="el" href="namespaceshrapnel_1_1api.html#a8fc768e74a62eb09f96ae1ca9f18199b">to_proto()</a>.</p>
 <div class="dynheader">
@@ -3919,12 +3928,12 @@ template&lt;&gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="midi__mapping__api_8cpp_source.html#l00329">329</a> of file <a class="el" href="midi__mapping__api_8cpp_source.html">midi_mapping_api.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  331</span>{</div>
-<div class="line"><span class="lineno">  332</span>    out.control = message.<a class="code hl_variable" href="structshrapnel_1_1midi_1_1Message_1_1ControlChange.html#a63472623103c98ec18cc0f2ff0cd67e5">control</a>;</div>
-<div class="line"><span class="lineno">  333</span>    out.value = message.<a class="code hl_variable" href="structshrapnel_1_1midi_1_1Message_1_1ControlChange.html#a2615450c8f2f31fc8c4298f8363d076c">value</a>;</div>
-<div class="line"><span class="lineno">  334</span>    <span class="keywordflow">return</span> 0;</div>
-<div class="line"><span class="lineno">  335</span>}</div>
+<p class="definition">Definition at line <a class="el" href="midi__mapping__api_8cpp_source.html#l00339">339</a> of file <a class="el" href="midi__mapping__api_8cpp_source.html">midi_mapping_api.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  341</span>{</div>
+<div class="line"><span class="lineno">  342</span>    out.control = message.<a class="code hl_variable" href="structshrapnel_1_1midi_1_1Message_1_1ControlChange.html#a63472623103c98ec18cc0f2ff0cd67e5">control</a>;</div>
+<div class="line"><span class="lineno">  343</span>    out.value = message.<a class="code hl_variable" href="structshrapnel_1_1midi_1_1Message_1_1ControlChange.html#a2615450c8f2f31fc8c4298f8363d076c">value</a>;</div>
+<div class="line"><span class="lineno">  344</span>    <span class="keywordflow">return</span> 0;</div>
+<div class="line"><span class="lineno">  345</span>}</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="midi__protocol_8h_source.html#l00063">shrapnel::midi::Message::ControlChange::control</a>, and <a class="el" href="midi__protocol_8h_source.html#l00064">shrapnel::midi::Message::ControlChange::value</a>.</p>
 
@@ -3958,12 +3967,12 @@ template&lt;&gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="midi__mapping__api_8cpp_source.html#l00311">311</a> of file <a class="el" href="midi__mapping__api_8cpp_source.html">midi_mapping_api.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  313</span>{</div>
-<div class="line"><span class="lineno">  314</span>    out.note = message.<a class="code hl_variable" href="structshrapnel_1_1midi_1_1Message_1_1NoteOff.html#a956f0f53e35e1dfda0e40c53b3e4c346">note</a>;</div>
-<div class="line"><span class="lineno">  315</span>    out.velocity = message.<a class="code hl_variable" href="structshrapnel_1_1midi_1_1Message_1_1NoteOff.html#a854bc5ff80d66e047c66678ca281df8d">velocity</a>;</div>
-<div class="line"><span class="lineno">  316</span>    <span class="keywordflow">return</span> 0;</div>
-<div class="line"><span class="lineno">  317</span>}</div>
+<p class="definition">Definition at line <a class="el" href="midi__mapping__api_8cpp_source.html#l00321">321</a> of file <a class="el" href="midi__mapping__api_8cpp_source.html">midi_mapping_api.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  323</span>{</div>
+<div class="line"><span class="lineno">  324</span>    out.note = message.<a class="code hl_variable" href="structshrapnel_1_1midi_1_1Message_1_1NoteOff.html#a956f0f53e35e1dfda0e40c53b3e4c346">note</a>;</div>
+<div class="line"><span class="lineno">  325</span>    out.velocity = message.<a class="code hl_variable" href="structshrapnel_1_1midi_1_1Message_1_1NoteOff.html#a854bc5ff80d66e047c66678ca281df8d">velocity</a>;</div>
+<div class="line"><span class="lineno">  326</span>    <span class="keywordflow">return</span> 0;</div>
+<div class="line"><span class="lineno">  327</span>}</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="midi__protocol_8h_source.html#l00055">shrapnel::midi::Message::NoteOff::note</a>, and <a class="el" href="midi__protocol_8h_source.html#l00056">shrapnel::midi::Message::NoteOff::velocity</a>.</p>
 
@@ -3997,12 +4006,12 @@ template&lt;&gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="midi__mapping__api_8cpp_source.html#l00293">293</a> of file <a class="el" href="midi__mapping__api_8cpp_source.html">midi_mapping_api.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  295</span>{</div>
-<div class="line"><span class="lineno">  296</span>    out.note = message.<a class="code hl_variable" href="structshrapnel_1_1midi_1_1Message_1_1NoteOn.html#ae16150bffaedd0c9c1ce7dd767b463eb">note</a>;</div>
-<div class="line"><span class="lineno">  297</span>    out.velocity = message.<a class="code hl_variable" href="structshrapnel_1_1midi_1_1Message_1_1NoteOn.html#a3377e69df50e588b93683fd3c3aa8a43">velocity</a>;</div>
-<div class="line"><span class="lineno">  298</span>    <span class="keywordflow">return</span> 0;</div>
-<div class="line"><span class="lineno">  299</span>}</div>
+<p class="definition">Definition at line <a class="el" href="midi__mapping__api_8cpp_source.html#l00303">303</a> of file <a class="el" href="midi__mapping__api_8cpp_source.html">midi_mapping_api.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  305</span>{</div>
+<div class="line"><span class="lineno">  306</span>    out.note = message.<a class="code hl_variable" href="structshrapnel_1_1midi_1_1Message_1_1NoteOn.html#ae16150bffaedd0c9c1ce7dd767b463eb">note</a>;</div>
+<div class="line"><span class="lineno">  307</span>    out.velocity = message.<a class="code hl_variable" href="structshrapnel_1_1midi_1_1Message_1_1NoteOn.html#a3377e69df50e588b93683fd3c3aa8a43">velocity</a>;</div>
+<div class="line"><span class="lineno">  308</span>    <span class="keywordflow">return</span> 0;</div>
+<div class="line"><span class="lineno">  309</span>}</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="midi__protocol_8h_source.html#l00047">shrapnel::midi::Message::NoteOn::note</a>, and <a class="el" href="midi__protocol_8h_source.html#l00048">shrapnel::midi::Message::NoteOn::velocity</a>.</p>
 
@@ -4036,11 +4045,11 @@ template&lt;&gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="midi__mapping__api_8cpp_source.html#l00347">347</a> of file <a class="el" href="midi__mapping__api_8cpp_source.html">midi_mapping_api.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  349</span>{</div>
-<div class="line"><span class="lineno">  350</span>    out.number = message.<a class="code hl_variable" href="structshrapnel_1_1midi_1_1Message_1_1ProgramChange.html#aa410a2e8f7c2338ad6cc7545ad5d93c8">number</a>;</div>
-<div class="line"><span class="lineno">  351</span>    <span class="keywordflow">return</span> 0;</div>
-<div class="line"><span class="lineno">  352</span>}</div>
+<p class="definition">Definition at line <a class="el" href="midi__mapping__api_8cpp_source.html#l00357">357</a> of file <a class="el" href="midi__mapping__api_8cpp_source.html">midi_mapping_api.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  359</span>{</div>
+<div class="line"><span class="lineno">  360</span>    out.number = message.<a class="code hl_variable" href="structshrapnel_1_1midi_1_1Message_1_1ProgramChange.html#aa410a2e8f7c2338ad6cc7545ad5d93c8">number</a>;</div>
+<div class="line"><span class="lineno">  361</span>    <span class="keywordflow">return</span> 0;</div>
+<div class="line"><span class="lineno">  362</span>}</div>
 </div><!-- fragment -->
 <p class="reference">References <a class="el" href="midi__protocol_8h_source.html#l00072">shrapnel::midi::Message::ProgramChange::number</a>.</p>
 
@@ -4074,20 +4083,20 @@ template&lt;&gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="midi__mapping__api_8cpp_source.html#l00459">459</a> of file <a class="el" href="midi__mapping__api_8cpp_source.html">midi_mapping_api.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  461</span>{</div>
-<div class="line"><span class="lineno">  462</span>    out.has_received_message = <span class="keyword">true</span>;</div>
-<div class="line"><span class="lineno">  463</span>    <span class="keywordtype">int</span> rc = to_proto&lt;shrapnel_midi_mapping_MidiMessage&gt;(message.<a class="code hl_variable" href="structshrapnel_1_1midi_1_1MessageReceived.html#a83ae76bcd410b1836b0d319f1c8cef4a">message</a>,</div>
-<div class="line"><span class="lineno">  464</span>                                                         out.received_message);</div>
-<div class="line"><span class="lineno">  465</span>    <span class="keywordflow">if</span>(rc != 0)</div>
-<div class="line"><span class="lineno">  466</span>    {</div>
-<div class="line"><span class="lineno">  467</span>        <span class="keywordflow">return</span> -1;</div>
-<div class="line"><span class="lineno">  468</span>    }</div>
-<div class="line"><span class="lineno">  469</span>    out.has_received_message = <span class="keyword">true</span>;</div>
-<div class="line"><span class="lineno">  470</span>    <span class="keywordflow">return</span> 0;</div>
-<div class="line"><span class="lineno">  471</span>}</div>
+<p class="definition">Definition at line <a class="el" href="midi__mapping__api_8cpp_source.html#l00469">469</a> of file <a class="el" href="midi__mapping__api_8cpp_source.html">midi_mapping_api.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  471</span>{</div>
+<div class="line"><span class="lineno">  472</span>    out.has_received_message = <span class="keyword">true</span>;</div>
+<div class="line"><span class="lineno">  473</span>    <span class="keywordtype">int</span> rc = to_proto&lt;shrapnel_midi_mapping_MidiMessage&gt;(message.<a class="code hl_variable" href="structshrapnel_1_1midi_1_1MessageReceived.html#a83ae76bcd410b1836b0d319f1c8cef4a">message</a>,</div>
+<div class="line"><span class="lineno">  474</span>                                                         out.received_message);</div>
+<div class="line"><span class="lineno">  475</span>    <span class="keywordflow">if</span>(rc != 0)</div>
+<div class="line"><span class="lineno">  476</span>    {</div>
+<div class="line"><span class="lineno">  477</span>        <span class="keywordflow">return</span> -1;</div>
+<div class="line"><span class="lineno">  478</span>    }</div>
+<div class="line"><span class="lineno">  479</span>    out.has_received_message = <span class="keyword">true</span>;</div>
+<div class="line"><span class="lineno">  480</span>    <span class="keywordflow">return</span> 0;</div>
+<div class="line"><span class="lineno">  481</span>}</div>
 </div><!-- fragment -->
-<p class="reference">References <a class="el" href="midi__mapping__api_8h_source.html#l00083">shrapnel::midi::MessageReceived::message</a>.</p>
+<p class="reference">References <a class="el" href="midi__mapping__api_8h_source.html#l00087">shrapnel::midi::MessageReceived::message</a>.</p>
 
 </div>
 </div>
@@ -4119,13 +4128,13 @@ template&lt;&gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="midi__mapping__api_8cpp_source.html#l00279">279</a> of file <a class="el" href="midi__mapping__api_8cpp_source.html">midi_mapping_api.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  280</span>{</div>
-<div class="line"><span class="lineno">  281</span>    out.id = message.<a class="code hl_variable" href="structshrapnel_1_1midi_1_1Remove.html#a117170210912dd5e3910ea1345e5dabe">id</a>;</div>
-<div class="line"><span class="lineno">  282</span>    <span class="keywordflow">return</span> 0;</div>
-<div class="line"><span class="lineno">  283</span>}</div>
+<p class="definition">Definition at line <a class="el" href="midi__mapping__api_8cpp_source.html#l00289">289</a> of file <a class="el" href="midi__mapping__api_8cpp_source.html">midi_mapping_api.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  290</span>{</div>
+<div class="line"><span class="lineno">  291</span>    out.id = message.<a class="code hl_variable" href="structshrapnel_1_1midi_1_1Remove.html#a117170210912dd5e3910ea1345e5dabe">id</a>;</div>
+<div class="line"><span class="lineno">  292</span>    <span class="keywordflow">return</span> 0;</div>
+<div class="line"><span class="lineno">  293</span>}</div>
 </div><!-- fragment -->
-<p class="reference">References <a class="el" href="midi__mapping__api_8h_source.html#l00077">shrapnel::midi::Remove::id</a>.</p>
+<p class="reference">References <a class="el" href="midi__mapping__api_8h_source.html#l00081">shrapnel::midi::Remove::id</a>.</p>
 
 </div>
 </div>
@@ -4157,19 +4166,19 @@ template&lt;&gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="midi__mapping__api_8cpp_source.html#l00259">259</a> of file <a class="el" href="midi__mapping__api_8cpp_source.html">midi_mapping_api.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  260</span>{</div>
-<div class="line"><span class="lineno">  261</span>    out.has_mapping = <span class="keyword">true</span>;</div>
-<div class="line"><span class="lineno">  262</span>    <span class="keywordtype">int</span> rc = to_proto&lt;shrapnel_midi_mapping_MappingRecord&gt;(message.<a class="code hl_variable" href="structshrapnel_1_1midi_1_1Update.html#a9dceb99ae11c395d675becd97f4a2fa5">mapping</a>,</div>
-<div class="line"><span class="lineno">  263</span>                                                           out.mapping);</div>
-<div class="line"><span class="lineno">  264</span>    <span class="keywordflow">if</span>(rc != 0)</div>
-<div class="line"><span class="lineno">  265</span>    {</div>
-<div class="line"><span class="lineno">  266</span>        <span class="keywordflow">return</span> -1;</div>
-<div class="line"><span class="lineno">  267</span>    }</div>
-<div class="line"><span class="lineno">  268</span>    <span class="keywordflow">return</span> 0;</div>
-<div class="line"><span class="lineno">  269</span>}</div>
+<p class="definition">Definition at line <a class="el" href="midi__mapping__api_8cpp_source.html#l00269">269</a> of file <a class="el" href="midi__mapping__api_8cpp_source.html">midi_mapping_api.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  270</span>{</div>
+<div class="line"><span class="lineno">  271</span>    out.has_mapping = <span class="keyword">true</span>;</div>
+<div class="line"><span class="lineno">  272</span>    <span class="keywordtype">int</span> rc = to_proto&lt;shrapnel_midi_mapping_MappingRecord&gt;(message.<a class="code hl_variable" href="structshrapnel_1_1midi_1_1Update.html#a9dceb99ae11c395d675becd97f4a2fa5">mapping</a>,</div>
+<div class="line"><span class="lineno">  273</span>                                                           out.mapping);</div>
+<div class="line"><span class="lineno">  274</span>    <span class="keywordflow">if</span>(rc != 0)</div>
+<div class="line"><span class="lineno">  275</span>    {</div>
+<div class="line"><span class="lineno">  276</span>        <span class="keywordflow">return</span> -1;</div>
+<div class="line"><span class="lineno">  277</span>    }</div>
+<div class="line"><span class="lineno">  278</span>    <span class="keywordflow">return</span> 0;</div>
+<div class="line"><span class="lineno">  279</span>}</div>
 </div><!-- fragment -->
-<p class="reference">References <a class="el" href="midi__mapping__api_8h_source.html#l00071">shrapnel::midi::Update::mapping</a>.</p>
+<p class="reference">References <a class="el" href="midi__mapping__api_8h_source.html#l00075">shrapnel::midi::Update::mapping</a>.</p>
 
 </div>
 </div>
@@ -5131,18 +5140,18 @@ template&lt;&gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="midi__mapping__api_8cpp_source.html#l00191">191</a> of file <a class="el" href="midi__mapping__api_8cpp_source.html">midi_mapping_api.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  193</span>{</div>
-<div class="line"><span class="lineno">  194</span>    <span class="keywordtype">int</span> rc =</div>
-<div class="line"><span class="lineno">  195</span>        to_proto&lt;shrapnel_midi_mapping_Mapping&gt;(message.second, out.mapping);</div>
-<div class="line"><span class="lineno">  196</span>    <span class="keywordflow">if</span>(rc != 0)</div>
-<div class="line"><span class="lineno">  197</span>    {</div>
-<div class="line"><span class="lineno">  198</span>        <span class="keywordflow">return</span> -1;</div>
-<div class="line"><span class="lineno">  199</span>    }</div>
-<div class="line"><span class="lineno">  200</span>    out.has_mapping = <span class="keyword">true</span>;</div>
-<div class="line"><span class="lineno">  201</span>    out.id = message.first;</div>
-<div class="line"><span class="lineno">  202</span>    <span class="keywordflow">return</span> 0;</div>
-<div class="line"><span class="lineno">  203</span>}</div>
+<p class="definition">Definition at line <a class="el" href="midi__mapping__api_8cpp_source.html#l00201">201</a> of file <a class="el" href="midi__mapping__api_8cpp_source.html">midi_mapping_api.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  203</span>{</div>
+<div class="line"><span class="lineno">  204</span>    <span class="keywordtype">int</span> rc =</div>
+<div class="line"><span class="lineno">  205</span>        to_proto&lt;shrapnel_midi_mapping_Mapping&gt;(message.second, out.mapping);</div>
+<div class="line"><span class="lineno">  206</span>    <span class="keywordflow">if</span>(rc != 0)</div>
+<div class="line"><span class="lineno">  207</span>    {</div>
+<div class="line"><span class="lineno">  208</span>        <span class="keywordflow">return</span> -1;</div>
+<div class="line"><span class="lineno">  209</span>    }</div>
+<div class="line"><span class="lineno">  210</span>    out.has_mapping = <span class="keyword">true</span>;</div>
+<div class="line"><span class="lineno">  211</span>    out.id = message.first;</div>
+<div class="line"><span class="lineno">  212</span>    <span class="keywordflow">return</span> 0;</div>
+<div class="line"><span class="lineno">  213</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -5176,7 +5185,7 @@ template&lt;typename ProtoT , typename T &gt; </div>
 
 <p>Convert a message to proto struct. </p>
 
-<p class="reference">Referenced by <a class="el" href="midi__mapping__api_8cpp_source.html#l00619">to_bytes()</a>, and <a class="el" href="midi__mapping__api_8cpp_source.html#l00363">to_proto()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="midi__mapping__api_8cpp_source.html#l00629">to_bytes()</a>, and <a class="el" href="midi__mapping__api_8cpp_source.html#l00373">to_proto()</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">

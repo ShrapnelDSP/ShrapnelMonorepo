@@ -160,6 +160,43 @@ Widget build(BuildContext context) {
       ),
       Provider.value(value: presetsRepository),
       Provider.value(value: selectedPresetRepository),
+      StateNotifierProvider&lt;PresetsServiceBase, PresetsState&gt;(
+        create: (_) {
+          return PresetsService(
+            presetsRepository: presetsRepository,
+            selectedPresetRepository: selectedPresetRepository,
+            parametersState: ParametersMergeStream(
+              ampGain: parameterService.getParameter(&#39;ampGain&#39;).value,
+              ampChannel: parameterService.getParameter(&#39;ampChannel&#39;).value,
+              bass: parameterService.getParameter(&#39;bass&#39;).value,
+              middle: parameterService.getParameter(&#39;middle&#39;).value,
+              treble: parameterService.getParameter(&#39;treble&#39;).value,
+              contour: parameterService.getParameter(&#39;contour&#39;).value,
+              volume: parameterService.getParameter(&#39;volume&#39;).value,
+              noiseGateThreshold:
+                  parameterService.getParameter(&#39;noiseGateThreshold&#39;).value,
+              noiseGateHysteresis:
+                  parameterService.getParameter(&#39;noiseGateHysteresis&#39;).value,
+              noiseGateAttack:
+                  parameterService.getParameter(&#39;noiseGateAttack&#39;).value,
+              noiseGateHold:
+                  parameterService.getParameter(&#39;noiseGateHold&#39;).value,
+              noiseGateRelease:
+                  parameterService.getParameter(&#39;noiseGateRelease&#39;).value,
+              noiseGateBypass:
+                  parameterService.getParameter(&#39;noiseGateBypass&#39;).value,
+              chorusRate: parameterService.getParameter(&#39;chorusRate&#39;).value,
+              chorusDepth: parameterService.getParameter(&#39;chorusDepth&#39;).value,
+              chorusMix: parameterService.getParameter(&#39;chorusMix&#39;).value,
+              chorusBypass:
+                  parameterService.getParameter(&#39;chorusBypass&#39;).value,
+              wahPosition: parameterService.getParameter(&#39;wahPosition&#39;).value,
+              wahVocal: parameterService.getParameter(&#39;wahVocal&#39;).value,
+              wahBypass: parameterService.getParameter(&#39;wahBypass&#39;).value,
+            ).stream,
+          );
+        },
+      ),
     ],
     child: const MyApp(),
   );

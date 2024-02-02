@@ -174,44 +174,8 @@ Widget build(BuildContext context) {
     body: Center(
       child: Column(
         children: [
-          StateNotifierProvider&lt;PresetsServiceBase, PresetsState&gt;(
-            create: (_) {
-              final parameters = context.read&lt;ParameterService&gt;();
-              return PresetsService(
-                presetsRepository: context.read&lt;PresetsRepositoryBase&gt;(),
-                selectedPresetRepository:
-                    context.read&lt;SelectedPresetRepositoryBase&gt;(),
-                parametersState: ParametersMergeStream(
-                  ampGain: parameters.getParameter(&#39;ampGain&#39;).value,
-                  ampChannel: parameters.getParameter(&#39;ampChannel&#39;).value,
-                  bass: parameters.getParameter(&#39;bass&#39;).value,
-                  middle: parameters.getParameter(&#39;middle&#39;).value,
-                  treble: parameters.getParameter(&#39;treble&#39;).value,
-                  contour: parameters.getParameter(&#39;contour&#39;).value,
-                  volume: parameters.getParameter(&#39;volume&#39;).value,
-                  noiseGateThreshold:
-                      parameters.getParameter(&#39;noiseGateThreshold&#39;).value,
-                  noiseGateHysteresis:
-                      parameters.getParameter(&#39;noiseGateHysteresis&#39;).value,
-                  noiseGateAttack:
-                      parameters.getParameter(&#39;noiseGateAttack&#39;).value,
-                  noiseGateHold:
-                      parameters.getParameter(&#39;noiseGateHold&#39;).value,
-                  noiseGateRelease:
-                      parameters.getParameter(&#39;noiseGateRelease&#39;).value,
-                  noiseGateBypass:
-                      parameters.getParameter(&#39;noiseGateBypass&#39;).value,
-                  chorusRate: parameters.getParameter(&#39;chorusRate&#39;).value,
-                  chorusDepth: parameters.getParameter(&#39;chorusDepth&#39;).value,
-                  chorusMix: parameters.getParameter(&#39;chorusMix&#39;).value,
-                  chorusBypass: parameters.getParameter(&#39;chorusBypass&#39;).value,
-                  wahPosition: parameters.getParameter(&#39;wahPosition&#39;).value,
-                  wahVocal: parameters.getParameter(&#39;wahVocal&#39;).value,
-                  wahBypass: parameters.getParameter(&#39;wahBypass&#39;).value,
-                ).stream,
-              );
-            },
-            builder: (context, _) {
+          Builder(
+            builder: (context) {
               final model = context.read&lt;PresetsServiceBase&gt;();
               final state = context.watch&lt;PresetsState&gt;();
 

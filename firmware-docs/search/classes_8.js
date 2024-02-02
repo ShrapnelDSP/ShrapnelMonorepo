@@ -5,5 +5,6 @@ var searchData=
   ['mappingmanager_2',['MappingManager',['../classshrapnel_1_1midi_1_1MappingManager.html',1,'shrapnel::midi']]],
   ['message_3',['Message',['../structshrapnel_1_1midi_1_1Message.html',1,'shrapnel::midi']]],
   ['messagereceived_4',['MessageReceived',['../structshrapnel_1_1midi_1_1MessageReceived.html',1,'shrapnel::midi']]],
-  ['midiuartbase_5',['MidiUartBase',['../classshrapnel_1_1midi_1_1MidiUartBase.html',1,'shrapnel::midi']]]
+  ['midimessagehandler_5',['MidiMessageHandler',['../classshrapnel_1_1MidiMessageHandler.html',1,'shrapnel']]],
+  ['midiuartbase_6',['MidiUartBase',['../classshrapnel_1_1midi_1_1MidiUartBase.html',1,'shrapnel::midi']]]
 ];

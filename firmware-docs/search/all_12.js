@@ -1,7 +1,7 @@
 var searchData=
 [
   ['rate_0',['rate',['../structshrapnel_1_1AudioProcessorParameters.html#a529d074f4132e64457a3fc2ef5338728',1,'shrapnel::AudioProcessorParameters']]],
-  ['read_1',['read',['../classshrapnel_1_1persistence_1_1EspCrud.html#acffbc9624d79f32ba578fcbc30cf229f',1,'shrapnel::persistence::EspCrud::read()'],['../classshrapnel_1_1midi_1_1MappingManager.html#a1ffb6617dae3c664cc5ee078d220d376',1,'shrapnel::midi::MappingManager::read()'],['../classshrapnel_1_1persistence_1_1Crud.html#a49f104b1f499d729ad6fc891ad61825e',1,'shrapnel::persistence::Crud::read()'],['../classshrapnel_1_1presets_1_1PresetsManager.html#a0aff6cb20b818976fb3b63792a1ba089',1,'shrapnel::presets::PresetsManager::read()']]],
+  ['read_1',['read',['../classshrapnel_1_1persistence_1_1EspCrud.html#acffbc9624d79f32ba578fcbc30cf229f',1,'shrapnel::persistence::EspCrud::read()'],['../classshrapnel_1_1midi_1_1MappingManager.html#abd4119da1824854961d5235c39824d17',1,'shrapnel::midi::MappingManager::read()'],['../classshrapnel_1_1persistence_1_1Crud.html#a49f104b1f499d729ad6fc891ad61825e',1,'shrapnel::persistence::Crud::read()'],['../classshrapnel_1_1presets_1_1PresetsManager.html#a0aff6cb20b818976fb3b63792a1ba089',1,'shrapnel::presets::PresetsManager::read()']]],
   ['read_2',['Read',['../structshrapnel_1_1selected__preset_1_1Read.html',1,'shrapnel::selected_preset']]],
   ['readme_2emd_3',['README.md',['../README_8md.html',1,'']]],
   ['receive_4',['receive',['../classshrapnel_1_1QueueBase.html#ab91cc1fb473ac9499f7843218842a946',1,'shrapnel::QueueBase::receive()'],['../classshrapnel_1_1Queue.html#aea7063f7ef99b8b46f6ba1250012332c',1,'shrapnel::Queue::receive()']]],

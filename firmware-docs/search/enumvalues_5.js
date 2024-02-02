@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['open_0',['OPEN',['../noise__gate_8cpp.html#aa0aafed44fec19806d8f9ad834be1248a0e0143636c29971736eab47415868eae',1,'noise_gate.cpp']]]
+  ['note_5foff_0',['NOTE_OFF',['../namespaceshrapnel_1_1midi.html#ad87a6a7595532b38466aa350b3d4e7aea630488f27611a5bef4c441142fb65143',1,'shrapnel::midi']]],
+  ['note_5fon_1',['NOTE_ON',['../namespaceshrapnel_1_1midi.html#ad87a6a7595532b38466aa350b3d4e7aeae3fb9dbaf6a8edc1be6286ae5b2e3bcf',1,'shrapnel::midi']]]
 ];

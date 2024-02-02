@@ -72,7 +72,7 @@
 
 </dt>
 <dd>
-  
+  Firmware creates a new MIDI mapping according to the parameters.
 </dd>
 
         <dt id="CreateResponse">
@@ -80,7 +80,7 @@
 
 </dt>
 <dd>
-  
+  Indicates that a new MIDI mapping was created successfully.
 </dd>
 
         <dt id="GetRequest">
@@ -88,7 +88,8 @@
 
 </dt>
 <dd>
-  
+  Send from the frontend to the firmware. When received, the firmware will send
+an update for each midi mapping that currently exists.
 </dd>
 
         <dt id="Mapping">
@@ -128,7 +129,9 @@
 
 </dt>
 <dd>
-  
+  Firmware notifies this periodically, so that the frontend can react
+to MIDI messages, for example to connect a parameter to the MIDI
+message.
 </dd>
 
         <dt id="MidiMessage">
@@ -136,7 +139,7 @@
 
 </dt>
 <dd>
-  
+  A MIDI message that was received by the firmware
 </dd>
 
         <dt id="MidiMessage_ControlChange">
@@ -176,7 +179,7 @@
 
 </dt>
 <dd>
-  
+  Firmware removes the specified MIDI mapping .
 </dd>
 
         <dt id="Update">
@@ -184,7 +187,7 @@
 
 </dt>
 <dd>
-  
+  Firmware updates an existing MIDI mapping according to the parameters.
 </dd>
 
       </dl>
@@ -258,8 +261,8 @@
       <li><a href="../knob_with_label/knob_with_label-library.html">knob_with_label</a></li>
       <li><a href="../main/main-library.html">main</a></li>
       <li><a href="../core_message_transport/core_message_transport-library.html">message_transport</a></li>
-      <li><a href="../midi_mapping_model_midi_learn/midi_mapping_model_midi_learn-library.html">midi_learn</a></li>
       <li><a href="../midi_mapping_view_midi_learn/midi_mapping_view_midi_learn-library.html">midi_learn</a></li>
+      <li><a href="../midi_mapping_model_midi_learn/midi_mapping_model_midi_learn-library.html">midi_learn</a></li>
       <li><a href="../midi_mapping_model_midi_learn_state/midi_mapping_model_midi_learn_state-library.html">midi_learn_state</a></li>
       <li><a href="../midi_mapping_view_midi_mapping/midi_mapping_view_midi_mapping-library.html">midi_mapping</a></li>
       <li><a href="../api_generated_midi_mapping.pb/api_generated_midi_mapping.pb-library.html">midi_mapping.pb</a></li>

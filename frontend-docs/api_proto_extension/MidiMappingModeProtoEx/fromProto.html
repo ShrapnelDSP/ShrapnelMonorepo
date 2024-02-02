@@ -80,6 +80,7 @@
   return switch (proto) {
     midi_mapping_pb.Mapping_Mode.parameter =&gt; MidiMappingMode.parameter,
     midi_mapping_pb.Mapping_Mode.toggle =&gt; MidiMappingMode.toggle,
+    midi_mapping_pb.Mapping_Mode.button =&gt; MidiMappingMode.button,
     _ =&gt; throw ProtoException(),
   };
 }</code></pre>

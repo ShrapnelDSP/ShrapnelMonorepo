@@ -186,6 +186,7 @@ prints green, as expected.</p>
   <pre class="language-dart"><code class="language-dart">@override
 Widget build(BuildContext context) {
   final parameters = context.read&lt;ParameterService&gt;().parameterNames;
+  final presets = context.watch&lt;PresetsState&gt;();
   final mappings = context.read&lt;MidiMappingService&gt;();
 
   return Dialog(
@@ -200,7 +201,7 @@ Widget build(BuildContext context) {
             Padding(
               padding: const EdgeInsets.all(8),
               child: Text(
-                &#39;Create a new MIDI mapping&#39;,
+                &#39;Create MIDI mapping&#39;,
                 style: Theme.of(context).textTheme.titleLarge,
               ),
             ),
@@ -257,9 +258,55 @@ Widget build(BuildContext context) {
                   ),
                 ),
               ],
-              value: parameter,
-              onChanged: (value) =&gt; setState(() =&gt; parameter = value),
-              validator: validateIsNotNull,
+              value: parameterId,
+              onChanged: switch (mode) {
+                MidiMappingMode.toggle ||
+                MidiMappingMode.parameter =&gt;
+                  (value) =&gt; setState(() =&gt; parameterId = value),
+                null || MidiMappingMode.button =&gt; null,
+              },
+              validator: (v) {
+                return switch (mode) {
+                  null || MidiMappingMode.button =&gt; null,
+                  MidiMappingMode.toggle ||
+                  MidiMappingMode.parameter =&gt;
+                    v == null ? _requiredValueString : null,
+                };
+              },
+            ),
+            DropdownButtonFormField&lt;int&gt;(
+              decoration: const InputDecoration(
+                label: Text(&#39;Preset&#39;),
+              ),
+              items: switch (presets) {
+                LoadingPresetsState() =&gt; null,
+                ReadyPresetsState(:final presets) =&gt; presets.map(
+                    (e) =&gt; DropdownMenuItem(
+                      value: e.id,
+                      child: Text(e.preset.name),
+                    ),
+                  ),
+              }
+                  ?.toList(),
+              value: presetId,
+              onChanged: switch (mode) {
+                null ||
+                MidiMappingMode.toggle ||
+                MidiMappingMode.parameter =&gt;
+                  null,
+                MidiMappingMode.button =&gt; (value) =&gt;
+                    setState(() =&gt; presetId = value),
+              },
+              validator: (v) {
+                return switch (mode) {
+                  null ||
+                  MidiMappingMode.toggle ||
+                  MidiMappingMode.parameter =&gt;
+                    null,
+                  MidiMappingMode.button =&gt;
+                    v == null ? _requiredValueString : null,
+                };
+              },
             ),
             ElevatedButton(
               onPressed: () {
@@ -267,12 +314,25 @@ Widget build(BuildContext context) {
                   Navigator.pop(context);
                   unawaited(
                     mappings.createMapping(
-                      MidiMapping(
-                        midiChannel: channel!,
-                        ccNumber: ccNumber!,
-                        parameterId: parameter!,
-                        mode: mode!,
-                      ),
+                      switch (mode) {
+                        null =&gt;
+                          throw StateError(&#39;Mode has not been selected&#39;),
+                        MidiMappingMode.toggle =&gt; MidiMapping.toggle(
+                            midiChannel: channel!,
+                            ccNumber: ccNumber!,
+                            parameterId: parameterId!,
+                          ),
+                        MidiMappingMode.parameter =&gt; MidiMapping.parameter(
+                            midiChannel: channel!,
+                            ccNumber: ccNumber!,
+                            parameterId: parameterId!,
+                          ),
+                        MidiMappingMode.button =&gt; MidiMapping.button(
+                            midiChannel: channel!,
+                            ccNumber: ccNumber!,
+                            presetId: presetId!,
+                          ),
+                      },
                     ),
                   );
                 }

@@ -77,12 +77,23 @@
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
   <pre class="language-dart"><code class="language-dart">static MidiMapping fromProto(midi_mapping_pb.Mapping proto) {
-  return MidiMapping(
-    midiChannel: proto.midiChannel,
-    ccNumber: proto.ccNumber,
-    parameterId: proto.parameterName,
-    mode: MidiMappingModeProtoEx.fromProto(proto.mode),
-  );
+  return switch (MidiMappingModeProtoEx.fromProto(proto.mode)) {
+    MidiMappingMode.toggle =&gt; MidiMapping.toggle(
+        midiChannel: proto.midiChannel,
+        ccNumber: proto.ccNumber,
+        parameterId: proto.parameterName,
+      ),
+    MidiMappingMode.parameter =&gt; MidiMapping.toggle(
+        midiChannel: proto.midiChannel,
+        ccNumber: proto.ccNumber,
+        parameterId: proto.parameterName,
+      ),
+    MidiMappingMode.button =&gt; MidiMapping.button(
+        midiChannel: proto.midiChannel,
+        ccNumber: proto.ccNumber,
+        presetId: proto.presetId,
+      ),
+  };
 }</code></pre>
 </section>
 

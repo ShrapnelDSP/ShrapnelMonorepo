@@ -16,7 +16,7 @@ var hierarchy =
     [ "shrapnel::midi::CreateResponse", "structshrapnel_1_1midi_1_1CreateResponse.html", null ],
     [ "shrapnel::persistence::Crud< DataT >", "classshrapnel_1_1persistence_1_1Crud.html", null ],
     [ "shrapnel::persistence::Crud< Mapping >", "classshrapnel_1_1persistence_1_1Crud.html", [
-      [ "shrapnel::midi::MappingManager< AudioParametersT, MAX_MAPPINGS, MAX_OBSERVERS >", "classshrapnel_1_1midi_1_1MappingManager.html", null ]
+      [ "shrapnel::midi::MappingManager< MAX_MAPPINGS, MAX_OBSERVERS >", "classshrapnel_1_1midi_1_1MappingManager.html", null ]
     ] ],
     [ "shrapnel::persistence::Crud< PresetData >", "classshrapnel_1_1persistence_1_1Crud.html", [
       [ "shrapnel::presets::PresetsManager", "classshrapnel_1_1presets_1_1PresetsManager.html", null ]
@@ -49,6 +49,7 @@ var hierarchy =
     [ "shrapnel::midi::Mapping", "structshrapnel_1_1midi_1_1Mapping.html", null ],
     [ "shrapnel::midi::Message", "structshrapnel_1_1midi_1_1Message.html", null ],
     [ "shrapnel::midi::MessageReceived", "structshrapnel_1_1midi_1_1MessageReceived.html", null ],
+    [ "shrapnel::MidiMessageHandler< AudioParametersT, MappingManagerT, PresetLoaderT >", "classshrapnel_1_1MidiMessageHandler.html", null ],
     [ "shrapnel::midi::MidiUartBase", "classshrapnel_1_1midi_1_1MidiUartBase.html", [
       [ "shrapnel::midi::EspMidiUart", "classshrapnel_1_1midi_1_1EspMidiUart.html", null ]
     ] ],
@@ -57,7 +58,7 @@ var hierarchy =
     [ "shrapnel::presets::Notify", "structshrapnel_1_1presets_1_1Notify.html", null ],
     [ "shrapnel::selected_preset::Notify", "structshrapnel_1_1selected__preset_1_1Notify.html", null ],
     [ "etl::observable", null, [
-      [ "shrapnel::midi::MappingManager< AudioParametersT, MAX_MAPPINGS, MAX_OBSERVERS >", "classshrapnel_1_1midi_1_1MappingManager.html", null ],
+      [ "shrapnel::midi::MappingManager< MAX_MAPPINGS, MAX_OBSERVERS >", "classshrapnel_1_1midi_1_1MappingManager.html", null ],
       [ "shrapnel::parameters::AudioParameters< MAX_PARAMETERS, MAX_OBSERVERS >", "classshrapnel_1_1parameters_1_1AudioParameters.html", null ]
     ] ],
     [ "shrapnel::events::OutputClipped", "structshrapnel_1_1events_1_1OutputClipped.html", null ],
@@ -67,6 +68,7 @@ var hierarchy =
     [ "shrapnel::presets::ParametersData", "structshrapnel_1_1presets_1_1ParametersData.html", null ],
     [ "shrapnel::ParameterUpdateNotifier", "classshrapnel_1_1ParameterUpdateNotifier.html", null ],
     [ "shrapnel::presets::PresetData", "structshrapnel_1_1presets_1_1PresetData.html", null ],
+    [ "shrapnel::PresetLoader< AudioParametersT >", "classshrapnel_1_1PresetLoader.html", null ],
     [ "juce::dsp::ProcessorBase", null, [
       [ "shrapnel::dsp::BlockProcessor< N, ChildProcessor >", "classshrapnel_1_1dsp_1_1BlockProcessor.html", null ]
     ] ],

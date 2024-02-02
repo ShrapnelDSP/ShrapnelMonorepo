@@ -12,6 +12,7 @@ var dir_a7f1045ea2c2de513e4829d3edd7d5b7 =
     [ "i2c", "dir_7f31785812d98c71fae5ba573a2ad89d.html", "dir_7f31785812d98c71fae5ba573a2ad89d" ],
     [ "i2s", "dir_7092270a206f379af139e0c789bb92ec.html", "dir_7092270a206f379af139e0c789bb92ec" ],
     [ "messages", "dir_005243991190519b595a4691befb2641.html", "dir_005243991190519b595a4691befb2641" ],
+    [ "midi_handling", "dir_04f80bd1cd07ee712dceecafec49d639.html", "dir_04f80bd1cd07ee712dceecafec49d639" ],
     [ "midi_mapping", "dir_4a0cde8174421f79b24d0a2ec9fdbc15.html", "dir_4a0cde8174421f79b24d0a2ec9fdbc15" ],
     [ "midi_protocol", "dir_6bb30634ea0a017998ca767619e0130b.html", "dir_6bb30634ea0a017998ca767619e0130b" ],
     [ "os", "dir_a87011361cfcfda094e536367881e980.html", "dir_a87011361cfcfda094e536367881e980" ],

@@ -78,7 +78,7 @@
   <h2><span>Implementation</span></h2>
   <pre class="language-dart"><code class="language-dart">void midiMessageReceived(MidiMessage message) {
   state.maybeWhen(
-    waitForMidi: (parameterId) {
+    waitForMidi: (mappedParameterId) {
       unawaited(
         message.maybeMap(
           controlChange: (message) async {
@@ -94,9 +94,15 @@
               return e;
             }).where(
               (e) =&gt;
-                  e.value.midiChannel == channel &amp;&amp;
-                      e.value.ccNumber == control ||
-                  e.value.parameterId == parameterId,
+                  (e.value.midiChannel == channel &amp;&amp;
+                      e.value.ccNumber == control) ||
+                  switch (e.value) {
+                        MidiMappingToggle(:final parameterId) ||
+                        MidiMappingParameter(:final parameterId) =&gt;
+                          parameterId,
+                        MidiMappingButton() =&gt; null,
+                      } ==
+                      mappedParameterId,
             );
 
             &#47;&#47; Need copy to prevent concurrent modification of the lazy iterator
@@ -113,11 +119,10 @@
             }
 
             await mappingService.createMapping(
-              MidiMapping(
+              MidiMapping.parameter(
                 ccNumber: control,
                 midiChannel: channel,
-                parameterId: parameterId,
-                mode: MidiMappingMode.parameter,
+                parameterId: mappedParameterId,
               ),
             );
 

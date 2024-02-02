@@ -1,12 +1,13 @@
 var classshrapnel_1_1midi_1_1MappingManager =
 [
-    [ "MapType", "classshrapnel_1_1midi_1_1MappingManager.html#a52c3eefd35b18584ae6ee72124aa805e", null ],
-    [ "MappingManager", "classshrapnel_1_1midi_1_1MappingManager.html#a40a743238cf9bf831a787004c2aada37", null ],
-    [ "create", "classshrapnel_1_1midi_1_1MappingManager.html#ab2d882a062a0547cfa02e71e6d848559", null ],
-    [ "destroy", "classshrapnel_1_1midi_1_1MappingManager.html#a0857042554c6afd3a5d6ef3a5e5722c4", null ],
-    [ "for_each", "classshrapnel_1_1midi_1_1MappingManager.html#a438dd58f66ecb8b84454dae9ab63d103", null ],
-    [ "get", "classshrapnel_1_1midi_1_1MappingManager.html#a7087692921b992e7a13da2d7499865a9", null ],
-    [ "process_message", "classshrapnel_1_1midi_1_1MappingManager.html#ac6f275b3280f5f57d8612d40e7d86141", null ],
-    [ "read", "classshrapnel_1_1midi_1_1MappingManager.html#a1ffb6617dae3c664cc5ee078d220d376", null ],
-    [ "update", "classshrapnel_1_1midi_1_1MappingManager.html#a456e26b8ff75565779d3f5f3246fbd81", null ]
+    [ "MapType", "classshrapnel_1_1midi_1_1MappingManager.html#ae50b4998519308a7f517617913141751", null ],
+    [ "MappingManager", "classshrapnel_1_1midi_1_1MappingManager.html#a8b21fee3ab09cbd918d4bd468152ef04", null ],
+    [ "begin", "classshrapnel_1_1midi_1_1MappingManager.html#a6210c6ef859c3aa51b0a72f5174f62d7", null ],
+    [ "create", "classshrapnel_1_1midi_1_1MappingManager.html#a1e3f4c1de3c5194b08c39d8999cddad5", null ],
+    [ "destroy", "classshrapnel_1_1midi_1_1MappingManager.html#a169d1106aeb7ef77fd57580ae1bb6ecf", null ],
+    [ "end", "classshrapnel_1_1midi_1_1MappingManager.html#a0d3d3a577016cca5ba37d14c784300da", null ],
+    [ "for_each", "classshrapnel_1_1midi_1_1MappingManager.html#aade7b0fc089b00967650a5a635e1f615", null ],
+    [ "get", "classshrapnel_1_1midi_1_1MappingManager.html#a561ea8313a042fd713172930185acc80", null ],
+    [ "read", "classshrapnel_1_1midi_1_1MappingManager.html#abd4119da1824854961d5235c39824d17", null ],
+    [ "update", "classshrapnel_1_1midi_1_1MappingManager.html#ae0aabb4f522eff53de7ae16a6ec39d45", null ]
 ];

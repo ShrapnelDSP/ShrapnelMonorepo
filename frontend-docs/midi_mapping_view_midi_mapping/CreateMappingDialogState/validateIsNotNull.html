@@ -78,7 +78,7 @@
   <h2><span>Implementation</span></h2>
   <pre class="language-dart"><code class="language-dart">String? validateIsNotNull&lt;T&gt;(T? value) {
   if (value == null) {
-    return &#39;A value must be selected&#39;;
+    return _requiredValueString;
   }
 
   return null;
