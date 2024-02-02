@@ -69,22 +69,6 @@ sealed class MidiMapping with _$MidiMapping {
   const MidiMapping._();
 }
 
-/// Midi mapping that is encodable to JSON. Used to communicate between the
-/// firmware and the frontend.
-// TODO remove if not needed any more
-@freezed
-class MidiMappingDto with _$MidiMappingDto {
-  const factory MidiMappingDto({
-    required int midiChannel,
-    required int ccNumber,
-    required String? parameterId,
-    required MidiMappingMode mode,
-    required int? presetId,
-  }) = _MidiMappingDto;
-
-  const MidiMappingDto._();
-}
-
 @freezed
 class MidiMappingEntry with _$MidiMappingEntry {
   const factory MidiMappingEntry({
