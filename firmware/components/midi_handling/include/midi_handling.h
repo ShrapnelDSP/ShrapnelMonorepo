@@ -20,34 +20,26 @@
 #pragma once
 
 #include "etl/delegate.h"
+#include "messages.h"
 #include "midi_mapping.h"
 #include "midi_protocol.h"
 #include "presets_manager.h"
 #include "selected_preset_manager.h"
-#include "messages.h"
 
 namespace shrapnel {
 
-template <typename AudioParametersT, typename MappingManagerT>
+template <typename AudioParametersT,
+          typename MappingManagerT,
+          typename PresetLoaderT>
 class MidiMessageHandler
 {
 public:
-    using SendMessageCallback = etl::delegate<void(const AppMessage &)>;
-
-    MidiMessageHandler(
-        std::shared_ptr<AudioParametersT> a_parameters,
-        std::shared_ptr<MappingManagerT> a_mapping_manager,
-        std::shared_ptr<presets::PresetsManager> a_presets_manager,
-        std::shared_ptr<selected_preset::SelectedPresetManager>
-            a_selected_preset_manager,
-        SendMessageCallback a_send_message)
+    MidiMessageHandler(std::shared_ptr<AudioParametersT> a_parameters,
+                       std::shared_ptr<MappingManagerT> a_mapping_manager,
+                       std::shared_ptr<PresetLoaderT> a_preset_loader)
         : parameters{std::move(a_parameters)},
           mapping_manager{std::move(a_mapping_manager)},
-          presets_manager{std::move(a_presets_manager)},
-          selected_preset_manager{std::move(a_selected_preset_manager)},
-          send_message{a_send_message}
-    {
-    }
+          preset_loader{std::move(a_preset_loader)} {};
 
     /** React to a MIDI message by updating an audio parameter if there is a
      * mapping registered
@@ -100,39 +92,17 @@ public:
                 }
 
                 auto id = mapping.preset_id;
-                int rc = selected_preset_manager->set(id);
-                if(rc != 0)
-                {
-                    continue;
-                }
-
-                presets::PresetData preset{};
-                rc = presets_manager->read(id, preset);
-                if(rc != 0)
-                {
-                    continue;
-                }
-
-                presets::deserialise_live_parameters(*parameters,
-                                                     preset.parameters);
-
-                send_message({selected_preset::Notify{
-                                  .selectedPresetId = id,
-                              },
-                              std::nullopt});
+                preset_loader->load_preset(id);
                 break;
             }
             }
         }
-    };
+    }
 
 private:
     std::shared_ptr<AudioParametersT> parameters;
     std::shared_ptr<MappingManagerT> mapping_manager;
-    std::shared_ptr<presets::PresetsManager> presets_manager;
-    std::shared_ptr<selected_preset::SelectedPresetManager>
-        selected_preset_manager;
-    SendMessageCallback send_message;
+    std::shared_ptr<PresetLoaderT> preset_loader;
 };
 
 } // namespace shrapnel
