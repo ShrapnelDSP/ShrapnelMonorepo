@@ -610,6 +610,7 @@ private:
     {
         presets::id_t id = write.selectedPresetId;
         preset_loader->load_preset(id);
+        return std::nullopt;
     }
 
     void on_midi_message(midi::Message message)
