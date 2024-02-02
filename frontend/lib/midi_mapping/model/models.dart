@@ -31,19 +31,15 @@ sealed class MidiApiMessage with _$MidiApiMessage {
     required MidiMapping mapping,
   }) = MidiCreateRequest;
 
-
   const factory MidiApiMessage.createResponse({
     required MidiMappingEntry mapping,
   }) = MidiCreateResponse;
-
 
   const factory MidiApiMessage.update({
     required MidiMappingEntry mapping,
   }) = MidiUpdate;
 
-
   const factory MidiApiMessage.remove({required MidiMappingId id}) = MidiRemove;
-
 
   const factory MidiApiMessage.midiMessageReceived({
     required MidiMessage message,

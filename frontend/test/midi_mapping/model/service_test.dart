@@ -151,8 +151,8 @@ void main() {
 
       await uut.createMapping(
         const MidiMapping.parameter(
-            midiChannel: 1,
-            ccNumber: 2,
+          midiChannel: 1,
+          ccNumber: 2,
           parameterId: 'gain',
         ),
       );

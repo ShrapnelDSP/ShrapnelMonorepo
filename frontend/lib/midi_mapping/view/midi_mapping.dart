@@ -404,26 +404,26 @@ class CreateMappingDialogState extends State<CreateMappingDialog> {
                     Navigator.pop(context);
                     unawaited(
                       mappings.createMapping(
-                          switch (mode) {
-                            null =>
-                              throw StateError('Mode has not been selected'),
-                            MidiMappingMode.toggle => MidiMapping.toggle(
-                                midiChannel: channel!,
-                                ccNumber: ccNumber!,
-                                parameterId: parameterId!,
-                              ),
-                            MidiMappingMode.parameter => MidiMapping.parameter(
-                                midiChannel: channel!,
-                                ccNumber: ccNumber!,
-                                parameterId: parameterId!,
-                              ),
-                            MidiMappingMode.button => MidiMapping.button(
-                                midiChannel: channel!,
-                                ccNumber: ccNumber!,
-                                presetId: presetId!,
-                              ),
-                          },
-                        ),
+                        switch (mode) {
+                          null =>
+                            throw StateError('Mode has not been selected'),
+                          MidiMappingMode.toggle => MidiMapping.toggle(
+                              midiChannel: channel!,
+                              ccNumber: ccNumber!,
+                              parameterId: parameterId!,
+                            ),
+                          MidiMappingMode.parameter => MidiMapping.parameter(
+                              midiChannel: channel!,
+                              ccNumber: ccNumber!,
+                              parameterId: parameterId!,
+                            ),
+                          MidiMappingMode.button => MidiMapping.button(
+                              midiChannel: channel!,
+                              ccNumber: ccNumber!,
+                              presetId: presetId!,
+                            ),
+                        },
+                      ),
                     );
                   }
                 },

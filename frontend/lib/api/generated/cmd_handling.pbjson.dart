@@ -32,15 +32,31 @@ const Initialise$json = {
 };
 
 /// Descriptor for `Initialise`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List initialiseDescriptor = $convert.base64Decode(
-    'CgpJbml0aWFsaXNl');
+final $typed_data.Uint8List initialiseDescriptor =
+    $convert.base64Decode('CgpJbml0aWFsaXNl');
 
 @$core.Deprecated('Use messageDescriptor instead')
 const Message$json = {
   '1': 'Message',
   '2': [
-    {'1': 'update', '3': 1, '4': 1, '5': 11, '6': '.shrapnel.cmd_handling.Update', '9': 0, '10': 'update'},
-    {'1': 'initialise', '3': 2, '4': 1, '5': 11, '6': '.shrapnel.cmd_handling.Initialise', '9': 0, '10': 'initialise'},
+    {
+      '1': 'update',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.shrapnel.cmd_handling.Update',
+      '9': 0,
+      '10': 'update'
+    },
+    {
+      '1': 'initialise',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6': '.shrapnel.cmd_handling.Initialise',
+      '9': 0,
+      '10': 'initialise'
+    },
   ],
   '8': [
     {'1': 'message'},
@@ -52,4 +68,3 @@ final $typed_data.Uint8List messageDescriptor = $convert.base64Decode(
     'CgdNZXNzYWdlEjcKBnVwZGF0ZRgBIAEoCzIdLnNocmFwbmVsLmNtZF9oYW5kbGluZy5VcGRhdG'
     'VIAFIGdXBkYXRlEkMKCmluaXRpYWxpc2UYAiABKAsyIS5zaHJhcG5lbC5jbWRfaGFuZGxpbmcu'
     'SW5pdGlhbGlzZUgAUgppbml0aWFsaXNlQgkKB21lc3NhZ2U=');
-

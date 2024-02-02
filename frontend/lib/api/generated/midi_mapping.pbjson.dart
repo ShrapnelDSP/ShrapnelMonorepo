@@ -19,7 +19,14 @@ const Mapping$json = {
   '2': [
     {'1': 'midi_channel', '3': 1, '4': 1, '5': 13, '10': 'midiChannel'},
     {'1': 'cc_number', '3': 2, '4': 1, '5': 13, '10': 'ccNumber'},
-    {'1': 'mode', '3': 3, '4': 1, '5': 14, '6': '.shrapnel.midi_mapping.Mapping.Mode', '10': 'mode'},
+    {
+      '1': 'mode',
+      '3': 3,
+      '4': 1,
+      '5': 14,
+      '6': '.shrapnel.midi_mapping.Mapping.Mode',
+      '10': 'mode'
+    },
     {'1': 'parameter_name', '3': 4, '4': 1, '5': 9, '10': 'parameterName'},
     {'1': 'preset_id', '3': 5, '4': 1, '5': 13, '10': 'presetId'},
   ],
@@ -49,12 +56,49 @@ const MidiMessage$json = {
   '1': 'MidiMessage',
   '2': [
     {'1': 'channel', '3': 1, '4': 1, '5': 13, '10': 'channel'},
-    {'1': 'note_on', '3': 2, '4': 1, '5': 11, '6': '.shrapnel.midi_mapping.MidiMessage.NoteOn', '9': 0, '10': 'noteOn'},
-    {'1': 'note_off', '3': 3, '4': 1, '5': 11, '6': '.shrapnel.midi_mapping.MidiMessage.NoteOff', '9': 0, '10': 'noteOff'},
-    {'1': 'control_change', '3': 4, '4': 1, '5': 11, '6': '.shrapnel.midi_mapping.MidiMessage.ControlChange', '9': 0, '10': 'controlChange'},
-    {'1': 'program_change', '3': 5, '4': 1, '5': 11, '6': '.shrapnel.midi_mapping.MidiMessage.ProgramChange', '9': 0, '10': 'programChange'},
+    {
+      '1': 'note_on',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6': '.shrapnel.midi_mapping.MidiMessage.NoteOn',
+      '9': 0,
+      '10': 'noteOn'
+    },
+    {
+      '1': 'note_off',
+      '3': 3,
+      '4': 1,
+      '5': 11,
+      '6': '.shrapnel.midi_mapping.MidiMessage.NoteOff',
+      '9': 0,
+      '10': 'noteOff'
+    },
+    {
+      '1': 'control_change',
+      '3': 4,
+      '4': 1,
+      '5': 11,
+      '6': '.shrapnel.midi_mapping.MidiMessage.ControlChange',
+      '9': 0,
+      '10': 'controlChange'
+    },
+    {
+      '1': 'program_change',
+      '3': 5,
+      '4': 1,
+      '5': 11,
+      '6': '.shrapnel.midi_mapping.MidiMessage.ProgramChange',
+      '9': 0,
+      '10': 'programChange'
+    },
   ],
-  '3': [MidiMessage_NoteOn$json, MidiMessage_NoteOff$json, MidiMessage_ControlChange$json, MidiMessage_ProgramChange$json],
+  '3': [
+    MidiMessage_NoteOn$json,
+    MidiMessage_NoteOff$json,
+    MidiMessage_ControlChange$json,
+    MidiMessage_ProgramChange$json
+  ],
   '8': [
     {'1': 'parameters'},
   ],
@@ -114,7 +158,14 @@ const MappingRecord$json = {
   '1': 'MappingRecord',
   '2': [
     {'1': 'id', '3': 1, '4': 1, '5': 13, '10': 'id'},
-    {'1': 'mapping', '3': 2, '4': 1, '5': 11, '6': '.shrapnel.midi_mapping.Mapping', '10': 'mapping'},
+    {
+      '1': 'mapping',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6': '.shrapnel.midi_mapping.Mapping',
+      '10': 'mapping'
+    },
   ],
 };
 
@@ -129,14 +180,21 @@ const GetRequest$json = {
 };
 
 /// Descriptor for `GetRequest`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List getRequestDescriptor = $convert.base64Decode(
-    'CgpHZXRSZXF1ZXN0');
+final $typed_data.Uint8List getRequestDescriptor =
+    $convert.base64Decode('CgpHZXRSZXF1ZXN0');
 
 @$core.Deprecated('Use createRequestDescriptor instead')
 const CreateRequest$json = {
   '1': 'CreateRequest',
   '2': [
-    {'1': 'mapping', '3': 1, '4': 1, '5': 11, '6': '.shrapnel.midi_mapping.Mapping', '10': 'mapping'},
+    {
+      '1': 'mapping',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.shrapnel.midi_mapping.Mapping',
+      '10': 'mapping'
+    },
   ],
 };
 
@@ -149,7 +207,14 @@ final $typed_data.Uint8List createRequestDescriptor = $convert.base64Decode(
 const CreateResponse$json = {
   '1': 'CreateResponse',
   '2': [
-    {'1': 'mapping', '3': 1, '4': 1, '5': 11, '6': '.shrapnel.midi_mapping.MappingRecord', '10': 'mapping'},
+    {
+      '1': 'mapping',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.shrapnel.midi_mapping.MappingRecord',
+      '10': 'mapping'
+    },
   ],
 };
 
@@ -162,7 +227,14 @@ final $typed_data.Uint8List createResponseDescriptor = $convert.base64Decode(
 const Update$json = {
   '1': 'Update',
   '2': [
-    {'1': 'mapping', '3': 1, '4': 1, '5': 11, '6': '.shrapnel.midi_mapping.MappingRecord', '10': 'mapping'},
+    {
+      '1': 'mapping',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.shrapnel.midi_mapping.MappingRecord',
+      '10': 'mapping'
+    },
   ],
 };
 
@@ -180,14 +252,21 @@ const Remove$json = {
 };
 
 /// Descriptor for `Remove`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List removeDescriptor = $convert.base64Decode(
-    'CgZSZW1vdmUSDgoCaWQYASABKA1SAmlk');
+final $typed_data.Uint8List removeDescriptor =
+    $convert.base64Decode('CgZSZW1vdmUSDgoCaWQYASABKA1SAmlk');
 
 @$core.Deprecated('Use messageReceivedDescriptor instead')
 const MessageReceived$json = {
   '1': 'MessageReceived',
   '2': [
-    {'1': 'received_message', '3': 1, '4': 1, '5': 11, '6': '.shrapnel.midi_mapping.MidiMessage', '10': 'receivedMessage'},
+    {
+      '1': 'received_message',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.shrapnel.midi_mapping.MidiMessage',
+      '10': 'receivedMessage'
+    },
   ],
 };
 
@@ -200,12 +279,60 @@ final $typed_data.Uint8List messageReceivedDescriptor = $convert.base64Decode(
 const Message$json = {
   '1': 'Message',
   '2': [
-    {'1': 'get_request', '3': 1, '4': 1, '5': 11, '6': '.shrapnel.midi_mapping.GetRequest', '9': 0, '10': 'getRequest'},
-    {'1': 'create_request', '3': 2, '4': 1, '5': 11, '6': '.shrapnel.midi_mapping.CreateRequest', '9': 0, '10': 'createRequest'},
-    {'1': 'create_response', '3': 3, '4': 1, '5': 11, '6': '.shrapnel.midi_mapping.CreateResponse', '9': 0, '10': 'createResponse'},
-    {'1': 'update', '3': 4, '4': 1, '5': 11, '6': '.shrapnel.midi_mapping.Update', '9': 0, '10': 'update'},
-    {'1': 'remove', '3': 5, '4': 1, '5': 11, '6': '.shrapnel.midi_mapping.Remove', '9': 0, '10': 'remove'},
-    {'1': 'message_received', '3': 6, '4': 1, '5': 11, '6': '.shrapnel.midi_mapping.MessageReceived', '9': 0, '10': 'messageReceived'},
+    {
+      '1': 'get_request',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.shrapnel.midi_mapping.GetRequest',
+      '9': 0,
+      '10': 'getRequest'
+    },
+    {
+      '1': 'create_request',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6': '.shrapnel.midi_mapping.CreateRequest',
+      '9': 0,
+      '10': 'createRequest'
+    },
+    {
+      '1': 'create_response',
+      '3': 3,
+      '4': 1,
+      '5': 11,
+      '6': '.shrapnel.midi_mapping.CreateResponse',
+      '9': 0,
+      '10': 'createResponse'
+    },
+    {
+      '1': 'update',
+      '3': 4,
+      '4': 1,
+      '5': 11,
+      '6': '.shrapnel.midi_mapping.Update',
+      '9': 0,
+      '10': 'update'
+    },
+    {
+      '1': 'remove',
+      '3': 5,
+      '4': 1,
+      '5': 11,
+      '6': '.shrapnel.midi_mapping.Remove',
+      '9': 0,
+      '10': 'remove'
+    },
+    {
+      '1': 'message_received',
+      '3': 6,
+      '4': 1,
+      '5': 11,
+      '6': '.shrapnel.midi_mapping.MessageReceived',
+      '9': 0,
+      '10': 'messageReceived'
+    },
   ],
   '8': [
     {'1': 'message'},
@@ -223,4 +350,3 @@ final $typed_data.Uint8List messageDescriptor = $convert.base64Decode(
     'cGluZy5SZW1vdmVIAFIGcmVtb3ZlElMKEG1lc3NhZ2VfcmVjZWl2ZWQYBiABKAsyJi5zaHJhcG'
     '5lbC5taWRpX21hcHBpbmcuTWVzc2FnZVJlY2VpdmVkSABSD21lc3NhZ2VSZWNlaXZlZEIJCgdt'
     'ZXNzYWdl');
-

@@ -24,12 +24,42 @@ const PresetParameters$json = {
     {'1': 'treble', '3': 5, '4': 1, '5': 5, '10': 'treble'},
     {'1': 'contour', '3': 6, '4': 1, '5': 5, '10': 'contour'},
     {'1': 'volume', '3': 7, '4': 1, '5': 5, '10': 'volume'},
-    {'1': 'noise_gate_threshold', '3': 8, '4': 1, '5': 5, '10': 'noiseGateThreshold'},
-    {'1': 'noise_gate_hysteresis', '3': 9, '4': 1, '5': 5, '10': 'noiseGateHysteresis'},
-    {'1': 'noise_gate_attack', '3': 10, '4': 1, '5': 5, '10': 'noiseGateAttack'},
+    {
+      '1': 'noise_gate_threshold',
+      '3': 8,
+      '4': 1,
+      '5': 5,
+      '10': 'noiseGateThreshold'
+    },
+    {
+      '1': 'noise_gate_hysteresis',
+      '3': 9,
+      '4': 1,
+      '5': 5,
+      '10': 'noiseGateHysteresis'
+    },
+    {
+      '1': 'noise_gate_attack',
+      '3': 10,
+      '4': 1,
+      '5': 5,
+      '10': 'noiseGateAttack'
+    },
     {'1': 'noise_gate_hold', '3': 11, '4': 1, '5': 5, '10': 'noiseGateHold'},
-    {'1': 'noise_gate_release', '3': 12, '4': 1, '5': 5, '10': 'noiseGateRelease'},
-    {'1': 'noise_gate_bypass', '3': 13, '4': 1, '5': 5, '10': 'noiseGateBypass'},
+    {
+      '1': 'noise_gate_release',
+      '3': 12,
+      '4': 1,
+      '5': 5,
+      '10': 'noiseGateRelease'
+    },
+    {
+      '1': 'noise_gate_bypass',
+      '3': 13,
+      '4': 1,
+      '5': 5,
+      '10': 'noiseGateBypass'
+    },
     {'1': 'chorus_rate', '3': 14, '4': 1, '5': 5, '10': 'chorusRate'},
     {'1': 'chorus_depth', '3': 15, '4': 1, '5': 5, '10': 'chorusDepth'},
     {'1': 'chorus_mix', '3': 16, '4': 1, '5': 5, '10': 'chorusMix'},
@@ -61,7 +91,14 @@ const Preset$json = {
   '1': 'Preset',
   '2': [
     {'1': 'name', '3': 1, '4': 1, '5': 9, '10': 'name'},
-    {'1': 'parameters', '3': 2, '4': 1, '5': 11, '6': '.shrapnel.presets.PresetParameters', '10': 'parameters'},
+    {
+      '1': 'parameters',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6': '.shrapnel.presets.PresetParameters',
+      '10': 'parameters'
+    },
   ],
 };
 
@@ -75,7 +112,14 @@ const PresetRecord$json = {
   '1': 'PresetRecord',
   '2': [
     {'1': 'id', '3': 1, '4': 1, '5': 13, '10': 'id'},
-    {'1': 'preset', '3': 2, '4': 1, '5': 11, '6': '.shrapnel.presets.Preset', '10': 'preset'},
+    {
+      '1': 'preset',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6': '.shrapnel.presets.Preset',
+      '10': 'preset'
+    },
   ],
 };
 
@@ -90,14 +134,21 @@ const Initialise$json = {
 };
 
 /// Descriptor for `Initialise`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List initialiseDescriptor = $convert.base64Decode(
-    'CgpJbml0aWFsaXNl');
+final $typed_data.Uint8List initialiseDescriptor =
+    $convert.base64Decode('CgpJbml0aWFsaXNl');
 
 @$core.Deprecated('Use notifyDescriptor instead')
 const Notify$json = {
   '1': 'Notify',
   '2': [
-    {'1': 'preset', '3': 1, '4': 1, '5': 11, '6': '.shrapnel.presets.PresetRecord', '10': 'preset'},
+    {
+      '1': 'preset',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.shrapnel.presets.PresetRecord',
+      '10': 'preset'
+    },
   ],
 };
 
@@ -110,7 +161,14 @@ final $typed_data.Uint8List notifyDescriptor = $convert.base64Decode(
 const Create$json = {
   '1': 'Create',
   '2': [
-    {'1': 'preset', '3': 1, '4': 1, '5': 11, '6': '.shrapnel.presets.Preset', '10': 'preset'},
+    {
+      '1': 'preset',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.shrapnel.presets.Preset',
+      '10': 'preset'
+    },
   ],
 };
 
@@ -123,7 +181,14 @@ final $typed_data.Uint8List createDescriptor = $convert.base64Decode(
 const Update$json = {
   '1': 'Update',
   '2': [
-    {'1': 'preset', '3': 1, '4': 1, '5': 11, '6': '.shrapnel.presets.PresetRecord', '10': 'preset'},
+    {
+      '1': 'preset',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.shrapnel.presets.PresetRecord',
+      '10': 'preset'
+    },
   ],
 };
 
@@ -141,18 +206,58 @@ const Remove$json = {
 };
 
 /// Descriptor for `Remove`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List removeDescriptor = $convert.base64Decode(
-    'CgZSZW1vdmUSDgoCaWQYASABKA1SAmlk');
+final $typed_data.Uint8List removeDescriptor =
+    $convert.base64Decode('CgZSZW1vdmUSDgoCaWQYASABKA1SAmlk');
 
 @$core.Deprecated('Use messageDescriptor instead')
 const Message$json = {
   '1': 'Message',
   '2': [
-    {'1': 'initialise', '3': 1, '4': 1, '5': 11, '6': '.shrapnel.presets.Initialise', '9': 0, '10': 'initialise'},
-    {'1': 'notify', '3': 2, '4': 1, '5': 11, '6': '.shrapnel.presets.Notify', '9': 0, '10': 'notify'},
-    {'1': 'create', '3': 3, '4': 1, '5': 11, '6': '.shrapnel.presets.Create', '9': 0, '10': 'create'},
-    {'1': 'update', '3': 4, '4': 1, '5': 11, '6': '.shrapnel.presets.Update', '9': 0, '10': 'update'},
-    {'1': 'remove', '3': 5, '4': 1, '5': 11, '6': '.shrapnel.presets.Remove', '9': 0, '10': 'remove'},
+    {
+      '1': 'initialise',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.shrapnel.presets.Initialise',
+      '9': 0,
+      '10': 'initialise'
+    },
+    {
+      '1': 'notify',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6': '.shrapnel.presets.Notify',
+      '9': 0,
+      '10': 'notify'
+    },
+    {
+      '1': 'create',
+      '3': 3,
+      '4': 1,
+      '5': 11,
+      '6': '.shrapnel.presets.Create',
+      '9': 0,
+      '10': 'create'
+    },
+    {
+      '1': 'update',
+      '3': 4,
+      '4': 1,
+      '5': 11,
+      '6': '.shrapnel.presets.Update',
+      '9': 0,
+      '10': 'update'
+    },
+    {
+      '1': 'remove',
+      '3': 5,
+      '4': 1,
+      '5': 11,
+      '6': '.shrapnel.presets.Remove',
+      '9': 0,
+      '10': 'remove'
+    },
   ],
   '8': [
     {'1': 'message'},
@@ -167,4 +272,3 @@ final $typed_data.Uint8List messageDescriptor = $convert.base64Decode(
     'VIAFIGY3JlYXRlEjIKBnVwZGF0ZRgEIAEoCzIYLnNocmFwbmVsLnByZXNldHMuVXBkYXRlSABS'
     'BnVwZGF0ZRIyCgZyZW1vdmUYBSABKAsyGC5zaHJhcG5lbC5wcmVzZXRzLlJlbW92ZUgAUgZyZW'
     '1vdmVCCQoHbWVzc2FnZQ==');
-
