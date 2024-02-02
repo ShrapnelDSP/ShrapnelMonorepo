@@ -160,28 +160,28 @@ TEST(MidiHandling, ProcessPresetButton)
     // these messages are ignored
     sut.process_message({
         .channel{5},
-        .parameters{
-            Message::ControlChange{.control = 42, .value = midi::CC_VALUE_MAX - 1}},
+        .parameters{Message::ControlChange{.control = 42,
+                                           .value = midi::CC_VALUE_MAX - 1}},
     });
 
     sut.process_message({
-                            .channel{5},
-                            .parameters{
-                                Message::ControlChange{.control = 41, .value = midi::CC_VALUE_MAX}},
-                        });
+        .channel{5},
+        .parameters{
+            Message::ControlChange{.control = 41, .value = midi::CC_VALUE_MAX}},
+    });
 
     sut.process_message({
-                            .channel{6},
-                            .parameters{
-                                Message::ControlChange{.control = 41, .value = midi::CC_VALUE_MAX}},
-                        });
+        .channel{6},
+        .parameters{
+            Message::ControlChange{.control = 41, .value = midi::CC_VALUE_MAX}},
+    });
 
     EXPECT_CALL(*preset_loader, load_preset(3)).Times(1);
     sut.process_message({
-                            .channel{5},
-                            .parameters{
-                                Message::ControlChange{.control = 42, .value = midi::CC_VALUE_MAX}},
-                        });
+        .channel{5},
+        .parameters{
+            Message::ControlChange{.control = 42, .value = midi::CC_VALUE_MAX}},
+    });
 }
 
 } // namespace

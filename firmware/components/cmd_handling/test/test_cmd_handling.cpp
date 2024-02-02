@@ -71,7 +71,6 @@ public:
     void send(const shrapnel::parameters::ApiMessage &message,
               std::optional<int> fd)
     {
-        
 
         event.send(message, fd);
     }
