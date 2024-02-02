@@ -63,11 +63,10 @@ void main() {
 
     const createRequest = ApiMessage.midiMapping(
       message: MidiApiMessage.createRequest(
-        mapping: MidiMapping(
+        mapping: MidiMapping.parameter(
           midiChannel: 1,
           ccNumber: 2,
           parameterId: 'chorusDepth',
-          mode: MidiMappingMode.parameter,
         ),
       ),
     );
@@ -79,11 +78,10 @@ void main() {
             message: MidiApiMessage.createResponse(
               mapping: MidiMappingEntry(
                 id: 123,
-                mapping: MidiMapping(
+                mapping: MidiMapping.parameter(
                   midiChannel: 1,
                   ccNumber: 2,
                   parameterId: 'chorusDepth',
-                  mode: MidiMappingMode.parameter,
                 ),
               ),
             ),
@@ -139,11 +137,10 @@ void main() {
 
       const createRequest = ApiMessage.midiMapping(
         message: MidiApiMessage.createRequest(
-          mapping: MidiMapping(
+          mapping: MidiMapping.parameter(
             midiChannel: 1,
             ccNumber: 2,
             parameterId: 'chorusDepth',
-            mode: MidiMappingMode.parameter,
           ),
         ),
       );
@@ -200,11 +197,10 @@ void main() {
               message: MidiApiMessage.update(
                 mapping: MidiMappingEntry(
                   id: 123,
-                  mapping: MidiMapping(
+                  mapping: MidiMapping.parameter(
                     midiChannel: 1,
                     ccNumber: 2,
                     parameterId: 'ampGain',
-                    mode: MidiMappingMode.parameter,
                   ),
                 ),
               ),
@@ -235,11 +231,10 @@ void main() {
             message: MidiApiMessage.update(
               mapping: MidiMappingEntry(
                 id: 123,
-                mapping: MidiMapping(
+                mapping: MidiMapping.parameter(
                   midiChannel: 3,
                   ccNumber: 2,
                   parameterId: 'ampGain',
-                  mode: MidiMappingMode.parameter,
                 ),
               ),
             ),
@@ -254,11 +249,10 @@ void main() {
             message: MidiApiMessage.update(
               mapping: MidiMappingEntry(
                 id: 123,
-                mapping: MidiMapping(
+                mapping: MidiMapping.parameter(
                   midiChannel: 3,
                   ccNumber: 4,
                   parameterId: 'ampGain',
-                  mode: MidiMappingMode.parameter,
                 ),
               ),
             ),
@@ -276,11 +270,10 @@ void main() {
             message: MidiApiMessage.update(
               mapping: MidiMappingEntry(
                 id: 123,
-                mapping: MidiMapping(
+                mapping: MidiMapping.toggle(
                   midiChannel: 3,
                   ccNumber: 4,
                   parameterId: 'ampGain',
-                  mode: MidiMappingMode.toggle,
                 ),
               ),
             ),
@@ -298,11 +291,10 @@ void main() {
             message: MidiApiMessage.update(
               mapping: MidiMappingEntry(
                 id: 123,
-                mapping: MidiMapping(
+                mapping: MidiMapping.toggle(
                   midiChannel: 3,
                   ccNumber: 4,
                   parameterId: 'contour',
-                  mode: MidiMappingMode.toggle,
                 ),
               ),
             ),
@@ -338,11 +330,10 @@ void main() {
               message: MidiApiMessage.update(
                 mapping: MidiMappingEntry(
                   id: 123,
-                  mapping: MidiMapping(
+                  mapping: MidiMapping.parameter(
                     midiChannel: 1,
                     ccNumber: 2,
                     parameterId: 'ampGain',
-                    mode: MidiMappingMode.parameter,
                   ),
                 ),
               ),
@@ -419,11 +410,10 @@ void main() {
 
       const createRequest = ApiMessage.midiMapping(
         message: MidiApiMessage.createRequest(
-          mapping: MidiMapping(
+          mapping: MidiMapping.parameter(
             midiChannel: 1,
             ccNumber: 2,
             parameterId: 'volume',
-            mode: MidiMappingMode.parameter,
           ),
         ),
       );
@@ -435,11 +425,10 @@ void main() {
               message: MidiApiMessage.createResponse(
                 mapping: MidiMappingEntry(
                   id: 123,
-                  mapping: MidiMapping(
+                  mapping: MidiMapping.parameter(
                     midiChannel: 1,
                     ccNumber: 2,
                     parameterId: 'volume',
-                    mode: MidiMappingMode.parameter,
                   ),
                 ),
               ),
@@ -501,11 +490,10 @@ void main() {
               message: MidiApiMessage.update(
                 mapping: MidiMappingEntry(
                   id: 456,
-                  mapping: MidiMapping(
+                  mapping: MidiMapping.parameter(
                     midiChannel: 3,
                     ccNumber: 4,
                     parameterId: 'volume',
-                    mode: MidiMappingMode.parameter,
                   ),
                 ),
               ),
@@ -539,11 +527,10 @@ void main() {
 
       const createRequest = ApiMessage.midiMapping(
         message: MidiApiMessage.createRequest(
-          mapping: MidiMapping(
+          mapping: MidiMapping.parameter(
             midiChannel: 1,
             ccNumber: 2,
             parameterId: 'volume',
-            mode: MidiMappingMode.parameter,
           ),
         ),
       );
@@ -555,11 +542,10 @@ void main() {
               message: MidiApiMessage.createResponse(
                 mapping: MidiMappingEntry(
                   id: 123,
-                  mapping: MidiMapping(
+                  mapping: MidiMapping.parameter(
                     midiChannel: 1,
                     ccNumber: 2,
                     parameterId: 'volume',
-                    mode: MidiMappingMode.parameter,
                   ),
                 ),
               ),
@@ -606,11 +592,10 @@ void main() {
 
       const createRequest2 = ApiMessage.midiMapping(
         message: MidiApiMessage.createRequest(
-          mapping: MidiMapping(
+          mapping: MidiMapping.parameter(
             midiChannel: 3,
             ccNumber: 4,
             parameterId: 'volume',
-            mode: MidiMappingMode.parameter,
           ),
         ),
       );
@@ -622,11 +607,10 @@ void main() {
               message: MidiApiMessage.createResponse(
                 mapping: MidiMappingEntry(
                   id: 456,
-                  mapping: MidiMapping(
+                  mapping: MidiMapping.parameter(
                     midiChannel: 3,
                     ccNumber: 4,
                     parameterId: 'volume',
-                    mode: MidiMappingMode.parameter,
                   ),
                 ),
               ),

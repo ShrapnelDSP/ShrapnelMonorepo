@@ -6,12 +6,14 @@ message Mapping {
   enum Mode {
     parameter = 0;
     toggle = 1;
+    button = 2;
   }
 
   uint32 midi_channel = 1;
   uint32 cc_number = 2;
   Mode mode = 3;
-  string parameterName = 4;
+  string parameter_name = 4;
+  uint32 preset_id = 5;
 }
 
 // A MIDI message that was received by the firmware

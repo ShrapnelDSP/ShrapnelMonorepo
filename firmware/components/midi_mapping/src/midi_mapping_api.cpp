@@ -33,6 +33,7 @@ etl::string_stream &operator<<(etl::string_stream &out, const Mapping &self)
     out << " mode "
         << (self.mode == Mapping::Mode::TOGGLE ? "toggle" : "parameter");
     out << " name " << self.parameter_name;
+    out << " preset " << self.preset_id;
     out << " }";
     return out;
 }
@@ -76,6 +77,7 @@ etl::string_stream &operator<<(etl::string_stream &out,
                                const MappingApiMessage &self)
 {
     if(auto message = std::get_if<GetRequest>(&self))
+
     {
         out << "<GetRequest>" << *message;
     }
@@ -158,12 +160,16 @@ int to_proto(const midi::Mapping &message, shrapnel_midi_mapping_Mapping &out)
     case midi::Mapping::Mode::TOGGLE:
         out.mode = shrapnel_midi_mapping_Mapping_Mode_toggle;
         break;
+    case midi::Mapping::Mode::BUTTON:
+        out.mode = shrapnel_midi_mapping_Mapping_Mode_button;
+        break;
     default:
         return -1;
     }
-    strncpy(out.parameterName,
+    strncpy(out.parameter_name,
             message.parameter_name.data(),
-            sizeof out.parameterName);
+            sizeof out.parameter_name);
+    out.preset_id = message.preset_id;
     return 0;
 }
 
@@ -172,7 +178,8 @@ int from_proto(const shrapnel_midi_mapping_Mapping &message, midi::Mapping &out)
 {
     out.midi_channel = static_cast<uint8_t>(message.midi_channel);
     out.cc_number = static_cast<uint8_t>(message.cc_number);
-    out.parameter_name = message.parameterName;
+    out.parameter_name = message.parameter_name;
+    out.preset_id = message.preset_id;
     switch(message.mode)
     {
     case shrapnel_midi_mapping_Mapping_Mode_parameter:
@@ -180,6 +187,9 @@ int from_proto(const shrapnel_midi_mapping_Mapping &message, midi::Mapping &out)
         break;
     case shrapnel_midi_mapping_Mapping_Mode_toggle:
         out.mode = midi::Mapping::Mode::TOGGLE;
+        break;
+    case shrapnel_midi_mapping_Mapping_Mode_button:
+        out.mode = midi::Mapping::Mode::BUTTON;
         break;
     default:
         return -1;

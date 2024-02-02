@@ -35,24 +35,15 @@ using ::testing::FloatEq;
 using ::testing::Not;
 using ::testing::Return;
 
-class MockAudioParameters
-{
-public:
-    MOCK_METHOD(int, update, (id_t param, float value), ());
-    MOCK_METHOD(float, get, (const id_t &param), ());
-};
-
 class MidiMapping : public ::testing::Test
 {
-    using SutType = MappingManager<MockAudioParameters, 2, 1>;
+    using SutType = MappingManager<2, 1>;
 
 protected:
     MidiMapping() {}
 
-    SutType create_sut() { return {parameters_mock, std::move(storage_mock)}; }
+    SutType create_sut() { return SutType{std::move(storage_mock)}; }
 
-    std::shared_ptr<MockAudioParameters> parameters_mock =
-        std::make_shared<MockAudioParameters>();
     std::unique_ptr<MockStorage> storage_mock = std::make_unique<MockStorage>();
 };
 
@@ -67,80 +58,6 @@ TEST_F(MidiMapping, Create)
     EXPECT_THAT(sut.get()->size(), 2);
     EXPECT_THAT(sut.create({5, 6, Mapping::Mode::PARAMETER, "tone"}, id),
                 Not(0));
-}
-
-TEST_F(MidiMapping, ProcessParameter)
-{
-    uint32_t id;
-    auto sut = create_sut();
-    EXPECT_EQ(0, sut.create({1, 2, Mapping::Mode::PARAMETER, "gain"}, id));
-
-    EXPECT_CALL(*parameters_mock, update(id_t("gain"), 0.f));
-    sut.process_message({
-        .channel{1},
-        .parameters{Message::ControlChange{.control = 2, .value = 0}},
-    });
-
-    EXPECT_CALL(*parameters_mock, update(id_t("gain"), 1.f));
-    sut.process_message({
-        .channel{1},
-        .parameters{
-            Message::ControlChange{.control = 2, .value = CC_VALUE_MAX}},
-    });
-
-    EXPECT_CALL(*parameters_mock, update).Times(0);
-    sut.process_message({
-        .channel{99},
-        .parameters{Message::ControlChange{.control = 2, .value = 0}},
-    });
-
-    sut.process_message({
-        .channel{1},
-        .parameters{Message::ControlChange{.control = 99, .value = 0}},
-    });
-}
-
-TEST_F(MidiMapping, ProcessToggle)
-{
-    auto sut = create_sut();
-
-    auto process_message_with_value = [&](uint8_t value)
-    {
-        sut.process_message({
-            .channel{1},
-            .parameters{Message::ControlChange{.control = 2, .value = value}},
-        });
-    };
-
-    // FIXME: use a mock for this, rather than setting up here
-    uint32_t id;
-    EXPECT_EQ(0, sut.create({1, 2, Mapping::Mode::TOGGLE, "bypass"}, id));
-
-    EXPECT_CALL(*parameters_mock, get(id_t{"bypass"}))
-        .WillRepeatedly(Return(0.f));
-    {
-        ::testing::InSequence seq;
-
-        // update is called for every event with non-zero value
-        // mock always returns 0, so call should be with 1 always
-        EXPECT_CALL(*parameters_mock, update(id_t("bypass"), FloatEq(1.f)))
-            .Times(2);
-        EXPECT_CALL(*parameters_mock, update).Times(0);
-    }
-
-    process_message_with_value(0);
-    process_message_with_value(1);
-    process_message_with_value(2);
-
-    sut.process_message({
-        .channel{99},
-        .parameters{Message::ControlChange{.control = 2, .value = 1}},
-    });
-
-    sut.process_message({
-        .channel{1},
-        .parameters{Message::ControlChange{.control = 99, .value = 1}},
-    });
 }
 
 TEST_F(MidiMapping, Update)
@@ -159,18 +76,7 @@ TEST_F(MidiMapping, Update)
     EXPECT_THAT(sut.update(0, {5, 6, Mapping::Mode::PARAMETER, "tone"}), 0);
     EXPECT_THAT(sut.get()->size(), 2);
 
-    // FIXME: move the tests related to this function elsewhere
-    EXPECT_CALL(*parameters_mock, update).Times(0);
-    sut.process_message({
-        .channel{1},
-        .parameters{Message::ControlChange{.control = 2, .value = 0}},
-    });
-
-    EXPECT_CALL(*parameters_mock, update(id_t("tone"), 0));
-    sut.process_message({
-        .channel{5},
-        .parameters{Message::ControlChange{.control = 6, .value = 0}},
-    });
+    // TODO should we verify iteration here or something?
 }
 
 TEST_F(MidiMapping, Destroy)
@@ -215,12 +121,12 @@ TEST(MidiMappingPod, ToString)
 {
     Mapping mapping{1, 2, Mapping::Mode::PARAMETER, parameters::id_t("test")};
 
-    etl::string<64> buffer;
+    etl::string<128> buffer;
     etl::string_stream stream{buffer};
     stream << mapping;
 
     EXPECT_THAT(std::string(buffer.data()),
-                "{ channel 1 cc number 2 mode parameter name test }");
+                "{ channel 1 cc number 2 mode parameter name test preset 0 }");
 }
 
 TEST(MidiMappingPod, GetRequestToString)
@@ -251,9 +157,9 @@ TEST(MidiMappingPod, CreateRequestToString)
     etl::string_stream stream{buffer};
     stream << message;
 
-    EXPECT_THAT(
-        std::string(buffer.data()),
-        "<CreateRequest>{ { channel 1 cc number 2 mode toggle name test } }");
+    EXPECT_THAT(std::string(buffer.data()),
+                "<CreateRequest>{ { channel 1 cc number 2 mode toggle name "
+                "test preset 0 } }");
 }
 
 TEST(MidiMappingPod, CreateResponseToString)
@@ -278,7 +184,7 @@ TEST(MidiMappingPod, CreateResponseToString)
 
     EXPECT_THAT(std::string(buffer.data()),
                 "<CreateResponse>{ { 42, { channel 1 cc number 2 mode toggle "
-                "name test } } }");
+                "name test preset 0 } } }");
 }
 
 TEST(MidiMappingPod, UpdateToString)
@@ -301,10 +207,10 @@ TEST(MidiMappingPod, UpdateToString)
     etl::string_stream stream{buffer};
     stream << message;
 
-    EXPECT_THAT(
-        std::string(buffer.data()),
-        "<Update>{ { 42, { channel 1 cc number 2 mode toggle name test } } }");
-}
+    EXPECT_THAT(std::string(buffer.data()),
+                "<Update>{ { 42, { channel 1 cc number 2 mode toggle name test "
+                "preset 0 } } }");
+} // namespace
 
 TEST(MidiMappingPod, RemoveToString)
 {

@@ -65,15 +65,15 @@ class PresetState with _$PresetState {
 }
 
 @freezed
-class PresetsState with _$PresetsState {
-  factory PresetsState.loading() = Loading;
+sealed class PresetsState with _$PresetsState {
+  factory PresetsState.loading() = LoadingPresetsState;
 
   factory PresetsState.ready({
     required bool isCurrentModified,
     required bool canUndo,
     required List<PresetRecord> presets,
     required int? selectedPreset,
-  }) = _PresetsState;
+  }) = ReadyPresetsState;
 
   PresetsState._();
 }

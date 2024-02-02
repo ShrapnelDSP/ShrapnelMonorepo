@@ -200,21 +200,46 @@ extension MidiMappingEntryProtoEx on MidiMappingEntry {
 
 extension MidiMappingProtoEx on MidiMapping {
   static MidiMapping fromProto(midi_mapping_pb.Mapping proto) {
-    return MidiMapping(
-      midiChannel: proto.midiChannel,
-      ccNumber: proto.ccNumber,
-      parameterId: proto.parameterName,
-      mode: MidiMappingModeProtoEx.fromProto(proto.mode),
-    );
+    return switch (MidiMappingModeProtoEx.fromProto(proto.mode)) {
+      MidiMappingMode.toggle => MidiMapping.toggle(
+          midiChannel: proto.midiChannel,
+          ccNumber: proto.ccNumber,
+          parameterId: proto.parameterName,
+        ),
+      MidiMappingMode.parameter => MidiMapping.toggle(
+          midiChannel: proto.midiChannel,
+          ccNumber: proto.ccNumber,
+          parameterId: proto.parameterName,
+        ),
+      MidiMappingMode.button => MidiMapping.button(
+          midiChannel: proto.midiChannel,
+          ccNumber: proto.ccNumber,
+          presetId: proto.presetId,
+        ),
+    };
   }
 
   midi_mapping_pb.Mapping toProto() {
-    return midi_mapping_pb.Mapping(
-      midiChannel: midiChannel,
-      ccNumber: ccNumber,
-      mode: mode.toProto(),
-      parameterName: parameterId,
-    );
+    return switch (this) {
+      MidiMappingToggle(:final parameterId) => midi_mapping_pb.Mapping(
+          midiChannel: midiChannel,
+          ccNumber: ccNumber,
+          mode: MidiMappingMode.toggle.toProto(),
+          parameterName: parameterId,
+        ),
+      MidiMappingParameter(:final parameterId) => midi_mapping_pb.Mapping(
+          midiChannel: midiChannel,
+          ccNumber: ccNumber,
+          mode: MidiMappingMode.parameter.toProto(),
+          parameterName: parameterId,
+        ),
+      MidiMappingButton(:final presetId) => midi_mapping_pb.Mapping(
+          midiChannel: midiChannel,
+          ccNumber: ccNumber,
+          mode: MidiMappingMode.button.toProto(),
+          presetId: presetId,
+        ),
+    };
   }
 }
 
@@ -223,6 +248,7 @@ extension MidiMappingModeProtoEx on MidiMappingMode {
     return switch (proto) {
       midi_mapping_pb.Mapping_Mode.parameter => MidiMappingMode.parameter,
       midi_mapping_pb.Mapping_Mode.toggle => MidiMappingMode.toggle,
+      midi_mapping_pb.Mapping_Mode.button => MidiMappingMode.button,
       _ => throw ProtoException(),
     };
   }
@@ -231,6 +257,7 @@ extension MidiMappingModeProtoEx on MidiMappingMode {
     return switch (this) {
       MidiMappingMode.toggle => midi_mapping_pb.Mapping_Mode.toggle,
       MidiMappingMode.parameter => midi_mapping_pb.Mapping_Mode.parameter,
+      MidiMappingMode.button => midi_mapping_pb.Mapping_Mode.button,
     };
   }
 }

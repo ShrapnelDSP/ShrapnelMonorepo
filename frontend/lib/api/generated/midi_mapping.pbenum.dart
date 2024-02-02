@@ -18,10 +18,13 @@ class Mapping_Mode extends $pb.ProtobufEnum {
       Mapping_Mode._(0, _omitEnumNames ? '' : 'parameter');
   static const Mapping_Mode toggle =
       Mapping_Mode._(1, _omitEnumNames ? '' : 'toggle');
+  static const Mapping_Mode button =
+      Mapping_Mode._(2, _omitEnumNames ? '' : 'button');
 
   static const $core.List<Mapping_Mode> values = <Mapping_Mode>[
     parameter,
     toggle,
+    button,
   ];
 
   static final $core.Map<$core.int, Mapping_Mode> _byValue =

@@ -51,7 +51,7 @@ class MidiLearnService extends StateNotifier<MidiLearnState> {
 
   void midiMessageReceived(MidiMessage message) {
     state.maybeWhen(
-      waitForMidi: (parameterId) {
+      waitForMidi: (mappedParameterId) {
         unawaited(
           message.maybeMap(
             controlChange: (message) async {
@@ -67,9 +67,15 @@ class MidiLearnService extends StateNotifier<MidiLearnState> {
                 return e;
               }).where(
                 (e) =>
-                    e.value.midiChannel == channel &&
-                        e.value.ccNumber == control ||
-                    e.value.parameterId == parameterId,
+                    (e.value.midiChannel == channel &&
+                        e.value.ccNumber == control) ||
+                    switch (e.value) {
+                          MidiMappingToggle(:final parameterId) ||
+                          MidiMappingParameter(:final parameterId) =>
+                            parameterId,
+                          MidiMappingButton() => null,
+                        } ==
+                        mappedParameterId,
               );
 
               // Need copy to prevent concurrent modification of the lazy iterator
@@ -86,11 +92,10 @@ class MidiLearnService extends StateNotifier<MidiLearnState> {
               }
 
               await mappingService.createMapping(
-                MidiMapping(
+                MidiMapping.parameter(
                   ccNumber: control,
                   midiChannel: channel,
-                  parameterId: parameterId,
-                  mode: MidiMappingMode.parameter,
+                  parameterId: mappedParameterId,
                 ),
               );
 

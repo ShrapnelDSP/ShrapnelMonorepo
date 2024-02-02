@@ -46,19 +46,21 @@
 #include <cstdint>
 #include <esp_log.h>
 #include <span>
+#include <utility>
 
 #include "audio_param.h"
 #include "crud.h"
 #include "midi_mapping_api.h"
 #include "midi_protocol.h"
+#include "presets.h"
+#include "presets_manager.h"
+#include "selected_preset_manager.h"
 
 namespace shrapnel::midi {
 
 using MappingObserver = etl::observer<const Mapping::id_t &>;
 
-template <typename AudioParametersT,
-          std::size_t MAX_MAPPINGS,
-          std::size_t MAX_OBSERVERS>
+template <std::size_t MAX_MAPPINGS, std::size_t MAX_OBSERVERS>
 class MappingManager final
     : public etl::observable<MappingObserver, MAX_OBSERVERS>,
       public persistence::Crud<Mapping>
@@ -66,11 +68,9 @@ class MappingManager final
 public:
     using MapType = etl::map<Mapping::id_t, Mapping, MAX_MAPPINGS>;
 
-    MappingManager(
-        std::shared_ptr<AudioParametersT> a_parameters,
+    explicit MappingManager(
         std::unique_ptr<persistence::Crud<std::span<uint8_t>>> a_storage)
-        : parameters{a_parameters},
-          storage{std::move(a_storage)}
+        : storage{std::move(a_storage)}
     {
         for_each(
             [this](uint32_t id, const shrapnel::midi::Mapping &mapping) {
@@ -173,7 +173,6 @@ public:
         {
             return -1;
         }
-
         mappings.erase(id);
         this->notify_observers(id);
         return 0;
@@ -195,50 +194,11 @@ public:
             });
     }
 
-    /** React to a MIDI message by updating an audio parameter if there is a
-     * mapping registered
-     */
-    void process_message(Message message) const
-    {
-        auto cc_params = get_if<Message::ControlChange>(&message.parameters);
-        if(!cc_params)
-            return;
+    MapType::iterator begin() { return mappings.begin(); }
 
-        for(const auto &[_, mapping] : mappings)
-        {
-            if(mapping.midi_channel != message.channel)
-            {
-                continue;
-            }
-
-            if(mapping.cc_number != cc_params->control)
-            {
-                continue;
-            }
-
-            switch(mapping.mode)
-            {
-            case Mapping::Mode::PARAMETER:
-                parameters->update(mapping.parameter_name,
-                                   cc_params->value / float(CC_VALUE_MAX));
-                break;
-            case Mapping::Mode::TOGGLE:
-                if(cc_params->value == 0)
-                {
-                    continue;
-                }
-
-                auto old_value = parameters->get(mapping.parameter_name);
-
-                parameters->update(mapping.parameter_name,
-                                   old_value < 0.5f ? 1.f : 0.f);
-                break;
-            }
-        }
-    };
+    MapType::iterator end() { return mappings.end(); }
 
 private:
-    std::shared_ptr<AudioParametersT> parameters;
     std::unique_ptr<persistence::Crud<std::span<uint8_t>>> storage;
     MapType mappings;
 

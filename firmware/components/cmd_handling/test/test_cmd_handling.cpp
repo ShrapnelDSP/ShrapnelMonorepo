@@ -71,6 +71,7 @@ public:
     void send(const shrapnel::parameters::ApiMessage &message,
               std::optional<int> fd)
     {
+
         event.send(message, fd);
     }
 
@@ -157,6 +158,6 @@ TEST_F(CmdHandling, InitialiseParameters)
     EXPECT_CALL(event, send({expected}, testing::Eq(std::nullopt))).Times(1);
 
     dispatch(shrapnel::parameters::Initialise{}, 0);
-}
+} // namespace
 
 } // namespace

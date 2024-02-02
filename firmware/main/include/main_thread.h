@@ -25,6 +25,7 @@
 #include "audio_param.h"
 #include "cmd_handling.h"
 #include "messages.h"
+#include "midi_handling.h"
 #include "midi_mapping.pb.h"
 #include "midi_uart.h"
 #include "os/queue.h"
@@ -46,7 +47,7 @@ class ParameterUpdateNotifier;
 
 using AudioParameters = parameters::AudioParameters<MAX_PARAMETERS, 1>;
 using SendMessageCallback = etl::delegate<void(const AppMessage &)>;
-using MidiMappingType = midi::MappingManager<ParameterUpdateNotifier, 10, 1>;
+using MidiMappingType = midi::MappingManager<10, 1>;
 
 class ParameterUpdateNotifier
 {
@@ -153,6 +154,56 @@ private:
     etl::map<parameters::id_t, float, MAX_PARAMETERS> updated_parameters;
 };
 
+template <typename AudioParametersT>
+class PresetLoader
+{
+public:
+    PresetLoader(std::shared_ptr<AudioParametersT> a_parameters,
+                 std::shared_ptr<presets::PresetsManager> a_presets_manager,
+                 std::shared_ptr<selected_preset::SelectedPresetManager>
+                     a_selected_preset_manager,
+                 SendMessageCallback a_send_message)
+        : parameters{std::move(a_parameters)},
+          presets_manager{std::move(a_presets_manager)},
+          selected_preset_manager{std::move(a_selected_preset_manager)},
+          send_message{a_send_message}
+    {
+    }
+
+    int load_preset(presets::id_t id)
+    {
+        int rc = selected_preset_manager->set(id);
+        if(rc != 0)
+        {
+            ESP_LOGE(TAG, "Failed to set selected preset ID");
+            return -1;
+        }
+
+        presets::PresetData preset{};
+        rc = presets_manager->read(id, preset);
+        if(rc != 0)
+        {
+            ESP_LOGE(TAG, "Failed to read preset data");
+            return -1;
+        }
+
+        presets::deserialise_live_parameters(*parameters, preset.parameters);
+
+        send_message({selected_preset::Notify{
+                          .selectedPresetId = id,
+                      },
+                      std::nullopt});
+        return 0;
+    }
+
+private:
+    std::shared_ptr<AudioParametersT> parameters;
+    std::shared_ptr<presets::PresetsManager> presets_manager;
+    std::shared_ptr<selected_preset::SelectedPresetManager>
+        selected_preset_manager;
+    SendMessageCallback send_message;
+};
+
 template <std::size_t MAX_PARAMETERS, std::size_t QUEUE_LEN>
 class MainThread
 {
@@ -194,10 +245,10 @@ public:
                       SendMessageCallback::create<
                           MainThread,
                           &MainThread::cmd_handling_send_message>(*this))},
-          presets_manager{std::make_unique<presets::PresetsManager>(
+          presets_manager{std::make_shared<presets::PresetsManager>(
               std::move(a_presets_storage))},
           selected_preset_manager{
-              std::make_unique<selected_preset::SelectedPresetManager>(
+              std::make_shared<selected_preset::SelectedPresetManager>(
                   a_persistence)}
     {
         auto create_and_load_parameter = [&](const parameters::id_t &name,
@@ -261,8 +312,20 @@ public:
         parameter_notifier = std::make_shared<ParameterUpdateNotifier>(
             a_audio_params, a_send_message);
 
-        midi_mapping_manager = std::make_unique<MidiMappingType>(
-            parameter_notifier, std::move(a_midi_mapping_storage));
+        midi_mapping_manager = std::make_shared<MidiMappingType>(
+            std::move(a_midi_mapping_storage));
+
+        preset_loader = std::make_shared<PresetLoader<ParameterUpdateNotifier>>(
+            parameter_notifier,
+            presets_manager,
+            selected_preset_manager,
+            send_message);
+
+        midi_message_handler = std::make_shared<
+            MidiMessageHandler<ParameterUpdateNotifier,
+                               MidiMappingType,
+                               PresetLoader<ParameterUpdateNotifier>>>(
+            parameter_notifier, midi_mapping_manager, preset_loader);
 
         BaseType_t rc = midi_message_notify_timer.start(portMAX_DELAY);
         if(rc != pdPASS)
@@ -545,24 +608,9 @@ private:
     std::optional<selected_preset::SelectedPresetApiMessage>
     handle_selected_preset_message(selected_preset::Write write)
     {
-        int rc = selected_preset_manager->set(write.selectedPresetId);
-        if(rc != 0)
-        {
-            return std::nullopt;
-        }
-
-        presets::PresetData preset{};
-        rc = presets_manager->read(write.selectedPresetId, preset);
-        if(rc != 0)
-        {
-            return std::nullopt;
-        }
-
-        deserialise_live_parameters(*parameter_notifier, preset.parameters);
-
-        return selected_preset::Notify{
-            .selectedPresetId = write.selectedPresetId,
-        };
+        presets::id_t id = write.selectedPresetId;
+        preset_loader->load_preset(id);
+        return std::nullopt;
     }
 
     void on_midi_message(midi::Message message)
@@ -576,7 +624,7 @@ private:
 
         {
             std::scoped_lock lock{midi_mutex};
-            midi_mapping_manager->process_message(message);
+            midi_message_handler->process_message(message);
         }
     };
 
@@ -599,15 +647,20 @@ private:
     std::optional<midi::Message> last_notified_midi_message;
     std::unique_ptr<midi::Decoder> midi_decoder;
     std::mutex midi_mutex;
-    std::unique_ptr<MidiMappingType> midi_mapping_manager;
+    std::shared_ptr<MidiMappingType> midi_mapping_manager;
+    std::shared_ptr<MidiMessageHandler<ParameterUpdateNotifier,
+                                       MidiMappingType,
+                                       PresetLoader<ParameterUpdateNotifier>>>
+        midi_message_handler;
     std::shared_ptr<AudioParameters> audio_params;
     std::unique_ptr<parameters::CommandHandling<
         parameters::AudioParameters<MAX_PARAMETERS, 1>>>
         cmd_handling;
-    std::unique_ptr<presets::PresetsManager> presets_manager;
-    std::unique_ptr<selected_preset::SelectedPresetManager>
+    std::shared_ptr<presets::PresetsManager> presets_manager;
+    std::shared_ptr<selected_preset::SelectedPresetManager>
         selected_preset_manager;
     std::shared_ptr<ParameterUpdateNotifier> parameter_notifier;
+    std::shared_ptr<PresetLoader<ParameterUpdateNotifier>> preset_loader;
 };
 
 } // namespace shrapnel

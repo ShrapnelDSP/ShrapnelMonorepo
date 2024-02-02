@@ -13,6 +13,9 @@ import 'dart:core' as $core;
 
 import 'package:protobuf/protobuf.dart' as $pb;
 
+/// Firmware: update DSP processing to use the new parameter value.
+///
+/// Frontend: Update UI to show new parameter value.
 class Update extends $pb.GeneratedMessage {
   factory Update({
     $core.String? id,
@@ -90,6 +93,8 @@ class Update extends $pb.GeneratedMessage {
   void clearValue() => clearField(2);
 }
 
+/// The firmware will respond by sending a `parameterUpdate` message with the
+/// current value of each audio parameter
 class Initialise extends $pb.GeneratedMessage {
   factory Initialise() => create();
   Initialise._() : super();

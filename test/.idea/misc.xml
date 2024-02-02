@@ -13,6 +13,7 @@
     </libraryRoots>
     <excludeRoots>
       <file path="$PROJECT_DIR$/../effects/wah/dsp/.venv" />
+      <file path="$PROJECT_DIR$/../firmware/build" />
     </excludeRoots>
   </component>
 </project>

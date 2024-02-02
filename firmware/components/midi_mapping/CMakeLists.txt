@@ -26,6 +26,7 @@ target_link_libraries(midi_mapping
                       shrapnel::midi_protocol
                       shrapnel::nanopb
                       shrapnel::persistence
+                      shrapnel::presets
                       PRIVATE
                       shrapnel::compiler_warning_flags)
 

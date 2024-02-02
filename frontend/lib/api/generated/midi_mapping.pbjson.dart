@@ -27,7 +27,8 @@ const Mapping$json = {
       '6': '.shrapnel.midi_mapping.Mapping.Mode',
       '10': 'mode'
     },
-    {'1': 'parameterName', '3': 4, '4': 1, '5': 9, '10': 'parameterName'},
+    {'1': 'parameter_name', '3': 4, '4': 1, '5': 9, '10': 'parameterName'},
+    {'1': 'preset_id', '3': 5, '4': 1, '5': 13, '10': 'presetId'},
   ],
   '4': [Mapping_Mode$json],
 };
@@ -38,6 +39,7 @@ const Mapping_Mode$json = {
   '2': [
     {'1': 'parameter', '2': 0},
     {'1': 'toggle', '2': 1},
+    {'1': 'button', '2': 2},
   ],
 };
 
@@ -45,8 +47,9 @@ const Mapping_Mode$json = {
 final $typed_data.Uint8List mappingDescriptor = $convert.base64Decode(
     'CgdNYXBwaW5nEiEKDG1pZGlfY2hhbm5lbBgBIAEoDVILbWlkaUNoYW5uZWwSGwoJY2NfbnVtYm'
     'VyGAIgASgNUghjY051bWJlchI3CgRtb2RlGAMgASgOMiMuc2hyYXBuZWwubWlkaV9tYXBwaW5n'
-    'Lk1hcHBpbmcuTW9kZVIEbW9kZRIkCg1wYXJhbWV0ZXJOYW1lGAQgASgJUg1wYXJhbWV0ZXJOYW'
-    '1lIiEKBE1vZGUSDQoJcGFyYW1ldGVyEAASCgoGdG9nZ2xlEAE=');
+    'Lk1hcHBpbmcuTW9kZVIEbW9kZRIlCg5wYXJhbWV0ZXJfbmFtZRgEIAEoCVINcGFyYW1ldGVyTm'
+    'FtZRIbCglwcmVzZXRfaWQYBSABKA1SCHByZXNldElkIi0KBE1vZGUSDQoJcGFyYW1ldGVyEAAS'
+    'CgoGdG9nZ2xlEAESCgoGYnV0dG9uEAI=');
 
 @$core.Deprecated('Use midiMessageDescriptor instead')
 const MidiMessage$json = {

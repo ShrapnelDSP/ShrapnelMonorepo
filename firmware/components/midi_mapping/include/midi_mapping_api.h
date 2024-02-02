@@ -23,6 +23,7 @@
 #include "audio_param.h"
 #include "midi_mapping.pb.h"
 #include "midi_protocol.h"
+#include "presets.h"
 #include <utility>
 #include <variant>
 
@@ -37,12 +38,14 @@ struct Mapping
     {
         PARAMETER,
         TOGGLE,
+        BUTTON,
     };
 
     uint8_t midi_channel;
     uint8_t cc_number;
     Mode mode;
     parameters::id_t parameter_name;
+    presets::id_t preset_id;
 
     std::strong_ordering operator<=>(const Mapping &other) const = default;
 };
@@ -67,6 +70,7 @@ struct CreateResponse
 };
 
 struct Update
+
 {
     std::pair<Mapping::id_t, Mapping> mapping;
     std::strong_ordering operator<=>(const Update &other) const = default;

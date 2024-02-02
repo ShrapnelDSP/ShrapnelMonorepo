@@ -13,6 +13,7 @@ import 'dart:core' as $core;
 
 import 'package:protobuf/protobuf.dart' as $pb;
 
+/// Sent when the input level is too high, causing clipping
 class InputClipped extends $pb.GeneratedMessage {
   factory InputClipped() => create();
   InputClipped._() : super();
@@ -54,6 +55,7 @@ class InputClipped extends $pb.GeneratedMessage {
   static InputClipped? _defaultInstance;
 }
 
+/// Sent when the output level is too high, causing clipping
 class OutputClipped extends $pb.GeneratedMessage {
   factory OutputClipped() => create();
   OutputClipped._() : super();

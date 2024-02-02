@@ -50,11 +50,10 @@ void main() {
       const response = MidiApiMessage.update(
         mapping: MidiMappingEntry(
           id: 123,
-          mapping: MidiMapping(
+          mapping: MidiMapping.parameter(
             midiChannel: 1,
             ccNumber: 2,
             parameterId: 'gain',
-            mode: MidiMappingMode.parameter,
           ),
         ),
       );
@@ -83,10 +82,9 @@ void main() {
       expect(outputMessages.removeLast(), request);
       expect(outputMessages, isEmpty);
       expect(uut.mappings, {
-        123: const MidiMapping(
+        123: const MidiMapping.parameter(
           midiChannel: 1,
           ccNumber: 2,
-          mode: MidiMappingMode.parameter,
           parameterId: 'gain',
         ),
       });
@@ -120,20 +118,18 @@ void main() {
       const response = MidiApiMessage.createResponse(
         mapping: MidiMappingEntry(
           id: 123,
-          mapping: MidiMapping(
+          mapping: MidiMapping.parameter(
             midiChannel: 1,
             ccNumber: 2,
-            mode: MidiMappingMode.parameter,
             parameterId: 'gain',
           ),
         ),
       );
 
       const request = MidiApiMessage.createRequest(
-        mapping: MidiMapping(
+        mapping: MidiMapping.parameter(
           midiChannel: 1,
           ccNumber: 2,
-          mode: MidiMappingMode.parameter,
           parameterId: 'gain',
         ),
       );
@@ -154,10 +150,9 @@ void main() {
       expect(uut.mappings, isEmpty);
 
       await uut.createMapping(
-        const MidiMapping(
+        const MidiMapping.parameter(
           midiChannel: 1,
           ccNumber: 2,
-          mode: MidiMappingMode.parameter,
           parameterId: 'gain',
         ),
       );

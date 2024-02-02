@@ -23,6 +23,7 @@ class Mapping extends $pb.GeneratedMessage {
     $core.int? ccNumber,
     Mapping_Mode? mode,
     $core.String? parameterName,
+    $core.int? presetId,
   }) {
     final $result = create();
     if (midiChannel != null) {
@@ -36,6 +37,9 @@ class Mapping extends $pb.GeneratedMessage {
     }
     if (parameterName != null) {
       $result.parameterName = parameterName;
+    }
+    if (presetId != null) {
+      $result.presetId = presetId;
     }
     return $result;
   }
@@ -58,7 +62,8 @@ class Mapping extends $pb.GeneratedMessage {
         defaultOrMaker: Mapping_Mode.parameter,
         valueOf: Mapping_Mode.valueOf,
         enumValues: Mapping_Mode.values)
-    ..aOS(4, _omitFieldNames ? '' : 'parameterName', protoName: 'parameterName')
+    ..aOS(4, _omitFieldNames ? '' : 'parameterName')
+    ..a<$core.int>(5, _omitFieldNames ? '' : 'presetId', $pb.PbFieldType.OU3)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('Using this can add significant overhead to your binary. '
@@ -129,6 +134,18 @@ class Mapping extends $pb.GeneratedMessage {
   $core.bool hasParameterName() => $_has(3);
   @$pb.TagNumber(4)
   void clearParameterName() => clearField(4);
+
+  @$pb.TagNumber(5)
+  $core.int get presetId => $_getIZ(4);
+  @$pb.TagNumber(5)
+  set presetId($core.int v) {
+    $_setUnsignedInt32(4, v);
+  }
+
+  @$pb.TagNumber(5)
+  $core.bool hasPresetId() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearPresetId() => clearField(5);
 }
 
 class MidiMessage_NoteOn extends $pb.GeneratedMessage {
@@ -442,6 +459,7 @@ enum MidiMessage_Parameters {
   notSet
 }
 
+/// A MIDI message that was received by the firmware
 class MidiMessage extends $pb.GeneratedMessage {
   factory MidiMessage({
     $core.int? channel,
@@ -679,6 +697,8 @@ class MappingRecord extends $pb.GeneratedMessage {
   Mapping ensureMapping() => $_ensure(1);
 }
 
+/// Send from the frontend to the firmware. When received, the firmware will send
+/// an update for each midi mapping that currently exists.
 class GetRequest extends $pb.GeneratedMessage {
   factory GetRequest() => create();
   GetRequest._() : super();
@@ -718,6 +738,7 @@ class GetRequest extends $pb.GeneratedMessage {
   static GetRequest? _defaultInstance;
 }
 
+/// Firmware creates a new MIDI mapping according to the parameters.
 class CreateRequest extends $pb.GeneratedMessage {
   factory CreateRequest({
     Mapping? mapping,
@@ -783,6 +804,7 @@ class CreateRequest extends $pb.GeneratedMessage {
   Mapping ensureMapping() => $_ensure(0);
 }
 
+/// Indicates that a new MIDI mapping was created successfully.
 class CreateResponse extends $pb.GeneratedMessage {
   factory CreateResponse({
     MappingRecord? mapping,
@@ -848,6 +870,7 @@ class CreateResponse extends $pb.GeneratedMessage {
   MappingRecord ensureMapping() => $_ensure(0);
 }
 
+/// Firmware updates an existing MIDI mapping according to the parameters.
 class Update extends $pb.GeneratedMessage {
   factory Update({
     MappingRecord? mapping,
@@ -911,6 +934,7 @@ class Update extends $pb.GeneratedMessage {
   MappingRecord ensureMapping() => $_ensure(0);
 }
 
+/// Firmware removes the specified MIDI mapping .
 class Remove extends $pb.GeneratedMessage {
   factory Remove({
     $core.int? id,
@@ -971,6 +995,9 @@ class Remove extends $pb.GeneratedMessage {
   void clearId() => clearField(1);
 }
 
+/// Firmware notifies this periodically, so that the frontend can react
+/// to MIDI messages, for example to connect a parameter to the MIDI
+/// message.
 class MessageReceived extends $pb.GeneratedMessage {
   factory MessageReceived({
     MidiMessage? receivedMessage,

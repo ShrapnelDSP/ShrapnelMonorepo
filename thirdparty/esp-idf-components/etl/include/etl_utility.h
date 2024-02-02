@@ -3,6 +3,7 @@
 #include "etl/string_stream.h"
 #include <utility>
 #include <array>
+#include <optional>
 
 namespace etl {
 
@@ -22,6 +23,22 @@ etl::string_stream& operator<<(etl::string_stream& out, const std::array<T, MAX_
         out << value << " ";
     }
     out << "]";
+    return out;
+}
+
+template <typename T>
+etl::string_stream &operator<<(etl::string_stream &out,
+                               const std::optional<T> &self)
+{
+    out << "optional ";
+    if(self.has_value())
+    {
+        out << "with value " << *self;
+    }
+    else
+    {
+        out << "with no value";
+    }
     return out;
 }
 

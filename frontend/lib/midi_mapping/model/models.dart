@@ -47,13 +47,24 @@ sealed class MidiApiMessage with _$MidiApiMessage {
 }
 
 @freezed
-class MidiMapping with _$MidiMapping {
-  const factory MidiMapping({
+sealed class MidiMapping with _$MidiMapping {
+  const factory MidiMapping.toggle({
     required int midiChannel,
     required int ccNumber,
     required String parameterId,
-    required MidiMappingMode mode,
-  }) = _MidiMapping;
+  }) = MidiMappingToggle;
+
+  const factory MidiMapping.parameter({
+    required int midiChannel,
+    required int ccNumber,
+    required String parameterId,
+  }) = MidiMappingParameter;
+
+  const factory MidiMapping.button({
+    required int midiChannel,
+    required int ccNumber,
+    required int presetId,
+  }) = MidiMappingButton;
 
   const MidiMapping._();
 }
@@ -70,7 +81,8 @@ class MidiMappingEntry with _$MidiMappingEntry {
 
 enum MidiMappingMode {
   toggle(uiName: 'Toggle'),
-  parameter(uiName: 'Knob');
+  parameter(uiName: 'Knob'),
+  button(uiName: 'Button');
 
   const MidiMappingMode({required this.uiName});
 
