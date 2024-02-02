@@ -34,6 +34,7 @@ using id_t = shrapnel::parameters::id_t;
 using ::testing::FloatEq;
 using ::testing::Not;
 using ::testing::Return;
+using ::testing::StrictMock;
 
 class MockAudioParameters
 {
@@ -42,32 +43,27 @@ public:
     MOCK_METHOD(float, get, (const id_t &param), ());
 };
 
-#if 0
-class MockMidiMappingManager
+class MockPresetLoader
 {
 public:
-    using MapType = std::map<uint32_t, Mapping>;
-    
-    MapType::iterator begin() { return mappings.begin(); }
-
-    MapType::iterator end() { return mappings.end(); }
-    
-private:
-    MapType mappings;
+    MOCK_METHOD(int, load_preset, (presets::id_t id), ());
 };
-#endif
-
-// FIXME: instead of loading the preset, then loading the parameters in the
-// handler, inject a preset loader and verify that that it calls the preset
-// loader correctly. It is doing too much low level stuff at the moment.
 
 TEST(MidiHandling, ProcessParameter)
 {
     auto mappings =
-        std::make_shared<etl::map<midi::Mapping::id_t, midi::Mapping, 5>>();
+        std::make_shared<std::map<midi::Mapping::id_t, midi::Mapping>>();
     auto parameters_mock = std::make_shared<MockAudioParameters>();
+    auto preset_loader = std::make_shared<StrictMock<MockPresetLoader>>();
 
-    auto sut = MidiMessageHandler(parameters_mock, mappings, );
+    auto sut = MidiMessageHandler(parameters_mock, mappings, preset_loader);
+
+    (*mappings)[0] = {
+        .midi_channel{1},
+        .cc_number{2},
+        .mode{Mapping::Mode::PARAMETER},
+        .parameter_name{"gain"},
+    };
 
     EXPECT_CALL(*parameters_mock, update(id_t("gain"), 0.f));
     sut.process_message({
@@ -96,6 +92,13 @@ TEST(MidiHandling, ProcessParameter)
 
 TEST(MidiHandling, ProcessToggle)
 {
+    auto mappings =
+        std::make_shared<std::map<midi::Mapping::id_t, midi::Mapping>>();
+    auto parameters_mock = std::make_shared<MockAudioParameters>();
+    auto preset_loader = std::make_shared<StrictMock<MockPresetLoader>>();
+
+    auto sut = MidiMessageHandler(parameters_mock, mappings, preset_loader);
+
     auto process_message_with_value = [&](uint8_t value)
     {
         sut.process_message({
@@ -104,7 +107,12 @@ TEST(MidiHandling, ProcessToggle)
         });
     };
 
-    EXPECT_EQ(0, sut.create({{1}, {1, 2, Mapping::Mode::TOGGLE, "bypass"}}));
+    (*mappings)[1] = {
+        .midi_channel{1},
+        .cc_number{2},
+        .mode{Mapping::Mode::TOGGLE},
+        .parameter_name{"bypass"},
+    };
 
     EXPECT_CALL(*parameters_mock, get(id_t{"bypass"}))
         .WillRepeatedly(Return(0.f));
@@ -131,6 +139,49 @@ TEST(MidiHandling, ProcessToggle)
         .channel{1},
         .parameters{Message::ControlChange{.control = 99, .value = 1}},
     });
+}
+
+TEST(MidiHandling, ProcessPresetButton)
+{
+    auto mappings =
+        std::make_shared<std::map<midi::Mapping::id_t, midi::Mapping>>();
+    auto parameters_mock = std::make_shared<MockAudioParameters>();
+    auto preset_loader = std::make_shared<StrictMock<MockPresetLoader>>();
+
+    auto sut = MidiMessageHandler(parameters_mock, mappings, preset_loader);
+
+    (*mappings)[0] = {
+        .midi_channel{5},
+        .cc_number{42},
+        .mode{Mapping::Mode::BUTTON},
+        .preset_id{3},
+    };
+
+    // these messages are ignored
+    sut.process_message({
+        .channel{5},
+        .parameters{
+            Message::ControlChange{.control = 42, .value = midi::CC_VALUE_MAX - 1}},
+    });
+
+    sut.process_message({
+                            .channel{5},
+                            .parameters{
+                                Message::ControlChange{.control = 41, .value = midi::CC_VALUE_MAX}},
+                        });
+
+    sut.process_message({
+                            .channel{6},
+                            .parameters{
+                                Message::ControlChange{.control = 41, .value = midi::CC_VALUE_MAX}},
+                        });
+
+    EXPECT_CALL(*preset_loader, load_preset(3)).Times(1);
+    sut.process_message({
+                            .channel{5},
+                            .parameters{
+                                Message::ControlChange{.control = 42, .value = midi::CC_VALUE_MAX}},
+                        });
 }
 
 } // namespace

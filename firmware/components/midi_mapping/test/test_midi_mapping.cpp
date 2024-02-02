@@ -126,8 +126,7 @@ TEST(MidiMappingPod, ToString)
     stream << mapping;
 
     EXPECT_THAT(std::string(buffer.data()),
-                "{ channel 1 cc number 2 mode parameter name optional with "
-                "value test preset optional with no value }");
+                "{ channel 1 cc number 2 mode parameter name test preset 0 }");
 }
 
 TEST(MidiMappingPod, GetRequestToString)
@@ -160,7 +159,7 @@ TEST(MidiMappingPod, CreateRequestToString)
 
     EXPECT_THAT(
         std::string(buffer.data()),
-        "<CreateRequest>{ { channel 1 cc number 2 mode toggle name test } }");
+        "<CreateRequest>{ { channel 1 cc number 2 mode toggle name test preset 0 } }");
 }
 
 TEST(MidiMappingPod, CreateResponseToString)
@@ -185,7 +184,7 @@ TEST(MidiMappingPod, CreateResponseToString)
 
     EXPECT_THAT(std::string(buffer.data()),
                 "<CreateResponse>{ { 42, { channel 1 cc number 2 mode toggle "
-                "name test } } }");
+                "name test preset 0 } } }");
 }
 
 TEST(MidiMappingPod, UpdateToString)
@@ -210,7 +209,7 @@ TEST(MidiMappingPod, UpdateToString)
 
     EXPECT_THAT(
         std::string(buffer.data()),
-        "<Update>{ { 42, { channel 1 cc number 2 mode toggle name test } } }");
+        "<Update>{ { 42, { channel 1 cc number 2 mode toggle name test preset 0 } } }");
 } // namespace
 
 TEST(MidiMappingPod, RemoveToString)
