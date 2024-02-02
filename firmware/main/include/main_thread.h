@@ -609,24 +609,7 @@ private:
     handle_selected_preset_message(selected_preset::Write write)
     {
         presets::id_t id = write.selectedPresetId;
-        int rc = selected_preset_manager->set(id);
-        if(rc != 0)
-        {
-            return std::nullopt;
-        }
-
-        presets::PresetData preset{};
-        rc = presets_manager->read(id, preset);
-        if(rc != 0)
-        {
-            return std::nullopt;
-        }
-
-        deserialise_live_parameters(*parameter_notifier, preset.parameters);
-
-        return selected_preset::Notify{
-            .selectedPresetId = write.selectedPresetId,
-        };
+        preset_loader->load_preset(id);
     }
 
     void on_midi_message(midi::Message message)
