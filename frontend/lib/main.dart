@@ -48,7 +48,6 @@ import 'presets/model/presets_service.dart';
 import 'presets/model/selected_preset_client.dart';
 import 'presets/model/selected_preset_repository.dart';
 import 'presets/view/presets.dart';
-import 'robust_websocket.dart';
 import 'status/view/websocket_status.dart';
 import 'tube_screamer.dart';
 import 'valvestate.dart';
@@ -153,10 +152,8 @@ class App extends riverpod.ConsumerWidget {
                 .map((event) => event.message),
           ),
         ),
-        Provider(
-          create: (context) => presets_client.PresetsTransport(
-            websocket: context.read<ApiWebsocket>(),
-          ),
+        Provider.value(
+          value: ref.watch(presets_client.presetsTransportProvider),
         ),
         Provider(
           create: (context) => presets_client.PresetsClient(

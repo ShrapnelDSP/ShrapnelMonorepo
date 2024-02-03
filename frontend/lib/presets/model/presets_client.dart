@@ -19,6 +19,7 @@
 
 import 'dart:async';
 
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logging/logging.dart';
 import 'package:rxdart/rxdart.dart';
@@ -117,6 +118,10 @@ sealed class PresetsMessage with _$PresetsMessage {
 
   factory PresetsMessage.delete(int id) = PresetsMessageDelete;
 }
+
+final presetsTransportProvider = Provider(
+  (ref) => PresetsTransport(websocket: ref.read(apiWebsocketProvider)),
+);
 
 class PresetsTransport
     implements MessageTransport<PresetsMessage, PresetsMessage> {
