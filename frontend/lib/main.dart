@@ -128,14 +128,8 @@ class App extends riverpod.ConsumerWidget {
           ),
         ),
         Provider.value(value: ref.watch(apiWebsocketProvider)),
-        ChangeNotifierProvider(
-          create: (context) => AudioClippingService(
-            stream: context
-                .read<ApiWebsocket>()
-                .stream
-                .whereType<ApiMessageAudioEvent>()
-                .map((event) => event.message),
-          ),
+        ChangeNotifierProvider.value(
+          value: ref.watch(audioClippingServiceProvider),
         ),
         if (provisioning != null)
           ChangeNotifierProvider.value(value: provisioning!)

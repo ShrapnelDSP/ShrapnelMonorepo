@@ -29,7 +29,6 @@ import 'package:mockito/mockito.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:shrapnel/api/api_websocket.dart';
 import 'package:shrapnel/audio_events.dart';
-import 'package:shrapnel/core/message_transport.dart';
 import 'package:shrapnel/main.dart';
 import 'package:shrapnel/parameter.dart';
 import 'package:shrapnel/presets/model/presets.dart';
