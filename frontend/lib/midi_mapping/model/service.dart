@@ -38,6 +38,12 @@ final midiMappingTransportProvider = Provider(
   ),
 );
 
+final midiMappingServiceProvider = ChangeNotifierProvider(
+  (ref) => MidiMappingService(
+    websocket: ref.read(midiMappingTransportProvider),
+  ),
+);
+
 class MidiMappingTransport
     implements MessageTransport<MidiApiMessage, MidiApiMessage> {
   MidiMappingTransport({required this.websocket}) {
