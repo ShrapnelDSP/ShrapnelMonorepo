@@ -44,7 +44,6 @@ import 'pedalboard.dart';
 import 'presets/model/presets.dart';
 import 'presets/model/presets_repository.dart';
 import 'presets/model/presets_service.dart';
-import 'presets/model/selected_preset_client.dart';
 import 'presets/model/selected_preset_repository.dart';
 import 'presets/view/presets.dart';
 import 'status/view/websocket_status.dart';
@@ -102,11 +101,9 @@ class App extends riverpod.ConsumerWidget {
   App({
     super.key,
     this.provisioning,
-    this.selectedPresetRepository,
   });
 
   final WifiProvisioningService? provisioning;
-  final SelectedPresetRepositoryBase? selectedPresetRepository;
 
   @override
   Widget build(BuildContext context, riverpod.WidgetRef ref) {
@@ -150,24 +147,7 @@ class App extends riverpod.ConsumerWidget {
           ),
         ),
         Provider.value(value: ref.watch(presetsRepositoryProvider)),
-        Provider(
-          create: (context) => SelectedPresetTransport(
-            websocket: context.read<ApiWebsocket>(),
-          ),
-        ),
-        Provider(
-          create: (context) => SelectedPresetClient(
-            transport: context.read<SelectedPresetTransport>(),
-          ),
-        ),
-        if (selectedPresetRepository != null)
-          Provider.value(value: selectedPresetRepository!)
-        else
-          Provider<SelectedPresetRepositoryBase>(
-            create: (context) => SelectedPresetRepository(
-              client: context.read<SelectedPresetClient>(),
-            ),
-          ),
+        Provider.value(value: ref.watch(selectedPresetRepositoryProvider)),
         Provider(
           create: (context) =>
               ChorusModel(parameterService: context.read<ParameterService>()),

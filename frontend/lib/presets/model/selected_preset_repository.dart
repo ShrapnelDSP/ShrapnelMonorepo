@@ -19,10 +19,16 @@
 
 import 'dart:async';
 
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:rxdart/rxdart.dart';
 
 import 'presets_service.dart';
 import 'selected_preset_client.dart';
+
+final selectedPresetRepositoryProvider = Provider<SelectedPresetRepositoryBase>(
+  (ref) =>
+      SelectedPresetRepository(client: ref.read(selectedPresetClientProvider)),
+);
 
 class SelectedPresetRepository implements SelectedPresetRepositoryBase {
   SelectedPresetRepository({required this.client}) {

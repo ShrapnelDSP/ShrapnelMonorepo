@@ -34,6 +34,7 @@ import 'package:shrapnel/parameter.dart';
 import 'package:shrapnel/presets/model/presets.dart';
 import 'package:shrapnel/presets/model/presets_repository.dart';
 import 'package:shrapnel/presets/model/presets_service.dart';
+import 'package:shrapnel/presets/model/selected_preset_repository.dart';
 import 'package:shrapnel/robust_websocket.dart';
 
 import '../home_page_object.dart';
@@ -234,10 +235,10 @@ void main() {
           apiWebsocketProvider.overrideWith((_) => apiWebsocket),
           parameterTransportProvider.overrideWith((_) => parameterTransport),
           presetsRepositoryProvider.overrideWith((_) => presetsRepository),
+          selectedPresetRepositoryProvider
+              .overrideWith((_) => selectedPresetRepository),
         ],
-        child: App(
-          selectedPresetRepository: selectedPresetRepository,
-        ),
+        child: App(),
       );
 
       await tester.pumpWidget(sut);

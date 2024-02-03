@@ -19,6 +19,7 @@
 
 import 'dart:async';
 
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logging/logging.dart';
 import 'package:rxdart/rxdart.dart';
@@ -41,6 +42,10 @@ sealed class SelectedPresetMessage with _$SelectedPresetMessage {
   factory SelectedPresetMessage.write({required int selectedPreset}) =
       WriteSelectedPresetMessage;
 }
+
+final selectedPresetTransport = Provider(
+  (ref) => SelectedPresetTransport(websocket: ref.read(apiWebsocketProvider)),
+);
 
 class SelectedPresetTransport
     implements MessageTransport<SelectedPresetMessage, SelectedPresetMessage> {
@@ -78,6 +83,10 @@ class SelectedPresetTransport
   @override
   bool get isAlive => _websocket.isAlive;
 }
+
+final selectedPresetClientProvider = Provider(
+  (ref) => SelectedPresetClient(transport: ref.read(selectedPresetTransport)),
+);
 
 class SelectedPresetClient {
   SelectedPresetClient({
