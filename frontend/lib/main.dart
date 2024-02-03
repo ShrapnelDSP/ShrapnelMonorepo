@@ -49,8 +49,6 @@ import 'presets/model/selected_preset_client.dart';
 import 'presets/model/selected_preset_repository.dart';
 import 'presets/view/presets.dart';
 import 'robust_websocket.dart';
-import 'status/data/status.dart';
-import 'status/model/websocket_status.dart';
 import 'status/view/websocket_status.dart';
 import 'tube_screamer.dart';
 import 'valvestate.dart';
@@ -240,10 +238,6 @@ class App extends riverpod.ConsumerWidget {
               client: context.read<SelectedPresetClient>(),
             ),
           ),
-        StateNotifierProvider<WebSocketStatusModel, WebSocketStatusData>(
-          create: (context) =>
-              WebSocketStatusModel(websocket: context.read<RobustWebsocket>()),
-        ),
         Provider(
           create: (context) =>
               ChorusModel(parameterService: context.read<ParameterService>()),

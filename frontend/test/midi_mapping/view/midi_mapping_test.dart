@@ -217,7 +217,7 @@ void main() {
       await tester.pumpWidget(
         ProviderScope(
           overrides: [
-            robustWebsocketProvider.overrideWith((_, __) => websocket)
+            robustWebsocketProvider.overrideWith((_, __) => websocket),
           ],
           child: App(
             apiWebsocket: api,
@@ -354,7 +354,7 @@ void main() {
       await tester.pumpWidget(
         ProviderScope(
           overrides: [
-            robustWebsocketProvider.overrideWith((_, __) => websocket)
+            robustWebsocketProvider.overrideWith((_, __) => websocket),
           ],
           child: App(
             apiWebsocket: api,
@@ -522,7 +522,7 @@ void main() {
       await tester.pumpWidget(
         ProviderScope(
           overrides: [
-            robustWebsocketProvider.overrideWith((_, __) => websocket)
+            robustWebsocketProvider.overrideWith((_, __) => websocket),
           ],
           child: App(
             apiWebsocket: api,

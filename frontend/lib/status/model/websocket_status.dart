@@ -17,26 +17,20 @@
  * ShrapnelDSP. If not, see <https://www.gnu.org/licenses/>.
  */
 
-import 'package:state_notifier/state_notifier.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../robust_websocket.dart';
 import '../data/status.dart';
 
-class WebSocketStatusModel extends StateNotifier<WebSocketStatusData> {
-  WebSocketStatusModel({required this.websocket})
-      : super(const WebSocketStatusData(isConnected: false)) {
-    websocket.addListener(_onStateChanged);
-  }
+part 'websocket_status.g.dart';
 
-  void _onStateChanged() {
-    state = WebSocketStatusData(isConnected: websocket.isAlive);
-  }
-
-  final RobustWebsocket websocket;
-
+@riverpod
+class WebSocketStatusModel extends _$WebSocketStatusModel {
   @override
-  void dispose() {
-    super.dispose();
-    websocket.removeListener(_onStateChanged);
+  WebSocketStatusData build() {
+    return WebSocketStatusData(
+      // TODO clean up URI duplication
+      isConnected: ref.watch(robustWebsocketProvider(Uri.parse('http://guitar-dsp.local:8080/websocket'))).isAlive,
+    );
   }
 }

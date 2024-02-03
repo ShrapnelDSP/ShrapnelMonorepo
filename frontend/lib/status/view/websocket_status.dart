@@ -18,18 +18,18 @@
  */
 
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../data/status.dart';
+import '../model/websocket_status.dart';
 
-class WebSocketStatus extends StatelessWidget {
+class WebSocketStatus extends ConsumerWidget {
   const WebSocketStatus({super.key, required this.size});
 
   final double size;
 
   @override
-  Widget build(BuildContext context) {
-    final isConnected = context.watch<WebSocketStatusData>().isConnected;
+  Widget build(BuildContext context, WidgetRef ref) {
+    final isConnected = ref.watch(webSocketStatusModelProvider).isConnected;
 
     return Tooltip(
       message: isConnected ? 'Connected' : 'Not Connected',
