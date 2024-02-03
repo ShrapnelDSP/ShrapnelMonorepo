@@ -18,7 +18,6 @@
  */
 
 import 'package:flutter/material.dart';
-import 'package:rxdart/rxdart.dart';
 
 import 'knob_with_label.dart';
 

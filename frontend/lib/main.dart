@@ -22,23 +22,16 @@ import 'dart:async';
 import 'package:esp_softap_provisioning/esp_softap_provisioning.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart' as riverpod;
-import 'package:flutter_state_notifier/flutter_state_notifier.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:logging/logging.dart';
 import 'package:provider/provider.dart';
-import 'package:rxdart/rxdart.dart';
 
 import 'api/api_websocket.dart';
 import 'audio_events.dart';
-import 'chorus.dart';
-import 'heavy_metal.dart';
 import 'midi_mapping/model/midi_learn.dart';
-import 'midi_mapping/model/midi_learn_state.dart';
-import 'midi_mapping/model/models.dart';
 import 'midi_mapping/model/service.dart';
 import 'midi_mapping/view/midi_learn.dart';
 import 'midi_mapping/view/midi_mapping.dart';
-import 'noise_gate.dart';
 import 'parameter.dart';
 import 'pedalboard.dart';
 import 'presets/model/presets.dart';
@@ -47,9 +40,6 @@ import 'presets/model/presets_service.dart';
 import 'presets/model/selected_preset_repository.dart';
 import 'presets/view/presets.dart';
 import 'status/view/websocket_status.dart';
-import 'tube_screamer.dart';
-import 'valvestate.dart';
-import 'wah.dart';
 import 'wifi_provisioning.dart';
 
 final _log = Logger('shrapnel.main');
@@ -109,7 +99,6 @@ class App extends riverpod.ConsumerWidget {
   Widget build(BuildContext context, riverpod.WidgetRef ref) {
     return MultiProvider(
       providers: [
-        Provider.value(value: ref.watch(apiWebsocketProvider)),
         if (provisioning != null)
           ChangeNotifierProvider.value(value: provisioning!)
         else

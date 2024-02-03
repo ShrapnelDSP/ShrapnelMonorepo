@@ -19,7 +19,6 @@
 
 import 'package:flutter/material.dart';
 
-import 'parameter.dart';
 import 'stompbox.dart';
 
 class WahModel extends StompboxModel {

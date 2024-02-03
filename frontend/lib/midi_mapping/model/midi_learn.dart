@@ -19,8 +19,8 @@
 
 import 'dart:async';
 
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logging/logging.dart';
-import 'package:riverpod/riverpod.dart';
 import 'package:rxdart/rxdart.dart';
 
 import '../../api/api_websocket.dart';
@@ -38,7 +38,7 @@ final midiLearnServiceProvider =
     parameterUpdates:
         ref.read(parameterServiceProvider).parameterUpdates.map((e) => e.id),
     midiMessages: ref
-        .read<ApiWebsocket>(apiWebsocketProvider)
+        .read(apiWebsocketProvider)
         .stream
         .whereType<ApiMessageMidiMapping>()
         .map((event) => event.message)
