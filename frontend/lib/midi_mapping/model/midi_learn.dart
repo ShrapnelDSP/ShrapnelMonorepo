@@ -29,10 +29,18 @@ import 'service.dart';
 final _log = Logger('shrapnel.midi_mapping.model.midi_learn');
 
 class MidiLearnService extends StateNotifier<MidiLearnState> {
-  MidiLearnService({required this.mappingService})
-      : super(const MidiLearnState.idle(null));
+  MidiLearnService({
+    required this.mappingService,
+    required this.parameterUpdates,
+    required this.midiMessages,
+  }) : super(const MidiLearnState.idle(null)) {
+    parameterUpdates.listen(parameterUpdated);
+    midiMessages.listen(midiMessageReceived);
+  }
 
   final MidiMappingService mappingService;
+  final Stream<String> parameterUpdates;
+  final Stream<MidiMessage> midiMessages;
 
   void startLearning() {
     state.maybeWhen(

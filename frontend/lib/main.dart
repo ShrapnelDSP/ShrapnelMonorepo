@@ -34,6 +34,7 @@ import 'chorus.dart';
 import 'heavy_metal.dart';
 import 'midi_mapping/model/midi_learn.dart';
 import 'midi_mapping/model/midi_learn_state.dart';
+import 'midi_mapping/model/models.dart';
 import 'midi_mapping/model/service.dart';
 import 'midi_mapping/view/midi_learn.dart';
 import 'midi_mapping/view/midi_mapping.dart';
@@ -110,25 +111,7 @@ class App extends riverpod.ConsumerWidget {
     this.presetsRepository,
     this.parameterService,
     this.selectedPresetRepository,
-  }) {
-    /*
-    this
-        .parameterService
-        .parameterUpdates
-        .map((e) => e.id)
-        .listen(midiLearnService.parameterUpdated);
-
-    apiWebsocket.stream
-        .whereType<ApiMessageMidiMapping>()
-        .map((event) => event.message)
-        .listen(
-          (m) => m.maybeWhen(
-            midiMessageReceived: midiLearnService.midiMessageReceived,
-            orElse: () => null,
-          ),
-        );
-     */
-  }
+  });
 
   final ApiWebsocket? apiWebsocket;
   final ParameterTransport? parameterTransport;
@@ -206,11 +189,19 @@ class App extends riverpod.ConsumerWidget {
             ),
           ),
         StateNotifierProvider<MidiLearnService, MidiLearnState>(
-          // TODO use proxy to call parameterUpdated on the midi learn service
-          // TODO use proxy to call midiMessageReceived when apiWebsocket
-          //      receives a midi message notification
           create: (context) => MidiLearnService(
             mappingService: context.read<MidiMappingService>(),
+            parameterUpdates: context
+                .read<ParameterService>()
+                .parameterUpdates
+                .map((e) => e.id),
+            midiMessages: context
+                .read<ApiWebsocket>()
+                .stream
+                .whereType<ApiMessageMidiMapping>()
+                .map((event) => event.message)
+                .whereType<MidiMessageReceived>()
+                .map((event) => event.message),
           ),
         ),
         Provider(
