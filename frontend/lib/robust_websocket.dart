@@ -24,9 +24,14 @@ import 'dart:math';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logging/logging.dart';
 
 final _log = Logger('shrapnel.robust_websocket');
+
+final robustWebsocketProvider = ChangeNotifierProvider.family(
+  (_, Uri uri) => RobustWebsocket(uri: uri),
+);
 
 /// Auto-reconnecting websocket client
 class RobustWebsocket extends ChangeNotifier {

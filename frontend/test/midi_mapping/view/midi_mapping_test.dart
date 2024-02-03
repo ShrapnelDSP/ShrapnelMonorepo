@@ -20,6 +20,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
@@ -45,9 +46,11 @@ void main() {
     when(api.connectionStream).thenAnswer((_) => Stream.fromIterable([]));
     when(api.isAlive).thenReturn(true);
 
-    final sut = App(
-      websocket: websocket,
-      apiWebsocket: api,
+    final sut = ProviderScope(
+      overrides: [robustWebsocketProvider.overrideWith((_, __) => websocket)],
+      child: App(
+        apiWebsocket: api,
+      ),
     );
 
     const getRequest =
@@ -123,9 +126,11 @@ void main() {
       when(api.connectionStream).thenAnswer((_) => Stream.fromIterable([]));
       when(api.isAlive).thenReturn(true);
 
-      final sut = App(
-        websocket: websocket,
-        apiWebsocket: api,
+      final sut = ProviderScope(
+        overrides: [robustWebsocketProvider.overrideWith((_, __) => websocket)],
+        child: App(
+          apiWebsocket: api,
+        ),
       );
 
       await tester.pumpWidget(sut);
@@ -210,9 +215,13 @@ void main() {
       );
 
       await tester.pumpWidget(
-        App(
-          websocket: websocket,
-          apiWebsocket: api,
+        ProviderScope(
+          overrides: [
+            robustWebsocketProvider.overrideWith((_, __) => websocket)
+          ],
+          child: App(
+            apiWebsocket: api,
+          ),
         ),
       );
 
@@ -343,9 +352,13 @@ void main() {
       );
 
       await tester.pumpWidget(
-        App(
-          websocket: websocket,
-          apiWebsocket: api,
+        ProviderScope(
+          overrides: [
+            robustWebsocketProvider.overrideWith((_, __) => websocket)
+          ],
+          child: App(
+            apiWebsocket: api,
+          ),
         ),
       );
 
@@ -385,9 +398,11 @@ void main() {
       when(api.connectionStream).thenAnswer((_) => Stream.fromIterable([]));
       when(api.isAlive).thenReturn(true);
 
-      final sut = App(
-        websocket: websocket,
-        apiWebsocket: api,
+      final sut = ProviderScope(
+        overrides: [robustWebsocketProvider.overrideWith((_, __) => websocket)],
+        child: App(
+          apiWebsocket: api,
+        ),
       );
 
       final homePageObject = HomePageObject(tester);
@@ -505,9 +520,13 @@ void main() {
       final homePageObject = HomePageObject(tester);
 
       await tester.pumpWidget(
-        App(
-          websocket: websocket,
-          apiWebsocket: api,
+        ProviderScope(
+          overrides: [
+            robustWebsocketProvider.overrideWith((_, __) => websocket)
+          ],
+          child: App(
+            apiWebsocket: api,
+          ),
         ),
       );
 

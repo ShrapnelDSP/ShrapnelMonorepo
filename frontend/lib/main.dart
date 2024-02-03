@@ -21,6 +21,7 @@ import 'dart:async';
 
 import 'package:esp_softap_provisioning/esp_softap_provisioning.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart' as riverpod;
 import 'package:flutter_state_notifier/flutter_state_notifier.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:logging/logging.dart';
@@ -30,7 +31,6 @@ import 'package:rxdart/rxdart.dart';
 import 'api/api_websocket.dart';
 import 'audio_events.dart';
 import 'chorus.dart';
-import 'core/message_transport.dart';
 import 'heavy_metal.dart';
 import 'midi_mapping/model/midi_learn.dart';
 import 'midi_mapping/model/midi_learn_state.dart';
@@ -80,7 +80,12 @@ String formatDateTime(DateTime t) {
 void main() {
   setupLogger(Level.INFO);
   GoogleFonts.config.allowRuntimeFetching = false;
-  runApp(App());
+
+  runApp(
+    riverpod.ProviderScope(
+      child: App(),
+    ),
+  );
 }
 
 void setupLogger(Level level) {
@@ -96,52 +101,17 @@ void setupLogger(Level level) {
   });
 }
 
-class App extends StatelessWidget {
+class App extends riverpod.ConsumerWidget {
   App({
     super.key,
-    RobustWebsocket? websocket,
-    ApiWebsocket? apiWebsocket,
-    WifiProvisioningService? provisioning,
-    MessageTransport<ParameterServiceOutputMessage,
-            ParameterServiceInputMessage>?
-        parameterTransport,
-    PresetsRepositoryBase? presetsRepository,
-    ParameterService? parameterService,
-    SelectedPresetRepositoryBase? selectedPresetRepository,
+    this.apiWebsocket,
+    this.provisioning,
+    this.parameterTransport,
+    this.presetsRepository,
+    this.parameterService,
+    this.selectedPresetRepository,
   }) {
-    websocket ??= RobustWebsocket(
-      uri: Uri.parse('http://guitar-dsp.local:8080/websocket'),
-    );
-    _websocket = websocket;
-    apiWebsocket ??= ApiWebsocket(websocket: websocket);
-    audioClippingService = AudioClippingService(
-      stream: apiWebsocket.stream
-          .whereType<ApiMessageAudioEvent>()
-          .map((event) => event.message),
-    );
-    this.provisioning = provisioning ??
-        WifiProvisioningService(
-          provisioningFactory: () {
-            _log.info('Creating provisioning connection');
-            return Provisioning(
-              security: Security1(pop: 'abcd1234'),
-              transport: TransportHTTP('guitar-dsp.local'),
-            );
-          },
-        );
-
-    midiMappingService = MidiMappingService(
-      websocket: MidiMappingTransport(websocket: apiWebsocket),
-    );
-    this.parameterService = parameterService ??
-        ParameterService(
-          transport:
-              parameterTransport ?? ParameterTransport(websocket: apiWebsocket),
-        );
-    midiLearnService = MidiLearnService(
-      mappingService: midiMappingService,
-    );
-
+    /*
     this
         .parameterService
         .parameterUpdates
@@ -158,78 +128,179 @@ class App extends StatelessWidget {
           ),
         );
 
-    this.presetsRepository = presetsRepository ??
-        PresetsRepository(
-          client: presets_client.PresetsClient(
-            transport: presets_client.PresetsTransport(websocket: apiWebsocket),
-          ),
-        );
     this.selectedPresetRepository = selectedPresetRepository ??
         SelectedPresetRepository(
           client: SelectedPresetClient(
             transport: SelectedPresetTransport(websocket: apiWebsocket),
           ),
         );
+     */
   }
 
-  late final RobustWebsocket _websocket;
-  late final AudioClippingService audioClippingService;
-  late final WifiProvisioningService provisioning;
-  late final MidiLearnService midiLearnService;
-  late final ParameterService parameterService;
-  late final MidiMappingService midiMappingService;
-  late final PresetsRepositoryBase presetsRepository;
-  late final SelectedPresetRepositoryBase selectedPresetRepository;
+  final ApiWebsocket? apiWebsocket;
+  final ParameterTransport? parameterTransport;
+  final WifiProvisioningService? provisioning;
+  final PresetsRepositoryBase? presetsRepository;
+  final ParameterService? parameterService;
+  final SelectedPresetRepositoryBase? selectedPresetRepository;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, riverpod.WidgetRef ref) {
     return MultiProvider(
       providers: [
-        StateNotifierProvider<MidiLearnService, MidiLearnState>.value(
-          value: midiLearnService,
+        ChangeNotifierProvider.value(
+          value: ref.watch(
+            robustWebsocketProvider(
+              Uri.parse('http://guitar-dsp.local:8080/websocket'),
+            ),
+          ),
         ),
+        if (apiWebsocket != null)
+          Provider.value(value: apiWebsocket!)
+        else
+          Provider(
+            create: (context) => ApiWebsocket(
+              websocket: context.read<RobustWebsocket>(),
+            ),
+          ),
+        ChangeNotifierProvider(
+          create: (context) => AudioClippingService(
+            stream: context
+                .read<ApiWebsocket>()
+                .stream
+                .whereType<ApiMessageAudioEvent>()
+                .map((event) => event.message),
+          ),
+        ),
+        if (provisioning != null)
+          ChangeNotifierProvider.value(value: provisioning!)
+        else
+          ChangeNotifierProvider(
+            create: (context) => WifiProvisioningService(
+              provisioningFactory: () {
+                _log.info('Creating provisioning connection');
+                return Provisioning(
+                  security: Security1(pop: 'abcd1234'),
+                  transport: TransportHTTP('guitar-dsp.local'),
+                );
+              },
+            ),
+          ),
+        Provider(
+          create: (context) =>
+              MidiMappingTransport(websocket: context.read<ApiWebsocket>()),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => MidiMappingService(
+            websocket: context.read<MidiMappingTransport>(),
+          ),
+        ),
+        if (parameterTransport != null)
+          Provider.value(value: parameterTransport!)
+        else
+          Provider(
+            create: (context) =>
+                ParameterTransport(websocket: context.read<ApiWebsocket>()),
+          ),
+        if (parameterService != null)
+          ChangeNotifierProvider.value(
+            value: parameterService!,
+          )
+        else
+          ChangeNotifierProvider(
+            create: (context) => ParameterService(
+              transport: context.read<ParameterTransport>(),
+            ),
+          ),
+        StateNotifierProvider<MidiLearnService, MidiLearnState>(
+          // TODO use proxy to call parameterUpdated on the midi learn service
+          // TODO use proxy to call midiMessageReceived when apiWebsocket
+          //      receives a midi message notification
+          create: (context) => MidiLearnService(
+            mappingService: context.read<MidiMappingService>(),
+          ),
+        ),
+        Provider(
+          create: (context) => presets_client.PresetsTransport(
+            websocket: context.read<ApiWebsocket>(),
+          ),
+        ),
+        Provider(
+          create: (context) => presets_client.PresetsClient(
+            transport: context.read<presets_client.PresetsTransport>(),
+          ),
+        ),
+        if (presetsRepository != null)
+          Provider.value(value: presetsRepository!)
+        else
+          Provider(
+            create: (context) => PresetsRepository(
+              client: context.read<presets_client.PresetsClient>(),
+            ),
+          ),
+        Provider(
+          create: (context) => SelectedPresetTransport(
+            websocket: context.read<ApiWebsocket>(),
+          ),
+        ),
+        Provider(
+          create: (context) => SelectedPresetClient(
+            transport: context.read<SelectedPresetTransport>(),
+          ),
+        ),
+        if (selectedPresetRepository != null)
+          Provider.value(value: selectedPresetRepository!)
+        else
+          Provider(
+            create: (context) => SelectedPresetRepository(
+              client: context.read<SelectedPresetClient>(),
+            ),
+          ),
         StateNotifierProvider<WebSocketStatusModel, WebSocketStatusData>(
-          create: (_) => WebSocketStatusModel(websocket: _websocket),
+          create: (context) =>
+              WebSocketStatusModel(websocket: context.read<RobustWebsocket>()),
         ),
-        ChangeNotifierProvider.value(value: provisioning),
-        ChangeNotifierProvider.value(
-          value: parameterService,
-        ),
-        ChangeNotifierProvider.value(
-          value: midiMappingService,
-        ),
-        ChangeNotifierProvider.value(value: audioClippingService),
         Provider(
-          create: (_) => ChorusModel(parameterService: parameterService),
+          create: (context) =>
+              ChorusModel(parameterService: context.read<ParameterService>()),
           lazy: false,
         ),
         Provider(
-          create: (_) => HeavyMetalModel(parameterService: parameterService),
+          create: (context) => HeavyMetalModel(
+            parameterService: context.read<ParameterService>(),
+          ),
           lazy: false,
         ),
         Provider(
-          create: (_) => NoiseGateModel(parameterService: parameterService),
+          create: (context) => NoiseGateModel(
+            parameterService: context.read<ParameterService>(),
+          ),
           lazy: false,
         ),
         Provider(
-          create: (_) => TubeScreamerModel(parameterService: parameterService),
+          create: (context) => TubeScreamerModel(
+            parameterService: context.read<ParameterService>(),
+          ),
           lazy: false,
         ),
         Provider(
-          create: (_) => ValvestateModel(parameterService: parameterService),
+          create: (context) => ValvestateModel(
+            parameterService: context.read<ParameterService>(),
+          ),
           lazy: false,
         ),
         Provider(
-          create: (_) => WahModel(parameterService: parameterService),
+          create: (context) =>
+              WahModel(parameterService: context.read<ParameterService>()),
           lazy: false,
         ),
-        Provider.value(value: presetsRepository),
-        Provider.value(value: selectedPresetRepository),
         StateNotifierProvider<PresetsServiceBase, PresetsState>(
-          create: (_) {
+          create: (context) {
+            final parameterService = context.read<ParameterService>();
             return PresetsService(
-              presetsRepository: presetsRepository,
-              selectedPresetRepository: selectedPresetRepository,
+              presetsRepository: context.read<PresetsRepository>(),
+              selectedPresetRepository:
+                  context.read<SelectedPresetRepository>(),
               parametersState: ParametersMergeStream(
                 ampGain: parameterService.getParameter('ampGain').value,
                 ampChannel: parameterService.getParameter('ampChannel').value,
