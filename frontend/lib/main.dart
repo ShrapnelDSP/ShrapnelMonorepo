@@ -116,17 +116,7 @@ class App extends riverpod.ConsumerWidget {
   Widget build(BuildContext context, riverpod.WidgetRef ref) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider.value(
-          value: ref.watch(
-            robustWebsocketProvider(
-              Uri.parse('http://guitar-dsp.local:8080/websocket'),
-            ),
-          ),
-        ),
         Provider.value(value: ref.watch(apiWebsocketProvider)),
-        ChangeNotifierProvider.value(
-          value: ref.watch(audioClippingServiceProvider),
-        ),
         if (provisioning != null)
           ChangeNotifierProvider.value(value: provisioning!)
         else
@@ -419,13 +409,13 @@ class ParametersMergeStream {
   }
 }
 
-class MyHomePage extends StatelessWidget {
+class MyHomePage extends riverpod.ConsumerWidget {
   const MyHomePage({super.key, required this.title});
 
   final String title;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, riverpod.WidgetRef ref) {
     return Scaffold(
       appBar: AppBar(
         title: Text(title),
@@ -573,7 +563,7 @@ class MyHomePage extends StatelessWidget {
                 message: 'Input clipping',
                 child: Icon(
                   Icons.input,
-                  color: context.watch<AudioClippingService>().inputIsClipped
+                  color: ref.watch(audioClippingServiceProvider).inputIsClipped
                       ? Colors.red
                       : null,
                 ),
@@ -583,7 +573,7 @@ class MyHomePage extends StatelessWidget {
                 message: 'Output clipping',
                 child: Icon(
                   Icons.output,
-                  color: context.watch<AudioClippingService>().outputIsClipped
+                  color: ref.watch(audioClippingServiceProvider).outputIsClipped
                       ? Colors.red
                       : null,
                 ),
