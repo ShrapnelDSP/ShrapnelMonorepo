@@ -42,7 +42,6 @@ import 'noise_gate.dart';
 import 'parameter.dart';
 import 'pedalboard.dart';
 import 'presets/model/presets.dart';
-import 'presets/model/presets_client.dart' as presets_client;
 import 'presets/model/presets_repository.dart';
 import 'presets/model/presets_service.dart';
 import 'presets/model/selected_preset_client.dart';
@@ -103,12 +102,10 @@ class App extends riverpod.ConsumerWidget {
   App({
     super.key,
     this.provisioning,
-    this.presetsRepository,
     this.selectedPresetRepository,
   });
 
   final WifiProvisioningService? provisioning;
-  final PresetsRepositoryBase? presetsRepository;
   final SelectedPresetRepositoryBase? selectedPresetRepository;
 
   @override
@@ -152,15 +149,7 @@ class App extends riverpod.ConsumerWidget {
                 .map((event) => event.message),
           ),
         ),
-        Provider.value(value: ref.watch(presets_client.presetsClientProvider)),
-        if (presetsRepository != null)
-          Provider.value(value: presetsRepository!)
-        else
-          Provider<PresetsRepositoryBase>(
-            create: (context) => PresetsRepository(
-              client: context.read<presets_client.PresetsClient>(),
-            ),
-          ),
+        Provider.value(value: ref.watch(presetsRepositoryProvider)),
         Provider(
           create: (context) => SelectedPresetTransport(
             websocket: context.read<ApiWebsocket>(),

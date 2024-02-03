@@ -32,6 +32,7 @@ import 'package:shrapnel/audio_events.dart';
 import 'package:shrapnel/main.dart';
 import 'package:shrapnel/parameter.dart';
 import 'package:shrapnel/presets/model/presets.dart';
+import 'package:shrapnel/presets/model/presets_repository.dart';
 import 'package:shrapnel/presets/model/presets_service.dart';
 import 'package:shrapnel/robust_websocket.dart';
 
@@ -232,9 +233,9 @@ void main() {
           robustWebsocketProvider.overrideWith((_, __) => websocket),
           apiWebsocketProvider.overrideWith((_) => apiWebsocket),
           parameterTransportProvider.overrideWith((_) => parameterTransport),
+          presetsRepositoryProvider.overrideWith((_) => presetsRepository),
         ],
         child: App(
-          presetsRepository: presetsRepository,
           selectedPresetRepository: selectedPresetRepository,
         ),
       );

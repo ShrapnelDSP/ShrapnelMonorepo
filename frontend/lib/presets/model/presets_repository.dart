@@ -19,11 +19,18 @@
 
 import 'dart:async';
 
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:rxdart/rxdart.dart';
 
 import 'presets.dart';
 import 'presets_client.dart';
 import 'presets_service.dart';
+
+final presetsRepositoryProvider = Provider<PresetsRepositoryBase>(
+  (ref) => PresetsRepository(
+    client: ref.read(presetsClientProvider),
+  ),
+);
 
 class PresetsRepository implements PresetsRepositoryBase {
   PresetsRepository({required this.client}) {
@@ -39,10 +46,10 @@ class PresetsRepository implements PresetsRepositoryBase {
   Future<PresetRecord> create(PresetState preset) async {
     await client.create(preset);
 
+    // Don't check equality of the parameter values, they will have rounding
+    // errors after roundtrip through the firmware, instead just check the
+    // name.
     final record = await client.presetUpdates
-        // Don't check equality of the parameter values, they will have rounding
-        // errors after roundtrip through the firmware, instead just check the
-        // name.
         .firstWhere((element) => element.preset.name == preset.name)
         .timeout(const Duration(seconds: 2));
 
