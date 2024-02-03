@@ -26,10 +26,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:logging/logging.dart';
 import 'package:provider/provider.dart';
 
-import 'api/api_websocket.dart';
 import 'audio_events.dart';
 import 'midi_mapping/model/midi_learn.dart';
-import 'midi_mapping/model/service.dart';
 import 'midi_mapping/view/midi_learn.dart';
 import 'midi_mapping/view/midi_mapping.dart';
 import 'parameter.dart';
@@ -113,9 +111,6 @@ class App extends riverpod.ConsumerWidget {
               },
             ),
           ),
-        ChangeNotifierProvider.value(
-          value: ref.watch(midiMappingServiceProvider),
-        ),
         ChangeNotifierProvider.value(
           value: ref.watch(parameterServiceProvider),
         ),

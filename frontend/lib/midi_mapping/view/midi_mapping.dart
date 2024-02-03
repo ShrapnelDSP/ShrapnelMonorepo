@@ -21,21 +21,21 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:provider/provider.dart';
 
 import '../../parameters_meta.dart';
 import '../../presets/model/presets.dart';
+import '../../presets/model/presets_service.dart';
 import '../model/models.dart';
 import '../model/service.dart';
 
 const _requiredValueString = 'A value must be selected';
 
-class MidiMappingPage extends StatelessWidget {
+class MidiMappingPage extends ConsumerWidget {
   const MidiMappingPage({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final midiMappingService = context.watch<MidiMappingService>();
+  Widget build(BuildContext context, WidgetRef ref) {
+    final midiMappingService = ref.watch(midiMappingServiceProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -277,8 +277,8 @@ class CreateMappingDialogState extends ConsumerState<CreateMappingDialog> {
   @override
   Widget build(BuildContext context) {
     final parameters = ref.read(parameterNamesProvider);
-    final presets = context.watch<PresetsState>();
-    final mappings = context.read<MidiMappingService>();
+    final presets = ref.watch(presetsServiceProvider);
+    final mappings = ref.watch(midiMappingServiceProvider);
 
     return Dialog(
       child: Padding(
@@ -511,8 +511,8 @@ class EditMappingDialogState extends ConsumerState<EditMappingDialog> {
   @override
   Widget build(BuildContext context) {
     final parameters = ref.read(parameterNamesProvider);
-    final presets = context.watch<PresetsState>();
-    final mappings = context.read<MidiMappingService>();
+    final presets = ref.watch(presetsServiceProvider);
+    final mappings = ref.read(midiMappingServiceProvider);
 
     return Dialog(
       child: Padding(
@@ -785,7 +785,7 @@ class ParametersDropdown extends ConsumerWidget {
   }
 }
 
-class PresetsDropdown extends StatelessWidget {
+class PresetsDropdown extends ConsumerWidget {
   const PresetsDropdown({
     required this.value,
     required this.onChanged,
@@ -796,8 +796,8 @@ class PresetsDropdown extends StatelessWidget {
   final void Function(int?) onChanged;
 
   @override
-  Widget build(BuildContext context) {
-    final presets = switch (context.watch<PresetsState>()) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final presets = switch (ref.watch(presetsServiceProvider)) {
       ReadyPresetsState(:final presets) => presets,
       LoadingPresetsState() => <PresetRecord>[],
     }
