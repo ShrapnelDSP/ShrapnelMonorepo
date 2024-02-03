@@ -148,31 +148,6 @@ class App extends riverpod.ConsumerWidget {
         ),
         Provider.value(value: ref.watch(presetsRepositoryProvider)),
         Provider.value(value: ref.watch(selectedPresetRepositoryProvider)),
-        Provider(
-          create: (context) => ChorusModel(),
-          lazy: false,
-        ),
-        Provider(
-          create: (context) => HeavyMetalModel(),
-          lazy: false,
-        ),
-        Provider(
-          create: (context) => NoiseGateModel(),
-          lazy: false,
-        ),
-        Provider(
-          create: (context) => TubeScreamerModel(),
-          lazy: false,
-        ),
-        Provider(
-          create: (context) => ValvestateModel(),
-          lazy: false,
-        ),
-        Provider(
-          create: (context) =>
-              WahModel(parameterService: context.read<ParameterService>()),
-          lazy: false,
-        ),
         Provider.value(value: ref.watch(presetsServiceProvider)),
         Provider<PresetsServiceBase>.value(
           value: ref.watch(presetsServiceProvider.notifier),

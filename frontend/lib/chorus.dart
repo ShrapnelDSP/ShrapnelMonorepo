@@ -18,7 +18,6 @@
  */
 
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 import 'stompbox.dart';
 
@@ -54,7 +53,7 @@ class Chorus extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Stompbox(
-      model: context.read<ChorusModel>(),
+      model: ChorusModel(),
       onCardTap: onTap,
       full: full,
       primarySwatch: Colors.blue,

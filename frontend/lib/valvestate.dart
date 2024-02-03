@@ -18,7 +18,6 @@
  */
 
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 import 'amplifier.dart';
 
@@ -55,7 +54,7 @@ class Valvestate extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Amplifier(
-      model: context.read<ValvestateModel>(),
+      model: ValvestateModel(),
       onTap: onTap,
       full: full,
     );

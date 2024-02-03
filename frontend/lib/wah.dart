@@ -18,14 +18,13 @@
  */
 
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 import 'parameter.dart';
 import 'stompbox.dart';
 
 class WahModel extends StompboxModel {
   // ignore: avoid_unused_constructor_parameters
-  WahModel({required ParameterService parameterService})
+  WahModel()
       : parameters = [
           'wahPosition',
           'wahVocal',
@@ -57,7 +56,7 @@ class Wah extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Stompbox(
-      model: context.read<WahModel>(),
+      model: WahModel(),
       onCardTap: onTap,
       full: full,
       primarySwatch: Colors.purple,

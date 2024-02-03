@@ -18,7 +18,6 @@
  */
 
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 import 'stompbox.dart';
 
@@ -58,7 +57,7 @@ class NoiseGate extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Stompbox(
-      model: context.read<NoiseGateModel>(),
+      model: NoiseGateModel(),
       onCardTap: onTap,
       full: full,
       primarySwatch: Colors.red,

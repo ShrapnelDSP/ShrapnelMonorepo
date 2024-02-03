@@ -18,7 +18,6 @@
  */
 
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 import 'stompbox.dart';
 
@@ -57,7 +56,7 @@ class HeavyMetal extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Stompbox(
-      model: context.read<HeavyMetalModel>(),
+      model: HeavyMetalModel(),
       onCardTap: onTap,
       full: full,
       primarySwatch: Colors.deepOrange,

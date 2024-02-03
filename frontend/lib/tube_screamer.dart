@@ -18,7 +18,6 @@
  */
 
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 import 'stompbox.dart';
 
@@ -56,7 +55,7 @@ class TubeScreamer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Stompbox(
-      model: context.read<TubeScreamerModel>(),
+      model: TubeScreamerModel(),
       onCardTap: onTap,
       full: full,
       primarySwatch: Colors.green,

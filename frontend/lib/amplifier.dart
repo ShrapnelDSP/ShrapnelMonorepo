@@ -18,7 +18,6 @@
  */
 
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:rxdart/rxdart.dart';
 
 import 'knob_with_label.dart';
@@ -76,27 +75,6 @@ class Amplifier extends StatelessWidget {
           ),
         ),
       ),
-    );
-  }
-}
-
-extension ProviderEx<T> on ValueStream<T> {
-  Widget provider({
-    Key? key,
-    ErrorBuilder<T>? catchError,
-    UpdateShouldNotify<T>? updateShouldNotify,
-    bool? lazy,
-    TransitionBuilder? builder,
-    Widget? child,
-  }) {
-    return StreamProvider<T>.value(
-      key: key,
-      value: this,
-      initialData: value,
-      updateShouldNotify: updateShouldNotify,
-      lazy: lazy,
-      builder: builder,
-      child: child,
     );
   }
 }
