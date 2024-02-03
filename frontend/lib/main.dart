@@ -30,12 +30,9 @@ import 'audio_events.dart';
 import 'midi_mapping/model/midi_learn.dart';
 import 'midi_mapping/view/midi_learn.dart';
 import 'midi_mapping/view/midi_mapping.dart';
-import 'parameter.dart';
 import 'pedalboard.dart';
 import 'presets/model/presets.dart';
-import 'presets/model/presets_repository.dart';
 import 'presets/model/presets_service.dart';
-import 'presets/model/selected_preset_repository.dart';
 import 'presets/view/presets.dart';
 import 'status/view/websocket_status.dart';
 import 'wifi_provisioning.dart';
@@ -111,15 +108,6 @@ class App extends riverpod.ConsumerWidget {
               },
             ),
           ),
-        ChangeNotifierProvider.value(
-          value: ref.watch(parameterServiceProvider),
-        ),
-        Provider.value(value: ref.watch(presetsRepositoryProvider)),
-        Provider.value(value: ref.watch(selectedPresetRepositoryProvider)),
-        Provider.value(value: ref.watch(presetsServiceProvider)),
-        Provider<PresetsServiceBase>.value(
-          value: ref.watch(presetsServiceProvider.notifier),
-        ),
       ],
       child: const MyApp(),
     );
@@ -223,8 +211,8 @@ class MyHomePage extends riverpod.ConsumerWidget {
           children: [
             Builder(
               builder: (context) {
-                final model = context.read<PresetsServiceBase>();
-                final state = context.watch<PresetsState>();
+                final model = ref.read(presetsServiceProvider.notifier);
+                final state = ref.watch(presetsServiceProvider);
 
                 return Presets(
                   createPreset: state.map(
@@ -240,20 +228,20 @@ class MyHomePage extends riverpod.ConsumerWidget {
                     loading: (_) => null,
                     ready: (ready) => switch (ready.selectedPreset) {
                       null => null,
-                      final int id => () => model.delete(id),
+                      final int id => () => unawaited(model.delete(id)),
                     },
                   ),
                   revertPreset: state.map(
                     loading: (_) => null,
                     ready: (ready) => switch (ready.selectedPreset) {
                       null => null,
-                      final int id => () => model.select(id),
+                      final int id => () => unawaited(model.select(id)),
                     },
                   ),
                   selectPreset: state.map(
                     loading: (_) => null,
-                    ready: (ready) =>
-                        (selectedPreset) => model.select(selectedPreset.id),
+                    ready: (ready) => (selectedPreset) =>
+                        unawaited(model.select(selectedPreset.id)),
                   ),
                   selectNextPreset: state.map(
                     loading: (value) => null,
@@ -262,7 +250,8 @@ class MyHomePage extends riverpod.ConsumerWidget {
                               .indexWhere((e) => e.id == ready.selectedPreset) +
                           1;
                       if (ready.presets.hasIndex(index)) {
-                        return () => model.select(ready.presets[index].id);
+                        return () =>
+                            unawaited(model.select(ready.presets[index].id));
                       }
 
                       return null;
@@ -275,7 +264,8 @@ class MyHomePage extends riverpod.ConsumerWidget {
                               .indexWhere((e) => e.id == ready.selectedPreset) -
                           1;
                       if (ready.presets.hasIndex(index)) {
-                        return () => model.select(ready.presets[index].id);
+                        return () =>
+                            unawaited(model.select(ready.presets[index].id));
                       }
 
                       return null;
