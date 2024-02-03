@@ -131,6 +131,12 @@ class ParameterTransport
   StreamSink<ParameterServiceOutputMessage> get sink => _controller;
 }
 
+final parameterServiceProvider = ChangeNotifierProvider(
+  (ref) => ParameterService(
+    transport: ref.read(parameterTransportProvider),
+  ),
+);
+
 class ParameterService extends ChangeNotifier {
   ParameterService({
     required MessageTransport<ParameterServiceOutputMessage,

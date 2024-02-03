@@ -105,13 +105,11 @@ class App extends riverpod.ConsumerWidget {
     super.key,
     this.provisioning,
     this.presetsRepository,
-    this.parameterService,
     this.selectedPresetRepository,
   });
 
   final WifiProvisioningService? provisioning;
   final PresetsRepositoryBase? presetsRepository;
-  final ParameterService? parameterService;
   final SelectedPresetRepositoryBase? selectedPresetRepository;
 
   @override
@@ -150,16 +148,9 @@ class App extends riverpod.ConsumerWidget {
         Provider.value(
           value: ref.watch(parameterTransportProvider),
         ),
-        if (parameterService != null)
-          ChangeNotifierProvider.value(
-            value: parameterService!,
-          )
-        else
-          ChangeNotifierProvider(
-            create: (context) => ParameterService(
-              transport: context.read<ParameterTransport>(),
-            ),
-          ),
+        ChangeNotifierProvider.value(
+          value: ref.watch(parameterServiceProvider),
+        ),
         StateNotifierProvider<MidiLearnService, MidiLearnState>(
           create: (context) => MidiLearnService(
             mappingService: context.read<MidiMappingService>(),
