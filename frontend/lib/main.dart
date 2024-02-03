@@ -127,13 +127,6 @@ class App extends riverpod.ConsumerWidget {
             orElse: () => null,
           ),
         );
-
-    this.selectedPresetRepository = selectedPresetRepository ??
-        SelectedPresetRepository(
-          client: SelectedPresetClient(
-            transport: SelectedPresetTransport(websocket: apiWebsocket),
-          ),
-        );
      */
   }
 
