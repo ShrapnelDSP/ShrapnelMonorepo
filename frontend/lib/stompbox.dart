@@ -19,10 +19,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:provider/provider.dart';
 
 import 'knob_with_label.dart';
-import 'midi_mapping/model/midi_learn_state.dart';
+import 'midi_mapping/model/midi_learn.dart';
 import 'parameter.dart';
 import 'util/conditional_parent.dart';
 
@@ -150,7 +149,7 @@ class _BypassButton extends ConsumerWidget {
         ref.watch(audioParameterDoubleModelProvider(parameterId)).value ?? 1;
     final bypass =
         ref.read(audioParameterDoubleModelProvider(parameterId).notifier);
-    final learningState = context.watch<MidiLearnState>();
+    final learningState = ref.watch(midiLearnServiceProvider);
 
     return ConditionalParent(
       condition: isEnabled,

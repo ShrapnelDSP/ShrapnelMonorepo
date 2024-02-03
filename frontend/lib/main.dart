@@ -114,8 +114,6 @@ class App extends riverpod.ConsumerWidget {
         ChangeNotifierProvider.value(
           value: ref.watch(parameterServiceProvider),
         ),
-        Provider.value(value: ref.watch(midiLearnServiceProvider)),
-        Provider.value(value: ref.watch(midiLearnServiceProvider.notifier)),
         Provider.value(value: ref.watch(presetsRepositoryProvider)),
         Provider.value(value: ref.watch(selectedPresetRepositoryProvider)),
         Provider.value(value: ref.watch(presetsServiceProvider)),
@@ -177,7 +175,7 @@ class MyHomePage extends riverpod.ConsumerWidget {
               icon: const Icon(Icons.menu_book_outlined),
               key: const Key('midi-learn-button'),
               onPressed: () {
-                context.read<MidiLearnService>().startLearning();
+                ref.read(midiLearnServiceProvider.notifier).startLearning();
               },
             ),
           ),

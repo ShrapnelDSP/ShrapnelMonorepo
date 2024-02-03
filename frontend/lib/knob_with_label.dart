@@ -19,10 +19,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:provider/provider.dart';
 
 import 'knob.dart';
-import 'midi_mapping/model/midi_learn_state.dart';
+import 'midi_mapping/model/midi_learn.dart';
 import 'parameter.dart';
 import 'parameters_meta.dart';
 
@@ -44,7 +43,7 @@ class KnobWithLabel extends ConsumerWidget {
         ref.watch(audioParameterDoubleModelProvider(parameterId)).value ?? 0.5;
     final parameter =
         ref.read(audioParameterDoubleModelProvider(parameterId).notifier);
-    final learningState = context.watch<MidiLearnState>();
+    final learningState = ref.watch(midiLearnServiceProvider);
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
