@@ -161,6 +161,10 @@ class PresetsTransport
   bool get isAlive => websocket.isAlive;
 }
 
+final presetsClientProvider = Provider(
+  (ref) => PresetsClient(transport: ref.read(presetsTransportProvider)),
+);
+
 class PresetsClient {
   PresetsClient({
     required MessageTransport<PresetsMessage, PresetsMessage> transport,

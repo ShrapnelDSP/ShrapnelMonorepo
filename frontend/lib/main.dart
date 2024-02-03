@@ -152,14 +152,7 @@ class App extends riverpod.ConsumerWidget {
                 .map((event) => event.message),
           ),
         ),
-        Provider.value(
-          value: ref.watch(presets_client.presetsTransportProvider),
-        ),
-        Provider(
-          create: (context) => presets_client.PresetsClient(
-            transport: context.read<presets_client.PresetsTransport>(),
-          ),
-        ),
+        Provider.value(value: ref.watch(presets_client.presetsClientProvider)),
         if (presetsRepository != null)
           Provider.value(value: presetsRepository!)
         else
