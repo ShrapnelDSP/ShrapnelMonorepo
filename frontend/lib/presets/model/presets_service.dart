@@ -19,11 +19,14 @@
 
 import 'dart:async';
 
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logging/logging.dart';
 import 'package:rxdart/rxdart.dart';
-import 'package:state_notifier/state_notifier.dart';
 
+import '../../parameter.dart';
 import 'presets.dart';
+import 'presets_repository.dart';
+import 'selected_preset_repository.dart';
 
 final _log = Logger('presets_fake');
 
@@ -45,6 +48,43 @@ abstract class SelectedPresetRepositoryBase {
 
   ValueStream<int> get selectedPreset;
 }
+
+final presetsServiceProvider =
+    StateNotifierProvider<PresetsService, PresetsState>(
+  (ref) {
+    final parameterService = ref.read(parameterServiceProvider);
+
+    return PresetsService(
+      presetsRepository: ref.read(presetsRepositoryProvider),
+      selectedPresetRepository: ref.read(selectedPresetRepositoryProvider),
+      parametersState: _ParametersMergeStream(
+        ampGain: parameterService.getParameter('ampGain').value,
+        ampChannel: parameterService.getParameter('ampChannel').value,
+        bass: parameterService.getParameter('bass').value,
+        middle: parameterService.getParameter('middle').value,
+        treble: parameterService.getParameter('treble').value,
+        contour: parameterService.getParameter('contour').value,
+        volume: parameterService.getParameter('volume').value,
+        noiseGateThreshold:
+            parameterService.getParameter('noiseGateThreshold').value,
+        noiseGateHysteresis:
+            parameterService.getParameter('noiseGateHysteresis').value,
+        noiseGateAttack: parameterService.getParameter('noiseGateAttack').value,
+        noiseGateHold: parameterService.getParameter('noiseGateHold').value,
+        noiseGateRelease:
+            parameterService.getParameter('noiseGateRelease').value,
+        noiseGateBypass: parameterService.getParameter('noiseGateBypass').value,
+        chorusRate: parameterService.getParameter('chorusRate').value,
+        chorusDepth: parameterService.getParameter('chorusDepth').value,
+        chorusMix: parameterService.getParameter('chorusMix').value,
+        chorusBypass: parameterService.getParameter('chorusBypass').value,
+        wahPosition: parameterService.getParameter('wahPosition').value,
+        wahVocal: parameterService.getParameter('wahVocal').value,
+        wahBypass: parameterService.getParameter('wahBypass').value,
+      ).stream,
+    );
+  },
+);
 
 class PresetsService extends StateNotifier<PresetsState>
     implements PresetsServiceBase {
@@ -136,5 +176,110 @@ class PresetsService extends StateNotifier<PresetsState>
     unawaited(_subscription.cancel());
     unawaited(_presetsSubscription.cancel());
     unawaited(_selectedPresetSubscription.cancel());
+  }
+}
+
+class _ParametersMergeStream {
+  _ParametersMergeStream({
+    required this.ampGain,
+    required this.ampChannel,
+    required this.bass,
+    required this.middle,
+    required this.treble,
+    required this.contour,
+    required this.volume,
+    required this.noiseGateThreshold,
+    required this.noiseGateHysteresis,
+    required this.noiseGateAttack,
+    required this.noiseGateHold,
+    required this.noiseGateRelease,
+    required this.noiseGateBypass,
+    required this.chorusRate,
+    required this.chorusDepth,
+    required this.chorusMix,
+    required this.chorusBypass,
+    required this.wahPosition,
+    required this.wahVocal,
+    required this.wahBypass,
+  }) {
+    _controller =
+        BehaviorSubject<PresetParametersData>.seeded(getParametersState());
+
+    void updateState() {
+      _controller.add(getParametersState());
+    }
+
+    ampGain.listen((_) => updateState());
+    ampChannel.listen((_) => updateState());
+    bass.listen((_) => updateState());
+    middle.listen((_) => updateState());
+    treble.listen((_) => updateState());
+    contour.listen((_) => updateState());
+    volume.listen((_) => updateState());
+    noiseGateThreshold.listen((_) => updateState());
+    noiseGateHysteresis.listen((_) => updateState());
+    noiseGateAttack.listen((_) => updateState());
+    noiseGateHold.listen((_) => updateState());
+    noiseGateRelease.listen((_) => updateState());
+    noiseGateBypass.listen((_) => updateState());
+    chorusRate.listen((_) => updateState());
+    chorusDepth.listen((_) => updateState());
+    chorusMix.listen((_) => updateState());
+    chorusBypass.listen((_) => updateState());
+    wahPosition.listen((_) => updateState());
+    wahVocal.listen((_) => updateState());
+    wahBypass.listen((_) => updateState());
+  }
+
+  late final BehaviorSubject<PresetParametersData> _controller;
+
+  final ValueStream<double> ampGain;
+  final ValueStream<double> ampChannel;
+  final ValueStream<double> bass;
+  final ValueStream<double> middle;
+  final ValueStream<double> treble;
+  final ValueStream<double> contour;
+  final ValueStream<double> volume;
+  final ValueStream<double> noiseGateThreshold;
+  final ValueStream<double> noiseGateHysteresis;
+  final ValueStream<double> noiseGateAttack;
+  final ValueStream<double> noiseGateHold;
+  final ValueStream<double> noiseGateRelease;
+  final ValueStream<double> noiseGateBypass;
+  final ValueStream<double> chorusRate;
+  final ValueStream<double> chorusDepth;
+  final ValueStream<double> chorusMix;
+  final ValueStream<double> chorusBypass;
+  final ValueStream<double> wahPosition;
+  final ValueStream<double> wahVocal;
+  final ValueStream<double> wahBypass;
+
+  ValueStream<PresetParametersData> get stream => _controller.stream;
+
+  PresetParametersData getParametersState() {
+    final parameters = PresetParametersData(
+      ampGain: ampGain.value,
+      ampChannel: ampChannel.value,
+      bass: bass.value,
+      middle: middle.value,
+      treble: treble.value,
+      contour: contour.value,
+      volume: volume.value,
+      noiseGateThreshold: noiseGateThreshold.value,
+      noiseGateHysteresis: noiseGateHysteresis.value,
+      noiseGateAttack: noiseGateAttack.value,
+      noiseGateHold: noiseGateHold.value,
+      noiseGateRelease: noiseGateRelease.value,
+      noiseGateBypass: noiseGateBypass.value,
+      chorusRate: chorusRate.value,
+      chorusDepth: chorusDepth.value,
+      chorusMix: chorusMix.value,
+      chorusBypass: chorusBypass.value,
+      wahPosition: wahPosition.value,
+      wahVocal: wahVocal.value,
+      wahBypass: wahBypass.value,
+    );
+
+    return parameters;
   }
 }
