@@ -20,6 +20,7 @@
 import 'dart:async';
 
 import 'package:flutter/widgets.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logging/logging.dart';
 import 'package:rxdart/rxdart.dart';
@@ -89,6 +90,12 @@ sealed class ParameterServiceInputMessage with _$ParameterServiceInputMessage {
     required double value,
   }) = ParameterServiceInputMessageParameterUpdate;
 }
+
+final parameterTransportProvider = Provider(
+  (ref) => ParameterTransport(
+    websocket: ref.read(apiWebsocketProvider),
+  ),
+);
 
 class ParameterTransport
     implements

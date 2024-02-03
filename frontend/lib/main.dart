@@ -104,13 +104,11 @@ class App extends riverpod.ConsumerWidget {
   App({
     super.key,
     this.provisioning,
-    this.parameterTransport,
     this.presetsRepository,
     this.parameterService,
     this.selectedPresetRepository,
   });
 
-  final ParameterTransport? parameterTransport;
   final WifiProvisioningService? provisioning;
   final PresetsRepositoryBase? presetsRepository;
   final ParameterService? parameterService;
@@ -149,13 +147,9 @@ class App extends riverpod.ConsumerWidget {
         ChangeNotifierProvider.value(
           value: ref.watch(midiMappingServiceProvider),
         ),
-        if (parameterTransport != null)
-          Provider.value(value: parameterTransport!)
-        else
-          Provider(
-            create: (context) =>
-                ParameterTransport(websocket: context.read<ApiWebsocket>()),
-          ),
+        Provider.value(
+          value: ref.watch(parameterTransportProvider),
+        ),
         if (parameterService != null)
           ChangeNotifierProvider.value(
             value: parameterService!,

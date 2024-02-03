@@ -231,9 +231,9 @@ void main() {
         overrides: [
           robustWebsocketProvider.overrideWith((_, __) => websocket),
           apiWebsocketProvider.overrideWith((_) => apiWebsocket),
+          parameterTransportProvider.overrideWith((_) => parameterTransport),
         ],
         child: App(
-          parameterTransport: parameterTransport,
           presetsRepository: presetsRepository,
           selectedPresetRepository: selectedPresetRepository,
         ),
