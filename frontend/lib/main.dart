@@ -131,12 +131,8 @@ class App extends riverpod.ConsumerWidget {
               },
             ),
           ),
-        Provider.value(value: ref.watch(midiMappingTransportProvider)),
         ChangeNotifierProvider.value(
           value: ref.watch(midiMappingServiceProvider),
-        ),
-        Provider.value(
-          value: ref.watch(parameterTransportProvider),
         ),
         ChangeNotifierProvider.value(
           value: ref.watch(parameterServiceProvider),
