@@ -145,10 +145,7 @@ class App extends riverpod.ConsumerWidget {
               },
             ),
           ),
-        Provider(
-          create: (context) =>
-              MidiMappingTransport(websocket: context.read<ApiWebsocket>()),
-        ),
+        Provider.value(value: ref.watch(midiMappingTransportProvider)),
         ChangeNotifierProvider(
           create: (context) => MidiMappingService(
             websocket: context.read<MidiMappingTransport>(),

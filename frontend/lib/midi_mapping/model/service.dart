@@ -21,6 +21,7 @@ import 'dart:async';
 import 'dart:collection';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logging/logging.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -30,6 +31,12 @@ import '../../core/stream_extensions.dart';
 import '../model/models.dart';
 
 final _log = Logger('midi_mapping_service');
+
+final midiMappingTransportProvider = Provider(
+  (ref) => MidiMappingTransport(
+    websocket: ref.read(apiWebsocketProvider),
+  ),
+);
 
 class MidiMappingTransport
     implements MessageTransport<MidiApiMessage, MidiApiMessage> {
