@@ -19,6 +19,8 @@
 
 import 'dart:async';
 
+import 'package:flutter/widgets.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logging/logging.dart';
 import 'package:rxdart/rxdart.dart';
@@ -61,10 +63,10 @@ sealed class ApiMessage with _$ApiMessage {
   }) = ApiMessageSelectedPreset;
 }
 
+final apiWebsocketProvider = Provider(ApiWebsocket.new);
+
 class ApiWebsocket {
-  ApiWebsocket({
-    required RobustWebsocket websocket,
-  }) : _websocket = websocket;
+  ApiWebsocket(Ref ref) : _websocket = ref.read(robustWebsocketProvider(Uri.parse('http://guitar-dsp.local:8080/websocket')));
 
   final RobustWebsocket _websocket;
 

@@ -103,7 +103,6 @@ void setupLogger(Level level) {
 class App extends riverpod.ConsumerWidget {
   App({
     super.key,
-    this.apiWebsocket,
     this.provisioning,
     this.parameterTransport,
     this.presetsRepository,
@@ -111,7 +110,6 @@ class App extends riverpod.ConsumerWidget {
     this.selectedPresetRepository,
   });
 
-  final ApiWebsocket? apiWebsocket;
   final ParameterTransport? parameterTransport;
   final WifiProvisioningService? provisioning;
   final PresetsRepositoryBase? presetsRepository;
@@ -129,14 +127,7 @@ class App extends riverpod.ConsumerWidget {
             ),
           ),
         ),
-        if (apiWebsocket != null)
-          Provider.value(value: apiWebsocket!)
-        else
-          Provider(
-            create: (context) => ApiWebsocket(
-              websocket: context.read<RobustWebsocket>(),
-            ),
-          ),
+        Provider.value(value: ref.watch(apiWebsocketProvider)),
         ChangeNotifierProvider(
           create: (context) => AudioClippingService(
             stream: context
@@ -215,7 +206,7 @@ class App extends riverpod.ConsumerWidget {
         if (presetsRepository != null)
           Provider.value(value: presetsRepository!)
         else
-          Provider(
+          Provider<PresetsRepositoryBase>(
             create: (context) => PresetsRepository(
               client: context.read<presets_client.PresetsClient>(),
             ),
@@ -233,7 +224,7 @@ class App extends riverpod.ConsumerWidget {
         if (selectedPresetRepository != null)
           Provider.value(value: selectedPresetRepository!)
         else
-          Provider(
+          Provider<SelectedPresetRepositoryBase>(
             create: (context) => SelectedPresetRepository(
               client: context.read<SelectedPresetClient>(),
             ),
@@ -276,9 +267,9 @@ class App extends riverpod.ConsumerWidget {
           create: (context) {
             final parameterService = context.read<ParameterService>();
             return PresetsService(
-              presetsRepository: context.read<PresetsRepository>(),
+              presetsRepository: context.read<PresetsRepositoryBase>(),
               selectedPresetRepository:
-                  context.read<SelectedPresetRepository>(),
+                  context.read<SelectedPresetRepositoryBase>(),
               parametersState: ParametersMergeStream(
                 ampGain: parameterService.getParameter('ampGain').value,
                 ampChannel: parameterService.getParameter('ampChannel').value,

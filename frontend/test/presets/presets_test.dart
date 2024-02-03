@@ -21,6 +21,7 @@ import 'dart:async';
 import 'dart:collection';
 import 'dart:ui';
 
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:logging/logging.dart';
 import 'package:mockito/annotations.dart';
@@ -45,9 +46,7 @@ final _log = Logger('presets_test');
     MockSpec<RobustWebsocket>(),
     MockSpec<ApiWebsocket>(),
     MockSpec<AudioClippingService>(),
-    MockSpec<
-        MessageTransport<ParameterServiceOutputMessage,
-            ParameterServiceInputMessage>>(),
+    MockSpec<ParameterTransport>(),
     MockSpec<PresetsRepositoryBase>(),
     MockSpec<SelectedPresetRepositoryBase>(),
   ],
@@ -82,7 +81,7 @@ void main() {
         'wahVocal': 1.0,
         'wahBypass': 0.1,
       };
-      final parameterTransport = MockMessageTransport();
+      final parameterTransport = MockParameterTransport();
       final parameterController =
           StreamController<ParameterServiceInputMessage>();
       // FIXME: see end of test
@@ -229,12 +228,16 @@ void main() {
           .thenAnswer((_) => const Stream.empty());
       when(apiWebsocket.isAlive).thenReturn(true);
 
-      final sut = App(
-        websocket: websocket,
-        apiWebsocket: apiWebsocket,
-        parameterTransport: parameterTransport,
-        presetsRepository: presetsRepository,
-        selectedPresetRepository: selectedPresetRepository,
+      final sut = ProviderScope(
+        overrides: [
+          robustWebsocketProvider.overrideWith((_, __) => websocket),
+          apiWebsocketProvider.overrideWith((_) => apiWebsocket),
+        ],
+        child: App(
+          parameterTransport: parameterTransport,
+          presetsRepository: presetsRepository,
+          selectedPresetRepository: selectedPresetRepository,
+        ),
       );
 
       await tester.pumpWidget(sut);

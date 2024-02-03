@@ -20,6 +20,7 @@
 import 'package:esp_softap_provisioning/esp_softap_provisioning.dart';
 import 'package:esp_softap_provisioning/src/connection_models.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
@@ -58,10 +59,12 @@ void main() {
 
   setUp(() async {
     websocket = MockRobustWebsocket();
-    sut = App(
-      websocket: websocket,
-      provisioning: WifiProvisioningService(
-        provisioningFactory: provisioningFactoryWrapper,
+    sut = ProviderScope(
+      overrides: [robustWebsocketProvider.overrideWith((_, __) => websocket)],
+      child: App(
+        provisioning: WifiProvisioningService(
+          provisioningFactory: provisioningFactoryWrapper,
+        ),
       ),
     );
   });

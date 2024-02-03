@@ -47,10 +47,11 @@ void main() {
     when(api.isAlive).thenReturn(true);
 
     final sut = ProviderScope(
-      overrides: [robustWebsocketProvider.overrideWith((_, __) => websocket)],
-      child: App(
-        apiWebsocket: api,
-      ),
+      overrides: [
+        robustWebsocketProvider.overrideWith((_, __) => websocket),
+        apiWebsocketProvider.overrideWith((_) => api),
+      ],
+      child: App(),
     );
 
     const getRequest =
@@ -127,10 +128,11 @@ void main() {
       when(api.isAlive).thenReturn(true);
 
       final sut = ProviderScope(
-        overrides: [robustWebsocketProvider.overrideWith((_, __) => websocket)],
-        child: App(
-          apiWebsocket: api,
-        ),
+        overrides: [
+          robustWebsocketProvider.overrideWith((_, __) => websocket),
+          apiWebsocketProvider.overrideWith((_) => api),
+        ],
+        child: App(),
       );
 
       await tester.pumpWidget(sut);
@@ -218,10 +220,9 @@ void main() {
         ProviderScope(
           overrides: [
             robustWebsocketProvider.overrideWith((_, __) => websocket),
+            apiWebsocketProvider.overrideWith((_) => api),
           ],
-          child: App(
-            apiWebsocket: api,
-          ),
+          child: App(),
         ),
       );
 
@@ -355,10 +356,9 @@ void main() {
         ProviderScope(
           overrides: [
             robustWebsocketProvider.overrideWith((_, __) => websocket),
+            apiWebsocketProvider.overrideWith((_) => api),
           ],
-          child: App(
-            apiWebsocket: api,
-          ),
+          child: App(),
         ),
       );
 
@@ -399,10 +399,11 @@ void main() {
       when(api.isAlive).thenReturn(true);
 
       final sut = ProviderScope(
-        overrides: [robustWebsocketProvider.overrideWith((_, __) => websocket)],
-        child: App(
-          apiWebsocket: api,
-        ),
+        overrides: [
+          robustWebsocketProvider.overrideWith((_, __) => websocket),
+          apiWebsocketProvider.overrideWith((_) => api),
+        ],
+        child: App(),
       );
 
       final homePageObject = HomePageObject(tester);
@@ -523,10 +524,9 @@ void main() {
         ProviderScope(
           overrides: [
             robustWebsocketProvider.overrideWith((_, __) => websocket),
+            apiWebsocketProvider.overrideWith((_) => api),
           ],
-          child: App(
-            apiWebsocket: api,
-          ),
+          child: App(),
         ),
       );
 
