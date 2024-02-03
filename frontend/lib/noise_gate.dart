@@ -20,49 +20,18 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'parameter.dart';
 import 'stompbox.dart';
 
 class NoiseGateModel extends StompboxModel {
-  NoiseGateModel({required ParameterService parameterService})
+  NoiseGateModel()
       : parameters = [
-          AudioParameterDoubleModel(
-            groupName: _name,
-            name: 'Attack',
-            id: 'noiseGateAttack',
-            parameterService: parameterService,
-          ),
-          AudioParameterDoubleModel(
-            groupName: _name,
-            name: 'Hold',
-            id: 'noiseGateHold',
-            parameterService: parameterService,
-          ),
-          AudioParameterDoubleModel(
-            groupName: _name,
-            name: 'Hysteresis',
-            id: 'noiseGateHysteresis',
-            parameterService: parameterService,
-          ),
-          AudioParameterDoubleModel(
-            groupName: _name,
-            name: 'Release',
-            id: 'noiseGateRelease',
-            parameterService: parameterService,
-          ),
-          AudioParameterDoubleModel(
-            groupName: _name,
-            name: 'Threshold',
-            id: 'noiseGateThreshold',
-            parameterService: parameterService,
-          ),
+          'noiseGateAttack',
+          'noiseGateHold',
+          'noiseGateHysteresis',
+          'noiseGateRelease',
+          'noiseGateThreshold',
         ],
-        bypass = AudioParameterDoubleModel(
-          groupName: _name,
-          name: 'Bypass',
-          id: 'noiseGateBypass',
-          parameterService: parameterService,
-        );
+        bypass = 'noiseGateBypass';
 
   static const _name = 'Noise Gate';
 
@@ -70,10 +39,10 @@ class NoiseGateModel extends StompboxModel {
   String get name => _name;
 
   @override
-  final List<AudioParameterDoubleModel> parameters;
+  final List<String> parameters;
 
   @override
-  AudioParameterDoubleModel bypass;
+  final String bypass;
 }
 
 class NoiseGate extends StatelessWidget {

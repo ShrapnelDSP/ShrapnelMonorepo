@@ -20,37 +20,16 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'parameter.dart';
 import 'stompbox.dart';
 
 class TubeScreamerModel extends StompboxModel {
-  TubeScreamerModel({required ParameterService parameterService})
+  TubeScreamerModel()
       : parameters = [
-          AudioParameterDoubleModel(
-            groupName: _name,
-            name: 'DRIVE',
-            id: 'tubeScreamerDrive',
-            parameterService: parameterService,
-          ),
-          AudioParameterDoubleModel(
-            groupName: _name,
-            name: 'TONE',
-            id: 'tubeScreamerTone',
-            parameterService: parameterService,
-          ),
-          AudioParameterDoubleModel(
-            groupName: _name,
-            name: 'LEVEL',
-            id: 'tubeScreamerLevel',
-            parameterService: parameterService,
-          ),
+          'tubeScreamerDrive',
+          'tubeScreamerTone',
+          'tubeScreamerLevel',
         ],
-        bypass = AudioParameterDoubleModel(
-          groupName: _name,
-          name: 'Bypass',
-          id: 'tubeScreamerBypass',
-          parameterService: parameterService,
-        );
+        bypass = 'tubeScreamerBypass';
 
   static const _name = 'Tube Screamer';
 
@@ -58,10 +37,10 @@ class TubeScreamerModel extends StompboxModel {
   String get name => _name;
 
   @override
-  final List<AudioParameterDoubleModel> parameters;
+  final List<String> parameters;
 
   @override
-  AudioParameterDoubleModel bypass;
+  final String bypass;
 }
 
 class TubeScreamer extends StatelessWidget {

@@ -18,26 +18,32 @@
  */
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:provider/provider.dart';
 
 import 'knob.dart';
 import 'midi_mapping/model/midi_learn_state.dart';
 import 'parameter.dart';
+import 'parameters_meta.dart';
 
-class KnobWithLabel extends StatelessWidget {
+class KnobWithLabel extends ConsumerWidget {
   const KnobWithLabel({
     super.key,
+    required this.parameterId,
     required this.isEnabled,
     required this.knobSize,
   });
 
+  final String parameterId;
   final bool isEnabled;
   final double knobSize;
 
   @override
-  Widget build(BuildContext context) {
-    final value = context.watch<double>();
-    final parameter = context.read<AudioParameterDoubleModel>();
+  Widget build(BuildContext context, WidgetRef ref) {
+    final value =
+        ref.watch(audioParameterDoubleModelProvider(parameterId)).value ?? 0.5;
+    final parameter =
+        ref.read(audioParameterDoubleModelProvider(parameterId).notifier);
     final learningState = context.watch<MidiLearnState>();
 
     return Column(
@@ -46,7 +52,7 @@ class KnobWithLabel extends StatelessWidget {
         AnimatedTheme(
           data: Theme.of(context).copyWith(
             colorScheme: learningState.maybeWhen(
-              waitForMidi: (id) => id == parameter.id
+              waitForMidi: (id) => id == parameterId
                   ? Theme.of(context)
                       .colorScheme
                       .copyWith(primary: Colors.white)
@@ -55,7 +61,7 @@ class KnobWithLabel extends StatelessWidget {
             ),
           ),
           child: Knob(
-            key: Key('knob-${parameter.id}'),
+            key: Key('knob-$parameterId'),
             onChanged: isEnabled ? parameter.onUserChanged : (_) {},
             value: value,
             size: knobSize,
@@ -64,7 +70,7 @@ class KnobWithLabel extends StatelessWidget {
         if (isEnabled) const SizedBox(height: 5),
         if (isEnabled)
           Text(
-            parameter.name,
+            ref.watch(audioParameterMetadataProvider(parameterId)).name,
             textAlign: TextAlign.center,
           ),
       ],

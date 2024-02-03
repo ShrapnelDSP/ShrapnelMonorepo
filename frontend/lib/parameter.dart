@@ -23,12 +23,15 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logging/logging.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:rxdart/rxdart.dart';
 
 import 'api/api_websocket.dart';
 import 'core/message_transport.dart';
 
 part 'parameter.freezed.dart';
+
+part 'parameter.g.dart';
 
 final _log = Logger('shrapnel.parameter');
 
@@ -40,35 +43,28 @@ class AudioParameterDoubleData with _$AudioParameterDoubleData {
   }) = _AudioParameterDoubleData;
 }
 
-class AudioParameterDoubleModel {
-  AudioParameterDoubleModel({
-    required this.groupName,
-    required this.name,
-    required this.id,
-    required this.parameterService,
-  }) {
-    parameterService.registerParameter(this);
+@freezed
+class AudioParameterMetaData with _$AudioParameterMetaData {
+  const factory AudioParameterMetaData({
+    required String groupName,
+    required String name,
+    required String id,
+  }) = _AudioParameterMetaData;
+}
+
+@riverpod
+class AudioParameterDoubleModel extends _$AudioParameterDoubleModel {
+  @override
+  Stream<double> build(String parameterId) {
+    return ref.watch(parameterServiceProvider).getParameter(parameterId);
   }
-
-  final _controller = BehaviorSubject<double>.seeded(0.5);
-
-  final String groupName;
-  final String name;
-  final String id;
-  final ParameterService parameterService;
 
   void onUserChanged(double value) {
-    _log.finest('user updated parameter $id to $value');
-    _controller.add(value);
-    parameterService
-        .parameterUpdatedByUser(AudioParameterDoubleData(value: value, id: id));
+    _log.finest('user updated parameter $parameterId to $value');
+    ref.read(parameterServiceProvider).parameterUpdatedByUser(
+          AudioParameterDoubleData(value: value, id: parameterId),
+        );
   }
-
-  void setValue(double value) {
-    _controller.add(value);
-  }
-
-  ValueStream<double> get value => _controller;
 }
 
 @freezed
@@ -169,26 +165,19 @@ class ParameterService extends ChangeNotifier {
 
   final _parameterUpdatesController =
       StreamController<AudioParameterDoubleData>();
+
+  /// Parameter updates performed by the user through the GUI
   late final Stream<AudioParameterDoubleData> parameterUpdates =
       _parameterUpdatesController.stream;
   final _sink = StreamController<ParameterServiceOutputMessage>.broadcast();
 
-  final _parameters = <String, AudioParameterDoubleModel>{};
+  final _parameters = <String, StreamController<double>>{};
 
   final MessageTransport<ParameterServiceOutputMessage,
       ParameterServiceInputMessage> _transport;
 
-  void registerParameter(AudioParameterDoubleModel parameter) {
-    assert(!_parameters.containsKey(parameter.id));
-    _parameters[parameter.id] = parameter;
-  }
-
-  AudioParameterDoubleModel getParameter(String parameterId) {
-    if (!_parameters.containsKey(parameterId)) {
-      throw StateError('Invalid parameter id: $parameterId');
-    }
-
-    return _parameters[parameterId]!;
+  Stream<double> getParameter(String parameterId) {
+    return _parameters.putIfAbsent(parameterId, StreamController.new).stream;
   }
 
   void _handleIncomingMessage(ParameterServiceInputMessage message) {
@@ -202,14 +191,8 @@ class ParameterService extends ChangeNotifier {
           return;
         }
 
-        _parameters[id]!.setValue(value);
+        _parameters[id]!.add(value);
     }
-  }
-
-  Map<String, String> get parameterNames {
-    return _parameters.map(
-      (id, param) => MapEntry(id, '${param.groupName}: ${param.name}'),
-    );
   }
 
   @override
@@ -220,6 +203,7 @@ class ParameterService extends ChangeNotifier {
   }
 
   void parameterUpdatedByUser(AudioParameterDoubleData parameter) {
+    _parameters[parameter.id]!.add(parameter.value);
     _parameterUpdatesController.add(parameter);
     _sink.add(
       ParameterServiceOutputMessage.parameterUpdate(

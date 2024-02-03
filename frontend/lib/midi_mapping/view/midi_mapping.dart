@@ -20,9 +20,10 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:provider/provider.dart';
 
-import '../../parameter.dart';
+import '../../parameters_meta.dart';
 import '../../presets/model/presets.dart';
 import '../model/models.dart';
 import '../model/service.dart';
@@ -256,16 +257,16 @@ class MidiMappingPage extends StatelessWidget {
   }
 }
 
-class CreateMappingDialog extends StatefulWidget {
+class CreateMappingDialog extends ConsumerStatefulWidget {
   const CreateMappingDialog({super.key});
 
   @override
-  State<StatefulWidget> createState() {
+  ConsumerState<CreateMappingDialog> createState() {
     return CreateMappingDialogState();
   }
 }
 
-class CreateMappingDialogState extends State<CreateMappingDialog> {
+class CreateMappingDialogState extends ConsumerState<CreateMappingDialog> {
   final _formKey = GlobalKey<FormState>();
   int? channel;
   int? ccNumber;
@@ -275,7 +276,7 @@ class CreateMappingDialogState extends State<CreateMappingDialog> {
 
   @override
   Widget build(BuildContext context) {
-    final parameters = context.read<ParameterService>().parameterNames;
+    final parameters = ref.read(parameterNamesProvider);
     final presets = context.watch<PresetsState>();
     final mappings = context.read<MidiMappingService>();
 
@@ -445,7 +446,7 @@ class CreateMappingDialogState extends State<CreateMappingDialog> {
   }
 }
 
-class EditMappingDialog extends StatefulWidget {
+class EditMappingDialog extends ConsumerStatefulWidget {
   const EditMappingDialog({
     super.key,
     required this.mapping,
@@ -465,12 +466,12 @@ class EditMappingDialog extends StatefulWidget {
   final String? parameterId;
 
   @override
-  State<StatefulWidget> createState() {
+  ConsumerState<EditMappingDialog> createState() {
     return EditMappingDialogState();
   }
 }
 
-class EditMappingDialogState extends State<EditMappingDialog> {
+class EditMappingDialogState extends ConsumerState<EditMappingDialog> {
   final _formKey = GlobalKey<FormState>();
   int? channel;
   int? ccNumber;
@@ -509,7 +510,7 @@ class EditMappingDialogState extends State<EditMappingDialog> {
 
   @override
   Widget build(BuildContext context) {
-    final parameters = context.read<ParameterService>().parameterNames;
+    final parameters = ref.read(parameterNamesProvider);
     final presets = context.watch<PresetsState>();
     final mappings = context.read<MidiMappingService>();
 
@@ -755,7 +756,7 @@ class ModeDropdown extends StatelessWidget {
   }
 }
 
-class ParametersDropdown extends StatelessWidget {
+class ParametersDropdown extends ConsumerWidget {
   const ParametersDropdown({
     required this.value,
     required this.onChanged,
@@ -766,8 +767,8 @@ class ParametersDropdown extends StatelessWidget {
   final void Function(String?) onChanged;
 
   @override
-  Widget build(BuildContext context) {
-    final parameters = context.read<ParameterService>().parameterNames;
+  Widget build(BuildContext context, WidgetRef ref) {
+    final parameters = ref.read(parameterNamesProvider);
 
     return DropdownButton<String>(
       items: [

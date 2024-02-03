@@ -30,7 +30,10 @@ class WebSocketStatusModel extends _$WebSocketStatusModel {
   WebSocketStatusData build() {
     return WebSocketStatusData(
       // TODO clean up URI duplication
-      isConnected: ref.watch(robustWebsocketProvider(Uri.parse('http://guitar-dsp.local:8080/websocket'))).isAlive,
+      isConnected: ref
+          .watch(robustWebsocketProvider(
+              Uri.parse('http://guitar-dsp.local:8080/websocket')))
+          .isAlive,
     );
   }
 }

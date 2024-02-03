@@ -22,11 +22,11 @@ import 'package:provider/provider.dart';
 import 'package:rxdart/rxdart.dart';
 
 import 'knob_with_label.dart';
-import 'parameter.dart';
 
 abstract class AmplifierModel {
   String get name;
-  List<AudioParameterDoubleModel> get parameters;
+
+  List<String> get parameters;
 }
 
 class Amplifier extends StatelessWidget {
@@ -47,11 +47,10 @@ class Amplifier extends StatelessWidget {
 
     for (var i = 0; i < parameters.length; i++) {
       knobs.add(
-        parameters[i].provider(
-          child: KnobWithLabel(
-            isEnabled: full,
-            knobSize: scaleFactor * 25,
-          ),
+        KnobWithLabel(
+          isEnabled: full,
+          knobSize: scaleFactor * 25,
+          parameterId: parameters[i],
         ),
       );
       if (i < parameters.length - 1) {
@@ -98,28 +97,6 @@ extension ProviderEx<T> on ValueStream<T> {
       lazy: lazy,
       builder: builder,
       child: child,
-    );
-  }
-}
-
-extension ParameterProviderEx on AudioParameterDoubleModel {
-  Widget provider({
-    Key? key,
-    ErrorBuilder<double>? catchError,
-    UpdateShouldNotify<double>? updateShouldNotify,
-    bool? lazy,
-    TransitionBuilder? builder,
-    Widget? child,
-  }) {
-    return Provider.value(
-      value: this,
-      child: value.provider(
-        key: key,
-        updateShouldNotify: updateShouldNotify,
-        lazy: lazy,
-        builder: builder,
-        child: child,
-      ),
     );
   }
 }

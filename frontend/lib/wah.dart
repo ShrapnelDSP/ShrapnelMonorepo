@@ -24,27 +24,13 @@ import 'parameter.dart';
 import 'stompbox.dart';
 
 class WahModel extends StompboxModel {
+  // ignore: avoid_unused_constructor_parameters
   WahModel({required ParameterService parameterService})
       : parameters = [
-          AudioParameterDoubleModel(
-            groupName: _name,
-            name: 'Position',
-            id: 'wahPosition',
-            parameterService: parameterService,
-          ),
-          AudioParameterDoubleModel(
-            groupName: _name,
-            name: 'Vocal',
-            id: 'wahVocal',
-            parameterService: parameterService,
-          ),
+          'wahPosition',
+          'wahVocal',
         ],
-        bypass = AudioParameterDoubleModel(
-          groupName: _name,
-          name: 'Bypass',
-          id: 'wahBypass',
-          parameterService: parameterService,
-        );
+        bypass = 'wahBypass';
 
   static const _name = 'Wah';
 
@@ -52,10 +38,10 @@ class WahModel extends StompboxModel {
   String get name => _name;
 
   @override
-  final AudioParameterDoubleModel bypass;
+  final String bypass;
 
   @override
-  List<AudioParameterDoubleModel> parameters;
+  final List<String> parameters;
 }
 
 class Wah extends StatelessWidget {

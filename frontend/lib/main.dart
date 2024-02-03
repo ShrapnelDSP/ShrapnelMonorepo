@@ -149,32 +149,23 @@ class App extends riverpod.ConsumerWidget {
         Provider.value(value: ref.watch(presetsRepositoryProvider)),
         Provider.value(value: ref.watch(selectedPresetRepositoryProvider)),
         Provider(
-          create: (context) =>
-              ChorusModel(parameterService: context.read<ParameterService>()),
+          create: (context) => ChorusModel(),
           lazy: false,
         ),
         Provider(
-          create: (context) => HeavyMetalModel(
-            parameterService: context.read<ParameterService>(),
-          ),
+          create: (context) => HeavyMetalModel(),
           lazy: false,
         ),
         Provider(
-          create: (context) => NoiseGateModel(
-            parameterService: context.read<ParameterService>(),
-          ),
+          create: (context) => NoiseGateModel(),
           lazy: false,
         ),
         Provider(
-          create: (context) => TubeScreamerModel(
-            parameterService: context.read<ParameterService>(),
-          ),
+          create: (context) => TubeScreamerModel(),
           lazy: false,
         ),
         Provider(
-          create: (context) => ValvestateModel(
-            parameterService: context.read<ParameterService>(),
-          ),
+          create: (context) => ValvestateModel(),
           lazy: false,
         ),
         Provider(
@@ -183,7 +174,9 @@ class App extends riverpod.ConsumerWidget {
           lazy: false,
         ),
         Provider.value(value: ref.watch(presetsServiceProvider)),
-        Provider.value(value: ref.watch(presetsServiceProvider.notifier)),
+        Provider<PresetsServiceBase>.value(
+          value: ref.watch(presetsServiceProvider.notifier),
+        ),
       ],
       child: const MyApp(),
     );
