@@ -19,12 +19,10 @@
 
 import 'dart:async';
 
-import 'package:esp_softap_provisioning/esp_softap_provisioning.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart' as riverpod;
 import 'package:google_fonts/google_fonts.dart';
 import 'package:logging/logging.dart';
-import 'package:provider/provider.dart';
 
 import 'audio_events.dart';
 import 'midi_mapping/model/midi_learn.dart';
@@ -36,8 +34,6 @@ import 'presets/model/presets_service.dart';
 import 'presets/view/presets.dart';
 import 'status/view/websocket_status.dart';
 import 'wifi_provisioning.dart';
-
-final _log = Logger('shrapnel.main');
 
 String formatDateTime(DateTime t) {
   final builder = StringBuffer()
@@ -83,34 +79,11 @@ void setupLogger(Level level) {
 }
 
 class App extends riverpod.ConsumerWidget {
-  App({
-    super.key,
-    this.provisioning,
-  });
-
-  final WifiProvisioningService? provisioning;
+  App({super.key});
 
   @override
   Widget build(BuildContext context, riverpod.WidgetRef ref) {
-    return MultiProvider(
-      providers: [
-        if (provisioning != null)
-          ChangeNotifierProvider.value(value: provisioning!)
-        else
-          ChangeNotifierProvider(
-            create: (context) => WifiProvisioningService(
-              provisioningFactory: () {
-                _log.info('Creating provisioning connection');
-                return Provisioning(
-                  security: Security1(pop: 'abcd1234'),
-                  transport: TransportHTTP('guitar-dsp.local'),
-                );
-              },
-            ),
-          ),
-      ],
-      child: const MyApp(),
-    );
+    return const MyApp();
   }
 }
 

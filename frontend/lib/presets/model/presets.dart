@@ -17,8 +17,8 @@
  * ShrapnelDSP. If not, see <https://www.gnu.org/licenses/>.
  */
 
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:state_notifier/state_notifier.dart';
 
 part 'presets.freezed.dart';
 

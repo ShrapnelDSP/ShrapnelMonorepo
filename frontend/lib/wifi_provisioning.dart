@@ -25,8 +25,8 @@ import 'package:esp_softap_provisioning/esp_softap_provisioning.dart';
 // ignore: implementation_imports
 import 'package:esp_softap_provisioning/src/connection_models.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logging/logging.dart';
-import 'package:provider/provider.dart';
 
 class _Strings {
   static const initialMessage =
@@ -78,18 +78,18 @@ class _WifiPasswordDialogState extends State<_WifiPasswordDialog> {
     super.dispose();
   }
 
-  void submitWifiPassword(BuildContext context) {
+  void submitWifiPassword(WidgetRef ref) {
     if (_formKey.currentState!.validate()) {
-      final provisioning =
-          Provider.of<WifiProvisioningService>(context, listen: false);
+      final provisioning = ref.read(provisioningProvider);
       unawaited(provisioning.join(null, _controller.value.text));
       Navigator.pop(context);
     }
   }
 
   @override
-  Widget build(BuildContext context) => Consumer<WifiProvisioningService>(
-        builder: (context, provisioning, _) {
+  Widget build(BuildContext context) => Consumer(
+        builder: (_, ref, __) {
+          final provisioning = ref.watch(provisioningProvider);
           final screenWidth = MediaQuery.of(context).size.width;
           const dialogWidth = 300;
           var insets = (screenWidth - dialogWidth) / 2;
@@ -120,7 +120,7 @@ class _WifiPasswordDialogState extends State<_WifiPasswordDialog> {
                     ElevatedButton(
                       key: const Key('password submit button'),
                       onPressed: () {
-                        submitWifiPassword(context);
+                        submitWifiPassword(ref);
                       },
                       child: const Text(_Strings.wifiPasswordSubmitButtonText),
                     ),
@@ -223,8 +223,9 @@ class _WifiDialogState extends State<_WifiDialog> {
   }
 
   @override
-  Widget build(BuildContext context) => Consumer<WifiProvisioningService>(
-        builder: (context, provisioning, _) {
+  Widget build(BuildContext context) => Consumer(
+        builder: (context, ref, _) {
+          final provisioning = ref.read(provisioningProvider);
           final screenWidth = MediaQuery.of(context).size.width;
           const dialogWidth = 300;
           var insets = (screenWidth - dialogWidth) / 2;
@@ -289,15 +290,10 @@ class _WifiDialogState extends State<_WifiDialog> {
       );
 }
 
-class _WifiScanningScreen extends StatefulWidget {
+class _WifiScanningScreen extends ConsumerWidget {
   @override
-  State<StatefulWidget> createState() => _WifiScanningScreenState();
-}
-
-class _WifiScanningScreenState extends State<_WifiScanningScreen> {
-  @override
-  Widget build(BuildContext context) {
-    final provisioning = Provider.of<WifiProvisioningService>(context);
+  Widget build(BuildContext context, WidgetRef ref) {
+    final provisioning = ref.read(provisioningProvider);
 
     final accessPointCount = provisioning.accessPoints?.length ?? 0;
 
@@ -353,11 +349,7 @@ class _WifiScanningScreenState extends State<_WifiScanningScreen> {
                         unawaited(
                           showDialog<void>(
                             context: context,
-                            builder: (context) => ChangeNotifierProvider<
-                                WifiProvisioningService>.value(
-                              value: provisioning,
-                              child: _WifiPasswordDialog(),
-                            ),
+                            builder: (context) => _WifiPasswordDialog(),
                           ),
                         );
                       },
@@ -371,11 +363,7 @@ class _WifiScanningScreenState extends State<_WifiScanningScreen> {
                 unawaited(
                   showDialog<void>(
                     context: context,
-                    builder: (context) =>
-                        ChangeNotifierProvider<WifiProvisioningService>.value(
-                      value: provisioning,
-                      child: _WifiDialog(),
-                    ),
+                    builder: (context) => _WifiDialog(),
                   ),
                 );
               },
@@ -395,10 +383,10 @@ class _WifiScanningScreenState extends State<_WifiScanningScreen> {
 class WifiProvisioningScreen extends StatelessWidget {
   WifiProvisioningScreen({super.key});
 
-  Widget buildInitial(BuildContext context) {
-    final provisioning =
-        Provider.of<WifiProvisioningService>(context, listen: false);
-
+  Widget buildInitial(
+    BuildContext context, {
+    required void Function() onStartPressed,
+  }) {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -412,7 +400,7 @@ class WifiProvisioningScreen extends StatelessWidget {
           ),
           ElevatedButton(
             key: const Key('wifi provisioning start'),
-            onPressed: provisioning.start,
+            onPressed: onStartPressed,
             child: const Text(_Strings.initialButtonText),
           ),
         ],
@@ -448,10 +436,10 @@ class WifiProvisioningScreen extends StatelessWidget {
     );
   }
 
-  Widget buildSessionFailure(BuildContext context) {
-    final provisioning =
-        Provider.of<WifiProvisioningService>(context, listen: false);
-
+  Widget buildSessionFailure(
+    BuildContext context, {
+    required void Function() onStartPressed,
+  }) {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -464,7 +452,7 @@ class WifiProvisioningScreen extends StatelessWidget {
             ),
           ),
           ElevatedButton(
-            onPressed: provisioning.start,
+            onPressed: onStartPressed,
             child: const Text(_Strings.retryButtonText),
           ),
         ],
@@ -472,9 +460,11 @@ class WifiProvisioningScreen extends StatelessWidget {
     );
   }
 
-  Widget buildFailure(BuildContext context) {
-    final provisioning = Provider.of<WifiProvisioningService>(context);
-
+  Widget buildFailure(
+    BuildContext context, {
+    required WifiConnectFailedReason? reason,
+    required void Function() onStartPressed,
+  }) {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -482,14 +472,15 @@ class WifiProvisioningScreen extends StatelessWidget {
           Container(
             margin: const EdgeInsets.all(10),
             child: Text(
-              provisioning.status?.failedReason == null
-                  ? _Strings.failureMessage
-                  : '${_Strings.failureMessage} ${_Strings.failureReasonMessage[provisioning.status!.failedReason]!}',
+              switch (reason) {
+                null => _Strings.failureMessage,
+                final reason => _Strings.failureReasonMessage[reason]!,
+              },
               textAlign: TextAlign.center,
             ),
           ),
           ElevatedButton(
-            onPressed: provisioning.start,
+            onPressed: onStartPressed,
             child: const Text(_Strings.retryButtonText),
           ),
         ],
@@ -520,22 +511,31 @@ class WifiProvisioningScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<WifiProvisioningService>(
-      builder: (_, provisioning, __) {
+    return Consumer(
+      builder: (_, ref, __) {
+        final provisioning = ref.watch(provisioningProvider);
+
         Widget child;
         switch (provisioning.state) {
           case WifiProvisioningState.initial:
-            child = buildInitial(context);
+            child = buildInitial(context, onStartPressed: provisioning.start);
           case WifiProvisioningState.connecting:
             child = buildConnecting(context);
           case WifiProvisioningState.sessionFailure:
-            child = buildSessionFailure(context);
+            child = buildSessionFailure(
+              context,
+              onStartPressed: provisioning.start,
+            );
           case WifiProvisioningState.scanning:
             child = _WifiScanningScreen();
           case WifiProvisioningState.testing:
             child = buildTesting(context);
           case WifiProvisioningState.failure:
-            child = buildFailure(context);
+            child = buildFailure(
+              context,
+              onStartPressed: provisioning.start,
+              reason: provisioning.status?.failedReason,
+            );
           case WifiProvisioningState.success:
             child = buildSuccess(context);
           default:
@@ -567,6 +567,18 @@ enum WifiProvisioningState {
   failure,
   success,
 }
+
+final provisioningProvider = ChangeNotifierProvider(
+  (ref) => WifiProvisioningService(
+    provisioningFactory: () {
+      _log.info('Creating provisioning connection');
+      return Provisioning(
+        security: Security1(pop: 'abcd1234'),
+        transport: TransportHTTP('guitar-dsp.local'),
+      );
+    },
+  ),
+);
 
 class WifiProvisioningService extends ChangeNotifier {
   WifiProvisioningService({required this.provisioningFactory});
