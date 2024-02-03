@@ -130,22 +130,8 @@ class App extends riverpod.ConsumerWidget {
         ChangeNotifierProvider.value(
           value: ref.watch(parameterServiceProvider),
         ),
-        StateNotifierProvider<MidiLearnService, MidiLearnState>(
-          create: (context) => MidiLearnService(
-            mappingService: context.read<MidiMappingService>(),
-            parameterUpdates: context
-                .read<ParameterService>()
-                .parameterUpdates
-                .map((e) => e.id),
-            midiMessages: context
-                .read<ApiWebsocket>()
-                .stream
-                .whereType<ApiMessageMidiMapping>()
-                .map((event) => event.message)
-                .whereType<MidiMessageReceived>()
-                .map((event) => event.message),
-          ),
-        ),
+        Provider.value(value: ref.watch(midiLearnServiceProvider)),
+        Provider.value(value: ref.watch(midiLearnServiceProvider.notifier)),
         Provider.value(value: ref.watch(presetsRepositoryProvider)),
         Provider.value(value: ref.watch(selectedPresetRepositoryProvider)),
         Provider.value(value: ref.watch(presetsServiceProvider)),

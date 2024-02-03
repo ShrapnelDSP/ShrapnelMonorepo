@@ -20,13 +20,32 @@
 import 'dart:async';
 
 import 'package:logging/logging.dart';
-import 'package:state_notifier/state_notifier.dart';
+import 'package:riverpod/riverpod.dart';
+import 'package:rxdart/rxdart.dart';
 
+import '../../api/api_websocket.dart';
+import '../../parameter.dart';
 import 'midi_learn_state.dart';
 import 'models.dart';
 import 'service.dart';
 
 final _log = Logger('shrapnel.midi_mapping.model.midi_learn');
+
+final midiLearnServiceProvider =
+    StateNotifierProvider<MidiLearnService, MidiLearnState>(
+  (ref) => MidiLearnService(
+    mappingService: ref.read(midiMappingServiceProvider),
+    parameterUpdates:
+        ref.read(parameterServiceProvider).parameterUpdates.map((e) => e.id),
+    midiMessages: ref
+        .read<ApiWebsocket>(apiWebsocketProvider)
+        .stream
+        .whereType<ApiMessageMidiMapping>()
+        .map((event) => event.message)
+        .whereType<MidiMessageReceived>()
+        .map((event) => event.message),
+  ),
+);
 
 class MidiLearnService extends StateNotifier<MidiLearnState> {
   MidiLearnService({
