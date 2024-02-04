@@ -6,7 +6,6 @@
 
     target_link_libraries(midi_protocol
                           PUBLIC
-                          idf::driver
                           idf::log
                           shrapnel::etl
                           PRIVATE

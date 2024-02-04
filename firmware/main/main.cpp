@@ -59,6 +59,7 @@
 #include "audio_param.h"
 #include "cmd_handling.h"
 #include "esp_crud.h"
+#include "esp_midi_uart.h"
 #include "esp_persistence.h"
 #include "hardware.h"
 #include "i2s.h"
@@ -382,7 +383,6 @@ extern "C" void app_main(void)
     auto main_thread = MainThread<MAX_PARAMETERS, QUEUE_LEN>(
         send_message,
         *in_queue,
-        midi_uart,
         audio_params,
         persistence,
         std::make_unique<Crud>("nvs", "midi_mapping"),

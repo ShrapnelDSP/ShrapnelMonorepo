@@ -12,6 +12,7 @@ target_link_libraries(${COMPONENT_LIB}
                       shrapnel::abstract_dsp
                       shrapnel::audio_events
                       shrapnel::cmd_handling
+                      shrapnel::esp_midi_uart
                       shrapnel::esp_persistence
                       shrapnel::etl
                       shrapnel::hardware

@@ -210,7 +210,6 @@ class MainThread
 public:
     MainThread(SendMessageCallback a_send_message,
                Queue<AppMessage, QUEUE_LEN> &a_in_queue,
-               midi::MidiUartBase *a_midi_uart,
                std::shared_ptr<AudioParameters> a_audio_params,
                std::shared_ptr<persistence::Storage> a_persistence,
                std::unique_ptr<persistence::Crud<std::span<uint8_t>>>
@@ -229,7 +228,6 @@ public:
               os::Timer::Callback::
                   create<MainThread, &MainThread::clear_midi_notify_waiting>(
                       *this)},
-          midi_uart{a_midi_uart},
           last_midi_message{},
           last_notified_midi_message{},
           midi_decoder{std::make_unique<midi::Decoder>(
@@ -339,16 +337,6 @@ public:
 
     void loop()
     {
-        {
-            auto byte = midi_uart->get_byte(0);
-            while(byte.has_value())
-            {
-                ESP_LOGI(TAG, "midi got byte 0x%02x", *byte);
-                midi_decoder->decode(*byte);
-                byte = midi_uart->get_byte(0);
-            }
-        }
-
         if(AppMessage message; in_queue.receive(&message, 0))
         {
             auto fd = message.second;
@@ -642,7 +630,6 @@ private:
     os::Timer clipping_throttle_timer;
     os::Timer midi_message_notify_timer;
     std::atomic_flag is_midi_notify_waiting;
-    midi::MidiUartBase *midi_uart;
     std::optional<midi::Message> last_midi_message;
     std::optional<midi::Message> last_notified_midi_message;
     std::unique_ptr<midi::Decoder> midi_decoder;

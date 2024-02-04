@@ -64,10 +64,10 @@ std::ostream &operator<<(std::ostream &out, const T &message)
 
 } // namespace shrapnel::midi
 
-class FakeMidiUart final : public shrapnel::midi::MidiUartBase
+class FakeMidiUart final : public shrapnel::midi::MidiUartBase<int>
 {
 public:
-    std::optional<uint8_t> get_byte(TickType_t) override
+    std::optional<uint8_t> get_byte(int) override
     {
         if(buffer.empty())
             return std::nullopt;
@@ -123,7 +123,6 @@ protected:
         return {
             send_message_fn,
             in_queue,
-            &midi_uart,
             audio_params,
             storage,
             std::move(midi_mapping_storage),
