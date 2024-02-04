@@ -1,0 +1,5 @@
+add_subdirectory(abstract_dsp)
+add_subdirectory(chorus)
+add_subdirectory(gate)
+add_subdirectory(valvestate)
+add_subdirectory(wah)

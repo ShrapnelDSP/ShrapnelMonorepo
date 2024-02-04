@@ -1,11 +1,11 @@
-include(../../../thirdparty/esp-idf-components/nanopb/nanopb-generate-cpp.cmake)
+include(../../thirdparty/esp-idf-components/nanopb/nanopb-generate-cpp.cmake)
 
 add_library(audio_events STATIC)
 add_library(shrapnel::audio_events ALIAS audio_events)
 
 set(NANOPB_GENERATE_CPP_APPEND_PATH ON)
 nanopb_generate_cpp(PROTO_SRCS PROTO_HDRS
-                    ../../../proto/audio_events.proto)
+                    ../../proto/audio_events.proto)
 
 target_include_directories(audio_events
                            PUBLIC

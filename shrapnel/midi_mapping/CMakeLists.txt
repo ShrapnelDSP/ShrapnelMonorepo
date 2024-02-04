@@ -1,11 +1,11 @@
-include(../../../thirdparty/esp-idf-components/nanopb/nanopb-generate-cpp.cmake)
+include(../../thirdparty/esp-idf-components/nanopb/nanopb-generate-cpp.cmake)
 
 add_library(midi_mapping STATIC)
 add_library(shrapnel::midi_mapping ALIAS midi_mapping)
 
 set(NANOPB_GENERATE_CPP_APPEND_PATH ON)
 nanopb_generate_cpp(PROTO_SRCS PROTO_HDRS
-                    ../../../proto/midi_mapping.proto)
+                    ../../proto/midi_mapping.proto)
 
 target_sources(midi_mapping
                PRIVATE

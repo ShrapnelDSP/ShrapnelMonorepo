@@ -1,11 +1,11 @@
-include(../../../thirdparty/esp-idf-components/nanopb/nanopb-generate-cpp.cmake)
+include(../../thirdparty/esp-idf-components/nanopb/nanopb-generate-cpp.cmake)
 
 add_library(cmd_handling STATIC)
 add_library(shrapnel::cmd_handling ALIAS cmd_handling)
 
 set(NANOPB_GENERATE_CPP_APPEND_PATH ON)
 nanopb_generate_cpp(PROTO_SRCS PROTO_HDRS
-                    ../../../proto/cmd_handling.proto)
+                    ../../proto/cmd_handling.proto)
 
 target_sources(cmd_handling
                PRIVATE
