@@ -29,6 +29,4 @@ target_link_libraries(presets
                       shrapnel::api
                       shrapnel::etl
                       shrapnel::persistence
-                      shrapnel::nanopb
-                      PRIVATE
-                      cppcodec)
+                      shrapnel::nanopb)

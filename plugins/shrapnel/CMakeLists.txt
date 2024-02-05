@@ -33,5 +33,6 @@ target_sources(ShrapnelDSP
 
 target_link_libraries(ShrapnelDSP
         PRIVATE
-        audio
+        shrapnel::audio
+        shrapnel::main_thread
         juce_modules)

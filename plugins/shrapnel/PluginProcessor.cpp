@@ -118,6 +118,8 @@ AudioPluginAudioProcessor::AudioPluginAudioProcessor()
           // clang-format on
       }
 {
+    bool success = main_thread.startThread();
+    jassert(success);
 }
 
 AudioPluginAudioProcessor::~AudioPluginAudioProcessor() = default;
