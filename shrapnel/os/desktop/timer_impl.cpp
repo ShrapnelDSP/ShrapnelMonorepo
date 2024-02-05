@@ -23,8 +23,8 @@
 namespace shrapnel::os {
 
 Timer::impl::impl(const char *pcTimerName,
-                  TickType_t xTimerPeriod,
-                  const UBaseType_t uxAutoReload,
+                  uint32_t xTimerPeriod,
+                  bool uxAutoReload,
                   std::optional<etl::delegate<void(void)>> callback)
     : callback(callback)
 {
@@ -35,18 +35,20 @@ Timer::impl::impl(const char *pcTimerName,
         uxAutoReload);
 }
 
-BaseType_t Timer::impl::is_active() const { return is_running; }
+bool Timer::impl::is_active() const { return is_running; }
 
-BaseType_t Timer::impl::start(TickType_t xBlockTime)
+timer_error Timer::impl::start(uint32_t xBlockTime)
 {
     is_running = true;
-    return timers.start(id);
+    return timers.start(id) ? timer_error::TIMER_START_SUCCESS
+                            : timer_error::TIMER_START_FAILURE;
 }
 
-BaseType_t Timer::impl::stop(TickType_t xBlockTime)
+timer_error Timer::impl::stop(uint32_t xBlockTime)
 {
     is_running = false;
-    return timers.stop(id);
+    return timers.stop(id) ? timer_error::TIMER_START_SUCCESS
+                           : timer_error::TIMER_START_FAILURE;
 }
 
 void Timer::impl::tick(uint32_t tick_count) { timers.tick(tick_count); }

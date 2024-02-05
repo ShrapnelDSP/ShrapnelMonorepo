@@ -17,9 +17,6 @@
  * ShrapnelDSP. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include <freertos/FreeRTOS.h>
-#include <freertos/task.h>
-
 #include "messages.h"
 #include "shrapnel.pb.h"
 #include <pb_decode.h>

@@ -23,8 +23,8 @@
 namespace shrapnel::os {
 
 Timer::Timer(const char *pcTimerName,
-             TickType_t xTimerPeriod,
-             const UBaseType_t uxAutoReload,
+             uint32_t xTimerPeriod,
+             bool uxAutoReload,
              std::optional<etl::delegate<void(void)>> callback)
 {
     p_impl = std::make_unique<impl>(
@@ -33,14 +33,14 @@ Timer::Timer(const char *pcTimerName,
 
 Timer::~Timer() {}
 
-BaseType_t Timer::is_active() const { return p_impl->is_active(); }
+bool Timer::is_active() const { return p_impl->is_active(); }
 
-BaseType_t Timer::start(TickType_t xBlockTime)
+timer_error Timer::start(uint32_t xBlockTime)
 {
     return p_impl->start(xBlockTime);
 }
 
-BaseType_t Timer::stop(TickType_t xBlockTime)
+timer_error Timer::stop(uint32_t xBlockTime)
 {
     return p_impl->stop(xBlockTime);
 }

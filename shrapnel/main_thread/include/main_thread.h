@@ -20,6 +20,7 @@
 #pragma once
 
 #include <midi_mapping.h>
+#include <os/os.h>
 #include <utility>
 
 #include "audio_param.h"
@@ -91,7 +92,7 @@ public:
         : is_save_throttled{true},
           persistence{std::move(a_persistence)},
           timer{"param save throttle",
-                pdMS_TO_TICKS(10'000),
+                os::ms_to_ticks(10'000),
                 false,
                 etl::delegate<void(void)>::create<
                     ParameterObserver<MAX_PARAMETERS>,
@@ -115,7 +116,8 @@ public:
 
         if(!timer.is_active())
         {
-            if(pdPASS != timer.start(pdMS_TO_TICKS(5)))
+            if(os::timer_error::TIMER_START_SUCCESS !=
+               timer.start(os::ms_to_ticks(5)))
             {
                 ESP_LOGE(TAG, "Failed to start parameter observer timer");
             }
@@ -220,10 +222,10 @@ public:
           in_queue{a_in_queue},
           parameter_observer{a_persistence},
           clipping_throttle_timer{
-              "clipping throttle", pdMS_TO_TICKS(1000), false},
+              "clipping throttle", os::ms_to_ticks(1000), false},
           midi_message_notify_timer{
               "midi notify",
-              pdMS_TO_TICKS(100),
+              os::ms_to_ticks(100),
               true,
               os::Timer::Callback::
                   create<MainThread, &MainThread::clear_midi_notify_waiting>(
@@ -325,8 +327,8 @@ public:
                                PresetLoader<ParameterUpdateNotifier>>>(
             parameter_notifier, midi_mapping_manager, preset_loader);
 
-        BaseType_t rc = midi_message_notify_timer.start(portMAX_DELAY);
-        if(rc != pdPASS)
+        auto rc = midi_message_notify_timer.start(os::max_delay());
+        if(rc != os::timer_error::TIMER_START_SUCCESS)
         {
             ESP_LOGE(TAG, "Failed to start midi message timer");
         }
@@ -337,7 +339,7 @@ public:
 
     void loop()
     {
-        if(AppMessage message; in_queue.receive(&message, 0))
+        if(AppMessage message; queue_error::SUCCESS == in_queue.receive(&message, 0))
         {
             auto fd = message.second;
 
@@ -351,9 +353,8 @@ public:
             {
                 ESP_LOGI(TAG, "input was clipped");
                 send_message({events::InputClipped{}, std::nullopt});
-                BaseType_t rc =
-                    clipping_throttle_timer.start(pdMS_TO_TICKS(10));
-                if(rc != pdPASS)
+                auto rc = clipping_throttle_timer.start(os::ms_to_ticks(10));
+                if(rc != os::timer_error::TIMER_START_SUCCESS)
                 {
                     ESP_LOGE(TAG, "Failed to start clipping throttle timer");
                 }
@@ -363,9 +364,8 @@ public:
             {
                 ESP_LOGI(TAG, "output was clipped");
                 send_message({events::OutputClipped{}, std::nullopt});
-                BaseType_t rc =
-                    clipping_throttle_timer.start(pdMS_TO_TICKS(10));
-                if(rc != pdPASS)
+                auto rc = clipping_throttle_timer.start(os::ms_to_ticks(10));
+                if(rc != os::timer_error::TIMER_START_SUCCESS)
                 {
                     ESP_LOGE(TAG, "Failed to start clipping throttle timer");
                 }

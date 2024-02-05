@@ -19,12 +19,8 @@
 
 #pragma once
 
-#include "FreeRTOSConfig.h"
 #include "etl/deque.h"
-#include "freertos/FreeRTOS.h"
-#include "freertos/queue.h"
 #include <cassert>
-#include <chrono>
 #include <cstdint>
 #include <mutex>
 #include <queue>
@@ -33,23 +29,32 @@
 
 namespace shrapnel {
 
+constexpr uint32_t ms_to_ticks();
+
+enum class queue_error {
+    SUCCESS = 0,
+    ERROR = 1,
+    EMPTY = 2,
+    FULL = 3,
+};
+
 template <typename T>
 class QueueBase
 {
 public:
     using value_type = T;
 
-    QueueBase(int number_of_elements) { (void)number_of_elements; };
+    explicit QueueBase(int number_of_elements) { (void)number_of_elements; };
 
-    virtual BaseType_t receive(T *out, TickType_t time_to_wait) = 0;
-    virtual BaseType_t send(const T *in, TickType_t time_to_wait) = 0;
+    virtual queue_error receive(T *out, uint32_t time_to_wait) = 0;
+    virtual queue_error send(const T *in, uint32_t time_to_wait) = 0;
 };
 
 template <typename T, std::size_t MAX_SIZE>
     requires(MAX_SIZE > 0) && (MAX_SIZE < PTRDIFF_MAX)
 class Queue final : public QueueBase<T>
 {
-    using ticks = std::chrono::duration<TickType_t>;
+    using ticks = std::chrono::duration<uint32_t>;
 
 public:
     Queue()
@@ -59,12 +64,12 @@ public:
     {
     }
 
-    [[nodiscard]] BaseType_t receive(T *out, TickType_t time_to_wait) override
+    [[nodiscard]] queue_error receive(T *out, uint32_t time_to_wait) override
     {
         // block until an item is available
         bool success = used_semaphore.try_acquire_for(ticks(time_to_wait));
         if(!success)
-            return errQUEUE_EMPTY;
+            return queue_error::EMPTY;
 
         // Receive the item
         {
@@ -73,15 +78,15 @@ public:
             queue.pop();
         }
         free_semaphore.release();
-        return pdPASS;
+        return queue_error::SUCCESS;
     }
 
-    [[nodiscard]] BaseType_t send(const T *in, TickType_t time_to_wait) override
+    [[nodiscard]] queue_error send(const T *in, uint32_t time_to_wait) override
     {
         // block until a space is available
         bool success = free_semaphore.try_acquire_for(ticks(time_to_wait));
         if(!success)
-            return errQUEUE_FULL;
+            return queue_error::FULL;
 
         // Add item to queue, and notify receivers
         {
@@ -89,7 +94,7 @@ public:
             queue.push(*in);
         }
         used_semaphore.release();
-        return pdPASS;
+        return queue_error::SUCCESS;
     }
 
 private:
@@ -97,7 +102,6 @@ private:
         used_semaphore;
     std::counting_semaphore<static_cast<std::ptrdiff_t>(MAX_SIZE)>
         free_semaphore;
-    etl::deque<T, MAX_SIZE> queue_storage;
     std::queue<T, etl::deque<T, MAX_SIZE>> queue;
     std::mutex mutex;
 };

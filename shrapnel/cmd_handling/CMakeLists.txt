@@ -10,7 +10,6 @@ nanopb_generate_cpp(PROTO_SRCS PROTO_HDRS
 target_sources(cmd_handling
                PRIVATE
                ${PROTO_SRCS}
-               src/cmd_handling.cpp
                src/cmd_handling_api.cpp)
 
 target_include_directories(cmd_handling
@@ -21,9 +20,7 @@ target_include_directories(cmd_handling
 
 target_link_libraries(cmd_handling
                       PUBLIC
-                      idf::esp_common
                       idf::log
-                      idf::freertos
                       shrapnel::api
                       shrapnel::audio_param
                       shrapnel::etl

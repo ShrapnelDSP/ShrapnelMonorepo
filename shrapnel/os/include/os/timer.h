@@ -19,11 +19,16 @@
 #pragma once
 
 #include "etl/delegate.h"
-#include "freertos/FreeRTOS.h"
 #include <memory>
 #include <optional>
 
 namespace shrapnel::os {
+
+enum class timer_error
+{
+    TIMER_START_SUCCESS,
+    TIMER_START_FAILURE,
+};
 
 class Timer final
 {
@@ -31,16 +36,16 @@ public:
     using Callback = etl::delegate<void(void)>;
 
     Timer(const char *pcTimerName,
-          TickType_t xTimerPeriod,
-          UBaseType_t uxAutoReload,
+          uint32_t xTimerPeriod,
+          bool uxAutoReload,
           std::optional<Callback> callback = std::nullopt);
 
     ~Timer();
 
-    [[nodiscard]] BaseType_t is_active() const;
+    [[nodiscard]] bool is_active() const;
 
-    [[nodiscard]] BaseType_t start(TickType_t xBlockTime);
-    [[nodiscard]] BaseType_t stop(TickType_t xBlockTime);
+    [[nodiscard]] timer_error start(uint32_t xBlockTime);
+    [[nodiscard]] timer_error stop(uint32_t xBlockTime);
 
     struct impl;
 

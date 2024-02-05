@@ -25,13 +25,13 @@ namespace shrapnel::os {
 struct Timer::impl
 {
     impl(const char *pcTimerName,
-         TickType_t xTimerPeriod,
-         const UBaseType_t uxAutoReload,
+         uint32_t xTimerPeriod,
+         bool uxAutoReload,
          std::optional<Callback> callback);
 
-    BaseType_t is_active() const;
-    BaseType_t start(TickType_t xBlockTime);
-    BaseType_t stop(TickType_t xBlockTime);
+    [[nodiscard]] bool is_active() const;
+    timer_error start(uint32_t xBlockTime);
+    timer_error stop(uint32_t xBlockTime);
 
     // Advance tick count, firing callbacks for any expired timers
 

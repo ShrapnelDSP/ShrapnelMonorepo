@@ -21,11 +21,8 @@
 
 #include "audio_param.h"
 #include "cmd_handling_api.h"
-#include "esp_err.h"
 #include "esp_log.h"
 #include "etl/list.h"
-#include "freertos/FreeRTOS.h"
-#include "freertos/task.h"
 #include <climits>
 #include <etl/delegate.h>
 #include <iterator>
@@ -56,13 +53,6 @@ public:
 
     void dispatch(const ApiMessage &a_message, int fd)
     {
-#if !defined(TESTING)
-        ESP_LOGI(TAG,
-                 "%s stack %d",
-                 __FUNCTION__,
-                 uxTaskGetStackHighWaterMark(NULL));
-#endif
-
         std::visit(
             [&](const auto &message) -> void
             {

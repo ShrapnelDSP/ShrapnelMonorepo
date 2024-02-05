@@ -17,4 +17,13 @@
  * ShrapnelDSP. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include "cmd_handling.h"
+#pragma once
+
+#include <cstdint>
+
+namespace shrapnel::os {
+
+constexpr uint32_t ms_to_ticks(uint32_t milliseconds) { return milliseconds; }
+constexpr uint32_t max_delay() { return UINT32_MAX; }
+
+} // namespace shrapnel::os
