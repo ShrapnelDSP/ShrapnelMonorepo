@@ -146,8 +146,8 @@ esp_err_t websocket_get_handler(httpd_req_t *req)
     {
         debug_print_received_message(*message);
         auto out = AppMessage{*message, fd};
-        int queue_rc = self->in_queue->send(&out, pdMS_TO_TICKS(100));
-        if(queue_rc != pdPASS)
+        auto queue_rc = self->in_queue->send(&out, pdMS_TO_TICKS(100));
+        if(queue_rc != queue_error::SUCCESS)
         {
             ESP_LOGE(TAG, "in_queue message dropped");
         }
@@ -169,8 +169,8 @@ void websocket_send(void *arg)
     auto self = reinterpret_cast<Server *>(arg);
 
     AppMessage message;
-    int rc = self->out_queue->receive(&message, 0);
-    if(!rc)
+    auto rc = self->out_queue->receive(&message, 0);
+    if(rc != queue_error::SUCCESS)
     {
         ESP_LOGE(TAG, "%s failed to receive from queue", __FUNCTION__);
         return;
@@ -286,7 +286,7 @@ void Server::send_message(const AppMessage &message)
     ESP_LOGD(
         TAG, "%s called from task: %s", __FUNCTION__, pcTaskGetName(nullptr));
 
-    if(errQUEUE_FULL == out_queue->send(&message, pdMS_TO_TICKS(100)))
+    if(queue_error::SUCCESS != out_queue->send(&message, pdMS_TO_TICKS(100)))
     {
         ESP_LOGE(TAG, "Failed to send message to websocket");
         return;

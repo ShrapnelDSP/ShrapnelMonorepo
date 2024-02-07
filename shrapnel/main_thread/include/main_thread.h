@@ -83,79 +83,6 @@ private:
     SendMessageCallback send_message;
 };
 
-template <std::size_t MAX_PARAMETERS>
-class ParameterObserver final : public parameters::ParameterObserver
-{
-public:
-    explicit ParameterObserver(
-        std::shared_ptr<persistence::Storage> a_persistence)
-        : is_save_throttled{true},
-          persistence{std::move(a_persistence)},
-          timer{"param save throttle",
-                os::ms_to_ticks(10'000),
-                false,
-                etl::delegate<void(void)>::create<
-                    ParameterObserver<MAX_PARAMETERS>,
-                    &ParameterObserver<MAX_PARAMETERS>::timer_callback>(*this)}
-    {
-    }
-
-    void
-    notification(std::pair<const parameters::id_t &, float> parameter) override
-    {
-        auto &[id, value] = parameter;
-        ESP_LOGI(
-            TAG, "notified about parameter change %s %f", id.data(), value);
-        if(!updated_parameters.available())
-        {
-            ESP_LOGE(TAG, "no space available");
-            return;
-        }
-
-        updated_parameters[id] = value;
-
-        if(!timer.is_active())
-        {
-            if(os::timer_error::TIMER_START_SUCCESS !=
-               timer.start(os::ms_to_ticks(5)))
-            {
-                ESP_LOGE(TAG, "Failed to start parameter observer timer");
-            }
-        }
-    }
-
-    void loop()
-    {
-        if(!is_save_throttled.test_and_set())
-        {
-            persist_parameters();
-            ESP_LOGI(TAG, "Parameters saved to NVS");
-        }
-    }
-
-private:
-    void timer_callback()
-    {
-        is_save_throttled.clear();
-        is_save_throttled.notify_all();
-    }
-
-    void persist_parameters()
-    {
-        for(const auto &param : updated_parameters)
-        {
-            persistence->save(param.first.data(), param.second);
-        }
-
-        updated_parameters.clear();
-    }
-
-    std::atomic_flag is_save_throttled;
-    std::shared_ptr<persistence::Storage> persistence;
-    os::Timer timer;
-    etl::map<parameters::id_t, float, MAX_PARAMETERS> updated_parameters;
-};
-
 template <typename AudioParametersT>
 class PresetLoader
 {
@@ -220,7 +147,6 @@ public:
                    a_presets_storage)
         : send_message{a_send_message},
           in_queue{a_in_queue},
-          parameter_observer{a_persistence},
           clipping_throttle_timer{
               "clipping throttle", os::ms_to_ticks(1000), false},
           midi_message_notify_timer{
@@ -251,64 +177,6 @@ public:
               std::make_shared<selected_preset::SelectedPresetManager>(
                   a_persistence)}
     {
-        auto create_and_load_parameter = [&](const parameters::id_t &name,
-                                             float minimum,
-                                             float maximum,
-                                             float default_value)
-        {
-            std::optional<float> loaded_value;
-            float value;
-            int rc = a_persistence->load(name.data(), value);
-            if(rc != 0)
-            {
-                ESP_LOGW(TAG, "Parameter %s failed to load", name.data());
-                goto out;
-            }
-
-            loaded_value = value;
-        out:
-            auto range = maximum - minimum;
-            rc = a_audio_params->create_and_add_parameter(
-                name,
-                minimum,
-                maximum,
-                loaded_value.has_value() ? *loaded_value * range + minimum
-                                         : default_value);
-            if(rc != 0)
-            {
-                ESP_LOGE(TAG, "Failed to create parameter %s", name.c_str());
-            }
-        };
-
-        // XXX: These are duplicated in the JUCE plugin, be sure to update both at
-        // the same time
-        create_and_load_parameter("ampGain", 0, 1, 0.5);
-        create_and_load_parameter("ampChannel", 0, 1, 0);
-        create_and_load_parameter("bass", 0, 1, 0.5);
-        create_and_load_parameter("middle", 0, 1, 0.5);
-        create_and_load_parameter("treble", 0, 1, 0.5);
-        //contour gets unstable when set to 0
-        create_and_load_parameter("contour", 0.01, 1, 0.5);
-        create_and_load_parameter("volume", -30, 0, -15);
-
-        create_and_load_parameter("noiseGateThreshold", -80, 0, -60);
-        create_and_load_parameter("noiseGateHysteresis", 0, 5, 0);
-        create_and_load_parameter("noiseGateAttack", 1, 50, 10);
-        create_and_load_parameter("noiseGateHold", 1, 250, 50);
-        create_and_load_parameter("noiseGateRelease", 1, 250, 50);
-        create_and_load_parameter("noiseGateBypass", 0, 1, 0);
-
-        create_and_load_parameter("chorusRate", 0.1, 4, 0.95);
-        create_and_load_parameter("chorusDepth", 0, 1, 0.3);
-        create_and_load_parameter("chorusMix", 0, 1, 0.8);
-        create_and_load_parameter("chorusBypass", 0, 1, 1);
-
-        create_and_load_parameter("wahPosition", 0, 1, 0.5);
-        create_and_load_parameter("wahVocal", 0, 1, 0);
-        create_and_load_parameter("wahBypass", 0, 1, 1);
-
-        a_audio_params->add_observer(parameter_observer);
-
         parameter_notifier = std::make_shared<ParameterUpdateNotifier>(
             a_audio_params, a_send_message);
 
@@ -339,7 +207,8 @@ public:
 
     void loop()
     {
-        if(AppMessage message; queue_error::SUCCESS == in_queue.receive(&message, 0))
+        if(AppMessage message;
+           queue_error::SUCCESS == in_queue.receive(&message, 0))
         {
             auto fd = message.second;
 
@@ -371,8 +240,6 @@ public:
                 }
             }
         }
-
-        parameter_observer.loop();
 
         if(!is_midi_notify_waiting.test_and_set() &&
            last_midi_message.has_value() &&
@@ -626,7 +493,6 @@ private:
 
     SendMessageCallback send_message;
     Queue<AppMessage, QUEUE_LEN> &in_queue;
-    ParameterObserver<MAX_PARAMETERS> parameter_observer;
     os::Timer clipping_throttle_timer;
     os::Timer midi_message_notify_timer;
     std::atomic_flag is_midi_notify_waiting;

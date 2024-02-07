@@ -86,6 +86,79 @@ namespace shrapnel {
 
 using Crud = persistence::EspCrud<256>;
 
+template <std::size_t MAX_PARAMETERS>
+class ParameterObserver final : public parameters::ParameterObserver
+{
+public:
+    explicit ParameterObserver(
+        std::shared_ptr<persistence::Storage> a_persistence)
+        : is_save_throttled{true},
+          persistence{std::move(a_persistence)},
+          timer{"param save throttle",
+                os::ms_to_ticks(10'000),
+                false,
+                etl::delegate<void(void)>::create<
+                    ParameterObserver<MAX_PARAMETERS>,
+                    &ParameterObserver<MAX_PARAMETERS>::timer_callback>(*this)}
+    {
+    }
+
+    void
+    notification(std::pair<const parameters::id_t &, float> parameter) override
+    {
+        auto &[id, value] = parameter;
+        ESP_LOGI(
+            TAG, "notified about parameter change %s %f", id.data(), value);
+        if(!updated_parameters.available())
+        {
+            ESP_LOGE(TAG, "no space available");
+            return;
+        }
+
+        updated_parameters[id] = value;
+
+        if(!timer.is_active())
+        {
+            if(os::timer_error::TIMER_START_SUCCESS !=
+               timer.start(os::ms_to_ticks(5)))
+            {
+                ESP_LOGE(TAG, "Failed to start parameter observer timer");
+            }
+        }
+    }
+
+    void loop()
+    {
+        if(!is_save_throttled.test_and_set())
+        {
+            persist_parameters();
+            ESP_LOGI(TAG, "Parameters saved to NVS");
+        }
+    }
+
+private:
+    void timer_callback()
+    {
+        is_save_throttled.clear();
+        is_save_throttled.notify_all();
+    }
+
+    void persist_parameters()
+    {
+        for(const auto &param : updated_parameters)
+        {
+            persistence->save(param.first.data(), param.second);
+        }
+
+        updated_parameters.clear();
+    }
+
+    std::atomic_flag is_save_throttled;
+    std::shared_ptr<persistence::Storage> persistence;
+    os::Timer timer;
+    etl::map<parameters::id_t, float, MAX_PARAMETERS> updated_parameters;
+};
+
 extern "C" {
 
 static void disconnect_handler(void *arg,
@@ -112,8 +185,8 @@ static void disconnect_handler(void *arg,
     ESP_LOGI(TAG, "WiFi disconnected");
     auto queue{reinterpret_cast<WifiQueue *>(arg)};
     wifi::InternalEvent event{wifi::InternalEvent::DISCONNECT};
-    int rc{queue->send(&event, 0)};
-    if(rc != pdPASS)
+    auto rc{queue->send(&event, 0)};
+    if(rc != queue_error::SUCCESS)
     {
         ESP_LOGE(TAG, "Failed to send disconnect event to queue");
     }
@@ -131,8 +204,8 @@ static void connect_handler(void *arg,
     ESP_LOGI(TAG, "WiFi connected");
     auto queue{reinterpret_cast<WifiQueue *>(arg)};
     wifi::InternalEvent event{wifi::InternalEvent::CONNECT_SUCCESS};
-    int rc{queue->send(&event, 0)};
-    if(rc != pdPASS)
+    auto rc{queue->send(&event, 0)};
+    if(rc != queue_error::SUCCESS)
     {
         ESP_LOGE(TAG, "Failed to send connect event to queue");
     }
@@ -149,8 +222,8 @@ static void wifi_start_handler(void *arg,
 
     auto queue{reinterpret_cast<WifiQueue *>(arg)};
     wifi::InternalEvent event{wifi::InternalEvent::STARTED};
-    int rc{queue->send(&event, 0)};
-    if(rc != pdPASS)
+    auto rc{queue->send(&event, 0)};
+    if(rc != queue_error::SUCCESS)
     {
         ESP_LOGE(TAG, "Failed to send start event to queue");
     }
@@ -249,6 +322,62 @@ extern "C" void app_main(void)
     auto persistence = std::make_shared<persistence::EspStorage>();
     auto audio_params = std::make_shared<AudioParameters>();
 
+    auto create_and_load_parameter = [&](const parameters::id_t &name,
+                                         float minimum,
+                                         float maximum,
+                                         float default_value)
+    {
+        std::optional<float> loaded_value;
+        float value;
+        int rc = persistence->load(name.data(), value);
+        if(rc != 0)
+        {
+            ESP_LOGW(TAG, "Parameter %s failed to load", name.data());
+            goto out;
+        }
+
+        loaded_value = value;
+    out:
+        auto range = maximum - minimum;
+        rc = audio_params->create_and_add_parameter(
+            name,
+            minimum,
+            maximum,
+            loaded_value.has_value() ? *loaded_value * range + minimum
+                                     : default_value);
+        if(rc != 0)
+        {
+            ESP_LOGE(TAG, "Failed to create parameter %s", name.c_str());
+        }
+    };
+
+    // XXX: These are duplicated in the JUCE plugin, be sure to update both at
+    // the same time
+    create_and_load_parameter("ampGain", 0, 1, 0.5);
+    create_and_load_parameter("ampChannel", 0, 1, 0);
+    create_and_load_parameter("bass", 0, 1, 0.5);
+    create_and_load_parameter("middle", 0, 1, 0.5);
+    create_and_load_parameter("treble", 0, 1, 0.5);
+    //contour gets unstable when set to 0
+    create_and_load_parameter("contour", 0.01, 1, 0.5);
+    create_and_load_parameter("volume", -30, 0, -15);
+
+    create_and_load_parameter("noiseGateThreshold", -80, 0, -60);
+    create_and_load_parameter("noiseGateHysteresis", 0, 5, 0);
+    create_and_load_parameter("noiseGateAttack", 1, 50, 10);
+    create_and_load_parameter("noiseGateHold", 1, 250, 50);
+    create_and_load_parameter("noiseGateRelease", 1, 250, 50);
+    create_and_load_parameter("noiseGateBypass", 0, 1, 0);
+
+    create_and_load_parameter("chorusRate", 0.1, 4, 0.95);
+    create_and_load_parameter("chorusDepth", 0, 1, 0.3);
+    create_and_load_parameter("chorusMix", 0, 1, 0.8);
+    create_and_load_parameter("chorusBypass", 0, 1, 1);
+
+    create_and_load_parameter("wahPosition", 0, 1, 0.5);
+    create_and_load_parameter("wahVocal", 0, 1, 0);
+    create_and_load_parameter("wahBypass", 0, 1, 1);
+
     i2c_setup();
     profiling_init(DMA_BUF_SIZE, SAMPLE_RATE);
 
@@ -322,7 +451,7 @@ extern "C" void app_main(void)
     auto wifi_send_event = [&](wifi::InternalEvent event)
     {
         auto rc = wifi_queue.send(&event, 0);
-        if(rc != pdPASS)
+        if(rc != queue_error::SUCCESS)
         {
             ESP_LOGE(TAG, "Failed to post wifi event to queue");
         }
@@ -390,6 +519,9 @@ extern "C" void app_main(void)
 
     audio::i2s_setup(PROFILING_GPIO, audio_params.get());
 
+    ParameterObserver<MAX_PARAMETERS> parameter_observer{persistence};
+    audio_params->add_observer(parameter_observer);
+
     ESP_LOGI(TAG, "setup done");
     ESP_LOGI(TAG, "stack: %d", uxTaskGetStackHighWaterMark(NULL));
     heap_caps_print_heap_info(MALLOC_CAP_DEFAULT);
@@ -400,6 +532,8 @@ extern "C" void app_main(void)
         auto tick_count_start = xTaskGetTickCount();
 
         main_thread.loop();
+
+        parameter_observer.loop();
 
         {
             // i2s produces an event on each buffer TX/RX. We process all the
@@ -413,7 +547,7 @@ extern "C" void app_main(void)
         }
 
         wifi::InternalEvent wifi_event;
-        while(pdPASS == wifi_queue.receive(&wifi_event, 0))
+        while(queue_error::SUCCESS == wifi_queue.receive(&wifi_event, 0))
         {
             wifi::State state{wifi_state_chart.get_state_id()};
             ESP_LOGI(

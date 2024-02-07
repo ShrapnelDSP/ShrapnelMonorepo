@@ -28,6 +28,14 @@
 // connect audio parameters to JUCE parameters
 // server
 
+// TODO does it really make sense to save the parameters as a VST plugin? That
+// is the host's responsibility.
+//
+// We can keep saving presets, and that requires reading from parameters, but
+// maybe the parameter storage code from the firmware should be removed from the
+// main thread, and instead a wrapper on AudioProcessorValueTreeState should be
+// injected.
+
 // TODO this is probably unsound. The juce::Timer internal to the PropertiesFile
 // will run the callback on some random thread. It locks the PropertiesFile
 // lock, but setValue etc. are inherited from the PropertySet and do not lock.

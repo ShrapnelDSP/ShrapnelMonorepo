@@ -37,8 +37,8 @@ extern "C" void timer_callback(TimerHandle_t a_timer)
 extern "C" void null_callback(TimerHandle_t) {}
 
 Timer::impl::impl(const char *pcTimerName,
-                  TickType_t xTimerPeriod,
-                  const UBaseType_t uxAutoReload,
+                  uint32_t xTimerPeriod,
+                  bool uxAutoReload,
                   std::optional<etl::delegate<void(void)>> callback)
     : callback{callback}
 {
@@ -55,16 +55,26 @@ Timer::impl::~impl()
     assert(rc == pdPASS);
 }
 
-BaseType_t Timer::impl::is_active() const { return xTimerIsTimerActive(timer); }
+bool Timer::impl::is_active() const { return xTimerIsTimerActive(timer); }
 
-BaseType_t Timer::impl::start(TickType_t xBlockTime)
+timer_error Timer::impl::start(TickType_t xBlockTime)
 {
-    return xTimerStart(timer, xBlockTime);
+    if(pdPASS != xTimerStart(timer, xBlockTime))
+    {
+        return timer_error::TIMER_START_FAILURE;
+    }
+
+    return timer_error::TIMER_START_SUCCESS;
 }
 
-BaseType_t Timer::impl::stop(TickType_t xBlockTime)
+timer_error Timer::impl::stop(TickType_t xBlockTime)
 {
-    return xTimerStop(timer, xBlockTime);
+    if(pdPASS != xTimerStop(timer, xBlockTime))
+    {
+        return timer_error::TIMER_START_FAILURE;
+    }
+
+    return timer_error::TIMER_START_SUCCESS;
 }
 
 } // namespace shrapnel::os

@@ -10,7 +10,7 @@ target_link_libraries(os
 
 if(ESP_PLATFORM)
     target_sources(os PRIVATE esp32/timer_impl.cpp universal/timer.cpp esp32/debug.cpp)
-    target_include_directories(os PRIVATE esp32)
+    target_include_directories(os PUBLIC esp32)
     target_link_libraries(os PRIVATE idf::freertos)
 
     return()

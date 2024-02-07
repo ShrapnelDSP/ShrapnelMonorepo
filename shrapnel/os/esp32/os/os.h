@@ -17,30 +17,16 @@
  * ShrapnelDSP. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include "freertos/FreeRTOS.h"
-#include "freertos/timers.h"
-#include "os/timer.h"
+#pragma once
+
+#include <cstdint>
 
 namespace shrapnel::os {
 
-extern "C" void timer_callback(TimerHandle_t a_timer);
-
-struct Timer::impl
+constexpr uint32_t ms_to_ticks(uint32_t milliseconds)
 {
-    impl(const char *pcTimerName,
-         uint32_t xTimerPeriod,
-         bool uxAutoReload,
-         std::optional<etl::delegate<void(void)>> callback);
-
-    ~impl();
-
-    [[nodiscard]] bool is_active() const;
-    timer_error start(TickType_t xBlockTime);
-    timer_error stop(TickType_t xBlockTime);
-
-    friend void shrapnel::os::timer_callback(TimerHandle_t a_timer);
-    TimerHandle_t timer;
-    std::optional<Callback> callback;
-};
+    return pdMS_TO_TICKS(milliseconds);
+}
+constexpr uint32_t max_delay() { return portMAX_DELAY; }
 
 } // namespace shrapnel::os

@@ -29,9 +29,8 @@
 
 namespace shrapnel {
 
-constexpr uint32_t ms_to_ticks();
-
-enum class queue_error {
+enum class queue_error
+{
     SUCCESS = 0,
     ERROR = 1,
     EMPTY = 2,
