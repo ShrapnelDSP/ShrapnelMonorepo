@@ -20,6 +20,7 @@
 #pragma once
 
 #include "main_thread.h"
+#include "parameter_adapter.h"
 #include <juce_data_structures/juce_data_structures.h>
 
 #include "juce_core/juce_core.h"
@@ -70,6 +71,8 @@ public:
         auto data_base64 = juce::Base64::toBase64(data.data(), data.size());
         propertiesFile->setValue(id_to_key(id), juce::var(data_base64));
         propertiesFile->setValue(last_id_key, juce::var(static_cast<int>(id)));
+
+        return 0;
     }
 
     int read(uint32_t id, std::span<uint8_t> &data_out) override
@@ -81,11 +84,15 @@ public:
     {
         auto data_base64 = juce::Base64::toBase64(data.data(), data.size());
         propertiesFile->setValue(id_to_key(id), juce::var(data_base64));
+
+        return 0;
     }
 
     int destroy(uint32_t id) override
     {
         propertiesFile->removeValue(id_to_key(id));
+
+        return 0;
     }
 
     void for_each(etl::delegate<void(uint32_t, const std::span<uint8_t> &)>
@@ -282,18 +289,19 @@ private:
 class MainThread final : public juce::Thread
 {
 public:
-    MainThread()
-        : juce::Thread("shrapnel"),
-          main_thread(
+    explicit MainThread(std::shared_ptr<ParameterAdapter> parameters)
+        : juce::Thread{"shrapnel"},
+          main_thread{
               [&](const AppMessage &message)
               {
                   //TODO print the message, later hook up to server
               },
               in_queue,
-              audio_parameters,
+              std::move(parameters),
               std::make_shared<JuceStorage>(),
               std::make_unique<JuceCrud>("midi_mapping"),
-              std::make_unique<JuceCrud>("presets"))
+              std::make_unique<JuceCrud>("presets"),
+          }
     {
     }
 
@@ -312,5 +320,5 @@ public:
 private:
     // A queue filled by the server with received API messages
     shrapnel::Queue<AppMessage, 4> in_queue;
-    shrapnel::MainThread<20, 4> main_thread;
+    shrapnel::MainThread<4, ParameterAdapter> main_thread;
 };

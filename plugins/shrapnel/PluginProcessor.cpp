@@ -81,6 +81,8 @@ AudioPluginAudioProcessor::AudioPluginAudioProcessor()
                   "wahBypass", "Wah Bypass", 0.f, 1.f, 1.f),
           },
       },
+      parameter_adapter{std::make_shared<ParameterAdapter>(parameters)},
+      main_thread{parameter_adapter},
       processor{
           // clang-format off
           ShrapnelAudioProcessor{
