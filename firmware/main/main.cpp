@@ -320,7 +320,7 @@ extern "C" void app_main(void)
     ESP_ERROR_CHECK(esp_event_loop_create_default());
 
     auto persistence = std::make_shared<persistence::EspStorage>();
-    auto audio_params = std::make_shared<AudioParameters>();
+    auto audio_params = std::make_shared<parameters::AudioParameters<20, 1>>();
 
     auto create_and_load_parameter = [&](const parameters::id_t &name,
                                          float minimum,
@@ -509,17 +509,18 @@ extern "C" void app_main(void)
     auto send_message = [&](const AppMessage &message)
     { server->send_message(message); };
 
-    auto main_thread = MainThread<MAX_PARAMETERS, QUEUE_LEN>(
-        send_message,
-        *in_queue,
-        audio_params,
-        persistence,
-        std::make_unique<Crud>("nvs", "midi_mapping"),
-        std::make_unique<Crud>("nvs", "presets"));
+    auto main_thread =
+        MainThread<QUEUE_LEN, parameters::AudioParameters<20, 1>>(
+            send_message,
+            *in_queue,
+            audio_params,
+            persistence,
+            std::make_unique<Crud>("nvs", "midi_mapping"),
+            std::make_unique<Crud>("nvs", "presets"));
 
     audio::i2s_setup(PROFILING_GPIO, audio_params.get());
 
-    ParameterObserver<MAX_PARAMETERS> parameter_observer{persistence};
+    ParameterObserver<20> parameter_observer{persistence};
     audio_params->add_observer(parameter_observer);
 
     ESP_LOGI(TAG, "setup done");

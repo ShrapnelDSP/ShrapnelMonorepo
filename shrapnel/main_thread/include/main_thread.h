@@ -42,18 +42,30 @@ namespace {
 constexpr const char *TAG = "main_thread";
 }
 
-constexpr const size_t MAX_PARAMETERS = 20;
+template <typename T>
+concept UpdatableParameter = requires(T a, parameters::id_t id, float value) {
+    {
+        a.update(id, value)
+    } -> std::same_as<int>;
+};
 
-class ParameterUpdateNotifier;
+template <typename T>
+concept GettableParameter = requires(T a, parameters::id_t id) {
+    {
+        a.get(id)
+    } -> std::same_as<float>;
+};
 
-using AudioParameters = parameters::AudioParameters<MAX_PARAMETERS, 1>;
 using SendMessageCallback = etl::delegate<void(const AppMessage &)>;
 using MidiMappingType = midi::MappingManager<10, 1>;
 
+template <typename AudioParametersT>
+    requires GettableParameter<AudioParametersT> &&
+             UpdatableParameter<AudioParametersT>
 class ParameterUpdateNotifier
 {
 public:
-    ParameterUpdateNotifier(std::shared_ptr<AudioParameters> a_audio_params,
+    ParameterUpdateNotifier(std::shared_ptr<AudioParametersT> a_audio_params,
                             SendMessageCallback a_send_message)
         : audio_params{std::move(a_audio_params)},
           send_message{a_send_message}
@@ -79,7 +91,7 @@ public:
     }
 
 private:
-    std::shared_ptr<AudioParameters> audio_params;
+    std::shared_ptr<AudioParametersT> audio_params;
     SendMessageCallback send_message;
 };
 
@@ -133,13 +145,15 @@ private:
     SendMessageCallback send_message;
 };
 
-template <std::size_t MAX_PARAMETERS, std::size_t QUEUE_LEN>
+template <std::size_t QUEUE_LEN, typename AudioParametersT>
+    requires GettableParameter<AudioParametersT> &&
+             UpdatableParameter<AudioParametersT>
 class MainThread
 {
 public:
     MainThread(SendMessageCallback a_send_message,
                Queue<AppMessage, QUEUE_LEN> &a_in_queue,
-               std::shared_ptr<AudioParameters> a_audio_params,
+               std::shared_ptr<AudioParametersT> a_audio_params,
                std::shared_ptr<persistence::Storage> a_persistence,
                std::unique_ptr<persistence::Crud<std::span<uint8_t>>>
                    a_midi_mapping_storage,
@@ -165,10 +179,10 @@ public:
           midi_mutex{},
           audio_params{a_audio_params},
           cmd_handling{
-              std::make_unique<parameters::CommandHandling<AudioParameters>>(
+              std::make_unique<parameters::CommandHandling<AudioParametersT>>(
                   a_audio_params,
-                  parameters::CommandHandling<AudioParameters>::
-                      SendMessageCallback::create<
+                  parameters::CommandHandling<AudioParametersT>::
+                      SendMessageCallback::template create<
                           MainThread,
                           &MainThread::cmd_handling_send_message>(*this))},
           presets_manager{std::make_shared<presets::PresetsManager>(
@@ -177,22 +191,24 @@ public:
               std::make_shared<selected_preset::SelectedPresetManager>(
                   a_persistence)}
     {
-        parameter_notifier = std::make_shared<ParameterUpdateNotifier>(
-            a_audio_params, a_send_message);
+        parameter_notifier =
+            std::make_shared<ParameterUpdateNotifier<AudioParametersT>>(
+                a_audio_params, a_send_message);
 
         midi_mapping_manager = std::make_shared<MidiMappingType>(
             std::move(a_midi_mapping_storage));
 
-        preset_loader = std::make_shared<PresetLoader<ParameterUpdateNotifier>>(
+        preset_loader = std::make_shared<
+            PresetLoader<ParameterUpdateNotifier<AudioParametersT>>>(
             parameter_notifier,
             presets_manager,
             selected_preset_manager,
             send_message);
 
-        midi_message_handler = std::make_shared<
-            MidiMessageHandler<ParameterUpdateNotifier,
-                               MidiMappingType,
-                               PresetLoader<ParameterUpdateNotifier>>>(
+        midi_message_handler = std::make_shared<MidiMessageHandler<
+            ParameterUpdateNotifier<AudioParametersT>,
+            MidiMappingType,
+            PresetLoader<ParameterUpdateNotifier<AudioParametersT>>>>(
             parameter_notifier, midi_mapping_manager, preset_loader);
 
         auto rc = midi_message_notify_timer.start(os::max_delay());
@@ -501,19 +517,20 @@ private:
     std::unique_ptr<midi::Decoder> midi_decoder;
     std::mutex midi_mutex;
     std::shared_ptr<MidiMappingType> midi_mapping_manager;
-    std::shared_ptr<MidiMessageHandler<ParameterUpdateNotifier,
-                                       MidiMappingType,
-                                       PresetLoader<ParameterUpdateNotifier>>>
+    std::shared_ptr<MidiMessageHandler<
+        ParameterUpdateNotifier<AudioParametersT>,
+        MidiMappingType,
+        PresetLoader<ParameterUpdateNotifier<AudioParametersT>>>>
         midi_message_handler;
-    std::shared_ptr<AudioParameters> audio_params;
-    std::unique_ptr<parameters::CommandHandling<
-        parameters::AudioParameters<MAX_PARAMETERS, 1>>>
-        cmd_handling;
+    std::shared_ptr<AudioParametersT> audio_params;
+    std::unique_ptr<parameters::CommandHandling<AudioParametersT>> cmd_handling;
     std::shared_ptr<presets::PresetsManager> presets_manager;
     std::shared_ptr<selected_preset::SelectedPresetManager>
         selected_preset_manager;
-    std::shared_ptr<ParameterUpdateNotifier> parameter_notifier;
-    std::shared_ptr<PresetLoader<ParameterUpdateNotifier>> preset_loader;
+    std::shared_ptr<ParameterUpdateNotifier<AudioParametersT>>
+        parameter_notifier;
+    std::shared_ptr<PresetLoader<ParameterUpdateNotifier<AudioParametersT>>>
+        preset_loader;
 };
 
 } // namespace shrapnel
