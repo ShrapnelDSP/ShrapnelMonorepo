@@ -48,6 +48,9 @@ public:
 
     // TODO begin and end members to iterate all parameters
     // implemented using copyState, then iterating the returned tree
+    MapType::iterator begin() { auto tree = parameters.copyState(); }
+
+    MapType::iterator end() { return parameters.end(); }
 
 private:
     juce::AudioProcessorValueTreeState &parameters;
