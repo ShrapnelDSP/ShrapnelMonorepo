@@ -31,6 +31,7 @@
 namespace shrapnel::dsp {
 
 template <std::size_t N, std::size_t K>
+    requires requires { CONFIG_DSP_MAX_FFT_SIZE == N; }
 class FastConvolution final
 {
 public:
