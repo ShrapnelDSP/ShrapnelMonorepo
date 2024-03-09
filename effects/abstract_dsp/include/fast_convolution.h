@@ -72,12 +72,23 @@ public:
         profiling_mark_stage("convolution dsps_cplx2real_fc32");
 
         // multiply A * B
+        // TODO put the complex multiply back here, the real transform still
+        // produces complex numbers as the output. That's why the example app
+        // does a[2*i + 0] ** 2 + a[2*i + 1] ** 2. It's getting the magnitude of
+        // the frequency domain.
+
         std::array<float, N> multiplied;
         dsps_mul_f32_ae32(
             a_copy.data(), b_copy.data(), multiplied.data(), N, 1, 1, 1);
         profiling_mark_stage("convolution dsps_mul_f32_ae32");
 
         // TODO this may be incorrect. How to do a real only inverse transform?
+        // http://www.dspguide.com/ch12/1.htm
+        // http://www.dspguide.com/ch12/5.htm
+        // we get even/odd decomposition for free when we run the forward
+        // transform on a real buffer, due to the interlaced buffer format
+        // re0, im0, re1, im1, etc is mapped to
+        // re0, re1, re2, re3 of the real signal
         rc = dsps_fft4r_fc32(multiplied.data(), N / 2);
         assert(rc == ESP_OK);
         profiling_mark_stage("convolution dsps_fft4r_fc32");
