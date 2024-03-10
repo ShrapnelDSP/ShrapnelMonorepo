@@ -77,7 +77,10 @@ TEST_F(FastConvolution, ComplexMultiply)
 
     std::array<std::complex<float>, 8> out_uut;
 
-    shrapnel::dsp::FastConvolution<8, 8>::complex_multiply(in_a, in_b, out_uut);
+    shrapnel::dsp::FastConvolution<16, 16>::complex_multiply(
+        reinterpret_cast<float *>(in_a.data()),
+        reinterpret_cast<float *>(in_b.data()),
+        reinterpret_cast<float *>(out_uut.data()));
 
     for(std::size_t i = 0; i < 8; i++)
     {

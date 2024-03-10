@@ -15,7 +15,9 @@ target_link_libraries(abstract_dsp
                       PRIVATE
                       shrapnel::compiler_warning_flags
                       PUBLIC
-                      idf::esp-dsp)
+                      idf::esp-dsp
+                      shrapnel::esp32_fft
+)
 
 target_compile_options(abstract_dsp PRIVATE -Wdouble-promotion)
 

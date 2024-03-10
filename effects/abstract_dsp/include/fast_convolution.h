@@ -20,18 +20,19 @@
 
 #pragma once
 
-#include "esp_dsp.h"
+#include "esp32_fft.h"
 #include "profiling.h"
 #include <algorithm>
 #include <array>
 #include <cassert>
 #include <complex>
 #include <cstddef>
+#include <esp_dsp.h>
+#include <span>
 
 namespace shrapnel::dsp {
 
 template <std::size_t N, std::size_t K>
-    requires(CONFIG_DSP_MAX_FFT_SIZE == N / 2)
 class FastConvolution final
 {
 public:
@@ -39,16 +40,27 @@ public:
     // Resample A to the current sample rate in the prepare method
     FastConvolution(const std::array<float, K> &a)
     {
-        esp_err_t rc = dsps_fft4r_init_fc32(NULL, CONFIG_DSP_MAX_FFT_SIZE);
-        assert(rc == ESP_OK);
+        // TODO Initialise FFT by hand to avoid some unnecessary allocations
+        // and duplication of the twiddle factor buffer
+
+        // TODO Instead of allocating input and output buffers, set the before
+        // the fft_execute call as required at the call site. This avoids some
+        // copies.
+        fft_config = esp32_fft_init(
+            N, ESP32_FFT_REAL, ESP32_FFT_FORWARD, nullptr, nullptr);
+        ifft_config = esp32_fft_init(
+            N, ESP32_FFT_REAL, ESP32_FFT_BACKWARD, nullptr, nullptr);
+
+        assert(fft_config != nullptr);
+        assert(ifft_config != nullptr);
 
         // transform a
-        std::array<float, N> a_tmp{};
-        std::copy(a.cbegin(), a.cend(), a_tmp.begin());
-        rc = dsps_fft4r_fc32(reinterpret_cast<float *>(a_copy.data()), N / 2);
-        assert(rc == ESP_OK);
-        dsps_bit_rev4r_fc32(reinterpret_cast<float *>(a_copy.data()), N / 2);
-        dsps_cplx2real_fc32(a_copy.data(), N / 2);
+        std::span<float, N> in{fft_config->input, N};
+        std::fill(in.begin(), in.end(), 0);
+        std::copy(a.cbegin(), a.cend(), fft_config->input);
+        esp32_fft_execute(fft_config);
+        std::span<float, N> out{fft_config->output, N};
+        std::copy(out.begin(), out.end(), a_copy.begin());
     }
 
     /**
@@ -58,57 +70,64 @@ public:
      */
     void process(const std::array<float, N> &b, std::array<float, N> &out)
     {
+        profiling_mark_stage("convolution start");
+        std::span<float, N> fft_in{fft_config->input, N};
+        std::span<float, N> fft_out{fft_config->output, N};
+        std::span<float, N> ifft_in{ifft_config->input, N};
+        std::span<float, N> ifft_out{ifft_config->output, N};
+
         // transform b
-        std::array<float, N> b_copy;
-        std::copy(b.begin(), b.end(), b_copy.begin());
-        profiling_mark_stage("convolution real_to_complex");
-        int rc =
-            dsps_fft4r_fc32(reinterpret_cast<float *>(b_copy.data()), N / 2);
-        assert(rc == ESP_OK);
-        profiling_mark_stage("convolution dsps_fft4r_fc32");
-        dsps_bit_rev4r_fc32(reinterpret_cast<float *>(b_copy.data()), N / 2);
-        profiling_mark_stage("convolution dsps_bit_rev4r_fc32");
-        dsps_cplx2real_fc32(b_copy.data(), N / 2);
-        profiling_mark_stage("convolution dsps_cplx2real_fc32");
+        std::copy(b.begin(), b.end(), fft_in.begin());
+        profiling_mark_stage("convolution b copy");
+        esp32_fft_execute(fft_config);
+        profiling_mark_stage("convolution b transform");
 
         // multiply A * B
-        // TODO put the complex multiply back here, the real transform still
-        // produces complex numbers as the output. That's why the example app
-        // does a[2*i + 0] ** 2 + a[2*i + 1] ** 2. It's getting the magnitude of
-        // the frequency domain.
+        // TODO this probably needs a special case for handling DC and Nyquist
+        // special encoding in the first element
+        complex_multiply(a_copy.data(), fft_out.data(), ifft_in.data());
+        profiling_mark_stage("convolution complex_multiply");
 
-        std::array<float, N> multiplied;
-        dsps_mul_f32_ae32(
-            a_copy.data(), b_copy.data(), multiplied.data(), N, 1, 1, 1);
-        profiling_mark_stage("convolution dsps_mul_f32_ae32");
-
-        // TODO this may be incorrect. How to do a real only inverse transform?
-        // http://www.dspguide.com/ch12/1.htm
-        // http://www.dspguide.com/ch12/5.htm
-        // we get even/odd decomposition for free when we run the forward
-        // transform on a real buffer, due to the interlaced buffer format
-        // re0, im0, re1, im1, etc is mapped to
-        // re0, re1, re2, re3 of the real signal
-        rc = dsps_fft4r_fc32(multiplied.data(), N / 2);
-        assert(rc == ESP_OK);
-        profiling_mark_stage("convolution dsps_fft4r_fc32");
-        dsps_bit_rev4r_fc32(multiplied.data(), N / 2);
-        profiling_mark_stage("convolution dsps_fft4r_fc32");
-        dsps_cplx2real_fc32(multiplied.data(), N / 2);
-        profiling_mark_stage("convolution dsps_cplx2real_fc32");
-
-        // FIXME: skipping writing to out, because this version is generating NaNs
-        dsps_mulc_f32(
-            multiplied.data(), multiplied.data(), N, scale_factor, 1, 1);
-        profiling_mark_stage("dsps_mulc_f32");
-
-        // FIXME: bypass processing
-        std::copy(b.begin(), b.end(), out.begin());
+        // Inverse transform
+        esp32_fft_execute(ifft_config);
+        profiling_mark_stage("convolution ifft");
+        std::copy(ifft_out.begin(), ifft_out.end(), out.begin());
+        profiling_mark_stage("convolution out copy");
     }
 
+    static void complex_multiply(const float *a, const float *b, float *out)
+    {
+        // We want to compute (r_a + im_a j) * (r_b + im_b j)
+        // This can be rewritten as follows:
+        //
+        // ra rb + ra im_b j + im_a r_b j + im_a im_b j j
+        //
+        // j j  is -1 so:
+        //
+        // (ra rb + ra im_b j) +    // part 1
+        // (- im_a im_b + im_a r_b j)   // part 2
+
+        // TODO we multiply then add here, could we use the MADD.S instruction
+        // to speed it up?
+
+        // part 1
+        dsps_mul_f32(a, b, out, N / 2, 2, 2, 2);
+        dsps_mul_f32(a, b + 1, out + 1, N / 2, 2, 2, 2);
+
+        // part 2
+        std::array<float, N> out2;
+        auto out2_ptr = reinterpret_cast<float *>(out2.data());
+        dsps_mul_f32(a + 1, b + 1, out2_ptr, N / 2, 2, 2, 2);
+        dsps_mul_f32(a + 1, b, out2_ptr + 1, N / 2, 2, 2, 2);
+        dsps_mulc_f32(out2_ptr, out2_ptr, N / 2, -1, 2, 2);
+
+        dsps_add_f32(out, out2_ptr, out, N, 1, 1, 1);
+    }
+    
 private:
-    static constexpr float scale_factor = 1.f / N;
     std::array<float, N> a_copy;
+    esp32_fft_config_t *fft_config;
+    esp32_fft_config_t *ifft_config;
 };
 
 } // namespace shrapnel::dsp
