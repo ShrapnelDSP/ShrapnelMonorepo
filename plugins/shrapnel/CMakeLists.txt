@@ -19,20 +19,21 @@ add_subdirectory(../../test/support/esp_hw_support esp_hw_support)
 add_subdirectory(../../test/support/log log)
 add_subdirectory(../../thirdparty/JUCE JUCE)
 add_subdirectory(../../thirdparty/esp-idf-components/esp-dsp esp-dsp)
+add_subdirectory(../../thirdparty/esp-idf-components/esp32-fft esp32-fft)
 add_subdirectory(../JUCE_static JUCE_static)
 
 juce_add_plugin(ShrapnelDSP
-        COMPANY_NAME Barabas Raffai
-        PLUGIN_MANUFACTURER_CODE BaRa
-        PLUGIN_CODE Shra
-        FORMATS VST3 Standalone
-        PRODUCT_NAME ShrapnelDSP)
+                COMPANY_NAME Barabas Raffai
+                PLUGIN_MANUFACTURER_CODE BaRa
+                PLUGIN_CODE Shra
+                FORMATS VST3 Standalone
+                PRODUCT_NAME ShrapnelDSP)
 
 target_sources(ShrapnelDSP
-        PRIVATE
-        PluginProcessor.cpp)
+               PRIVATE
+               PluginProcessor.cpp)
 
 target_link_libraries(ShrapnelDSP
-        PRIVATE
-        audio
-        juce_modules)
+                      PRIVATE
+                      audio
+                      juce_modules)
