@@ -56,7 +56,7 @@ TEST_F(FastConvolution, ComplexMultiply)
     using namespace std::complex_literals;
 
     std::array<std::complex<float>, 8> in_a{
-        0.f + 0if,
+        2.f + 3if,
         1.f + 0if,
         0.f + 2if,
         1.f + 2if,
@@ -66,7 +66,7 @@ TEST_F(FastConvolution, ComplexMultiply)
     };
 
     std::array<std::complex<float>, 8> in_b{
-        1.f + 1if,
+        7.f + 21if,
         1.f + 1if,
         1.f + 1if,
         1.f + 1if,
@@ -84,7 +84,9 @@ TEST_F(FastConvolution, ComplexMultiply)
 
     for(std::size_t i = 0; i < 8; i++)
     {
-        auto ref = in_a[i] * in_b[i];
+        auto ref = i == 0 ? in_a[0].real() * in_b[0].real() +
+                                1if * (in_a[0].imag() * in_b[0].imag())
+                          : in_a[i] * in_b[i];
 
         EXPECT_FLOAT_EQ(ref.real(), out_uut[i].real())
             << "i: " << i << " in_a: " << in_a[i] << " in_b: " << in_b[i];
@@ -95,8 +97,8 @@ TEST_F(FastConvolution, ComplexMultiply)
 
 TEST_F(FastConvolution, ImpulseZeroDelayIsIdentity)
 {
-    std::array<float, 4> input_a{};
-    std::array<float, 4> input_b{};
+    std::array<float, 8> input_a{};
+    std::array<float, 8> input_b{};
 
     input_b[0] = 1;
 
@@ -104,21 +106,32 @@ TEST_F(FastConvolution, ImpulseZeroDelayIsIdentity)
     input_a[1] = 2;
     input_a[2] = 3;
     input_a[3] = 4;
+    input_a[4] = 5;
+    input_a[5] = 6;
+    input_a[6] = 7;
+    input_a[7] = 8;
 
-    std::array<float, 4> out{};
+    std::array<float, 8> out{};
 
-    shrapnel::dsp::FastConvolution<4, 4> uut(input_a);
+    shrapnel::dsp::FastConvolution<8, 8> uut(input_a);
 
     uut.process(input_b, out);
 
     EXPECT_THAT(out,
-                ElementsAre(FloatEq(1), FloatEq(2), FloatEq(3), FloatEq(4)));
+                ElementsAre(FloatEq(1),
+                            FloatEq(2),
+                            FloatEq(3),
+                            FloatEq(4),
+                            FloatEq(5),
+                            FloatEq(6),
+                            FloatEq(7),
+                            FloatEq(8)));
 }
 
 TEST_F(FastConvolution, ImpulseNonZeroDelay)
 {
-    std::array<float, 4> input_a{};
-    std::array<float, 4> input_b{};
+    std::array<float, 8> input_a{};
+    std::array<float, 8> input_b{};
 
     input_b[1] = 1;
 
@@ -126,42 +139,61 @@ TEST_F(FastConvolution, ImpulseNonZeroDelay)
     input_a[1] = 2;
     input_a[2] = 3;
     input_a[3] = 4;
+    input_a[4] = 5;
+    input_a[5] = 6;
+    input_a[6] = 7;
+    input_a[7] = 8;
 
-    std::array<float, 4> out{};
+    std::array<float, 8> out{};
 
-    shrapnel::dsp::FastConvolution<4, 4> uut(input_a);
+    shrapnel::dsp::FastConvolution<8, 8> uut(input_a);
 
     uut.process(input_b, out);
 
     EXPECT_THAT(out,
-                ElementsAre(FloatEq(4), FloatEq(1), FloatEq(2), FloatEq(3)));
+                ElementsAre(FloatEq(8),
+                            FloatEq(1),
+                            FloatEq(2),
+                            FloatEq(3),
+                            FloatEq(4),
+                            FloatEq(5),
+                            FloatEq(6),
+                            FloatEq(7)));
 }
 
 TEST_F(FastConvolution, IsCommutative)
 {
-    std::array<float, 4> input_a{};
-    std::array<float, 4> input_b{};
+    std::array<float, 8> input_a{};
+    std::array<float, 8> input_b{};
 
     input_a[0] = 1;
     input_a[1] = 2;
     input_a[2] = 3;
     input_a[3] = 4;
+    input_a[4] = 5;
+    input_a[5] = 6;
+    input_a[6] = 7;
+    input_a[7] = 8;
 
-    input_b[0] = 5;
-    input_b[1] = 6;
-    input_b[2] = 7;
-    input_b[3] = 8;
+    input_b[0] = 9;
+    input_b[1] = 10;
+    input_b[2] = 11;
+    input_b[3] = 12;
+    input_b[4] = 13;
+    input_b[5] = 14;
+    input_b[6] = 15;
+    input_b[7] = 16;
 
-    std::array<float, 4> out_a{};
-    std::array<float, 4> out_b{};
+    std::array<float, 8> out_a{};
+    std::array<float, 8> out_b{};
 
-    shrapnel::dsp::FastConvolution<4, 4> uut_a(input_a);
-    shrapnel::dsp::FastConvolution<4, 4> uut_b(input_b);
+    shrapnel::dsp::FastConvolution<8, 8> uut_a(input_a);
+    shrapnel::dsp::FastConvolution<8, 8> uut_b(input_b);
 
     uut_a.process(input_b, out_a);
     uut_b.process(input_a, out_b);
 
-    for(std::size_t i = 0; i < 4; i++)
+    for(std::size_t i = 0; i < 8; i++)
     {
         EXPECT_FLOAT_EQ(out_a[i], out_b[i]);
     }
@@ -169,8 +201,8 @@ TEST_F(FastConvolution, IsCommutative)
 
 TEST_F(FastConvolution, IsLinear)
 {
-    std::array<float, 4> input_a{};
-    std::array<float, 4> input_b{};
+    std::array<float, 8> input_a{};
+    std::array<float, 8> input_b{};
 
     input_b[0] = 1;
     input_b[1] = 1;
@@ -179,15 +211,24 @@ TEST_F(FastConvolution, IsLinear)
     input_a[1] = 2;
     input_a[2] = 3;
     input_a[3] = 4;
+    input_a[4] = 5;
+    input_a[5] = 6;
+    input_a[6] = 7;
+    input_a[7] = 8;
 
-    std::array<float, 4> out{};
+    std::array<float, 8> out{};
 
-    shrapnel::dsp::FastConvolution<4, 4> uut(input_a);
+    shrapnel::dsp::FastConvolution<8, 8> uut(input_a);
 
     uut.process(input_b, out);
 
-    EXPECT_THAT(
-        out,
-        ElementsAre(
-            FloatEq(1 + 4), FloatEq(2 + 1), FloatEq(3 + 2), FloatEq(4 + 3)));
+    EXPECT_THAT(out,
+                ElementsAre(FloatEq(1 + 8),
+                            FloatEq(2 + 1),
+                            FloatEq(3 + 2),
+                            FloatEq(4 + 3),
+                            FloatEq(5 + 4),
+                            FloatEq(6 + 5),
+                            FloatEq(7 + 6),
+                            FloatEq(8 + 7)));
 }

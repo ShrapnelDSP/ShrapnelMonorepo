@@ -33,6 +33,8 @@
 namespace shrapnel::dsp {
 
 template <std::size_t N, std::size_t K>
+    // The FFT library doesn't seem to work when using fewer than 8 points
+    requires(N >= 8)
 class FastConvolution final
 {
 public:
@@ -63,6 +65,12 @@ public:
         std::copy(out.begin(), out.end(), a_copy.begin());
     }
 
+    ~FastConvolution()
+    {
+        esp32_fft_destroy(fft_config);
+        esp32_fft_destroy(ifft_config);
+    }
+
     /**
      * Process samples
      *
@@ -83,8 +91,6 @@ public:
         profiling_mark_stage("convolution b transform");
 
         // multiply A * B
-        // TODO this probably needs a special case for handling DC and Nyquist
-        // special encoding in the first element
         complex_multiply(a_copy.data(), fft_out.data(), ifft_in.data());
         profiling_mark_stage("convolution complex_multiply");
 
@@ -107,23 +113,32 @@ public:
         // (ra rb + ra im_b j) +    // part 1
         // (- im_a im_b + im_a r_b j)   // part 2
 
+        // The FFT result has a special encoding for DC and Nyquist. DC is
+        // stored in the first element, and nyquist in the second.
+        out[0] = a[0] * b[0];
+        out[1] = a[1] * b[1];
+        
+        a += 2;
+        b += 2;
+        out += 2;
+
         // TODO we multiply then add here, could we use the MADD.S instruction
         // to speed it up?
-
+        
         // part 1
-        dsps_mul_f32(a, b, out, N / 2, 2, 2, 2);
-        dsps_mul_f32(a, b + 1, out + 1, N / 2, 2, 2, 2);
+        dsps_mul_f32(a, b, out, N / 2 - 1, 2, 2, 2);
+        dsps_mul_f32(a, b + 1, out + 1, N / 2 - 1, 2, 2, 2);
 
         // part 2
-        std::array<float, N> out2;
+        std::array<float, N - 2> out2;
         auto out2_ptr = reinterpret_cast<float *>(out2.data());
-        dsps_mul_f32(a + 1, b + 1, out2_ptr, N / 2, 2, 2, 2);
-        dsps_mul_f32(a + 1, b, out2_ptr + 1, N / 2, 2, 2, 2);
-        dsps_mulc_f32(out2_ptr, out2_ptr, N / 2, -1, 2, 2);
+        dsps_mul_f32(a + 1, b + 1, out2_ptr, N / 2 - 1, 2, 2, 2);
+        dsps_mul_f32(a + 1, b, out2_ptr + 1, N / 2 - 1, 2, 2, 2);
+        dsps_mulc_f32(out2_ptr, out2_ptr, N / 2 - 1, -1, 2, 2);
 
-        dsps_add_f32(out, out2_ptr, out, N, 1, 1, 1);
+        dsps_add_f32(out, out2_ptr, out, N - 2, 1, 1, 1);
     }
-    
+
 private:
     std::array<float, N> a_copy;
     esp32_fft_config_t *fft_config;
