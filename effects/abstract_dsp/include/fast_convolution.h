@@ -33,42 +33,47 @@
 namespace shrapnel::dsp {
 
 template <std::size_t N, std::size_t K>
-    // The FFT library doesn't seem to work when using fewer than 8 points
+// The FFT library doesn't seem to work when using fewer than 8 points
     requires(N >= 8)
 class FastConvolution final
 {
 public:
     // TODO move the definition of A into the prepare method
     // Resample A to the current sample rate in the prepare method
-    FastConvolution(const std::array<float, K> &a)
+    explicit FastConvolution(const std::array<float, K> &a)
     {
-        // TODO Initialise FFT by hand to avoid some unnecessary allocations
-        // and duplication of the twiddle factor buffer
+        // Initialise FFT structs by hand to avoid some unnecessary allocations
+        // and duplication of the twiddle factor buffer. Input and output
+        // buffers are assigned later to avoid some allocations and copies
+        // from the FFT buffer to the output buffer of the functions.
+        constexpr float two_pi = 6.28318530;
+        constexpr float two_pi_by_n = two_pi / N;
 
-        // TODO Instead of allocating input and output buffers, set the before
-        // the fft_execute call as required at the call site. This avoids some
-        // copies.
-        fft_config = esp32_fft_init(
-            N, ESP32_FFT_REAL, ESP32_FFT_FORWARD, nullptr, nullptr);
-        ifft_config = esp32_fft_init(
-            N, ESP32_FFT_REAL, ESP32_FFT_BACKWARD, nullptr, nullptr);
+        int k, m;
+        for(k = 0, m = 0; k < N; k++, m += 2)
+        {
+            twiddle_factors[m] = cosf(two_pi_by_n * k);     // real
+            twiddle_factors[m + 1] = sinf(two_pi_by_n * k); // imag
+        }
 
-        assert(fft_config != nullptr);
-        assert(ifft_config != nullptr);
+        fft_config.flags = 0;
+        fft_config.type = ESP32_FFT_REAL;
+        fft_config.direction = ESP32_FFT_FORWARD;
+        fft_config.size = N;
+        fft_config.twiddle_factors = twiddle_factors.data();
+
+        ifft_config.flags = 0;
+        ifft_config.type = ESP32_FFT_REAL;
+        ifft_config.direction = ESP32_FFT_BACKWARD;
+        ifft_config.size = N;
+        ifft_config.twiddle_factors = twiddle_factors.data();
 
         // transform a
-        std::span<float, N> in{fft_config->input, N};
-        std::fill(in.begin(), in.end(), 0);
-        std::copy(a.cbegin(), a.cend(), fft_config->input);
-        esp32_fft_execute(fft_config);
-        std::span<float, N> out{fft_config->output, N};
-        std::copy(out.begin(), out.end(), a_copy.begin());
-    }
-
-    ~FastConvolution()
-    {
-        esp32_fft_destroy(fft_config);
-        esp32_fft_destroy(ifft_config);
+        std::array<float, N> a_tmp{};
+        std::copy(a.cbegin(), a.cend(), a_tmp.data());
+        fft_config.input = a_tmp.data();
+        fft_config.output = a_copy.data();
+        esp32_fft_execute(&fft_config);
     }
 
     /**
@@ -79,26 +84,25 @@ public:
     void process(const std::array<float, N> &b, std::array<float, N> &out)
     {
         profiling_mark_stage("convolution start");
-        std::span<float, N> fft_in{fft_config->input, N};
-        std::span<float, N> fft_out{fft_config->output, N};
-        std::span<float, N> ifft_in{ifft_config->input, N};
-        std::span<float, N> ifft_out{ifft_config->output, N};
 
         // transform b
-        std::copy(b.begin(), b.end(), fft_in.begin());
-        profiling_mark_stage("convolution b copy");
-        esp32_fft_execute(fft_config);
+        // const cast is OK because the forward FFT does not modify the input
+        // buffer
+        fft_config.input = const_cast<float *>(b.data());
+        fft_config.output = out.data();
+        esp32_fft_execute(&fft_config);
         profiling_mark_stage("convolution b transform");
 
         // multiply A * B
-        complex_multiply(a_copy.data(), fft_out.data(), ifft_in.data());
+        std::array<float, N> multiplied;
+        complex_multiply(a_copy.data(), out.data(), multiplied.data());
         profiling_mark_stage("convolution complex_multiply");
 
         // Inverse transform
-        esp32_fft_execute(ifft_config);
+        ifft_config.input = multiplied.data();
+        ifft_config.output = out.data();
+        esp32_fft_execute(&ifft_config);
         profiling_mark_stage("convolution ifft");
-        std::copy(ifft_out.begin(), ifft_out.end(), out.begin());
-        profiling_mark_stage("convolution out copy");
     }
 
     static void complex_multiply(const float *a, const float *b, float *out)
@@ -117,14 +121,14 @@ public:
         // stored in the first element, and nyquist in the second.
         out[0] = a[0] * b[0];
         out[1] = a[1] * b[1];
-        
+
         a += 2;
         b += 2;
         out += 2;
 
         // TODO we multiply then add here, could we use the MADD.S instruction
         // to speed it up?
-        
+
         // part 1
         dsps_mul_f32(a, b, out, N / 2 - 1, 2, 2, 2);
         dsps_mul_f32(a, b + 1, out + 1, N / 2 - 1, 2, 2, 2);
@@ -140,9 +144,10 @@ public:
     }
 
 private:
+    std::array<float, 2 * N> twiddle_factors;
     std::array<float, N> a_copy;
-    esp32_fft_config_t *fft_config;
-    esp32_fft_config_t *ifft_config;
+    esp32_fft_config_t fft_config;
+    esp32_fft_config_t ifft_config;
 };
 
 } // namespace shrapnel::dsp
