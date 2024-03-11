@@ -36,7 +36,7 @@
 
 #define DMA_BUF_COUNT (3)
 
-#define TASK_STACK (36000)
+#define TASK_STACK (20000)
 
 /* Guarantee no preemption by esp-idf tasks.
  *
