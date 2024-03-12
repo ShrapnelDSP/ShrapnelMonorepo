@@ -36,7 +36,7 @@
 
 #define DMA_BUF_COUNT (3)
 
-#define TASK_STACK (36000)
+#define TASK_STACK (20000)
 
 /* Guarantee no preemption by esp-idf tasks.
  *
@@ -125,6 +125,7 @@ static void i2s_processing_task(void *param)
                                        &i2s_config,
                                        I2S_QUEUE_SIZE,
                                        &i2s_queue);
+
     if(err != ESP_OK)
     {
         ESP_LOGE(

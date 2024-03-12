@@ -47,7 +47,7 @@ namespace shrapnel::dsp {
  */
 template <size_t N, size_t M, typename Convolution>
     requires integral_power_of_2<decltype(N), N> &&
-             integral_power_of_2<decltype(M), M> && requires { M <= N / 2; }
+             integral_power_of_2<decltype(M), M> && (N <= M / 2)
 class FastFir final
 {
 public:
