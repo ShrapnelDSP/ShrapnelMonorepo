@@ -133,7 +133,7 @@ $(document).ready(function(){initNavTree('block__processor_8h_source.html',''); 
 <div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>        <a class="code hl_function" href="classshrapnel_1_1dsp_1_1BlockProcessor.html#a7729e4a8226ad8a7e29b1c54f8be09a9">reset</a>();</div>
 <div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span> </div>
 <div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>        <span class="keyword">auto</span> childSpec = spec;</div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>        childSpec.maximumBlockSize = N;</div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>        childSpec.maximumBlockSize = <a class="code hl_variable" href="namespacefft.html#a46f001319030a8e4a2a47d52b56743ed">N</a>;</div>
 <div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>        child.prepare(childSpec);</div>
 <div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>    };</div>
 <div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span> </div>
@@ -152,13 +152,13 @@ $(document).ready(function(){initNavTree('block__processor_8h_source.html',''); 
 <div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span> </div>
 <div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>        <span class="keywordflow">while</span>(samples_left &gt; 0)</div>
 <div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>        {</div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>            <span class="keyword">auto</span> space_left_in_write_buffer = N - write_size;</div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>            <span class="keyword">auto</span> space_left_in_write_buffer = <a class="code hl_variable" href="namespacefft.html#a46f001319030a8e4a2a47d52b56743ed">N</a> - write_size;</div>
 <div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>            <span class="keyword">auto</span> samples_processed_this_iteration =</div>
 <div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>                juce::jmin(space_left_in_write_buffer, samples_left);</div>
 <div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>            samples_left -= samples_processed_this_iteration;</div>
 <div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span> </div>
 <div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>            <span class="comment">// We must never overflow the buffer</span></div>
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>            jassert(write_size + samples_processed_this_iteration &lt;= N);</div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>            jassert(write_size + samples_processed_this_iteration &lt;= <a class="code hl_variable" href="namespacefft.html#a46f001319030a8e4a2a47d52b56743ed">N</a>);</div>
 <div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span> </div>
 <div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>            <span class="comment">// Add input samples to the internal buffer</span></div>
 <div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>            <span class="keyword">auto</span> write_buffer = buffers.getWritePointer(!read_buffer_channel);</div>
@@ -181,7 +181,7 @@ $(document).ready(function(){initNavTree('block__processor_8h_source.html',''); 
 <div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span> </div>
 <div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>            <span class="comment">// After pushing, the buffer might now be full. If it is, then we</span></div>
 <div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>            <span class="comment">// let the block processor process it.</span></div>
-<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>            <span class="keywordflow">if</span>(write_size == N)</div>
+<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>            <span class="keywordflow">if</span>(write_size == <a class="code hl_variable" href="namespacefft.html#a46f001319030a8e4a2a47d52b56743ed">N</a>)</div>
 <div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>            {</div>
 <div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>                <span class="keyword">auto</span> completeBlock =</div>
 <div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>                    block.getSingleChannelBlock(!read_buffer_channel);</div>
@@ -195,7 +195,7 @@ $(document).ready(function(){initNavTree('block__processor_8h_source.html',''); 
 <div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span> </div>
 <div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span><span class="keyword">private</span>:</div>
 <div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>    ChildProcessor child;</div>
-<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>    juce::AudioBuffer&lt;float&gt; buffers{2, N};</div>
+<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>    juce::AudioBuffer&lt;float&gt; buffers{2, <a class="code hl_variable" href="namespacefft.html#a46f001319030a8e4a2a47d52b56743ed">N</a>};</div>
 <div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>    juce::dsp::AudioBlock&lt;float&gt; block{buffers};</div>
 <div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>    <span class="keywordtype">size_t</span> read_buffer_channel = 0;</div>
 <div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>    <span class="keywordtype">size_t</span> write_size = 0;</div>
@@ -208,6 +208,7 @@ $(document).ready(function(){initNavTree('block__processor_8h_source.html',''); 
 <div class="ttc" id="aclassshrapnel_1_1dsp_1_1BlockProcessor_html_ab7bceb1991de4e23fc6242ce31c9c3ed"><div class="ttname"><a href="classshrapnel_1_1dsp_1_1BlockProcessor.html#ab7bceb1991de4e23fc6242ce31c9c3ed">shrapnel::dsp::BlockProcessor::BlockProcessor</a></div><div class="ttdeci">BlockProcessor(ChildProcessor a_child)</div><div class="ttdef"><b>Definition:</b> <a href="block__processor_8h_source.html#l00031">block_processor.h:31</a></div></div>
 <div class="ttc" id="aclassshrapnel_1_1dsp_1_1BlockProcessor_html_ad030c1cd0ca1f5d699634dcb66d5eea7"><div class="ttname"><a href="classshrapnel_1_1dsp_1_1BlockProcessor.html#ad030c1cd0ca1f5d699634dcb66d5eea7">shrapnel::dsp::BlockProcessor::process</a></div><div class="ttdeci">void process(const juce::dsp::ProcessContextReplacing&lt; float &gt; &amp;context) override</div><div class="ttdef"><b>Definition:</b> <a href="block__processor_8h_source.html#l00051">block_processor.h:51</a></div></div>
 <div class="ttc" id="aclassshrapnel_1_1dsp_1_1BlockProcessor_html_ad7763ea8923c3a939d2ffb2f145b8cdb"><div class="ttname"><a href="classshrapnel_1_1dsp_1_1BlockProcessor.html#ad7763ea8923c3a939d2ffb2f145b8cdb">shrapnel::dsp::BlockProcessor::prepare</a></div><div class="ttdeci">void prepare(const juce::dsp::ProcessSpec &amp;spec) override</div><div class="ttdef"><b>Definition:</b> <a href="block__processor_8h_source.html#l00035">block_processor.h:35</a></div></div>
+<div class="ttc" id="anamespacefft_html_a46f001319030a8e4a2a47d52b56743ed"><div class="ttname"><a href="namespacefft.html#a46f001319030a8e4a2a47d52b56743ed">fft.N</a></div><div class="ttdeci">int N</div><div class="ttdef"><b>Definition:</b> <a href="fft_8py_source.html#l00022">fft.py:22</a></div></div>
 <div class="ttc" id="anamespaceshrapnel_1_1dsp_html"><div class="ttname"><a href="namespaceshrapnel_1_1dsp.html">shrapnel::dsp</a></div><div class="ttdef"><b>Definition:</b> <a href="block__processor_8h_source.html#l00025">block_processor.h:25</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->

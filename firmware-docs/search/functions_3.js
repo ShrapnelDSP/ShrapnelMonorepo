@@ -1,7 +1,7 @@
 var searchData=
 [
   ['commandhandling_0',['CommandHandling',['../classshrapnel_1_1parameters_1_1CommandHandling.html#a47cb76588381f02e79f92df27687a36e',1,'shrapnel::parameters::CommandHandling']]],
-  ['complex_5fmultiply_1',['complex_multiply',['../classshrapnel_1_1dsp_1_1FastConvolution.html#af1edb28634e2a86d0223e4bf56234650',1,'shrapnel::dsp::FastConvolution']]],
+  ['complex_5fmultiply_1',['complex_multiply',['../classshrapnel_1_1dsp_1_1FastConvolution.html#a87717f972182efc27a42947f4ff2e413',1,'shrapnel::dsp::FastConvolution']]],
   ['connect_5fhandler_2',['connect_handler',['../namespaceshrapnel.html#a4bf0b1d7c4fef2839a56059a237d1da6',1,'shrapnel']]],
   ['contourfilter_3',['ContourFilter',['../classContourFilter.html#af4486d2fb4e9beb086f2b11b5f48d111',1,'ContourFilter']]],
   ['create_4',['create',['../classshrapnel_1_1persistence_1_1EspCrud.html#aa8aa11ef4d54cb9915c2feadde7a74fe',1,'shrapnel::persistence::EspCrud::create()'],['../classshrapnel_1_1midi_1_1MappingManager.html#a1e3f4c1de3c5194b08c39d8999cddad5',1,'shrapnel::midi::MappingManager::create()'],['../classshrapnel_1_1persistence_1_1Crud.html#a135faa57335c718ed5b12a8fa3caa376',1,'shrapnel::persistence::Crud::create()'],['../classshrapnel_1_1presets_1_1PresetsManager.html#a61ecad878277bcfb1af7b6ee08b6b43e',1,'shrapnel::presets::PresetsManager::create()']]],

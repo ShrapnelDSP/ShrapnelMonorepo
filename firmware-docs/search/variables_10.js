@@ -1,12 +1,8 @@
 var searchData=
 [
-  ['sample_5frate_0',['sample_rate',['../esp32_2profiling_8c.html#a63433fe701b4e06f2cfdd50509e660db',1,'sample_rate():&#160;profiling.c'],['../noise__gate_8cpp.html#a63433fe701b4e06f2cfdd50509e660db',1,'sample_rate():&#160;noise_gate.cpp']]],
-  ['selectedpresetid_1',['selectedPresetId',['../structshrapnel_1_1selected__preset_1_1Notify.html#a8cdab9a037d26059b6d7fd19bfa360bb',1,'shrapnel::selected_preset::Notify::selectedPresetId()'],['../structshrapnel_1_1selected__preset_1_1Write.html#ac727ce7f767ebd1ac09881c995251afc',1,'shrapnel::selected_preset::Write::selectedPresetId()']]],
-  ['shape_2',['shape',['../wave__shape_8cpp.html#ac90590641d80fb6ee53567544ae1e32c',1,'wave_shape.cpp']]],
-  ['shape_5fsize_3',['shape_size',['../wave__shape_8cpp.html#abfe121fe4182d1620e2846cffd98f268',1,'wave_shape.cpp']]],
-  ['stage_5fcycles_4',['stage_cycles',['../esp32_2profiling_8c.html#ade2d6f84e5a6696fba128c5769eef4db',1,'profiling.c']]],
-  ['stage_5fnames_5',['stage_names',['../esp32_2profiling_8c.html#a5f565596b2d7f88d6820a1b1d37df2f9',1,'profiling.c']]],
-  ['start_5fcycles_6',['start_cycles',['../esp32_2profiling_8c.html#abbb1d59d5361eaadca69523f17e12a25',1,'profiling.c']]],
-  ['state_7',['state',['../noise__gate_8cpp.html#a499e7824037af983d0524a98081e7f0b',1,'noise_gate.cpp']]],
-  ['state_5ftable_8',['state_table',['../classshrapnel_1_1wifi_1_1WifiStateMachine.html#a45fa4c2f5bfd4399d1419b3681e75656',1,'shrapnel::wifi::WifiStateMachine']]]
+  ['rate_0',['rate',['../structshrapnel_1_1AudioProcessorParameters.html#a529d074f4132e64457a3fc2ef5338728',1,'shrapnel::AudioProcessorParameters']]],
+  ['rect_1',['rect',['../namespacefft.html#a74ac2b458e684b75e2b0f276cc318b26',1,'fft']]],
+  ['release_2',['release',['../structshrapnel_1_1AudioProcessorParameters.html#a43ed7c1d6fe3d05c368c4545809231f2',1,'shrapnel::AudioProcessorParameters']]],
+  ['release_5fsamples_3',['release_samples',['../noise__gate_8cpp.html#ad7dabea111d7fb382e5fdc3dca9c152c',1,'noise_gate.cpp']]],
+  ['rfft_5fresult_4',['rfft_result',['../namespacefft.html#a4c9745171d2f8dc0c38088711ad2e462',1,'fft']]]
 ];

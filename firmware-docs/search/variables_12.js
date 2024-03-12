@@ -1,7 +1,8 @@
 var searchData=
 [
-  ['value_0',['value',['../structshrapnel_1_1parameters_1_1Update.html#a4e6b9e60fd8c7c94769b080cd0137dae',1,'shrapnel::parameters::Update::value()'],['../structshrapnel_1_1midi_1_1Message_1_1ControlChange.html#a2615450c8f2f31fc8c4298f8363d076c',1,'shrapnel::midi::Message::ControlChange::value()']]],
-  ['velocity_1',['velocity',['../structshrapnel_1_1midi_1_1Message_1_1NoteOn.html#a3377e69df50e588b93683fd3c3aa8a43',1,'shrapnel::midi::Message::NoteOn::velocity()'],['../structshrapnel_1_1midi_1_1Message_1_1NoteOff.html#a854bc5ff80d66e047c66678ca281df8d',1,'shrapnel::midi::Message::NoteOff::velocity()']]],
-  ['vocal_2',['vocal',['../structshrapnel_1_1AudioProcessorParameters.html#a01c7b16f5f94cc85804344fc4086f40d',1,'shrapnel::AudioProcessorParameters']]],
-  ['volume_3',['volume',['../structshrapnel_1_1AudioProcessorParameters.html#a1a4680847e8471c1e439ee679cf95e94',1,'shrapnel::AudioProcessorParameters::volume()'],['../structshrapnel_1_1presets_1_1ParametersData.html#aec514abaf05dfdea8a2fd831a8099669',1,'shrapnel::presets::ParametersData::volume()']]]
+  ['threshold_0',['threshold',['../structshrapnel_1_1AudioProcessorParameters.html#a0d536cc617664abe74d2972c348d8d6d',1,'shrapnel::AudioProcessorParameters::threshold()'],['../noise__gate_8cpp.html#a376acef8954eadc70f4b55e8e0588e13',1,'threshold():&#160;noise_gate.cpp']]],
+  ['threshold_5flow_1',['threshold_low',['../noise__gate_8cpp.html#a111b07f67c2a0fd54566f676c398c900',1,'noise_gate.cpp']]],
+  ['timer_2',['timer',['../structshrapnel_1_1os_1_1Timer_1_1impl.html#a16e4380850736034ac4d1c12385f2386',1,'shrapnel::os::Timer::impl']]],
+  ['transition_5ftable_3',['transition_table',['../classshrapnel_1_1wifi_1_1WifiStateMachine.html#a86185bd538ac8cb096a0e3d7fd1f217a',1,'shrapnel::wifi::WifiStateMachine']]],
+  ['treble_4',['treble',['../structshrapnel_1_1AudioProcessorParameters.html#a388a51f2ff3a51cd792f982502200582',1,'shrapnel::AudioProcessorParameters::treble()'],['../structshrapnel_1_1presets_1_1ParametersData.html#a0039957eb040138f6e2e0ba826cb1a6c',1,'shrapnel::presets::ParametersData::treble()']]]
 ];

@@ -1,5 +1,18 @@
 var namespaces_dup =
 [
+    [ "fft", "namespacefft.html", [
+      [ "plot_complex_signal", "namespacefft.html#a792b29847f8ac66b6d062b579b1ef667", null ],
+      [ "plot_signal", "namespacefft.html#a08f569bcc69ad7ef0d9df3ce5587fe9a", null ],
+      [ "esp_dsp_complex_result", "namespacefft.html#aae8bd0792219aaa31306e648251ffa58", null ],
+      [ "esp_dsp_real_result", "namespacefft.html#a53e0e66c639ce85e4c5ec41c1ca2d478", null ],
+      [ "impulse", "namespacefft.html#ae0ad0667b60978895e689eac72ef4dc5", null ],
+      [ "label", "namespacefft.html#a7f4657fee5d575fbd382abe2ba1bdc86", null ],
+      [ "N", "namespacefft.html#a46f001319030a8e4a2a47d52b56743ed", null ],
+      [ "rect", "namespacefft.html#a74ac2b458e684b75e2b0f276cc318b26", null ],
+      [ "rfft_result", "namespacefft.html#a4c9745171d2f8dc0c38088711ad2e462", null ],
+      [ "sequence", "namespacefft.html#ad4c6a2e0c14e81bebc8a235e48f0108a", null ],
+      [ "silence", "namespacefft.html#add084e7c6c1a4944fcda7f6522103760", null ]
+    ] ],
     [ "shrapnel", "namespaceshrapnel.html", "namespaceshrapnel" ],
     [ "wah", "namespacewah.html", [
       [ "design_filter", "namespacewah.html#a38b599146a517b6c23ae2448a984d417", null ],

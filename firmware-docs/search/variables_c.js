@@ -1,13 +1,11 @@
 var searchData=
 [
-  ['name_0',['name',['../classshrapnel_1_1parameters_1_1AudioParameterFloat.html#a920d0aab2ee7a9cade98fdee516d380b',1,'shrapnel::parameters::AudioParameterFloat::name()'],['../structshrapnel_1_1presets_1_1PresetData.html#a5d9526eb1809a35b0a82b8ba564638ff',1,'shrapnel::presets::PresetData::name()']]],
-  ['noise_5fgate_5fattack_1',['noise_gate_attack',['../structshrapnel_1_1presets_1_1ParametersData.html#aa251a9e962731cca88d1ad28c011e378',1,'shrapnel::presets::ParametersData']]],
-  ['noise_5fgate_5fbypass_2',['noise_gate_bypass',['../structshrapnel_1_1presets_1_1ParametersData.html#a37fd673e027b04797cbfbef7e7ab47cc',1,'shrapnel::presets::ParametersData']]],
-  ['noise_5fgate_5fhold_3',['noise_gate_hold',['../structshrapnel_1_1presets_1_1ParametersData.html#acdd2e500c03d3b663ba922c624272725',1,'shrapnel::presets::ParametersData']]],
-  ['noise_5fgate_5fhysteresis_4',['noise_gate_hysteresis',['../structshrapnel_1_1presets_1_1ParametersData.html#a93c2bb5b64aba556d28231a33c017e93',1,'shrapnel::presets::ParametersData']]],
-  ['noise_5fgate_5frelease_5',['noise_gate_release',['../structshrapnel_1_1presets_1_1ParametersData.html#a3f29900feae894411329dcf66aef1657',1,'shrapnel::presets::ParametersData']]],
-  ['noise_5fgate_5fthreshold_6',['noise_gate_threshold',['../structshrapnel_1_1presets_1_1ParametersData.html#a6063ad8eaf13bdb2214367d221797873',1,'shrapnel::presets::ParametersData']]],
-  ['note_7',['note',['../structshrapnel_1_1midi_1_1Message_1_1NoteOn.html#ae16150bffaedd0c9c1ce7dd767b463eb',1,'shrapnel::midi::Message::NoteOn::note()'],['../structshrapnel_1_1midi_1_1Message_1_1NoteOff.html#a956f0f53e35e1dfda0e40c53b3e4c346',1,'shrapnel::midi::Message::NoteOff::note()']]],
-  ['num_8',['num',['../namespacewah.html#ac0e49814eb451b1f60de1d8a809b62b0',1,'wah']]],
-  ['number_9',['number',['../structshrapnel_1_1midi_1_1Message_1_1ProgramChange.html#aa410a2e8f7c2338ad6cc7545ad5d93c8',1,'shrapnel::midi::Message::ProgramChange']]]
+  ['mapping_0',['mapping',['../structshrapnel_1_1midi_1_1CreateRequest.html#a328c690a44a674edcfd74e9098b553ab',1,'shrapnel::midi::CreateRequest::mapping()'],['../structshrapnel_1_1midi_1_1CreateResponse.html#a9e3f73aa5d09af4a127809bcf53a758c',1,'shrapnel::midi::CreateResponse::mapping()'],['../structshrapnel_1_1midi_1_1Update.html#a9dceb99ae11c395d675becd97f4a2fa5',1,'shrapnel::midi::Update::mapping()']]],
+  ['max_5fparameters_1',['MAX_PARAMETERS',['../namespaceshrapnel.html#ac2574f72fe2ddfb3366666bc097b29f2',1,'shrapnel']]],
+  ['message_2',['message',['../structshrapnel_1_1midi_1_1MessageReceived.html#a83ae76bcd410b1836b0d319f1c8cef4a',1,'shrapnel::midi::MessageReceived']]],
+  ['middle_3',['middle',['../structshrapnel_1_1AudioProcessorParameters.html#a0818fc120aa3b6cbddb71572a40348c9',1,'shrapnel::AudioProcessorParameters::middle()'],['../structshrapnel_1_1presets_1_1ParametersData.html#a6f3d6efee8ab56404f115438a0f5580d',1,'shrapnel::presets::ParametersData::middle()']]],
+  ['midi_5fchannel_4',['midi_channel',['../structshrapnel_1_1midi_1_1Mapping.html#a46fa239f0d9c9c4db85812d0f38b0f29',1,'shrapnel::midi::Mapping']]],
+  ['minor_5',['minor',['../namespacewah.html#ad960e329d3b178d3fcf3bc0552a4f302',1,'wah']]],
+  ['mix_6',['mix',['../structshrapnel_1_1AudioProcessorParameters.html#a9fb06b1c2a1949abbe9c19a0e83fe797',1,'shrapnel::AudioProcessorParameters']]],
+  ['mode_7',['mode',['../structshrapnel_1_1midi_1_1Mapping.html#ad02ebea6e6428980d752a6f3844bf21f',1,'shrapnel::midi::Mapping']]]
 ];

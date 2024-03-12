@@ -291,7 +291,7 @@ Here is the caller graph for this function:</div>
 <div class="line"><span class="lineno">   66</span>    <span class="keywordflow">if</span>(<a class="code hl_variable" href="esp32_2profiling_8c.html#a4ff804bf46703f603a1541568cef5531">got_semaphore</a>)</div>
 <div class="line"><span class="lineno">   67</span>    {</div>
 <div class="line"><span class="lineno">   68</span>        <a class="code hl_variable" href="esp32_2profiling_8c.html#ade2d6f84e5a6696fba128c5769eef4db">stage_cycles</a>[<a class="code hl_variable" href="esp32_2profiling_8c.html#a86988a65e0d3ece7990c032c159786d6">count</a>] = esp_cpu_get_cycle_count();</div>
-<div class="line"><span class="lineno">   69</span>        <a class="code hl_variable" href="esp32_2profiling_8c.html#a5f565596b2d7f88d6820a1b1d37df2f9">stage_names</a>[<a class="code hl_variable" href="esp32_2profiling_8c.html#a86988a65e0d3ece7990c032c159786d6">count</a>] = label;</div>
+<div class="line"><span class="lineno">   69</span>        <a class="code hl_variable" href="esp32_2profiling_8c.html#a5f565596b2d7f88d6820a1b1d37df2f9">stage_names</a>[<a class="code hl_variable" href="esp32_2profiling_8c.html#a86988a65e0d3ece7990c032c159786d6">count</a>] = <a class="code hl_variable" href="namespacefft.html#a7f4657fee5d575fbd382abe2ba1bdc86">label</a>;</div>
 <div class="line"><span class="lineno">   70</span>        <a class="code hl_variable" href="esp32_2profiling_8c.html#a86988a65e0d3ece7990c032c159786d6">count</a>++;</div>
 <div class="line"><span class="lineno">   71</span>    }</div>
 <div class="line"><span class="lineno">   72</span>}</div>
@@ -299,8 +299,9 @@ Here is the caller graph for this function:</div>
 <div class="ttc" id="aesp32_2profiling_8c_html_a5f565596b2d7f88d6820a1b1d37df2f9"><div class="ttname"><a href="esp32_2profiling_8c.html#a5f565596b2d7f88d6820a1b1d37df2f9">stage_names</a></div><div class="ttdeci">static const char * stage_names[NUMBER_OF_STAGES]</div><div class="ttdef"><b>Definition:</b> <a href="esp32_2profiling_8c_source.html#l00035">profiling.c:35</a></div></div>
 <div class="ttc" id="aesp32_2profiling_8c_html_a86988a65e0d3ece7990c032c159786d6"><div class="ttname"><a href="esp32_2profiling_8c.html#a86988a65e0d3ece7990c032c159786d6">count</a></div><div class="ttdeci">static uint32_t count</div><div class="ttdef"><b>Definition:</b> <a href="esp32_2profiling_8c_source.html#l00032">profiling.c:32</a></div></div>
 <div class="ttc" id="aesp32_2profiling_8c_html_ade2d6f84e5a6696fba128c5769eef4db"><div class="ttname"><a href="esp32_2profiling_8c.html#ade2d6f84e5a6696fba128c5769eef4db">stage_cycles</a></div><div class="ttdeci">static uint32_t stage_cycles[NUMBER_OF_STAGES]</div><div class="ttdef"><b>Definition:</b> <a href="esp32_2profiling_8c_source.html#l00034">profiling.c:34</a></div></div>
+<div class="ttc" id="anamespacefft_html_a7f4657fee5d575fbd382abe2ba1bdc86"><div class="ttname"><a href="namespacefft.html#a7f4657fee5d575fbd382abe2ba1bdc86">fft.label</a></div><div class="ttdeci">label</div><div class="ttdef"><b>Definition:</b> <a href="fft_8py_source.html#l00062">fft.py:62</a></div></div>
 </div><!-- fragment -->
-<p class="reference">References <a class="el" href="esp32_2profiling_8c_source.html#l00032">count</a>, <a class="el" href="esp32_2profiling_8c_source.html#l00037">got_semaphore</a>, <a class="el" href="esp32_2profiling_8c_source.html#l00034">stage_cycles</a>, and <a class="el" href="esp32_2profiling_8c_source.html#l00035">stage_names</a>.</p>
+<p class="reference">References <a class="el" href="esp32_2profiling_8c_source.html#l00032">count</a>, <a class="el" href="esp32_2profiling_8c_source.html#l00037">got_semaphore</a>, <a class="el" href="fft_8py_source.html#l00062">fft::label</a>, <a class="el" href="esp32_2profiling_8c_source.html#l00034">stage_cycles</a>, and <a class="el" href="esp32_2profiling_8c_source.html#l00035">stage_names</a>.</p>
 
 </div>
 </div>
