@@ -17,7 +17,7 @@
  * ShrapnelDSP. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#define LOG_LOCAL_LEVEL ESP_LOG_VERBOSE
+// #define LOG_LOCAL_LEVEL ESP_LOG_VERBOSE
 
 #include "driver/i2s.h"
 #include "audio_processor.h"
@@ -87,19 +87,11 @@ void log_i2s_event(const i2s_event_t &e)
     }
 }
 
-#define LOG_STACK(a)                                                           \
-    do                                                                         \
-    {                                                                          \
-        ESP_LOGD(TAG, a " stack: %d", uxTaskGetStackHighWaterMark(nullptr));   \
-    } while(0)
-
 static void i2s_processing_task(void *param)
 {
     (void)param;
 
     esp_log_level_set(TAG, ESP_LOG_VERBOSE);
-
-    LOG_STACK("initial");
 
     auto audio_param =
         reinterpret_cast<shrapnel::parameters::AudioParametersBase *>(param);
@@ -134,8 +126,6 @@ static void i2s_processing_task(void *param)
                                        I2S_QUEUE_SIZE,
                                        &i2s_queue);
 
-    LOG_STACK("after i2s_driver_install");
-
     if(err != ESP_OK)
     {
         ESP_LOGE(
@@ -151,14 +141,9 @@ static void i2s_processing_task(void *param)
         return;
     }
 
-    LOG_STACK("after i2s_set_pin");
-
     auto processor_parameters = parameter_init(audio_param);
-    LOG_STACK("after parameter_init");
     auto processor = shrapnel::AudioProcessor(processor_parameters);
-    LOG_STACK("after AudioProcessor");
     processor.prepare(SAMPLE_RATE, DMA_BUF_SIZE);
-    LOG_STACK("after AudioProcessor prepare");
 
     /* Get the DMA buffers into their initial states
      *
@@ -187,7 +172,6 @@ static void i2s_processing_task(void *param)
         }
         ESP_LOGI(TAG, "discarded %zu samples from RX buffer", read_count);
     } while(read_count != 0);
-    LOG_STACK("after i2s_read");
 
     err = i2s_zero_dma_buffer(static_cast<i2s_port_t>(I2S_NUM));
     if(err != ESP_OK)
@@ -198,7 +182,6 @@ static void i2s_processing_task(void *param)
                  esp_err_to_name(err));
         return;
     }
-    LOG_STACK("after i2s_zero_dma_buffer");
 
     err = i2s_start(static_cast<i2s_port_t>(I2S_NUM));
     if(err != ESP_OK)
@@ -206,7 +189,6 @@ static void i2s_processing_task(void *param)
         ESP_LOGE(TAG, "i2s_start failed %d, %s", err, esp_err_to_name(err));
         return;
     }
-    LOG_STACK("after i2s_start");
 
     while(true)
     {
