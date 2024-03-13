@@ -1,0 +1,3 @@
+tags:
+  # Firmware API tests. These tests connect to a real device running firmware.
+  api:

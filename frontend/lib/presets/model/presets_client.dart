@@ -119,13 +119,12 @@ sealed class PresetsMessage with _$PresetsMessage {
 }
 
 class PresetsTransport
-    implements MessageTransport<PresetsMessage, PresetsMessage> {
+    implements ReconnectingMessageTransport<PresetsMessage, PresetsMessage> {
   PresetsTransport({required this.websocket}) {
     _controller.stream
         .logFinest(_log, (event) => 'send message: $event')
-        .listen(
-          (message) => websocket.send(ApiMessage.presets(message: message)),
-        );
+        .map((message) => ApiMessage.presets(message: message))
+        .listen(websocket.sink.add);
   }
 
   final _controller = StreamController<PresetsMessage>();
@@ -158,10 +157,11 @@ class PresetsTransport
 
 class PresetsClient {
   PresetsClient({
-    required MessageTransport<PresetsMessage, PresetsMessage> transport,
+    required ReconnectingMessageTransport<PresetsMessage, PresetsMessage>
+        transport,
   }) : _transport = transport;
 
-  final MessageTransport<PresetsMessage, PresetsMessage> _transport;
+  final ReconnectingMessageTransport<PresetsMessage, PresetsMessage> _transport;
 
   /// Firmware will reply by sending a preset update message for every preset
   /// that already exists.
