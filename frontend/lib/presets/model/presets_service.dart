@@ -28,7 +28,7 @@ import 'presets.dart';
 import 'presets_repository.dart';
 import 'selected_preset_repository.dart';
 
-final _log = Logger('presets_fake');
+final _log = Logger('presets_service');
 
 abstract class PresetsRepositoryBase {
   Future<PresetRecord> create(PresetState preset);
@@ -59,6 +59,7 @@ final presetsServiceProvider =
     );
 
     ref.listen(currentParametersProvider, (_, next) {
+      _log.finest('parameters update: $next');
       service._parametersState = next;
       service._updateState();
     });
@@ -92,6 +93,13 @@ class PresetsService extends StateNotifier<PresetsState>
     final presets = presetsRepository.presets.valueOrNull;
     final selectedPreset = selectedPresetRepository.selectedPreset.valueOrNull;
 
+    _log
+      ..finest('_updateState')
+      ..finest('presets=$presets')
+      ..finest('selectedPreset=$selectedPreset')
+      ..finest('presets[selectedPreset]=${presets?[selectedPreset]}')
+      ..finest('_parametersState=$_parametersState');
+
     if (presets == null) {
       state = PresetsState.loading();
     } else {
@@ -105,6 +113,7 @@ class PresetsService extends StateNotifier<PresetsState>
         selectedPreset: selectedPreset,
         canUndo: false,
       );
+      _log.finest('new state: $state');
     }
   }
 

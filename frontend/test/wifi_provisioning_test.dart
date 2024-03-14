@@ -60,12 +60,15 @@ void main() {
   setUp(() async {
     websocket = MockRobustWebsocket();
     sut = ProviderScope(
-      overrides: [robustWebsocketProvider.overrideWith((_, __) => websocket)],
-      child: App(
-        provisioning: WifiProvisioningService(
-          provisioningFactory: provisioningFactoryWrapper,
+      overrides: [
+        robustWebsocketProvider.overrideWith((_, __) => websocket),
+        provisioningProvider.overrideWith(
+          (_) => WifiProvisioningService(
+            provisioningFactory: provisioningFactoryWrapper,
+          ),
         ),
-      ),
+      ],
+      child: App(),
     );
   });
 
@@ -248,6 +251,12 @@ void main() {
     final passwordField = find.byKey(const Key('password text field'));
     await tester.enterText(passwordField, 'password');
     await tester.tap(find.byKey(const Key('password submit button')));
+    verify(
+      mockProvisioning.sendWifiConfig(
+        ssid: 'test SSID',
+        password: 'password',
+      ),
+    );
 
     await tester.pump(const Duration(milliseconds: 500));
 

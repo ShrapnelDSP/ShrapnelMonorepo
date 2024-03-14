@@ -474,7 +474,8 @@ class WifiProvisioningScreen extends StatelessWidget {
             child: Text(
               switch (reason) {
                 null => _Strings.failureMessage,
-                final reason => _Strings.failureReasonMessage[reason]!,
+                final reason =>
+                  '${_Strings.failureMessage} ${_Strings.failureReasonMessage[reason]}',
               },
               textAlign: TextAlign.center,
             ),

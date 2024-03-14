@@ -7,40 +7,40 @@ part 'current_parameters.g.dart';
 
 @riverpod
 AsyncValue<PresetParametersData> currentParameters(CurrentParametersRef ref) {
-  final ampGain = ref.read(audioParameterDoubleModelProvider('ampGain')).value;
+  final ampGain = ref.watch(audioParameterDoubleModelProvider('ampGain')).value;
   final ampChannel =
-      ref.read(audioParameterDoubleModelProvider('ampChannel')).value;
-  final bass = ref.read(audioParameterDoubleModelProvider('bass')).value;
-  final middle = ref.read(audioParameterDoubleModelProvider('middle')).value;
-  final treble = ref.read(audioParameterDoubleModelProvider('treble')).value;
-  final contour = ref.read(audioParameterDoubleModelProvider('contour')).value;
-  final volume = ref.read(audioParameterDoubleModelProvider('volume')).value;
+      ref.watch(audioParameterDoubleModelProvider('ampChannel')).value;
+  final bass = ref.watch(audioParameterDoubleModelProvider('bass')).value;
+  final middle = ref.watch(audioParameterDoubleModelProvider('middle')).value;
+  final treble = ref.watch(audioParameterDoubleModelProvider('treble')).value;
+  final contour = ref.watch(audioParameterDoubleModelProvider('contour')).value;
+  final volume = ref.watch(audioParameterDoubleModelProvider('volume')).value;
   final noiseGateThreshold =
-      ref.read(audioParameterDoubleModelProvider('noiseGateThreshold')).value;
+      ref.watch(audioParameterDoubleModelProvider('noiseGateThreshold')).value;
   final noiseGateHysteresis =
-      ref.read(audioParameterDoubleModelProvider('noiseGateHysteresis')).value;
+      ref.watch(audioParameterDoubleModelProvider('noiseGateHysteresis')).value;
   final noiseGateAttack =
-      ref.read(audioParameterDoubleModelProvider('noiseGateAttack')).value;
+      ref.watch(audioParameterDoubleModelProvider('noiseGateAttack')).value;
   final noiseGateHold =
-      ref.read(audioParameterDoubleModelProvider('noiseGateHold')).value;
+      ref.watch(audioParameterDoubleModelProvider('noiseGateHold')).value;
   final noiseGateRelease =
-      ref.read(audioParameterDoubleModelProvider('noiseGateRelease')).value;
+      ref.watch(audioParameterDoubleModelProvider('noiseGateRelease')).value;
   final noiseGateBypass =
-      ref.read(audioParameterDoubleModelProvider('noiseGateBypass')).value;
+      ref.watch(audioParameterDoubleModelProvider('noiseGateBypass')).value;
   final chorusRate =
-      ref.read(audioParameterDoubleModelProvider('chorusRate')).value;
+      ref.watch(audioParameterDoubleModelProvider('chorusRate')).value;
   final chorusDepth =
-      ref.read(audioParameterDoubleModelProvider('chorusDepth')).value;
+      ref.watch(audioParameterDoubleModelProvider('chorusDepth')).value;
   final chorusMix =
-      ref.read(audioParameterDoubleModelProvider('chorusMix')).value;
+      ref.watch(audioParameterDoubleModelProvider('chorusMix')).value;
   final chorusBypass =
-      ref.read(audioParameterDoubleModelProvider('chorusBypass')).value;
+      ref.watch(audioParameterDoubleModelProvider('chorusBypass')).value;
   final wahPosition =
-      ref.read(audioParameterDoubleModelProvider('wahPosition')).value;
+      ref.watch(audioParameterDoubleModelProvider('wahPosition')).value;
   final wahVocal =
-      ref.read(audioParameterDoubleModelProvider('wahVocal')).value;
+      ref.watch(audioParameterDoubleModelProvider('wahVocal')).value;
   final wahBypass =
-      ref.read(audioParameterDoubleModelProvider('wahBypass')).value;
+      ref.watch(audioParameterDoubleModelProvider('wahBypass')).value;
 
   return switch ((
     ampGain,
