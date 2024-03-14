@@ -57,6 +57,7 @@ final presetsServiceProvider =
       selectedPresetRepository: ref.read(selectedPresetRepositoryProvider),
       parametersState: ref.read(currentParametersProvider),
       presets: ref.read(presetsStreamProvider),
+      selectedPreset: ref.read(selectedPresetStreamProvider),
     );
 
     ref.listen(currentParametersProvider, (_, next) {
@@ -71,6 +72,12 @@ final presetsServiceProvider =
       service._updateState();
     });
 
+    ref.listen(selectedPresetStreamProvider, (_, next) {
+      _log.finest('presets update: $next');
+      service._selectedPreset = next;
+      service._updateState();
+    });
+
     return service;
   },
 );
@@ -82,23 +89,23 @@ class PresetsService extends StateNotifier<PresetsState>
     required this.selectedPresetRepository,
     required AsyncValue<PresetParametersData> parametersState,
     required AsyncValue<Map<int, PresetRecord>> presets,
+    required AsyncValue<int> selectedPreset,
   })  : _parametersState = parametersState,
         _presets = presets,
+        _selectedPreset = selectedPreset,
         super(PresetsState.loading()) {
-    _selectedPresetSubscription =
-        selectedPresetRepository.selectedPreset.listen((_) => _updateState());
     _updateState();
   }
 
   AsyncValue<PresetParametersData> _parametersState;
   AsyncValue<Map<int, PresetRecord>> _presets;
-  late final StreamSubscription<int> _selectedPresetSubscription;
+  AsyncValue<int> _selectedPreset;
   final PresetsRepositoryBase presetsRepository;
   final SelectedPresetRepositoryBase selectedPresetRepository;
 
   void _updateState() {
-    final presets = _presets.value;
-    final selectedPreset = selectedPresetRepository.selectedPreset.valueOrNull;
+    final presets = _presets.valueOrNull;
+    final selectedPreset = _selectedPreset.valueOrNull;
 
     _log
       ..finest('_updateState')
@@ -158,7 +165,7 @@ class PresetsService extends StateNotifier<PresetsState>
       );
     }
 
-    final currentPresetId = selectedPresetRepository.selectedPreset.valueOrNull;
+    final currentPresetId = _selectedPreset.valueOrNull;
     if (currentPresetId == null) {
       _log.severe("Don't know current preset id");
       return;
@@ -177,11 +184,5 @@ class PresetsService extends StateNotifier<PresetsState>
         ),
       ),
     );
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    unawaited(_selectedPresetSubscription.cancel());
   }
 }

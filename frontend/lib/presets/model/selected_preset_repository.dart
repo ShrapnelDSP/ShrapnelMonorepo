@@ -30,6 +30,10 @@ final selectedPresetRepositoryProvider = Provider<SelectedPresetRepositoryBase>(
       SelectedPresetRepository(client: ref.read(selectedPresetClientProvider)),
 );
 
+final selectedPresetStreamProvider = StreamProvider<int>(
+  (ref) => ref.read(selectedPresetRepositoryProvider).selectedPreset,
+);
+
 class SelectedPresetRepository implements SelectedPresetRepositoryBase {
   SelectedPresetRepository({required this.client}) {
     unawaited(_subject.addStream(client.selectedPreset));
