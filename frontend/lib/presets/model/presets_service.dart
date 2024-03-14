@@ -21,12 +21,15 @@ import 'dart:async';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logging/logging.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:rxdart/rxdart.dart';
 
 import 'current_parameters.dart';
 import 'presets.dart';
 import 'presets_repository.dart';
 import 'selected_preset_repository.dart';
+
+part 'presets_service.g.dart';
 
 final _log = Logger('presets_service');
 
@@ -49,140 +52,85 @@ abstract class SelectedPresetRepositoryBase {
   ValueStream<int> get selectedPreset;
 }
 
-final presetsServiceProvider =
-    AutoDisposeStateNotifierProvider<PresetsService, PresetsState>(
-  (ref) {
-    final service = PresetsService(
-      presetsRepository: ref.read(presetsRepositoryProvider),
-      selectedPresetRepository: ref.read(selectedPresetRepositoryProvider),
-      parametersState: ref.read(currentParametersProvider),
-      presets: ref.read(presetsStreamProvider),
-      selectedPreset: ref.read(selectedPresetStreamProvider),
-    );
-
-    ref.listen(currentParametersProvider, (_, next) {
-      _log.finest('parameters update: $next');
-      service._parametersState = next;
-      service._updateState();
-    });
-
-    ref.listen(presetsStreamProvider, (_, next) {
-      _log.finest('presets update: $next');
-      service._presets = next;
-      service._updateState();
-    });
-
-    ref.listen(selectedPresetStreamProvider, (_, next) {
-      _log.finest('presets update: $next');
-      service._selectedPreset = next;
-      service._updateState();
-    });
-
-    return service;
-  },
-);
-
-class PresetsService extends StateNotifier<PresetsState>
-    implements PresetsServiceBase {
-  PresetsService({
-    required this.presetsRepository,
-    required this.selectedPresetRepository,
-    required AsyncValue<PresetParametersData> parametersState,
-    required AsyncValue<Map<int, PresetRecord>> presets,
-    required AsyncValue<int> selectedPreset,
-  })  : _parametersState = parametersState,
-        _presets = presets,
-        _selectedPreset = selectedPreset,
-        super(PresetsState.loading()) {
-    _updateState();
-  }
-
-  AsyncValue<PresetParametersData> _parametersState;
-  AsyncValue<Map<int, PresetRecord>> _presets;
-  AsyncValue<int> _selectedPreset;
-  final PresetsRepositoryBase presetsRepository;
-  final SelectedPresetRepositoryBase selectedPresetRepository;
-
-  void _updateState() {
-    final presets = _presets.valueOrNull;
-    final selectedPreset = _selectedPreset.valueOrNull;
+@riverpod
+class PresetsService extends _$PresetsService {
+  @override
+  PresetsState build() {
+    final presets = ref.watch(presetsStreamProvider).valueOrNull;
+    final selectedPreset = ref.watch(selectedPresetStreamProvider).valueOrNull;
+    final parametersState = ref.watch(currentParametersProvider).valueOrNull;
 
     _log
-      ..finest('_updateState')
+      ..finest('build')
       ..finest('presets=$presets')
       ..finest('selectedPreset=$selectedPreset')
       ..finest('presets[selectedPreset]=${presets?[selectedPreset]}')
-      ..finest('_parametersState=$_parametersState');
+      ..finest('parametersState=$parametersState');
 
     if (presets == null) {
-      state = PresetsState.loading();
+      return PresetsState.loading();
     } else {
       final sortedPresets = presets.values.toList()
         ..sort((a, b) => a.preset.name.compareTo(b.preset.name));
-      state = PresetsState.ready(
+      return PresetsState.ready(
         isCurrentModified: selectedPreset != null &&
-            _parametersState.value !=
-                presets[selectedPreset]?.preset.parameters,
+            parametersState != presets[selectedPreset]?.preset.parameters,
         presets: sortedPresets,
         selectedPreset: selectedPreset,
         canUndo: false,
       );
-      _log.finest('new state: $state');
     }
   }
 
-  @override
   Future<void> create(String name) async {
-    final parameters = _parametersState.value;
+    final parameters = ref.read(currentParametersProvider).value;
     if (parameters == null) {
       throw StateError(
         'Attempted to create preset while parameters are loading',
       );
     }
 
-    final record = await presetsRepository.create(
-      PresetState(name: name, parameters: parameters),
-    );
-    await selectedPresetRepository.selectPreset(record.id);
+    final record = await ref.read(presetsRepositoryProvider).create(
+          PresetState(name: name, parameters: parameters),
+        );
+    await ref.read(selectedPresetRepositoryProvider).selectPreset(record.id);
   }
 
-  @override
   Future<void> select(int id) async {
-    await selectedPresetRepository.selectPreset(id);
+    await ref.read(selectedPresetRepositoryProvider).selectPreset(id);
   }
 
-  @override
   Future<void> delete(int id) async {
-    await presetsRepository.delete(id);
+    await ref.read(presetsRepositoryProvider).delete(id);
   }
 
-  @override
   Future<void> saveChanges() async {
-    final parameters = _parametersState.value;
+    final parameters = ref.read(currentParametersProvider).valueOrNull;
     if (parameters == null) {
       throw StateError(
         'Attempted to save changes while parameters are loading',
       );
     }
 
-    final currentPresetId = _selectedPreset.valueOrNull;
+    final currentPresetId = ref.read(selectedPresetStreamProvider).valueOrNull;
     if (currentPresetId == null) {
       _log.severe("Don't know current preset id");
       return;
     }
 
-    final currentPreset = _presets.value?[currentPresetId];
+    final currentPreset =
+        ref.read(presetsStreamProvider).valueOrNull?[currentPresetId];
     if (currentPreset == null) {
       _log.severe("Don't know preset with id $currentPresetId");
       return;
     }
 
-    await presetsRepository.update(
-      currentPreset.copyWith(
-        preset: currentPreset.preset.copyWith(
-          parameters: parameters,
-        ),
-      ),
-    );
+    await ref.read(presetsRepositoryProvider).update(
+          currentPreset.copyWith(
+            preset: currentPreset.preset.copyWith(
+              parameters: parameters,
+            ),
+          ),
+        );
   }
 }
