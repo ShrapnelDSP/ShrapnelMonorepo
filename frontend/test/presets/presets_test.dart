@@ -229,19 +229,21 @@ void main() {
           .thenAnswer((_) => const Stream.empty());
       when(apiWebsocket.isAlive).thenReturn(true);
 
-      final sut = ProviderScope(
-        overrides: [
-          robustWebsocketProvider.overrideWith((_, __) => websocket),
-          apiWebsocketProvider.overrideWith((_) => apiWebsocket),
-          parameterTransportProvider.overrideWith((_) => parameterTransport),
-          presetsRepositoryProvider.overrideWith((_) => presetsRepository),
-          selectedPresetRepositoryProvider
-              .overrideWith((_) => selectedPresetRepository),
-        ],
-        child: App(),
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [
+            robustWebsocketProvider(Uri.parse(kShrapnelUri))
+                .overrideWith((_) => websocket),
+            apiWebsocketProvider.overrideWith((_) => apiWebsocket),
+            parameterTransportProvider.overrideWith((_) => parameterTransport),
+            presetsRepositoryProvider.overrideWith((_) => presetsRepository),
+            selectedPresetRepositoryProvider
+                .overrideWith((_) => selectedPresetRepository),
+          ],
+          child: App(),
+        ),
       );
 
-      await tester.pumpWidget(sut);
       _log.info('pump done');
       _log.info('delaying');
       // For debouncing of the parameter output messages

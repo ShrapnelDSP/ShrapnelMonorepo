@@ -24,14 +24,19 @@ import 'dart:math';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logging/logging.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+
+import 'riverpod_util.dart';
+
+part 'robust_websocket.g.dart';
 
 final _log = Logger('shrapnel.robust_websocket');
 
-final robustWebsocketProvider = ChangeNotifierProvider.family(
-  (_, Uri uri) => RobustWebsocket(uri: uri),
-);
+@riverpod
+// ignore: unsupported_provider_value
+RobustWebsocket robustWebsocket(RobustWebsocketRef ref, Uri uri) =>
+    ref.listenAndDisposeChangeNotifier(RobustWebsocket(uri: uri));
 
 /// Auto-reconnecting websocket client
 class RobustWebsocket extends ChangeNotifier {

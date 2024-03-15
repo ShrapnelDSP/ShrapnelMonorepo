@@ -19,9 +19,9 @@
 
 import 'dart:async';
 
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logging/logging.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:rxdart/rxdart.dart';
 
 import '../audio_events.dart';
@@ -36,7 +36,11 @@ import 'proto_extension.dart';
 
 part 'api_websocket.freezed.dart';
 
+part 'api_websocket.g.dart';
+
 final _log = Logger('api_websocket');
+
+const kShrapnelUri = 'http://guitar-dsp.local:8080/websocket';
 
 @freezed
 sealed class ApiMessage with _$ApiMessage {
@@ -62,15 +66,19 @@ sealed class ApiMessage with _$ApiMessage {
   }) = ApiMessageSelectedPreset;
 }
 
-final apiWebsocketProvider = Provider(ApiWebsocket.new);
+@riverpod
+ApiWebsocket apiWebsocket(ApiWebsocketRef ref) {
+  return ApiWebsocket(
+    websocket: ref.read(
+      robustWebsocketProvider(
+        Uri.parse(kShrapnelUri),
+      ),
+    ),
+  );
+}
 
 class ApiWebsocket {
-  ApiWebsocket(Ref ref)
-      : _websocket = ref.read(
-          robustWebsocketProvider(
-            Uri.parse('http://guitar-dsp.local:8080/websocket'),
-          ),
-        );
+  ApiWebsocket({required RobustWebsocket websocket}) : _websocket = websocket;
 
   final RobustWebsocket _websocket;
 

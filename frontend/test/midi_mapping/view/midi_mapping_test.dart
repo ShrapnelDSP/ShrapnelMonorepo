@@ -46,18 +46,19 @@ void main() {
     when(api.connectionStream).thenAnswer((_) => Stream.fromIterable([]));
     when(api.isAlive).thenReturn(true);
 
-    final sut = ProviderScope(
-      overrides: [
-        robustWebsocketProvider.overrideWith((_, __) => websocket),
-        apiWebsocketProvider.overrideWith((_) => api),
-      ],
-      child: App(),
-    );
-
     const getRequest =
         ApiMessage.midiMapping(message: MidiApiMessage.getRequest());
 
-    await tester.pumpWidget(sut);
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          robustWebsocketProvider(Uri.parse(kShrapnelUri))
+              .overrideWith((_) => websocket),
+          apiWebsocketProvider.overrideWith((_) => api),
+        ],
+        child: App(),
+      ),
+    );
 
     final midiMappingPage = await HomePageObject(tester).openMidiMapping();
 
@@ -127,15 +128,16 @@ void main() {
       when(api.connectionStream).thenAnswer((_) => Stream.fromIterable([]));
       when(api.isAlive).thenReturn(true);
 
-      final sut = ProviderScope(
-        overrides: [
-          robustWebsocketProvider.overrideWith((_, __) => websocket),
-          apiWebsocketProvider.overrideWith((_) => api),
-        ],
-        child: App(),
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [
+            robustWebsocketProvider(Uri.parse(kShrapnelUri))
+                .overrideWith((_) => websocket),
+            apiWebsocketProvider.overrideWith((_) => api),
+          ],
+          child: App(),
+        ),
       );
-
-      await tester.pumpWidget(sut);
 
       final midiMappingPage = await HomePageObject(tester).openMidiMapping();
 
@@ -219,7 +221,8 @@ void main() {
       await tester.pumpWidget(
         ProviderScope(
           overrides: [
-            robustWebsocketProvider.overrideWith((_, __) => websocket),
+            robustWebsocketProvider(Uri.parse(kShrapnelUri))
+                .overrideWith((_) => websocket),
             apiWebsocketProvider.overrideWith((_) => api),
           ],
           child: App(),
@@ -355,7 +358,8 @@ void main() {
       await tester.pumpWidget(
         ProviderScope(
           overrides: [
-            robustWebsocketProvider.overrideWith((_, __) => websocket),
+            robustWebsocketProvider(Uri.parse(kShrapnelUri))
+                .overrideWith((_) => websocket),
             apiWebsocketProvider.overrideWith((_) => api),
           ],
           child: App(),
@@ -398,17 +402,18 @@ void main() {
       when(api.connectionStream).thenAnswer((_) => Stream.fromIterable([]));
       when(api.isAlive).thenReturn(true);
 
-      final sut = ProviderScope(
-        overrides: [
-          robustWebsocketProvider.overrideWith((_, __) => websocket),
-          apiWebsocketProvider.overrideWith((_) => api),
-        ],
-        child: App(),
-      );
-
       final homePageObject = HomePageObject(tester);
 
-      await tester.pumpWidget(sut);
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [
+            robustWebsocketProvider(Uri.parse(kShrapnelUri))
+                .overrideWith((_) => websocket),
+            apiWebsocketProvider.overrideWith((_) => api),
+          ],
+          child: App(),
+        ),
+      );
 
       await homePageObject.toggleCollapsedAmplifier();
 
@@ -523,7 +528,8 @@ void main() {
       await tester.pumpWidget(
         ProviderScope(
           overrides: [
-            robustWebsocketProvider.overrideWith((_, __) => websocket),
+            robustWebsocketProvider(Uri.parse(kShrapnelUri))
+                .overrideWith((_) => websocket),
             apiWebsocketProvider.overrideWith((_) => api),
           ],
           child: App(),

@@ -19,20 +19,23 @@
 
 import 'dart:async';
 
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:rxdart/rxdart.dart';
 
 import 'presets_service.dart';
 import 'selected_preset_client.dart';
 
-final selectedPresetRepositoryProvider = Provider<SelectedPresetRepositoryBase>(
-  (ref) =>
-      SelectedPresetRepository(client: ref.read(selectedPresetClientProvider)),
-);
+part 'selected_preset_repository.g.dart';
 
-final selectedPresetStreamProvider = StreamProvider<int>(
-  (ref) => ref.read(selectedPresetRepositoryProvider).selectedPreset,
-);
+@riverpod
+SelectedPresetRepositoryBase selectedPresetRepository(
+  SelectedPresetRepositoryRef ref,
+) =>
+    SelectedPresetRepository(client: ref.read(selectedPresetClientProvider));
+
+@riverpod
+Stream<int> selectedPresetStream(SelectedPresetStreamRef ref) =>
+    ref.read(selectedPresetRepositoryProvider).selectedPreset;
 
 class SelectedPresetRepository implements SelectedPresetRepositoryBase {
   SelectedPresetRepository({required this.client}) {

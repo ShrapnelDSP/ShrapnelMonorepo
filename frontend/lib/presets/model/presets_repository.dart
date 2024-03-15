@@ -19,7 +19,6 @@
 
 import 'dart:async';
 
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -27,14 +26,17 @@ import 'presets.dart';
 import 'presets_client.dart';
 import 'presets_service.dart';
 
-final presetsRepositoryProvider = Provider<PresetsRepositoryBase>(
-  (ref) => PresetsRepository(
-    client: ref.read(presetsClientProvider),
-  ),
-);
+part 'presets_repository.g.dart';
 
-final presetsStreamProvider =
-    StreamProvider((ref) => ref.read(presetsRepositoryProvider).presets);
+@riverpod
+PresetsRepositoryBase presetsRepository(PresetsRepositoryRef ref) =>
+    PresetsRepository(
+      client: ref.read(presetsClientProvider),
+    );
+
+@riverpod
+Stream<Map<int, PresetRecord>> presetsStream(PresetsStreamRef ref) =>
+    ref.read(presetsRepositoryProvider).presets;
 
 class PresetsRepository implements PresetsRepositoryBase {
   PresetsRepository({required this.client}) {

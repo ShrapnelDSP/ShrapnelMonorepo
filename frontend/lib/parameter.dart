@@ -20,7 +20,6 @@
 import 'dart:async';
 
 import 'package:flutter/widgets.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logging/logging.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -28,6 +27,7 @@ import 'package:rxdart/rxdart.dart';
 
 import 'api/api_websocket.dart';
 import 'core/message_transport.dart';
+import 'riverpod_util.dart';
 
 part 'parameter.freezed.dart';
 
@@ -87,11 +87,11 @@ sealed class ParameterServiceInputMessage with _$ParameterServiceInputMessage {
   }) = ParameterServiceInputMessageParameterUpdate;
 }
 
-final parameterTransportProvider = Provider(
-  (ref) => ParameterTransport(
-    websocket: ref.read(apiWebsocketProvider),
-  ),
-);
+@riverpod
+ParameterTransport parameterTransport(ParameterTransportRef ref) =>
+    ParameterTransport(
+      websocket: ref.read(apiWebsocketProvider),
+    );
 
 class ParameterTransport
     implements
@@ -127,11 +127,14 @@ class ParameterTransport
   StreamSink<ParameterServiceOutputMessage> get sink => _controller;
 }
 
-final parameterServiceProvider = ChangeNotifierProvider(
-  (ref) => ParameterService(
-    transport: ref.read(parameterTransportProvider),
-  ),
-);
+@riverpod
+// ignore: unsupported_provider_value
+ParameterService parameterService(ParameterServiceRef ref) =>
+    ref.listenAndDisposeChangeNotifier(
+      ParameterService(
+        transport: ref.read(parameterTransportProvider),
+      ),
+    );
 
 class ParameterService extends ChangeNotifier {
   ParameterService({

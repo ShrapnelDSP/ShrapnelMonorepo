@@ -19,6 +19,7 @@
 
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import '../../api/api_websocket.dart';
 import '../../robust_websocket.dart';
 import '../data/status.dart';
 
@@ -33,7 +34,7 @@ class WebSocketStatusModel extends _$WebSocketStatusModel {
       isConnected: ref
           .watch(
             robustWebsocketProvider(
-              Uri.parse('http://guitar-dsp.local:8080/websocket'),
+              Uri.parse(kShrapnelUri),
             ),
           )
           .isAlive,
