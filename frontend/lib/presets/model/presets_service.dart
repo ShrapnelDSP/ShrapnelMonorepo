@@ -83,16 +83,19 @@ class PresetsService extends _$PresetsService {
 
   Future<void> create(String name) async {
     final parameters = ref.read(currentParametersProvider).value;
+    final presetsRepository = ref.read(presetsRepositoryProvider);
+    final selectedPresetRepository = ref.read(selectedPresetRepositoryProvider);
+
     if (parameters == null) {
       throw StateError(
         'Attempted to create preset while parameters are loading',
       );
     }
 
-    final record = await ref.read(presetsRepositoryProvider).create(
-          PresetState(name: name, parameters: parameters),
-        );
-    await ref.read(selectedPresetRepositoryProvider).selectPreset(record.id);
+    final record = await presetsRepository.create(
+      PresetState(name: name, parameters: parameters),
+    );
+    await selectedPresetRepository.selectPreset(record.id);
   }
 
   Future<void> select(int id) async {
