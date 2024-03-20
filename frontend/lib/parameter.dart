@@ -28,6 +28,7 @@ import 'package:rxdart/rxdart.dart';
 import 'api/api_websocket.dart';
 import 'core/message_transport.dart';
 import 'riverpod_util.dart';
+import 'robust_websocket.dart';
 
 part 'parameter.freezed.dart';
 
@@ -56,7 +57,11 @@ class AudioParameterMetaData with _$AudioParameterMetaData {
 class AudioParameterDoubleModel extends _$AudioParameterDoubleModel {
   @override
   Stream<double> build(String parameterId) {
-    return ref.watch(parameterServiceProvider).getParameter(parameterId);
+    if (ref.watch(isAliveProvider)) {
+      return ref.watch(parameterServiceProvider).getParameter(parameterId);
+    } else {
+      return const Stream<double>.empty();
+    }
   }
 
   void onUserChanged(double value) {
@@ -90,7 +95,7 @@ sealed class ParameterServiceInputMessage with _$ParameterServiceInputMessage {
 @riverpod
 ParameterTransport parameterTransport(ParameterTransportRef ref) =>
     ParameterTransport(
-      websocket: ref.read(apiWebsocketProvider),
+      websocket: ref.watch(apiWebsocketProvider),
     );
 
 class ParameterTransport
@@ -132,7 +137,7 @@ class ParameterTransport
 ParameterService parameterService(ParameterServiceRef ref) =>
     ref.listenAndDisposeChangeNotifier(
       ParameterService(
-        transport: ref.read(parameterTransportProvider),
+        transport: ref.watch(parameterTransportProvider),
       ),
     );
 

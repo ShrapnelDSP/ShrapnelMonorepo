@@ -293,7 +293,7 @@ class _WifiDialogState extends State<_WifiDialog> {
 class _WifiScanningScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final provisioning = ref.read(provisioningProvider);
+    final provisioning = ref.watch(provisioningProvider);
 
     final accessPointCount = provisioning.accessPoints?.length ?? 0;
 

@@ -31,7 +31,7 @@ part 'selected_preset_repository.g.dart';
 SelectedPresetRepositoryBase selectedPresetRepository(
   SelectedPresetRepositoryRef ref,
 ) =>
-    SelectedPresetRepository(client: ref.read(selectedPresetClientProvider));
+    SelectedPresetRepository(client: ref.watch(selectedPresetClientProvider));
 
 @riverpod
 Stream<int> selectedPresetStream(SelectedPresetStreamRef ref) =>

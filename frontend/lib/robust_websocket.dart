@@ -27,6 +27,7 @@ import 'package:flutter/material.dart';
 import 'package:logging/logging.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import 'api/api_websocket.dart';
 import 'riverpod_util.dart';
 
 part 'robust_websocket.g.dart';
@@ -37,6 +38,10 @@ final _log = Logger('shrapnel.robust_websocket');
 // ignore: unsupported_provider_value
 RobustWebsocket robustWebsocket(RobustWebsocketRef ref, Uri uri) =>
     ref.listenAndDisposeChangeNotifier(RobustWebsocket(uri: uri));
+
+@riverpod
+bool isAlive(IsAliveRef ref) =>
+    ref.watch(robustWebsocketProvider(Uri.parse(kShrapnelUri))).isAlive;
 
 /// Auto-reconnecting websocket client
 class RobustWebsocket extends ChangeNotifier {

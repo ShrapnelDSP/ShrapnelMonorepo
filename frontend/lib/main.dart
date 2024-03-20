@@ -32,6 +32,7 @@ import 'pedalboard.dart';
 import 'presets/model/presets.dart';
 import 'presets/model/presets_service.dart';
 import 'presets/view/presets.dart';
+import 'provider_observer.dart';
 import 'status/view/websocket_status.dart';
 import 'wifi_provisioning.dart';
 
@@ -60,6 +61,7 @@ void main() {
 
   runApp(
     riverpod.ProviderScope(
+      observers: [MyObserver()],
       child: App(),
     ),
   );

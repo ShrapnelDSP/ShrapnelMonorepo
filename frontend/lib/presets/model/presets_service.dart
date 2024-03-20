@@ -39,7 +39,7 @@ abstract class PresetsRepositoryBase {
 
   Future<void> delete(int id);
 
-  ValueStream<Map<int, PresetRecord>> get presets;
+  Stream<Map<int, PresetRecord>> get presets;
 }
 
 abstract class SelectedPresetRepositoryBase {

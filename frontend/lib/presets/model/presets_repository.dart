@@ -31,12 +31,12 @@ part 'presets_repository.g.dart';
 @riverpod
 PresetsRepositoryBase presetsRepository(PresetsRepositoryRef ref) =>
     PresetsRepository(
-      client: ref.read(presetsClientProvider),
+      client: ref.watch(presetsClientProvider),
     );
 
 @riverpod
 Stream<Map<int, PresetRecord>> presetsStream(PresetsStreamRef ref) =>
-    ref.read(presetsRepositoryProvider).presets;
+    ref.watch(presetsRepositoryProvider).presets;
 
 class PresetsRepository implements PresetsRepositoryBase {
   PresetsRepository({required this.client}) {
@@ -59,7 +59,7 @@ class PresetsRepository implements PresetsRepositoryBase {
         .firstWhere((element) => element.preset.name == preset.name)
         .timeout(const Duration(seconds: 2));
 
-    final newValue = _presets.value..[record.id] = record;
+    final newValue = _presets.value!..[record.id] = record;
     _presets.add(newValue);
 
     return record;
@@ -69,25 +69,29 @@ class PresetsRepository implements PresetsRepositoryBase {
   Future<void> delete(int id) async {
     await client.delete(id);
 
-    final newValue = _presets.value..remove(id);
+    final newValue = _presets.value!..remove(id);
     _presets.add(newValue);
   }
 
-  final _presets = BehaviorSubject.seeded(<int, PresetRecord>{});
+  final _presets = BehaviorSubject<Map<int, PresetRecord>?>.seeded(null);
 
   @override
-  ValueStream<Map<int, PresetRecord>> get presets => _presets;
+  Stream<Map<int, PresetRecord>> get presets => _presets.whereNotNull();
 
   @override
   Future<void> update(PresetRecord preset) async {
     await client.update(preset);
 
-    final newValue = _presets.value..[preset.id] = preset;
+    final newValue = _presets.value!..[preset.id] = preset;
     _presets.add(newValue);
   }
 
   void _handleNotification(PresetRecord preset) {
-    _presets.add(_presets.value..[preset.id] = preset);
+    if (_presets.value == null) {
+      _presets.add({preset.id: preset});
+    } else {
+      _presets.add(_presets.value!..[preset.id] = preset);
+    }
   }
 
   void dispose() {

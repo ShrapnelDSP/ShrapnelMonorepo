@@ -32,11 +32,11 @@ import 'service.dart';
 final _log = Logger('shrapnel.midi_mapping.model.midi_learn');
 
 final midiLearnServiceProvider =
-    StateNotifierProvider<MidiLearnService, MidiLearnState>(
+    AutoDisposeStateNotifierProvider<MidiLearnService, MidiLearnState>(
   (ref) => MidiLearnService(
-    mappingService: ref.read(midiMappingServiceProvider),
+    mappingService: ref.watch(midiMappingServiceProvider),
     parameterUpdates:
-        ref.read(parameterServiceProvider).parameterUpdates.map((e) => e.id),
+        ref.watch(parameterServiceProvider).parameterUpdates.map((e) => e.id),
     midiMessages: ref
         .read(apiWebsocketProvider)
         .stream

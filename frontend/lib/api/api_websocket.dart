@@ -69,7 +69,7 @@ sealed class ApiMessage with _$ApiMessage {
 @riverpod
 ApiWebsocket apiWebsocket(ApiWebsocketRef ref) {
   return ApiWebsocket(
-    websocket: ref.read(
+    websocket: ref.watch(
       robustWebsocketProvider(
         Uri.parse(kShrapnelUri),
       ),

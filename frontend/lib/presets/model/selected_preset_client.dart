@@ -49,7 +49,7 @@ sealed class SelectedPresetMessage with _$SelectedPresetMessage {
 SelectedPresetTransport selectedPresetTransport(
   SelectedPresetTransportRef ref,
 ) =>
-    SelectedPresetTransport(websocket: ref.read(apiWebsocketProvider));
+    SelectedPresetTransport(websocket: ref.watch(apiWebsocketProvider));
 
 class SelectedPresetTransport
     implements MessageTransport<SelectedPresetMessage, SelectedPresetMessage> {
@@ -90,7 +90,7 @@ class SelectedPresetTransport
 
 @riverpod
 SelectedPresetClient selectedPresetClient(SelectedPresetClientRef ref) =>
-    SelectedPresetClient(transport: ref.read(selectedPresetTransportProvider));
+    SelectedPresetClient(transport: ref.watch(selectedPresetTransportProvider));
 
 class SelectedPresetClient {
   SelectedPresetClient({

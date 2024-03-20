@@ -63,7 +63,7 @@ class HomePageObject {
     await tester.pumpAndSettle();
   }
 
-  double getKnobValue({required String parameterId}) {
+  double? getKnobValue({required String parameterId}) {
     final knob = findKnob(parameterId).evaluate().single.widget as Knob;
     return knob.value;
   }
@@ -84,5 +84,6 @@ class HomePageObject {
   }
 
   late final _presetsPage = PresetsPageObject(tester);
+
   PresetsPageObject get presetsPage => _presetsPage;
 }

@@ -276,7 +276,7 @@ class CreateMappingDialogState extends ConsumerState<CreateMappingDialog> {
 
   @override
   Widget build(BuildContext context) {
-    final parameters = ref.read(parameterNamesProvider);
+    final parameters = ref.watch(parameterNamesProvider);
     final presets = ref.watch(presetsServiceProvider);
     final mappings = ref.watch(midiMappingServiceProvider);
 
@@ -510,7 +510,7 @@ class EditMappingDialogState extends ConsumerState<EditMappingDialog> {
 
   @override
   Widget build(BuildContext context) {
-    final parameters = ref.read(parameterNamesProvider);
+    final parameters = ref.watch(parameterNamesProvider);
     final presets = ref.watch(presetsServiceProvider);
     final mappings = ref.read(midiMappingServiceProvider);
 
@@ -768,7 +768,7 @@ class ParametersDropdown extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final parameters = ref.read(parameterNamesProvider);
+    final parameters = ref.watch(parameterNamesProvider);
 
     return DropdownButton<String>(
       items: [

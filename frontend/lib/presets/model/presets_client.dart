@@ -123,7 +123,7 @@ sealed class PresetsMessage with _$PresetsMessage {
 
 @riverpod
 PresetsTransport presetsTransport(PresetsTransportRef ref) =>
-    PresetsTransport(websocket: ref.read(apiWebsocketProvider));
+    PresetsTransport(websocket: ref.watch(apiWebsocketProvider));
 
 class PresetsTransport
     implements MessageTransport<PresetsMessage, PresetsMessage> {
@@ -165,7 +165,7 @@ class PresetsTransport
 
 @riverpod
 PresetsClient presetsClient(PresetsClientRef ref) =>
-    PresetsClient(transport: ref.read(presetsTransportProvider));
+    PresetsClient(transport: ref.watch(presetsTransportProvider));
 
 class PresetsClient {
   PresetsClient({

@@ -32,15 +32,15 @@ import '../model/models.dart';
 
 final _log = Logger('midi_mapping_service');
 
-final midiMappingTransportProvider = Provider(
+final midiMappingTransportProvider = AutoDisposeProvider(
   (ref) => MidiMappingTransport(
-    websocket: ref.read(apiWebsocketProvider),
+    websocket: ref.watch(apiWebsocketProvider),
   ),
 );
 
-final midiMappingServiceProvider = ChangeNotifierProvider(
+final midiMappingServiceProvider = AutoDisposeChangeNotifierProvider(
   (ref) => MidiMappingService(
-    websocket: ref.read(midiMappingTransportProvider),
+    websocket: ref.watch(midiMappingTransportProvider),
   ),
 );
 

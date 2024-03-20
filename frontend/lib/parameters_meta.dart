@@ -152,7 +152,7 @@ AudioParameterMetaData audioParameterMetadata(
   AudioParameterMetadataRef ref,
   String parameterId,
 ) =>
-    ref.read(allParametersProvider)[parameterId]!;
+    ref.watch(allParametersProvider)[parameterId]!;
 
 @riverpod
 Map<String, AudioParameterMetaData> allParameters(AllParametersRef ref) =>
@@ -160,6 +160,6 @@ Map<String, AudioParameterMetaData> allParameters(AllParametersRef ref) =>
 
 @riverpod
 Map<String, String> parameterNames(ParameterNamesRef ref) =>
-    ref.read(allParametersProvider).map(
+    ref.watch(allParametersProvider).map(
           (id, param) => MapEntry(id, '${param.groupName}: ${param.name}'),
         );

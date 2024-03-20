@@ -39,8 +39,7 @@ class KnobWithLabel extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final value =
-        ref.watch(audioParameterDoubleModelProvider(parameterId)).value ?? 0.5;
+    final value = ref.watch(audioParameterDoubleModelProvider(parameterId));
     final parameter =
         ref.read(audioParameterDoubleModelProvider(parameterId).notifier);
     final learningState = ref.watch(midiLearnServiceProvider);
@@ -62,7 +61,7 @@ class KnobWithLabel extends ConsumerWidget {
           child: Knob(
             key: Key('knob-$parameterId'),
             onChanged: isEnabled ? parameter.onUserChanged : (_) {},
-            value: value,
+            value: value.unwrapPrevious().valueOrNull,
             size: knobSize,
           ),
         ),
