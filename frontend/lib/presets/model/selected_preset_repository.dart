@@ -35,7 +35,7 @@ SelectedPresetRepositoryBase selectedPresetRepository(
 
 @riverpod
 Stream<int> selectedPresetStream(SelectedPresetStreamRef ref) =>
-    ref.read(selectedPresetRepositoryProvider).selectedPreset;
+    ref.watch(selectedPresetRepositoryProvider).selectedPreset;
 
 class SelectedPresetRepository implements SelectedPresetRepositoryBase {
   SelectedPresetRepository({required this.client}) {

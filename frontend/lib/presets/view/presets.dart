@@ -56,17 +56,19 @@ class Presets extends StatelessWidget {
               key: const Key('presets-create-button'),
               icon: const Icon(Icons.add),
               tooltip: 'Create new preset',
-              onPressed: () async {
-                final name = await showDialog<String>(
-                  context: context,
-                  builder: (_) {
-                    return const PresetNameDialog();
-                  },
-                );
-                if (name != null) {
-                  createPreset!(name);
-                }
-              },
+              onPressed: createPreset == null
+                  ? null
+                  : () async {
+                      final name = await showDialog<String>(
+                        context: context,
+                        builder: (_) {
+                          return const PresetNameDialog();
+                        },
+                      );
+                      if (name != null) {
+                        createPreset!(name);
+                      }
+                    },
             ),
             IconButton(
               key: const Key('presets-save-button'),
@@ -103,14 +105,23 @@ class Presets extends StatelessWidget {
                   isExpanded: true,
                   value: selectedPreset,
                   items: presets
-                      ?.map(
-                        (e) => DropdownMenuItem(
-                          value: e,
-                          child: Text(e.preset.name),
+                          ?.map(
+                            (e) => DropdownMenuItem(
+                              value: e,
+                              child: Text(e.preset.name),
+                            ),
+                          )
+                          .toList() ??
+                      // When loading, use an empty menu item so that the
+                      // dropdown has the correct height
+                      [
+                        const DropdownMenuItem(
+                          child: Text(''),
                         ),
-                      )
-                      .toList(),
-                  onChanged: (selected) => selectPreset?.call(selected!),
+                      ],
+                  onChanged: selectPreset == null
+                      ? null
+                      : (selected) => selectPreset?.call(selected!),
                 ),
               ),
             ),

@@ -59,7 +59,7 @@ class PresetsRepository implements PresetsRepositoryBase {
         .firstWhere((element) => element.preset.name == preset.name)
         .timeout(const Duration(seconds: 2));
 
-    final newValue = _presets.value!..[record.id] = record;
+    final newValue = _presets.value..[record.id] = record;
     _presets.add(newValue);
 
     return record;
@@ -69,28 +69,28 @@ class PresetsRepository implements PresetsRepositoryBase {
   Future<void> delete(int id) async {
     await client.delete(id);
 
-    final newValue = _presets.value!..remove(id);
+    final newValue = _presets.value..remove(id);
     _presets.add(newValue);
   }
 
-  final _presets = BehaviorSubject<Map<int, PresetRecord>?>.seeded(null);
+  final _presets = BehaviorSubject<Map<int, PresetRecord>>();
 
   @override
-  Stream<Map<int, PresetRecord>> get presets => _presets.whereNotNull();
+  Stream<Map<int, PresetRecord>> get presets => _presets;
 
   @override
   Future<void> update(PresetRecord preset) async {
     await client.update(preset);
 
-    final newValue = _presets.value!..[preset.id] = preset;
+    final newValue = _presets.value..[preset.id] = preset;
     _presets.add(newValue);
   }
 
   void _handleNotification(PresetRecord preset) {
-    if (_presets.value == null) {
+    if (!_presets.hasValue) {
       _presets.add({preset.id: preset});
     } else {
-      _presets.add(_presets.value!..[preset.id] = preset);
+      _presets.add(_presets.value..[preset.id] = preset);
     }
   }
 
