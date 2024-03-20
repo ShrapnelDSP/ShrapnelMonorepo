@@ -38,7 +38,7 @@ final midiLearnServiceProvider =
     parameterUpdates:
         ref.watch(parameterServiceProvider).parameterUpdates.map((e) => e.id),
     midiMessages: ref
-        .read(apiWebsocketProvider)
+        .watch(apiWebsocketProvider)
         .stream
         .whereType<ApiMessageMidiMapping>()
         .map((event) => event.message)

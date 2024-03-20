@@ -37,10 +37,10 @@ sealed class AudioEventMessage with _$AudioEventMessage {
   factory AudioEventMessage.outputClipped() = AudioEventMessageOutputClipped;
 }
 
-final audioClippingServiceProvider = ChangeNotifierProvider(
+final audioClippingServiceProvider = AutoDisposeChangeNotifierProvider(
   (ref) => AudioClippingService(
     stream: ref
-        .read(apiWebsocketProvider)
+        .watch(apiWebsocketProvider)
         .stream
         .whereType<ApiMessageAudioEvent>()
         .map((event) => event.message),
