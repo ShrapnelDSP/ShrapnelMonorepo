@@ -22,12 +22,14 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:logging/logging.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:shrapnel/api/api_websocket.dart';
 import 'package:shrapnel/audio_events.dart';
 import 'package:shrapnel/main.dart';
 import 'package:shrapnel/midi_mapping/model/models.dart';
+import 'package:shrapnel/parameter.dart';
 import 'package:shrapnel/robust_websocket.dart';
 
 import '../../home_page_object.dart';
@@ -43,8 +45,6 @@ void main() {
     final websocket = MockRobustWebsocket();
     final api = MockApiWebsocket();
     when(api.stream).thenAnswer((_) => apiController.stream);
-    when(api.connectionStream).thenAnswer((_) => Stream.fromIterable([]));
-    when(api.isAlive).thenReturn(true);
 
     const getRequest =
         ApiMessage.midiMapping(message: MidiApiMessage.getRequest());
@@ -125,8 +125,6 @@ void main() {
       final websocket = MockRobustWebsocket();
       final api = MockApiWebsocket();
       when(api.stream).thenAnswer((_) => apiController.stream);
-      when(api.connectionStream).thenAnswer((_) => Stream.fromIterable([]));
-      when(api.isAlive).thenReturn(true);
 
       await tester.pumpWidget(
         ProviderScope(
@@ -193,8 +191,6 @@ void main() {
       final websocket = MockRobustWebsocket();
       final api = MockApiWebsocket();
       when(api.stream).thenAnswer((_) => apiController.stream);
-      when(api.connectionStream).thenAnswer((_) => Stream.fromIterable([]));
-      when(api.isAlive).thenReturn(true);
 
       const getRequest =
           ApiMessage.midiMapping(message: MidiApiMessage.getRequest());
@@ -330,8 +326,6 @@ void main() {
       final websocket = MockRobustWebsocket();
       final api = MockApiWebsocket();
       when(api.stream).thenAnswer((_) => apiController.stream);
-      when(api.connectionStream).thenAnswer((_) => Stream.fromIterable([]));
-      when(api.isAlive).thenReturn(true);
 
       const getRequest =
           ApiMessage.midiMapping(message: MidiApiMessage.getRequest());
@@ -393,14 +387,30 @@ void main() {
   testWidgets(
     'MIDI mapping can be learned',
     (tester) async {
+      setupLogger(Level.ALL);
       await tester.binding.setSurfaceSize(const Size(1920, 1080));
 
       final apiController = StreamController<ApiMessage>.broadcast();
       final websocket = MockRobustWebsocket();
+      when(websocket.isAlive).thenReturn(true);
       final api = MockApiWebsocket();
       when(api.stream).thenAnswer((_) => apiController.stream);
-      when(api.connectionStream).thenAnswer((_) => Stream.fromIterable([]));
-      when(api.isAlive).thenReturn(true);
+      when(
+        api.send(
+          ApiMessage.parameterOutput(
+            message: ParameterServiceOutputMessage.requestInitialisation(),
+          ),
+        ),
+      ).thenAnswer((_) {
+        apiController.add(
+          ApiMessage.parameterInput(
+            message: ParameterServiceInputMessage.parameterUpdate(
+              id: 'volume',
+              value: 0.5,
+            ),
+          ),
+        );
+      });
 
       final homePageObject = HomePageObject(tester);
 
@@ -498,8 +508,22 @@ void main() {
       final websocket = MockRobustWebsocket();
       final api = MockApiWebsocket();
       when(api.stream).thenAnswer((_) => apiController.stream);
-      when(api.connectionStream).thenAnswer((_) => Stream.fromIterable([]));
-      when(api.isAlive).thenReturn(true);
+      when(
+        api.send(
+          ApiMessage.parameterOutput(
+            message: ParameterServiceOutputMessage.requestInitialisation(),
+          ),
+        ),
+      ).thenAnswer((_) {
+        apiController.add(
+          ApiMessage.parameterInput(
+            message: ParameterServiceInputMessage.parameterUpdate(
+              id: 'volume',
+              value: 0.5,
+            ),
+          ),
+        );
+      });
 
       const getRequest =
           ApiMessage.midiMapping(message: MidiApiMessage.getRequest());

@@ -26,9 +26,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:logging/logging.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:rxdart/rxdart.dart';
 
-import 'api/api_websocket.dart';
 import 'riverpod_util.dart';
 
 part 'robust_websocket.g.dart';
@@ -39,15 +37,6 @@ final _log = Logger('shrapnel.robust_websocket');
 // ignore: unsupported_provider_value
 RobustWebsocket robustWebsocket(RobustWebsocketRef ref, Uri uri) =>
     ref.listenAndDisposeChangeNotifier(RobustWebsocket(uri: uri));
-
-@riverpod
-bool isAlive(IsAliveRef ref) {
-  final provider = ref.watch(robustWebsocketProvider(Uri.parse(kShrapnelUri)));
-  final subscription =
-      provider._isAliveSubject.skip(1).listen((_) => ref.invalidateSelf());
-  ref.onDispose(subscription.cancel);
-  return provider.isAlive;
-}
 
 /// Auto-reconnecting websocket client
 class RobustWebsocket extends ChangeNotifier {
@@ -67,11 +56,15 @@ class RobustWebsocket extends ChangeNotifier {
   }
 
   Uri uri;
-  final _isAliveSubject = BehaviorSubject<bool>.seeded(false);
 
-  bool get isAlive => _isAliveSubject.stream.value;
+  bool _isAlive = false;
 
-  set isAlive(bool value) => _isAliveSubject.add(value);
+  set isAlive(bool value) {
+    _isAlive = value;
+    notifyListeners();
+  }
+
+  bool get isAlive => _isAlive;
 
   final _connectionController = StreamController<void>.broadcast();
 

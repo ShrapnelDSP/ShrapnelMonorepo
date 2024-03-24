@@ -60,7 +60,7 @@ class KnobWithLabel extends ConsumerWidget {
           ),
           child: Knob(
             key: Key('knob-$parameterId'),
-            onChanged: isEnabled ? parameter.onUserChanged : (_) {},
+            onChanged: isEnabled ? parameter.onUserChanged : null,
             value: value.unwrapPrevious().valueOrNull,
             size: knobSize,
           ),

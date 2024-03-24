@@ -21,6 +21,8 @@ import 'dart:math' as m;
 import 'package:flutter/material.dart';
 import 'package:vector_math/vector_math_64.dart' show Vector3;
 
+import 'util/conditional_parent.dart';
+
 const ColorFilter _greyscale = ColorFilter.matrix(<double>[
   ...[0.2126, 0.7152, 0.0722, 0, 0],
   ...[0.2126, 0.7152, 0.0722, 0, 0],
@@ -54,7 +56,7 @@ class Knob extends StatelessWidget {
   static const double maxAngle = -minAngle;
   static const double sweepAngle = maxAngle - minAngle;
 
-  final ValueChanged<double> onChanged;
+  final ValueChanged<double>? onChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -72,18 +74,23 @@ class Knob extends StatelessWidget {
       colorFilter: value == null ? _greyscale : _identity,
       child: Transform.rotate(
         angle: m.pi / 4,
-        child: GestureDetector(
-          onVerticalDragUpdate: (DragUpdateDetails details) {
-            if (value == null) {
-              return;
-            }
+        child: ConditionalParent(
+          condition: onChanged != null,
+          builder: (child) => GestureDetector(
+            onVerticalDragUpdate: (DragUpdateDetails details) {
+              if (value == null) {
+                return;
+              }
 
-            final changeInY = details.delta.dy;
-            final changeInValue = distanceToValue * -changeInY;
-            final newValue = value! + changeInValue;
+              final changeInY = details.delta.dy;
+              final changeInValue = distanceToValue * -changeInY;
+              final newValue = value! + changeInValue;
 
-            onChanged(newValue.clamp(min, max));
-          },
+              // checked in condition
+              onChanged!(newValue.clamp(min, max));
+            },
+            child: child,
+          ),
           child: Transform.rotate(
             angle: -m.pi / 4,
             child: ClipRect(

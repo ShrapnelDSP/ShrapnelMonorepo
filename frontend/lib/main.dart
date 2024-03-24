@@ -138,7 +138,7 @@ class MyHomePage extends riverpod.ConsumerWidget {
               icon: const Icon(Icons.menu_book_outlined),
               key: const Key('midi-learn-button'),
               onPressed: ref.watch(midiLearnServiceProvider).maybeWhen(
-                    loading: null,
+                    loading: () => null,
                     orElse: () => () => startMidiLearning(ref),
                   ),
             ),

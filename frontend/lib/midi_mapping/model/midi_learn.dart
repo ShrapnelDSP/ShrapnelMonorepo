@@ -89,16 +89,20 @@ class MidiLearnService extends MidiLearnServiceBase {
     required this.parameterUpdates,
     required this.midiMessages,
   }) : super(const MidiLearnState.idle(null)) {
-    parameterUpdates.listen(parameterUpdated);
-    midiMessages.listen(midiMessageReceived);
+    parameterUpdateSubscription = parameterUpdates.listen(parameterUpdated);
+    midiMessageSubscription = midiMessages.listen(midiMessageReceived);
   }
 
   final MidiMappingService mappingService;
   final Stream<String> parameterUpdates;
   final Stream<MidiMessage> midiMessages;
 
+  late final StreamSubscription<dynamic> parameterUpdateSubscription;
+  late final StreamSubscription<dynamic> midiMessageSubscription;
+
   @override
   void startLearning() {
+    _log.finest('startLearning');
     state.maybeWhen(
       idle: (_) => state = const MidiLearnState.waitForParameter(),
       orElse: () => null,
@@ -106,6 +110,7 @@ class MidiLearnService extends MidiLearnServiceBase {
   }
 
   void parameterUpdated(String id) {
+    _log.finest('parameter updated: $id');
     state.maybeWhen(
       waitForParameter: () => state = MidiLearnState.waitForMidi(id),
       waitForMidi: (_) => state = MidiLearnState.waitForMidi(id),
@@ -114,6 +119,7 @@ class MidiLearnService extends MidiLearnServiceBase {
   }
 
   void midiMessageReceived(MidiMessage message) {
+    _log.finest('midiMessageReceived: $message');
     state.maybeWhen(
       waitForMidi: (mappedParameterId) {
         unawaited(
@@ -163,6 +169,10 @@ class MidiLearnService extends MidiLearnServiceBase {
                 ),
               );
 
+              if (!mounted) {
+                return;
+              }
+
               state = MidiLearnState.idle(similarMappingsList);
             },
             orElse: () => null,
@@ -175,11 +185,13 @@ class MidiLearnService extends MidiLearnServiceBase {
 
   @override
   void cancelLearning() {
+    _log.finest('cancelLearning');
     state = const MidiLearnState.idle(null);
   }
 
   @override
   Future<void> undoRemoveSimilarMappings() async {
+    _log.finest('undoRemoveSimilarMappings');
     unawaited(
       state.maybeWhen(
         idle: (duplicates) async {
@@ -198,5 +210,12 @@ class MidiLearnService extends MidiLearnServiceBase {
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    unawaited(parameterUpdateSubscription.cancel());
+    unawaited(midiMessageSubscription.cancel());
+    super.dispose();
   }
 }

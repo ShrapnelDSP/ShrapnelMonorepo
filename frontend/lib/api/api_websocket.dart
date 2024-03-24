@@ -68,15 +68,9 @@ sealed class ApiMessage with _$ApiMessage {
 
 @riverpod
 ApiWebsocket? apiWebsocket(ApiWebsocketRef ref) {
-  final isAlive = ref.watch(isAliveProvider);
-  if (isAlive) {
-    return ApiWebsocket(
-      websocket: ref.watch(
-        robustWebsocketProvider(
-          Uri.parse(kShrapnelUri),
-        ),
-      ),
-    );
+  final websocket = ref.watch(robustWebsocketProvider(Uri.parse(kShrapnelUri)));
+  if (websocket.isAlive) {
+    return ApiWebsocket(websocket: websocket);
   }
 
   return null;

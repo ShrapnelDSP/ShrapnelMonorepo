@@ -148,7 +148,6 @@ void main() {
             updateParameter(id, value);
         }
       });
-      when(parameterTransport.isAlive).thenReturn(true);
       when(parameterTransport.stream)
           .thenAnswer((_) => parameterController.stream);
 
@@ -225,9 +224,6 @@ void main() {
       final apiWebsocket = MockApiWebsocket();
       when(apiWebsocket.stream)
           .thenAnswer((_) => StreamController<ApiMessage>().stream);
-      when(apiWebsocket.connectionStream)
-          .thenAnswer((_) => const Stream.empty());
-      when(apiWebsocket.isAlive).thenReturn(true);
 
       await tester.pumpWidget(
         ProviderScope(
