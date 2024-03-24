@@ -32,22 +32,58 @@ import 'service.dart';
 final _log = Logger('shrapnel.midi_mapping.model.midi_learn');
 
 final midiLearnServiceProvider =
-    AutoDisposeStateNotifierProvider<MidiLearnService, MidiLearnState>(
-  (ref) => MidiLearnService(
-    mappingService: ref.watch(midiMappingServiceProvider),
-    parameterUpdates:
-        ref.watch(parameterServiceProvider).parameterUpdates.map((e) => e.id),
-    midiMessages: ref
-        .watch(apiWebsocketProvider)
-        .stream
-        .whereType<ApiMessageMidiMapping>()
-        .map((event) => event.message)
-        .whereType<MidiMessageReceived>()
-        .map((event) => event.message),
-  ),
+    AutoDisposeStateNotifierProvider<MidiLearnServiceBase, MidiLearnState>(
+  (ref) {
+    return switch ((
+      ref.watch(midiMappingServiceProvider),
+      ref.watch(parameterServiceProvider),
+      ref.watch(apiWebsocketProvider),
+    )) {
+      (final midiMappingService?, final parameterService?, final websocket?) =>
+        MidiLearnService(
+          mappingService: midiMappingService,
+          parameterUpdates: parameterService.parameterUpdates.map((e) => e.id),
+          midiMessages: websocket.stream
+              .whereType<ApiMessageMidiMapping>()
+              .map((event) => event.message)
+              .whereType<MidiMessageReceived>()
+              .map((event) => event.message),
+        ),
+      _ => MidiLearnServiceLoading(),
+    };
+  },
 );
 
-class MidiLearnService extends StateNotifier<MidiLearnState> {
+abstract class MidiLearnServiceBase extends StateNotifier<MidiLearnState> {
+  MidiLearnServiceBase(super._state);
+
+  void startLearning();
+
+  void cancelLearning();
+
+  Future<void> undoRemoveSimilarMappings();
+}
+
+class MidiLearnServiceLoading extends MidiLearnServiceBase {
+  MidiLearnServiceLoading() : super(const MidiLearnState.loading());
+
+  @override
+  void cancelLearning() {
+    throw StateError("Can't cancel learning while loading");
+  }
+
+  @override
+  void startLearning() {
+    throw StateError("Can't start learning while loading");
+  }
+
+  @override
+  Future<void> undoRemoveSimilarMappings() {
+    throw StateError("Can't undo learning while loading");
+  }
+}
+
+class MidiLearnService extends MidiLearnServiceBase {
   MidiLearnService({
     required this.mappingService,
     required this.parameterUpdates,
@@ -61,6 +97,7 @@ class MidiLearnService extends StateNotifier<MidiLearnState> {
   final Stream<String> parameterUpdates;
   final Stream<MidiMessage> midiMessages;
 
+  @override
   void startLearning() {
     state.maybeWhen(
       idle: (_) => state = const MidiLearnState.waitForParameter(),
@@ -136,10 +173,12 @@ class MidiLearnService extends StateNotifier<MidiLearnState> {
     );
   }
 
+  @override
   void cancelLearning() {
     state = const MidiLearnState.idle(null);
   }
 
+  @override
   Future<void> undoRemoveSimilarMappings() async {
     unawaited(
       state.maybeWhen(

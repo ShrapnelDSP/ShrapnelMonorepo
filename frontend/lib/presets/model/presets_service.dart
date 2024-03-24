@@ -89,10 +89,10 @@ class PresetsService extends _$PresetsService {
     final presetsRepository = ref.read(presetsRepositoryProvider);
     final selectedPresetRepository = ref.read(selectedPresetRepositoryProvider);
 
-    if (parameters == null) {
-      throw StateError(
-        'Attempted to create preset while parameters are loading',
-      );
+    if (parameters == null ||
+        presetsRepository == null ||
+        selectedPresetRepository == null) {
+      throw StateError('Attempted to create preset while loading');
     }
 
     final record = await presetsRepository.create(
@@ -102,11 +102,11 @@ class PresetsService extends _$PresetsService {
   }
 
   Future<void> select(int id) async {
-    await ref.read(selectedPresetRepositoryProvider).selectPreset(id);
+    await ref.read(selectedPresetRepositoryProvider)!.selectPreset(id);
   }
 
   Future<void> delete(int id) async {
-    await ref.read(presetsRepositoryProvider).delete(id);
+    await ref.read(presetsRepositoryProvider)!.delete(id);
   }
 
   Future<void> saveChanges() async {
@@ -130,7 +130,7 @@ class PresetsService extends _$PresetsService {
       return;
     }
 
-    await ref.read(presetsRepositoryProvider).update(
+    await ref.read(presetsRepositoryProvider)!.update(
           currentPreset.copyWith(
             preset: currentPreset.preset.copyWith(
               parameters: parameters,

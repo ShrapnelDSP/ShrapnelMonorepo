@@ -137,9 +137,10 @@ class MyHomePage extends riverpod.ConsumerWidget {
             child: IconButton(
               icon: const Icon(Icons.menu_book_outlined),
               key: const Key('midi-learn-button'),
-              onPressed: () {
-                ref.read(midiLearnServiceProvider.notifier).startLearning();
-              },
+              onPressed: ref.watch(midiLearnServiceProvider).maybeWhen(
+                    loading: null,
+                    orElse: () => () => startMidiLearning(ref),
+                  ),
             ),
           ),
           Tooltip(
@@ -277,9 +278,11 @@ class MyHomePage extends riverpod.ConsumerWidget {
                 message: 'Input clipping',
                 child: Icon(
                   Icons.input,
-                  color: ref.watch(audioClippingServiceProvider).inputIsClipped
-                      ? Colors.red
-                      : null,
+                  color:
+                      ref.watch(audioClippingServiceProvider)?.inputIsClipped ??
+                              false
+                          ? Colors.red
+                          : null,
                 ),
               ),
               const SizedBox(width: 8),
@@ -287,7 +290,10 @@ class MyHomePage extends riverpod.ConsumerWidget {
                 message: 'Output clipping',
                 child: Icon(
                   Icons.output,
-                  color: ref.watch(audioClippingServiceProvider).outputIsClipped
+                  color: ref
+                              .watch(audioClippingServiceProvider)
+                              ?.outputIsClipped ??
+                          false
                       ? Colors.red
                       : null,
                 ),
@@ -302,6 +308,10 @@ class MyHomePage extends riverpod.ConsumerWidget {
         ),
       ),
     );
+  }
+
+  void startMidiLearning(riverpod.WidgetRef ref) {
+    ref.read(midiLearnServiceProvider.notifier).startLearning();
   }
 }
 

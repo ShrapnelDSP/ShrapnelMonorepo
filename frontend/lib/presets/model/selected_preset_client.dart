@@ -46,10 +46,13 @@ sealed class SelectedPresetMessage with _$SelectedPresetMessage {
 }
 
 @riverpod
-SelectedPresetTransport selectedPresetTransport(
+SelectedPresetTransport? selectedPresetTransport(
   SelectedPresetTransportRef ref,
 ) =>
-    SelectedPresetTransport(websocket: ref.watch(apiWebsocketProvider));
+    switch (ref.watch(apiWebsocketProvider)) {
+      final websocket? => SelectedPresetTransport(websocket: websocket),
+      null => null,
+    };
 
 class SelectedPresetTransport
     implements MessageTransport<SelectedPresetMessage, SelectedPresetMessage> {
@@ -74,23 +77,20 @@ class SelectedPresetTransport
       .map((event) => event.message)
       .logFinest(_log, (event) => 'received message: $event');
 
-  @override
-  Stream<void> get connectionStream => _websocket.connectionStream;
-
   final ApiWebsocket _websocket;
 
   @override
   void dispose() {
     unawaited(_controller.close());
   }
-
-  @override
-  bool get isAlive => _websocket.isAlive;
 }
 
 @riverpod
-SelectedPresetClient selectedPresetClient(SelectedPresetClientRef ref) =>
-    SelectedPresetClient(transport: ref.watch(selectedPresetTransportProvider));
+SelectedPresetClient? selectedPresetClient(SelectedPresetClientRef ref) =>
+    switch (ref.watch(selectedPresetTransportProvider)) {
+      final transport? => SelectedPresetClient(transport: transport),
+      null => null,
+    };
 
 class SelectedPresetClient {
   SelectedPresetClient({
@@ -112,6 +112,4 @@ class SelectedPresetClient {
   Future<void> selectPreset(int presetId) async {
     _transport.sink.add(SelectedPresetMessage.write(selectedPreset: presetId));
   }
-
-  Stream<void> get connectionStream => _transport.connectionStream;
 }

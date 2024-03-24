@@ -38,13 +38,18 @@ sealed class AudioEventMessage with _$AudioEventMessage {
 }
 
 final audioClippingServiceProvider = AutoDisposeChangeNotifierProvider(
-  (ref) => AudioClippingService(
-    stream: ref
-        .watch(apiWebsocketProvider)
-        .stream
-        .whereType<ApiMessageAudioEvent>()
-        .map((event) => event.message),
-  ),
+  (ref) {
+    final websocket = ref.watch(apiWebsocketProvider);
+    if (websocket != null) {
+      return AudioClippingService(
+        stream: websocket.stream
+            .whereType<ApiMessageAudioEvent>()
+            .map((event) => event.message),
+      );
+    }
+
+    return null;
+  },
 );
 
 class AudioClippingService extends ChangeNotifier {

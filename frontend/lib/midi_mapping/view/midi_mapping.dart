@@ -53,194 +53,209 @@ class MidiMappingPage extends ConsumerWidget {
               DataColumn(label: Text('Target')),
               DataColumn(label: Text('Delete')),
             ],
-            rows: midiMappingService.mappings.entries.map(
-              (mapEntry) {
-                final mapping = MidiMappingEntry(
-                  id: mapEntry.key,
-                  mapping: mapEntry.value,
-                );
-                return DataRow(
-                  key: ValueKey(mapping.id),
-                  cells: [
-                    DataCell(
-                      MidiChannelDropdown(
-                        key: Key('${mapping.id}-midi-channel-dropdown'),
-                        value: mapping.mapping.midiChannel,
-                        onChanged: (value) => unawaited(
-                          midiMappingService.updateMapping(
-                            mapping.copyWith.mapping(midiChannel: value!),
+            rows: switch (midiMappingService) {
+              final midiMappingService? =>
+                midiMappingService.mappings.entries.map(
+                  (mapEntry) {
+                    final mapping = MidiMappingEntry(
+                      id: mapEntry.key,
+                      mapping: mapEntry.value,
+                    );
+                    return DataRow(
+                      key: ValueKey(mapping.id),
+                      cells: [
+                        DataCell(
+                          MidiChannelDropdown(
+                            key: Key('${mapping.id}-midi-channel-dropdown'),
+                            value: mapping.mapping.midiChannel,
+                            onChanged: (value) => unawaited(
+                              midiMappingService.updateMapping(
+                                mapping.copyWith.mapping(midiChannel: value!),
+                              ),
+                            ),
                           ),
                         ),
-                      ),
-                    ),
-                    DataCell(
-                      MidiCCDropdown(
-                        key: Key('${mapping.id}-cc-number-dropdown'),
-                        value: mapping.mapping.ccNumber,
-                        onChanged: (value) => unawaited(
-                          midiMappingService.updateMapping(
-                            mapping.copyWith.mapping(ccNumber: value!),
+                        DataCell(
+                          MidiCCDropdown(
+                            key: Key('${mapping.id}-cc-number-dropdown'),
+                            value: mapping.mapping.ccNumber,
+                            onChanged: (value) => unawaited(
+                              midiMappingService.updateMapping(
+                                mapping.copyWith.mapping(ccNumber: value!),
+                              ),
+                            ),
                           ),
                         ),
-                      ),
-                    ),
-                    DataCell(
-                      ModeDropdown(
-                        key: Key('${mapping.id}-mode-dropdown'),
-                        value: mapping.mapping.mode,
-                        onChanged: (value) {
-                          if (value == mapping.mapping.mode) {
-                            return;
-                          }
+                        DataCell(
+                          ModeDropdown(
+                            key: Key('${mapping.id}-mode-dropdown'),
+                            value: mapping.mapping.mode,
+                            onChanged: (value) {
+                              if (value == mapping.mapping.mode) {
+                                return;
+                              }
 
-                          if (value == null) {
-                            return;
-                          }
+                              if (value == null) {
+                                return;
+                              }
 
-                          const parameterModes = [
-                            MidiMappingMode.parameter,
-                            MidiMappingMode.toggle,
-                          ];
+                              const parameterModes = [
+                                MidiMappingMode.parameter,
+                                MidiMappingMode.toggle,
+                              ];
 
-                          final isTrivialChange =
-                              parameterModes.contains(mapping.mapping.mode) &&
+                              final isTrivialChange = parameterModes
+                                      .contains(mapping.mapping.mode) &&
                                   parameterModes.contains(value);
 
-                          if (isTrivialChange) {
-                            unawaited(
-                              midiMappingService.updateMapping(
-                                switch (mapping.mapping) {
-                                  final MidiMappingToggle toggle => switch (
-                                        value) {
-                                      MidiMappingMode.toggle =>
-                                        throw StateError(''),
-                                      MidiMappingMode.parameter =>
-                                        mapping.copyWith(
-                                          mapping: MidiMapping.parameter(
-                                            midiChannel: toggle.midiChannel,
-                                            ccNumber: toggle.ccNumber,
-                                            parameterId: toggle.parameterId,
-                                          ),
-                                        ),
-                                      MidiMappingMode.button =>
+                              if (isTrivialChange) {
+                                unawaited(
+                                  midiMappingService.updateMapping(
+                                    switch (mapping.mapping) {
+                                      final MidiMappingToggle toggle => switch (
+                                            value) {
+                                          MidiMappingMode.toggle =>
+                                            throw StateError(''),
+                                          MidiMappingMode.parameter =>
+                                            mapping.copyWith(
+                                              mapping: MidiMapping.parameter(
+                                                midiChannel: toggle.midiChannel,
+                                                ccNumber: toggle.ccNumber,
+                                                parameterId: toggle.parameterId,
+                                              ),
+                                            ),
+                                          MidiMappingMode.button =>
+                                            throw StateError(''),
+                                        },
+                                      final MidiMappingParameter parameter =>
+                                        switch (value) {
+                                          MidiMappingMode.toggle =>
+                                            mapping.copyWith(
+                                              mapping: MidiMapping.toggle(
+                                                midiChannel:
+                                                    parameter.midiChannel,
+                                                ccNumber: parameter.ccNumber,
+                                                parameterId:
+                                                    parameter.parameterId,
+                                              ),
+                                            ),
+                                          MidiMappingMode.parameter =>
+                                            throw StateError(''),
+                                          MidiMappingMode.button =>
+                                            throw StateError(''),
+                                        },
+                                      MidiMappingButton() =>
                                         throw StateError(''),
                                     },
-                                  final MidiMappingParameter parameter =>
-                                    switch (value) {
-                                      MidiMappingMode.toggle =>
-                                        mapping.copyWith(
-                                          mapping: MidiMapping.toggle(
-                                            midiChannel: parameter.midiChannel,
-                                            ccNumber: parameter.ccNumber,
-                                            parameterId: parameter.parameterId,
-                                          ),
-                                        ),
-                                      MidiMappingMode.parameter =>
-                                        throw StateError(''),
-                                      MidiMappingMode.button =>
-                                        throw StateError(''),
-                                    },
-                                  MidiMappingButton() => throw StateError(''),
-                                },
-                              ),
-                            );
-                          } else {
-                            unawaited(
-                              showDialog<void>(
-                                context: context,
-                                builder: (context) => EditMappingDialog(
-                                  mapping: mapping,
-                                  mode: value,
-                                ),
-                              ),
-                            );
-                          }
-                        },
-                      ),
-                    ),
-                    DataCell(
-                      switch (mapping.mapping) {
-                        final MidiMappingToggle midiMapping => Row(
-                            children: [
-                              Text(
-                                'Parameter:',
-                                style: Theme.of(context).textTheme.titleMedium,
-                              ),
-                              const SizedBox(width: 8),
-                              ParametersDropdown(
-                                key: Key('${mapping.id}-parameter-id-dropdown'),
-                                value: midiMapping.parameterId,
-                                onChanged: (value) => unawaited(
-                                  midiMappingService.updateMapping(
-                                    mapping.copyWith(
-                                      mapping: midiMapping.copyWith(
-                                        parameterId: value!,
-                                      ),
+                                  ),
+                                );
+                              } else {
+                                unawaited(
+                                  showDialog<void>(
+                                    context: context,
+                                    builder: (context) => EditMappingDialog(
+                                      mapping: mapping,
+                                      mode: value,
                                     ),
                                   ),
-                                ),
-                              ),
-                            ],
+                                );
+                              }
+                            },
                           ),
-                        final MidiMappingParameter midiMapping => Row(
-                            children: [
-                              Text(
-                                'Parameter:',
-                                style: Theme.of(context).textTheme.titleMedium,
-                              ),
-                              const SizedBox(width: 8),
-                              ParametersDropdown(
-                                key: Key('${mapping.id}-parameter-id-dropdown'),
-                                value: midiMapping.parameterId,
-                                onChanged: (value) => unawaited(
-                                  midiMappingService.updateMapping(
-                                    mapping.copyWith(
-                                      mapping: midiMapping.copyWith(
-                                        parameterId: value!,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        final MidiMappingButton midiMapping => Row(
-                            children: [
-                              Text(
-                                'Preset:',
-                                style: Theme.of(context).textTheme.titleMedium,
-                              ),
-                              const SizedBox(width: 8),
-                              PresetsDropdown(
-                                key: Key('${mapping.id}-preset-id-dropdown'),
-                                value: midiMapping.presetId,
-                                onChanged: (value) => unawaited(
-                                  midiMappingService.updateMapping(
-                                    mapping.copyWith(
-                                      mapping: midiMapping.copyWith(
-                                        presetId: value!,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                      },
-                    ),
-                    DataCell(
-                      IconButton(
-                        key: Key('${mapping.id}-delete-button'),
-                        icon: const Icon(Icons.delete),
-                        onPressed: () => unawaited(
-                          midiMappingService.deleteMapping(id: mapping.id),
                         ),
-                      ),
-                    ),
-                  ],
-                );
-              },
-            ).toList(growable: false),
+                        DataCell(
+                          switch (mapping.mapping) {
+                            final MidiMappingToggle midiMapping => Row(
+                                children: [
+                                  Text(
+                                    'Parameter:',
+                                    style:
+                                        Theme.of(context).textTheme.titleMedium,
+                                  ),
+                                  const SizedBox(width: 8),
+                                  ParametersDropdown(
+                                    key: Key(
+                                      '${mapping.id}-parameter-id-dropdown',
+                                    ),
+                                    value: midiMapping.parameterId,
+                                    onChanged: (value) => unawaited(
+                                      midiMappingService.updateMapping(
+                                        mapping.copyWith(
+                                          mapping: midiMapping.copyWith(
+                                            parameterId: value!,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            final MidiMappingParameter midiMapping => Row(
+                                children: [
+                                  Text(
+                                    'Parameter:',
+                                    style:
+                                        Theme.of(context).textTheme.titleMedium,
+                                  ),
+                                  const SizedBox(width: 8),
+                                  ParametersDropdown(
+                                    key: Key(
+                                      '${mapping.id}-parameter-id-dropdown',
+                                    ),
+                                    value: midiMapping.parameterId,
+                                    onChanged: (value) => unawaited(
+                                      midiMappingService.updateMapping(
+                                        mapping.copyWith(
+                                          mapping: midiMapping.copyWith(
+                                            parameterId: value!,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            final MidiMappingButton midiMapping => Row(
+                                children: [
+                                  Text(
+                                    'Preset:',
+                                    style:
+                                        Theme.of(context).textTheme.titleMedium,
+                                  ),
+                                  const SizedBox(width: 8),
+                                  PresetsDropdown(
+                                    key:
+                                        Key('${mapping.id}-preset-id-dropdown'),
+                                    value: midiMapping.presetId,
+                                    onChanged: (value) => unawaited(
+                                      midiMappingService.updateMapping(
+                                        mapping.copyWith(
+                                          mapping: midiMapping.copyWith(
+                                            presetId: value!,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                          },
+                        ),
+                        DataCell(
+                          IconButton(
+                            key: Key('${mapping.id}-delete-button'),
+                            icon: const Icon(Icons.delete),
+                            onPressed: () => unawaited(
+                              midiMappingService.deleteMapping(id: mapping.id),
+                            ),
+                          ),
+                        ),
+                      ],
+                    );
+                  },
+                ).toList(growable: false),
+              null => [],
+            },
           ),
         ),
       ),
@@ -400,34 +415,38 @@ class CreateMappingDialogState extends ConsumerState<CreateMappingDialog> {
                 },
               ),
               ElevatedButton(
-                onPressed: () {
-                  if (_formKey.currentState!.validate()) {
-                    Navigator.pop(context);
-                    unawaited(
-                      mappings.createMapping(
-                        switch (mode) {
-                          null =>
-                            throw StateError('Mode has not been selected'),
-                          MidiMappingMode.toggle => MidiMapping.toggle(
-                              midiChannel: channel!,
-                              ccNumber: ccNumber!,
-                              parameterId: parameterId!,
+                onPressed: mappings == null
+                    ? null
+                    : () {
+                        if (_formKey.currentState!.validate()) {
+                          Navigator.pop(context);
+                          unawaited(
+                            mappings.createMapping(
+                              switch (mode) {
+                                null => throw StateError(
+                                    'Mode has not been selected',
+                                  ),
+                                MidiMappingMode.toggle => MidiMapping.toggle(
+                                    midiChannel: channel!,
+                                    ccNumber: ccNumber!,
+                                    parameterId: parameterId!,
+                                  ),
+                                MidiMappingMode.parameter =>
+                                  MidiMapping.parameter(
+                                    midiChannel: channel!,
+                                    ccNumber: ccNumber!,
+                                    parameterId: parameterId!,
+                                  ),
+                                MidiMappingMode.button => MidiMapping.button(
+                                    midiChannel: channel!,
+                                    ccNumber: ccNumber!,
+                                    presetId: presetId!,
+                                  ),
+                              },
                             ),
-                          MidiMappingMode.parameter => MidiMapping.parameter(
-                              midiChannel: channel!,
-                              ccNumber: ccNumber!,
-                              parameterId: parameterId!,
-                            ),
-                          MidiMappingMode.button => MidiMapping.button(
-                              midiChannel: channel!,
-                              ccNumber: ccNumber!,
-                              presetId: presetId!,
-                            ),
-                        },
-                      ),
-                    );
-                  }
-                },
+                          );
+                        }
+                      },
                 child: const Text('Create'),
               ),
             ],
@@ -634,37 +653,41 @@ class EditMappingDialogState extends ConsumerState<EditMappingDialog> {
                 },
               ),
               ElevatedButton(
-                onPressed: () {
-                  if (_formKey.currentState!.validate()) {
-                    Navigator.pop(context);
-                    unawaited(
-                      mappings.updateMapping(
-                        MidiMappingEntry(
-                          id: widget.mapping.id,
-                          mapping: switch (mode) {
-                            null =>
-                              throw StateError('Mode has not been selected'),
-                            MidiMappingMode.toggle => MidiMapping.toggle(
-                                midiChannel: channel!,
-                                ccNumber: ccNumber!,
-                                parameterId: parameterId!,
+                onPressed: mappings == null
+                    ? null
+                    : () {
+                        if (_formKey.currentState!.validate()) {
+                          Navigator.pop(context);
+                          unawaited(
+                            mappings.updateMapping(
+                              MidiMappingEntry(
+                                id: widget.mapping.id,
+                                mapping: switch (mode) {
+                                  null => throw StateError(
+                                      'Mode has not been selected',
+                                    ),
+                                  MidiMappingMode.toggle => MidiMapping.toggle(
+                                      midiChannel: channel!,
+                                      ccNumber: ccNumber!,
+                                      parameterId: parameterId!,
+                                    ),
+                                  MidiMappingMode.parameter =>
+                                    MidiMapping.parameter(
+                                      midiChannel: channel!,
+                                      ccNumber: ccNumber!,
+                                      parameterId: parameterId!,
+                                    ),
+                                  MidiMappingMode.button => MidiMapping.button(
+                                      midiChannel: channel!,
+                                      ccNumber: ccNumber!,
+                                      presetId: presetId!,
+                                    ),
+                                },
                               ),
-                            MidiMappingMode.parameter => MidiMapping.parameter(
-                                midiChannel: channel!,
-                                ccNumber: ccNumber!,
-                                parameterId: parameterId!,
-                              ),
-                            MidiMappingMode.button => MidiMapping.button(
-                                midiChannel: channel!,
-                                ccNumber: ccNumber!,
-                                presetId: presetId!,
-                              ),
-                          },
-                        ),
-                      ),
-                    );
-                  }
-                },
+                            ),
+                          );
+                        }
+                      },
                 child: const Text('Update'),
               ),
             ],

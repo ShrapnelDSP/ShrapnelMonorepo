@@ -122,8 +122,11 @@ sealed class PresetsMessage with _$PresetsMessage {
 }
 
 @riverpod
-PresetsTransport presetsTransport(PresetsTransportRef ref) =>
-    PresetsTransport(websocket: ref.watch(apiWebsocketProvider));
+PresetsTransport? presetsTransport(PresetsTransportRef ref) =>
+    switch (ref.watch(apiWebsocketProvider)) {
+      final websocket? => PresetsTransport(websocket: websocket),
+      null => null,
+    };
 
 class PresetsTransport
     implements MessageTransport<PresetsMessage, PresetsMessage> {
@@ -149,23 +152,20 @@ class PresetsTransport
         (event) => 'receive message: $event',
       );
 
-  @override
-  Stream<void> get connectionStream => websocket.connectionStream;
-
   ApiWebsocket websocket;
 
   @override
   void dispose() {
     unawaited(_controller.close());
   }
-
-  @override
-  bool get isAlive => websocket.isAlive;
 }
 
 @riverpod
-PresetsClient presetsClient(PresetsClientRef ref) =>
-    PresetsClient(transport: ref.watch(presetsTransportProvider));
+PresetsClient? presetsClient(PresetsClientRef ref) =>
+    switch (ref.watch(presetsTransportProvider)) {
+      final transport? => PresetsClient(transport: transport),
+      null => null,
+    };
 
 class PresetsClient {
   PresetsClient({
@@ -231,8 +231,6 @@ class PresetsClient {
       ),
     );
   }
-
-  Stream<void> get connectionStream => _transport.connectionStream;
 
   void dispose() {
     _transport.dispose();

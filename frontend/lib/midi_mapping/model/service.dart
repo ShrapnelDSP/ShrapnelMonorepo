@@ -33,15 +33,23 @@ import '../model/models.dart';
 final _log = Logger('midi_mapping_service');
 
 final midiMappingTransportProvider = AutoDisposeProvider(
-  (ref) => MidiMappingTransport(
-    websocket: ref.watch(apiWebsocketProvider),
-  ),
+  (ref) {
+    return switch (ref.watch(apiWebsocketProvider)) {
+      final websocket? => MidiMappingTransport(websocket: websocket),
+      null => null,
+    };
+  },
 );
 
 final midiMappingServiceProvider = AutoDisposeChangeNotifierProvider(
-  (ref) => MidiMappingService(
-    websocket: ref.watch(midiMappingTransportProvider),
-  ),
+  (ref) {
+    return switch (ref.watch(midiMappingTransportProvider)) {
+      final transport? => MidiMappingService(
+          websocket: transport,
+        ),
+      null => null,
+    };
+  },
 );
 
 class MidiMappingTransport
@@ -68,18 +76,12 @@ class MidiMappingTransport
         (event) => 'receive message: $event',
       );
 
-  @override
-  Stream<void> get connectionStream => websocket.connectionStream;
-
   ApiWebsocket websocket;
 
   @override
   void dispose() {
     unawaited(_controller.close());
   }
-
-  @override
-  bool get isAlive => websocket.isAlive;
 }
 
 class MidiMappingService extends ChangeNotifier {
@@ -87,13 +89,8 @@ class MidiMappingService extends ChangeNotifier {
     required this.websocket,
   }) {
     _mappingsView = UnmodifiableMapView(__mappings);
-
-    websocket.connectionStream.listen((_) async => getMapping());
     _subscription = websocket.stream.listen(_handleMessage);
-
-    if (websocket.isAlive) {
-      unawaited(getMapping());
-    }
+    unawaited(getMapping());
   }
 
   static const responseTimeout = Duration(milliseconds: 500);

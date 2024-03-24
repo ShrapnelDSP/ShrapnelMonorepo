@@ -28,7 +28,6 @@ import 'package:rxdart/rxdart.dart';
 import 'api/api_websocket.dart';
 import 'core/message_transport.dart';
 import 'riverpod_util.dart';
-import 'robust_websocket.dart';
 
 part 'parameter.freezed.dart';
 
@@ -57,16 +56,17 @@ class AudioParameterMetaData with _$AudioParameterMetaData {
 class AudioParameterDoubleModel extends _$AudioParameterDoubleModel {
   @override
   Stream<double> build(String parameterId) {
-    if (ref.watch(isAliveProvider)) {
-      return ref.watch(parameterServiceProvider).getParameter(parameterId);
-    } else {
-      return const Stream<double>.empty();
+    final service = ref.watch(parameterServiceProvider);
+    if (service == null) {
+      return const Stream.empty();
     }
+
+    return service.getParameter(parameterId);
   }
 
   void onUserChanged(double value) {
     _log.finest('user updated parameter $parameterId to $value');
-    ref.read(parameterServiceProvider).parameterUpdatedByUser(
+    ref.read(parameterServiceProvider)!.parameterUpdatedByUser(
           AudioParameterDoubleData(value: value, id: parameterId),
         );
   }
@@ -93,10 +93,13 @@ sealed class ParameterServiceInputMessage with _$ParameterServiceInputMessage {
 }
 
 @riverpod
-ParameterTransport parameterTransport(ParameterTransportRef ref) =>
-    ParameterTransport(
-      websocket: ref.watch(apiWebsocketProvider),
-    );
+ParameterTransport? parameterTransport(ParameterTransportRef ref) =>
+    switch (ref.watch(apiWebsocketProvider)) {
+      final websocket? => ParameterTransport(
+          websocket: websocket,
+        ),
+      null => null,
+    };
 
 class ParameterTransport
     implements
@@ -111,12 +114,6 @@ class ParameterTransport
   ApiWebsocket websocket;
 
   final _controller = StreamController<ParameterServiceOutputMessage>();
-
-  @override
-  Stream<void> get connectionStream => websocket.connectionStream;
-
-  @override
-  bool get isAlive => websocket.isAlive;
 
   @override
   Stream<ParameterServiceInputMessage> get stream => websocket.stream
@@ -134,12 +131,15 @@ class ParameterTransport
 
 @riverpod
 // ignore: unsupported_provider_value
-ParameterService parameterService(ParameterServiceRef ref) =>
-    ref.listenAndDisposeChangeNotifier(
-      ParameterService(
-        transport: ref.watch(parameterTransportProvider),
-      ),
-    );
+ParameterService? parameterService(ParameterServiceRef ref) =>
+    switch (ref.watch(parameterTransportProvider)) {
+      final transport? => ref.listenAndDisposeChangeNotifier(
+          ParameterService(
+            transport: transport,
+          ),
+        ),
+      null => null,
+    };
 
 class ParameterService extends ChangeNotifier {
   ParameterService({
@@ -157,13 +157,9 @@ class ParameterService extends ChangeNotifier {
       ),
     );
 
-    _transport.stream.listen(_handleIncomingMessage);
+    _subscription = _transport.stream.listen(_handleIncomingMessage);
 
-    if (_transport.isAlive) {
-      _requestParameterInitialisation();
-    }
-    _transport.connectionStream
-        .listen((_) => _requestParameterInitialisation());
+    _requestParameterInitialisation();
   }
 
   void _requestParameterInitialisation() {
@@ -172,7 +168,7 @@ class ParameterService extends ChangeNotifier {
   }
 
   final _parameterUpdatesController =
-      StreamController<AudioParameterDoubleData>();
+      StreamController<AudioParameterDoubleData>.broadcast();
 
   /// Parameter updates performed by the user through the GUI
   late final Stream<AudioParameterDoubleData> parameterUpdates =
@@ -183,6 +179,8 @@ class ParameterService extends ChangeNotifier {
 
   final MessageTransport<ParameterServiceOutputMessage,
       ParameterServiceInputMessage> _transport;
+
+  late final StreamSubscription<ParameterServiceInputMessage> _subscription;
 
   Stream<double> getParameter(String parameterId) {
     return _parameters
@@ -209,6 +207,7 @@ class ParameterService extends ChangeNotifier {
   void dispose() {
     unawaited(_sink.close());
     unawaited(_parameterUpdatesController.close());
+    unawaited(_subscription.cancel());
     for (final controller in _parameters.values) {
       unawaited(controller.close());
     }

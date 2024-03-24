@@ -32,6 +32,7 @@ class MidiLearnStatus extends ConsumerWidget {
     final midiLearnService = ref.read(midiLearnServiceProvider.notifier);
 
     final isInProgress = midiLearnState.when(
+      loading: () => false,
       idle: (_) => false,
       waitForParameter: () => true,
       waitForMidi: (_) => true,
@@ -39,6 +40,7 @@ class MidiLearnStatus extends ConsumerWidget {
     );
 
     final isCancellable = midiLearnState.when(
+      loading: () => false,
       idle: (_) => false,
       waitForParameter: () => true,
       waitForMidi: (_) => true,

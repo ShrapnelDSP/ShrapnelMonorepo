@@ -67,16 +67,22 @@ sealed class ApiMessage with _$ApiMessage {
 }
 
 @riverpod
-ApiWebsocket apiWebsocket(ApiWebsocketRef ref) {
-  return ApiWebsocket(
-    websocket: ref.watch(
-      robustWebsocketProvider(
-        Uri.parse(kShrapnelUri),
+ApiWebsocket? apiWebsocket(ApiWebsocketRef ref) {
+  final isAlive = ref.watch(isAliveProvider);
+  if (isAlive) {
+    return ApiWebsocket(
+      websocket: ref.watch(
+        robustWebsocketProvider(
+          Uri.parse(kShrapnelUri),
+        ),
       ),
-    ),
-  );
+    );
+  }
+
+  return null;
 }
 
+// TODO make this implement MessageTransport<ApiMessage, ApiMessage>
 class ApiWebsocket {
   ApiWebsocket({required RobustWebsocket websocket}) : _websocket = websocket;
 
@@ -91,10 +97,6 @@ class ApiWebsocket {
         _log,
         (event) => 'received: $event',
       );
-
-  late final Stream<void> connectionStream = _websocket.connectionStream;
-
-  bool get isAlive => _websocket.isAlive;
 
   void send(ApiMessage message) {
     _log.finest('sending: $message');

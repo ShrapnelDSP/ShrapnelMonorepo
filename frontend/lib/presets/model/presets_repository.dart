@@ -28,21 +28,25 @@ import 'presets_service.dart';
 part 'presets_repository.g.dart';
 
 @riverpod
-PresetsRepositoryBase presetsRepository(PresetsRepositoryRef ref) =>
-    PresetsRepository(
-      client: ref.watch(presetsClientProvider),
-    );
+PresetsRepositoryBase? presetsRepository(PresetsRepositoryRef ref) =>
+    switch (ref.watch(presetsClientProvider)) {
+      final client? => PresetsRepository(
+          client: client,
+        ),
+      null => null,
+    };
 
 @riverpod
 Stream<Map<int, PresetRecord>> presetsStream(PresetsStreamRef ref) =>
-    ref.watch(presetsRepositoryProvider).presets;
+    switch (ref.watch(presetsRepositoryProvider)) {
+      final repository? => repository.presets,
+      null => const Stream.empty(),
+    };
 
 class PresetsRepository implements PresetsRepositoryBase {
   PresetsRepository({required this.client}) {
     client.presetUpdates.listen(_handleNotification);
-    client.connectionStream.listen((_) {
-      unawaited(client.initialise());
-    });
+    unawaited(client.initialise());
   }
 
   PresetsClient client;
