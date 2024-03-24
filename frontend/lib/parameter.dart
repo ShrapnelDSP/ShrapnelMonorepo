@@ -185,7 +185,9 @@ class ParameterService extends ChangeNotifier {
       ParameterServiceInputMessage> _transport;
 
   Stream<double> getParameter(String parameterId) {
-    return _parameters.putIfAbsent(parameterId, StreamController.new).stream;
+    return _parameters
+        .putIfAbsent(parameterId, StreamController.broadcast)
+        .stream;
   }
 
   void _handleIncomingMessage(ParameterServiceInputMessage message) {
@@ -207,6 +209,9 @@ class ParameterService extends ChangeNotifier {
   void dispose() {
     unawaited(_sink.close());
     unawaited(_parameterUpdatesController.close());
+    for (final controller in _parameters.values) {
+      unawaited(controller.close());
+    }
     super.dispose();
   }
 

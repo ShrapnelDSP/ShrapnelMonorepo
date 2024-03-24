@@ -21,7 +21,6 @@ import 'dart:async';
 
 import 'package:logging/logging.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:rxdart/rxdart.dart';
 
 import 'current_parameters.dart';
 import 'presets.dart';
@@ -48,13 +47,17 @@ abstract class SelectedPresetRepositoryBase {
   /// [id] must be the ID of one of the existing presets.
   Future<void> selectPreset(int id);
 
-  ValueStream<int> get selectedPreset;
+  Stream<int> get selectedPreset;
 }
 
 @riverpod
 class PresetsService extends _$PresetsService {
   @override
   PresetsState build() {
+    ref.onDispose(() {
+      _log.warning('PresetsService dispose');
+    });
+
     final presets = ref.watch(presetsStreamProvider).valueOrNull;
     final selectedPreset = ref.watch(selectedPresetStreamProvider).valueOrNull;
     final parametersState = ref.watch(currentParametersProvider).valueOrNull;

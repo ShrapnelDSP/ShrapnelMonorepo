@@ -26,6 +26,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:logging/logging.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:rxdart/rxdart.dart';
 
 import 'api/api_websocket.dart';
 import 'riverpod_util.dart';
@@ -40,8 +41,13 @@ RobustWebsocket robustWebsocket(RobustWebsocketRef ref, Uri uri) =>
     ref.listenAndDisposeChangeNotifier(RobustWebsocket(uri: uri));
 
 @riverpod
-bool isAlive(IsAliveRef ref) =>
-    ref.watch(robustWebsocketProvider(Uri.parse(kShrapnelUri))).isAlive;
+bool isAlive(IsAliveRef ref) {
+  final provider = ref.watch(robustWebsocketProvider(Uri.parse(kShrapnelUri)));
+  final subscription =
+      provider._isAliveSubject.skip(1).listen((_) => ref.invalidateSelf());
+  ref.onDispose(subscription.cancel);
+  return provider.isAlive;
+}
 
 /// Auto-reconnecting websocket client
 class RobustWebsocket extends ChangeNotifier {
@@ -54,7 +60,6 @@ class RobustWebsocket extends ChangeNotifier {
     _log.warning('websocket close reason ${_ws!.closeReason}');
 
     isAlive = false;
-    notifyListeners();
 
     await Future<void>.delayed(const Duration(seconds: 5));
 
@@ -62,7 +67,11 @@ class RobustWebsocket extends ChangeNotifier {
   }
 
   Uri uri;
-  bool isAlive = false;
+  final _isAliveSubject = BehaviorSubject<bool>.seeded(false);
+
+  bool get isAlive => _isAliveSubject.stream.value;
+
+  set isAlive(bool value) => _isAliveSubject.add(value);
 
   final _connectionController = StreamController<void>.broadcast();
 
@@ -115,7 +124,6 @@ class RobustWebsocket extends ChangeNotifier {
     _log.info('Connected to server');
 
     isAlive = true;
-    notifyListeners();
 
     _ws = WebSocket.fromUpgradedSocket(socket, serverSide: false);
 

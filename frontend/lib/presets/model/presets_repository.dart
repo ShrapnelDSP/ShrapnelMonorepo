@@ -20,7 +20,6 @@
 import 'dart:async';
 
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:rxdart/rxdart.dart';
 
 import 'presets.dart';
 import 'presets_client.dart';
@@ -59,8 +58,7 @@ class PresetsRepository implements PresetsRepositoryBase {
         .firstWhere((element) => element.preset.name == preset.name)
         .timeout(const Duration(seconds: 2));
 
-    final newValue = _presets.value..[record.id] = record;
-    _presets.add(newValue);
+    _state = _state!..[record.id] = record;
 
     return record;
   }
@@ -69,28 +67,35 @@ class PresetsRepository implements PresetsRepositoryBase {
   Future<void> delete(int id) async {
     await client.delete(id);
 
-    final newValue = _presets.value..remove(id);
-    _presets.add(newValue);
+    _state = _state!..remove(id);
   }
 
-  final _presets = BehaviorSubject<Map<int, PresetRecord>>();
+  final _presets = StreamController<Map<int, PresetRecord>>();
+
+  Map<int, PresetRecord>? __state;
+
+  set _state(Map<int, PresetRecord>? newState) {
+    __state = newState;
+    _presets.add(newState!);
+  }
+
+  Map<int, PresetRecord>? get _state => __state;
 
   @override
-  Stream<Map<int, PresetRecord>> get presets => _presets;
+  Stream<Map<int, PresetRecord>> get presets => _presets.stream;
 
   @override
   Future<void> update(PresetRecord preset) async {
     await client.update(preset);
 
-    final newValue = _presets.value..[preset.id] = preset;
-    _presets.add(newValue);
+    _state = _state!..[preset.id] = preset;
   }
 
   void _handleNotification(PresetRecord preset) {
-    if (!_presets.hasValue) {
-      _presets.add({preset.id: preset});
+    if (_state == null) {
+      _state = {preset.id: preset};
     } else {
-      _presets.add(_presets.value..[preset.id] = preset);
+      _state = _state!..[preset.id] = preset;
     }
   }
 

@@ -30,14 +30,7 @@ class WebSocketStatusModel extends _$WebSocketStatusModel {
   @override
   WebSocketStatusData build() {
     return WebSocketStatusData(
-      // TODO clean up URI duplication
-      isConnected: ref
-          .watch(
-            robustWebsocketProvider(
-              Uri.parse(kShrapnelUri),
-            ),
-          )
-          .isAlive,
+      isConnected: ref.watch(isAliveProvider),
     );
   }
 }
