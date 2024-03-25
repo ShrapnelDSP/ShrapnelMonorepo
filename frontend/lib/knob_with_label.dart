@@ -43,6 +43,12 @@ class KnobWithLabel extends ConsumerWidget {
     final parameter =
         ref.read(audioParameterDoubleModelProvider(parameterId).notifier);
     final learningState = ref.watch(midiLearnServiceProvider);
+    final meta = ref.watch(audioParameterMetadataProvider(parameterId));
+    final range = meta.max - meta.min;
+    final realValue = switch (value.unwrapPrevious().valueOrNull) {
+      final value? => meta.min + value * range,
+      null => null,
+    };
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -60,8 +66,13 @@ class KnobWithLabel extends ConsumerWidget {
           ),
           child: Knob(
             key: Key('knob-$parameterId'),
-            onChanged: isEnabled ? parameter.onUserChanged : null,
-            value: value.unwrapPrevious().valueOrNull,
+            onChanged: isEnabled
+                ? (value) => parameter.onUserChanged((value - meta.min) / range)
+                : null,
+            value: realValue,
+            defaultValue: meta.defaultValue,
+            min: meta.min,
+            max: meta.max,
             size: knobSize,
           ),
         ),

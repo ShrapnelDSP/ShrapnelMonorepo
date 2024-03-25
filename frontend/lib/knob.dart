@@ -19,6 +19,7 @@
 
 import 'dart:math' as m;
 import 'package:flutter/material.dart';
+import 'package:logging/logging.dart';
 import 'package:vector_math/vector_math_64.dart' show Vector3;
 
 import 'util/conditional_parent.dart';
@@ -41,6 +42,7 @@ class Knob extends StatelessWidget {
   const Knob({
     super.key,
     required this.value,
+    required this.defaultValue,
     required this.onChanged,
     this.min = 0,
     this.max = 1,
@@ -48,6 +50,7 @@ class Knob extends StatelessWidget {
   });
 
   final double? value;
+  final double defaultValue;
   final double min;
   final double max;
   final double size;
@@ -88,6 +91,9 @@ class Knob extends StatelessWidget {
 
               // checked in condition
               onChanged!(newValue.clamp(min, max));
+            },
+            onDoubleTap: () {
+              onChanged!(defaultValue);
             },
             child: child,
           ),

@@ -49,6 +49,9 @@ class AudioParameterMetaData with _$AudioParameterMetaData {
     required String groupName,
     required String name,
     required String id,
+    required double min,
+    required double max,
+    required double defaultValue,
   }) = _AudioParameterMetaData;
 }
 
