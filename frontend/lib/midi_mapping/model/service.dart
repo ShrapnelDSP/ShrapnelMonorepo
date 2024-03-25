@@ -21,6 +21,7 @@ import 'dart:async';
 import 'dart:collection';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logging/logging.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -30,6 +31,30 @@ import '../../core/stream_extensions.dart';
 import '../model/models.dart';
 
 final _log = Logger('midi_mapping_service');
+
+final midiMappingTransportProvider = AutoDisposeProvider(
+  (ref) {
+    return switch (ref.watch(apiWebsocketProvider)) {
+      final websocket? => MidiMappingTransport(websocket: websocket),
+      null => null,
+    };
+  },
+);
+
+final midiMappingServiceProvider = AutoDisposeChangeNotifierProvider(
+  (ref) {
+    ref.keepAlive();
+    ref.onDispose(() {
+      _log.warning('midiMappingService dispose');
+    });
+    return switch (ref.watch(midiMappingTransportProvider)) {
+      final transport? => MidiMappingService(
+          websocket: transport,
+        ),
+      null => null,
+    };
+  },
+);
 
 class MidiMappingTransport
     implements MessageTransport<MidiApiMessage, MidiApiMessage> {
@@ -55,18 +80,12 @@ class MidiMappingTransport
         (event) => 'receive message: $event',
       );
 
-  @override
-  Stream<void> get connectionStream => websocket.connectionStream;
-
   ApiWebsocket websocket;
 
   @override
   void dispose() {
     unawaited(_controller.close());
   }
-
-  @override
-  bool get isAlive => websocket.isAlive;
 }
 
 class MidiMappingService extends ChangeNotifier {
@@ -74,13 +93,8 @@ class MidiMappingService extends ChangeNotifier {
     required this.websocket,
   }) {
     _mappingsView = UnmodifiableMapView(__mappings);
-
-    websocket.connectionStream.listen((_) async => getMapping());
     _subscription = websocket.stream.listen(_handleMessage);
-
-    if (websocket.isAlive) {
-      unawaited(getMapping());
-    }
+    unawaited(_getMapping());
   }
 
   static const responseTimeout = Duration(milliseconds: 500);
@@ -99,7 +113,7 @@ class MidiMappingService extends ChangeNotifier {
   MessageTransport<MidiApiMessage, MidiApiMessage> websocket;
   late StreamSubscription<MidiApiMessage> _subscription;
 
-  Future<void> getMapping() async {
+  Future<void> _getMapping() async {
     _log.info('Initialising');
     const message = MidiApiMessage.getRequest();
 
@@ -134,6 +148,7 @@ class MidiMappingService extends ChangeNotifier {
       __mappings[responseMapping.id] = responseMapping.mapping;
       notifyListeners();
     } on TimeoutException {
+      _log.severe('create response timeout');
       // FIXME: rollback optimistic update
       /*
       __mappings.remove(mapping.id);

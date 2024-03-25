@@ -17,31 +17,14 @@
  * ShrapnelDSP. If not, see <https://www.gnu.org/licenses/>.
  */
 
-import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../model/websocket_status.dart';
-
-class WebSocketStatus extends ConsumerWidget {
-  const WebSocketStatus({super.key, required this.size});
-
-  final double size;
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final isConnected = ref.watch(webSocketStatusModelProvider).isConnected;
-
-    return Tooltip(
-      message: isConnected ? 'Connected' : 'Not Connected',
-      waitDuration: const Duration(milliseconds: 500),
-      child: Container(
-        width: size,
-        height: size,
-        decoration: BoxDecoration(
-          color: isConnected ? Colors.green : Colors.red,
-          shape: BoxShape.circle,
-        ),
-      ),
-    );
+extension ChangeNotifierWithCodeGenExtension on Ref {
+  T listenAndDisposeChangeNotifier<T extends ChangeNotifier>(T notifier) {
+    notifier.addListener(notifyListeners);
+    onDispose(() => notifier.removeListener(notifyListeners));
+    onDispose(notifier.dispose);
+    return notifier;
   }
 }

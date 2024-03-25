@@ -21,6 +21,7 @@ import 'dart:async';
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logging/logging.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:rxdart/rxdart.dart';
 
 import '../../api/api_websocket.dart';
@@ -29,6 +30,8 @@ import '../../core/stream_extensions.dart';
 import 'presets.dart' as presets;
 
 part 'presets_client.freezed.dart';
+
+part 'presets_client.g.dart';
 
 // ignore: unused_element
 final _log = Logger('presets_client');
@@ -118,6 +121,13 @@ sealed class PresetsMessage with _$PresetsMessage {
   factory PresetsMessage.delete(int id) = PresetsMessageDelete;
 }
 
+@riverpod
+PresetsTransport? presetsTransport(PresetsTransportRef ref) =>
+    switch (ref.watch(apiWebsocketProvider)) {
+      final websocket? => PresetsTransport(websocket: websocket),
+      null => null,
+    };
+
 class PresetsTransport
     implements MessageTransport<PresetsMessage, PresetsMessage> {
   PresetsTransport({required this.websocket}) {
@@ -142,19 +152,20 @@ class PresetsTransport
         (event) => 'receive message: $event',
       );
 
-  @override
-  Stream<void> get connectionStream => websocket.connectionStream;
-
   ApiWebsocket websocket;
 
   @override
   void dispose() {
     unawaited(_controller.close());
   }
-
-  @override
-  bool get isAlive => websocket.isAlive;
 }
+
+@riverpod
+PresetsClient? presetsClient(PresetsClientRef ref) =>
+    switch (ref.watch(presetsTransportProvider)) {
+      final transport? => PresetsClient(transport: transport),
+      null => null,
+    };
 
 class PresetsClient {
   PresetsClient({
@@ -220,8 +231,6 @@ class PresetsClient {
       ),
     );
   }
-
-  Stream<void> get connectionStream => _transport.connectionStream;
 
   void dispose() {
     _transport.dispose();

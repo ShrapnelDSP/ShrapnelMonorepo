@@ -18,47 +18,26 @@
  */
 
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
-import 'parameter.dart';
 import 'stompbox.dart';
 
 class ChorusModel extends StompboxModel {
-  ChorusModel({required ParameterService parameterService})
+  ChorusModel()
       : parameters = [
-          AudioParameterDoubleModel(
-            groupName: _name,
-            name: 'DEPTH',
-            id: 'chorusDepth',
-            parameterService: parameterService,
-          ),
-          AudioParameterDoubleModel(
-            groupName: _name,
-            name: 'MIX',
-            id: 'chorusMix',
-            parameterService: parameterService,
-          ),
-          AudioParameterDoubleModel(
-            groupName: _name,
-            name: 'RATE',
-            id: 'chorusRate',
-            parameterService: parameterService,
-          ),
+          'chorusDepth',
+          'chorusMix',
+          'chorusRate',
         ],
-        bypass = AudioParameterDoubleModel(
-          groupName: _name,
-          name: 'Bypass',
-          id: 'chorusBypass',
-          parameterService: parameterService,
-        );
+        bypass = 'chorusBypass';
 
   static const _name = 'Chorus';
+
   @override
   String get name => _name;
   @override
-  final List<AudioParameterDoubleModel> parameters;
+  final List<String> parameters;
   @override
-  final AudioParameterDoubleModel bypass;
+  final String bypass;
 }
 
 class Chorus extends StatelessWidget {
@@ -74,7 +53,7 @@ class Chorus extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Stompbox(
-      model: context.read<ChorusModel>(),
+      model: ChorusModel(),
       onCardTap: onTap,
       full: full,
       primarySwatch: Colors.blue,

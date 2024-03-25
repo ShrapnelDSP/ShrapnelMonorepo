@@ -19,21 +19,35 @@
 
 import 'dart:async';
 
-import 'package:rxdart/rxdart.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import 'presets_service.dart';
 import 'selected_preset_client.dart';
 
+part 'selected_preset_repository.g.dart';
+
+@riverpod
+SelectedPresetRepositoryBase? selectedPresetRepository(
+  SelectedPresetRepositoryRef ref,
+) =>
+    switch (ref.watch(selectedPresetClientProvider)) {
+      final client? => SelectedPresetRepository(client: client),
+      null => null,
+    };
+
+@riverpod
+Stream<int> selectedPresetStream(SelectedPresetStreamRef ref) =>
+    switch (ref.watch(selectedPresetRepositoryProvider)) {
+      final repository? => repository.selectedPreset,
+      null => const Stream.empty(),
+    };
+
 class SelectedPresetRepository implements SelectedPresetRepositoryBase {
   SelectedPresetRepository({required this.client}) {
-    unawaited(_subject.addStream(client.selectedPreset));
-    client.connectionStream.listen((_) {
-      unawaited(client.initialise());
-    });
+    unawaited(client.initialise());
   }
 
   SelectedPresetClient client;
-  final _subject = BehaviorSubject<int>();
 
   @override
   Future<void> selectPreset(int presetId) async {
@@ -41,5 +55,5 @@ class SelectedPresetRepository implements SelectedPresetRepositoryBase {
   }
 
   @override
-  ValueStream<int> get selectedPreset => _subject;
+  Stream<int> get selectedPreset => client.selectedPreset;
 }

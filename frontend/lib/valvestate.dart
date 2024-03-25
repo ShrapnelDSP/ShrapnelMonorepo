@@ -18,56 +18,19 @@
  */
 
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 import 'amplifier.dart';
-import 'parameter.dart';
 
 class ValvestateModel extends AmplifierModel {
-  ValvestateModel({required ParameterService parameterService})
+  ValvestateModel()
       : parameters = [
-          AudioParameterDoubleModel(
-            groupName: _name,
-            name: 'OD1/OD2',
-            id: 'ampChannel',
-            parameterService: parameterService,
-          ),
-          AudioParameterDoubleModel(
-            groupName: _name,
-            name: 'Gain',
-            id: 'ampGain',
-            parameterService: parameterService,
-          ),
-          AudioParameterDoubleModel(
-            groupName: _name,
-            name: 'Bass',
-            id: 'bass',
-            parameterService: parameterService,
-          ),
-          AudioParameterDoubleModel(
-            groupName: _name,
-            name: 'Middle',
-            id: 'middle',
-            parameterService: parameterService,
-          ),
-          AudioParameterDoubleModel(
-            groupName: _name,
-            name: 'Treble',
-            id: 'treble',
-            parameterService: parameterService,
-          ),
-          AudioParameterDoubleModel(
-            groupName: _name,
-            name: 'Contour',
-            id: 'contour',
-            parameterService: parameterService,
-          ),
-          AudioParameterDoubleModel(
-            groupName: _name,
-            name: 'Volume',
-            id: 'volume',
-            parameterService: parameterService,
-          ),
+          'ampChannel',
+          'ampGain',
+          'bass',
+          'middle',
+          'treble',
+          'contour',
+          'volume',
         ];
 
   static const _name = 'Valvestate';
@@ -75,7 +38,7 @@ class ValvestateModel extends AmplifierModel {
   @override
   String get name => _name;
   @override
-  final List<AudioParameterDoubleModel> parameters;
+  final List<String> parameters;
 }
 
 class Valvestate extends StatelessWidget {
@@ -91,7 +54,7 @@ class Valvestate extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Amplifier(
-      model: context.read<ValvestateModel>(),
+      model: ValvestateModel(),
       onTap: onTap,
       full: full,
     );

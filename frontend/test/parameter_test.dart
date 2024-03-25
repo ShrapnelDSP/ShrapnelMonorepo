@@ -21,8 +21,10 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:shrapnel/parameter.dart';
+import 'package:shrapnel/parameters_meta.dart';
 
 import 'parameter_test.mocks.dart';
+import 'riverpod_util.dart';
 
 @GenerateMocks([ParameterService])
 void main() {
@@ -31,12 +33,23 @@ void main() {
     () async {
       final parameterService = MockParameterService();
 
-      final parameter = AudioParameterDoubleModel(
-        groupName: 'TestGroup',
-        name: 'TestName',
-        id: 'test',
-        parameterService: parameterService,
+      final container = createContainer(
+        overrides: [
+          allParametersProvider.overrideWithValue(
+            {
+              'test': const AudioParameterMetaData(
+                groupName: 'TestGroup',
+                name: 'TestName',
+                id: 'test',
+              ),
+            },
+          ),
+          parameterServiceProvider.overrideWith((_) => parameterService),
+        ],
       );
+
+      final parameter =
+          container.read(audioParameterDoubleModelProvider('test').notifier);
       parameter.onUserChanged(0);
 
       await pumpEventQueue();
@@ -44,25 +57,11 @@ void main() {
       verify(
         parameterService.parameterUpdatedByUser(
           AudioParameterDoubleData(
-            value: parameter.value.value,
-            id: parameter.id,
+            value: 0,
+            id: parameter.parameterId,
           ),
         ),
       );
     },
   );
-
-  test('Adds itself to parameter service', () {
-    final parameterService = MockParameterService();
-
-    final parameter = AudioParameterDoubleModel(
-      groupName: 'TestGroup',
-      name: 'TestName',
-      id: 'test',
-      parameterService: parameterService,
-    );
-    parameter.setValue(0);
-
-    verify(parameterService.registerParameter(parameter));
-  });
 }

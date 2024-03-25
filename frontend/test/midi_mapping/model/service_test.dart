@@ -43,9 +43,6 @@ void main() {
 
       final fakeWebsocket =
           MockMessageTransport<MidiApiMessage, MidiApiMessage>();
-      when(fakeWebsocket.connectionStream)
-          .thenAnswer((_) => Stream.fromIterable([]));
-      when(fakeWebsocket.isAlive).thenReturn(false);
 
       const response = MidiApiMessage.update(
         mapping: MidiMappingEntry(
@@ -76,7 +73,6 @@ void main() {
       expect(listenerCount, 1);
       expect(uut.mappings, isEmpty);
 
-      await uut.getMapping();
       await pumpEventQueue();
 
       expect(outputMessages.removeLast(), request);
@@ -111,9 +107,6 @@ void main() {
 
       final fakeWebsocket =
           MockMessageTransport<MidiApiMessage, MidiApiMessage>();
-      when(fakeWebsocket.connectionStream)
-          .thenAnswer((_) => Stream.fromIterable([]));
-      when(fakeWebsocket.isAlive).thenReturn(false);
 
       const response = MidiApiMessage.createResponse(
         mapping: MidiMappingEntry(
@@ -145,9 +138,11 @@ void main() {
       when(fakeWebsocket.stream).thenAnswer((_) => controller.stream);
 
       final uut = MidiMappingService(websocket: fakeWebsocket);
+      await pumpEventQueue();
 
       expect(listenerCount, 1);
       expect(uut.mappings, isEmpty);
+      expect(outputMessages.removeLast(), const MidiApiMessage.getRequest());
 
       await uut.createMapping(
         const MidiMapping.parameter(

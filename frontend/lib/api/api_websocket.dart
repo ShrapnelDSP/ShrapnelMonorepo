@@ -21,6 +21,7 @@ import 'dart:async';
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logging/logging.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:rxdart/rxdart.dart';
 
 import '../audio_events.dart';
@@ -35,7 +36,11 @@ import 'proto_extension.dart';
 
 part 'api_websocket.freezed.dart';
 
+part 'api_websocket.g.dart';
+
 final _log = Logger('api_websocket');
+
+const kShrapnelUri = 'http://guitar-dsp.local:8080/websocket';
 
 @freezed
 sealed class ApiMessage with _$ApiMessage {
@@ -61,10 +66,19 @@ sealed class ApiMessage with _$ApiMessage {
   }) = ApiMessageSelectedPreset;
 }
 
+@riverpod
+ApiWebsocket? apiWebsocket(ApiWebsocketRef ref) {
+  final websocket = ref.watch(robustWebsocketProvider(Uri.parse(kShrapnelUri)));
+  if (websocket.isAlive) {
+    return ApiWebsocket(websocket: websocket);
+  }
+
+  return null;
+}
+
+// TODO make this implement MessageTransport<ApiMessage, ApiMessage>
 class ApiWebsocket {
-  ApiWebsocket({
-    required RobustWebsocket websocket,
-  }) : _websocket = websocket;
+  ApiWebsocket({required RobustWebsocket websocket}) : _websocket = websocket;
 
   final RobustWebsocket _websocket;
 
@@ -77,10 +91,6 @@ class ApiWebsocket {
         _log,
         (event) => 'received: $event',
       );
-
-  late final Stream<void> connectionStream = _websocket.connectionStream;
-
-  bool get isAlive => _websocket.isAlive;
 
   void send(ApiMessage message) {
     _log.finest('sending: $message');

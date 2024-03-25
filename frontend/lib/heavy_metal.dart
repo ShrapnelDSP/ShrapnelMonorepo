@@ -18,45 +18,18 @@
  */
 
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
-import 'parameter.dart';
 import 'stompbox.dart';
 
 class HeavyMetalModel extends StompboxModel {
-  HeavyMetalModel({required ParameterService parameterService})
+  HeavyMetalModel()
       : parameters = [
-          AudioParameterDoubleModel(
-            groupName: _name,
-            name: 'LEVEL',
-            id: 'heavyMetalLevel',
-            parameterService: parameterService,
-          ),
-          AudioParameterDoubleModel(
-            groupName: _name,
-            name: 'LOW',
-            id: 'heavyMetalLow',
-            parameterService: parameterService,
-          ),
-          AudioParameterDoubleModel(
-            groupName: _name,
-            name: 'HIGH',
-            id: 'heavyMetalHigh',
-            parameterService: parameterService,
-          ),
-          AudioParameterDoubleModel(
-            groupName: _name,
-            name: 'DISTORTION',
-            id: 'heavyMetalDistortion',
-            parameterService: parameterService,
-          ),
+          'heavyMetalLevel',
+          'heavyMetalLow',
+          'heavyMetalHigh',
+          'heavyMetalDistortion',
         ],
-        bypass = AudioParameterDoubleModel(
-          groupName: _name,
-          name: 'Bypass',
-          id: 'heavyMetalBypass',
-          parameterService: parameterService,
-        );
+        bypass = 'heavyMetalBypass';
 
   static const _name = 'Heavy Metal';
 
@@ -64,10 +37,10 @@ class HeavyMetalModel extends StompboxModel {
   String get name => _name;
 
   @override
-  final List<AudioParameterDoubleModel> parameters;
+  final List<String> parameters;
 
   @override
-  AudioParameterDoubleModel bypass;
+  final String bypass;
 }
 
 class HeavyMetal extends StatelessWidget {
@@ -83,7 +56,7 @@ class HeavyMetal extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Stompbox(
-      model: context.read<HeavyMetalModel>(),
+      model: HeavyMetalModel(),
       onCardTap: onTap,
       full: full,
       primarySwatch: Colors.deepOrange,

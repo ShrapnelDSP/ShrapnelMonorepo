@@ -21,6 +21,7 @@ import 'dart:async';
 import 'dart:collection';
 import 'dart:ui';
 
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:logging/logging.dart';
 import 'package:mockito/annotations.dart';
@@ -28,11 +29,12 @@ import 'package:mockito/mockito.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:shrapnel/api/api_websocket.dart';
 import 'package:shrapnel/audio_events.dart';
-import 'package:shrapnel/core/message_transport.dart';
 import 'package:shrapnel/main.dart';
 import 'package:shrapnel/parameter.dart';
 import 'package:shrapnel/presets/model/presets.dart';
+import 'package:shrapnel/presets/model/presets_repository.dart';
 import 'package:shrapnel/presets/model/presets_service.dart';
+import 'package:shrapnel/presets/model/selected_preset_repository.dart';
 import 'package:shrapnel/robust_websocket.dart';
 
 import '../home_page_object.dart';
@@ -45,9 +47,7 @@ final _log = Logger('presets_test');
     MockSpec<RobustWebsocket>(),
     MockSpec<ApiWebsocket>(),
     MockSpec<AudioClippingService>(),
-    MockSpec<
-        MessageTransport<ParameterServiceOutputMessage,
-            ParameterServiceInputMessage>>(),
+    MockSpec<ParameterTransport>(),
     MockSpec<PresetsRepositoryBase>(),
     MockSpec<SelectedPresetRepositoryBase>(),
   ],
@@ -82,7 +82,7 @@ void main() {
         'wahVocal': 1.0,
         'wahBypass': 0.1,
       };
-      final parameterTransport = MockMessageTransport();
+      final parameterTransport = MockParameterTransport();
       final parameterController =
           StreamController<ParameterServiceInputMessage>();
       // FIXME: see end of test
@@ -148,7 +148,6 @@ void main() {
             updateParameter(id, value);
         }
       });
-      when(parameterTransport.isAlive).thenReturn(true);
       when(parameterTransport.stream)
           .thenAnswer((_) => parameterController.stream);
 
@@ -225,19 +224,22 @@ void main() {
       final apiWebsocket = MockApiWebsocket();
       when(apiWebsocket.stream)
           .thenAnswer((_) => StreamController<ApiMessage>().stream);
-      when(apiWebsocket.connectionStream)
-          .thenAnswer((_) => const Stream.empty());
-      when(apiWebsocket.isAlive).thenReturn(true);
 
-      final sut = App(
-        websocket: websocket,
-        apiWebsocket: apiWebsocket,
-        parameterTransport: parameterTransport,
-        presetsRepository: presetsRepository,
-        selectedPresetRepository: selectedPresetRepository,
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [
+            robustWebsocketProvider(Uri.parse(kShrapnelUri))
+                .overrideWith((_) => websocket),
+            apiWebsocketProvider.overrideWith((_) => apiWebsocket),
+            parameterTransportProvider.overrideWith((_) => parameterTransport),
+            presetsRepositoryProvider.overrideWith((_) => presetsRepository),
+            selectedPresetRepositoryProvider
+                .overrideWith((_) => selectedPresetRepository),
+          ],
+          child: App(),
+        ),
       );
 
-      await tester.pumpWidget(sut);
       _log.info('pump done');
       _log.info('delaying');
       // For debouncing of the parameter output messages

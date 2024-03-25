@@ -21,6 +21,22 @@ import 'dart:math' as m;
 import 'package:flutter/material.dart';
 import 'package:vector_math/vector_math_64.dart' show Vector3;
 
+import 'util/conditional_parent.dart';
+
+const ColorFilter _greyscale = ColorFilter.matrix(<double>[
+  ...[0.2126, 0.7152, 0.0722, 0, 0],
+  ...[0.2126, 0.7152, 0.0722, 0, 0],
+  ...[0.2126, 0.7152, 0.0722, 0, 0],
+  ...[0, 0, 0, 1, 0],
+]);
+
+const ColorFilter _identity = ColorFilter.matrix(<double>[
+  ...[1, 0, 0, 0, 0],
+  ...[0, 1, 0, 0, 0],
+  ...[0, 0, 1, 0, 0],
+  ...[0, 0, 0, 1, 0],
+]);
+
 class Knob extends StatelessWidget {
   const Knob({
     super.key,
@@ -31,7 +47,7 @@ class Knob extends StatelessWidget {
     this.size = 50,
   });
 
-  final double value;
+  final double? value;
   final double min;
   final double max;
   final double size;
@@ -40,39 +56,57 @@ class Knob extends StatelessWidget {
   static const double maxAngle = -minAngle;
   static const double sweepAngle = maxAngle - minAngle;
 
-  final ValueChanged<double> onChanged;
+  final ValueChanged<double>? onChanged;
 
   @override
   Widget build(BuildContext context) {
     final distanceToValue = 0.003 * (max - min);
-    final normalisedValue = (value - min) / (max - min);
-    final angle = minAngle + normalisedValue * sweepAngle;
+    final normalisedValue = switch (value) {
+      final value? => (value - min) / (max - min),
+      null => null,
+    };
+    final angle = switch (normalisedValue) {
+      final normalisedValue? => minAngle + normalisedValue * sweepAngle,
+      null => -m.pi / 2,
+    };
 
-    return Transform.rotate(
-      angle: m.pi / 4,
-      child: GestureDetector(
-        onVerticalDragUpdate: (DragUpdateDetails details) {
-          final changeInY = details.delta.dy;
-          final changeInValue = distanceToValue * -changeInY;
-          final newValue = value + changeInValue;
+    return ColorFiltered(
+      colorFilter: value == null ? _greyscale : _identity,
+      child: Transform.rotate(
+        angle: m.pi / 4,
+        child: ConditionalParent(
+          condition: onChanged != null,
+          builder: (child) => GestureDetector(
+            onVerticalDragUpdate: (DragUpdateDetails details) {
+              if (value == null) {
+                return;
+              }
 
-          onChanged(newValue.clamp(min, max));
-        },
-        child: Transform.rotate(
-          angle: -m.pi / 4,
-          child: ClipRect(
-            child: CustomPaint(
-              painter: _KnobArc(
-                minAngle: minAngle,
-                maxAngle: maxAngle,
-                currentAngle: angle,
-                arcWidth: size * 0.08,
-                backgroundColor: Theme.of(context).colorScheme.background,
-                primaryColor: Theme.of(context).colorScheme.primary,
-              ),
-              child: SizedBox(
-                height: size,
-                width: size,
+              final changeInY = details.delta.dy;
+              final changeInValue = distanceToValue * -changeInY;
+              final newValue = value! + changeInValue;
+
+              // checked in condition
+              onChanged!(newValue.clamp(min, max));
+            },
+            child: child,
+          ),
+          child: Transform.rotate(
+            angle: -m.pi / 4,
+            child: ClipRect(
+              child: CustomPaint(
+                painter: _KnobArc(
+                  minAngle: minAngle,
+                  maxAngle: maxAngle,
+                  currentAngle: angle,
+                  arcWidth: size * 0.08,
+                  backgroundColor: Theme.of(context).colorScheme.background,
+                  primaryColor: Theme.of(context).colorScheme.primary,
+                ),
+                child: SizedBox(
+                  height: size,
+                  width: size,
+                ),
               ),
             ),
           ),

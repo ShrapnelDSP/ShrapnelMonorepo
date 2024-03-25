@@ -11,3 +11,4 @@ protoc --dart_out="$proto_dir/generated" \
   presets.proto \
   selected_preset.proto \
   shrapnel.proto
+dart format "$proto_dir/generated"

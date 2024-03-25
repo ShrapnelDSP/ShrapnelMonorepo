@@ -19,22 +19,93 @@
 
 import 'dart:async';
 
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logging/logging.dart';
-import 'package:state_notifier/state_notifier.dart';
+import 'package:rxdart/rxdart.dart';
 
+import '../../api/api_websocket.dart';
+import '../../parameter.dart';
 import 'midi_learn_state.dart';
 import 'models.dart';
 import 'service.dart';
 
 final _log = Logger('shrapnel.midi_mapping.model.midi_learn');
 
-class MidiLearnService extends StateNotifier<MidiLearnState> {
-  MidiLearnService({required this.mappingService})
-      : super(const MidiLearnState.idle(null));
+final midiLearnServiceProvider =
+    AutoDisposeStateNotifierProvider<MidiLearnServiceBase, MidiLearnState>(
+  (ref) {
+    ref.onDispose(() {
+      _log.warning('midiLearn dispose');
+    });
+    return switch ((
+      ref.read(midiMappingServiceProvider),
+      ref.watch(parameterServiceProvider),
+      ref.watch(apiWebsocketProvider),
+    )) {
+      (final midiMappingService?, final parameterService?, final websocket?) =>
+        MidiLearnService(
+          mappingService: midiMappingService,
+          parameterUpdates: parameterService.parameterUpdates.map((e) => e.id),
+          midiMessages: websocket.stream
+              .whereType<ApiMessageMidiMapping>()
+              .map((event) => event.message)
+              .whereType<MidiMessageReceived>()
+              .map((event) => event.message),
+        ),
+      _ => MidiLearnServiceLoading(),
+    };
+  },
+);
+
+abstract class MidiLearnServiceBase extends StateNotifier<MidiLearnState> {
+  MidiLearnServiceBase(super._state);
+
+  void startLearning();
+
+  void cancelLearning();
+
+  Future<void> undoRemoveSimilarMappings();
+}
+
+class MidiLearnServiceLoading extends MidiLearnServiceBase {
+  MidiLearnServiceLoading() : super(const MidiLearnState.loading());
+
+  @override
+  void cancelLearning() {
+    throw StateError("Can't cancel learning while loading");
+  }
+
+  @override
+  void startLearning() {
+    throw StateError("Can't start learning while loading");
+  }
+
+  @override
+  Future<void> undoRemoveSimilarMappings() {
+    throw StateError("Can't undo learning while loading");
+  }
+}
+
+class MidiLearnService extends MidiLearnServiceBase {
+  MidiLearnService({
+    required this.mappingService,
+    required this.parameterUpdates,
+    required this.midiMessages,
+  }) : super(const MidiLearnState.idle(null)) {
+    parameterUpdateSubscription = parameterUpdates.listen(parameterUpdated);
+    midiMessageSubscription = midiMessages.listen(midiMessageReceived);
+  }
 
   final MidiMappingService mappingService;
+  final Stream<String> parameterUpdates;
+  final Stream<MidiMessage> midiMessages;
 
+  late final StreamSubscription<dynamic> parameterUpdateSubscription;
+  late final StreamSubscription<dynamic> midiMessageSubscription;
+
+  @override
   void startLearning() {
+    _log.finest('startLearning');
     state.maybeWhen(
       idle: (_) => state = const MidiLearnState.waitForParameter(),
       orElse: () => null,
@@ -42,6 +113,7 @@ class MidiLearnService extends StateNotifier<MidiLearnState> {
   }
 
   void parameterUpdated(String id) {
+    _log.finest('parameter updated: $id');
     state.maybeWhen(
       waitForParameter: () => state = MidiLearnState.waitForMidi(id),
       waitForMidi: (_) => state = MidiLearnState.waitForMidi(id),
@@ -50,6 +122,7 @@ class MidiLearnService extends StateNotifier<MidiLearnState> {
   }
 
   void midiMessageReceived(MidiMessage message) {
+    _log.finest('midiMessageReceived: $message');
     state.maybeWhen(
       waitForMidi: (mappedParameterId) {
         unawaited(
@@ -99,6 +172,10 @@ class MidiLearnService extends StateNotifier<MidiLearnState> {
                 ),
               );
 
+              if (!mounted) {
+                return;
+              }
+
               state = MidiLearnState.idle(similarMappingsList);
             },
             orElse: () => null,
@@ -109,11 +186,15 @@ class MidiLearnService extends StateNotifier<MidiLearnState> {
     );
   }
 
+  @override
   void cancelLearning() {
+    _log.finest('cancelLearning');
     state = const MidiLearnState.idle(null);
   }
 
+  @override
   Future<void> undoRemoveSimilarMappings() async {
+    _log.finest('undoRemoveSimilarMappings');
     unawaited(
       state.maybeWhen(
         idle: (duplicates) async {
@@ -132,5 +213,12 @@ class MidiLearnService extends StateNotifier<MidiLearnState> {
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    unawaited(parameterUpdateSubscription.cancel());
+    unawaited(midiMessageSubscription.cancel());
+    super.dispose();
   }
 }

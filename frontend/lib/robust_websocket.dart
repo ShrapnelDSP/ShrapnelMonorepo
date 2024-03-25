@@ -25,8 +25,18 @@ import 'dart:math';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:logging/logging.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+
+import 'riverpod_util.dart';
+
+part 'robust_websocket.g.dart';
 
 final _log = Logger('shrapnel.robust_websocket');
+
+@riverpod
+// ignore: unsupported_provider_value
+RobustWebsocket robustWebsocket(RobustWebsocketRef ref, Uri uri) =>
+    ref.listenAndDisposeChangeNotifier(RobustWebsocket(uri: uri));
 
 /// Auto-reconnecting websocket client
 class RobustWebsocket extends ChangeNotifier {
@@ -39,7 +49,6 @@ class RobustWebsocket extends ChangeNotifier {
     _log.warning('websocket close reason ${_ws!.closeReason}');
 
     isAlive = false;
-    notifyListeners();
 
     await Future<void>.delayed(const Duration(seconds: 5));
 
@@ -47,7 +56,15 @@ class RobustWebsocket extends ChangeNotifier {
   }
 
   Uri uri;
-  bool isAlive = false;
+
+  bool _isAlive = false;
+
+  set isAlive(bool value) {
+    _isAlive = value;
+    notifyListeners();
+  }
+
+  bool get isAlive => _isAlive;
 
   final _connectionController = StreamController<void>.broadcast();
 
@@ -100,7 +117,6 @@ class RobustWebsocket extends ChangeNotifier {
     _log.info('Connected to server');
 
     isAlive = true;
-    notifyListeners();
 
     _ws = WebSocket.fromUpgradedSocket(socket, serverSide: false);
 

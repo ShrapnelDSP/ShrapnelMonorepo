@@ -20,9 +20,11 @@
 import 'package:esp_softap_provisioning/esp_softap_provisioning.dart';
 import 'package:esp_softap_provisioning/src/connection_models.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
+import 'package:shrapnel/api/api_websocket.dart';
 import 'package:shrapnel/main.dart';
 import 'package:shrapnel/robust_websocket.dart';
 import 'package:shrapnel/wifi_provisioning.dart';
@@ -47,25 +49,6 @@ Map<String, dynamic> _createFakeWifi({
 @GenerateNiceMocks([MockSpec<RobustWebsocket>()])
 @GenerateMocks([Provisioning])
 void main() {
-  late Widget sut;
-  late MockProvisioning mockProvisioning;
-  late RobustWebsocket websocket;
-  void Function()? provisioningFactory;
-  MockProvisioning provisioningFactoryWrapper() {
-    provisioningFactory!.call();
-    return mockProvisioning;
-  }
-
-  setUp(() async {
-    websocket = MockRobustWebsocket();
-    sut = App(
-      websocket: websocket,
-      provisioning: WifiProvisioningService(
-        provisioningFactory: provisioningFactoryWrapper,
-      ),
-    );
-  });
-
   testWidgets(
     'WiFi provisioning warns if already connected to device',
     (tester) async {
@@ -83,7 +66,29 @@ void main() {
   testWidgets(
     'WiFi provisioning can succeed',
     (tester) async {
-      await tester.pumpWidget(sut);
+      late MockProvisioning mockProvisioning;
+      void Function()? provisioningFactory;
+      MockProvisioning provisioningFactoryWrapper() {
+        provisioningFactory!.call();
+        return mockProvisioning;
+      }
+
+      final websocket = MockRobustWebsocket();
+
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [
+            robustWebsocketProvider(Uri.parse(kShrapnelUri))
+                .overrideWith((_) => websocket),
+            provisioningProvider.overrideWith(
+              (_) => WifiProvisioningService(
+                provisioningFactory: provisioningFactoryWrapper,
+              ),
+            ),
+          ],
+          child: App(),
+        ),
+      );
 
       await tester.tap(find.byKey(const Key('wifi provisioning button')));
       await tester.pumpAndSettle();
@@ -162,7 +167,29 @@ void main() {
 
   testWidgets('WiFi provisioning fails if not connected to access point',
       (tester) async {
-    await tester.pumpWidget(sut);
+    late MockProvisioning mockProvisioning;
+    void Function()? provisioningFactory;
+    MockProvisioning provisioningFactoryWrapper() {
+      provisioningFactory!.call();
+      return mockProvisioning;
+    }
+
+    final websocket = MockRobustWebsocket();
+
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          robustWebsocketProvider(Uri.parse(kShrapnelUri))
+              .overrideWith((_) => websocket),
+          provisioningProvider.overrideWith(
+            (_) => WifiProvisioningService(
+              provisioningFactory: provisioningFactoryWrapper,
+            ),
+          ),
+        ],
+        child: App(),
+      ),
+    );
 
     await tester.tap(find.byKey(const Key('wifi provisioning button')));
     await tester.pumpAndSettle();
@@ -181,7 +208,29 @@ void main() {
 
   testWidgets('WiFi provisioning fails if incorrect password is provided',
       (tester) async {
-    await tester.pumpWidget(sut);
+    late MockProvisioning mockProvisioning;
+    void Function()? provisioningFactory;
+    MockProvisioning provisioningFactoryWrapper() {
+      provisioningFactory!.call();
+      return mockProvisioning;
+    }
+
+    final websocket = MockRobustWebsocket();
+
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          robustWebsocketProvider(Uri.parse(kShrapnelUri))
+              .overrideWith((_) => websocket),
+          provisioningProvider.overrideWith(
+            (_) => WifiProvisioningService(
+              provisioningFactory: provisioningFactoryWrapper,
+            ),
+          ),
+        ],
+        child: App(),
+      ),
+    );
 
     await tester.tap(find.byKey(const Key('wifi provisioning button')));
     await tester.pumpAndSettle();
@@ -245,6 +294,12 @@ void main() {
     final passwordField = find.byKey(const Key('password text field'));
     await tester.enterText(passwordField, 'password');
     await tester.tap(find.byKey(const Key('password submit button')));
+    verify(
+      mockProvisioning.sendWifiConfig(
+        ssid: 'test SSID',
+        password: 'password',
+      ),
+    );
 
     await tester.pump(const Duration(milliseconds: 500));
 
@@ -257,7 +312,29 @@ void main() {
 
   testWidgets('WiFi provisioning fails if incorrect SSID is provided',
       (tester) async {
-    await tester.pumpWidget(sut);
+    late MockProvisioning mockProvisioning;
+    void Function()? provisioningFactory;
+    MockProvisioning provisioningFactoryWrapper() {
+      provisioningFactory!.call();
+      return mockProvisioning;
+    }
+
+    final websocket = MockRobustWebsocket();
+
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          robustWebsocketProvider(Uri.parse(kShrapnelUri))
+              .overrideWith((_) => websocket),
+          provisioningProvider.overrideWith(
+            (_) => WifiProvisioningService(
+              provisioningFactory: provisioningFactoryWrapper,
+            ),
+          ),
+        ],
+        child: App(),
+      ),
+    );
 
     await tester.tap(find.byKey(const Key('wifi provisioning button')));
     await tester.pumpAndSettle();
@@ -333,7 +410,29 @@ void main() {
 
   testWidgets('WiFi provisioning fails if invalid password is provided',
       (tester) async {
-    await tester.pumpWidget(sut);
+    late MockProvisioning mockProvisioning;
+    void Function()? provisioningFactory;
+    MockProvisioning provisioningFactoryWrapper() {
+      provisioningFactory!.call();
+      return mockProvisioning;
+    }
+
+    final websocket = MockRobustWebsocket();
+
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          robustWebsocketProvider(Uri.parse(kShrapnelUri))
+              .overrideWith((_) => websocket),
+          provisioningProvider.overrideWith(
+            (_) => WifiProvisioningService(
+              provisioningFactory: provisioningFactoryWrapper,
+            ),
+          ),
+        ],
+        child: App(),
+      ),
+    );
 
     await tester.tap(find.byKey(const Key('wifi provisioning button')));
     await tester.pumpAndSettle();
@@ -398,7 +497,29 @@ void main() {
 
   testWidgets('WiFi provisioning can succeed when using hidden SSID',
       (tester) async {
-    await tester.pumpWidget(sut);
+    late MockProvisioning mockProvisioning;
+    void Function()? provisioningFactory;
+    MockProvisioning provisioningFactoryWrapper() {
+      provisioningFactory!.call();
+      return mockProvisioning;
+    }
+
+    final websocket = MockRobustWebsocket();
+
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          robustWebsocketProvider(Uri.parse(kShrapnelUri))
+              .overrideWith((_) => websocket),
+          provisioningProvider.overrideWith(
+            (_) => WifiProvisioningService(
+              provisioningFactory: provisioningFactoryWrapper,
+            ),
+          ),
+        ],
+        child: App(),
+      ),
+    );
 
     await tester.tap(find.byKey(const Key('wifi provisioning button')));
     await tester.pumpAndSettle();
