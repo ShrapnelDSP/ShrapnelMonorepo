@@ -73,7 +73,6 @@ void main() {
       expect(listenerCount, 1);
       expect(uut.mappings, isEmpty);
 
-      await uut.getMapping();
       await pumpEventQueue();
 
       expect(outputMessages.removeLast(), request);
@@ -139,9 +138,11 @@ void main() {
       when(fakeWebsocket.stream).thenAnswer((_) => controller.stream);
 
       final uut = MidiMappingService(websocket: fakeWebsocket);
+      await pumpEventQueue();
 
       expect(listenerCount, 1);
       expect(uut.mappings, isEmpty);
+      expect(outputMessages.removeLast(), const MidiApiMessage.getRequest());
 
       await uut.createMapping(
         const MidiMapping.parameter(

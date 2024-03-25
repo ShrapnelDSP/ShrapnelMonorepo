@@ -94,7 +94,7 @@ class MidiMappingService extends ChangeNotifier {
   }) {
     _mappingsView = UnmodifiableMapView(__mappings);
     _subscription = websocket.stream.listen(_handleMessage);
-    unawaited(getMapping());
+    unawaited(_getMapping());
   }
 
   static const responseTimeout = Duration(milliseconds: 500);
@@ -113,7 +113,7 @@ class MidiMappingService extends ChangeNotifier {
   MessageTransport<MidiApiMessage, MidiApiMessage> websocket;
   late StreamSubscription<MidiApiMessage> _subscription;
 
-  Future<void> getMapping() async {
+  Future<void> _getMapping() async {
     _log.info('Initialising');
     const message = MidiApiMessage.getRequest();
 
