@@ -19,7 +19,6 @@
 
 import 'dart:math' as m;
 import 'package:flutter/material.dart';
-import 'package:logging/logging.dart';
 import 'package:vector_math/vector_math_64.dart' show Vector3;
 
 import 'util/conditional_parent.dart';
