@@ -3,7 +3,7 @@ import 'package:logging/logging.dart';
 
 final _log = Logger('provider')..level = Level.ALL;
 
-class MyObserver extends ProviderObserver {
+class ProviderObserverImpl extends ProviderObserver {
   @override
   void didAddProvider(
     ProviderBase<Object?> provider,

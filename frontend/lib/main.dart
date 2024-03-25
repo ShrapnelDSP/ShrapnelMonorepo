@@ -61,7 +61,11 @@ void main() {
 
   runApp(
     riverpod.ProviderScope(
-      //observers: [MyObserver()],
+      observers: [
+        // ignore: do_not_use_environment
+        if (const bool.fromEnvironment('ENABLE_PROVIDER_OBSERVER'))
+          ProviderObserverImpl(),
+      ],
       child: App(),
     ),
   );
