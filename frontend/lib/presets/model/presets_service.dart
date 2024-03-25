@@ -22,6 +22,7 @@ import 'dart:async';
 import 'package:logging/logging.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import '../../parameters_meta.dart';
 import 'current_parameters.dart';
 import 'presets.dart';
 import 'presets_repository.dart';
@@ -70,9 +71,24 @@ class PresetsService extends _$PresetsService {
     } else {
       final sortedPresets = presets.values.toList()
         ..sort((a, b) => a.preset.name.compareTo(b.preset.name));
+
+      final parametersStateMap = parametersState?.toMap();
+
+      final presetParameters = switch (selectedPreset) {
+        final selectedPreset? =>
+          presets[selectedPreset]?.preset.parameters.toMap(),
+        null => null,
+      };
+
+      final error = switch ((parametersStateMap, presetParameters)) {
+        (final parameters?, final preset?) =>
+          preset.map((key, value) => MapEntry(key, value - parameters[key]!)),
+        _ => null,
+      };
+
       return PresetsState.ready(
-        isCurrentModified: selectedPreset != null &&
-            parametersState != presets[selectedPreset]?.preset.parameters,
+        isCurrentModified:
+            error?.values.any((element) => element.abs() > 0.001) ?? false,
         presets: sortedPresets,
         selectedPreset: selectedPreset,
         canUndo: false,
@@ -133,5 +149,32 @@ class PresetsService extends _$PresetsService {
             ),
           ),
         );
+  }
+}
+
+extension on PresetParametersData {
+  Map<String, double> toMap() {
+    return {
+      'ampGain': ampGain,
+      'ampChannel': ampChannel,
+      'bass': bass,
+      'middle': middle,
+      'treble': treble,
+      'contour': contour,
+      'volume': volume,
+      'noiseGateThreshold': noiseGateThreshold,
+      'noiseGateHysteresis': noiseGateHysteresis,
+      'noiseGateAttack': noiseGateAttack,
+      'noiseGateHold': noiseGateHold,
+      'noiseGateRelease': noiseGateRelease,
+      'noiseGateBypass': noiseGateBypass,
+      'chorusRate': chorusRate,
+      'chorusDepth': chorusDepth,
+      'chorusMix': chorusMix,
+      'chorusBypass': chorusBypass,
+      'wahPosition': wahPosition,
+      'wahVocal': wahVocal,
+      'wahBypass': wahBypass,
+    };
   }
 }
