@@ -34,8 +34,11 @@ final _log = Logger('shrapnel.midi_mapping.model.midi_learn');
 final midiLearnServiceProvider =
     AutoDisposeStateNotifierProvider<MidiLearnServiceBase, MidiLearnState>(
   (ref) {
+    ref.onDispose(() {
+      _log.warning('midiLearn dispose');
+    });
     return switch ((
-      ref.watch(midiMappingServiceProvider),
+      ref.read(midiMappingServiceProvider),
       ref.watch(parameterServiceProvider),
       ref.watch(apiWebsocketProvider),
     )) {

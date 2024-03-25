@@ -43,6 +43,10 @@ final midiMappingTransportProvider = AutoDisposeProvider(
 
 final midiMappingServiceProvider = AutoDisposeChangeNotifierProvider(
   (ref) {
+    ref.keepAlive();
+    ref.onDispose(() {
+      _log.warning('midiMappingService dispose');
+    });
     return switch (ref.watch(midiMappingTransportProvider)) {
       final transport? => MidiMappingService(
           websocket: transport,
@@ -144,6 +148,7 @@ class MidiMappingService extends ChangeNotifier {
       __mappings[responseMapping.id] = responseMapping.mapping;
       notifyListeners();
     } on TimeoutException {
+      _log.severe('create response timeout');
       // FIXME: rollback optimistic update
       /*
       __mappings.remove(mapping.id);

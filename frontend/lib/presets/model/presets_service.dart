@@ -54,10 +54,6 @@ abstract class SelectedPresetRepositoryBase {
 class PresetsService extends _$PresetsService {
   @override
   PresetsState build() {
-    ref.onDispose(() {
-      _log.warning('PresetsService dispose');
-    });
-
     final presets = ref.watch(presetsStreamProvider).valueOrNull;
     final selectedPreset = ref.watch(selectedPresetStreamProvider).valueOrNull;
     final parametersState = ref.watch(currentParametersProvider).valueOrNull;

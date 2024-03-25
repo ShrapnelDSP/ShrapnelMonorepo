@@ -61,7 +61,7 @@ void main() {
 
   runApp(
     riverpod.ProviderScope(
-      observers: [MyObserver()],
+      //observers: [MyObserver()],
       child: App(),
     ),
   );

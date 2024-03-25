@@ -387,7 +387,6 @@ void main() {
   testWidgets(
     'MIDI mapping can be learned',
     (tester) async {
-      setupLogger(Level.ALL);
       await tester.binding.setSurfaceSize(const Size(1920, 1080));
 
       final apiController = StreamController<ApiMessage>.broadcast();
@@ -502,10 +501,12 @@ void main() {
   testWidgets(
     'MIDI mapping learn removes duplicates',
     (tester) async {
+      setupLogger(Level.ALL);
       await tester.binding.setSurfaceSize(const Size(1920, 1080));
 
       final apiController = StreamController<ApiMessage>.broadcast();
       final websocket = MockRobustWebsocket();
+      when(websocket.isAlive).thenReturn(true);
       final api = MockApiWebsocket();
       when(api.stream).thenAnswer((_) => apiController.stream);
       when(
