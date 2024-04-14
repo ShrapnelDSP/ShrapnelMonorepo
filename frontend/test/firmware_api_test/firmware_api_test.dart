@@ -76,6 +76,8 @@ void main() {
     assert(dutIpAddress.isNotEmpty, 'DUT_IP_ADDRESS must be set');
 
     const uri = 'ws://$dutIpAddress:8080/websocket';
+    // closed by the WebSocketTransport
+    // ignore: close_sinks
     final webSocket = await WebSocket.connect(uri);
     final webSocketTransport = WebSocketTransportAdapter(websocket: webSocket);
     final api = ApiWebsocket(websocket: webSocketTransport);
@@ -92,9 +94,10 @@ void main() {
     // Skip 1, because it's the default injected by the parameter model. We
     // are waiting for the first update from the firmware here.
     final update = await ampGain.value.skip(1).first;
+    // Expect notification including the default value
     expect(update, closeTo(0.5, 0.000001));
 
-    await webSocket.close(WebSocketStatus.normalClosure);
+    await webSocketTransport.dispose();
   });
 }
 

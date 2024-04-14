@@ -151,7 +151,7 @@ class RobustWebsocket extends ChangeNotifier
     unawaited(_streamController.close());
     unawaited(_sinkController.close());
     unawaited(_connectionController.close());
-    _transport?.dispose();
+    unawaited(_transport?.dispose());
   }
 
   void _handleSinkEvent(WebSocketData event) {
@@ -187,22 +187,25 @@ class WebSocketTransport
       onDone: onDone,
     );
 
-    unawaited(
-      websocket.addStream(_sinkController.stream.map((event) => event.value)),
-    );
+    addStreamFuture =
+        // ignore: discarded_futures
+        websocket.addStream(_sinkController.stream.map((event) => event.value));
   }
 
+  late final Future<void> addStreamFuture;
   WebSocket websocket;
 
   final _streamController = StreamController<WebSocketData>.broadcast();
 
-  final _sinkController = StreamController<WebSocketData>.broadcast();
+  final _sinkController = StreamController<WebSocketData>();
 
   @override
-  void dispose() {
-    unawaited(websocket.close(1001));
+  Future<void> dispose() async {
     unawaited(_streamController.close());
-    unawaited(_sinkController.close());
+
+    await _sinkController.close();
+    await addStreamFuture;
+    await websocket.close(WebSocketStatus.normalClosure);
   }
 
   @override
