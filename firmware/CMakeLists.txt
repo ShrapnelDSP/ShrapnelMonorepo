@@ -4,7 +4,7 @@ if(ESP_PLATFORM)
     set(CMAKE_CXX_STANDARD 20)
 
     option(SHRAPNEL_RESET_WIFI_CREDENTIALS
-           "Remove the provisioning Wi-Fi credentials at power up"
+           "Remove the provisioned Wi-Fi credentials at power up"
            OFF
     )
 
