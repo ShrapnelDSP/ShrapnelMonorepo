@@ -68,8 +68,12 @@ import 'util.dart';
 
 // ignore: do_not_use_environment
 const dutIpAddress = String.fromEnvironment('DUT_IP_ADDRESS');
+// ignore: do_not_use_environment
 const networkSsid = String.fromEnvironment('NETWORK_SSID');
+// ignore: do_not_use_environment
 const networkPassphrase = String.fromEnvironment('NETWORK_PASSPHRASE');
+// ignore: do_not_use_environment
+const firmwareBinaryPath = String.fromEnvironment('FIRMWARE_BINARY_PATH');
 
 // Initial implementation
 //
@@ -85,7 +89,7 @@ void main() {
 
   setUp(() async {
     final macAddress = await eraseFlash();
-    await flashFirmware();
+    await flashFirmware(firmwareBinaryPath);
     await connectToDutAccessPoint(macAddress);
     await setUpWiFi(ssid: networkSsid, password: networkPassphrase);
 

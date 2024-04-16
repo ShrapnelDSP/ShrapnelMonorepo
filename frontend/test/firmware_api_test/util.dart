@@ -6,6 +6,8 @@ import 'package:shrapnel/wifi_provisioning.dart';
 
 typedef MacAddress = List<int>;
 
+final _log = Logger('firmware_api_test_util');
+
 Future<void> connectToDutAccessPoint(MacAddress macAddress) async {
   final dutAccessPointSsid =
       'shrapnel_${macAddress.sublist(3).map((e) => e.toRadixString(16)).join().toUpperCase()}';
@@ -14,10 +16,10 @@ Future<void> connectToDutAccessPoint(MacAddress macAddress) async {
     'connection up $dutAccessPointSsid'.split(' '),
   );
 
-  print(result.exitCode);
-  print(result.pid);
-  print(result.stderr);
-  print(result.stdout);
+  _log.info(result.exitCode);
+  _log.info(result.pid);
+  _log.info(result.stderr);
+  _log.info(result.stdout);
 }
 
 Future<void> setUpWiFi({required String ssid, required String password}) async {
@@ -59,10 +61,10 @@ Future<MacAddress> eraseFlash() async {
 
   final result = await Process.run(command, args);
 
-  print(result.exitCode);
-  print(result.pid);
-  print(result.stderr);
-  print(result.stdout);
+  _log.info(result.exitCode);
+  _log.info(result.pid);
+  _log.info(result.stderr);
+  _log.info(result.stdout);
 
   final macRegex =
       RegExp(r'^MAC: (([0-9a-f]{2}:){5}([0-9a-f]{2}))$', multiLine: true);
@@ -71,10 +73,7 @@ Future<MacAddress> eraseFlash() async {
   return macString.split(':').map((e) => int.parse(e, radix: 16)).toList();
 }
 
-Future<void> flashFirmware() async {
-  // TODO pass in path using --dart-define
-  const path = '../firmware/dist';
-
+Future<void> flashFirmware(String path) async {
   // pip can be used to install esptool into the global environment:
   // https://docs.espressif.com/projects/esptool/en/latest/esp32/#quick-start
   const command = 'esptool.py';
@@ -89,8 +88,8 @@ Future<void> flashFirmware() async {
 
   final result = await Process.run(command, args);
 
-  print(result.exitCode);
-  print(result.pid);
-  print(result.stderr);
-  print(result.stdout);
+  _log.info(result.exitCode);
+  _log.info(result.pid);
+  _log.info(result.stderr);
+  _log.info(result.stdout);
 }
