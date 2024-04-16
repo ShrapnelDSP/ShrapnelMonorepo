@@ -78,11 +78,12 @@ const networkPassphrase = String.fromEnvironment('NETWORK_PASSPHRASE');
 //
 // Make a single request and expect a response.
 void main() {
-  test('simple test', () async {
-    assert(dutIpAddress.isNotEmpty, 'DUT_IP_ADDRESS must be set');
+  assert(dutIpAddress.isNotEmpty, 'DUT_IP_ADDRESS must be set');
+  setupLogger(Level.ALL);
 
-    setupLogger(Level.ALL);
+  late ApiWebsocket api;
 
+  setUp(() async {
     await eraseFlash();
     await flashFirmware();
     await connectToDutAccessPoint();
@@ -96,7 +97,11 @@ void main() {
     // ignore: close_sinks
     final webSocket = await WebSocket.connect(uri);
     final webSocketTransport = WebSocketTransportAdapter(websocket: webSocket);
-    final api = ApiWebsocket(websocket: webSocketTransport);
+    api = ApiWebsocket(websocket: webSocketTransport);
+    addTearDown(webSocketTransport.dispose);
+  });
+
+  test('simple test', () async {
     final transport = ParameterTransport(websocket: api);
     final service = ParameterService(transport: transport);
 
@@ -112,8 +117,6 @@ void main() {
     final update = await ampGain.value.skip(1).first;
     // Expect notification including the default value
     expect(update, closeTo(0.5, 0.000001));
-
-    await webSocketTransport.dispose();
   });
 }
 
