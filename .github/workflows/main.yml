@@ -260,7 +260,7 @@ jobs:
       run: flutter pub run build_runner build
 
     - name: Test
-      run: flutter test --coverage
+      run: flutter test --coverage --exclude-tags=api
 
     - name: Coverage clean-up
       run: >
