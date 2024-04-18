@@ -63,6 +63,26 @@
     
 
 
+    <section>
+      <dl class="dl-horizontal">
+        
+
+        
+  <dt>Implemented types</dt>
+  <dd>
+    <ul class="comma-separated clazz-relationships">
+        <li><a href="../core_message_transport/ReconnectingMessageTransport-class.html">ReconnectingMessageTransport</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../api_api_websocket/ApiMessage-class.html">ApiMessage</a></span>, <span class="type-parameter"><a href="../api_api_websocket/ApiMessage-class.html">ApiMessage</a></span>&gt;</span></li>
+    </ul>
+  </dd>
+        
+
+
+
+        
+
+
+      </dl>
+    </section>
 
     
   <section class="summary offset-anchor" id="constructors">
@@ -70,7 +90,7 @@
 
     <dl class="constructor-summary-list">
         <dt id="ApiWebsocket" class="callable">
-          <span class="name"><a href="../api_api_websocket/ApiWebsocket/ApiWebsocket.html">ApiWebsocket</a></span><span class="signature">(<span class="parameter" id="-param-websocket">{<span>required</span> <span class="type-annotation"><a href="../robust_websocket/RobustWebsocket-class.html">RobustWebsocket</a></span> <span class="parameter-name">websocket</span>}</span>)</span>
+          <span class="name"><a href="../api_api_websocket/ApiWebsocket/ApiWebsocket.html">ApiWebsocket</a></span><span class="signature">(<span class="parameter" id="-param-websocket">{<span>required</span> <span class="type-annotation"><a href="../core_message_transport/ReconnectingMessageTransport-class.html">ReconnectingMessageTransport</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../robust_websocket/WebSocketData-class.html">WebSocketData</a></span>, <span class="type-parameter"><a href="../robust_websocket/WebSocketData-class.html">WebSocketData</a></span>&gt;</span></span> <span class="parameter-name">websocket</span>}</span>)</span>
         </dt>
         <dd>
           
@@ -88,7 +108,7 @@
 
 </dt>
 <dd>
-  
+  A null is emitted every time a connection is successfully created
   <div class="features"><span class="feature">late</span><span class="feature">final</span></div>
 
 </dd>
@@ -110,8 +130,8 @@
 
 </dt>
 <dd>
-  
-  <div class="features"><span class="feature">no setter</span></div>
+  Returns true if the connection is alive at the moment
+  <div class="features"><span class="feature">no setter</span><span class="feature">override</span></div>
 
 </dd>
 
@@ -126,13 +146,25 @@
 
 </dd>
 
+        <dt id="sink" class="property">
+  <span class="name"><a href="../api_api_websocket/ApiWebsocket/sink.html">sink</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/dart-async/StreamSink-class.html">StreamSink</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../api_api_websocket/ApiMessage-class.html">ApiMessage</a></span>&gt;</span></span> 
+
+</dt>
+<dd>
+  Messages added to this sink will be sent to the other side of the
+connection.
+  <div class="features"><span class="feature">late</span><span class="feature">final</span></div>
+
+</dd>
+
         <dt id="stream" class="property">
   <span class="name"><a href="../api_api_websocket/ApiWebsocket/stream.html">stream</a></span>
   <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/dart-async/Stream-class.html">Stream</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../api_api_websocket/ApiMessage-class.html">ApiMessage</a></span>&gt;</span></span> 
 
 </dt>
 <dd>
-  The stream of incoming messages
+  Messages from the other side of the connection will appear in this stream.
   <div class="features"><span class="feature">late</span><span class="feature">final</span></div>
 
 </dd>
@@ -146,6 +178,20 @@
       id="instance-methods">
     <h2>Methods</h2>
     <dl class="callables">
+        <dt id="dispose" class="callable">
+  <span class="name"><a href="../api_api_websocket/ApiWebsocket/dispose.html">dispose</a></span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; void</span>
+  </span>
+  
+
+</dt>
+<dd>
+  Must be called to clean up resource after the transport is no longer in
+use.
+  <div class="features"><span class="feature">override</span></div>
+
+</dd>
+
         <dt id="noSuchMethod" class="callable inherited">
   <span class="name"><a href="https://api.flutter.dev/flutter/dart-core/Object/noSuchMethod.html">noSuchMethod</a></span><span class="signature">(<wbr><span class="parameter" id="noSuchMethod-param-invocation"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/Invocation-class.html">Invocation</a></span> <span class="parameter-name">invocation</span></span>)
     <span class="returntype parameter">&#8594; dynamic</span>
@@ -156,19 +202,6 @@
 <dd class="inherited">
   Invoked when a nonexistent method or property is accessed.
   <div class="features"><span class="feature">inherited</span></div>
-
-</dd>
-
-        <dt id="send" class="callable">
-  <span class="name"><a href="../api_api_websocket/ApiWebsocket/send.html">send</a></span><span class="signature">(<wbr><span class="parameter" id="send-param-message"><span class="type-annotation"><a href="../api_api_websocket/ApiMessage-class.html">ApiMessage</a></span> <span class="parameter-name">message</span></span>)
-    <span class="returntype parameter">&#8594; void</span>
-  </span>
-  
-
-</dt>
-<dd>
-  
-  
 
 </dd>
 

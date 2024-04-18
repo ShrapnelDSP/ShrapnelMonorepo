@@ -4,8 +4,8 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, user-scalable=no">
-  <meta name="description" content="API docs for the send method from the ApiWebsocket class, for the Dart programming language.">
-  <title>send method - ApiWebsocket class - api_websocket library - Dart API</title>
+  <meta name="description" content="API docs for the connectionStream property from the ReconnectingMessageTransport class, for the Dart programming language.">
+  <title>connectionStream property - ReconnectingMessageTransport class - message_transport library - Dart API</title>
 
 
   
@@ -29,11 +29,11 @@
   <span id="sidenav-left-toggle" class="material-symbols-outlined" role="button" tabindex="0">menu</span>
   <ol class="breadcrumbs gt-separated dark hidden-xs">
     <li><a href="../../index.html">shrapnel</a></li>
-    <li><a href="../../api_api_websocket/api_api_websocket-library.html">api_websocket</a></li>
-    <li><a href="../../api_api_websocket/ApiWebsocket-class.html">ApiWebsocket</a></li>
-    <li class="self-crumb">send method</li>
+    <li><a href="../../core_message_transport/core_message_transport-library.html">message_transport</a></li>
+    <li><a href="../../core_message_transport/ReconnectingMessageTransport-class.html">ReconnectingMessageTransport<span class="signature">&lt;<wbr><span class="type-parameter">T1</span>, <span class="type-parameter">T2</span>&gt;</span></a></li>
+    <li class="self-crumb">connectionStream property</li>
   </ol>
-  <div class="self-name">send</div>
+  <div class="self-name">connectionStream</div>
   <form class="search navbar-right" role="search">
     <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
   </form>
@@ -54,32 +54,35 @@
   <div
       id="dartdoc-main-content"
       class="main-content"
-      data-above-sidebar="api_api_websocket&#47;ApiWebsocket-class-sidebar.html"
+      data-above-sidebar="core_message_transport&#47;ReconnectingMessageTransport-class-sidebar.html"
       data-below-sidebar="">
       <div>
-<h1><span class="kind-method">send</span> method 
+<h1><span class="kind-property">connectionStream</span> property 
 </h1></div>
 
-    <section class="multi-line-signature">
-      
 
-<span class="returntype">void</span>
-<span class="name ">send</span>(<wbr><ol class="parameter-list"><li><span class="parameter" id="send-param-message"><span class="type-annotation"><a href="../../api_api_websocket/ApiMessage-class.html">ApiMessage</a></span> <span class="parameter-name">message</span></span></li>
-</ol>)
+        
+<section id="getter">
 
-      
+<section class="multi-line-signature">
+  
+  <span class="returntype"><a href="https://api.flutter.dev/flutter/dart-async/Stream-class.html">Stream</a><span class="signature">&lt;<wbr><span class="type-parameter">void</span>&gt;</span></span>
+  <span class="name ">connectionStream</span>
+  
 
-    </section>
-    
+</section>
 
 
-    
+<section class="desc markdown">
+  <p>A null is emitted every time a connection is successfully created</p>
+</section>
+
+
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">void send(ApiMessage message) {
-  _log.finest(&#39;sending: $message&#39;);
-  _websocket.sendMessage(message.toProto().writeToBuffer());
-}</code></pre>
+  <pre class="language-dart"><code class="language-dart">Stream&lt;void&gt; get connectionStream;</code></pre>
+</section>
+
 </section>
 
 
@@ -95,13 +98,13 @@
 
 <ol class="breadcrumbs gt-separated dark hidden-l" id="sidebar-nav">
     <li><a href="../../index.html">shrapnel</a></li>
-    <li><a href="../../api_api_websocket/api_api_websocket-library.html">api_websocket</a></li>
-    <li><a href="../../api_api_websocket/ApiWebsocket-class.html">ApiWebsocket</a></li>
-    <li class="self-crumb">send method</li>
+    <li><a href="../../core_message_transport/core_message_transport-library.html">message_transport</a></li>
+    <li><a href="../../core_message_transport/ReconnectingMessageTransport-class.html">ReconnectingMessageTransport<span class="signature">&lt;<wbr><span class="type-parameter">T1</span>, <span class="type-parameter">T2</span>&gt;</span></a></li>
+    <li class="self-crumb">connectionStream property</li>
 </ol>
 
 
-    <h5>ApiWebsocket class</h5>
+    <h5>ReconnectingMessageTransport class</h5>
   </div><!--/.sidebar-offcanvas-->
 
   <div id="dartdoc-sidebar-right" class="sidebar sidebar-offcanvas-right">

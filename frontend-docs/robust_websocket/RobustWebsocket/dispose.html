@@ -91,10 +91,12 @@ listeners or not immediately before disposal.</p>
   <h2><span>Implementation</span></h2>
   <pre class="language-dart"><code class="language-dart">@override
 void dispose() {
-  unawaited(_connectionController.close());
-  unawaited(_ws?.close(1001));
-  unawaited(_dataController.close());
+  _disposed = true;
   super.dispose();
+  unawaited(_streamController.close());
+  unawaited(_sinkController.close());
+  unawaited(_connectionController.close());
+  unawaited(_transport?.dispose());
 }</code></pre>
 </section>
 

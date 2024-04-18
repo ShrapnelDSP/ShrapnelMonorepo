@@ -79,6 +79,12 @@
   </dd>
 
         
+  <dt>Implemented types</dt>
+  <dd>
+    <ul class="comma-separated clazz-relationships">
+        <li><a href="../core_message_transport/ReconnectingMessageTransport-class.html">ReconnectingMessageTransport</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../robust_websocket/WebSocketData-class.html">WebSocketData</a></span>, <span class="type-parameter"><a href="../robust_websocket/WebSocketData-class.html">WebSocketData</a></span>&gt;</span></li>
+    </ul>
+  </dd>
         
 
 
@@ -114,18 +120,7 @@
 </dt>
 <dd>
   A null is emitted every time a connection is successfully created
-  <div class="features"><span class="feature">no setter</span></div>
-
-</dd>
-
-        <dt id="dataStream" class="property">
-  <span class="name"><a href="../robust_websocket/RobustWebsocket/dataStream.html">dataStream</a></span>
-  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/dart-async/Stream-class.html">Stream</a></span> 
-
-</dt>
-<dd>
-  Equivalent to the stream of a <a href="https://api.flutter.dev/flutter/dart-io/WebSocket-class.html">WebSocket</a>
-  <div class="features"><span class="feature">no setter</span></div>
+  <div class="features"><span class="feature">no setter</span><span class="feature">override</span></div>
 
 </dd>
 
@@ -157,8 +152,8 @@
 
 </dt>
 <dd>
-  
-  <div class="features"><span class="feature">getter/setter pair</span></div>
+  Returns true if the connection is alive at the moment
+  <div class="features"><span class="feature">getter/setter pair</span><span class="feature">override-getter</span></div>
 
 </dd>
 
@@ -170,6 +165,29 @@
 <dd class="inherited">
   A representation of the runtime type of the object.
   <div class="features"><span class="feature">no setter</span><span class="feature">inherited</span></div>
+
+</dd>
+
+        <dt id="sink" class="property">
+  <span class="name"><a href="../robust_websocket/RobustWebsocket/sink.html">sink</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/dart-async/StreamSink-class.html">StreamSink</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../robust_websocket/WebSocketData-class.html">WebSocketData</a></span>&gt;</span></span> 
+
+</dt>
+<dd>
+  Messages added to this sink will be sent to the other side of the
+connection.
+  <div class="features"><span class="feature">no setter</span><span class="feature">override</span></div>
+
+</dd>
+
+        <dt id="stream" class="property">
+  <span class="name"><a href="../robust_websocket/RobustWebsocket/stream.html">stream</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/dart-async/Stream-class.html">Stream</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../robust_websocket/WebSocketData-class.html">WebSocketData</a></span>&gt;</span></span> 
+
+</dt>
+<dd>
+  Messages from the other side of the connection will appear in this stream.
+  <div class="features"><span class="feature">no setter</span><span class="feature">override</span></div>
 
 </dd>
 
@@ -258,19 +276,6 @@ object is not in a usable state and should be discarded (calls to
   Remove a previously registered closure from the list of closures that are
 notified when the object changes.
   <div class="features"><span class="feature">inherited</span></div>
-
-</dd>
-
-        <dt id="sendMessage" class="callable">
-  <span class="name"><a href="../robust_websocket/RobustWebsocket/sendMessage.html">sendMessage</a></span><span class="signature">(<wbr><span class="parameter" id="sendMessage-param-s"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span>&gt;</span></span> <span class="parameter-name">s</span></span>)
-    <span class="returntype parameter">&#8594; void</span>
-  </span>
-  
-
-</dt>
-<dd>
-  
-  
 
 </dd>
 

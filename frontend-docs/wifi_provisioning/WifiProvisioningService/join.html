@@ -118,7 +118,7 @@
     return;
   }
 
-  _status = await _pollWifiStatusWithTimeout(const Duration(seconds: 10));
+  _status = await provisioning!.pollStatus(const Duration(seconds: 10));
   if (!_status.isSuccess()) {
     _log.severe(
       &#39;could not connect to provisioned access point &#39;

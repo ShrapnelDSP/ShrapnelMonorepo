@@ -4,8 +4,8 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, user-scalable=no">
-  <meta name="description" content="API docs for the sendMessage method from the RobustWebsocket class, for the Dart programming language.">
-  <title>sendMessage method - RobustWebsocket class - robust_websocket library - Dart API</title>
+  <meta name="description" content="API docs for the sink property from the ApiWebsocket class, for the Dart programming language.">
+  <title>sink property - ApiWebsocket class - api_websocket library - Dart API</title>
 
 
   
@@ -29,11 +29,11 @@
   <span id="sidenav-left-toggle" class="material-symbols-outlined" role="button" tabindex="0">menu</span>
   <ol class="breadcrumbs gt-separated dark hidden-xs">
     <li><a href="../../index.html">shrapnel</a></li>
-    <li><a href="../../robust_websocket/robust_websocket-library.html">robust_websocket</a></li>
-    <li><a href="../../robust_websocket/RobustWebsocket-class.html">RobustWebsocket</a></li>
-    <li class="self-crumb">sendMessage method</li>
+    <li><a href="../../api_api_websocket/api_api_websocket-library.html">api_websocket</a></li>
+    <li><a href="../../api_api_websocket/ApiWebsocket-class.html">ApiWebsocket</a></li>
+    <li class="self-crumb">sink property</li>
   </ol>
-  <div class="self-name">sendMessage</div>
+  <div class="self-name">sink</div>
   <form class="search navbar-right" role="search">
     <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
   </form>
@@ -54,31 +54,41 @@
   <div
       id="dartdoc-main-content"
       class="main-content"
-      data-above-sidebar="robust_websocket&#47;RobustWebsocket-class-sidebar.html"
+      data-above-sidebar="api_api_websocket&#47;ApiWebsocket-class-sidebar.html"
       data-below-sidebar="">
       <div>
-<h1><span class="kind-method">sendMessage</span> method 
+<h1><span class="kind-property">sink</span> property 
 </h1></div>
 
-    <section class="multi-line-signature">
-      
+        <section class="multi-line-signature">
+          
+  <div>
+    <ol class="annotation-list">
+        <li>@<a href="https://api.flutter.dev/flutter/dart-core/override-constant.html">override</a></li>
+    </ol>
+  </div>
+          <a href="https://api.flutter.dev/flutter/dart-async/StreamSink-class.html">StreamSink</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../../api_api_websocket/ApiMessage-class.html">ApiMessage</a></span>&gt;</span>
+          <span class="name ">sink</span>
+          <div class="features"><span class="feature">late</span><span class="feature">final</span></div>
 
-<span class="returntype">void</span>
-<span class="name ">sendMessage</span>(<wbr><ol class="parameter-list"><li><span class="parameter" id="sendMessage-param-s"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span>&gt;</span></span> <span class="parameter-name">s</span></span></li>
-</ol>)
+        </section>
+        
+<section class="desc markdown">
+  <p>Messages added to this sink will be sent to the other side of the
+connection.</p>
+</section>
 
-      
-
-    </section>
-    
-
-
-    
+        
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">void sendMessage(List&lt;int&gt; s) {
-  _ws?.add(s);
-}</code></pre>
+  <pre class="language-dart"><code class="language-dart">@override
+late final StreamSink&lt;ApiMessage&gt; sink =
+    StreamSinkTransformer&lt;ApiMessage, WebSocketData&gt;.fromHandlers(
+  handleData: (message, sink) {
+    _log.finest(&#39;sending: $message&#39;);
+    sink.add(WebSocketData.binary(value: message.toProto().writeToBuffer()));
+  },
+).bind(_websocket.sink);</code></pre>
 </section>
 
 
@@ -94,13 +104,13 @@
 
 <ol class="breadcrumbs gt-separated dark hidden-l" id="sidebar-nav">
     <li><a href="../../index.html">shrapnel</a></li>
-    <li><a href="../../robust_websocket/robust_websocket-library.html">robust_websocket</a></li>
-    <li><a href="../../robust_websocket/RobustWebsocket-class.html">RobustWebsocket</a></li>
-    <li class="self-crumb">sendMessage method</li>
+    <li><a href="../../api_api_websocket/api_api_websocket-library.html">api_websocket</a></li>
+    <li><a href="../../api_api_websocket/ApiWebsocket-class.html">ApiWebsocket</a></li>
+    <li class="self-crumb">sink property</li>
 </ol>
 
 
-    <h5>RobustWebsocket class</h5>
+    <h5>ApiWebsocket class</h5>
   </div><!--/.sidebar-offcanvas-->
 
   <div id="dartdoc-sidebar-right" class="sidebar sidebar-offcanvas-right">

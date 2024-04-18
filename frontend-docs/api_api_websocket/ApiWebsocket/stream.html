@@ -62,6 +62,11 @@
 
         <section class="multi-line-signature">
           
+  <div>
+    <ol class="annotation-list">
+        <li>@<a href="https://api.flutter.dev/flutter/dart-core/override-constant.html">override</a></li>
+    </ol>
+  </div>
           <a href="https://api.flutter.dev/flutter/dart-async/Stream-class.html">Stream</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../../api_api_websocket/ApiMessage-class.html">ApiMessage</a></span>&gt;</span>
           <span class="name ">stream</span>
           <div class="features"><span class="feature">late</span><span class="feature">final</span></div>
@@ -69,14 +74,16 @@
         </section>
         
 <section class="desc markdown">
-  <p>The stream of incoming messages</p>
+  <p>Messages from the other side of the connection will appear in this stream.</p>
 </section>
 
         
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">late final Stream&lt;ApiMessage&gt; stream = _websocket.dataStream
-    .whereType&lt;List&lt;int&gt;&gt;()
+  <pre class="language-dart"><code class="language-dart">@override
+late final Stream&lt;ApiMessage&gt; stream = _websocket.stream
+    .whereType&lt;WebSocketDataBinary&gt;()
+    .map((event) =&gt; event.value)
     .map(shrapnel_pb.Message.fromBuffer)
     .map(ApiMessageProtoEx.fromProto)
     .logFinest(
