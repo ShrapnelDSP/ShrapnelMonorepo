@@ -19,11 +19,13 @@
 
 import 'dart:async';
 
+import 'package:async/async.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logging/logging.dart';
 import 'package:rxdart/rxdart.dart';
 
 import '../audio_events.dart';
+import '../core/message_transport.dart';
 import '../core/stream_extensions.dart';
 import '../midi_mapping/model/models.dart';
 import '../parameter.dart';
@@ -61,16 +63,19 @@ sealed class ApiMessage with _$ApiMessage {
   }) = ApiMessageSelectedPreset;
 }
 
-class ApiWebsocket {
+class ApiWebsocket
+    implements ReconnectingMessageTransport<ApiMessage, ApiMessage> {
   ApiWebsocket({
-    required RobustWebsocket websocket,
+    required ReconnectingMessageTransport<WebSocketData, WebSocketData>
+        websocket,
   }) : _websocket = websocket;
 
-  final RobustWebsocket _websocket;
+  final ReconnectingMessageTransport<WebSocketData, WebSocketData> _websocket;
 
-  /// The stream of incoming messages
-  late final Stream<ApiMessage> stream = _websocket.dataStream
-      .whereType<List<int>>()
+  @override
+  late final Stream<ApiMessage> stream = _websocket.stream
+      .whereType<WebSocketDataBinary>()
+      .map((event) => event.value)
       .map(shrapnel_pb.Message.fromBuffer)
       .map(ApiMessageProtoEx.fromProto)
       .logFinest(
@@ -78,12 +83,24 @@ class ApiWebsocket {
         (event) => 'received: $event',
       );
 
+  @override
   late final Stream<void> connectionStream = _websocket.connectionStream;
 
+  @override
   bool get isAlive => _websocket.isAlive;
 
-  void send(ApiMessage message) {
-    _log.finest('sending: $message');
-    _websocket.sendMessage(message.toProto().writeToBuffer());
+  @override
+  late final StreamSink<ApiMessage> sink =
+      StreamSinkTransformer<ApiMessage, WebSocketData>.fromHandlers(
+    handleData: (message, sink) {
+      _log.finest('sending: $message');
+      sink.add(WebSocketData.binary(value: message.toProto().writeToBuffer()));
+    },
+  ).bind(_websocket.sink);
+
+  @override
+  void dispose() {
+    _websocket.dispose();
+    unawaited(sink.close());
   }
 }

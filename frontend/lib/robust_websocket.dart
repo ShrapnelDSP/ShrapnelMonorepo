@@ -23,43 +23,64 @@ import 'dart:io';
 import 'dart:math';
 
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logging/logging.dart';
+
+import 'core/message_transport.dart';
+
+part 'robust_websocket.freezed.dart';
 
 final _log = Logger('shrapnel.robust_websocket');
 
 /// Auto-reconnecting websocket client
-class RobustWebsocket extends ChangeNotifier {
+class RobustWebsocket extends ChangeNotifier
+    implements ReconnectingMessageTransport<WebSocketData, WebSocketData> {
   RobustWebsocket({required this.uri}) {
     unawaited(_connect());
+    _sinkController.stream.listen(_handleSinkEvent);
   }
 
+  bool _disposed = false;
+
+  Uri uri;
+
+  @override
+  bool isAlive = false;
+
+  final _connectionController = StreamController<void>.broadcast();
+  final _streamController = StreamController<WebSocketData>.broadcast();
+  final _sinkController = StreamController<WebSocketData>();
+
+  @override
+  Stream<void> get connectionStream => _connectionController.stream;
+
+  @override
+  StreamSink<WebSocketData> get sink => _sinkController;
+
+  @override
+  Stream<WebSocketData> get stream => _streamController.stream;
+
+  WebSocketTransport? _transport;
+
   Future<void> _reconnect() async {
-    _log.warning('websocket close code ${_ws!.closeCode}');
-    _log.warning('websocket close reason ${_ws!.closeReason}');
+    if (_disposed) {
+      return;
+    }
+
+    _log.warning('websocket close code ${_transport!.websocket.closeCode}');
+    _log.warning('websocket close reason ${_transport!.websocket.closeReason}');
 
     isAlive = false;
     notifyListeners();
 
     await Future<void>.delayed(const Duration(seconds: 5));
 
+    if (_disposed) {
+      return;
+    }
+
     await _connect();
   }
-
-  Uri uri;
-  bool isAlive = false;
-
-  final _connectionController = StreamController<void>.broadcast();
-
-  /// A null is emitted every time a connection is successfully created
-  Stream<void> get connectionStream => _connectionController.stream;
-
-  final _dataController = StreamController<dynamic>.broadcast();
-
-  /// Equivalent to the stream of a [WebSocket]
-  Stream<dynamic> get dataStream => _dataController.stream;
-
-  WebSocket? _ws;
 
   Future<void> _connect() async {
     _log.info('Connecting to server...');
@@ -84,9 +105,18 @@ class RobustWebsocket extends ChangeNotifier {
 
         request.headers
           ..set('Connection', 'Upgrade')
-          ..set('Upgrade', 'websocket')
-          ..set('Sec-WebSocket-Key', base64.encode(nonce))
-          ..set('Sec-WebSocket-Version', '13');
+          ..set(
+            'Upgrade',
+            'websocket',
+          )
+          ..set(
+            'Sec-WebSocket-Key',
+            base64.encode(nonce),
+          )
+          ..set(
+            'Sec-WebSocket-Version',
+            '13',
+          );
 
         final response = await request.close();
         socket = await response.detachSocket();
@@ -99,33 +129,88 @@ class RobustWebsocket extends ChangeNotifier {
 
     _log.info('Connected to server');
 
+    // The WebSocketTransport takes ownership of this sink
+    // ignore: close_sinks
+    final websocket = WebSocket.fromUpgradedSocket(socket, serverSide: false)
+      ..pingInterval = const Duration(seconds: 1);
+
+    final transport =
+        WebSocketTransport(websocket: websocket, onDone: _reconnect);
+    transport.stream.listen(_streamController.add);
+
+    _transport = transport;
     isAlive = true;
-    notifyListeners();
-
-    _ws = WebSocket.fromUpgradedSocket(socket, serverSide: false);
-
-    _ws!.listen(
-      _dataController.add,
-      onError: (Object e) {
-        _log.warning('websocket error: $e');
-      },
-      onDone: _reconnect,
-    );
-
-    _ws!.pingInterval = const Duration(seconds: 1);
-
     _connectionController.add(null);
-  }
-
-  void sendMessage(List<int> s) {
-    _ws?.add(s);
+    notifyListeners();
   }
 
   @override
   void dispose() {
-    unawaited(_connectionController.close());
-    unawaited(_ws?.close(1001));
-    unawaited(_dataController.close());
+    _disposed = true;
     super.dispose();
+    unawaited(_streamController.close());
+    unawaited(_sinkController.close());
+    unawaited(_connectionController.close());
+    unawaited(_transport?.dispose());
   }
+
+  void _handleSinkEvent(WebSocketData event) {
+    _transport?.sink.add(event);
+  }
+}
+
+@freezed
+class WebSocketData with _$WebSocketData {
+  factory WebSocketData.text({required String value}) = WebSocketDataText;
+
+  factory WebSocketData.binary({required List<int> value}) =
+      WebSocketDataBinary;
+}
+
+class WebSocketTransport
+    implements MessageTransport<WebSocketData, WebSocketData> {
+  WebSocketTransport({
+    required this.websocket,
+    required void Function() onDone,
+  }) {
+    websocket.listen(
+      (event) => _streamController.add(
+        switch (event) {
+          final String text => WebSocketData.text(value: text),
+          final List<int> binary => WebSocketData.binary(value: binary),
+          _ => throw StateError('unexpected data type'),
+        },
+      ),
+      onError: (Object e) {
+        _log.warning('websocket error: $e');
+      },
+      onDone: onDone,
+    );
+
+    addStreamFuture =
+        // ignore: discarded_futures
+        websocket.addStream(_sinkController.stream.map((event) => event.value));
+  }
+
+  late final Future<void> addStreamFuture;
+  WebSocket websocket;
+
+  final _streamController = StreamController<WebSocketData>.broadcast();
+
+  final _sinkController = StreamController<WebSocketData>();
+
+  @override
+  Future<void> dispose() async {
+    unawaited(_streamController.close());
+
+    await _sinkController.close();
+    await addStreamFuture;
+    await websocket.close(WebSocketStatus.normalClosure);
+  }
+
+  @override
+  StreamSink<WebSocketData> get sink => _sinkController;
+
+  @override
+  Stream<WebSocketData> get stream => _streamController.stream;
 }

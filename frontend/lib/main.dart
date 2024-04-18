@@ -102,7 +102,7 @@ class App extends StatelessWidget {
     RobustWebsocket? websocket,
     ApiWebsocket? apiWebsocket,
     WifiProvisioningService? provisioning,
-    MessageTransport<ParameterServiceOutputMessage,
+    ReconnectingMessageTransport<ParameterServiceOutputMessage,
             ParameterServiceInputMessage>?
         parameterTransport,
     PresetsRepositoryBase? presetsRepository,

@@ -2,7 +2,7 @@
   <configuration default="false" name="All tests" type="FlutterTestConfigType" factoryName="Flutter Test">
     <option name="testDir" value="$PROJECT_DIR$/test" />
     <option name="useRegexp" value="false" />
-    <option name="additionalArgs" value="" />
+    <option name="additionalArgs" value="--exclude-tags=api" />
     <method v="2" />
   </configuration>
 </component>

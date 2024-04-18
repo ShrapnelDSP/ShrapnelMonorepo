@@ -43,15 +43,15 @@ sealed class SelectedPresetMessage with _$SelectedPresetMessage {
 }
 
 class SelectedPresetTransport
-    implements MessageTransport<SelectedPresetMessage, SelectedPresetMessage> {
+    implements
+        ReconnectingMessageTransport<SelectedPresetMessage,
+            SelectedPresetMessage> {
   SelectedPresetTransport({required ApiWebsocket websocket})
       : _websocket = websocket {
     _controller.stream
         .logFinest(_log, (event) => 'send message: $event')
-        .listen(
-          (message) =>
-              _websocket.send(ApiMessage.selectedPreset(message: message)),
-        );
+        .map((message) => ApiMessage.selectedPreset(message: message))
+        .listen(_websocket.sink.add);
   }
 
   final _controller = StreamController<SelectedPresetMessage>();
@@ -81,12 +81,13 @@ class SelectedPresetTransport
 
 class SelectedPresetClient {
   SelectedPresetClient({
-    required MessageTransport<SelectedPresetMessage, SelectedPresetMessage>
+    required ReconnectingMessageTransport<SelectedPresetMessage,
+            SelectedPresetMessage>
         transport,
   }) : _transport = transport;
 
-  final MessageTransport<SelectedPresetMessage, SelectedPresetMessage>
-      _transport;
+  final ReconnectingMessageTransport<SelectedPresetMessage,
+      SelectedPresetMessage> _transport;
 
   Future<void> initialise() async {
     _transport.sink.add(SelectedPresetMessage.read());
