@@ -173,7 +173,7 @@ class WebSocketTransport
     required this.websocket,
     required void Function() onDone,
   }) {
-    websocket.listen(
+    websocketSubscription = websocket.listen(
       (event) => _streamController.add(
         switch (event) {
           final String text => WebSocketData.text(value: text),
@@ -193,6 +193,7 @@ class WebSocketTransport
   }
 
   late final Future<void> addStreamFuture;
+  late final StreamSubscription<dynamic> websocketSubscription;
   WebSocket websocket;
 
   final _streamController = StreamController<WebSocketData>.broadcast();
@@ -201,6 +202,7 @@ class WebSocketTransport
 
   @override
   Future<void> dispose() async {
+    await websocketSubscription.cancel();
     unawaited(_streamController.close());
 
     await _sinkController.close();
