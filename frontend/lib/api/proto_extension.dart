@@ -206,7 +206,7 @@ extension MidiMappingProtoEx on MidiMapping {
           ccNumber: proto.ccNumber,
           parameterId: proto.parameterName,
         ),
-      MidiMappingMode.parameter => MidiMapping.toggle(
+      MidiMappingMode.parameter => MidiMapping.parameter(
           midiChannel: proto.midiChannel,
           ccNumber: proto.ccNumber,
           parameterId: proto.parameterName,

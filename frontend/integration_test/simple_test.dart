@@ -21,17 +21,15 @@
 @Tags(['api'])
 library;
 
-import 'dart:io';
-
 import 'package:flutter_test/flutter_test.dart';
 import 'package:logging/logging.dart';
-import 'package:shrapnel/api/api_websocket.dart';
 import 'package:shrapnel/core/message_transport.dart';
 import 'package:shrapnel/main.dart';
-import 'package:shrapnel/parameter.dart';
+import 'package:shrapnel/midi_mapping/model/models.dart';
 import 'package:shrapnel/robust_websocket.dart';
 
-import 'util.dart';
+import '../test/firmware_api_test/util.dart';
+import '../test/home_page_object.dart';
 
 // audio parameter basic test
 // factory reset
@@ -105,9 +103,9 @@ void main() {
   assert(dutIpAddress.isNotEmpty, 'DUT_IP_ADDRESS must be set');
   setupLogger(Level.ALL);
 
-  late ApiWebsocket api;
-
   setUp(() async {
+    // commented out for debug. device is pre configured with firmware and wifi setup
+    /*
     final macAddress = await eraseFlash();
     await flashFirmware(firmwareBinaryPath);
     await connectToDutAccessPoint(macAddress);
@@ -115,32 +113,42 @@ void main() {
 
     // Wait for firmware to start server after getting provisioned
     await Future<void>.delayed(const Duration(seconds: 10));
-
-    const uri = 'ws://$dutIpAddress:8080/websocket';
-    // closed by the WebSocketTransport
-    // ignore: close_sinks
-    final webSocket = await WebSocket.connect(uri);
-    final webSocketTransport = WebSocketTransportAdapter(websocket: webSocket);
-    api = ApiWebsocket(websocket: webSocketTransport);
-    addTearDown(webSocketTransport.dispose);
+     */
   });
 
-  test('simple test', () async {
-    final transport = ParameterTransport(websocket: api);
-    final service = ParameterService(transport: transport);
+  testWidgets('simple test', (tester) async {
+    await tester.pumpWidget(App());
 
-    final ampGain = AudioParameterDoubleModel(
-      groupName: 'test',
-      id: 'ampGain',
-      name: 'Amp Gain',
-      parameterService: service,
-    );
+    // wait until connected
+    // poll connection status widget until ready with timeout
+    final homePage = HomePageObject(tester);
+    await homePage.waitUntilConnected();
 
-    // Skip 1, because it's the default injected by the parameter model. We
-    // are waiting for the first update from the firmware here.
-    final update = await ampGain.value.skip(1).first;
-    // Expect notification including the default value
-    expect(update, closeTo(0.5, 0.000001));
+    final midiMappingPage = await homePage.openMidiMapping();
+
+    expect(midiMappingPage.findPage(), findsOneWidget);
+    expect(midiMappingPage.findMappingRows(), findsNothing);
+
+    // create a mapping
+    final midiMappingCreatePage = await midiMappingPage.openCreateDialog();
+    await midiMappingCreatePage.selectMidiChannel(1);
+    await midiMappingCreatePage.selectCcNumber(2);
+    await midiMappingCreatePage.selectMode(MidiMappingMode.parameter);
+    // XXX: There is a bug in flutter where the DropdownButton's popup menu is
+    //      unreliable during tests: https://github.com/flutter/flutter/issues/82908
+    //
+    // Pick an arbitrary parameter here. The only criteria for selection is that
+    // it actually works during the test. This is more likely if something is
+    // picked from the top of the list.
+    await midiMappingCreatePage.selectParameter('Chorus: DEPTH');
+    await midiMappingCreatePage.submitCreateDialog();
+
+    await tester.pump(const Duration(seconds: 1));
+    await tester.pumpAndSettle();
+
+    // Expect new mapping visible in UI
+    // TODO check the correct value is visible in all dropdowns
+    expect(midiMappingPage.findMappingRows(), findsOneWidget);
   });
 }
 
