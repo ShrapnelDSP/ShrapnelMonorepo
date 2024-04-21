@@ -125,4 +125,25 @@ class HomePageObject {
 
     throw TimeoutException('Connection timed out');
   }
+
+  Future<void> createPreset(String name) async {
+    await tester.tap(find.byKey(const Key('presets-create-button')));
+    await tester.pumpAndSettle();
+
+    final createPresetPage = CreatePresetPageObject(tester);
+    await createPresetPage.submitName(name);
+  }
+}
+
+class CreatePresetPageObject {
+  CreatePresetPageObject(this.tester);
+
+  final WidgetTester tester;
+
+  Future<void> submitName(String name) async {
+    await tester.enterText(find.byKey(const Key('presets-name-field')), name);
+
+    await tester.tap(find.byKey(const Key('presets-confirm-name-button')));
+    await tester.pumpAndSettle();
+  }
 }

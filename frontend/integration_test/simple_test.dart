@@ -104,8 +104,6 @@ void main() {
   setupLogger(Level.ALL);
 
   setUp(() async {
-    // commented out for debug. device is pre configured with firmware and wifi setup
-    /*
     final macAddress = await eraseFlash();
     await flashFirmware(firmwareBinaryPath);
     await connectToDutAccessPoint(macAddress);
@@ -113,7 +111,6 @@ void main() {
 
     // Wait for firmware to start server after getting provisioned
     await Future<void>.delayed(const Duration(seconds: 10));
-     */
   });
 
   testWidgets('simple test', (tester) async {
@@ -123,6 +120,8 @@ void main() {
     // poll connection status widget until ready with timeout
     final homePage = HomePageObject(tester);
     await homePage.waitUntilConnected();
+
+    await homePage.createPreset('Preset 1');
 
     final midiMappingPage = await homePage.openMidiMapping();
 
@@ -147,8 +146,39 @@ void main() {
     await tester.pumpAndSettle();
 
     // Expect new mapping visible in UI
-    // TODO check the correct value is visible in all dropdowns
     expect(midiMappingPage.findMappingRows(), findsOneWidget);
+
+    await midiMappingPage.openCreateDialog();
+    await midiMappingCreatePage.selectMidiChannel(2);
+    await midiMappingCreatePage.selectCcNumber(3);
+    await midiMappingCreatePage.selectMode(MidiMappingMode.button);
+    await midiMappingCreatePage.selectPreset('Preset 1');
+    await midiMappingCreatePage.submitCreateDialog();
+
+    await tester.pump(const Duration(seconds: 1));
+    await tester.pumpAndSettle();
+
+    // Expect new mapping visible in UI
+    expect(midiMappingPage.findMappingRows(), findsNWidgets(2));
+
+    await midiMappingPage.openCreateDialog();
+    await midiMappingCreatePage.selectMidiChannel(3);
+    await midiMappingCreatePage.selectCcNumber(4);
+    await midiMappingCreatePage.selectMode(MidiMappingMode.toggle);
+    // XXX: There is a bug in flutter where the DropdownButton's popup menu is
+    //      unreliable during tests: https://github.com/flutter/flutter/issues/82908
+    //
+    // Pick an arbitrary parameter here. The only criteria for selection is that
+    // it actually works during the test. This is more likely if something is
+    // picked from the top of the list.
+    await midiMappingCreatePage.selectParameter('Chorus: RATE');
+    await midiMappingCreatePage.submitCreateDialog();
+
+    await tester.pump(const Duration(seconds: 1));
+    await tester.pumpAndSettle();
+
+    // Expect new mapping visible in UI
+    expect(midiMappingPage.findMappingRows(), findsNWidgets(3));
   });
 }
 
