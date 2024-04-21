@@ -307,6 +307,7 @@ void WifiStateMachine::provisioning_init()
     };
 
     ESP_ERROR_CHECK(wifi_prov_mgr_init(config));
+    ESP_ERROR_CHECK(wifi_prov_mgr_disable_auto_stop(5 * 1000));
 }
 
 void WifiStateMachine::provisioning_deinit()
