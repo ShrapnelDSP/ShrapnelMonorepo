@@ -1,2 +1,2 @@
-protobuf==4.0
+protobuf~=4.25
 grpcio-tools
