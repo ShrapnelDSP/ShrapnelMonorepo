@@ -19,10 +19,14 @@
 
 #include "shrapnel_console.h"
 #include "esp_log.h"
+#include "midi_mapping_api.h"
 #include <argtable3/argtable3.h>
 #include <cassert>
+#include <cppcodec/base64_rfc4648.hpp>
 #include <cstdio>
+#include <cstring>
 #include <esp_console.h>
+#include <span>
 
 #define TAG "shrapnel_console"
 
@@ -35,7 +39,7 @@ static Console *instance;
 
 static struct
 {
-    struct arg_int *data;
+    struct arg_str *data;
     struct arg_end *end;
 } arg_midi;
 
@@ -49,18 +53,7 @@ static int handle_midi(int argc, char *argv[])
     }
 
     int nerrors = arg_parse(argc, argv, (void **)(&arg_midi));
-
-    ESP_LOGW(TAG, "nerrors = %d", nerrors);
-
-    if(nerrors == 0)
-    {
-        int count = arg_midi.data->count;
-        for(int i = 0; i < count; i++)
-        {
-            ESP_LOGI(TAG, "data: %d", arg_midi.data->ival[i]);
-        }
-    }
-    else
+    if(nerrors != 0)
     {
         char error_message_memory[1024] = {};
         auto file =
@@ -71,7 +64,40 @@ static int handle_midi(int argc, char *argv[])
         return -1;
     }
 
-    // TODO parse, handle request
+    ESP_LOGI(TAG, "data: %s", arg_midi.data->sval[0]);
+
+    std::array<uint8_t, 128> buffer{};
+    size_t decoded_size = 0;
+    auto error =
+        cppcodec::base64_rfc4648::decode(buffer.data(),
+                                         buffer.size(),
+                                         arg_midi.data->sval[0],
+                                         strlen(arg_midi.data->sval[0]),
+                                         decoded_size);
+
+    if(!holds_alternative<std::monostate>(error))
+    {
+        ESP_LOGE(TAG, "base64 decode error");
+        return -1;
+    }
+
+    ESP_LOG_BUFFER_HEX_LEVEL(TAG, buffer.data(), decoded_size, ESP_LOG_INFO);
+
+    auto message =
+        api::from_bytes<midi::Message>(std::span(buffer.data(), decoded_size));
+    if(!message.has_value())
+    {
+        ESP_LOGE(TAG, "failed to decode MIDI message");
+        return -1;
+    }
+
+    etl::string<64> string;
+    etl::string_stream stream(string);
+
+    stream << message.value();
+
+    ESP_LOGI(TAG, "decoded %s", string.c_str());
+
     return 0;
 }
 
@@ -80,7 +106,8 @@ Console::Console()
     assert(instance == nullptr);
     instance = this;
 
-    arg_midi.data = arg_intn("b", "byte", nullptr, 1, 3, "MIDI bytes");
+    arg_midi.data =
+        arg_str1("d", "data", "<base64>", "MIDI message protobuf as base64");
     arg_midi.end = arg_end(0);
 
     embedded_cli_init(&cli, "shrapnel $ ", Console::putch, this);
