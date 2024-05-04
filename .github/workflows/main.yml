@@ -44,7 +44,7 @@ jobs:
         . $IDF_PATH/export.sh
         python3 -m pip install -r thirdparty/esp-idf-components/nanopb/requirements.txt
         apt update
-        apt install bsdmainutils
+        apt -y install bsdmainutils
         hexdump -C firmware/dependencies.lock
         idf.py -C firmware build
 
