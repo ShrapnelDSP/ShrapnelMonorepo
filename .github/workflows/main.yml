@@ -47,6 +47,7 @@ jobs:
         apt -y install bsdmainutils
         hexdump -C firmware/main/idf_component.yml
         git config --global --add safe.directory /__w/ShrapnelMonorepo/ShrapnelMonorepo
+        python -m pip install idf-component-manager==1.5.2
         python -m pip freeze | grep idf
         idf.py -C firmware build
         git status
