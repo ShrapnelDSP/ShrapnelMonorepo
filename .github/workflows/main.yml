@@ -45,7 +45,7 @@ jobs:
         python3 -m pip install -r thirdparty/esp-idf-components/nanopb/requirements.txt
         apt update
         apt -y install bsdmainutils
-        hexdump -C firmware/dependencies.lock
+        hexdump -C firmware/main/idf_component.yml
         python -m pip freeze | grep idf
         idf.py -C firmware build
         git status
