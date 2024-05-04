@@ -73,6 +73,7 @@
 #include "pcm3060.h"
 #include "profiling.h"
 #include "server.h"
+#include "shrapnel_console.h"
 #include "wifi_state_machine.h"
 
 #define TAG "main"
@@ -388,6 +389,8 @@ extern "C" void app_main(void)
         std::make_unique<Crud>("nvs", "midi_mapping"),
         std::make_unique<Crud>("nvs", "presets"));
 
+    auto console = shrapnel::Console();
+
     audio::i2s_setup(PROFILING_GPIO, audio_params.get());
 
     ESP_LOGI(TAG, "setup done");
@@ -426,6 +429,18 @@ extern "C" void app_main(void)
             {
                 ESP_LOGI(TAG, "changed to state: %s", new_state.c_str());
             }
+        }
+
+        {
+            int c = EOF;
+            do
+            {
+                c = fgetc(stdin);
+                if(c != EOF)
+                {
+                    console.handle_character(c);
+                }
+            } while(c != EOF);
         }
 
         /* Check if the current iteration of the main loop took too long. This
