@@ -22,7 +22,7 @@ jobs:
     runs-on: ubuntu-latest
     container: barabas5532/shrapnel:8
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
       with:
         submodules: recursive
 
@@ -62,7 +62,7 @@ jobs:
         build_type: ["Release", "Debug"]
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
       with:
         submodules: recursive
 
@@ -96,7 +96,7 @@ jobs:
       matrix:
         build_type: ["Release", "Debug"]
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
       with:
         submodules: recursive
 
@@ -159,7 +159,7 @@ jobs:
       matrix:
         build_type: ["Release", "Debug"]
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
       with:
         submodules: recursive
 
@@ -199,7 +199,7 @@ jobs:
         working-directory:
           frontend
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
       with:
         submodules: recursive
 
@@ -225,7 +225,7 @@ jobs:
         working-directory:
           frontend
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
       with:
         submodules: recursive
 
@@ -248,7 +248,7 @@ jobs:
         working-directory:
           frontend
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
       with:
         submodules: recursive
 
@@ -295,7 +295,7 @@ jobs:
   license-headers:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
       with:
         submodules: recursive
     - name: Check License Header

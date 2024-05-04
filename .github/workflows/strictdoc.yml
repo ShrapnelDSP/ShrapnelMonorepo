@@ -16,7 +16,7 @@ jobs:
     container: barabas5532/strictdoc:0.0.26
     steps:
     - name: Checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: StrictDoc export
       run: strictdoc export requirements
@@ -32,7 +32,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         submodules: recursive
 
@@ -56,7 +56,7 @@ jobs:
         working-directory:
           frontend
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
 
     - name: Install flutter
       uses: subosito/flutter-action@v2
