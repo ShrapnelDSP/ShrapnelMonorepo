@@ -46,7 +46,9 @@ jobs:
         apt update
         apt -y install bsdmainutils
         hexdump -C firmware/dependencies.lock
+        python -m pip freeze | grep idf
         idf.py -C firmware build
+        git status
 
     - name: ccache statistics
       run: ccache --show-stats
