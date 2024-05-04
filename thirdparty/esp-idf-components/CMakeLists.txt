@@ -1,4 +1,5 @@
 add_subdirectory(cppcodec)
+add_subdirectory(embedded_cli)
 add_subdirectory(esp-dsp)
 add_subdirectory(esp32-fft)
 add_subdirectory(etl)

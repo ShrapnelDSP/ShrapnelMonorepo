@@ -19,10 +19,27 @@
 
 #pragma once
 
+extern "C" {
+#include "embedded_cli.h"
+}
+
+#include <cstddef>
+
 namespace shrapnel {
 class Console
 {
 public:
+    Console();
+
     void handle_character(char c);
+
+private:
+    static void putch(void *, char c, bool);
+
+    struct embedded_cli cli;
+#if 0
+    char buffer[128];
+    size_t buffer_used = 0;
+#endif
 };
 } // namespace shrapnel

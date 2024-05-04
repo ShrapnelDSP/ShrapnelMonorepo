@@ -19,9 +19,35 @@
 
 #include "shrapnel_console.h"
 #include "esp_log.h"
+#include <cassert>
 
 #define TAG "shrapnel_console"
 
 namespace shrapnel {
-void Console::handle_character(char c) { ESP_LOGI(TAG, "c: 0x%02x", c); }
+
+Console::Console()
+{
+    embedded_cli_init(&cli, "shrapnel", Console::putch, this);
+}
+
+void Console::handle_character(char c)
+{
+    ESP_LOGI(TAG, "rx c: 0x%02x", c);
+    auto needs_processing = embedded_cli_insert_char(&cli, c);
+    if(needs_processing)
+    {
+        char **argv;
+        int argc = embedded_cli_argc(&cli, &argv);
+        assert(argc <= EMBEDDED_CLI_MAX_ARGC);
+
+        for(int i = 0; i < argc; i++)
+        {
+            ESP_LOGI(TAG, "arg %d: %s", i, argv[i]);
+        }
+
+        embedded_cli_prompt(&cli);
+    }
+}
+
+void Console::putch(void *, char c, bool) { ESP_LOGI(TAG, "tx c: 0x%02x", c); }
 } // namespace shrapnel
