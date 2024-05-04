@@ -36,7 +36,9 @@ public:
 private:
     static void putch(void *, char c, bool);
 
-    struct embedded_cli cli;
+    struct embedded_cli cli
+    {
+    };
 #if 0
     char buffer[128];
     size_t buffer_used = 0;
