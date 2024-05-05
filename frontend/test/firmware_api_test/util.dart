@@ -17,10 +17,15 @@
  * ShrapnelDSP. If not, see <https://www.gnu.org/licenses/>.
  */
 
+import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:esp_softap_provisioning/esp_softap_provisioning.dart';
+import 'package:flutter_libserialport/flutter_libserialport.dart';
 import 'package:logging/logging.dart';
+import 'package:shrapnel/api/proto_extension.dart';
+import 'package:shrapnel/midi_mapping/model/models.dart';
 import 'package:shrapnel/wifi_provisioning.dart';
 
 typedef MacAddress = List<int>;
@@ -111,4 +116,71 @@ Future<void> flashFirmware(String path) async {
   _log.info(result.pid);
   _log.info(result.stderr);
   _log.info(result.stdout);
+}
+
+/// UART driver
+class ShrapnelUart {
+  ShrapnelUart._(this.port, this.reader);
+
+  static final _logger = Logger('ShrapnelUart');
+
+  SerialPort port;
+  SerialPortReader reader;
+
+  static Future<ShrapnelUart> open(String name) async {
+    final ports = SerialPort.availablePorts;
+    _logger.info('available ports: $ports');
+
+    final port = SerialPort(ports.first);
+
+    final reader = SerialPortReader(port);
+
+    final success = port.openReadWrite();
+    if (!success) {
+      throw StateError('serial port failed to open');
+    }
+
+    port.config = SerialPortConfig()
+      ..baudRate = 2000000
+      ..bits = 8
+      ..parity = 0
+      ..stopBits = 1
+      ..setFlowControl(SerialPortFlowControl.none);
+
+    return ShrapnelUart._(port, reader);
+  }
+
+  Future<void> resetFirmware() async {
+    // TODO use DTR/RTS
+  }
+
+  Future<void> sendMidiMessage(MidiMessage message) async {
+    final encoded = base64Encode(message.toProto().writeToBuffer());
+
+    final command = 'midi -d $encoded';
+
+    final bytesToWrite = ascii.encode(command);
+    final bytesWritten = port.write(bytesToWrite);
+
+    if (bytesToWrite.length != bytesWritten) {
+      throw StateError('UART write failed');
+    }
+  }
+
+  late final _log =
+      reader.stream.cast<List<int>>().transform<String>(utf8.decoder);
+
+  Stream<String> get log => _log;
+
+  void dispose() {}
+}
+
+class FakeMidi {
+  FakeMidi(this.uart);
+
+  ShrapnelUart uart;
+
+  Future<void> sendMessage(MidiMessage message) async {
+    await uart.sendMidiMessage(message);
+  }
 }

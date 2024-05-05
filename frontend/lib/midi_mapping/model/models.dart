@@ -90,7 +90,7 @@ enum MidiMappingMode {
 }
 
 @freezed
-class MidiMessage with _$MidiMessage {
+sealed class MidiMessage with _$MidiMessage {
   const factory MidiMessage.noteOn({
     required int channel,
     required int note,

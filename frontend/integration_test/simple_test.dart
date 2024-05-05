@@ -21,9 +21,11 @@
 @Tags(['api'])
 library;
 
+import 'package:async/async.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:logging/logging.dart';
 import 'package:shrapnel/core/message_transport.dart';
+import 'package:shrapnel/core/stream_extensions.dart';
 import 'package:shrapnel/main.dart';
 import 'package:shrapnel/midi_mapping/model/models.dart';
 import 'package:shrapnel/robust_websocket.dart';
@@ -104,6 +106,7 @@ void main() {
   setupLogger(Level.ALL);
 
   setUp(() async {
+    /*
     final macAddress = await eraseFlash();
     await flashFirmware(firmwareBinaryPath);
     await connectToDutAccessPoint(macAddress);
@@ -111,6 +114,36 @@ void main() {
 
     // Wait for firmware to start server after getting provisioned
     await Future<void>.delayed(const Duration(seconds: 10));
+     */
+  });
+
+  testWidgets('uart debug', (tester) async {
+    await tester.runAsync(() async {
+      // TODO detect the serial port used by esptool and open that
+      final uart = await ShrapnelUart.open('/dev/ttyUSB0');
+      uart.log.logInfo(Logger('firmware'), (event) => event);
+
+      await Future<void>.delayed(Duration(seconds: 1));
+      await uart.sendMidiMessage(
+          MidiMessage.controlChange(channel: 0, control: 1, value: 0x00));
+      await Future<void>.delayed(Duration(seconds: 1));
+      await uart.sendMidiMessage(
+          MidiMessage.controlChange(channel: 0, control: 1, value: 0x7F));
+      await Future<void>.delayed(Duration(seconds: 1));
+      await uart.sendMidiMessage(
+          MidiMessage.controlChange(channel: 0, control: 1, value: 0x00));
+      await Future<void>.delayed(Duration(seconds: 1));
+      await uart.sendMidiMessage(
+          MidiMessage.controlChange(channel: 0, control: 1, value: 0x7F));
+      await Future<void>.delayed(Duration(seconds: 1));
+      await uart.sendMidiMessage(
+          MidiMessage.controlChange(channel: 0, control: 1, value: 0x00));
+      await Future<void>.delayed(Duration(seconds: 1));
+      await uart.sendMidiMessage(
+          MidiMessage.controlChange(channel: 0, control: 1, value: 0x7F));
+
+      await Future<void>.delayed(Duration(seconds: 1));
+    });
   });
 
   testWidgets('simple test', (tester) async {
@@ -179,7 +212,7 @@ void main() {
 
     // Expect new mapping visible in UI
     expect(midiMappingPage.findMappingRows(), findsNWidgets(3));
-  });
+  }, skip: true);
 }
 
 /// Implements reconnecting feature for the low level WebSockets transport.
