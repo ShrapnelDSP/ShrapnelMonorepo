@@ -389,7 +389,18 @@ extern "C" void app_main(void)
         std::make_unique<Crud>("nvs", "midi_mapping"),
         std::make_unique<Crud>("nvs", "presets"));
 
-    auto console = shrapnel::Console();
+    auto send_midi_message = [&](const midi::Message &message)
+    {
+        auto app_message = AppMessage{ApiMessage{message}, std::nullopt};
+        int rc = in_queue->send(&app_message, portMAX_DELAY);
+
+        if(rc != pdPASS)
+        {
+            ESP_LOGE(TAG, "Failed to send to main queue %d", rc);
+        }
+    };
+
+    auto console = shrapnel::Console(send_midi_message);
 
     audio::i2s_setup(PROFILING_GPIO, audio_params.get());
 

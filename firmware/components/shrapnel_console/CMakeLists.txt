@@ -14,8 +14,9 @@ target_link_libraries(shrapnel_console
                       idf::esp_common
                       idf::log
                       shrapnel::embedded_cli
+                      shrapnel::etl
+                      shrapnel::midi_mapping
                       PRIVATE
                       idf::console
                       cppcodec
-                      shrapnel::midi_mapping
                       shrapnel::compiler_warning_flags)

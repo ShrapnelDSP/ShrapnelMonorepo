@@ -43,7 +43,7 @@ static struct
     struct arg_end *end;
 } arg_midi;
 
-static int handle_midi(int argc, char *argv[])
+int handle_midi(int argc, char *argv[])
 {
     ESP_LOGI(TAG, "midi argc %d", argc);
 
@@ -98,10 +98,13 @@ static int handle_midi(int argc, char *argv[])
 
     ESP_LOGI(TAG, "decoded %s", string.c_str());
 
+    instance->midi_message_callback(message.value());
+
     return 0;
 }
 
-Console::Console()
+Console::Console(MidiMessageSendCallback a_midi_message_callback)
+    : midi_message_callback{a_midi_message_callback}
 {
     assert(instance == nullptr);
     instance = this;
@@ -123,7 +126,7 @@ Console::Console()
 
     esp_console_cmd_t midi_command{
         .command = "midi",
-        .help = "Inject a fake midi command for testing",
+        .help = "Inject a fake midi message for testing",
         .func = handle_midi,
         .argtable = &arg_midi,
     };

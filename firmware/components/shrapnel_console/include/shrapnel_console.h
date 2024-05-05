@@ -23,25 +23,29 @@ extern "C" {
 #include "embedded_cli.h"
 }
 
+#include "midi_protocol.h"
 #include <cstddef>
+#include <etl/delegate.h>
 
 namespace shrapnel {
+
+using MidiMessageSendCallback = etl::delegate<void(const midi::Message &)>;
+
 class Console
 {
 public:
-    Console();
+    explicit Console(MidiMessageSendCallback a_midi_message_callback);
 
     void handle_character(char c);
 
 private:
+    friend int handle_midi(int argc, char *argv[]);
+
+    MidiMessageSendCallback midi_message_callback;
     static void putch(void *, char c, bool);
 
     struct embedded_cli cli
     {
     };
-#if 0
-    char buffer[128];
-    size_t buffer_used = 0;
-#endif
 };
 } // namespace shrapnel
