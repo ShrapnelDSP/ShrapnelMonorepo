@@ -25,6 +25,7 @@ import 'package:esp_softap_provisioning/esp_softap_provisioning.dart';
 import 'package:flutter_libserialport/flutter_libserialport.dart';
 import 'package:logging/logging.dart';
 import 'package:shrapnel/api/proto_extension.dart';
+import 'package:shrapnel/core/stream_extensions.dart';
 import 'package:shrapnel/midi_mapping/model/models.dart';
 import 'package:shrapnel/wifi_provisioning.dart';
 import 'package:path/path.dart' as p;
@@ -54,7 +55,9 @@ Future<void> setUpWiFi({required String ssid, required String password}) async {
 
   final provisioning = Provisioning(
     security: Security1(pop: 'abcd1234'),
-    transport: TransportHTTP('guitar-dsp.local'),
+    // FIXME: we should use the guitar-dsp.local mDNS advertised address here,
+    // but it causes provisioning in all but the first setup call to fail.
+    transport: TransportHTTP('192.168.4.1'),
   );
 
   var success = await provisioning.establishSession();
@@ -179,7 +182,7 @@ Future<(bool, MacAddress)> _checkIfAlreadyFlashed({
   _log.info(result.stdout);
 
   return (
-    switch (exitCode) {
+    switch (result.exitCode) {
       0 => true,
       2 => false,
       _ => throw StateError(
@@ -299,10 +302,27 @@ class ShrapnelUart {
     }
   }
 
+  Future<void> provisionWifi({
+    required String ssid,
+    required String password,
+  }) async {
+    final command =
+        'wifi ${escapeCommandArg(ssid)} ${escapeCommandArg(password)}';
+
+    final bytesToWrite = ascii.encode('$command\n');
+    final bytesWritten = port.write(bytesToWrite);
+
+    if (bytesToWrite.length != bytesWritten) {
+      throw StateError('UART write failed');
+    }
+  }
+
   late final _log = reader.stream
       .cast<List<int>>()
       .transform<String>(utf8.decoder)
-      .transform(const LineSplitter());
+      .transform(const LineSplitter())
+      .logInfo(_logger, (event) => event)
+      .asBroadcastStream();
 
   Stream<String> get log => _log;
 
@@ -312,4 +332,11 @@ class ShrapnelUart {
     port.close();
     port.dispose();
   }
+}
+
+String escapeCommandArg(String arg) {
+  return arg.replaceAllMapped(
+    RegExp(r'[\\" ]'),
+    (match) => '\\${match.group(0)!}',
+  );
 }

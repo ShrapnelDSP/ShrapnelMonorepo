@@ -86,6 +86,10 @@ const networkSsid = String.fromEnvironment('NETWORK_SSID');
 const networkPassphrase = String.fromEnvironment('NETWORK_PASSPHRASE');
 // ignore: do_not_use_environment
 const firmwareBinaryPath = String.fromEnvironment('FIRMWARE_BINARY_PATH');
+// ignore: do_not_use_environment
+const useFastProvisioning = bool.fromEnvironment('FAST_PROVISIONING');
+
+final _log = Logger('test');
 
 // Initial implementation
 //
@@ -97,41 +101,51 @@ void main() {
   assert(dutIpAddress.isNotEmpty, 'DUT_IP_ADDRESS must be set');
   setupLogger(Level.ALL);
 
+  late final MacAddress macAddress;
+  late ShrapnelUart uart;
+
   setUpAll(() async {
-    final macAddress = await flashFirmware(
+    macAddress = await flashFirmware(
       appPartitionAddress: 0x10000,
       path: firmwareBinaryPath,
     );
+  });
 
-    // TODO add an option to load pre-provisioned wifi
+  setUp(() async {
     await nvsErase();
 
-    await connectToDutAccessPoint(macAddress);
-    await setUpWiFi(ssid: networkSsid, password: networkPassphrase);
+    uart = await ShrapnelUart.open('/dev/ttyUSB0');
+    // TODO move this into the uart class, so it logs by itself even if there
+    // are no external log listeners
+    // ensure at least one listener so logging side effect always runs
+    uart.log.listen((_) {});
+    addTearDown(uart.dispose);
 
-    // TODO save the NVS partition after provisioning so it can be reloaded
-    // between tests
+    if (useFastProvisioning) {
+      _log.warning('Bypassing Wi-Fi provisioning to speed up test execution');
+      await uart.provisionWifi(ssid: networkSsid, password: networkPassphrase);
+    } else {
+      // TODO we can still speed up tests where provisioning must be tested:
+      // - export NVS partition to file after first time wifi provisioning is used
+      // - reload it in the setup for each following test. This resets the NVS
+      //    partition without requiring a fresh wifi provisioning run for each
+      //    test.
+      //
+      // Alternatively, create a new test group that doesn't run the fast wifi
+      // provisioning setup, and instead runs the slow wifi setup.
+
+      await connectToDutAccessPoint(macAddress);
+      await setUpWiFi(ssid: networkSsid, password: networkPassphrase);
+    }
 
     // Wait for firmware to start server after getting provisioned
     await Future<void>.delayed(const Duration(seconds: 10));
   });
 
-  setUp(() async {
-    // TODO reload the NVS partition created after provisioning
-
-    // wait for firmware to start
-  });
-
   testWidgets('uart console smoke', (tester) async {
     await tester.runAsync(() async {
-      final uart = await ShrapnelUart.open('/dev/ttyUSB0');
-      addTearDown(uart.dispose);
-
       // At least one response line has to arrive within 1 second
-      final responseLogs = uart.log
-          .logInfo(Logger('firmware'), (event) => event)
-          .first
-          .timeout(const Duration(seconds: 1));
+      final responseLogs = uart.log.first.timeout(const Duration(seconds: 1));
 
       await uart.sendMidiMessage(
         const MidiMessage.controlChange(
@@ -223,7 +237,7 @@ void main() {
 
     // Expect new mapping visible in UI
     expect(midiMappingPage.findMappingRows(), findsNWidgets(3));
-  }, skip: true);
+  });
 }
 
 /// Implements reconnecting feature for the low level WebSockets transport.
