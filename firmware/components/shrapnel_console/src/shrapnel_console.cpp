@@ -43,6 +43,13 @@ static struct
     struct arg_end *end;
 } arg_midi;
 
+static struct
+{
+    struct arg_str *ssid;
+    struct arg_str *password;
+    struct arg_end *end;
+} arg_wifi;
+
 int handle_midi(int argc, char *argv[])
 {
     ESP_LOGI(TAG, "midi argc %d", argc);
@@ -103,15 +110,47 @@ int handle_midi(int argc, char *argv[])
     return 0;
 }
 
+int handle_wifi(int argc, char *argv[])
+{
+    ESP_LOGI(TAG, "wifi argc %d", argc);
+
+    for(int i = 0; i < argc; i++)
+    {
+        ESP_LOGI(TAG, "wifi argv %d: %s", i, argv[i]);
+    }
+
+    int nerrors = arg_parse(argc, argv, (void **)(&arg_wifi));
+    if(nerrors != 0)
+    {
+        char error_message_memory[1024] = {};
+        auto file =
+            fmemopen(error_message_memory, sizeof error_message_memory, "w");
+        arg_print_errors(file, arg_wifi.end, "wifi");
+
+        ESP_LOGE(TAG, "%s", error_message_memory);
+        return -1;
+    }
+
+    if(arg_wifi.ssid->count != 1 || arg_wifi.password->count != 1)
+    {
+        ESP_LOGE(TAG, "Missing SSID or password");
+        return -1;
+    }
+
+    // TODO update wifi config with new SSID and password
+    ESP_LOGI(TAG,
+             "wifi config %s %s",
+             arg_wifi.ssid->sval[0],
+             arg_wifi.password->sval[0]);
+
+    return 0;
+}
+
 Console::Console(MidiMessageSendCallback a_midi_message_callback)
     : midi_message_callback{a_midi_message_callback}
 {
     assert(instance == nullptr);
     instance = this;
-
-    arg_midi.data =
-        arg_str1("d", "data", "<base64>", "MIDI message protobuf as base64");
-    arg_midi.end = arg_end(0);
 
     embedded_cli_init(&cli, "shrapnel $ ", Console::putch, this);
     esp_console_config_t console_config{
@@ -124,6 +163,10 @@ Console::Console(MidiMessageSendCallback a_midi_message_callback)
     esp_console_init(&console_config);
     esp_console_register_help_command();
 
+    arg_midi.data =
+        arg_str1("d", "data", "<base64>", "MIDI message protobuf as base64");
+    arg_midi.end = arg_end(0);
+
     esp_console_cmd_t midi_command{
         .command = "midi",
         .help = "Inject a fake midi message for testing",
@@ -132,6 +175,20 @@ Console::Console(MidiMessageSendCallback a_midi_message_callback)
     };
 
     esp_console_cmd_register(&midi_command);
+
+    arg_wifi.ssid = arg_str1(nullptr, nullptr, "<ssid>", "Access point SSID");
+    arg_wifi.password =
+        arg_str1(nullptr, nullptr, "<password>", "Access point password");
+    arg_wifi.end = arg_end(0);
+
+    esp_console_cmd_t wifi_command{
+        .command = "wifi",
+        .help = "Configure wifi for testing",
+        .func = handle_wifi,
+        .argtable = &arg_wifi,
+    };
+
+    esp_console_cmd_register(&wifi_command);
 } // namespace shrapnel
 
 void Console::handle_character(char c)
