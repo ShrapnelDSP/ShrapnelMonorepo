@@ -21,14 +21,10 @@
 @Tags(['api'])
 library;
 
-import 'package:async/async.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:logging/logging.dart';
-import 'package:shrapnel/core/message_transport.dart';
-import 'package:shrapnel/core/stream_extensions.dart';
 import 'package:shrapnel/main.dart';
 import 'package:shrapnel/midi_mapping/model/models.dart';
-import 'package:shrapnel/robust_websocket.dart';
 
 import '../test/firmware_api_test/util.dart';
 import '../test/home_page_object.dart';
@@ -238,21 +234,4 @@ void main() {
     // Expect new mapping visible in UI
     expect(midiMappingPage.findMappingRows(), findsNWidgets(3));
   });
-}
-
-/// Implements reconnecting feature for the low level WebSockets transport.
-///
-/// It is somewhat fake. New connections are never created and the instance is
-/// always connected.
-class WebSocketTransportAdapter extends WebSocketTransport
-    implements ReconnectingMessageTransport<WebSocketData, WebSocketData> {
-  WebSocketTransportAdapter({required super.websocket}) : super(onDone: () {});
-
-  @override
-  Stream<void> get connectionStream => const Stream.empty();
-
-  @override
-  // This class is always connected. It is constructed with an already connected
-  // instance of the WebSockets connection
-  bool get isAlive => true;
 }
