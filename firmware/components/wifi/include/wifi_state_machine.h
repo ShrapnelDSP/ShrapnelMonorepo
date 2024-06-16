@@ -43,6 +43,8 @@ struct InternalEvent
         RESET_PROVISIONING,
         PROVISIONING_SUCCESS,
         PROVISIONING_FAILURE,
+        /// The wifi credentials were set using a side channel. Stop
+        /// provisioning, and attempt connection using the existing credentials.
         PROVISIONING_BYPASS,
         PROVISIONING_END,
     };
@@ -87,16 +89,18 @@ struct State
         PROVISIONING,
         PROVISIONING_STOPPING,
         PROVISIONING_FINISHING,
+        PROVISIONING_BYPASSED,
     };
 
     ETL_DECLARE_ENUM_TYPE(State, int)
-    ETL_ENUM_TYPE(INIT, "INIT")
-    ETL_ENUM_TYPE(STARTING, "STARTING")
-    ETL_ENUM_TYPE(CONNECTING, "CONNECTING")
-    ETL_ENUM_TYPE(CONNECTED, "CONNECTED")
-    ETL_ENUM_TYPE(PROVISIONING, "PROVISIONING")
-    ETL_ENUM_TYPE(PROVISIONING_STOPPING, "PROVISIONING_STOPPING")
-    ETL_ENUM_TYPE(PROVISIONING_FINISHING, "PROVISIONING_FINISHING")
+    ETL_ENUM_TYPE_AUTO(INIT)
+    ETL_ENUM_TYPE_AUTO(STARTING)
+    ETL_ENUM_TYPE_AUTO(CONNECTING)
+    ETL_ENUM_TYPE_AUTO(CONNECTED)
+    ETL_ENUM_TYPE_AUTO(PROVISIONING)
+    ETL_ENUM_TYPE_AUTO(PROVISIONING_STOPPING)
+    ETL_ENUM_TYPE_AUTO(PROVISIONING_FINISHING)
+    ETL_ENUM_TYPE_AUTO(PROVISIONING_BYPASSED)
     ETL_END_ENUM_TYPE
 };
 
@@ -138,8 +142,8 @@ public:
     using transition = etl::state_chart_traits::transition<WifiStateMachine>;
     using state = etl::state_chart_traits::state<WifiStateMachine>;
 
-    static const transition transition_table[12];
-    static const state state_table[7];
+    static const transition transition_table[14];
+    static const state state_table[8];
 
 private:
     void check_if_provisioned();

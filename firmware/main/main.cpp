@@ -430,7 +430,7 @@ extern "C" void app_main(void)
             return;
         }
 
-        // TODO stop provisioning, start wifi
+        wifi_send_event(wifi::InternalEvent::PROVISIONING_BYPASS);
     };
 
     auto console = shrapnel::Console(send_midi_message, setup_wifi);
