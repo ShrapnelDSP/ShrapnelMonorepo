@@ -108,8 +108,9 @@ class HomePageObject {
     return widget.message == 'Connected';
   }
 
-  Future<void> waitUntilConnected(
-      {Duration timeout = const Duration(seconds: 10)}) async {
+  Future<void> waitUntilConnected({
+    Duration timeout = const Duration(seconds: 10),
+  }) async {
     var keepGoing = true;
     final timer = Timer(timeout, () {
       _log.warning('Connection to provisioned access point timed out');

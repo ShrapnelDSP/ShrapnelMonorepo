@@ -108,8 +108,10 @@ void main() {
   late ApiWebsocket api;
 
   setUp(() async {
-    final macAddress = await eraseFlash();
-    await flashFirmware(firmwareBinaryPath);
+    final macAddress = await flashFirmware(
+      appPartitionAddress: 0x10000,
+      path: firmwareBinaryPath,
+    );
     await connectToDutAccessPoint(macAddress);
     await setUpWiFi(ssid: networkSsid, password: networkPassphrase);
 

@@ -33,14 +33,6 @@ import 'package:shrapnel/robust_websocket.dart';
 import '../test/firmware_api_test/util.dart';
 import '../test/home_page_object.dart';
 
-// audio parameter basic test
-// factory reset
-// all parameters loaded correctly
-// update a parameter
-// force save to NVS
-// reboot
-// check parameter reloaded
-
 // preset test
 // start up
 // create preset
@@ -105,16 +97,29 @@ void main() {
   assert(dutIpAddress.isNotEmpty, 'DUT_IP_ADDRESS must be set');
   setupLogger(Level.ALL);
 
-  setUp(() async {
-    /*
-    final macAddress = await eraseFlash();
-    await flashFirmware(firmwareBinaryPath);
+  setUpAll(() async {
+    final macAddress = await flashFirmware(
+      appPartitionAddress: 0x10000,
+      path: firmwareBinaryPath,
+    );
+
+    // TODO add an option to load pre-provisioned wifi
+    await nvsErase();
+
     await connectToDutAccessPoint(macAddress);
     await setUpWiFi(ssid: networkSsid, password: networkPassphrase);
 
+    // TODO save the NVS partition after provisioning so it can be reloaded
+    // between tests
+
     // Wait for firmware to start server after getting provisioned
     await Future<void>.delayed(const Duration(seconds: 10));
-     */
+  });
+
+  setUp(() async {
+    // TODO reload the NVS partition created after provisioning
+
+    // wait for firmware to start
   });
 
   testWidgets('uart console smoke', (tester) async {
@@ -137,6 +142,18 @@ void main() {
       );
 
       await expectLater(responseLogs, completes);
+    });
+  });
+
+  testWidgets('audio parameters', (tester) async {
+    await tester.runAsync(() async {
+      // audio parameter basic test
+      // factory reset
+      // all parameters loaded correctly
+      // update a parameter
+      // force save to NVS
+      // reboot
+      // check parameter reloaded
     });
   });
 
