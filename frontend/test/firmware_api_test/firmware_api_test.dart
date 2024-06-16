@@ -17,6 +17,7 @@
  * ShrapnelDSP. If not, see <https://www.gnu.org/licenses/>.
  */
 
+@Timeout(Duration(seconds: 60))
 @Tags(['api'])
 library;
 
