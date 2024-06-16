@@ -121,7 +121,7 @@ void main() {
     await tester.runAsync(() async {
       // TODO detect the serial port used by esptool and open that
       final uart = await ShrapnelUart.open('/dev/ttyUSB0');
-      uart.log.logInfo(Logger('firmware'), (event) => event);
+      uart.log.logInfo(Logger('firmware'), (event) => event).listen((_) {});
 
       await Future<void>.delayed(Duration(seconds: 1));
       await uart.sendMidiMessage(

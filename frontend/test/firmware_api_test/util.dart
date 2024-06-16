@@ -167,8 +167,10 @@ class ShrapnelUart {
     }
   }
 
-  late final _log =
-      reader.stream.cast<List<int>>().transform<String>(utf8.decoder);
+  late final _log = reader.stream
+      .cast<List<int>>()
+      .transform<String>(utf8.decoder)
+      .transform(const LineSplitter());
 
   Stream<String> get log => _log;
 
