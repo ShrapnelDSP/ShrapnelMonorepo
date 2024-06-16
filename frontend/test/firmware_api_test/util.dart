@@ -128,11 +128,7 @@ class ShrapnelUart {
   SerialPortReader reader;
 
   static Future<ShrapnelUart> open(String name) async {
-    final ports = SerialPort.availablePorts;
-    _logger.info('available ports: $ports');
-
-    final port = SerialPort(ports.first);
-
+    final port = SerialPort(name);
     final reader = SerialPortReader(port);
 
     final success = port.openReadWrite();
@@ -159,7 +155,7 @@ class ShrapnelUart {
 
     final command = 'midi -d $encoded';
 
-    final bytesToWrite = ascii.encode(command);
+    final bytesToWrite = ascii.encode('$command\n');
     final bytesWritten = port.write(bytesToWrite);
 
     if (bytesToWrite.length != bytesWritten) {
@@ -174,7 +170,12 @@ class ShrapnelUart {
 
   Stream<String> get log => _log;
 
-  void dispose() {}
+  void dispose() {
+    port.flush();
+    reader.close();
+    port.close();
+    port.dispose();
+  }
 }
 
 class FakeMidi {

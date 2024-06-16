@@ -117,32 +117,26 @@ void main() {
      */
   });
 
-  testWidgets('uart debug', (tester) async {
+  testWidgets('uart console smoke', (tester) async {
     await tester.runAsync(() async {
-      // TODO detect the serial port used by esptool and open that
       final uart = await ShrapnelUart.open('/dev/ttyUSB0');
-      uart.log.logInfo(Logger('firmware'), (event) => event).listen((_) {});
+      addTearDown(uart.dispose);
 
-      await Future<void>.delayed(Duration(seconds: 1));
-      await uart.sendMidiMessage(
-          MidiMessage.controlChange(channel: 0, control: 1, value: 0x00));
-      await Future<void>.delayed(Duration(seconds: 1));
-      await uart.sendMidiMessage(
-          MidiMessage.controlChange(channel: 0, control: 1, value: 0x7F));
-      await Future<void>.delayed(Duration(seconds: 1));
-      await uart.sendMidiMessage(
-          MidiMessage.controlChange(channel: 0, control: 1, value: 0x00));
-      await Future<void>.delayed(Duration(seconds: 1));
-      await uart.sendMidiMessage(
-          MidiMessage.controlChange(channel: 0, control: 1, value: 0x7F));
-      await Future<void>.delayed(Duration(seconds: 1));
-      await uart.sendMidiMessage(
-          MidiMessage.controlChange(channel: 0, control: 1, value: 0x00));
-      await Future<void>.delayed(Duration(seconds: 1));
-      await uart.sendMidiMessage(
-          MidiMessage.controlChange(channel: 0, control: 1, value: 0x7F));
+      // At least one response line has to arrive within 1 second
+      final responseLogs = uart.log
+          .logInfo(Logger('firmware'), (event) => event)
+          .first
+          .timeout(const Duration(seconds: 1));
 
-      await Future<void>.delayed(Duration(seconds: 1));
+      await uart.sendMidiMessage(
+        const MidiMessage.controlChange(
+          channel: 0,
+          control: 1,
+          value: 0x00,
+        ),
+      );
+
+      await expectLater(responseLogs, completes);
     });
   });
 
