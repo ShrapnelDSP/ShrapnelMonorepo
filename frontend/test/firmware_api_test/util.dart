@@ -53,32 +53,19 @@ Future<void> setUpWiFi({required String ssid, required String password}) async {
 
   log.info('setting up Wi-Fi using SSID: $ssid');
 
-  late Provisioning provisioning;
-
-  try {
-    provisioning = Provisioning(
+  final provisioning = await _retry(() async {
+    final provisioning = Provisioning(
       security: Security1(pop: 'abcd1234'),
       transport: TransportHTTP('guitar-dsp.local'),
     );
 
     final success = await provisioning.establishSession();
     if (!success) {
-      throw StateError('provisioning failed to establish session');
+      throw Exception('provisioning failed to establish session');
     }
-  } catch (e) {
-    // Need to replace the entire provisioning, its internal state breaks after
-    // any error.
-    provisioning = Provisioning(
-      security: Security1(pop: 'abcd1234'),
-      transport: TransportHTTP('guitar-dsp.local'),
-    );
 
-    _log.warning('Retrying provisioning session');
-    final success = await provisioning.establishSession();
-    if (!success) {
-      throw StateError('provisioning failed to establish session');
-    }
-  }
+    return provisioning;
+  });
 
   var success =
       await provisioning.sendWifiConfig(ssid: ssid, password: password);
@@ -355,4 +342,13 @@ String escapeCommandArg(String arg) {
     RegExp(r'[\\" ]'),
     (match) => '\\${match.group(0)!}',
   );
+}
+
+Future<T> _retry<T>(Future<T> Function() fn) async {
+  try {
+    return await fn();
+  } on Exception catch (_) {
+    _log.warning('retrying');
+    return fn();
+  }
 }
