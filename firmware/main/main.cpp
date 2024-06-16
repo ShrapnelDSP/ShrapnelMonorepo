@@ -400,7 +400,40 @@ extern "C" void app_main(void)
         }
     };
 
-    auto console = shrapnel::Console(send_midi_message);
+    auto setup_wifi = [&](const char *ssid, const char *password)
+    {
+        ESP_LOGI(TAG, "wifi config %s %s", ssid, password);
+
+        wifi_config_t wifi_cfg{};
+        esp_err_t rc = esp_wifi_get_config(WIFI_IF_STA, &wifi_cfg);
+        if(rc != ESP_OK)
+        {
+            ESP_LOGE(TAG, "get config failed 0x%x %s", rc, esp_err_to_name(rc));
+            return;
+        }
+
+        // According to Espressif code in the Wi-Fi provisioning component:
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wstringop-truncation"
+        // SSID can use all 32 bytes safely
+        strncpy((char *)wifi_cfg.sta.ssid, ssid, sizeof wifi_cfg.sta.ssid);
+#pragma GCC diagnostic pop
+        // Password should use up to 63 bytes, and leave a null termination
+        strlcpy((char *)wifi_cfg.sta.password,
+                password,
+                sizeof wifi_cfg.sta.password);
+
+        rc = esp_wifi_set_config(WIFI_IF_STA, &wifi_cfg);
+        if(rc != ESP_OK)
+        {
+            ESP_LOGE(TAG, "set config failed 0x%x %s", rc, esp_err_to_name(rc));
+            return;
+        }
+
+        // TODO stop provisioning, start wifi
+    };
+
+    auto console = shrapnel::Console(send_midi_message, setup_wifi);
 
     audio::i2s_setup(PROFILING_GPIO, audio_params.get());
 

@@ -137,17 +137,17 @@ int handle_wifi(int argc, char *argv[])
         return -1;
     }
 
-    // TODO update wifi config with new SSID and password
-    ESP_LOGI(TAG,
-             "wifi config %s %s",
-             arg_wifi.ssid->sval[0],
-             arg_wifi.password->sval[0]);
+    instance->wifi_setup_callback(arg_wifi.ssid->sval[0],
+                                  arg_wifi.password->sval[0]);
 
     return 0;
 }
 
-Console::Console(MidiMessageSendCallback a_midi_message_callback)
-    : midi_message_callback{a_midi_message_callback}
+Console::Console(MidiMessageSendCallback a_midi_message_callback,
+                 WifiSetupCallback a_wifi_setup_callback)
+    : midi_message_callback{a_midi_message_callback},
+      wifi_setup_callback{a_wifi_setup_callback},
+      cli{}
 {
     assert(instance == nullptr);
     instance = this;

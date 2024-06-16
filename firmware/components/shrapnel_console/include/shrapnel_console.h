@@ -30,22 +30,26 @@ extern "C" {
 namespace shrapnel {
 
 using MidiMessageSendCallback = etl::delegate<void(const midi::Message &)>;
+using WifiSetupCallback =
+    etl::delegate<void(const char *ssid, const char *password)>;
 
 class Console
 {
 public:
-    explicit Console(MidiMessageSendCallback a_midi_message_callback);
+    Console(MidiMessageSendCallback a_midi_message_callback,
+            WifiSetupCallback a_wifi_setup_callback);
 
     void handle_character(char c);
 
 private:
     friend int handle_midi(int argc, char *argv[]);
+    friend int handle_wifi(int argc, char *argv[]);
 
-    MidiMessageSendCallback midi_message_callback;
     static void putch(void *, char c, bool);
 
-    struct embedded_cli cli
-    {
-    };
+    MidiMessageSendCallback midi_message_callback;
+    WifiSetupCallback wifi_setup_callback;
+
+    struct embedded_cli cli;
 };
 } // namespace shrapnel
