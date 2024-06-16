@@ -53,19 +53,35 @@ Future<void> setUpWiFi({required String ssid, required String password}) async {
 
   log.info('setting up Wi-Fi using SSID: $ssid');
 
-  final provisioning = Provisioning(
-    security: Security1(pop: 'abcd1234'),
-    // FIXME: we should use the guitar-dsp.local mDNS advertised address here,
-    // but it causes provisioning in all but the first setup call to fail.
-    transport: TransportHTTP('192.168.4.1'),
-  );
+  late Provisioning provisioning;
 
-  var success = await provisioning.establishSession();
-  if (!success) {
-    throw StateError('provisioning failed to establish session');
+  try {
+    provisioning = Provisioning(
+      security: Security1(pop: 'abcd1234'),
+      transport: TransportHTTP('guitar-dsp.local'),
+    );
+
+    final success = await provisioning.establishSession();
+    if (!success) {
+      throw StateError('provisioning failed to establish session');
+    }
+  } catch (e) {
+    // Need to replace the entire provisioning, its internal state breaks after
+    // any error.
+    provisioning = Provisioning(
+      security: Security1(pop: 'abcd1234'),
+      transport: TransportHTTP('guitar-dsp.local'),
+    );
+
+    _log.warning('Retrying provisioning session');
+    final success = await provisioning.establishSession();
+    if (!success) {
+      throw StateError('provisioning failed to establish session');
+    }
   }
 
-  success = await provisioning.sendWifiConfig(ssid: ssid, password: password);
+  var success =
+      await provisioning.sendWifiConfig(ssid: ssid, password: password);
   if (!success) {
     throw StateError('send wifi config failed');
   }
