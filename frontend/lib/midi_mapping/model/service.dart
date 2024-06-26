@@ -126,16 +126,13 @@ class MidiMappingService extends ChangeNotifier {
      */
 
     final message = MidiApiMessage.createRequest(mapping: mapping);
-    _log.shout('send request');
     websocket.sink.add(message);
 
     try {
       final responseMapping = await response;
-      _log.shout('got response');
       __mappings[responseMapping.id] = responseMapping.mapping;
       notifyListeners();
     } on TimeoutException {
-      _log.shout('got timeout');
       // FIXME: rollback optimistic update
       /*
       __mappings.remove(mapping.id);
