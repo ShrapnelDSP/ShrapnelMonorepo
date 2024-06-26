@@ -209,8 +209,10 @@ constexpr WifiStateMachine::transition WifiStateMachine::transition_table[]{
 
     transition(State::PROVISIONING,           InternalEvent::PROVISIONING_SUCCESS, State::PROVISIONING_FINISHING),
     transition(State::PROVISIONING,           InternalEvent::PROVISIONING_FAILURE, State::PROVISIONING_STOPPING),
+    transition(State::PROVISIONING,           InternalEvent::PROVISIONING_BYPASS,  State::PROVISIONING_BYPASSED),
 
     transition(State::PROVISIONING_FINISHING, InternalEvent::PROVISIONING_END,     State::CONNECTED,              &WifiStateMachine::provisioning_deinit),
+    transition(State::PROVISIONING_BYPASSED,  InternalEvent::PROVISIONING_END,     State::CONNECTING,             &WifiStateMachine::provisioning_deinit),
 
     transition(State::PROVISIONING_STOPPING,  InternalEvent::PROVISIONING_END,     State::PROVISIONING),
     // clang-format on
@@ -225,6 +227,7 @@ constexpr WifiStateMachine::state WifiStateMachine::state_table[]{
     state(State::PROVISIONING, &WifiStateMachine::provisioning_start, &WifiStateMachine::provisioning_stop),
     state(State::PROVISIONING_FINISHING),
     state(State::PROVISIONING_STOPPING),
+    state(State::PROVISIONING_BYPASSED),
     // clang-format on
 };
 
@@ -307,6 +310,7 @@ void WifiStateMachine::provisioning_init()
     };
 
     ESP_ERROR_CHECK(wifi_prov_mgr_init(config));
+    ESP_ERROR_CHECK(wifi_prov_mgr_disable_auto_stop(5 * 1000));
 }
 
 void WifiStateMachine::provisioning_deinit()

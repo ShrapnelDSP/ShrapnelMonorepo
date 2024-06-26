@@ -33,7 +33,8 @@ using ApiMessage =
                  shrapnel::midi::MappingApiMessage,
                  shrapnel::events::ApiMessage,
                  shrapnel::selected_preset::SelectedPresetApiMessage,
-                 shrapnel::presets::PresetsApiMessage>;
+                 shrapnel::presets::PresetsApiMessage,
+                 shrapnel::midi::Message>;
 using FileDescriptor = std::optional<int>;
 using AppMessage = std::pair<ApiMessage, FileDescriptor>;
 

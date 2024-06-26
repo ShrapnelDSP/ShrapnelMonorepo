@@ -21,25 +21,13 @@
 @Tags(['api'])
 library;
 
-import 'dart:io';
-
 import 'package:flutter_test/flutter_test.dart';
 import 'package:logging/logging.dart';
-import 'package:shrapnel/api/api_websocket.dart';
-import 'package:shrapnel/core/message_transport.dart';
 import 'package:shrapnel/main.dart';
-import 'package:shrapnel/parameter.dart';
-import 'package:shrapnel/robust_websocket.dart';
+import 'package:shrapnel/midi_mapping/model/models.dart';
 
-import 'util.dart';
-
-// audio parameter basic test
-// factory reset
-// all parameters loaded correctly
-// update a parameter
-// force save to NVS
-// reboot
-// check parameter reloaded
+import '../test/firmware_api_test/util.dart';
+import '../test/home_page_object.dart';
 
 // preset test
 // start up
@@ -104,7 +92,6 @@ void main() {
   setupLogger(Level.ALL);
 
   late final MacAddress macAddress;
-  late ApiWebsocket api;
   late ShrapnelUart uart;
 
   setUpAll(() async {
@@ -143,48 +130,102 @@ void main() {
 
     // Wait for firmware to start server after getting provisioned
     await Future<void>.delayed(const Duration(seconds: 10));
-
-    const uri = 'ws://$dutIpAddress:8080/websocket';
-    // closed by the WebSocketTransport
-    // ignore: close_sinks
-    final webSocket = await WebSocket.connect(uri);
-    final webSocketTransport = WebSocketTransportAdapter(websocket: webSocket);
-    api = ApiWebsocket(websocket: webSocketTransport);
-    addTearDown(webSocketTransport.dispose);
   });
 
-  test('simple test', () async {
-    final transport = ParameterTransport(websocket: api);
-    final service = ParameterService(transport: transport);
+  testWidgets('uart console smoke', (tester) async {
+    await tester.runAsync(() async {
+      // At least one response line has to arrive within 1 second
+      final responseLogs = uart.log.first.timeout(const Duration(seconds: 1));
 
-    final ampGain = AudioParameterDoubleModel(
-      groupName: 'test',
-      id: 'ampGain',
-      name: 'Amp Gain',
-      parameterService: service,
-    );
+      await uart.sendMidiMessage(
+        const MidiMessage.controlChange(
+          channel: 0,
+          control: 1,
+          value: 0x00,
+        ),
+      );
 
-    // Skip 1, because it's the default injected by the parameter model. We
-    // are waiting for the first update from the firmware here.
-    final update = await ampGain.value.skip(1).first;
-    // Expect notification including the default value
-    expect(update, closeTo(0.5, 0.000001));
+      await expectLater(responseLogs, completes);
+    });
   });
-}
 
-/// Implements reconnecting feature for the low level WebSockets transport.
-///
-/// It is somewhat fake. New connections are never created and the instance is
-/// always connected.
-class WebSocketTransportAdapter extends WebSocketTransport
-    implements ReconnectingMessageTransport<WebSocketData, WebSocketData> {
-  WebSocketTransportAdapter({required super.websocket}) : super(onDone: () {});
+  testWidgets('audio parameters', (tester) async {
+    await tester.runAsync(() async {
+      // audio parameter basic test
+      // factory reset
+      // all parameters loaded correctly
+      // update a parameter
+      // force save to NVS
+      // reboot
+      // check parameter reloaded
+    });
+  });
 
-  @override
-  Stream<void> get connectionStream => const Stream.empty();
+  testWidgets('simple test', (tester) async {
+    await tester.pumpWidget(App());
 
-  @override
-  // This class is always connected. It is constructed with an already connected
-  // instance of the WebSockets connection
-  bool get isAlive => true;
+    // wait until connected
+    // poll connection status widget until ready with timeout
+    final homePage = HomePageObject(tester);
+    await homePage.waitUntilConnected();
+
+    await homePage.createPreset('Preset 1');
+
+    final midiMappingPage = await homePage.openMidiMapping();
+
+    expect(midiMappingPage.findPage(), findsOneWidget);
+    expect(midiMappingPage.findMappingRows(), findsNothing);
+
+    // create a mapping
+    final midiMappingCreatePage = await midiMappingPage.openCreateDialog();
+    await midiMappingCreatePage.selectMidiChannel(1);
+    await midiMappingCreatePage.selectCcNumber(2);
+    await midiMappingCreatePage.selectMode(MidiMappingMode.parameter);
+    // XXX: There is a bug in flutter where the DropdownButton's popup menu is
+    //      unreliable during tests: https://github.com/flutter/flutter/issues/82908
+    //
+    // Pick an arbitrary parameter here. The only criteria for selection is that
+    // it actually works during the test. This is more likely if something is
+    // picked from the top of the list.
+    await midiMappingCreatePage.selectParameter('Chorus: DEPTH');
+    await midiMappingCreatePage.submitCreateDialog();
+
+    await tester.pump(const Duration(seconds: 1));
+    await tester.pumpAndSettle();
+
+    // Expect new mapping visible in UI
+    expect(midiMappingPage.findMappingRows(), findsOneWidget);
+
+    await midiMappingPage.openCreateDialog();
+    await midiMappingCreatePage.selectMidiChannel(2);
+    await midiMappingCreatePage.selectCcNumber(3);
+    await midiMappingCreatePage.selectMode(MidiMappingMode.button);
+    await midiMappingCreatePage.selectPreset('Preset 1');
+    await midiMappingCreatePage.submitCreateDialog();
+
+    await tester.pump(const Duration(seconds: 1));
+    await tester.pumpAndSettle();
+
+    // Expect new mapping visible in UI
+    expect(midiMappingPage.findMappingRows(), findsNWidgets(2));
+
+    await midiMappingPage.openCreateDialog();
+    await midiMappingCreatePage.selectMidiChannel(3);
+    await midiMappingCreatePage.selectCcNumber(4);
+    await midiMappingCreatePage.selectMode(MidiMappingMode.toggle);
+    // XXX: There is a bug in flutter where the DropdownButton's popup menu is
+    //      unreliable during tests: https://github.com/flutter/flutter/issues/82908
+    //
+    // Pick an arbitrary parameter here. The only criteria for selection is that
+    // it actually works during the test. This is more likely if something is
+    // picked from the top of the list.
+    await midiMappingCreatePage.selectParameter('Chorus: RATE');
+    await midiMappingCreatePage.submitCreateDialog();
+
+    await tester.pump(const Duration(seconds: 1));
+    await tester.pumpAndSettle();
+
+    // Expect new mapping visible in UI
+    expect(midiMappingPage.findMappingRows(), findsNWidgets(3));
+  });
 }

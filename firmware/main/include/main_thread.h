@@ -39,7 +39,7 @@ namespace shrapnel {
 
 namespace {
 constexpr const char *TAG = "main_thread";
-}
+} // namespace
 
 constexpr const size_t MAX_PARAMETERS = 20;
 
@@ -398,189 +398,199 @@ public:
     }
 
 private:
-    void handle_message(const auto &app_message, std::optional<int> fd)
+    void
+    handle_message(const selected_preset::SelectedPresetApiMessage &app_message,
+                   std::optional<int>)
     {
-        using AppMessageT = std::decay_t<decltype(app_message)>;
+        auto response = std::visit(
+            [this](const auto &message)
+                -> std::optional<selected_preset::SelectedPresetApiMessage>
+            { return handle_selected_preset_message(message); },
+            app_message);
 
-        if constexpr(std::is_same_v<AppMessageT, parameters::ApiMessage>)
+        if(response.has_value())
         {
-            if(!fd.has_value())
-            {
-                ESP_LOGE(TAG, "Must always have fd");
-            }
-
-            cmd_handling->dispatch(app_message, *fd);
+            send_message({*response, std::nullopt});
         }
-        else if constexpr(std::is_same_v<AppMessageT, midi::MappingApiMessage>)
-        {
-            std::scoped_lock lock{midi_mutex};
+    }
 
-            auto response = std::visit(
-                [&](const auto &midi_mapping_message)
-                    -> std::optional<midi::MappingApiMessage>
+    void handle_message(const presets::PresetsApiMessage &app_message,
+                        std::optional<int>)
+    {
+        auto response = std::visit(
+            [&](const auto &presets_message)
+                -> std::optional<presets::PresetsApiMessage>
+            {
+                using PresetsMessageT = std::decay_t<decltype(presets_message)>;
+
+                if constexpr(std::is_same_v<PresetsMessageT,
+                                            presets::Initialise>)
                 {
-                    using MidiMappingMessageT =
-                        std::decay_t<decltype(midi_mapping_message)>;
+                    presets_manager->for_each(
 
-                    if constexpr(std::is_same_v<MidiMappingMessageT,
-                                                midi::GetRequest>)
-                    {
-                        auto mappings = midi_mapping_manager->get();
-                        for(const auto &[id, mapping] : *mappings)
+                        [this](presets::id_t id,
+                               const presets::PresetData &preset)
                         {
-                            send_message({
-                                midi::Update{
-                                    {
-                                        id,
-                                        mapping,
-                                    },
-                                },
-                                std::nullopt,
-                            });
-                        }
+                            send_message({presets::Notify{
+                                              .id = id,
+                                              .preset = preset,
+                                          },
+                                          std::nullopt});
+                        });
+                }
+                else if constexpr(std::is_same_v<PresetsMessageT,
+                                                 presets::Create>)
+                {
+                    presets::id_t id;
+                    int rc =
+                        presets_manager->create(presets_message.preset, id);
+                    if(rc != 0)
+                    {
+                        ESP_LOGE(TAG, "Failed to create preset");
+                        return std::nullopt;
                     }
-                    else if constexpr(std::is_same_v<MidiMappingMessageT,
-                                                     midi::CreateRequest>)
+                    return presets::Notify{
+                        .id{id},
+                        .preset{presets_message.preset},
+                    };
+                }
+                else if constexpr(std::is_same_v<PresetsMessageT,
+                                                 presets::Update>)
+                {
+                    int rc = presets_manager->update(presets_message.id,
+                                                     presets_message.preset);
+                    if(rc != 0)
                     {
-                        uint32_t id;
-                        auto rc = midi_mapping_manager->create(
-                            midi_mapping_message.mapping, id);
-                        if(rc == 0)
-                        {
-                            return midi::CreateResponse{
-                                .mapping{
+                        ESP_LOGE(TAG, "Failed to update preset");
+                        return std::nullopt;
+                    }
+
+                    return presets::Notify{
+                        .id{presets_message.id},
+                        .preset{presets_message.preset},
+                    };
+                }
+                else if constexpr(std::is_same_v<PresetsMessageT,
+                                                 presets::Delete>)
+                {
+                    int rc = presets_manager->destroy(presets_message.id);
+                    if(rc != 0)
+                    {
+                        ESP_LOGE(TAG, "Failed to destroy preset");
+                        return std::nullopt;
+                    }
+                }
+                else
+                {
+                    ESP_LOGE(TAG, "Unhandled message type");
+                }
+
+                return std::nullopt;
+            },
+            app_message);
+
+        if(response.has_value())
+        {
+            send_message({*response, std::nullopt});
+        }
+    }
+
+    void handle_message(const parameters::ApiMessage &app_message,
+                        std::optional<int> fd)
+    {
+        if(!fd.has_value())
+        {
+            ESP_LOGE(TAG, "Must always have fd");
+        }
+
+        cmd_handling->dispatch(app_message, *fd);
+    }
+
+    void handle_message(const midi::MappingApiMessage &app_message,
+                        std::optional<int>)
+    {
+        std::scoped_lock lock{midi_mutex};
+
+        auto response = std::visit(
+            [&](const auto &midi_mapping_message)
+                -> std::optional<midi::MappingApiMessage>
+            {
+                using MidiMappingMessageT =
+                    std::decay_t<decltype(midi_mapping_message)>;
+
+                if constexpr(std::is_same_v<MidiMappingMessageT,
+                                            midi::GetRequest>)
+                {
+                    auto mappings = midi_mapping_manager->get();
+                    for(const auto &[id, mapping] : *mappings)
+                    {
+                        send_message({
+                            midi::Update{
+                                {
                                     id,
-                                    midi_mapping_message.mapping,
+                                    mapping,
                                 },
-                            };
-                        }
+                            },
+                            std::nullopt,
+                        });
                     }
-                    else if constexpr(std::is_same_v<MidiMappingMessageT,
-                                                     midi::Update>)
-                    {
-                        // return code ignored, as there is no way
-                        // to indicate the error to the frontend
-                        (void)midi_mapping_manager->update(
-                            midi_mapping_message.mapping.first,
-                            midi_mapping_message.mapping.second);
-                    }
-                    else if constexpr(std::is_same_v<MidiMappingMessageT,
-                                                     midi::Remove>)
-                    {
-                        // ignored because no way to report error to frontend
-                        (void)midi_mapping_manager->destroy(
-                            midi_mapping_message.id);
-                    }
-                    else
-                    {
-                        ESP_LOGE(TAG, "Unhandled message type");
-                    }
-
-                    return std::nullopt;
-                },
-                app_message);
-
-            if(response.has_value())
-            {
-                send_message({*response, std::nullopt});
-            }
-        }
-        else if constexpr(std::is_same_v<AppMessageT,
-                                         presets::PresetsApiMessage>)
-        {
-            auto response = std::visit(
-                [&](const auto &presets_message)
-                    -> std::optional<presets::PresetsApiMessage>
+                }
+                else if constexpr(std::is_same_v<MidiMappingMessageT,
+                                                 midi::CreateRequest>)
                 {
-                    using PresetsMessageT =
-                        std::decay_t<decltype(presets_message)>;
-
-                    if constexpr(std::is_same_v<PresetsMessageT,
-                                                presets::Initialise>)
+                    uint32_t id;
+                    auto rc = midi_mapping_manager->create(
+                        midi_mapping_message.mapping, id);
+                    if(rc == 0)
                     {
-                        presets_manager->for_each(
-
-                            [this](presets::id_t id,
-                                   const presets::PresetData &preset)
-                            {
-                                send_message({presets::Notify{
-                                                  .id = id,
-                                                  .preset = preset,
-                                              },
-                                              std::nullopt});
-                            });
-                    }
-                    else if constexpr(std::is_same_v<PresetsMessageT,
-                                                     presets::Create>)
-                    {
-                        presets::id_t id;
-                        int rc =
-                            presets_manager->create(presets_message.preset, id);
-                        if(rc != 0)
-                        {
-                            ESP_LOGE(TAG, "Failed to create preset");
-                            return std::nullopt;
-                        }
-                        return presets::Notify{
-                            .id{id},
-                            .preset{presets_message.preset},
+                        return midi::CreateResponse{
+                            .mapping{
+                                id,
+                                midi_mapping_message.mapping,
+                            },
                         };
                     }
-                    else if constexpr(std::is_same_v<PresetsMessageT,
-                                                     presets::Update>)
-                    {
-                        int rc = presets_manager->update(
-                            presets_message.id, presets_message.preset);
-                        if(rc != 0)
-                        {
-                            ESP_LOGE(TAG, "Failed to update preset");
-                            return std::nullopt;
-                        }
+                }
+                else if constexpr(std::is_same_v<MidiMappingMessageT,
+                                                 midi::Update>)
+                {
+                    // return code ignored, as there is no way
+                    // to indicate the error to the frontend
+                    (void)midi_mapping_manager->update(
+                        midi_mapping_message.mapping.first,
+                        midi_mapping_message.mapping.second);
+                }
+                else if constexpr(std::is_same_v<MidiMappingMessageT,
+                                                 midi::Remove>)
+                {
+                    // ignored because no way to report error to frontend
+                    (void)midi_mapping_manager->destroy(
+                        midi_mapping_message.id);
+                }
+                else
+                {
+                    ESP_LOGE(TAG, "Unhandled message type");
+                }
 
-                        return presets::Notify{
-                            .id{presets_message.id},
-                            .preset{presets_message.preset},
-                        };
-                    }
-                    else if constexpr(std::is_same_v<PresetsMessageT,
-                                                     presets::Delete>)
-                    {
-                        int rc = presets_manager->destroy(presets_message.id);
-                        if(rc != 0)
-                        {
-                            ESP_LOGE(TAG, "Failed to destroy preset");
-                            return std::nullopt;
-                        }
-                    }
-                    else
-                    {
-                        ESP_LOGE(TAG, "Unhandled message type");
-                    }
+                return std::nullopt;
+            },
+            app_message);
 
-                    return std::nullopt;
-                },
-                app_message);
-
-            if(response.has_value())
-            {
-                send_message({*response, std::nullopt});
-            }
-        }
-        else if constexpr(std::is_same_v<
-                              AppMessageT,
-                              selected_preset::SelectedPresetApiMessage>)
+        if(response.has_value())
         {
-            auto response = std::visit(
-                [this](const auto &message)
-                    -> std::optional<selected_preset::SelectedPresetApiMessage>
-                { return handle_selected_preset_message(message); },
-                app_message);
-
-            if(response.has_value())
-            {
-                send_message({*response, std::nullopt});
-            }
+            send_message({*response, std::nullopt});
         }
+    }
+
+    void handle_message(const midi::Message &message, std::optional<int>)
+    {
+        on_midi_message(message);
+    }
+
+    void handle_message(const events::ApiMessage &app_message,
+                        std::optional<int>)
+    {
+        // nothing to do
     }
 
     std::optional<selected_preset::SelectedPresetApiMessage>

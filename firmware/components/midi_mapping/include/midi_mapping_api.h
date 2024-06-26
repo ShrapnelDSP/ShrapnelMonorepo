@@ -128,5 +128,12 @@ template <>
 int from_proto(const shrapnel_midi_mapping_Message &message,
                midi::MappingApiMessage &out);
 
+template <>
+std::optional<midi::Message> from_bytes(std::span<const uint8_t> buffer);
+
+template <>
+int from_proto(const shrapnel_midi_mapping_MidiMessage &message,
+               midi::Message &out);
+
 } // namespace api
 } // namespace shrapnel
