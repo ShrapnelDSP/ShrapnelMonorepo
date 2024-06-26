@@ -94,20 +94,52 @@ const networkSsid = String.fromEnvironment('NETWORK_SSID');
 const networkPassphrase = String.fromEnvironment('NETWORK_PASSPHRASE');
 // ignore: do_not_use_environment
 const firmwareBinaryPath = String.fromEnvironment('FIRMWARE_BINARY_PATH');
+// ignore: do_not_use_environment
+const useFastProvisioning = bool.fromEnvironment('FAST_PROVISIONING');
+
+final _log = Logger('test');
 
 void main() {
   assert(dutIpAddress.isNotEmpty, 'DUT_IP_ADDRESS must be set');
   setupLogger(Level.ALL);
 
+  late final MacAddress macAddress;
   late ApiWebsocket api;
+  late ShrapnelUart uart;
 
-  setUp(() async {
-    final macAddress = await flashFirmware(
+  setUpAll(() async {
+    macAddress = await flashFirmware(
       appPartitionAddress: 0x10000,
       path: firmwareBinaryPath,
     );
-    await connectToDutAccessPoint(macAddress);
-    await setUpWiFi(ssid: networkSsid, password: networkPassphrase);
+  });
+
+  setUp(() async {
+    await nvsErase();
+
+    uart = await ShrapnelUart.open('/dev/ttyUSB0');
+    // TODO move this into the uart class, so it logs by itself even if there
+    // are no external log listeners
+    // ensure at least one listener so logging side effect always runs
+    uart.log.listen((_) {});
+    addTearDown(uart.dispose);
+
+    if (useFastProvisioning) {
+      _log.warning('Bypassing Wi-Fi provisioning to speed up test execution');
+      await uart.provisionWifi(ssid: networkSsid, password: networkPassphrase);
+    } else {
+      // TODO we can still speed up tests where provisioning must be tested:
+      // - export NVS partition to file after first time wifi provisioning is used
+      // - reload it in the setup for each following test. This resets the NVS
+      //    partition without requiring a fresh wifi provisioning run for each
+      //    test.
+      //
+      // Alternatively, create a new test group that doesn't run the fast wifi
+      // provisioning setup, and instead runs the slow wifi setup.
+
+      await connectToDutAccessPoint(macAddress);
+      await setUpWiFi(ssid: networkSsid, password: networkPassphrase);
+    }
 
     // Wait for firmware to start server after getting provisioned
     await Future<void>.delayed(const Duration(seconds: 10));
