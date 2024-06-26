@@ -398,37 +398,6 @@ public:
     }
 
 private:
-#if 0
-    void handle_message(const auto &app_message, std::optional<int> fd)
-    {
-        using AppMessageT = std::decay_t<decltype(app_message)>;
-
-        if constexpr(std::is_same_v<AppMessageT, parameters::ApiMessage>)
-        {
-            handle_parameters_message(app_message, fd);
-        }
-        else if constexpr(std::is_same_v<AppMessageT, midi::MappingApiMessage>)
-        {
-            handle_midi_mapping_message(app_message);
-        }
-        else if constexpr(std::is_same_v<AppMessageT,
-                                         presets::PresetsApiMessage>)
-        {
-            handle_presets_message(app_message);
-        }
-        else if constexpr(std::is_same_v<
-                              AppMessageT,
-                              selected_preset::SelectedPresetApiMessage>)
-        {
-            handle_selected_preset_api_message(app_message);
-        }
-        else if constexpr(std::is_same_v<AppMessageT, midi::Message>)
-        {
-            ESP_LOGI(TAG, "handling midi message");
-        }
-    }
-#endif
-
     void
     handle_message(const selected_preset::SelectedPresetApiMessage &app_message,
                    std::optional<int>)
