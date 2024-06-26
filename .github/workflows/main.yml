@@ -42,7 +42,7 @@ jobs:
     - name: Setup ESP-IDF and build
       run: |
         . $IDF_PATH/export.sh
-        python3 -m pip install -r thirdparty/esp-idf-components/nanopb/requirements.txt
+        python3 -m pip install -r thirdparty/esp-idf-components/nanopb/nanopb/requirements.txt
         idf.py -C firmware build
 
     - name: ccache statistics
@@ -73,7 +73,7 @@ jobs:
       run: ccache --zero-stats
 
     - name: Install python dependencies
-      run: python3 -m pip install -r thirdparty/esp-idf-components/nanopb/requirements.txt
+      run: python3 -m pip install -r thirdparty/esp-idf-components/nanopb/nanopb/requirements.txt
 
     - name: Configure CMake
       run: cmake -B build -DCMAKE_BUILD_TYPE=${{matrix.build_type}} plugins/${{matrix.plugin}}
@@ -107,7 +107,7 @@ jobs:
       run: ccache --zero-stats
 
     - name: Install python dependencies
-      run: python3 -m pip install -r thirdparty/esp-idf-components/nanopb/requirements.txt
+      run: python3 -m pip install -r thirdparty/esp-idf-components/nanopb/nanopb/requirements.txt
 
     - name: Configure CMake
       env:
@@ -170,7 +170,7 @@ jobs:
       run: ccache --zero-stats
 
     - name: Install python dependencies
-      run: python3 -m pip install -r thirdparty/esp-idf-components/nanopb/requirements.txt
+      run: python3 -m pip install -r thirdparty/esp-idf-components/nanopb/nanopb/requirements.txt
 
     - name: Configure CMake
       env:
