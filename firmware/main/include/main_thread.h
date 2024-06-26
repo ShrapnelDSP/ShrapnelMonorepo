@@ -39,12 +39,6 @@ namespace shrapnel {
 
 namespace {
 constexpr const char *TAG = "main_thread";
-
-template <class... Ts>
-struct overload : Ts...
-{
-    using Ts::operator()...;
-};
 } // namespace
 
 constexpr const size_t MAX_PARAMETERS = 20;
