@@ -87,12 +87,6 @@ const useFastProvisioning = bool.fromEnvironment('FAST_PROVISIONING');
 
 final _log = Logger('test');
 
-// Initial implementation
-//
-// Assumes firmware already flashed and running. Later it will build and flash
-// the firmware.
-//
-// Make a single request and expect a response.
 void main() {
   assert(dutIpAddress.isNotEmpty, 'DUT_IP_ADDRESS must be set');
   setupLogger(Level.ALL);

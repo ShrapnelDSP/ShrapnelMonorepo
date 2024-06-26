@@ -95,12 +95,6 @@ const networkPassphrase = String.fromEnvironment('NETWORK_PASSPHRASE');
 // ignore: do_not_use_environment
 const firmwareBinaryPath = String.fromEnvironment('FIRMWARE_BINARY_PATH');
 
-// Initial implementation
-//
-// Assumes firmware already flashed and running. Later it will build and flash
-// the firmware.
-//
-// Make a single request and expect a response.
 void main() {
   assert(dutIpAddress.isNotEmpty, 'DUT_IP_ADDRESS must be set');
   setupLogger(Level.ALL);
