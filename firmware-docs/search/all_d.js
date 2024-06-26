@@ -30,9 +30,10 @@ var searchData=
   ['midi_5fuart_2eh_27',['midi_uart.h',['../midi__uart_8h.html',1,'']]],
   ['midimappingtype_28',['MidiMappingType',['../namespaceshrapnel.html#a3ad03c6776b891d713cefe820a043d5e',1,'shrapnel']]],
   ['midimessagehandler_29',['MidiMessageHandler',['../classshrapnel_1_1MidiMessageHandler.html#a822fa02450c2b7b937d096115716095e',1,'shrapnel::MidiMessageHandler::MidiMessageHandler()'],['../classshrapnel_1_1MidiMessageHandler.html',1,'shrapnel::MidiMessageHandler&lt; AudioParametersT, MappingManagerT, PresetLoaderT &gt;']]],
-  ['midiuartbase_30',['MidiUartBase',['../classshrapnel_1_1midi_1_1MidiUartBase.html',1,'shrapnel::midi']]],
-  ['minor_31',['minor',['../namespacewah.html#ad960e329d3b178d3fcf3bc0552a4f302',1,'wah']]],
-  ['mix_32',['mix',['../structshrapnel_1_1AudioProcessorParameters.html#a9fb06b1c2a1949abbe9c19a0e83fe797',1,'shrapnel::AudioProcessorParameters']]],
-  ['mode_33',['mode',['../structshrapnel_1_1midi_1_1Mapping.html#ad02ebea6e6428980d752a6f3844bf21f',1,'shrapnel::midi::Mapping']]],
-  ['mode_34',['Mode',['../structshrapnel_1_1midi_1_1Mapping.html#a9d3978518402ec5df1963f1b8c0a7013',1,'shrapnel::midi::Mapping']]]
+  ['midimessagesendcallback_30',['MidiMessageSendCallback',['../namespaceshrapnel.html#aa132f492a61d2a950f16a98f209073ec',1,'shrapnel']]],
+  ['midiuartbase_31',['MidiUartBase',['../classshrapnel_1_1midi_1_1MidiUartBase.html',1,'shrapnel::midi']]],
+  ['minor_32',['minor',['../namespacewah.html#ad960e329d3b178d3fcf3bc0552a4f302',1,'wah']]],
+  ['mix_33',['mix',['../structshrapnel_1_1AudioProcessorParameters.html#a9fb06b1c2a1949abbe9c19a0e83fe797',1,'shrapnel::AudioProcessorParameters']]],
+  ['mode_34',['mode',['../structshrapnel_1_1midi_1_1Mapping.html#ad02ebea6e6428980d752a6f3844bf21f',1,'shrapnel::midi::Mapping']]],
+  ['mode_35',['Mode',['../structshrapnel_1_1midi_1_1Mapping.html#a9d3978518402ec5df1963f1b8c0a7013',1,'shrapnel::midi::Mapping']]]
 ];

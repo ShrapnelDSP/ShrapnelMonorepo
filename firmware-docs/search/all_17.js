@@ -22,7 +22,8 @@ var searchData=
   ['wifi_5fstate_5fmachine_2ecpp_19',['wifi_state_machine.cpp',['../wifi__state__machine_8cpp.html',1,'']]],
   ['wifi_5fstate_5fmachine_2eh_20',['wifi_state_machine.h',['../wifi__state__machine_8h.html',1,'']]],
   ['wifiqueue_21',['WifiQueue',['../main_8cpp.html#a69811aaa1a7fd4891677577d309248e6',1,'main.cpp']]],
-  ['wifistatemachine_22',['WifiStateMachine',['../classshrapnel_1_1wifi_1_1WifiStateMachine.html',1,'shrapnel::wifi::WifiStateMachine'],['../classshrapnel_1_1wifi_1_1WifiStateMachine.html#a9d36086194c4a0efa52d6953f08012b0',1,'shrapnel::wifi::WifiStateMachine::WifiStateMachine()']]],
-  ['worn_23',['worN',['../namespacewah-smoothing.html#a7197fc547190bc4b369f552d97a8abde',1,'wah-smoothing.worN()'],['../namespacewah.html#a645f5a27fb4d52852c227e07eca94e57',1,'wah.worN()']]],
-  ['write_24',['Write',['../structshrapnel_1_1selected__preset_1_1Write.html',1,'shrapnel::selected_preset']]]
+  ['wifisetupcallback_22',['WifiSetupCallback',['../namespaceshrapnel.html#a991d41830ef89ab39e9154c91d629c3a',1,'shrapnel']]],
+  ['wifistatemachine_23',['WifiStateMachine',['../classshrapnel_1_1wifi_1_1WifiStateMachine.html',1,'shrapnel::wifi::WifiStateMachine'],['../classshrapnel_1_1wifi_1_1WifiStateMachine.html#a9d36086194c4a0efa52d6953f08012b0',1,'shrapnel::wifi::WifiStateMachine::WifiStateMachine()']]],
+  ['worn_24',['worN',['../namespacewah-smoothing.html#a7197fc547190bc4b369f552d97a8abde',1,'wah-smoothing.worN()'],['../namespacewah.html#a645f5a27fb4d52852c227e07eca94e57',1,'wah.worN()']]],
+  ['write_25',['Write',['../structshrapnel_1_1selected__preset_1_1Write.html',1,'shrapnel::selected_preset']]]
 ];

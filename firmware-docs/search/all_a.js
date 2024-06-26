@@ -28,7 +28,7 @@ var searchData=
   ['input_5ffilter_2eh_25',['input_filter.h',['../input__filter_8h.html',1,'']]],
   ['inputclipped_26',['InputClipped',['../structshrapnel_1_1events_1_1InputClipped.html',1,'shrapnel::events']]],
   ['inputfilter_27',['InputFilter',['../classshrapnel_1_1effect_1_1valvestate_1_1InputFilter.html',1,'shrapnel::effect::valvestate']]],
-  ['instance_28',['instance',['../classEspHeapTracing.html#af49dc8f718e254d2aa165b56a0cf640e',1,'EspHeapTracing']]],
+  ['instance_28',['instance',['../namespaceshrapnel.html#a61d9e389048ec815ed90807a442dfbae',1,'shrapnel::instance()'],['../classEspHeapTracing.html#af49dc8f718e254d2aa165b56a0cf640e',1,'EspHeapTracing::instance()']]],
   ['internal_5fevent_5fcallback_5ft_29',['internal_event_callback_t',['../classshrapnel_1_1wifi_1_1WifiStateMachine.html#ad5f434b37772a92b730426934f26dc6b',1,'shrapnel::wifi::WifiStateMachine']]],
   ['internalevent_30',['InternalEvent',['../structshrapnel_1_1wifi_1_1InternalEvent.html',1,'shrapnel::wifi']]],
   ['is_5factive_31',['is_active',['../classshrapnel_1_1os_1_1Timer.html#a700eee72ff07045cfdebbef6d397668e',1,'shrapnel::os::Timer::is_active()'],['../structshrapnel_1_1os_1_1Timer_1_1impl.html#ac6408319748208db3d4881e0ad3d719f',1,'shrapnel::os::Timer::impl::is_active() const'],['../structshrapnel_1_1os_1_1Timer_1_1impl.html#ac6408319748208db3d4881e0ad3d719f',1,'shrapnel::os::Timer::impl::is_active() const']]],

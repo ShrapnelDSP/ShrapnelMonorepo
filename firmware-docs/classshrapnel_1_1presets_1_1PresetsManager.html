@@ -117,7 +117,7 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:ac32d7de2f08895a847ee4461777b46be"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a61ecad878277bcfb1af7b6ee08b6b43e"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classshrapnel_1_1presets_1_1PresetsManager.html#a61ecad878277bcfb1af7b6ee08b6b43e">create</a> (const <a class="el" href="structshrapnel_1_1presets_1_1PresetData.html">PresetData</a> &amp;preset, <a class="el" href="namespaceshrapnel_1_1presets.html#ac181ce2b435bffbfb2c4f45dd121fae6">id_t</a> &amp;id_out) override</td></tr>
 <tr class="separator:a61ecad878277bcfb1af7b6ee08b6b43e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0aff6cb20b818976fb3b63792a1ba089"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classshrapnel_1_1presets_1_1PresetsManager.html#a0aff6cb20b818976fb3b63792a1ba089">read</a> (<a class="el" href="namespaceshrapnel_1_1presets.html#ac181ce2b435bffbfb2c4f45dd121fae6">id_t</a> id, <a class="el" href="structshrapnel_1_1presets_1_1PresetData.html">PresetData</a> &amp;data) override</td></tr>
+<tr class="memitem:a0aff6cb20b818976fb3b63792a1ba089"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classshrapnel_1_1presets_1_1PresetsManager.html#a0aff6cb20b818976fb3b63792a1ba089">read</a> (<a class="el" href="namespaceshrapnel_1_1presets.html#ac181ce2b435bffbfb2c4f45dd121fae6">id_t</a> id, <a class="el" href="structshrapnel_1_1presets_1_1PresetData.html">PresetData</a> &amp;<a class="el" href="namespaceshrapnel.html#ac9abbf33a3e7514326e9056b8541fc77">data</a>) override</td></tr>
 <tr class="separator:a0aff6cb20b818976fb3b63792a1ba089"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab1499051b1b135575f8f7b012e663af9"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classshrapnel_1_1presets_1_1PresetsManager.html#ab1499051b1b135575f8f7b012e663af9">update</a> (<a class="el" href="namespaceshrapnel_1_1presets.html#ac181ce2b435bffbfb2c4f45dd121fae6">id_t</a> id, const <a class="el" href="structshrapnel_1_1presets_1_1PresetData.html">PresetData</a> &amp;preset) override</td></tr>
 <tr class="separator:ab1499051b1b135575f8f7b012e663af9"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -212,9 +212,9 @@ Public Member Functions</h2></td></tr>
 <p class="definition">Definition at line <a class="el" href="preset__manager_8cpp_source.html#l00032">32</a> of file <a class="el" href="preset__manager_8cpp_source.html">preset_manager.cpp</a>.</p>
 <div class="fragment"><div class="line"><span class="lineno">   33</span>{</div>
 <div class="line"><span class="lineno">   34</span>    std::array&lt;uint8_t, 100&gt; buffer;</div>
-<div class="line"><span class="lineno">   35</span>    <span class="keyword">auto</span> data = std::span&lt;uint8_t, std::dynamic_extent&gt;(buffer);</div>
+<div class="line"><span class="lineno">   35</span>    <span class="keyword">auto</span> <a class="code hl_variable" href="namespaceshrapnel.html#ac9abbf33a3e7514326e9056b8541fc77">data</a> = std::span&lt;uint8_t, std::dynamic_extent&gt;(buffer);</div>
 <div class="line"><span class="lineno">   36</span> </div>
-<div class="line"><span class="lineno">   37</span>    <span class="keyword">auto</span> encoded = <a class="code hl_function" href="namespaceshrapnel_1_1api.html#a4eb6fa3c5ed2f9fe0bce8d80e4479a32">api::to_bytes</a>(preset, data);</div>
+<div class="line"><span class="lineno">   37</span>    <span class="keyword">auto</span> encoded = <a class="code hl_function" href="namespaceshrapnel_1_1api.html#a4eb6fa3c5ed2f9fe0bce8d80e4479a32">api::to_bytes</a>(preset, <a class="code hl_variable" href="namespaceshrapnel.html#ac9abbf33a3e7514326e9056b8541fc77">data</a>);</div>
 <div class="line"><span class="lineno">   38</span>    <span class="keywordflow">if</span>(!encoded.has_value())</div>
 <div class="line"><span class="lineno">   39</span>    {</div>
 <div class="line"><span class="lineno">   40</span>        <span class="keywordflow">return</span> -1;</div>
@@ -229,8 +229,9 @@ Public Member Functions</h2></td></tr>
 <div class="line"><span class="lineno">   49</span>    <span class="keywordflow">return</span> 0;</div>
 <div class="line"><span class="lineno">   50</span>}</div>
 <div class="ttc" id="anamespaceshrapnel_1_1api_html_a4eb6fa3c5ed2f9fe0bce8d80e4479a32"><div class="ttname"><a href="namespaceshrapnel_1_1api.html#a4eb6fa3c5ed2f9fe0bce8d80e4479a32">shrapnel::api::to_bytes</a></div><div class="ttdeci">std::optional&lt; std::span&lt; uint8_t &gt; &gt; to_bytes(const T &amp;message, std::span&lt; uint8_t &gt; buffer)</div><div class="ttdoc">Convert a message to bytes to be sent over the network to the frontend.</div></div>
+<div class="ttc" id="anamespaceshrapnel_html_ac9abbf33a3e7514326e9056b8541fc77"><div class="ttname"><a href="namespaceshrapnel.html#ac9abbf33a3e7514326e9056b8541fc77">shrapnel::data</a></div><div class="ttdeci">struct arg_str * data</div><div class="ttdef"><b>Definition:</b> <a href="shrapnel__console_8cpp_source.html#l00042">shrapnel_console.cpp:42</a></div></div>
 </div><!-- fragment -->
-<p class="reference">References <a class="el" href="namespaceshrapnel_1_1api.html#a4eb6fa3c5ed2f9fe0bce8d80e4479a32">shrapnel::api::to_bytes()</a>.</p>
+<p class="reference">References <a class="el" href="shrapnel__console_8cpp_source.html#l00042">shrapnel::data</a>, and <a class="el" href="namespaceshrapnel_1_1api.html#a4eb6fa3c5ed2f9fe0bce8d80e4479a32">shrapnel::api::to_bytes()</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -306,9 +307,9 @@ Here is the call graph for this function:</div>
 <p class="definition">Definition at line <a class="el" href="preset__manager_8cpp_source.html#l00104">104</a> of file <a class="el" href="preset__manager_8cpp_source.html">preset_manager.cpp</a>.</p>
 <div class="fragment"><div class="line"><span class="lineno">  106</span>{</div>
 <div class="line"><span class="lineno">  107</span>    storage-&gt;for_each(</div>
-<div class="line"><span class="lineno">  108</span>        [&amp;callback](uint32_t <span class="keywordtype">id</span>, std::span&lt;uint8_t&gt; data)</div>
+<div class="line"><span class="lineno">  108</span>        [&amp;callback](uint32_t <span class="keywordtype">id</span>, std::span&lt;uint8_t&gt; <a class="code hl_variable" href="namespaceshrapnel.html#ac9abbf33a3e7514326e9056b8541fc77">data</a>)</div>
 <div class="line"><span class="lineno">  109</span>        {</div>
-<div class="line"><span class="lineno">  110</span>            <span class="keyword">auto</span> decoded = api::from_bytes&lt;PresetData&gt;(data);</div>
+<div class="line"><span class="lineno">  110</span>            <span class="keyword">auto</span> decoded = api::from_bytes&lt;PresetData&gt;(<a class="code hl_variable" href="namespaceshrapnel.html#ac9abbf33a3e7514326e9056b8541fc77">data</a>);</div>
 <div class="line"><span class="lineno">  111</span>            <span class="keywordflow">if</span>(!decoded.has_value())</div>
 <div class="line"><span class="lineno">  112</span>            {</div>
 <div class="line"><span class="lineno">  113</span>                <span class="keywordflow">return</span>;</div>
@@ -318,6 +319,8 @@ Here is the call graph for this function:</div>
 <div class="line"><span class="lineno">  117</span>        });</div>
 <div class="line"><span class="lineno">  118</span>}</div>
 </div><!-- fragment -->
+<p class="reference">References <a class="el" href="shrapnel__console_8cpp_source.html#l00042">shrapnel::data</a>.</p>
+
 </div>
 </div>
 <a id="a0aff6cb20b818976fb3b63792a1ba089" name="a0aff6cb20b818976fb3b63792a1ba089"></a>
@@ -357,14 +360,14 @@ Here is the call graph for this function:</div>
 <p class="definition">Definition at line <a class="el" href="preset__manager_8cpp_source.html#l00052">52</a> of file <a class="el" href="preset__manager_8cpp_source.html">preset_manager.cpp</a>.</p>
 <div class="fragment"><div class="line"><span class="lineno">   53</span>{</div>
 <div class="line"><span class="lineno">   54</span>    std::array&lt;uint8_t, 100&gt; buffer;</div>
-<div class="line"><span class="lineno">   55</span>    <span class="keyword">auto</span> data = std::span&lt;uint8_t&gt;(buffer);</div>
-<div class="line"><span class="lineno">   56</span>    <span class="keywordtype">int</span> rc = storage-&gt;read(<span class="keywordtype">id</span>, data);</div>
+<div class="line"><span class="lineno">   55</span>    <span class="keyword">auto</span> <a class="code hl_variable" href="namespaceshrapnel.html#ac9abbf33a3e7514326e9056b8541fc77">data</a> = std::span&lt;uint8_t&gt;(buffer);</div>
+<div class="line"><span class="lineno">   56</span>    <span class="keywordtype">int</span> rc = storage-&gt;read(<span class="keywordtype">id</span>, <a class="code hl_variable" href="namespaceshrapnel.html#ac9abbf33a3e7514326e9056b8541fc77">data</a>);</div>
 <div class="line"><span class="lineno">   57</span>    <span class="keywordflow">if</span>(rc != 0)</div>
 <div class="line"><span class="lineno">   58</span>    {</div>
 <div class="line"><span class="lineno">   59</span>        <span class="keywordflow">return</span> -1;</div>
 <div class="line"><span class="lineno">   60</span>    }</div>
 <div class="line"><span class="lineno">   61</span> </div>
-<div class="line"><span class="lineno">   62</span>    <span class="keyword">auto</span> decoded = api::from_bytes&lt;PresetData&gt;(data);</div>
+<div class="line"><span class="lineno">   62</span>    <span class="keyword">auto</span> decoded = api::from_bytes&lt;PresetData&gt;(<a class="code hl_variable" href="namespaceshrapnel.html#ac9abbf33a3e7514326e9056b8541fc77">data</a>);</div>
 <div class="line"><span class="lineno">   63</span>    <span class="keywordflow">if</span>(!decoded.has_value())</div>
 <div class="line"><span class="lineno">   64</span>    {</div>
 <div class="line"><span class="lineno">   65</span>        <span class="keywordflow">return</span> -1;</div>
@@ -375,6 +378,8 @@ Here is the call graph for this function:</div>
 <div class="line"><span class="lineno">   70</span>    <span class="keywordflow">return</span> 0;</div>
 <div class="line"><span class="lineno">   71</span>}</div>
 </div><!-- fragment -->
+<p class="reference">References <a class="el" href="shrapnel__console_8cpp_source.html#l00042">shrapnel::data</a>.</p>
+
 </div>
 </div>
 <a id="ab1499051b1b135575f8f7b012e663af9" name="ab1499051b1b135575f8f7b012e663af9"></a>
@@ -414,9 +419,9 @@ Here is the call graph for this function:</div>
 <p class="definition">Definition at line <a class="el" href="preset__manager_8cpp_source.html#l00073">73</a> of file <a class="el" href="preset__manager_8cpp_source.html">preset_manager.cpp</a>.</p>
 <div class="fragment"><div class="line"><span class="lineno">   74</span>{</div>
 <div class="line"><span class="lineno">   75</span>    std::array&lt;uint8_t, 100&gt; buffer;</div>
-<div class="line"><span class="lineno">   76</span>    <span class="keyword">auto</span> data = std::span&lt;uint8_t, std::dynamic_extent&gt;(buffer);</div>
+<div class="line"><span class="lineno">   76</span>    <span class="keyword">auto</span> <a class="code hl_variable" href="namespaceshrapnel.html#ac9abbf33a3e7514326e9056b8541fc77">data</a> = std::span&lt;uint8_t, std::dynamic_extent&gt;(buffer);</div>
 <div class="line"><span class="lineno">   77</span> </div>
-<div class="line"><span class="lineno">   78</span>    <span class="keyword">auto</span> encoded = <a class="code hl_function" href="namespaceshrapnel_1_1api.html#a4eb6fa3c5ed2f9fe0bce8d80e4479a32">api::to_bytes</a>(preset, data);</div>
+<div class="line"><span class="lineno">   78</span>    <span class="keyword">auto</span> encoded = <a class="code hl_function" href="namespaceshrapnel_1_1api.html#a4eb6fa3c5ed2f9fe0bce8d80e4479a32">api::to_bytes</a>(preset, <a class="code hl_variable" href="namespaceshrapnel.html#ac9abbf33a3e7514326e9056b8541fc77">data</a>);</div>
 <div class="line"><span class="lineno">   79</span>    <span class="keywordflow">if</span>(!encoded.has_value())</div>
 <div class="line"><span class="lineno">   80</span>    {</div>
 <div class="line"><span class="lineno">   81</span>        <span class="keywordflow">return</span> -1;</div>
@@ -431,7 +436,7 @@ Here is the call graph for this function:</div>
 <div class="line"><span class="lineno">   90</span>    <span class="keywordflow">return</span> 0;</div>
 <div class="line"><span class="lineno">   91</span>}</div>
 </div><!-- fragment -->
-<p class="reference">References <a class="el" href="namespaceshrapnel_1_1api.html#a4eb6fa3c5ed2f9fe0bce8d80e4479a32">shrapnel::api::to_bytes()</a>.</p>
+<p class="reference">References <a class="el" href="shrapnel__console_8cpp_source.html#l00042">shrapnel::data</a>, and <a class="el" href="namespaceshrapnel_1_1api.html#a4eb6fa3c5ed2f9fe0bce8d80e4479a32">shrapnel::api::to_bytes()</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">

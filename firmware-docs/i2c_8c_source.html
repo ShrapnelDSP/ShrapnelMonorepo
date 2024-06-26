@@ -121,7 +121,7 @@ $(document).ready(function(){initNavTree('i2c_8c_source.html',''); initResizable
 <div class="line"><a id="l00025" name="l00025"></a><span class="lineno"><a class="line" href="i2c_8c.html#a45e8e37789f0b27a7fe24b58795787f7">   25</a></span>esp_err_t <a class="code hl_function" href="i2c_8c.html#a45e8e37789f0b27a7fe24b58795787f7">i2c_write_byte</a>(i2c_port_t port,</div>
 <div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>                         uint8_t slave_address,</div>
 <div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>                         uint8_t reg_address,</div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>                         uint8_t data)</div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>                         uint8_t <a class="code hl_variable" href="namespaceshrapnel.html#ac9abbf33a3e7514326e9056b8541fc77">data</a>)</div>
 <div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>{</div>
 <div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>    esp_err_t err = ESP_OK;</div>
 <div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>    i2c_cmd_handle_t cmd = i2c_cmd_link_create();</div>
@@ -144,7 +144,7 @@ $(document).ready(function(){initNavTree('i2c_8c_source.html',''); initResizable
 <div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>    <span class="keywordflow">if</span>(err != ESP_OK)</div>
 <div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>        <span class="keywordflow">goto</span> cleanup;</div>
 <div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span> </div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>    err = i2c_master_write_byte(cmd, data, <span class="keyword">true</span>);</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>    err = i2c_master_write_byte(cmd, <a class="code hl_variable" href="namespaceshrapnel.html#ac9abbf33a3e7514326e9056b8541fc77">data</a>, <span class="keyword">true</span>);</div>
 <div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>    <span class="keywordflow">if</span>(err != ESP_OK)</div>
 <div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>        <span class="keywordflow">goto</span> cleanup;</div>
 <div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span> </div>
@@ -167,12 +167,12 @@ $(document).ready(function(){initNavTree('i2c_8c_source.html',''); initResizable
 <div class="line"><a id="l00071" name="l00071"></a><span class="lineno"><a class="line" href="i2c_8c.html#ad8582e6632e6cf4154a23778d9ed7c3c">   71</a></span>esp_err_t <a class="code hl_function" href="i2c_8c.html#ad8582e6632e6cf4154a23778d9ed7c3c">i2c_read_byte</a>(i2c_port_t port,</div>
 <div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>                        uint8_t slave_address,</div>
 <div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>                        uint8_t reg_address,</div>
-<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>                        uint8_t *data)</div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>                        uint8_t *<a class="code hl_variable" href="namespaceshrapnel.html#ac9abbf33a3e7514326e9056b8541fc77">data</a>)</div>
 <div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>{</div>
 <div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>    (void)port;</div>
 <div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>    (void)slave_address;</div>
 <div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>    (void)reg_address;</div>
-<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>    (void)data;</div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>    (void)<a class="code hl_variable" href="namespaceshrapnel.html#ac9abbf33a3e7514326e9056b8541fc77">data</a>;</div>
 <div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span> </div>
 <div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>    <span class="comment">/* PCM3060 datasheet has no read operation, maybe it&#39;s not supported ? */</span></div>
 <div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>    ESP_LOGE(TAG, <span class="stringliteral">&quot;Read is not implemented&quot;</span>);</div>
@@ -181,6 +181,7 @@ $(document).ready(function(){initNavTree('i2c_8c_source.html',''); initResizable
 <div class="ttc" id="ai2c_8c_html_a45e8e37789f0b27a7fe24b58795787f7"><div class="ttname"><a href="i2c_8c.html#a45e8e37789f0b27a7fe24b58795787f7">i2c_write_byte</a></div><div class="ttdeci">esp_err_t i2c_write_byte(i2c_port_t port, uint8_t slave_address, uint8_t reg_address, uint8_t data)</div><div class="ttdef"><b>Definition:</b> <a href="i2c_8c_source.html#l00025">i2c.c:25</a></div></div>
 <div class="ttc" id="ai2c_8c_html_ad8582e6632e6cf4154a23778d9ed7c3c"><div class="ttname"><a href="i2c_8c.html#ad8582e6632e6cf4154a23778d9ed7c3c">i2c_read_byte</a></div><div class="ttdeci">esp_err_t i2c_read_byte(i2c_port_t port, uint8_t slave_address, uint8_t reg_address, uint8_t *data)</div><div class="ttdef"><b>Definition:</b> <a href="i2c_8c_source.html#l00071">i2c.c:71</a></div></div>
 <div class="ttc" id="ai2c_8h_html"><div class="ttname"><a href="i2c_8h.html">i2c.h</a></div></div>
+<div class="ttc" id="anamespaceshrapnel_html_ac9abbf33a3e7514326e9056b8541fc77"><div class="ttname"><a href="namespaceshrapnel.html#ac9abbf33a3e7514326e9056b8541fc77">shrapnel::data</a></div><div class="ttdeci">struct arg_str * data</div><div class="ttdef"><b>Definition:</b> <a href="shrapnel__console_8cpp_source.html#l00042">shrapnel_console.cpp:42</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

@@ -10,11 +10,7 @@ var structshrapnel_1_1wifi_1_1InternalEvent =
       [ "RESET_PROVISIONING", "structshrapnel_1_1wifi_1_1InternalEvent.html#a62d199da7e8162e54b10e20b9dd35d85ac6adf347d662de0822875ecead0ac20c", null ],
       [ "PROVISIONING_SUCCESS", "structshrapnel_1_1wifi_1_1InternalEvent.html#a62d199da7e8162e54b10e20b9dd35d85a6b8a10c4ca47a4f4dfa1ff2dd4714533", null ],
       [ "PROVISIONING_FAILURE", "structshrapnel_1_1wifi_1_1InternalEvent.html#a62d199da7e8162e54b10e20b9dd35d85acac810b6d7ad26b4bb8a9489aa3d1d9d", null ],
+      [ "PROVISIONING_BYPASS", "structshrapnel_1_1wifi_1_1InternalEvent.html#a62d199da7e8162e54b10e20b9dd35d85ab594b3a03581c98fb5ea7b7ecc205609", null ],
       [ "PROVISIONING_END", "structshrapnel_1_1wifi_1_1InternalEvent.html#a62d199da7e8162e54b10e20b9dd35d85a4eea5765310e9a176370c5411294653c", null ]
-    ] ],
-    [ "ETL_DECLARE_ENUM_TYPE", "structshrapnel_1_1wifi_1_1InternalEvent.html#aa4ee23b32709cfa9005b249ed1410291", null ],
-    [ "ETL_ENUM_TYPE", "structshrapnel_1_1wifi_1_1InternalEvent.html#a6a765410c4f99a234b99e73c53d86815", null ],
-    [ "ETL_ENUM_TYPE", "structshrapnel_1_1wifi_1_1InternalEvent.html#a5bf06075f21c99dbe4abf85237b0c3dd", null ],
-    [ "ETL_ENUM_TYPE", "structshrapnel_1_1wifi_1_1InternalEvent.html#aa46bee4af5d5a6d369c89d9a568d5659", null ],
-    [ "ETL_ENUM_TYPE", "structshrapnel_1_1wifi_1_1InternalEvent.html#a245b38e174ec3eae50d60a9aabe70baf", null ]
+    ] ]
 ];

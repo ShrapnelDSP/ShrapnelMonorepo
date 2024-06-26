@@ -9,6 +9,7 @@ var hierarchy =
     [ "shrapnel::effect::Chorus", "classshrapnel_1_1effect_1_1Chorus.html", null ],
     [ "shrapnel::effect::valvestate::Clipping", "classshrapnel_1_1effect_1_1valvestate_1_1Clipping.html", null ],
     [ "shrapnel::parameters::CommandHandling< AudioParametersT >", "classshrapnel_1_1parameters_1_1CommandHandling.html", null ],
+    [ "shrapnel::Console", "classshrapnel_1_1Console.html", null ],
     [ "ContourFilter", "classContourFilter.html", null ],
     [ "shrapnel::midi::Message::ControlChange", "structshrapnel_1_1midi_1_1Message_1_1ControlChange.html", null ],
     [ "shrapnel::presets::Create", "structshrapnel_1_1presets_1_1Create.html", null ],

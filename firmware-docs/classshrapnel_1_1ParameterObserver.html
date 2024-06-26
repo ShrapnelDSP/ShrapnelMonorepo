@@ -232,7 +232,7 @@ template&lt;std::size_t MAX_PARAMETERS&gt; </div>
 <div class="fragment"><div class="line"><span class="lineno">  104</span>    {</div>
 <div class="line"><span class="lineno">  105</span>        <span class="keyword">auto</span> &amp;[id, value] = parameter;</div>
 <div class="line"><span class="lineno">  106</span>        ESP_LOGI(</div>
-<div class="line"><span class="lineno">  107</span>            TAG, <span class="stringliteral">&quot;notified about parameter change %s %f&quot;</span>, <span class="keywordtype">id</span>.data(), value);</div>
+<div class="line"><span class="lineno">  107</span>            TAG, <span class="stringliteral">&quot;notified about parameter change %s %f&quot;</span>, <span class="keywordtype">id</span>.<a class="code hl_variable" href="namespaceshrapnel.html#ac9abbf33a3e7514326e9056b8541fc77">data</a>(), value);</div>
 <div class="line"><span class="lineno">  108</span>        <span class="keywordflow">if</span>(!updated_parameters.available())</div>
 <div class="line"><span class="lineno">  109</span>        {</div>
 <div class="line"><span class="lineno">  110</span>            ESP_LOGE(TAG, <span class="stringliteral">&quot;no space available&quot;</span>);</div>
@@ -251,8 +251,9 @@ template&lt;std::size_t MAX_PARAMETERS&gt; </div>
 <div class="line"><span class="lineno">  123</span>    }</div>
 <div class="ttc" id="aclassshrapnel_1_1os_1_1Timer_html_a5ff1b2e05dc1558fb40ef551fc00d6a9"><div class="ttname"><a href="classshrapnel_1_1os_1_1Timer.html#a5ff1b2e05dc1558fb40ef551fc00d6a9">shrapnel::os::Timer::start</a></div><div class="ttdeci">BaseType_t start(TickType_t xBlockTime)</div><div class="ttdef"><b>Definition:</b> <a href="timer_8cpp_source.html#l00038">timer.cpp:38</a></div></div>
 <div class="ttc" id="aclassshrapnel_1_1os_1_1Timer_html_a700eee72ff07045cfdebbef6d397668e"><div class="ttname"><a href="classshrapnel_1_1os_1_1Timer.html#a700eee72ff07045cfdebbef6d397668e">shrapnel::os::Timer::is_active</a></div><div class="ttdeci">BaseType_t is_active() const</div><div class="ttdef"><b>Definition:</b> <a href="timer_8cpp_source.html#l00036">timer.cpp:36</a></div></div>
+<div class="ttc" id="anamespaceshrapnel_html_ac9abbf33a3e7514326e9056b8541fc77"><div class="ttname"><a href="namespaceshrapnel.html#ac9abbf33a3e7514326e9056b8541fc77">shrapnel::data</a></div><div class="ttdeci">struct arg_str * data</div><div class="ttdef"><b>Definition:</b> <a href="shrapnel__console_8cpp_source.html#l00042">shrapnel_console.cpp:42</a></div></div>
 </div><!-- fragment -->
-<p class="reference">References <a class="el" href="timer_8cpp_source.html#l00036">shrapnel::os::Timer::is_active()</a>, and <a class="el" href="timer_8cpp_source.html#l00038">shrapnel::os::Timer::start()</a>.</p>
+<p class="reference">References <a class="el" href="shrapnel__console_8cpp_source.html#l00042">shrapnel::data</a>, <a class="el" href="timer_8cpp_source.html#l00036">shrapnel::os::Timer::is_active()</a>, and <a class="el" href="timer_8cpp_source.html#l00038">shrapnel::os::Timer::start()</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">

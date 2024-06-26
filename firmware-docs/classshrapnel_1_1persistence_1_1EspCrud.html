@@ -121,11 +121,11 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a618958ad06b98b3d6310383d949c683f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a917b1aeb36c9dc9cf3028c457c370cd0"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classshrapnel_1_1persistence_1_1EspCrud.html#a917b1aeb36c9dc9cf3028c457c370cd0">~EspCrud</a> () final</td></tr>
 <tr class="separator:a917b1aeb36c9dc9cf3028c457c370cd0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa8aa11ef4d54cb9915c2feadde7a74fe"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classshrapnel_1_1persistence_1_1EspCrud.html#aa8aa11ef4d54cb9915c2feadde7a74fe">create</a> (const std::span&lt; uint8_t &gt; &amp;data, uint32_t &amp;id_out) override</td></tr>
+<tr class="memitem:aa8aa11ef4d54cb9915c2feadde7a74fe"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classshrapnel_1_1persistence_1_1EspCrud.html#aa8aa11ef4d54cb9915c2feadde7a74fe">create</a> (const std::span&lt; uint8_t &gt; &amp;<a class="el" href="namespaceshrapnel.html#ac9abbf33a3e7514326e9056b8541fc77">data</a>, uint32_t &amp;id_out) override</td></tr>
 <tr class="separator:aa8aa11ef4d54cb9915c2feadde7a74fe"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acffbc9624d79f32ba578fcbc30cf229f"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classshrapnel_1_1persistence_1_1EspCrud.html#acffbc9624d79f32ba578fcbc30cf229f">read</a> (uint32_t id, std::span&lt; uint8_t &gt; &amp;buffer) override</td></tr>
 <tr class="separator:acffbc9624d79f32ba578fcbc30cf229f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aad573811f3d9f6b07efba8e09dcad6bc"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classshrapnel_1_1persistence_1_1EspCrud.html#aad573811f3d9f6b07efba8e09dcad6bc">update</a> (uint32_t id, const std::span&lt; uint8_t &gt; &amp;data) override</td></tr>
+<tr class="memitem:aad573811f3d9f6b07efba8e09dcad6bc"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classshrapnel_1_1persistence_1_1EspCrud.html#aad573811f3d9f6b07efba8e09dcad6bc">update</a> (uint32_t id, const std::span&lt; uint8_t &gt; &amp;<a class="el" href="namespaceshrapnel.html#ac9abbf33a3e7514326e9056b8541fc77">data</a>) override</td></tr>
 <tr class="separator:aad573811f3d9f6b07efba8e09dcad6bc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a469359978bc57399024f0e7a42bc78e7"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classshrapnel_1_1persistence_1_1EspCrud.html#a469359978bc57399024f0e7a42bc78e7">destroy</a> (uint32_t id) override</td></tr>
 <tr class="separator:a469359978bc57399024f0e7a42bc78e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -290,7 +290,7 @@ template&lt;size_t READ_BUFFER_SIZE&gt; </div>
 <div class="line"><span class="lineno">   88</span> </div>
 <div class="line"><span class="lineno">   89</span>        ESP_ERROR_CHECK_WITHOUT_ABORT(</div>
 <div class="line"><span class="lineno">   90</span>            err = nvs_set_blob(</div>
-<div class="line"><span class="lineno">   91</span>                nvs_handle, id_to_key(<span class="keywordtype">id</span>).c_str(), data.data(), data.size()));</div>
+<div class="line"><span class="lineno">   91</span>                nvs_handle, id_to_key(<span class="keywordtype">id</span>).c_str(), <a class="code hl_variable" href="namespaceshrapnel.html#ac9abbf33a3e7514326e9056b8541fc77">data</a>.data(), <a class="code hl_variable" href="namespaceshrapnel.html#ac9abbf33a3e7514326e9056b8541fc77">data</a>.size()));</div>
 <div class="line"><span class="lineno">   92</span>        <span class="keywordflow">if</span>(err != ESP_OK)</div>
 <div class="line"><span class="lineno">   93</span>            <span class="keywordflow">return</span> -1;</div>
 <div class="line"><span class="lineno">   94</span> </div>
@@ -305,7 +305,10 @@ template&lt;size_t READ_BUFFER_SIZE&gt; </div>
 <div class="line"><span class="lineno">  103</span> </div>
 <div class="line"><span class="lineno">  104</span>        <span class="keywordflow">return</span> 0;</div>
 <div class="line"><span class="lineno">  105</span>    }</div>
+<div class="ttc" id="anamespaceshrapnel_html_ac9abbf33a3e7514326e9056b8541fc77"><div class="ttname"><a href="namespaceshrapnel.html#ac9abbf33a3e7514326e9056b8541fc77">shrapnel::data</a></div><div class="ttdeci">struct arg_str * data</div><div class="ttdef"><b>Definition:</b> <a href="shrapnel__console_8cpp_source.html#l00042">shrapnel_console.cpp:42</a></div></div>
 </div><!-- fragment -->
+<p class="reference">References <a class="el" href="shrapnel__console_8cpp_source.html#l00042">shrapnel::data</a>.</p>
+
 </div>
 </div>
 <a id="a469359978bc57399024f0e7a42bc78e7" name="a469359978bc57399024f0e7a42bc78e7"></a>
@@ -538,7 +541,7 @@ template&lt;size_t READ_BUFFER_SIZE&gt; </div>
 <div class="line"><span class="lineno">  145</span> </div>
 <div class="line"><span class="lineno">  146</span>        ESP_ERROR_CHECK_WITHOUT_ABORT(</div>
 <div class="line"><span class="lineno">  147</span>            err = nvs_set_blob(</div>
-<div class="line"><span class="lineno">  148</span>                nvs_handle, id_to_key(<span class="keywordtype">id</span>).c_str(), data.data(), data.size()));</div>
+<div class="line"><span class="lineno">  148</span>                nvs_handle, id_to_key(<span class="keywordtype">id</span>).c_str(), <a class="code hl_variable" href="namespaceshrapnel.html#ac9abbf33a3e7514326e9056b8541fc77">data</a>.data(), <a class="code hl_variable" href="namespaceshrapnel.html#ac9abbf33a3e7514326e9056b8541fc77">data</a>.size()));</div>
 <div class="line"><span class="lineno">  149</span>        <span class="keywordflow">if</span>(err != ESP_OK)</div>
 <div class="line"><span class="lineno">  150</span>            <span class="keywordflow">return</span> -1;</div>
 <div class="line"><span class="lineno">  151</span> </div>
@@ -549,6 +552,8 @@ template&lt;size_t READ_BUFFER_SIZE&gt; </div>
 <div class="line"><span class="lineno">  156</span>        <span class="keywordflow">return</span> 0;</div>
 <div class="line"><span class="lineno">  157</span>    };</div>
 </div><!-- fragment -->
+<p class="reference">References <a class="el" href="shrapnel__console_8cpp_source.html#l00042">shrapnel::data</a>.</p>
+
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following file:<ul>

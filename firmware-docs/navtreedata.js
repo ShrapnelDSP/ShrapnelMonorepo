@@ -26,13 +26,10 @@ var NAVTREE =
 [
   [ "ShrapnelDSP", "index.html", [
     [ "websockets API", "ws_api.html", null ],
-    [ "SharpnelDSP Firmware", "md_firmware_README.html", [
-      [ "Build instructions", "md_firmware_README.html#autotoc_md0", null ]
-    ] ],
     [ "Namespaces", "namespaces.html", [
       [ "Namespace List", "namespaces.html", "namespaces_dup" ],
       [ "Namespace Members", "namespacemembers.html", [
-        [ "All", "namespacemembers.html", null ],
+        [ "All", "namespacemembers.html", "namespacemembers_dup" ],
         [ "Functions", "namespacemembers_func.html", null ],
         [ "Variables", "namespacemembers_vars.html", null ],
         [ "Typedefs", "namespacemembers_type.html", null ],
@@ -72,12 +69,13 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "abstract__dsp_8h.html",
-"classshrapnel_1_1effect_1_1Wah.html#a4b8c2846e60e95f20173224d0d88dee6",
-"classshrapnel_1_1wifi_1_1WifiStateMachine.html#a45fa4c2f5bfd4399d1419b3681e75656",
-"functions_func_v.html",
-"namespaceshrapnel_1_1api.html#a3ab1d2a49992be39cbc754c059d0f66b",
-"presets__api_8h.html#a2fc133b98abea575e4db058abe2cd314",
-"structshrapnel_1_1os_1_1Timer_1_1impl.html#ac6408319748208db3d4881e0ad3d719f"
+"classshrapnel_1_1effect_1_1Chorus.html#ab721c376bd1680c901101a6f366fc6a2",
+"classshrapnel_1_1selected__preset_1_1SelectedPresetManager.html#a48de89ecf69dcf1a3e90c7b86751ba07",
+"functions_func_f.html",
+"namespaceshrapnel.html#a9c85fa6a77cfb97394c46cf0ebe10298",
+"pcm3060_8c.html#a71b6997ffef11829ebada7d54261e2f3",
+"structshrapnel_1_1midi_1_1MessageReceived.html#a83ae76bcd410b1836b0d319f1c8cef4a",
+"wah-smoothing_8py.html#abc1f92f01bf15f1729ff05c8074295aa"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

@@ -86,6 +86,7 @@ use.</p>
   <h2><span>Implementation</span></h2>
   <pre class="language-dart"><code class="language-dart">@override
 Future&lt;void&gt; dispose() async {
+  await websocketSubscription.cancel();
   unawaited(_streamController.close());
 
   await _sinkController.close();

@@ -224,8 +224,15 @@ $(document).ready(function(){initNavTree('midi__mapping__api_8h_source.html','')
 <div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span><span class="keywordtype">int</span> <a class="code hl_function" href="namespaceshrapnel_1_1api.html#a3fe25beb5fb138338c66392d3788da02">from_proto</a>(<span class="keyword">const</span> shrapnel_midi_mapping_Message &amp;message,</div>
 <div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>               <a class="code hl_typedef" href="namespaceshrapnel_1_1midi.html#a1f9618ba2a946f50c5d3decb14ad0a07">midi::MappingApiMessage</a> &amp;out);</div>
 <div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span> </div>
-<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span>} <span class="comment">// namespace api</span></div>
-<div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span>} <span class="comment">// namespace shrapnel</span></div>
+<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span><span class="keyword">template</span> &lt;&gt;</div>
+<div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span>std::optional&lt;midi::Message&gt; <a class="code hl_function" href="namespaceshrapnel_1_1api.html#a714cc0eaf10c88e19166e483ee0f6ea1">from_bytes</a>(std::span&lt;const uint8_t&gt; buffer);</div>
+<div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span> </div>
+<div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span><span class="keyword">template</span> &lt;&gt;</div>
+<div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span><span class="keywordtype">int</span> <a class="code hl_function" href="namespaceshrapnel_1_1api.html#a3fe25beb5fb138338c66392d3788da02">from_proto</a>(<span class="keyword">const</span> shrapnel_midi_mapping_MidiMessage &amp;message,</div>
+<div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span>               <a class="code hl_struct" href="structshrapnel_1_1midi_1_1Message.html">midi::Message</a> &amp;out);</div>
+<div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span> </div>
+<div class="line"><a id="l00138" name="l00138"></a><span class="lineno">  138</span>} <span class="comment">// namespace api</span></div>
+<div class="line"><a id="l00139" name="l00139"></a><span class="lineno">  139</span>} <span class="comment">// namespace shrapnel</span></div>
 <div class="ttc" id="aapi_8h_html"><div class="ttname"><a href="api_8h.html">api.h</a></div></div>
 <div class="ttc" id="aaudio__param_8h_html"><div class="ttname"><a href="audio__param_8h.html">audio_param.h</a></div></div>
 <div class="ttc" id="amidi__protocol_8h_html"><div class="ttname"><a href="midi__protocol_8h.html">midi_protocol.h</a></div></div>

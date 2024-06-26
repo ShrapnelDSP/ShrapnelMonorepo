@@ -79,6 +79,7 @@ var annotated_dup =
       ] ],
       [ "AudioProcessor", "classshrapnel_1_1AudioProcessor.html", "classshrapnel_1_1AudioProcessor" ],
       [ "AudioProcessorParameters", "structshrapnel_1_1AudioProcessorParameters.html", "structshrapnel_1_1AudioProcessorParameters" ],
+      [ "Console", "classshrapnel_1_1Console.html", "classshrapnel_1_1Console" ],
       [ "MainThread", "classshrapnel_1_1MainThread.html", "classshrapnel_1_1MainThread" ],
       [ "MidiMessageHandler", "classshrapnel_1_1MidiMessageHandler.html", "classshrapnel_1_1MidiMessageHandler" ],
       [ "ParameterObserver", "classshrapnel_1_1ParameterObserver.html", "classshrapnel_1_1ParameterObserver" ],

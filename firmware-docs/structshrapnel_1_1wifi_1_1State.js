@@ -7,10 +7,7 @@ var structshrapnel_1_1wifi_1_1State =
       [ "CONNECTED", "structshrapnel_1_1wifi_1_1State.html#a0c7289235b004679b762cbd803e86e87a8af18733df93a67c99f9ddbe77e714a6", null ],
       [ "PROVISIONING", "structshrapnel_1_1wifi_1_1State.html#a0c7289235b004679b762cbd803e86e87a910ad9f181f6db9f076240c8f016ff51", null ],
       [ "PROVISIONING_STOPPING", "structshrapnel_1_1wifi_1_1State.html#a0c7289235b004679b762cbd803e86e87aec9d39e7a025f419453f6b19558a140f", null ],
-      [ "PROVISIONING_FINISHING", "structshrapnel_1_1wifi_1_1State.html#a0c7289235b004679b762cbd803e86e87a73b9afdfcbbddce777671844566ba216", null ]
-    ] ],
-    [ "ETL_DECLARE_ENUM_TYPE", "structshrapnel_1_1wifi_1_1State.html#aedfab6def2d8ca1e22a1c1b0e714ef1a", null ],
-    [ "ETL_ENUM_TYPE", "structshrapnel_1_1wifi_1_1State.html#a8908278aa8cbdb9f5e4abffabee8aaaa", null ],
-    [ "ETL_ENUM_TYPE", "structshrapnel_1_1wifi_1_1State.html#a5eb981153001087216e4eee02a60e2f5", null ],
-    [ "ETL_ENUM_TYPE", "structshrapnel_1_1wifi_1_1State.html#a0cf6007d295f553b604d592aa02eb294", null ]
+      [ "PROVISIONING_FINISHING", "structshrapnel_1_1wifi_1_1State.html#a0c7289235b004679b762cbd803e86e87a73b9afdfcbbddce777671844566ba216", null ],
+      [ "PROVISIONING_BYPASSED", "structshrapnel_1_1wifi_1_1State.html#a0c7289235b004679b762cbd803e86e87a4bd1e294671425758fe0cf27c8cd7f83", null ]
+    ] ]
 ];

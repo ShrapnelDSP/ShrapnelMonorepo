@@ -2,6 +2,8 @@ var midi__mapping__api_8cpp =
 [
     [ "from_bytes", "midi__mapping__api_8cpp.html#afb9c40c4817e7a3efb9d64106d2dadca", null ],
     [ "from_bytes", "midi__mapping__api_8cpp.html#ae4aacb12f1ef64aeb00516d408132c85", null ],
+    [ "from_bytes", "midi__mapping__api_8cpp.html#a6292410ae18b65e509db9b46ca4926c3", null ],
+    [ "from_bytes", "midi__mapping__api_8cpp.html#a681a57451d2bf7e5e37aeddb2aed6419", null ],
     [ "from_proto", "midi__mapping__api_8cpp.html#acaff6312d226c4d11a7dc6dccd673801", null ],
     [ "from_proto", "midi__mapping__api_8cpp.html#a454e2d63788a5c7aa7fe291c31081f07", null ],
     [ "from_proto", "midi__mapping__api_8cpp.html#a4c655dbf6670db90910824cd5a1a2a50", null ],
