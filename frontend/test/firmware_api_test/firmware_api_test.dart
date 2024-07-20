@@ -94,8 +94,6 @@ const networkSsid = String.fromEnvironment('NETWORK_SSID');
 const networkPassphrase = String.fromEnvironment('NETWORK_PASSPHRASE');
 // ignore: do_not_use_environment
 const firmwareBinaryPath = String.fromEnvironment('FIRMWARE_BINARY_PATH');
-// ignore: do_not_use_environment
-const useFastProvisioning = bool.fromEnvironment('FAST_PROVISIONING');
 
 final _log = Logger('test');
 
@@ -124,7 +122,7 @@ void main() {
     uart.log.listen((_) {});
     addTearDown(uart.dispose);
 
-    if (useFastProvisioning) {
+    if (true) {
       _log.warning('Bypassing Wi-Fi provisioning to speed up test execution');
       await uart.provisionWifi(ssid: networkSsid, password: networkPassphrase);
     } else {

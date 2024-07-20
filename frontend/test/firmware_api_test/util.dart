@@ -84,13 +84,13 @@ Future<void> setUpWiFi({required String ssid, required String password}) async {
   }
 }
 
-Future<void> _eraseFlash() async {
+Future<void> _eraseFlash({required String port}) async {
   _log.info('Flashing firmware');
 
   // pip can be used to install esptool into the global environment:
   // https://docs.espressif.com/projects/esptool/en/latest/esp32/#quick-start
   const command = 'esptool.py';
-  final args = ['erase_flash'];
+  final args = ['-p', port, 'erase_flash'];
 
   final result = await Process.run(command, args);
 
@@ -111,6 +111,7 @@ List<int> _getMacAddressFromEsptoolStdout(String espToolStdout) {
 ///
 /// If the firmware is already loaded, then does nothing and quickly returns.
 Future<MacAddress> flashFirmware({
+  required String port,
   required int appPartitionAddress,
   required String path,
 }) async {
@@ -120,13 +121,14 @@ Future<MacAddress> flashFirmware({
   // takes about 1 second.
 
   final (isAlreadyFlashed, macAddress) = await _checkIfAlreadyFlashed(
+    port: port,
     appPartitionAddress: appPartitionAddress,
     binaryFilePath: p.join(path, 'esp32-dsp.bin'),
   );
 
   if (!isAlreadyFlashed) {
-    await _eraseFlash();
-    await _flashFirmware(path);
+    await _eraseFlash(port: port);
+    await _flashFirmware(port: port, path);
   } else {
     _log.info('Firmware appears to be already flashed, skip flashing');
   }
@@ -135,6 +137,7 @@ Future<MacAddress> flashFirmware({
 }
 
 Future<(bool, MacAddress)> _checkIfAlreadyFlashed({
+  required String port,
   required int appPartitionAddress,
   required String binaryFilePath,
 }) async {
@@ -169,7 +172,8 @@ Future<(bool, MacAddress)> _checkIfAlreadyFlashed({
   // pip can be used to install esptool into the global environment:
   // https://docs.espressif.com/projects/esptool/en/latest/esp32/#quick-start
   const command = 'esptool.py';
-  final args = '-b 2000000 '
+  final args = '-p $port '
+          '-b 2000000 '
           '--before default_reset --after hard_reset '
           '--chip esp32 '
           'verify_flash 0x10000 $expectedHeaderFilePath'
@@ -196,13 +200,14 @@ Future<(bool, MacAddress)> _checkIfAlreadyFlashed({
   );
 }
 
-Future<void> _flashFirmware(String path) async {
+Future<void> _flashFirmware(String path, {required String port}) async {
   _log.info('Flashing firmware');
 
   // pip can be used to install esptool into the global environment:
   // https://docs.espressif.com/projects/esptool/en/latest/esp32/#quick-start
   const command = 'esptool.py';
-  final args = '-b 2000000 '
+  final args = '-p $port '
+          '-b 2000000 '
           '--before default_reset --after hard_reset '
           '--chip esp32 '
           'write_flash --flash_mode dio --flash_size 4MB --flash_freq 80m '
@@ -219,13 +224,14 @@ Future<void> _flashFirmware(String path) async {
   _log.info(result.stdout);
 }
 
-Future<void> nvsErase() async {
+Future<void> nvsErase({required String port}) async {
   _log.info('Erasing NVS partition');
 
   // pip can be used to install esptool into the global environment:
   // https://docs.espressif.com/projects/esptool/en/latest/esp32/#quick-start
   const command = 'esptool.py';
-  final args = '-b 2000000 '
+  final args = '-p $port '
+          '-b 2000000 '
           '--before default_reset --after hard_reset '
           '--chip esp32 '
           'erase_region 0x9000 0x6000'
@@ -239,13 +245,14 @@ Future<void> nvsErase() async {
   _log.info(result.stdout);
 }
 
-Future<void> nvsLoad(String binaryPath) async {
+Future<void> nvsLoad(String binaryPath, {required String port}) async {
   _log.info('Flashing NVS partition');
 
   // pip can be used to install esptool into the global environment:
   // https://docs.espressif.com/projects/esptool/en/latest/esp32/#quick-start
   const command = 'esptool.py';
-  final args = '-b 2000000 '
+  final args = '-p $port '
+          '-b 2000000 '
           '--before default_reset --after hard_reset '
           '--chip esp32 '
           'write_flash --flash_mode dio --flash_size 4MB --flash_freq 80m '

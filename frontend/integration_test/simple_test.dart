@@ -82,8 +82,7 @@ const networkSsid = String.fromEnvironment('NETWORK_SSID');
 const networkPassphrase = String.fromEnvironment('NETWORK_PASSPHRASE');
 // ignore: do_not_use_environment
 const firmwareBinaryPath = String.fromEnvironment('FIRMWARE_BINARY_PATH');
-// ignore: do_not_use_environment
-const useFastProvisioning = bool.fromEnvironment('FAST_PROVISIONING');
+const port = '/dev/ttyUSB0';
 
 final _log = Logger('test');
 
@@ -96,136 +95,142 @@ void main() {
 
   setUpAll(() async {
     macAddress = await flashFirmware(
+      port: port,
       appPartitionAddress: 0x10000,
       path: firmwareBinaryPath,
     );
   });
 
-  setUp(() async {
-    await nvsErase();
+  test('wifi provisioning', () async {
+    await nvsErase(port: port);
 
-    uart = await ShrapnelUart.open('/dev/ttyUSB0');
+    uart = await ShrapnelUart.open(port);
     // TODO move this into the uart class, so it logs by itself even if there
     // are no external log listeners
     // ensure at least one listener so logging side effect always runs
     uart.log.listen((_) {});
-    addTearDown(uart.dispose);
 
-    if (useFastProvisioning) {
+    await connectToDutAccessPoint(macAddress);
+    await setUpWiFi(ssid: networkSsid, password: networkPassphrase);
+
+    // TODO export NVS partition for reuse later
+
+    uart.dispose();
+  });
+
+  group('wifi already set up', () {
+    setUp(() async {
+      await nvsErase(port: port);
+
+      uart = await ShrapnelUart.open(port);
+      // TODO move this into the uart class, so it logs by itself even if there
+      // are no external log listeners
+      // ensure at least one listener so logging side effect always runs
+      uart.log.listen((_) {});
+      addTearDown(uart.dispose);
+
       _log.warning('Bypassing Wi-Fi provisioning to speed up test execution');
       await uart.provisionWifi(ssid: networkSsid, password: networkPassphrase);
-    } else {
-      // TODO we can still speed up tests where provisioning must be tested:
-      // - export NVS partition to file after first time wifi provisioning is used
-      // - reload it in the setup for each following test. This resets the NVS
-      //    partition without requiring a fresh wifi provisioning run for each
-      //    test.
+
+      // Wait for firmware to start server after getting provisioned
+      await Future<void>.delayed(const Duration(seconds: 10));
+    });
+
+    testWidgets('uart console smoke', (tester) async {
+      await tester.runAsync(() async {
+        // At least one response line has to arrive within 1 second
+        final responseLogs = uart.log.first.timeout(const Duration(seconds: 1));
+
+        await uart.sendMidiMessage(
+          const MidiMessage.controlChange(
+            channel: 0,
+            control: 1,
+            value: 0x00,
+          ),
+        );
+
+        await expectLater(responseLogs, completes);
+      });
+    });
+
+    testWidgets('audio parameters', (tester) async {
+      await tester.runAsync(() async {
+        // audio parameter basic test
+        // factory reset
+        // all parameters loaded correctly
+        // update a parameter
+        // force save to NVS
+        // reboot
+        // check parameter reloaded
+      });
+    });
+
+    testWidgets('simple test', (tester) async {
+      await tester.pumpWidget(App());
+
+      // wait until connected
+      // poll connection status widget until ready with timeout
+      final homePage = HomePageObject(tester);
+      await homePage.waitUntilConnected();
+
+      await homePage.createPreset('Preset 1');
+
+      final midiMappingPage = await homePage.openMidiMapping();
+
+      expect(midiMappingPage.findPage(), findsOneWidget);
+      expect(midiMappingPage.findMappingRows(), findsNothing);
+
+      // create a mapping
+      final midiMappingCreatePage = await midiMappingPage.openCreateDialog();
+      await midiMappingCreatePage.selectMidiChannel(1);
+      await midiMappingCreatePage.selectCcNumber(2);
+      await midiMappingCreatePage.selectMode(MidiMappingMode.parameter);
+      // XXX: There is a bug in flutter where the DropdownButton's popup menu is
+      //      unreliable during tests: https://github.com/flutter/flutter/issues/82908
       //
-      // Alternatively, create a new test group that doesn't run the fast wifi
-      // provisioning setup, and instead runs the slow wifi setup.
+      // Pick an arbitrary parameter here. The only criteria for selection is that
+      // it actually works during the test. This is more likely if something is
+      // picked from the top of the list.
+      await midiMappingCreatePage.selectParameter('Chorus: DEPTH');
+      await midiMappingCreatePage.submitCreateDialog();
 
-      await connectToDutAccessPoint(macAddress);
-      await setUpWiFi(ssid: networkSsid, password: networkPassphrase);
-    }
+      await tester.pump(const Duration(seconds: 1));
+      await tester.pumpAndSettle();
 
-    // Wait for firmware to start server after getting provisioned
-    await Future<void>.delayed(const Duration(seconds: 10));
-  });
+      // Expect new mapping visible in UI
+      expect(midiMappingPage.findMappingRows(), findsOneWidget);
 
-  testWidgets('uart console smoke', (tester) async {
-    await tester.runAsync(() async {
-      // At least one response line has to arrive within 1 second
-      final responseLogs = uart.log.first.timeout(const Duration(seconds: 1));
+      await midiMappingPage.openCreateDialog();
+      await midiMappingCreatePage.selectMidiChannel(2);
+      await midiMappingCreatePage.selectCcNumber(3);
+      await midiMappingCreatePage.selectMode(MidiMappingMode.button);
+      await midiMappingCreatePage.selectPreset('Preset 1');
+      await midiMappingCreatePage.submitCreateDialog();
 
-      await uart.sendMidiMessage(
-        const MidiMessage.controlChange(
-          channel: 0,
-          control: 1,
-          value: 0x00,
-        ),
-      );
+      await tester.pump(const Duration(seconds: 1));
+      await tester.pumpAndSettle();
 
-      await expectLater(responseLogs, completes);
+      // Expect new mapping visible in UI
+      expect(midiMappingPage.findMappingRows(), findsNWidgets(2));
+
+      await midiMappingPage.openCreateDialog();
+      await midiMappingCreatePage.selectMidiChannel(3);
+      await midiMappingCreatePage.selectCcNumber(4);
+      await midiMappingCreatePage.selectMode(MidiMappingMode.toggle);
+      // XXX: There is a bug in flutter where the DropdownButton's popup menu is
+      //      unreliable during tests: https://github.com/flutter/flutter/issues/82908
+      //
+      // Pick an arbitrary parameter here. The only criteria for selection is that
+      // it actually works during the test. This is more likely if something is
+      // picked from the top of the list.
+      await midiMappingCreatePage.selectParameter('Chorus: RATE');
+      await midiMappingCreatePage.submitCreateDialog();
+
+      await tester.pump(const Duration(seconds: 1));
+      await tester.pumpAndSettle();
+
+      // Expect new mapping visible in UI
+      expect(midiMappingPage.findMappingRows(), findsNWidgets(3));
     });
-  });
-
-  testWidgets('audio parameters', (tester) async {
-    await tester.runAsync(() async {
-      // audio parameter basic test
-      // factory reset
-      // all parameters loaded correctly
-      // update a parameter
-      // force save to NVS
-      // reboot
-      // check parameter reloaded
-    });
-  });
-
-  testWidgets('simple test', (tester) async {
-    await tester.pumpWidget(App());
-
-    // wait until connected
-    // poll connection status widget until ready with timeout
-    final homePage = HomePageObject(tester);
-    await homePage.waitUntilConnected();
-
-    await homePage.createPreset('Preset 1');
-
-    final midiMappingPage = await homePage.openMidiMapping();
-
-    expect(midiMappingPage.findPage(), findsOneWidget);
-    expect(midiMappingPage.findMappingRows(), findsNothing);
-
-    // create a mapping
-    final midiMappingCreatePage = await midiMappingPage.openCreateDialog();
-    await midiMappingCreatePage.selectMidiChannel(1);
-    await midiMappingCreatePage.selectCcNumber(2);
-    await midiMappingCreatePage.selectMode(MidiMappingMode.parameter);
-    // XXX: There is a bug in flutter where the DropdownButton's popup menu is
-    //      unreliable during tests: https://github.com/flutter/flutter/issues/82908
-    //
-    // Pick an arbitrary parameter here. The only criteria for selection is that
-    // it actually works during the test. This is more likely if something is
-    // picked from the top of the list.
-    await midiMappingCreatePage.selectParameter('Chorus: DEPTH');
-    await midiMappingCreatePage.submitCreateDialog();
-
-    await tester.pump(const Duration(seconds: 1));
-    await tester.pumpAndSettle();
-
-    // Expect new mapping visible in UI
-    expect(midiMappingPage.findMappingRows(), findsOneWidget);
-
-    await midiMappingPage.openCreateDialog();
-    await midiMappingCreatePage.selectMidiChannel(2);
-    await midiMappingCreatePage.selectCcNumber(3);
-    await midiMappingCreatePage.selectMode(MidiMappingMode.button);
-    await midiMappingCreatePage.selectPreset('Preset 1');
-    await midiMappingCreatePage.submitCreateDialog();
-
-    await tester.pump(const Duration(seconds: 1));
-    await tester.pumpAndSettle();
-
-    // Expect new mapping visible in UI
-    expect(midiMappingPage.findMappingRows(), findsNWidgets(2));
-
-    await midiMappingPage.openCreateDialog();
-    await midiMappingCreatePage.selectMidiChannel(3);
-    await midiMappingCreatePage.selectCcNumber(4);
-    await midiMappingCreatePage.selectMode(MidiMappingMode.toggle);
-    // XXX: There is a bug in flutter where the DropdownButton's popup menu is
-    //      unreliable during tests: https://github.com/flutter/flutter/issues/82908
-    //
-    // Pick an arbitrary parameter here. The only criteria for selection is that
-    // it actually works during the test. This is more likely if something is
-    // picked from the top of the list.
-    await midiMappingCreatePage.selectParameter('Chorus: RATE');
-    await midiMappingCreatePage.submitCreateDialog();
-
-    await tester.pump(const Duration(seconds: 1));
-    await tester.pumpAndSettle();
-
-    // Expect new mapping visible in UI
-    expect(midiMappingPage.findMappingRows(), findsNWidgets(3));
   });
 }
