@@ -116,10 +116,6 @@ void main() {
     await nvsErase();
 
     uart = await ShrapnelUart.open('/dev/ttyUSB0');
-    // TODO move this into the uart class, so it logs by itself even if there
-    // are no external log listeners
-    // ensure at least one listener so logging side effect always runs
-    uart.log.listen((_) {});
     addTearDown(uart.dispose);
 
     if (true) {

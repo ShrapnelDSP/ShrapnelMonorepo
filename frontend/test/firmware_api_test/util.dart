@@ -269,7 +269,9 @@ Future<void> nvsLoad(String binaryPath, {required String port}) async {
 
 /// UART driver
 class ShrapnelUart {
-  ShrapnelUart._(this.port, this.reader);
+  ShrapnelUart._(this.port, this.reader) {
+    log.listen(_logger.info);
+  }
 
   static final _logger = Logger('ShrapnelUart');
 
@@ -331,7 +333,6 @@ class ShrapnelUart {
       .cast<List<int>>()
       .transform<String>(utf8.decoder)
       .transform(const LineSplitter())
-      .logInfo(_logger, (event) => event)
       .asBroadcastStream();
 
   Stream<String> get log => _log;

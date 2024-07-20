@@ -109,11 +109,6 @@ void main() {
     uart = await ShrapnelUart.open(port);
     addTearDown(() => uart.dispose());
 
-    // TODO move this into the uart class, so it logs by itself even if there
-    // are no external log listeners
-    // ensure at least one listener so logging side effect always runs
-    uart.log.listen((_) {});
-
     await connectToDutAccessPoint(macAddress);
 
     // mDNS seems to be slow, use the IP address directly for faster testing.
@@ -166,10 +161,6 @@ void main() {
       await nvsErase(port: port);
 
       uart = await ShrapnelUart.open(port);
-      // TODO move this into the uart class, so it logs by itself even if there
-      // are no external log listeners
-      // ensure at least one listener so logging side effect always runs
-      uart.log.listen((_) {});
       addTearDown(uart.dispose);
 
       _log.warning('Bypassing Wi-Fi provisioning to speed up test execution');
