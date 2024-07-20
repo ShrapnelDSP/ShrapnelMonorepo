@@ -153,8 +153,6 @@ void main() {
     );
 
     await homePage.waitUntilConnected();
-
-    // TODO export NVS partition for reuse later
   });
 
   group('wifi already set up', () {
