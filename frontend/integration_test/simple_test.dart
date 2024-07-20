@@ -125,10 +125,11 @@ void main() {
     await provisioningPage.startProvisioning();
 
     await pumpWaitingFor(
-        tester: tester,
-        predicate: () =>
-            provisioningPage.findScanCompletePage.evaluate().isNotEmpty,
-        timeout: const Duration(seconds: 10));
+      tester: tester,
+      predicate: () =>
+          provisioningPage.findScanCompletePage.evaluate().isNotEmpty,
+      timeout: const Duration(seconds: 10),
+    );
 
     await provisioningPage.openAdvancedSetup();
 

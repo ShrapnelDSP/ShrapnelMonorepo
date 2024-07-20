@@ -26,7 +26,6 @@ import 'package:flutter_libserialport/flutter_libserialport.dart';
 import 'package:logging/logging.dart';
 import 'package:path/path.dart' as p;
 import 'package:shrapnel/api/proto_extension.dart';
-import 'package:shrapnel/core/stream_extensions.dart';
 import 'package:shrapnel/midi_mapping/model/models.dart';
 import 'package:shrapnel/wifi_provisioning.dart';
 

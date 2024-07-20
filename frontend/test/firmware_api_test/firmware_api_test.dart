@@ -94,8 +94,7 @@ const networkSsid = String.fromEnvironment('NETWORK_SSID');
 const networkPassphrase = String.fromEnvironment('NETWORK_PASSPHRASE');
 // ignore: do_not_use_environment
 const firmwareBinaryPath = String.fromEnvironment('FIRMWARE_BINARY_PATH');
-
-final _log = Logger('test');
+const port = '/dev/ttyUSB0';
 
 void main() {
   assert(dutIpAddress.isNotEmpty, 'DUT_IP_ADDRESS must be set');
@@ -107,62 +106,57 @@ void main() {
 
   setUpAll(() async {
     macAddress = await flashFirmware(
+      port: port,
       appPartitionAddress: 0x10000,
       path: firmwareBinaryPath,
     );
   });
 
-  setUp(() async {
-    await nvsErase();
-
-    uart = await ShrapnelUart.open('/dev/ttyUSB0');
-    addTearDown(uart.dispose);
-
-    if (true) {
-      _log.warning('Bypassing Wi-Fi provisioning to speed up test execution');
-      await uart.provisionWifi(ssid: networkSsid, password: networkPassphrase);
-    } else {
-      // TODO we can still speed up tests where provisioning must be tested:
-      // - export NVS partition to file after first time wifi provisioning is used
-      // - reload it in the setup for each following test. This resets the NVS
-      //    partition without requiring a fresh wifi provisioning run for each
-      //    test.
-      //
-      // Alternatively, create a new test group that doesn't run the fast wifi
-      // provisioning setup, and instead runs the slow wifi setup.
-
-      await connectToDutAccessPoint(macAddress);
-      await setUpWiFi(ssid: networkSsid, password: networkPassphrase);
-    }
-
-    // Wait for firmware to start server after getting provisioned
-    await Future<void>.delayed(const Duration(seconds: 10));
-
-    const uri = 'ws://$dutIpAddress:8080/websocket';
-    // closed by the WebSocketTransport
-    // ignore: close_sinks
-    final webSocket = await WebSocket.connect(uri);
-    final webSocketTransport = WebSocketTransportAdapter(websocket: webSocket);
-    api = ApiWebsocket(websocket: webSocketTransport);
-    addTearDown(webSocketTransport.dispose);
+  test('wifi provisioning', () async {
+    await nvsErase(port: port);
+    await connectToDutAccessPoint(macAddress);
+    await setUpWiFi(ssid: networkSsid, password: networkPassphrase);
   });
 
-  test('simple test', () async {
-    final transport = ParameterTransport(websocket: api);
-    final service = ParameterService(transport: transport);
+  group('wifi already set up', () {
+    setUp(() async {
+      await nvsErase(port: port);
 
-    final ampGain = AudioParameterDoubleModel(
-      groupName: 'test',
-      id: 'ampGain',
-      name: 'Amp Gain',
-      parameterService: service,
-    );
+      uart = await ShrapnelUart.open('/dev/ttyUSB0');
+      addTearDown(uart.dispose);
 
-    // Skip 1, because it's the default injected by the parameter model. We
-    // are waiting for the first update from the firmware here.
-    final update = await ampGain.value.skip(1).first;
-    // Expect notification including the default value
-    expect(update, closeTo(0.5, 0.000001));
+      await uart.provisionWifi(ssid: networkSsid, password: networkPassphrase);
+
+      // Wait for firmware to start server after getting provisioned
+      await Future<void>.delayed(const Duration(seconds: 10));
+
+      const uri = 'ws://$dutIpAddress:8080/websocket';
+      // closed by the WebSocketTransport
+      // ignore: close_sinks
+      final webSocket = await WebSocket.connect(uri);
+      final webSocketTransport =
+          WebSocketTransportAdapter(websocket: webSocket);
+      api = ApiWebsocket(websocket: webSocketTransport);
+      addTearDown(webSocketTransport.dispose);
+    });
+
+    test('simple test', () async {
+      final transport = ParameterTransport(websocket: api);
+      final service = ParameterService(transport: transport);
+
+      final ampGain = AudioParameterDoubleModel(
+        groupName: 'test',
+        id: 'ampGain',
+        name: 'Amp Gain',
+        parameterService: service,
+      );
+
+      // Skip 1, because it's the default injected by the parameter model. We
+      // are waiting for the first update from the firmware here.
+      final update = await ampGain.value.skip(1).first;
+      // Expect notification including the default value
+      expect(update, closeTo(0.5, 0.000001));
+    });
   });
 }
 
