@@ -21,6 +21,7 @@
 @Tags(['api'])
 library;
 
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:logging/logging.dart';
 import 'package:shrapnel/main.dart';
@@ -28,6 +29,7 @@ import 'package:shrapnel/midi_mapping/model/models.dart';
 
 import '../test/firmware_api_test/util.dart';
 import '../test/home_page_object.dart';
+import '../test/util.dart';
 
 // preset test
 // start up
@@ -101,21 +103,62 @@ void main() {
     );
   });
 
-  test('wifi provisioning', () async {
+  testWidgets('wifi provisioning', (tester) async {
     await nvsErase(port: port);
 
     uart = await ShrapnelUart.open(port);
+    addTearDown(() => uart.dispose());
+
     // TODO move this into the uart class, so it logs by itself even if there
     // are no external log listeners
     // ensure at least one listener so logging side effect always runs
     uart.log.listen((_) {});
 
     await connectToDutAccessPoint(macAddress);
-    await setUpWiFi(ssid: networkSsid, password: networkPassphrase);
+
+    // mDNS seems to be slow, use the IP address directly for faster testing.
+    await tester.pumpWidget(
+      App(
+        normalHost: dutIpAddress,
+        provisioningHost: '192.168.4.1',
+      ),
+    );
+
+    final homePage = HomePageObject(tester);
+    final provisioningPage = await homePage.openWifiProvisioningPage();
+
+    await provisioningPage.startProvisioning();
+
+    await pumpWaitingFor(
+        tester: tester,
+        predicate: () =>
+            provisioningPage.findScanCompletePage.evaluate().isNotEmpty,
+        timeout: const Duration(seconds: 10));
+
+    await provisioningPage.openAdvancedSetup();
+
+    await provisioningPage.enterSsid(networkSsid);
+    await provisioningPage.enterPassword(networkPassphrase);
+
+    await provisioningPage.submitAdvanced();
+
+    await pumpWaitingFor(
+      tester: tester,
+      predicate: () => provisioningPage.findSuccessPage.evaluate().isNotEmpty,
+      timeout: const Duration(seconds: 10),
+    );
+
+    await tester.tap(find.byType(BackButton));
+
+    await pumpWaitingFor(
+      tester: tester,
+      predicate: () => homePage.findHomePage.evaluate().isNotEmpty,
+      timeout: const Duration(seconds: 10),
+    );
+
+    await homePage.waitUntilConnected();
 
     // TODO export NVS partition for reuse later
-
-    uart.dispose();
   });
 
   group('wifi already set up', () {
@@ -166,7 +209,13 @@ void main() {
     });
 
     testWidgets('simple test', (tester) async {
-      await tester.pumpWidget(App());
+      // mDNS seems to be slow, use the IP address directly for faster testing.
+      await tester.pumpWidget(
+        App(
+          normalHost: dutIpAddress,
+          provisioningHost: '192.168.4.1',
+        ),
+      );
 
       // wait until connected
       // poll connection status widget until ready with timeout

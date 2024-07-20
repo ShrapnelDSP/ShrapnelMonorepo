@@ -56,7 +56,7 @@ Future<void> setUpWiFi({required String ssid, required String password}) async {
   final provisioning = await _retry(() async {
     final provisioning = Provisioning(
       security: Security1(pop: 'abcd1234'),
-      transport: TransportHTTP('guitar-dsp.local'),
+      transport: TransportHTTP('192.168.4.1'),
     );
 
     final success = await provisioning.establishSession();

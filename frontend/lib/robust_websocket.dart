@@ -93,7 +93,7 @@ class RobustWebsocket extends ChangeNotifier
     while (socket == null) {
       try {
         final client = HttpClient();
-        client.connectionTimeout = const Duration(seconds: 15);
+        client.connectionTimeout = const Duration(seconds: 5);
         final request = await client.openUrl('GET', uri);
 
         final nonce = <int>[];
