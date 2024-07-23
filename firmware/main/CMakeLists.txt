@@ -11,13 +11,14 @@ if(ESP_PLATFORM)
                            mdns
                            nvs_flash
                            LDFRAGMENTS esp-dsp.lf
-                           )
+    )
 
     target_link_libraries(${COMPONENT_LIB}
                           PRIVATE
                           shrapnel::abstract_dsp
                           shrapnel::audio_events
                           shrapnel::cmd_handling
+                          shrapnel::console
                           shrapnel::esp_persistence
                           shrapnel::etl
                           shrapnel::hardware

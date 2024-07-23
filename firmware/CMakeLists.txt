@@ -1,16 +1,16 @@
-if (ESP_PLATFORM)
+if(ESP_PLATFORM)
     cmake_minimum_required(VERSION 3.13)
 
     set(CMAKE_CXX_STANDARD 20)
 
     option(SHRAPNEL_RESET_WIFI_CREDENTIALS
-            "Remove the provisioning Wi-Fi credentials at power up"
-            OFF
-            )
+           "Remove the provisioned Wi-Fi credentials at power up"
+           OFF
+    )
 
-    if (SHRAPNEL_RESET_WIFI_CREDENTIALS)
+    if(SHRAPNEL_RESET_WIFI_CREDENTIALS)
         add_compile_definitions(SHRAPNEL_RESET_WIFI_CREDENTIALS=1)
-    endif ()
+    endif()
 
     list(APPEND EXTRA_COMPONENT_DIRS ../thirdparty/esp-idf-components/esp-dsp)
 
@@ -22,8 +22,10 @@ if (ESP_PLATFORM)
     add_subdirectory(../effects/gate gate)
     add_subdirectory(../effects/valvestate valvestate)
     add_subdirectory(../effects/wah wah)
-    add_subdirectory(../thirdparty/esp-idf-components/etl etl)
     add_subdirectory(../thirdparty/esp-idf-components/cppcodec cppcodec)
+    add_subdirectory(../thirdparty/esp-idf-components/embedded_cli embedded_cli)
+    add_subdirectory(../thirdparty/esp-idf-components/esp32-fft esp32-fft)
+    add_subdirectory(../thirdparty/esp-idf-components/etl etl)
     add_subdirectory(../thirdparty/esp-idf-components/nanopb nanopb)
     add_subdirectory(components/api)
     add_subdirectory(components/audio)
@@ -46,6 +48,7 @@ if (ESP_PLATFORM)
     add_subdirectory(components/persistence)
     add_subdirectory(components/presets)
     add_subdirectory(components/server)
+    add_subdirectory(components/shrapnel_console)
     add_subdirectory(components/wifi)
 
     return()

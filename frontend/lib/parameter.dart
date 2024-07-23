@@ -106,9 +106,9 @@ class ParameterTransport
         MessageTransport<ParameterServiceOutputMessage,
             ParameterServiceInputMessage> {
   ParameterTransport({required this.websocket}) {
-    _controller.stream.listen((message) {
-      websocket.send(ApiMessage.parameterOutput(message: message));
-    });
+    _controller.stream
+        .map((message) => ApiMessage.parameterOutput(message: message))
+        .listen(websocket.sink.add);
   }
 
   ApiWebsocket websocket;

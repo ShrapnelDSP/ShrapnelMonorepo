@@ -28,6 +28,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logging/logging.dart';
 
+import 'api/api_websocket.dart';
+
 class _Strings {
   static const initialMessage =
       'Please connect to the ShrapnelDSP WiFi access point (shrapnel_XXXXXX).';
@@ -305,6 +307,7 @@ class _WifiScanningScreen extends ConsumerWidget {
       child = Padding(
         padding: const EdgeInsets.all(8),
         child: Column(
+          key: const Key('wifi scan complete page'),
           children: [
             Expanded(
               child: ListView.builder(
@@ -570,15 +573,19 @@ enum WifiProvisioningState {
 }
 
 final provisioningProvider = ChangeNotifierProvider(
-  (ref) => WifiProvisioningService(
-    provisioningFactory: () {
-      _log.info('Creating provisioning connection');
-      return Provisioning(
-        security: Security1(pop: 'abcd1234'),
-        transport: TransportHTTP('guitar-dsp.local'),
-      );
-    },
-  ),
+  (ref) {
+    final host = ref.watch(provisioningHostProvider);
+
+    return WifiProvisioningService(
+      provisioningFactory: () {
+        _log.info('Creating provisioning connection');
+        return Provisioning(
+          security: Security1(pop: 'abcd1234'),
+          transport: TransportHTTP(host),
+        );
+      },
+    );
+  },
 );
 
 class WifiProvisioningService extends ChangeNotifier {
@@ -715,7 +722,7 @@ class WifiProvisioningService extends ChangeNotifier {
       return;
     }
 
-    _status = await _pollWifiStatusWithTimeout(const Duration(seconds: 10));
+    _status = await provisioning!.pollStatus(const Duration(seconds: 10));
     if (!_status.isSuccess()) {
       _log.severe(
         'could not connect to provisioned access point '
@@ -728,27 +735,6 @@ class WifiProvisioningService extends ChangeNotifier {
 
     _state = WifiProvisioningState.success;
     return;
-  }
-
-  Future<ConnectionStatus?> _pollWifiStatusWithTimeout(Duration timeout) async {
-    var keepGoing = true;
-    final timer = Timer(timeout, () {
-      _log.warning('Connection to provisioned access point timed out');
-      keepGoing = false;
-    });
-    ConnectionStatus? status;
-
-    while (keepGoing) {
-      status = await provisioning!.getStatus();
-
-      if (status.isTerminal()) {
-        timer.cancel();
-        return status;
-      }
-      await Future<void>.delayed(const Duration(seconds: 1));
-    }
-
-    return status;
   }
 
   void reset() {
@@ -779,5 +765,28 @@ extension ShrapnelAdditions on ConnectionStatus? {
     }
 
     return this!.state == WifiConnectionState.Connected;
+  }
+}
+
+extension StatusPollEx on Provisioning {
+  Future<ConnectionStatus?> pollStatus(Duration timeout) async {
+    var keepGoing = true;
+    final timer = Timer(timeout, () {
+      _log.warning('Connection to provisioned access point timed out');
+      keepGoing = false;
+    });
+    ConnectionStatus? status;
+
+    while (keepGoing) {
+      status = await getStatus();
+
+      if (status.isTerminal()) {
+        timer.cancel();
+        return status;
+      }
+      await Future<void>.delayed(const Duration(seconds: 1));
+    }
+
+    return status;
   }
 }

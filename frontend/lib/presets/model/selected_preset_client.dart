@@ -60,10 +60,8 @@ class SelectedPresetTransport
       : _websocket = websocket {
     _controller.stream
         .logFinest(_log, (event) => 'send message: $event')
-        .listen(
-          (message) =>
-              _websocket.send(ApiMessage.selectedPreset(message: message)),
-        );
+        .map((message) => ApiMessage.selectedPreset(message: message))
+        .listen(_websocket.sink.add);
   }
 
   final _controller = StreamController<SelectedPresetMessage>();

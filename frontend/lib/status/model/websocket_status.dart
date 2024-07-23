@@ -30,7 +30,7 @@ class WebSocketStatusModel extends _$WebSocketStatusModel {
   @override
   WebSocketStatusData build() {
     final websocket =
-        ref.watch(robustWebsocketProvider(Uri.parse(kShrapnelUri)));
+        ref.watch(robustWebsocketProvider(ref.watch(shrapnelUriProvider)));
     return WebSocketStatusData(isConnected: websocket.isAlive);
   }
 }

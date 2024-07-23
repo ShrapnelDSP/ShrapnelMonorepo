@@ -19,7 +19,6 @@
 
 import 'package:esp_softap_provisioning/esp_softap_provisioning.dart';
 import 'package:esp_softap_provisioning/src/connection_models.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
@@ -29,6 +28,7 @@ import 'package:shrapnel/main.dart';
 import 'package:shrapnel/robust_websocket.dart';
 import 'package:shrapnel/wifi_provisioning.dart';
 
+import 'home_page_object.dart';
 import 'wifi_provisioning_test.mocks.dart';
 
 Map<String, dynamic> _createFakeWifi({
@@ -78,7 +78,7 @@ void main() {
       await tester.pumpWidget(
         ProviderScope(
           overrides: [
-            robustWebsocketProvider(Uri.parse(kShrapnelUri))
+            robustWebsocketProvider(kShrapnelUri)
                 .overrideWith((_) => websocket),
             provisioningProvider.overrideWith(
               (_) => WifiProvisioningService(
@@ -90,8 +90,8 @@ void main() {
         ),
       );
 
-      await tester.tap(find.byKey(const Key('wifi provisioning button')));
-      await tester.pumpAndSettle();
+      final homePage = HomePageObject(tester);
+      final provisioningPage = await homePage.openWifiProvisioningPage();
 
       provisioningFactory = () {
         mockProvisioning = MockProvisioning();
@@ -118,8 +118,7 @@ void main() {
         );
       };
 
-      await tester.tap(find.byKey(const Key('wifi provisioning start')));
-      await tester.pumpAndSettle();
+      await provisioningPage.startProvisioning();
 
       await tester.pump(const Duration(seconds: 1));
 
@@ -151,9 +150,8 @@ void main() {
         ),
       );
 
-      final passwordField = find.byKey(const Key('password text field'));
-      await tester.enterText(passwordField, 'password');
-      await tester.tap(find.byKey(const Key('password submit button')));
+      await provisioningPage.enterPassword('password');
+      await provisioningPage.submitPassword();
 
       await tester.pump(const Duration(milliseconds: 500));
 
@@ -161,7 +159,7 @@ void main() {
 
       await tester.pump(const Duration(seconds: 1));
 
-      expect(find.textContaining('success'), findsOneWidget);
+      expect(provisioningPage.findSuccessPage, findsOneWidget);
     },
   );
 
@@ -179,8 +177,7 @@ void main() {
     await tester.pumpWidget(
       ProviderScope(
         overrides: [
-          robustWebsocketProvider(Uri.parse(kShrapnelUri))
-              .overrideWith((_) => websocket),
+          robustWebsocketProvider(kShrapnelUri).overrideWith((_) => websocket),
           provisioningProvider.overrideWith(
             (_) => WifiProvisioningService(
               provisioningFactory: provisioningFactoryWrapper,
@@ -191,8 +188,8 @@ void main() {
       ),
     );
 
-    await tester.tap(find.byKey(const Key('wifi provisioning button')));
-    await tester.pumpAndSettle();
+    final homePage = HomePageObject(tester);
+    final provisioningPage = await homePage.openWifiProvisioningPage();
 
     provisioningFactory = () {
       mockProvisioning = MockProvisioning();
@@ -200,8 +197,7 @@ void main() {
           .thenAnswer((_) => Future.value(false));
     };
 
-    await tester.tap(find.byKey(const Key('wifi provisioning start')));
-    await tester.pumpAndSettle();
+    await provisioningPage.startProvisioning();
 
     expect(find.textContaining('failed'), findsOneWidget);
   });
@@ -220,8 +216,7 @@ void main() {
     await tester.pumpWidget(
       ProviderScope(
         overrides: [
-          robustWebsocketProvider(Uri.parse(kShrapnelUri))
-              .overrideWith((_) => websocket),
+          robustWebsocketProvider(kShrapnelUri).overrideWith((_) => websocket),
           provisioningProvider.overrideWith(
             (_) => WifiProvisioningService(
               provisioningFactory: provisioningFactoryWrapper,
@@ -232,8 +227,8 @@ void main() {
       ),
     );
 
-    await tester.tap(find.byKey(const Key('wifi provisioning button')));
-    await tester.pumpAndSettle();
+    final homePage = HomePageObject(tester);
+    final provisioningPage = await homePage.openWifiProvisioningPage();
 
     provisioningFactory = () {
       mockProvisioning = MockProvisioning();
@@ -260,8 +255,7 @@ void main() {
       );
     };
 
-    await tester.tap(find.byKey(const Key('wifi provisioning start')));
-    await tester.pumpAndSettle();
+    await provisioningPage.startProvisioning();
 
     await tester.pump(const Duration(seconds: 1));
 
@@ -291,9 +285,8 @@ void main() {
       ),
     );
 
-    final passwordField = find.byKey(const Key('password text field'));
-    await tester.enterText(passwordField, 'password');
-    await tester.tap(find.byKey(const Key('password submit button')));
+    await provisioningPage.enterPassword('password');
+    await provisioningPage.submitPassword();
     verify(
       mockProvisioning.sendWifiConfig(
         ssid: 'test SSID',
@@ -324,8 +317,7 @@ void main() {
     await tester.pumpWidget(
       ProviderScope(
         overrides: [
-          robustWebsocketProvider(Uri.parse(kShrapnelUri))
-              .overrideWith((_) => websocket),
+          robustWebsocketProvider(kShrapnelUri).overrideWith((_) => websocket),
           provisioningProvider.overrideWith(
             (_) => WifiProvisioningService(
               provisioningFactory: provisioningFactoryWrapper,
@@ -336,8 +328,8 @@ void main() {
       ),
     );
 
-    await tester.tap(find.byKey(const Key('wifi provisioning button')));
-    await tester.pumpAndSettle();
+    final homePage = HomePageObject(tester);
+    final provisioningPage = await homePage.openWifiProvisioningPage();
 
     provisioningFactory = () {
       mockProvisioning = MockProvisioning();
@@ -364,8 +356,7 @@ void main() {
       );
     };
 
-    await tester.tap(find.byKey(const Key('wifi provisioning start')));
-    await tester.pumpAndSettle();
+    await provisioningPage.startProvisioning();
 
     await tester.pump(const Duration(seconds: 1));
 
@@ -395,9 +386,8 @@ void main() {
       ),
     );
 
-    final passwordField = find.byKey(const Key('password text field'));
-    await tester.enterText(passwordField, 'password');
-    await tester.tap(find.byKey(const Key('password submit button')));
+    await provisioningPage.enterPassword('password');
+    await provisioningPage.submitPassword();
 
     await tester.pump(const Duration(milliseconds: 500));
 
@@ -422,8 +412,7 @@ void main() {
     await tester.pumpWidget(
       ProviderScope(
         overrides: [
-          robustWebsocketProvider(Uri.parse(kShrapnelUri))
-              .overrideWith((_) => websocket),
+          robustWebsocketProvider(kShrapnelUri).overrideWith((_) => websocket),
           provisioningProvider.overrideWith(
             (_) => WifiProvisioningService(
               provisioningFactory: provisioningFactoryWrapper,
@@ -434,8 +423,8 @@ void main() {
       ),
     );
 
-    await tester.tap(find.byKey(const Key('wifi provisioning button')));
-    await tester.pumpAndSettle();
+    final homePage = HomePageObject(tester);
+    final provisioningPage = await homePage.openWifiProvisioningPage();
 
     provisioningFactory = () {
       mockProvisioning = MockProvisioning();
@@ -462,8 +451,7 @@ void main() {
       );
     };
 
-    await tester.tap(find.byKey(const Key('wifi provisioning start')));
-    await tester.pumpAndSettle();
+    await provisioningPage.startProvisioning();
 
     await tester.pump(const Duration(seconds: 1));
 
@@ -473,12 +461,9 @@ void main() {
     await tester.tap(ssidCard.first);
     await tester.pumpAndSettle();
 
-    final passwordField = find.byKey(const Key('password text field'));
-    final submitButton = find.byKey(const Key('password submit button'));
-
     Future<void> submitPassword(String password) async {
-      await tester.enterText(passwordField, password);
-      await tester.tap(submitButton);
+      await provisioningPage.enterPassword(password);
+      await provisioningPage.submitPassword();
       await tester.pump();
     }
 
@@ -509,8 +494,7 @@ void main() {
     await tester.pumpWidget(
       ProviderScope(
         overrides: [
-          robustWebsocketProvider(Uri.parse(kShrapnelUri))
-              .overrideWith((_) => websocket),
+          robustWebsocketProvider(kShrapnelUri).overrideWith((_) => websocket),
           provisioningProvider.overrideWith(
             (_) => WifiProvisioningService(
               provisioningFactory: provisioningFactoryWrapper,
@@ -521,8 +505,8 @@ void main() {
       ),
     );
 
-    await tester.tap(find.byKey(const Key('wifi provisioning button')));
-    await tester.pumpAndSettle();
+    final homePage = HomePageObject(tester);
+    final provisioningPage = await homePage.openWifiProvisioningPage();
 
     provisioningFactory = () {
       mockProvisioning = MockProvisioning();
@@ -549,16 +533,14 @@ void main() {
       );
     };
 
-    await tester.tap(find.byKey(const Key('wifi provisioning start')));
-    await tester.pumpAndSettle();
+    await provisioningPage.startProvisioning();
 
     await tester.pump(const Duration(seconds: 1));
 
     final ssidCard = find.textContaining('test SSID');
     expect(ssidCard, findsOneWidget);
 
-    await tester.tap(find.textContaining('Advanced'));
-    await tester.pumpAndSettle();
+    await provisioningPage.openAdvancedSetup();
 
     when(
       mockProvisioning.sendWifiConfig(
@@ -580,12 +562,10 @@ void main() {
       ),
     );
 
-    final ssidField = find.byKey(const Key('ssid text field'));
-    await tester.enterText(ssidField, 'hidden SSID');
+    await provisioningPage.enterSsid('hidden SSID');
 
-    final passwordField = find.byKey(const Key('password text field'));
-    await tester.enterText(passwordField, 'password');
-    await tester.tap(find.byKey(const Key('advanced submit button')));
+    await provisioningPage.enterPassword('password');
+    await provisioningPage.submitAdvanced();
 
     await tester.pump(const Duration(milliseconds: 500));
 
@@ -593,6 +573,6 @@ void main() {
 
     await tester.pump(const Duration(seconds: 1));
 
-    expect(find.textContaining('success'), findsOneWidget);
+    expect(provisioningPage.findSuccessPage, findsOneWidget);
   });
 }

@@ -20,34 +20,60 @@
 
 #pragma once
 
-#include "esp_dsp.h"
+#include "esp32_fft.h"
 #include "profiling.h"
 #include <algorithm>
 #include <array>
 #include <cassert>
 #include <complex>
 #include <cstddef>
+#include <esp_dsp.h>
+#include <span>
 
 namespace shrapnel::dsp {
 
 template <std::size_t N, std::size_t K>
+// The FFT library doesn't seem to work when using fewer than 8 points
+    requires(N >= 8)
 class FastConvolution final
 {
 public:
     // TODO move the definition of A into the prepare method
     // Resample A to the current sample rate in the prepare method
-    FastConvolution(const std::array<float, K> &a)
+    explicit FastConvolution(const std::array<float, K> &a)
     {
-        esp_err_t rc = dsps_fft4r_init_fc32(NULL, CONFIG_DSP_MAX_FFT_SIZE);
-        assert(rc == ESP_OK);
+        // Initialise FFT structs by hand to avoid some unnecessary allocations
+        // and duplication of the twiddle factor buffer. Input and output
+        // buffers are assigned later to avoid some allocations and copies
+        // from the FFT buffer to the output buffer of the functions.
+        constexpr float two_pi = 6.28318530;
+        constexpr float two_pi_by_n = two_pi / N;
+
+        int k, m;
+        for(k = 0, m = 0; k < N; k++, m += 2)
+        {
+            twiddle_factors[m] = cosf(two_pi_by_n * k);     // real
+            twiddle_factors[m + 1] = sinf(two_pi_by_n * k); // imag
+        }
+
+        fft_config.flags = 0;
+        fft_config.type = ESP32_FFT_REAL;
+        fft_config.direction = ESP32_FFT_FORWARD;
+        fft_config.size = N;
+        fft_config.twiddle_factors = twiddle_factors.data();
+
+        ifft_config.flags = 0;
+        ifft_config.type = ESP32_FFT_REAL;
+        ifft_config.direction = ESP32_FFT_BACKWARD;
+        ifft_config.size = N;
+        ifft_config.twiddle_factors = twiddle_factors.data();
 
         // transform a
-        std::array<float, N> a_copy{};
-        std::copy(a.cbegin(), a.cend(), a_copy.begin());
-        a_complex = real_to_complex(a_copy);
-        rc = dsps_fft4r_fc32(reinterpret_cast<float *>(a_complex.data()), N);
-        assert(rc == ESP_OK);
-        dsps_bit_rev4r_fc32(reinterpret_cast<float *>(a_complex.data()), N);
+        std::array<float, N> a_tmp{};
+        std::copy(a.cbegin(), a.cend(), a_tmp.data());
+        fft_config.input = a_tmp.data();
+        fft_config.output = a_copy.data();
+        esp32_fft_execute(&fft_config);
     }
 
     /**
@@ -57,74 +83,29 @@ public:
      */
     void process(const std::array<float, N> &b, std::array<float, N> &out)
     {
+        profiling_mark_stage("convolution start");
+
         // transform b
-        auto b_complex = real_to_complex(b);
-        profiling_mark_stage("convolution real_to_complex");
-        int rc =
-            dsps_fft4r_fc32(reinterpret_cast<float *>(b_complex.data()), N);
-        assert(rc == ESP_OK);
-        profiling_mark_stage("convolution dsps_fft4r_fc32");
-        dsps_bit_rev4r_fc32(reinterpret_cast<float *>(b_complex.data()), N);
-        profiling_mark_stage("convolution dsps_bit_rev4r_fc32");
+        // const cast is OK because the forward FFT does not modify the input
+        // buffer
+        fft_config.input = const_cast<float *>(b.data());
+        fft_config.output = out.data();
+        esp32_fft_execute(&fft_config);
+        profiling_mark_stage("convolution b transform");
 
         // multiply A * B
-        std::array<std::complex<float>, N> multiplied;
-        complex_multiply(a_complex, b_complex, multiplied);
+        std::array<float, N> multiplied;
+        complex_multiply(a_copy.data(), out.data(), multiplied.data());
         profiling_mark_stage("convolution complex_multiply");
 
-        // transform result
-        // Inverse transform achieved by complex conjugating the input and
-        // output of the forward transform. The imaginary part of the output is
-        // not used, so we don't actually calculate the complex conjugate on
-        // it.
-        //
-        // There is no inverse transform provided by esp-dsp.
-        auto multiplied_ptr = reinterpret_cast<float *>(multiplied.data());
-        dsps_mulc_f32(multiplied_ptr + 1, multiplied_ptr + 1, N, -1, 2, 2);
-        profiling_mark_stage("convolution dsps_mulc_f32");
-        rc = (dsps_fft4r_fc32(multiplied_ptr, N));
-        assert(rc == ESP_OK);
-        profiling_mark_stage("convolution dsps_fft4r_fc32");
-        dsps_bit_rev4r_fc32(multiplied_ptr, N);
-        profiling_mark_stage("convolution dsps_fft4r_fc32");
-
-        complex_to_real(multiplied, out);
-        profiling_mark_stage("convolution complex_to_real");
-
-        dsps_mulc_f32(out.data(), out.data(), N, scale_factor, 1, 1);
-        profiling_mark_stage("dsps_mulc_f32");
+        // Inverse transform
+        ifft_config.input = multiplied.data();
+        ifft_config.output = out.data();
+        esp32_fft_execute(&ifft_config);
+        profiling_mark_stage("convolution ifft");
     }
 
-private:
-    static constexpr float scale_factor = 1.f / N;
-    std::array<std::complex<float>, N> a_complex;
-
-    std::array<std::complex<float>, N>
-    real_to_complex(const std::array<float, N> &real)
-    {
-        std::array<std::complex<float>, N> _complex{};
-
-        for(std::size_t i = 0; i < N; i++)
-        {
-            _complex[i] = real[i];
-        }
-
-        return _complex;
-    }
-
-    void complex_to_real(const std::array<std::complex<float>, N> &_complex,
-                         std::array<float, N> &real)
-    {
-        for(std::size_t i = 0; i < N; i++)
-        {
-            real[i] = _complex[i].real();
-        }
-    }
-
-public:
-    static void complex_multiply(const std::array<std::complex<float>, N> &a,
-                                 const std::array<std::complex<float>, N> &b,
-                                 std::array<std::complex<float>, N> &out)
+    static void complex_multiply(const float *a, const float *b, float *out)
     {
         // We want to compute (r_a + im_a j) * (r_b + im_b j)
         // This can be rewritten as follows:
@@ -136,25 +117,37 @@ public:
         // (ra rb + ra im_b j) +    // part 1
         // (- im_a im_b + im_a r_b j)   // part 2
 
+        // The FFT result has a special encoding for DC and Nyquist. DC is
+        // stored in the first element, and nyquist in the second.
+        out[0] = a[0] * b[0];
+        out[1] = a[1] * b[1];
+
+        a += 2;
+        b += 2;
+        out += 2;
+
         // TODO we multiply then add here, could we use the MADD.S instruction
         // to speed it up?
 
-        auto a_ptr = reinterpret_cast<const float *>(a.data());
-        auto b_ptr = reinterpret_cast<const float *>(b.data());
-        auto out_ptr = reinterpret_cast<float *>(out.data());
         // part 1
-        dsps_mul_f32(a_ptr, b_ptr, out_ptr, N, 2, 2, 2);
-        dsps_mul_f32(a_ptr, b_ptr + 1, out_ptr + 1, N, 2, 2, 2);
+        dsps_mul_f32(a, b, out, N / 2 - 1, 2, 2, 2);
+        dsps_mul_f32(a, b + 1, out + 1, N / 2 - 1, 2, 2, 2);
 
         // part 2
-        std::array<std::complex<float>, N> out2;
+        std::array<float, N - 2> out2;
         auto out2_ptr = reinterpret_cast<float *>(out2.data());
-        dsps_mul_f32(a_ptr + 1, b_ptr + 1, out2_ptr, N, 2, 2, 2);
-        dsps_mul_f32(a_ptr + 1, b_ptr, out2_ptr + 1, N, 2, 2, 2);
-        dsps_mulc_f32(out2_ptr, out2_ptr, N, -1, 2, 2);
+        dsps_mul_f32(a + 1, b + 1, out2_ptr, N / 2 - 1, 2, 2, 2);
+        dsps_mul_f32(a + 1, b, out2_ptr + 1, N / 2 - 1, 2, 2, 2);
+        dsps_mulc_f32(out2_ptr, out2_ptr, N / 2 - 1, -1, 2, 2);
 
-        dsps_add_f32(out_ptr, out2_ptr, out_ptr, 2 * out.size(), 1, 1, 1);
+        dsps_add_f32(out, out2_ptr, out, N - 2, 1, 1, 1);
     }
+
+private:
+    std::array<float, 2 * N> twiddle_factors;
+    std::array<float, N> a_copy;
+    esp32_fft_config_t fft_config;
+    esp32_fft_config_t ifft_config;
 };
 
 } // namespace shrapnel::dsp

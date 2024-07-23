@@ -305,6 +305,7 @@ class MyHomePage extends riverpod.ConsumerWidget {
               const Spacer(),
               // Same size as icons
               WebSocketStatus(
+                key: const Key('websocket-status'),
                 size: IconTheme.of(context).size ?? 24.0,
               ),
             ],

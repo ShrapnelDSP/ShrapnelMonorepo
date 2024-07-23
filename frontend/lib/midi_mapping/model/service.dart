@@ -61,9 +61,8 @@ class MidiMappingTransport
   MidiMappingTransport({required this.websocket}) {
     _controller.stream
         .logFinest(_log, (event) => 'send message: $event')
-        .listen(
-          (message) => websocket.send(ApiMessage.midiMapping(message: message)),
-        );
+        .map((message) => ApiMessage.midiMapping(message: message))
+        .listen(websocket.sink.add);
   }
 
   final _controller = StreamController<MidiApiMessage>();

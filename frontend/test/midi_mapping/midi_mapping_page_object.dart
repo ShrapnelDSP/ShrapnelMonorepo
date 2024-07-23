@@ -28,6 +28,7 @@ class MidiMappingPageObject {
   final WidgetTester tester;
 
   Finder findMappingRows() => find.byType(MidiChannelDropdown);
+
   Finder findPage() => find.text('MIDI Mapping');
 
   Future<MidiMappingCreatePageObject> openCreateDialog() async {
@@ -130,6 +131,18 @@ class MidiMappingCreatePageObject {
       find.ancestor(
         of: find.text('Parameter'),
         matching: find.byType(DropdownButton<String>),
+      ),
+    );
+    await tester.pumpAndSettle();
+    await tester.tap(find.text(name).last);
+    await tester.pumpAndSettle();
+  }
+
+  Future<void> selectPreset(String name) async {
+    await tester.tap(
+      find.ancestor(
+        of: find.text('Preset'),
+        matching: find.byType(DropdownButton<int>),
       ),
     );
     await tester.pumpAndSettle();

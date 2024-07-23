@@ -224,11 +224,12 @@ void main() {
       final apiWebsocket = MockApiWebsocket();
       when(apiWebsocket.stream)
           .thenAnswer((_) => StreamController<ApiMessage>().stream);
+      when(apiWebsocket.sink).thenReturn(StreamController());
 
       await tester.pumpWidget(
         ProviderScope(
           overrides: [
-            robustWebsocketProvider(Uri.parse(kShrapnelUri))
+            robustWebsocketProvider(kShrapnelUri)
                 .overrideWith((_) => websocket),
             apiWebsocketProvider.overrideWith((_) => apiWebsocket),
             parameterTransportProvider.overrideWith((_) => parameterTransport),

@@ -35,6 +35,15 @@ import 'package:shrapnel/robust_websocket.dart';
 import '../../home_page_object.dart';
 import 'midi_mapping_test.mocks.dart';
 
+// required for mocking using mockito, implement clause doesn't support inline
+// function types or typedefs to function types
+// ignore: one_member_abstracts
+abstract class _ApiSendBase {
+  void call(ApiMessage message);
+}
+
+class _MockApiSend extends Mock implements _ApiSendBase {}
+
 @GenerateMocks([ApiWebsocket])
 @GenerateNiceMocks(
   [MockSpec<RobustWebsocket>(), MockSpec<AudioClippingService>()],
@@ -44,7 +53,11 @@ void main() {
     final apiController = StreamController<ApiMessage>.broadcast();
     final websocket = MockRobustWebsocket();
     final api = MockApiWebsocket();
+    final apiSinkController = StreamController<ApiMessage>();
+    final apiSend = _MockApiSend();
+    apiSinkController.stream.listen(apiSend.call);
     when(api.stream).thenAnswer((_) => apiController.stream);
+    when(api.sink).thenReturn(apiSinkController);
 
     const getRequest =
         ApiMessage.midiMapping(message: MidiApiMessage.getRequest());
@@ -52,8 +65,7 @@ void main() {
     await tester.pumpWidget(
       ProviderScope(
         overrides: [
-          robustWebsocketProvider(Uri.parse(kShrapnelUri))
-              .overrideWith((_) => websocket),
+          robustWebsocketProvider(kShrapnelUri).overrideWith((_) => websocket),
           apiWebsocketProvider.overrideWith((_) => api),
         ],
         child: App(),
@@ -64,7 +76,7 @@ void main() {
 
     expect(midiMappingPage.findPage(), findsOneWidget);
     expect(midiMappingPage.findMappingRows(), findsNothing);
-    verify(api.send(getRequest));
+    verify(apiSend(getRequest));
 
     const createRequest = ApiMessage.midiMapping(
       message: MidiApiMessage.createRequest(
@@ -76,7 +88,7 @@ void main() {
       ),
     );
 
-    when(api.send(createRequest)).thenAnswer(
+    when(apiSend(createRequest)).thenAnswer(
       (_) {
         apiController.add(
           const ApiMessage.midiMapping(
@@ -109,7 +121,7 @@ void main() {
     await midiMappingCreatePage.selectParameter('Chorus: DEPTH');
     await midiMappingCreatePage.submitCreateDialog();
 
-    verify(api.send(createRequest));
+    verify(apiSend(createRequest));
 
     // Expect new mapping visible in UI
     // TODO check the correct value is visible in all dropdowns
@@ -124,12 +136,16 @@ void main() {
       final apiController = StreamController<ApiMessage>.broadcast();
       final websocket = MockRobustWebsocket();
       final api = MockApiWebsocket();
+      final apiSinkController = StreamController<ApiMessage>();
+      final apiSend = _MockApiSend();
+      apiSinkController.stream.listen(apiSend.call);
       when(api.stream).thenAnswer((_) => apiController.stream);
+      when(api.sink).thenReturn(apiSinkController);
 
       await tester.pumpWidget(
         ProviderScope(
           overrides: [
-            robustWebsocketProvider(Uri.parse(kShrapnelUri))
+            robustWebsocketProvider(kShrapnelUri)
                 .overrideWith((_) => websocket),
             apiWebsocketProvider.overrideWith((_) => api),
           ],
@@ -166,7 +182,7 @@ void main() {
       await midiMappingCreatePage.selectParameter('Chorus: DEPTH');
       await midiMappingCreatePage.submitCreateDialog();
 
-      verify(api.send(createRequest));
+      verify(apiSend(createRequest));
 
       // Expect new mapping visible in UI
       expect(midiMappingPage.findMappingRows(), findsOneWidget);
@@ -190,12 +206,16 @@ void main() {
       final apiController = StreamController<ApiMessage>.broadcast();
       final websocket = MockRobustWebsocket();
       final api = MockApiWebsocket();
+      final apiSinkController = StreamController<ApiMessage>();
+      final apiSend = _MockApiSend();
+      apiSinkController.stream.listen(apiSend.call);
       when(api.stream).thenAnswer((_) => apiController.stream);
+      when(api.sink).thenReturn(apiSinkController);
 
       const getRequest =
           ApiMessage.midiMapping(message: MidiApiMessage.getRequest());
 
-      when(api.send(getRequest)).thenAnswer(
+      when(apiSend(getRequest)).thenAnswer(
         (_) {
           apiController.add(
             const ApiMessage.midiMapping(
@@ -217,7 +237,7 @@ void main() {
       await tester.pumpWidget(
         ProviderScope(
           overrides: [
-            robustWebsocketProvider(Uri.parse(kShrapnelUri))
+            robustWebsocketProvider(kShrapnelUri)
                 .overrideWith((_) => websocket),
             apiWebsocketProvider.overrideWith((_) => api),
           ],
@@ -225,7 +245,7 @@ void main() {
         ),
       );
 
-      verify(api.send(getRequest));
+      verify(apiSend(getRequest));
 
       final midiMappingPage = await HomePageObject(tester).openMidiMapping();
       await tester.pumpAndSettle();
@@ -235,7 +255,7 @@ void main() {
 
       await midiMappingPage.updateMidiChannel(id: '123', value: 3);
       verify(
-        api.send(
+        apiSend(
           const ApiMessage.midiMapping(
             message: MidiApiMessage.update(
               mapping: MidiMappingEntry(
@@ -253,7 +273,7 @@ void main() {
 
       await midiMappingPage.updateCcNumber(id: '123', value: 4);
       verify(
-        api.send(
+        apiSend(
           const ApiMessage.midiMapping(
             message: MidiApiMessage.update(
               mapping: MidiMappingEntry(
@@ -274,7 +294,7 @@ void main() {
         value: MidiMappingMode.toggle,
       );
       verify(
-        api.send(
+        apiSend(
           const ApiMessage.midiMapping(
             message: MidiApiMessage.update(
               mapping: MidiMappingEntry(
@@ -295,7 +315,7 @@ void main() {
         value: 'Valvestate: Contour',
       );
       verify(
-        api.send(
+        apiSend(
           const ApiMessage.midiMapping(
             message: MidiApiMessage.update(
               mapping: MidiMappingEntry(
@@ -325,12 +345,16 @@ void main() {
       final apiController = StreamController<ApiMessage>.broadcast();
       final websocket = MockRobustWebsocket();
       final api = MockApiWebsocket();
+      final apiSinkController = StreamController<ApiMessage>();
+      final apiSend = _MockApiSend();
+      apiSinkController.stream.listen(apiSend.call);
       when(api.stream).thenAnswer((_) => apiController.stream);
+      when(api.sink).thenReturn(apiSinkController);
 
       const getRequest =
           ApiMessage.midiMapping(message: MidiApiMessage.getRequest());
 
-      when(api.send(getRequest)).thenAnswer(
+      when(apiSend(getRequest)).thenAnswer(
         (_) {
           apiController.add(
             const ApiMessage.midiMapping(
@@ -352,7 +376,7 @@ void main() {
       await tester.pumpWidget(
         ProviderScope(
           overrides: [
-            robustWebsocketProvider(Uri.parse(kShrapnelUri))
+            robustWebsocketProvider(kShrapnelUri)
                 .overrideWith((_) => websocket),
             apiWebsocketProvider.overrideWith((_) => api),
           ],
@@ -360,7 +384,7 @@ void main() {
         ),
       );
 
-      verify(api.send(getRequest));
+      verify(apiSend(getRequest));
 
       final midiMappingPage = await HomePageObject(tester).openMidiMapping();
 
@@ -370,7 +394,7 @@ void main() {
       await midiMappingPage.deleteMapping(id: '123');
 
       verify(
-        api.send(
+        apiSend(
           const ApiMessage.midiMapping(
             message: MidiApiMessage.remove(
               id: 123,
@@ -393,9 +417,14 @@ void main() {
       final websocket = MockRobustWebsocket();
       when(websocket.isAlive).thenReturn(true);
       final api = MockApiWebsocket();
+      final apiSinkController = StreamController<ApiMessage>();
+      final apiSend = _MockApiSend();
+      apiSinkController.stream.listen(apiSend.call);
       when(api.stream).thenAnswer((_) => apiController.stream);
+      when(api.sink).thenReturn(apiSinkController);
+
       when(
-        api.send(
+        apiSend.call(
           ApiMessage.parameterOutput(
             message: ParameterServiceOutputMessage.requestInitialisation(),
           ),
@@ -416,7 +445,7 @@ void main() {
       await tester.pumpWidget(
         ProviderScope(
           overrides: [
-            robustWebsocketProvider(Uri.parse(kShrapnelUri))
+            robustWebsocketProvider(kShrapnelUri)
                 .overrideWith((_) => websocket),
             apiWebsocketProvider.overrideWith((_) => api),
           ],
@@ -448,7 +477,7 @@ void main() {
         ),
       );
 
-      when(api.send(createRequest)).thenAnswer(
+      when(apiSend(createRequest)).thenAnswer(
         (_) {
           apiController.add(
             const ApiMessage.midiMapping(
@@ -483,7 +512,7 @@ void main() {
 
       await tester.pumpAndSettle();
 
-      verify(api.send(createRequest));
+      verify(apiSend(createRequest));
       expect(
         homePageObject.findMidiLearnWaitingForMidiMessage(),
         findsNothing,
@@ -508,9 +537,14 @@ void main() {
       final websocket = MockRobustWebsocket();
       when(websocket.isAlive).thenReturn(true);
       final api = MockApiWebsocket();
+      final apiSinkController = StreamController<ApiMessage>();
+      final apiSend = _MockApiSend();
+      apiSinkController.stream.listen(apiSend.call);
       when(api.stream).thenAnswer((_) => apiController.stream);
+      when(api.sink).thenReturn(apiSinkController);
+
       when(
-        api.send(
+        apiSend.call(
           ApiMessage.parameterOutput(
             message: ParameterServiceOutputMessage.requestInitialisation(),
           ),
@@ -529,7 +563,7 @@ void main() {
       const getRequest =
           ApiMessage.midiMapping(message: MidiApiMessage.getRequest());
 
-      when(api.send(getRequest)).thenAnswer(
+      when(apiSend(getRequest)).thenAnswer(
         (_) {
           apiController.add(
             const ApiMessage.midiMapping(
@@ -553,7 +587,7 @@ void main() {
       await tester.pumpWidget(
         ProviderScope(
           overrides: [
-            robustWebsocketProvider(Uri.parse(kShrapnelUri))
+            robustWebsocketProvider(kShrapnelUri)
                 .overrideWith((_) => websocket),
             apiWebsocketProvider.overrideWith((_) => api),
           ],
@@ -585,7 +619,7 @@ void main() {
         ),
       );
 
-      when(api.send(createRequest)).thenAnswer(
+      when(apiSend(createRequest)).thenAnswer(
         (_) {
           apiController.add(
             const ApiMessage.midiMapping(
@@ -621,14 +655,14 @@ void main() {
       await tester.pumpAndSettle();
 
       verify(
-        api.send(
+        apiSend(
           const ApiMessage.midiMapping(
             message: MidiApiMessage.remove(id: 456),
           ),
         ),
       );
 
-      verify(api.send(createRequest));
+      verify(apiSend(createRequest));
 
       expect(
         homePageObject.findMidiLearnWaitingForMidiMessage(),
@@ -650,7 +684,7 @@ void main() {
         ),
       );
 
-      when(api.send(createRequest2)).thenAnswer(
+      when(apiSend(createRequest2)).thenAnswer(
         (_) {
           apiController.add(
             const ApiMessage.midiMapping(
@@ -671,7 +705,7 @@ void main() {
 
       await homePageObject.restoreRemovedDuplicateMappings();
 
-      verify(api.send(createRequest2));
+      verify(apiSend(createRequest2));
 
       final midiMappingPage = await homePageObject.openMidiMapping();
       expect(midiMappingPage.findPage(), findsOneWidget);

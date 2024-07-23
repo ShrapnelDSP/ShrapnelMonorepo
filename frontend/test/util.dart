@@ -17,11 +17,26 @@
  * ShrapnelDSP. If not, see <https://www.gnu.org/licenses/>.
  */
 
-import 'package:integration_test/integration_test.dart';
+import 'dart:async';
 
-import '../test/midi_mapping/view/midi_mapping_test.dart' as test;
+import 'package:flutter_test/flutter_test.dart';
 
-void main() {
-  IntegrationTestWidgetsFlutterBinding.ensureInitialized();
-  test.main();
+Future<bool> pumpWaitingFor({
+  required WidgetTester tester,
+  required bool Function() predicate,
+  required Duration timeout,
+}) async {
+  var keepGoing = true;
+  final timer = Timer(timeout, () {
+    keepGoing = false;
+  });
+  while (keepGoing) {
+    if (predicate()) {
+      timer.cancel();
+      return true;
+    }
+    await tester.pump(const Duration(seconds: 1));
+  }
+
+  return false;
 }

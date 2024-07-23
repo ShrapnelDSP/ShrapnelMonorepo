@@ -133,9 +133,8 @@ class PresetsTransport
   PresetsTransport({required this.websocket}) {
     _controller.stream
         .logFinest(_log, (event) => 'send message: $event')
-        .listen(
-          (message) => websocket.send(ApiMessage.presets(message: message)),
-        );
+        .map((message) => ApiMessage.presets(message: message))
+        .listen(websocket.sink.add);
   }
 
   final _controller = StreamController<PresetsMessage>();

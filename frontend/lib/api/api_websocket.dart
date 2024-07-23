@@ -19,12 +19,14 @@
 
 import 'dart:async';
 
+import 'package:async/async.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logging/logging.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:rxdart/rxdart.dart';
 
 import '../audio_events.dart';
+import '../core/message_transport.dart';
 import '../core/stream_extensions.dart';
 import '../midi_mapping/model/models.dart';
 import '../parameter.dart';
@@ -40,7 +42,19 @@ part 'api_websocket.g.dart';
 
 final _log = Logger('api_websocket');
 
-const kShrapnelUri = 'http://guitar-dsp.local:8080/websocket';
+@Riverpod(keepAlive: true)
+String normalHost(NormalHostRef ref) => 'guitar-dsp.local';
+
+@Riverpod(keepAlive: true)
+String provisioningHost(ProvisioningHostRef ref) => 'guitar-dsp.local';
+
+@visibleForTesting
+final kShrapnelUri = Uri(
+  scheme: 'http',
+  host: 'guitar-dsp.local',
+  port: 8080,
+  path: '/websocket',
+);
 
 @freezed
 sealed class ApiMessage with _$ApiMessage {
@@ -67,8 +81,14 @@ sealed class ApiMessage with _$ApiMessage {
 }
 
 @riverpod
+Uri shrapnelUri(ShrapnelUriRef ref) {
+  return kShrapnelUri.replace(host: ref.watch(normalHostProvider));
+}
+
+@riverpod
 ApiWebsocket? apiWebsocket(ApiWebsocketRef ref) {
-  final websocket = ref.watch(robustWebsocketProvider(Uri.parse(kShrapnelUri)));
+  final websocket =
+      ref.watch(robustWebsocketProvider(ref.watch(shrapnelUriProvider)));
   if (websocket.isAlive) {
     return ApiWebsocket(websocket: websocket);
   }
@@ -76,15 +96,17 @@ ApiWebsocket? apiWebsocket(ApiWebsocketRef ref) {
   return null;
 }
 
-// TODO make this implement MessageTransport<ApiMessage, ApiMessage>
-class ApiWebsocket {
-  ApiWebsocket({required RobustWebsocket websocket}) : _websocket = websocket;
+class ApiWebsocket implements MessageTransport<ApiMessage, ApiMessage> {
+  ApiWebsocket({
+    required MessageTransport<WebSocketData, WebSocketData> websocket,
+  }) : _websocket = websocket;
 
-  final RobustWebsocket _websocket;
+  final MessageTransport<WebSocketData, WebSocketData> _websocket;
 
-  /// The stream of incoming messages
-  late final Stream<ApiMessage> stream = _websocket.dataStream
-      .whereType<List<int>>()
+  @override
+  late final Stream<ApiMessage> stream = _websocket.stream
+      .whereType<WebSocketDataBinary>()
+      .map((event) => event.value)
       .map(shrapnel_pb.Message.fromBuffer)
       .map(ApiMessageProtoEx.fromProto)
       .logFinest(
@@ -92,8 +114,18 @@ class ApiWebsocket {
         (event) => 'received: $event',
       );
 
-  void send(ApiMessage message) {
-    _log.finest('sending: $message');
-    _websocket.sendMessage(message.toProto().writeToBuffer());
+  @override
+  late final StreamSink<ApiMessage> sink =
+      StreamSinkTransformer<ApiMessage, WebSocketData>.fromHandlers(
+    handleData: (message, sink) {
+      _log.finest('sending: $message');
+      sink.add(WebSocketData.binary(value: message.toProto().writeToBuffer()));
+    },
+  ).bind(_websocket.sink);
+
+  @override
+  void dispose() {
+    _websocket.dispose();
+    unawaited(sink.close());
   }
 }
