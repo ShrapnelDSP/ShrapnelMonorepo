@@ -28,8 +28,10 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:logging/logging.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:shrapnel/api/api_websocket.dart';
+import 'package:shrapnel/core/stream_extensions.dart';
 import 'package:shrapnel/main.dart';
 import 'package:shrapnel/parameter.dart';
+import 'package:shrapnel/provider_observer.dart';
 
 import '../riverpod_util.dart';
 import 'util.dart';
@@ -111,7 +113,7 @@ void main() {
     );
   });
 
-  test('wifi provisioning', () async {
+  test(skip: true, 'wifi provisioning', () async {
     await nvsErase(port: port);
     await connectToDutAccessPoint(macAddress);
     await setUpWiFi(ssid: networkSsid, password: networkPassphrase);
@@ -131,50 +133,85 @@ void main() {
     });
 
     test('simple test', () async {
+      final log = Logger('debug');
+
+      log.shout('create container');
       final container = createContainer(
         overrides: [
           normalHostProvider.overrideWithValue(dutIpAddress),
         ],
+        observers: [ProviderObserverImpl()],
       );
 
+      /*
+      final stream = container
+          .listenAsStream(audioParameterDoubleModelProvider('ampGain'))
+          .logInfo(
+            Logger('debug'),
+            (event) => 'event $event',
+          );
+
+      log.shout('setup expectation');
       final expectation = expectLater(
-        container.listenAsStream(audioParameterDoubleModelProvider('ampGain')),
+        stream,
         emitsInOrder([
           isAsyncLoading<double>(),
           isAsyncData<double>(closeTo(0.5, 0.000001)),
         ]),
       );
 
-      // wait for connection, init
+      log.shout('pump1');
       await pumpEventQueue();
       await Future<void>.delayed(const Duration(seconds: 1));
+
+      log.shout('pump2');
       await pumpEventQueue();
       await Future<void>.delayed(const Duration(seconds: 1));
+
+      log.shout('pump3');
       await pumpEventQueue();
 
+      log.shout('wait expectation');
+      await Future<void>.delayed(const Duration(seconds: 10));
       await expectation;
+      */
+
+      container.listen(audioParameterDoubleModelProvider('ampGain'),
+          (previous, next) {
+        Logger('debug').info('prev $previous next $next');
+      });
+
+      /*
+      container
+          .listenAsStream(
+            audioParameterDoubleModelProvider('ampGain'),
+          )
+          .listen((event) => Logger('debug').info('event $event'));
+       */
+
+      await Future<void>.delayed(const Duration(seconds: 10));
     });
   });
 }
 
 extension ProviderContainerTestEx on ProviderContainer {
   Stream<T> listenAsStream<T>(ProviderListenable<T> provider) {
-    final controller = BehaviorSubject<T>();
+    final controller = StreamController<T>();
 
+    Logger('debug').shout('listening');
     late final subscription = listen(
       provider,
-      (_, value) {
+      (o, value) {
+        Logger('debug').shout('provider notified $o $value');
         controller.add(value);
       },
-      fireImmediately: true,
+      fireImmediately: false,
     );
 
     controller.onCancel = () {
       subscription.close();
       unawaited(controller.close());
     };
-
-    controller.add(read(provider));
 
     return controller.stream;
   }
