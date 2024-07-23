@@ -150,7 +150,6 @@ class RobustWebsocket extends ChangeNotifier
 
   @override
   void dispose() {
-    _log.shout('dispose');
     _disposed = true;
     super.dispose();
     unawaited(_streamController.close());

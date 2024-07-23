@@ -113,7 +113,7 @@ void main() {
     );
   });
 
-  test(skip: true, 'wifi provisioning', () async {
+  test('wifi provisioning', () async {
     await nvsErase(port: port);
     await connectToDutAccessPoint(macAddress);
     await setUpWiFi(ssid: networkSsid, password: networkPassphrase);
@@ -133,63 +133,21 @@ void main() {
     });
 
     test('simple test', () async {
-      final log = Logger('debug');
-
-      log.shout('create container');
       final container = createContainer(
         overrides: [
           normalHostProvider.overrideWithValue(dutIpAddress),
         ],
-        observers: [ProviderObserverImpl()],
       );
 
-      /*
-      final stream = container
-          .listenAsStream(audioParameterDoubleModelProvider('ampGain'))
-          .logInfo(
-            Logger('debug'),
-            (event) => 'event $event',
-          );
-
-      log.shout('setup expectation');
       final expectation = expectLater(
-        stream,
+        container.listenAsStream(audioParameterDoubleModelProvider('ampGain')),
         emitsInOrder([
           isAsyncLoading<double>(),
           isAsyncData<double>(closeTo(0.5, 0.000001)),
         ]),
       );
 
-      log.shout('pump1');
-      await pumpEventQueue();
-      await Future<void>.delayed(const Duration(seconds: 1));
-
-      log.shout('pump2');
-      await pumpEventQueue();
-      await Future<void>.delayed(const Duration(seconds: 1));
-
-      log.shout('pump3');
-      await pumpEventQueue();
-
-      log.shout('wait expectation');
-      await Future<void>.delayed(const Duration(seconds: 10));
       await expectation;
-      */
-
-      container.listen(audioParameterDoubleModelProvider('ampGain'),
-          (previous, next) {
-        Logger('debug').info('prev $previous next $next');
-      });
-
-      /*
-      container
-          .listenAsStream(
-            audioParameterDoubleModelProvider('ampGain'),
-          )
-          .listen((event) => Logger('debug').info('event $event'));
-       */
-
-      await Future<void>.delayed(const Duration(seconds: 10));
     });
   });
 }
@@ -198,14 +156,12 @@ extension ProviderContainerTestEx on ProviderContainer {
   Stream<T> listenAsStream<T>(ProviderListenable<T> provider) {
     final controller = StreamController<T>();
 
-    Logger('debug').shout('listening');
-    late final subscription = listen(
+    final subscription = listen(
       provider,
-      (o, value) {
-        Logger('debug').shout('provider notified $o $value');
+      (_, value) {
         controller.add(value);
       },
-      fireImmediately: false,
+      fireImmediately: true,
     );
 
     controller.onCancel = () {
