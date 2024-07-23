@@ -215,10 +215,10 @@ void main() {
         ),
       );
 
-      // wait until connected
-      // poll connection status widget until ready with timeout
       final homePage = HomePageObject(tester);
       await homePage.waitUntilConnected();
+
+      await homePage.waitUntilPresetsReady();
 
       await homePage.createPreset('Preset 1');
 

@@ -45,11 +45,26 @@ Stream<Map<int, PresetRecord>> presetsStream(PresetsStreamRef ref) =>
 
 class PresetsRepository implements PresetsRepositoryBase {
   PresetsRepository({required this.client}) {
+    _initTimer = Timer(const Duration(seconds: 1), _initTimerExpired);
+
     client.presetUpdates.listen(_handleNotification);
     unawaited(client.initialise());
   }
 
   PresetsClient client;
+  late Timer _initTimer;
+  bool _isLoading = true;
+
+  void _initTimerExpired() {
+    // Firmware doesn't send any response when there are no presets configured.
+    // It also doesn't send any message to indicate that initialisation is
+    // complete. Assume initialisation completes in 1 second.
+    _isLoading = false;
+
+    // notify state using side-effect in setter
+    // ignore: no_self_assignments
+    _state = _state;
+  }
 
   @override
   Future<PresetRecord> create(PresetState preset) async {
@@ -62,7 +77,7 @@ class PresetsRepository implements PresetsRepositoryBase {
         .firstWhere((element) => element.preset.name == preset.name)
         .timeout(const Duration(seconds: 2));
 
-    _state = _state!..[record.id] = record;
+    _state = _state..[record.id] = record;
 
     return record;
   }
@@ -71,19 +86,23 @@ class PresetsRepository implements PresetsRepositoryBase {
   Future<void> delete(int id) async {
     await client.delete(id);
 
-    _state = _state!..remove(id);
+    _state = _state..remove(id);
   }
 
   final _presets = StreamController<Map<int, PresetRecord>>();
 
-  Map<int, PresetRecord>? __state;
+  Map<int, PresetRecord> __state = {};
 
-  set _state(Map<int, PresetRecord>? newState) {
+  set _state(Map<int, PresetRecord> newState) {
     __state = newState;
-    _presets.add(newState!);
+
+    if (_isLoading) {
+      return;
+    }
+    _presets.add(newState);
   }
 
-  Map<int, PresetRecord>? get _state => __state;
+  Map<int, PresetRecord> get _state => __state;
 
   @override
   Stream<Map<int, PresetRecord>> get presets => _presets.stream;
@@ -92,18 +111,15 @@ class PresetsRepository implements PresetsRepositoryBase {
   Future<void> update(PresetRecord preset) async {
     await client.update(preset);
 
-    _state = _state!..[preset.id] = preset;
+    _state = _state..[preset.id] = preset;
   }
 
   void _handleNotification(PresetRecord preset) {
-    if (_state == null) {
-      _state = {preset.id: preset};
-    } else {
-      _state = _state!..[preset.id] = preset;
-    }
+    _state = _state..[preset.id] = preset;
   }
 
   void dispose() {
+    _initTimer.cancel();
     client.dispose();
     unawaited(_presets.close());
   }

@@ -34,7 +34,7 @@ part 'presets_client.freezed.dart';
 part 'presets_client.g.dart';
 
 // ignore: unused_element
-final _log = Logger('presets_client');
+final _log = Logger('presets_client')..level = Level.ALL;
 
 @freezed
 class PresetParametersData with _$PresetParametersData {

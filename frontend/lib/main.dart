@@ -194,6 +194,8 @@ class MyHomePage extends riverpod.ConsumerWidget {
                 final model = ref.read(presetsServiceProvider.notifier);
                 final state = ref.watch(presetsServiceProvider);
 
+                Logger('debug').info('state: $state');
+
                 return Presets(
                   createPreset: state.map(
                     loading: (_) => null,
