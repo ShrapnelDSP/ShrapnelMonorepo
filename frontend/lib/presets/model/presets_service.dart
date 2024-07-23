@@ -29,7 +29,7 @@ import 'selected_preset_repository.dart';
 
 part 'presets_service.g.dart';
 
-final _log = Logger('presets_service')..level = Level.ALL;
+final _log = Logger('presets_service');
 
 abstract class PresetsRepositoryBase {
   Future<PresetRecord> create(PresetState preset);
