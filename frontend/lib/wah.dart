@@ -18,33 +18,17 @@
  */
 
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
-import 'parameter.dart';
 import 'stompbox.dart';
 
 class WahModel extends StompboxModel {
-  WahModel({required ParameterService parameterService})
+  // ignore: avoid_unused_constructor_parameters
+  WahModel()
       : parameters = [
-          AudioParameterDoubleModel(
-            groupName: _name,
-            name: 'Position',
-            id: 'wahPosition',
-            parameterService: parameterService,
-          ),
-          AudioParameterDoubleModel(
-            groupName: _name,
-            name: 'Vocal',
-            id: 'wahVocal',
-            parameterService: parameterService,
-          ),
+          'wahPosition',
+          'wahVocal',
         ],
-        bypass = AudioParameterDoubleModel(
-          groupName: _name,
-          name: 'Bypass',
-          id: 'wahBypass',
-          parameterService: parameterService,
-        );
+        bypass = 'wahBypass';
 
   static const _name = 'Wah';
 
@@ -52,10 +36,10 @@ class WahModel extends StompboxModel {
   String get name => _name;
 
   @override
-  final AudioParameterDoubleModel bypass;
+  final String bypass;
 
   @override
-  List<AudioParameterDoubleModel> parameters;
+  final List<String> parameters;
 }
 
 class Wah extends StatelessWidget {
@@ -71,7 +55,7 @@ class Wah extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Stompbox(
-      model: context.read<WahModel>(),
+      model: WahModel(),
       onCardTap: onTap,
       full: full,
       primarySwatch: Colors.purple,

@@ -28,7 +28,7 @@ import 'package:shrapnel/midi_mapping/model/models.dart';
 import 'package:shrapnel/midi_mapping/model/service.dart';
 import 'service_test.mocks.dart';
 
-@GenerateMocks([ReconnectingMessageTransport])
+@GenerateMocks([MessageTransport])
 void main() {
   group('Get MIDI mapping: ', () {
     test('success', () async {
@@ -42,10 +42,7 @@ void main() {
       final sinkController = StreamController<MidiApiMessage>();
 
       final fakeWebsocket =
-          MockReconnectingMessageTransport<MidiApiMessage, MidiApiMessage>();
-      when(fakeWebsocket.connectionStream)
-          .thenAnswer((_) => Stream.fromIterable([]));
-      when(fakeWebsocket.isAlive).thenReturn(false);
+          MockMessageTransport<MidiApiMessage, MidiApiMessage>();
 
       const response = MidiApiMessage.update(
         mapping: MidiMappingEntry(
@@ -76,7 +73,6 @@ void main() {
       expect(listenerCount, 1);
       expect(uut.mappings, isEmpty);
 
-      await uut.getMapping();
       await pumpEventQueue();
 
       expect(outputMessages.removeLast(), request);
@@ -110,10 +106,7 @@ void main() {
       final sinkController = StreamController<MidiApiMessage>();
 
       final fakeWebsocket =
-          MockReconnectingMessageTransport<MidiApiMessage, MidiApiMessage>();
-      when(fakeWebsocket.connectionStream)
-          .thenAnswer((_) => Stream.fromIterable([]));
-      when(fakeWebsocket.isAlive).thenReturn(false);
+          MockMessageTransport<MidiApiMessage, MidiApiMessage>();
 
       const response = MidiApiMessage.createResponse(
         mapping: MidiMappingEntry(
@@ -145,9 +138,11 @@ void main() {
       when(fakeWebsocket.stream).thenAnswer((_) => controller.stream);
 
       final uut = MidiMappingService(websocket: fakeWebsocket);
+      await pumpEventQueue();
 
       expect(listenerCount, 1);
       expect(uut.mappings, isEmpty);
+      expect(outputMessages.removeLast(), const MidiApiMessage.getRequest());
 
       await uut.createMapping(
         const MidiMapping.parameter(

@@ -22,8 +22,10 @@
 library;
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:logging/logging.dart';
+import 'package:shrapnel/api/api_websocket.dart';
 import 'package:shrapnel/main.dart';
 import 'package:shrapnel/midi_mapping/model/models.dart';
 
@@ -113,9 +115,12 @@ void main() {
 
     // mDNS seems to be slow, use the IP address directly for faster testing.
     await tester.pumpWidget(
-      App(
-        normalHost: dutIpAddress,
-        provisioningHost: '192.168.4.1',
+      ProviderScope(
+        overrides: [
+          normalHostProvider.overrideWithValue(dutIpAddress),
+          provisioningHostProvider.overrideWithValue('192.168.4.1'),
+        ],
+        child: App(),
       ),
     );
 
@@ -201,16 +206,19 @@ void main() {
     testWidgets('simple test', (tester) async {
       // mDNS seems to be slow, use the IP address directly for faster testing.
       await tester.pumpWidget(
-        App(
-          normalHost: dutIpAddress,
-          provisioningHost: '192.168.4.1',
+        ProviderScope(
+          overrides: [
+            normalHostProvider.overrideWithValue(dutIpAddress),
+            provisioningHostProvider.overrideWithValue('192.168.4.1'),
+          ],
+          child: App(),
         ),
       );
 
-      // wait until connected
-      // poll connection status widget until ready with timeout
       final homePage = HomePageObject(tester);
       await homePage.waitUntilConnected();
+
+      await homePage.waitUntilPresetsReady();
 
       await homePage.createPreset('Preset 1');
 

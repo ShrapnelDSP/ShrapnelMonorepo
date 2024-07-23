@@ -25,12 +25,21 @@ import 'dart:math';
 import 'package:flutter/foundation.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logging/logging.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import 'core/message_transport.dart';
+import 'riverpod_util.dart';
 
 part 'robust_websocket.freezed.dart';
 
+part 'robust_websocket.g.dart';
+
 final _log = Logger('shrapnel.robust_websocket');
+
+@riverpod
+// ignore: unsupported_provider_value
+RobustWebsocket robustWebsocket(RobustWebsocketRef ref, Uri uri) =>
+    ref.listenAndDisposeChangeNotifier(RobustWebsocket(uri: uri));
 
 /// Auto-reconnecting websocket client
 class RobustWebsocket extends ChangeNotifier
@@ -47,12 +56,8 @@ class RobustWebsocket extends ChangeNotifier
   @override
   bool isAlive = false;
 
-  final _connectionController = StreamController<void>.broadcast();
   final _streamController = StreamController<WebSocketData>.broadcast();
   final _sinkController = StreamController<WebSocketData>();
-
-  @override
-  Stream<void> get connectionStream => _connectionController.stream;
 
   @override
   StreamSink<WebSocketData> get sink => _sinkController;
@@ -140,7 +145,6 @@ class RobustWebsocket extends ChangeNotifier
 
     _transport = transport;
     isAlive = true;
-    _connectionController.add(null);
     notifyListeners();
   }
 
@@ -150,7 +154,6 @@ class RobustWebsocket extends ChangeNotifier
     super.dispose();
     unawaited(_streamController.close());
     unawaited(_sinkController.close());
-    unawaited(_connectionController.close());
     unawaited(_transport?.dispose());
   }
 

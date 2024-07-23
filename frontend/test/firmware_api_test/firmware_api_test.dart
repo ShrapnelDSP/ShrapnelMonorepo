@@ -21,16 +21,19 @@
 @Tags(['api'])
 library;
 
-import 'dart:io';
+import 'dart:async';
 
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:logging/logging.dart';
+import 'package:rxdart/rxdart.dart';
 import 'package:shrapnel/api/api_websocket.dart';
-import 'package:shrapnel/core/message_transport.dart';
+import 'package:shrapnel/core/stream_extensions.dart';
 import 'package:shrapnel/main.dart';
 import 'package:shrapnel/parameter.dart';
-import 'package:shrapnel/robust_websocket.dart';
+import 'package:shrapnel/provider_observer.dart';
 
+import '../riverpod_util.dart';
 import 'util.dart';
 
 // audio parameter basic test
@@ -101,8 +104,6 @@ void main() {
   setupLogger(Level.ALL);
 
   late final MacAddress macAddress;
-  late ApiWebsocket api;
-  late ShrapnelUart uart;
 
   setUpAll(() async {
     macAddress = await flashFirmware(
@@ -122,57 +123,57 @@ void main() {
     setUp(() async {
       await nvsErase(port: port);
 
-      uart = await ShrapnelUart.open('/dev/ttyUSB0');
+      final uart = await ShrapnelUart.open('/dev/ttyUSB0');
       addTearDown(uart.dispose);
 
       await uart.provisionWifi(ssid: networkSsid, password: networkPassphrase);
 
       // Wait for firmware to start server after getting provisioned
       await Future<void>.delayed(const Duration(seconds: 10));
-
-      const uri = 'ws://$dutIpAddress:8080/websocket';
-      // closed by the WebSocketTransport
-      // ignore: close_sinks
-      final webSocket = await WebSocket.connect(uri);
-      final webSocketTransport =
-          WebSocketTransportAdapter(websocket: webSocket);
-      api = ApiWebsocket(websocket: webSocketTransport);
-      addTearDown(webSocketTransport.dispose);
     });
 
     test('simple test', () async {
-      final transport = ParameterTransport(websocket: api);
-      final service = ParameterService(transport: transport);
-
-      final ampGain = AudioParameterDoubleModel(
-        groupName: 'test',
-        id: 'ampGain',
-        name: 'Amp Gain',
-        parameterService: service,
+      final container = createContainer(
+        overrides: [
+          normalHostProvider.overrideWithValue(dutIpAddress),
+        ],
       );
 
-      // Skip 1, because it's the default injected by the parameter model. We
-      // are waiting for the first update from the firmware here.
-      final update = await ampGain.value.skip(1).first;
-      // Expect notification including the default value
-      expect(update, closeTo(0.5, 0.000001));
+      final expectation = expectLater(
+        container.listenAsStream(audioParameterDoubleModelProvider('ampGain')),
+        emitsInOrder([
+          isAsyncLoading<double>(),
+          isAsyncData<double>(closeTo(0.5, 0.000001)),
+        ]),
+      );
+
+      await expectation;
     });
   });
 }
 
-/// Implements reconnecting feature for the low level WebSockets transport.
-///
-/// It is somewhat fake. New connections are never created and the instance is
-/// always connected.
-class WebSocketTransportAdapter extends WebSocketTransport
-    implements ReconnectingMessageTransport<WebSocketData, WebSocketData> {
-  WebSocketTransportAdapter({required super.websocket}) : super(onDone: () {});
+extension ProviderContainerTestEx on ProviderContainer {
+  Stream<T> listenAsStream<T>(ProviderListenable<T> provider) {
+    final controller = StreamController<T>();
 
-  @override
-  Stream<void> get connectionStream => const Stream.empty();
+    final subscription = listen(
+      provider,
+      (_, value) {
+        controller.add(value);
+      },
+      fireImmediately: true,
+    );
 
-  @override
-  // This class is always connected. It is constructed with an already connected
-  // instance of the WebSockets connection
-  bool get isAlive => true;
+    controller.onCancel = () {
+      subscription.close();
+      unawaited(controller.close());
+    };
+
+    return controller.stream;
+  }
 }
+
+Matcher isAsyncLoading<T>() => isA<AsyncLoading<T>>();
+
+Matcher isAsyncData<T>(Matcher matcher) =>
+    isA<AsyncData<T>>().having((data) => data.value, 'value', matcher);

@@ -18,9 +18,13 @@
  */
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logging/logging.dart';
 import 'package:pausable_timer/pausable_timer.dart';
+import 'package:rxdart/rxdart.dart';
+
+import 'api/api_websocket.dart';
 
 part 'audio_events.freezed.dart';
 
@@ -32,6 +36,21 @@ sealed class AudioEventMessage with _$AudioEventMessage {
 
   factory AudioEventMessage.outputClipped() = AudioEventMessageOutputClipped;
 }
+
+final audioClippingServiceProvider = AutoDisposeChangeNotifierProvider(
+  (ref) {
+    final websocket = ref.watch(apiWebsocketProvider);
+    if (websocket != null) {
+      return AudioClippingService(
+        stream: websocket.stream
+            .whereType<ApiMessageAudioEvent>()
+            .map((event) => event.message),
+      );
+    }
+
+    return null;
+  },
+);
 
 class AudioClippingService extends ChangeNotifier {
   AudioClippingService({required Stream<AudioEventMessage> stream}) {

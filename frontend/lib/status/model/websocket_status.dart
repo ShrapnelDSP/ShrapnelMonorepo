@@ -17,26 +17,20 @@
  * ShrapnelDSP. If not, see <https://www.gnu.org/licenses/>.
  */
 
-import 'package:state_notifier/state_notifier.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import '../../api/api_websocket.dart';
 import '../../robust_websocket.dart';
 import '../data/status.dart';
 
-class WebSocketStatusModel extends StateNotifier<WebSocketStatusData> {
-  WebSocketStatusModel({required this.websocket})
-      : super(const WebSocketStatusData(isConnected: false)) {
-    websocket.addListener(_onStateChanged);
-  }
+part 'websocket_status.g.dart';
 
-  void _onStateChanged() {
-    state = WebSocketStatusData(isConnected: websocket.isAlive);
-  }
-
-  final RobustWebsocket websocket;
-
+@riverpod
+class WebSocketStatusModel extends _$WebSocketStatusModel {
   @override
-  void dispose() {
-    super.dispose();
-    websocket.removeListener(_onStateChanged);
+  WebSocketStatusData build() {
+    final websocket =
+        ref.watch(robustWebsocketProvider(ref.watch(shrapnelUriProvider)));
+    return WebSocketStatusData(isConnected: websocket.isAlive);
   }
 }

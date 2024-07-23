@@ -21,6 +21,7 @@ import 'dart:async';
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logging/logging.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:rxdart/rxdart.dart';
 
 import '../../api/api_websocket.dart';
@@ -28,6 +29,8 @@ import '../../core/message_transport.dart';
 import '../../core/stream_extensions.dart';
 
 part 'selected_preset_client.freezed.dart';
+
+part 'selected_preset_client.g.dart';
 
 final _log = Logger('selected_preset_client');
 
@@ -42,10 +45,17 @@ sealed class SelectedPresetMessage with _$SelectedPresetMessage {
       WriteSelectedPresetMessage;
 }
 
+@riverpod
+SelectedPresetTransport? selectedPresetTransport(
+  SelectedPresetTransportRef ref,
+) =>
+    switch (ref.watch(apiWebsocketProvider)) {
+      final websocket? => SelectedPresetTransport(websocket: websocket),
+      null => null,
+    };
+
 class SelectedPresetTransport
-    implements
-        ReconnectingMessageTransport<SelectedPresetMessage,
-            SelectedPresetMessage> {
+    implements MessageTransport<SelectedPresetMessage, SelectedPresetMessage> {
   SelectedPresetTransport({required ApiWebsocket websocket})
       : _websocket = websocket {
     _controller.stream
@@ -65,29 +75,29 @@ class SelectedPresetTransport
       .map((event) => event.message)
       .logFinest(_log, (event) => 'received message: $event');
 
-  @override
-  Stream<void> get connectionStream => _websocket.connectionStream;
-
   final ApiWebsocket _websocket;
 
   @override
   void dispose() {
     unawaited(_controller.close());
   }
-
-  @override
-  bool get isAlive => _websocket.isAlive;
 }
+
+@riverpod
+SelectedPresetClient? selectedPresetClient(SelectedPresetClientRef ref) =>
+    switch (ref.watch(selectedPresetTransportProvider)) {
+      final transport? => SelectedPresetClient(transport: transport),
+      null => null,
+    };
 
 class SelectedPresetClient {
   SelectedPresetClient({
-    required ReconnectingMessageTransport<SelectedPresetMessage,
-            SelectedPresetMessage>
+    required MessageTransport<SelectedPresetMessage, SelectedPresetMessage>
         transport,
   }) : _transport = transport;
 
-  final ReconnectingMessageTransport<SelectedPresetMessage,
-      SelectedPresetMessage> _transport;
+  final MessageTransport<SelectedPresetMessage, SelectedPresetMessage>
+      _transport;
 
   Future<void> initialise() async {
     _transport.sink.add(SelectedPresetMessage.read());
@@ -100,6 +110,4 @@ class SelectedPresetClient {
   Future<void> selectPreset(int presetId) async {
     _transport.sink.add(SelectedPresetMessage.write(selectedPreset: presetId));
   }
-
-  Stream<void> get connectionStream => _transport.connectionStream;
 }

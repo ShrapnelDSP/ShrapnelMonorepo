@@ -22,6 +22,7 @@ import 'dart:async';
 import 'package:async/async.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logging/logging.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:rxdart/rxdart.dart';
 
 import '../audio_events.dart';
@@ -37,7 +38,23 @@ import 'proto_extension.dart';
 
 part 'api_websocket.freezed.dart';
 
+part 'api_websocket.g.dart';
+
 final _log = Logger('api_websocket');
+
+@Riverpod(keepAlive: true)
+String normalHost(NormalHostRef ref) => 'guitar-dsp.local';
+
+@Riverpod(keepAlive: true)
+String provisioningHost(ProvisioningHostRef ref) => 'guitar-dsp.local';
+
+@visibleForTesting
+final kShrapnelUri = Uri(
+  scheme: 'http',
+  host: 'guitar-dsp.local',
+  port: 8080,
+  path: '/websocket',
+);
 
 @freezed
 sealed class ApiMessage with _$ApiMessage {
@@ -63,14 +80,28 @@ sealed class ApiMessage with _$ApiMessage {
   }) = ApiMessageSelectedPreset;
 }
 
-class ApiWebsocket
-    implements ReconnectingMessageTransport<ApiMessage, ApiMessage> {
+@riverpod
+Uri shrapnelUri(ShrapnelUriRef ref) {
+  return kShrapnelUri.replace(host: ref.watch(normalHostProvider));
+}
+
+@riverpod
+ApiWebsocket? apiWebsocket(ApiWebsocketRef ref) {
+  final websocket =
+      ref.watch(robustWebsocketProvider(ref.watch(shrapnelUriProvider)));
+  if (websocket.isAlive) {
+    return ApiWebsocket(websocket: websocket);
+  }
+
+  return null;
+}
+
+class ApiWebsocket implements MessageTransport<ApiMessage, ApiMessage> {
   ApiWebsocket({
-    required ReconnectingMessageTransport<WebSocketData, WebSocketData>
-        websocket,
+    required MessageTransport<WebSocketData, WebSocketData> websocket,
   }) : _websocket = websocket;
 
-  final ReconnectingMessageTransport<WebSocketData, WebSocketData> _websocket;
+  final MessageTransport<WebSocketData, WebSocketData> _websocket;
 
   @override
   late final Stream<ApiMessage> stream = _websocket.stream
@@ -82,12 +113,6 @@ class ApiWebsocket
         _log,
         (event) => 'received: $event',
       );
-
-  @override
-  late final Stream<void> connectionStream = _websocket.connectionStream;
-
-  @override
-  bool get isAlive => _websocket.isAlive;
 
   @override
   late final StreamSink<ApiMessage> sink =

@@ -22,12 +22,16 @@ import 'dart:async';
 import 'package:flutter/widgets.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logging/logging.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:rxdart/rxdart.dart';
 
 import 'api/api_websocket.dart';
 import 'core/message_transport.dart';
+import 'riverpod_util.dart';
 
 part 'parameter.freezed.dart';
+
+part 'parameter.g.dart';
 
 final _log = Logger('shrapnel.parameter');
 
@@ -39,35 +43,33 @@ class AudioParameterDoubleData with _$AudioParameterDoubleData {
   }) = _AudioParameterDoubleData;
 }
 
-class AudioParameterDoubleModel {
-  AudioParameterDoubleModel({
-    required this.groupName,
-    required this.name,
-    required this.id,
-    required this.parameterService,
-  }) {
-    parameterService.registerParameter(this);
+@freezed
+class AudioParameterMetaData with _$AudioParameterMetaData {
+  const factory AudioParameterMetaData({
+    required String groupName,
+    required String name,
+    required String id,
+  }) = _AudioParameterMetaData;
+}
+
+@riverpod
+class AudioParameterDoubleModel extends _$AudioParameterDoubleModel {
+  @override
+  Stream<double> build(String parameterId) {
+    final service = ref.watch(parameterServiceProvider);
+    if (service == null) {
+      return const Stream.empty();
+    }
+
+    return service.getParameter(parameterId);
   }
-
-  final _controller = BehaviorSubject<double>.seeded(0.5);
-
-  final String groupName;
-  final String name;
-  final String id;
-  final ParameterService parameterService;
 
   void onUserChanged(double value) {
-    _log.finest('user updated parameter $id to $value');
-    _controller.add(value);
-    parameterService
-        .parameterUpdatedByUser(AudioParameterDoubleData(value: value, id: id));
+    _log.finest('user updated parameter $parameterId to $value');
+    ref.read(parameterServiceProvider)!.parameterUpdatedByUser(
+          AudioParameterDoubleData(value: value, id: parameterId),
+        );
   }
-
-  void setValue(double value) {
-    _controller.add(value);
-  }
-
-  ValueStream<double> get value => _controller;
 }
 
 @freezed
@@ -90,9 +92,18 @@ sealed class ParameterServiceInputMessage with _$ParameterServiceInputMessage {
   }) = ParameterServiceInputMessageParameterUpdate;
 }
 
+@riverpod
+ParameterTransport? parameterTransport(ParameterTransportRef ref) =>
+    switch (ref.watch(apiWebsocketProvider)) {
+      final websocket? => ParameterTransport(
+          websocket: websocket,
+        ),
+      null => null,
+    };
+
 class ParameterTransport
     implements
-        ReconnectingMessageTransport<ParameterServiceOutputMessage,
+        MessageTransport<ParameterServiceOutputMessage,
             ParameterServiceInputMessage> {
   ParameterTransport({required this.websocket}) {
     _controller.stream
@@ -103,12 +114,6 @@ class ParameterTransport
   ApiWebsocket websocket;
 
   final _controller = StreamController<ParameterServiceOutputMessage>();
-
-  @override
-  Stream<void> get connectionStream => websocket.connectionStream;
-
-  @override
-  bool get isAlive => websocket.isAlive;
 
   @override
   Stream<ParameterServiceInputMessage> get stream => websocket.stream
@@ -124,9 +129,21 @@ class ParameterTransport
   StreamSink<ParameterServiceOutputMessage> get sink => _controller;
 }
 
+@riverpod
+// ignore: unsupported_provider_value
+ParameterService? parameterService(ParameterServiceRef ref) =>
+    switch (ref.watch(parameterTransportProvider)) {
+      final transport? => ref.listenAndDisposeChangeNotifier(
+          ParameterService(
+            transport: transport,
+          ),
+        ),
+      null => null,
+    };
+
 class ParameterService extends ChangeNotifier {
   ParameterService({
-    required ReconnectingMessageTransport<ParameterServiceOutputMessage,
+    required MessageTransport<ParameterServiceOutputMessage,
             ParameterServiceInputMessage>
         transport,
   }) : _transport = transport {
@@ -140,13 +157,9 @@ class ParameterService extends ChangeNotifier {
       ),
     );
 
-    _transport.stream.listen(_handleIncomingMessage);
+    _subscription = _transport.stream.listen(_handleIncomingMessage);
 
-    if (_transport.isAlive) {
-      _requestParameterInitialisation();
-    }
-    _transport.connectionStream
-        .listen((_) => _requestParameterInitialisation());
+    _requestParameterInitialisation();
   }
 
   void _requestParameterInitialisation() {
@@ -155,27 +168,24 @@ class ParameterService extends ChangeNotifier {
   }
 
   final _parameterUpdatesController =
-      StreamController<AudioParameterDoubleData>();
+      StreamController<AudioParameterDoubleData>.broadcast();
+
+  /// Parameter updates performed by the user through the GUI
   late final Stream<AudioParameterDoubleData> parameterUpdates =
       _parameterUpdatesController.stream;
   final _sink = StreamController<ParameterServiceOutputMessage>.broadcast();
 
-  final _parameters = <String, AudioParameterDoubleModel>{};
+  final _parameters = <String, StreamController<double>>{};
 
-  final ReconnectingMessageTransport<ParameterServiceOutputMessage,
+  final MessageTransport<ParameterServiceOutputMessage,
       ParameterServiceInputMessage> _transport;
 
-  void registerParameter(AudioParameterDoubleModel parameter) {
-    assert(!_parameters.containsKey(parameter.id));
-    _parameters[parameter.id] = parameter;
-  }
+  late final StreamSubscription<ParameterServiceInputMessage> _subscription;
 
-  AudioParameterDoubleModel getParameter(String parameterId) {
-    if (!_parameters.containsKey(parameterId)) {
-      throw StateError('Invalid parameter id: $parameterId');
-    }
-
-    return _parameters[parameterId]!;
+  Stream<double> getParameter(String parameterId) {
+    return _parameters
+        .putIfAbsent(parameterId, StreamController.broadcast)
+        .stream;
   }
 
   void _handleIncomingMessage(ParameterServiceInputMessage message) {
@@ -189,24 +199,23 @@ class ParameterService extends ChangeNotifier {
           return;
         }
 
-        _parameters[id]!.setValue(value);
+        _parameters[id]!.add(value);
     }
-  }
-
-  Map<String, String> get parameterNames {
-    return _parameters.map(
-      (id, param) => MapEntry(id, '${param.groupName}: ${param.name}'),
-    );
   }
 
   @override
   void dispose() {
     unawaited(_sink.close());
     unawaited(_parameterUpdatesController.close());
+    unawaited(_subscription.cancel());
+    for (final controller in _parameters.values) {
+      unawaited(controller.close());
+    }
     super.dispose();
   }
 
   void parameterUpdatedByUser(AudioParameterDoubleData parameter) {
+    _parameters[parameter.id]!.add(parameter.value);
     _parameterUpdatesController.add(parameter);
     _sink.add(
       ParameterServiceOutputMessage.parameterUpdate(

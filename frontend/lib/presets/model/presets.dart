@@ -18,7 +18,6 @@
  */
 
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:state_notifier/state_notifier.dart';
 
 part 'presets.freezed.dart';
 
@@ -76,20 +75,4 @@ sealed class PresetsState with _$PresetsState {
   }) = ReadyPresetsState;
 
   PresetsState._();
-}
-
-abstract class PresetsServiceBase extends StateNotifier<PresetsState> {
-  PresetsServiceBase(super._state);
-
-  /// Creates a new preset and makes it active.
-  void create(String name);
-
-  /// Changes the active preset to a new value.
-  void select(int id);
-
-  /// Delete a preset.
-  void delete(int id);
-
-  /// Save changes made to the current preset.
-  void saveChanges();
 }

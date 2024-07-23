@@ -25,6 +25,7 @@ import 'package:logging/logging.dart';
 import 'package:shrapnel/amplifier.dart';
 import 'package:shrapnel/knob.dart';
 
+import 'core/button_page_object.dart';
 import 'midi_mapping/midi_mapping_page_object.dart';
 import 'presets/presets_page_object.dart';
 import 'util.dart';
@@ -74,7 +75,7 @@ class HomePageObject {
     await tester.pumpAndSettle();
   }
 
-  double getKnobValue({required String parameterId}) {
+  double? getKnobValue({required String parameterId}) {
     final knob = findKnob(parameterId).evaluate().single.widget as Knob;
     return knob.value;
   }
@@ -120,6 +121,21 @@ class HomePageObject {
       tester: tester,
       predicate: () => isConnected,
       timeout: timeout,
+    );
+
+    if (!success) {
+      _log.warning('Connection to provisioned access point timed out');
+      throw TimeoutException('Connection timed out');
+    }
+  }
+
+  Future<void> waitUntilPresetsReady() async {
+    final success = await pumpWaitingFor(
+      tester: tester,
+      predicate: () =>
+          ButtonPageObject(tester, key: const Key('presets-create-button'))
+              .isEnabled,
+      timeout: const Duration(seconds: 5),
     );
 
     if (!success) {

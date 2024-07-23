@@ -19,20 +19,20 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../model/midi_learn.dart';
-import '../model/midi_learn_state.dart';
 
-class MidiLearnStatus extends StatelessWidget {
+class MidiLearnStatus extends ConsumerWidget {
   const MidiLearnStatus({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final midiLearnState = context.watch<MidiLearnState>();
-    final midiLearnService = context.read<MidiLearnService>();
+  Widget build(BuildContext context, WidgetRef ref) {
+    final midiLearnState = ref.watch(midiLearnServiceProvider);
+    final midiLearnService = ref.read(midiLearnServiceProvider.notifier);
 
     final isInProgress = midiLearnState.when(
+      loading: () => false,
       idle: (_) => false,
       waitForParameter: () => true,
       waitForMidi: (_) => true,
@@ -40,6 +40,7 @@ class MidiLearnStatus extends StatelessWidget {
     );
 
     final isCancellable = midiLearnState.when(
+      loading: () => false,
       idle: (_) => false,
       waitForParameter: () => true,
       waitForMidi: (_) => true,

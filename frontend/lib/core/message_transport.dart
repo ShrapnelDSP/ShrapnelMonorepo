@@ -36,7 +36,4 @@ abstract class ReconnectingMessageTransport<T1, T2>
     extends MessageTransport<T1, T2> {
   /// Returns true if the connection is alive at the moment
   bool get isAlive;
-
-  /// A null is emitted every time a connection is successfully created
-  Stream<void> get connectionStream;
 }

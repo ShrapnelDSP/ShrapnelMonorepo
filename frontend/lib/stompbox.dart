@@ -18,18 +18,19 @@
  */
 
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'amplifier.dart';
 import 'knob_with_label.dart';
-import 'midi_mapping/model/midi_learn_state.dart';
+import 'midi_mapping/model/midi_learn.dart';
 import 'parameter.dart';
 import 'util/conditional_parent.dart';
 
 abstract class StompboxModel {
   String get name;
-  List<AudioParameterDoubleModel> get parameters;
-  AudioParameterDoubleModel get bypass;
+
+  List<String> get parameters;
+
+  String get bypass;
 }
 
 class Stompbox extends StatelessWidget {
@@ -57,14 +58,13 @@ class Stompbox extends StatelessWidget {
           children: List<Widget>.generate(
             2 * i + 1 >= parameters.length ? 1 : 2,
             (j) {
-              return parameters[2 * i + j].provider(
-                child: Expanded(
-                  child: Padding(
-                    padding: EdgeInsets.only(bottom: scaleFactor * 3),
-                    child: KnobWithLabel(
-                      isEnabled: full,
-                      knobSize: scaleFactor * 25,
-                    ),
+              return Expanded(
+                child: Padding(
+                  padding: EdgeInsets.only(bottom: scaleFactor * 3),
+                  child: KnobWithLabel(
+                    isEnabled: full,
+                    knobSize: scaleFactor * 25,
+                    parameterId: parameters[2 * i + j],
                   ),
                 ),
               );
@@ -116,11 +116,10 @@ class Stompbox extends StatelessWidget {
                         ),
                       ),
                     ),
-                    model.bypass.provider(
-                      child: _BypassButton(
-                        size: scaleFactor * 23,
-                        isEnabled: full,
-                      ),
+                    _BypassButton(
+                      size: scaleFactor * 23,
+                      isEnabled: full,
+                      parameterId: model.bypass,
                     ),
                   ],
                 ),
@@ -133,17 +132,24 @@ class Stompbox extends StatelessWidget {
   }
 }
 
-class _BypassButton extends StatelessWidget {
-  const _BypassButton({required this.size, required this.isEnabled});
+class _BypassButton extends ConsumerWidget {
+  const _BypassButton({
+    required this.size,
+    required this.isEnabled,
+    required this.parameterId,
+  });
 
   final double size;
   final bool isEnabled;
+  final String parameterId;
 
   @override
-  Widget build(BuildContext context) {
-    final value = context.watch<double>();
-    final bypass = context.read<AudioParameterDoubleModel>();
-    final learningState = context.watch<MidiLearnState>();
+  Widget build(BuildContext context, WidgetRef ref) {
+    final value =
+        ref.watch(audioParameterDoubleModelProvider(parameterId)).unwrapPrevious().valueOrNull ?? 1;
+    final bypass =
+        ref.read(audioParameterDoubleModelProvider(parameterId).notifier);
+    final learningState = ref.watch(midiLearnServiceProvider);
 
     return ConditionalParent(
       condition: isEnabled,
@@ -159,7 +165,7 @@ class _BypassButton extends StatelessWidget {
           //  learning ID. This would be easier to update everywhere in case we
           //  have additional states where mapping is still active.
           colorScheme: learningState.maybeWhen(
-            waitForMidi: (id) => id == bypass.id
+            waitForMidi: (id) => id == parameterId
                 ? Theme.of(context)
                     .colorScheme
                     .copyWith(background: Colors.white, primary: Colors.white)

@@ -21,6 +21,7 @@ import 'dart:async';
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logging/logging.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:rxdart/rxdart.dart';
 
 import '../../api/api_websocket.dart';
@@ -30,7 +31,8 @@ import 'presets.dart' as presets;
 
 part 'presets_client.freezed.dart';
 
-// ignore: unused_element
+part 'presets_client.g.dart';
+
 final _log = Logger('presets_client');
 
 @freezed
@@ -118,8 +120,15 @@ sealed class PresetsMessage with _$PresetsMessage {
   factory PresetsMessage.delete(int id) = PresetsMessageDelete;
 }
 
+@riverpod
+PresetsTransport? presetsTransport(PresetsTransportRef ref) =>
+    switch (ref.watch(apiWebsocketProvider)) {
+      final websocket? => PresetsTransport(websocket: websocket),
+      null => null,
+    };
+
 class PresetsTransport
-    implements ReconnectingMessageTransport<PresetsMessage, PresetsMessage> {
+    implements MessageTransport<PresetsMessage, PresetsMessage> {
   PresetsTransport({required this.websocket}) {
     _controller.stream
         .logFinest(_log, (event) => 'send message: $event')
@@ -141,27 +150,27 @@ class PresetsTransport
         (event) => 'receive message: $event',
       );
 
-  @override
-  Stream<void> get connectionStream => websocket.connectionStream;
-
   ApiWebsocket websocket;
 
   @override
   void dispose() {
     unawaited(_controller.close());
   }
-
-  @override
-  bool get isAlive => websocket.isAlive;
 }
+
+@riverpod
+PresetsClient? presetsClient(PresetsClientRef ref) =>
+    switch (ref.watch(presetsTransportProvider)) {
+      final transport? => PresetsClient(transport: transport),
+      null => null,
+    };
 
 class PresetsClient {
   PresetsClient({
-    required ReconnectingMessageTransport<PresetsMessage, PresetsMessage>
-        transport,
+    required MessageTransport<PresetsMessage, PresetsMessage> transport,
   }) : _transport = transport;
 
-  final ReconnectingMessageTransport<PresetsMessage, PresetsMessage> _transport;
+  final MessageTransport<PresetsMessage, PresetsMessage> _transport;
 
   /// Firmware will reply by sending a preset update message for every preset
   /// that already exists.
@@ -220,8 +229,6 @@ class PresetsClient {
       ),
     );
   }
-
-  Stream<void> get connectionStream => _transport.connectionStream;
 
   void dispose() {
     _transport.dispose();

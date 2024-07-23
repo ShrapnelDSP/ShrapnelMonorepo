@@ -17,31 +17,25 @@
  * ShrapnelDSP. If not, see <https://www.gnu.org/licenses/>.
  */
 
-import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_test/flutter_test.dart';
 
-import '../model/websocket_status.dart';
+/// A testing utility which creates a [ProviderContainer] and automatically
+/// disposes it at the end of the test.
+ProviderContainer createContainer({
+  ProviderContainer? parent,
+  List<Override> overrides = const [],
+  List<ProviderObserver>? observers,
+}) {
+  // Create a ProviderContainer, and optionally allow specifying parameters.
+  final container = ProviderContainer(
+    parent: parent,
+    overrides: overrides,
+    observers: observers,
+  );
 
-class WebSocketStatus extends ConsumerWidget {
-  const WebSocketStatus({super.key, required this.size});
+  // When the test ends, dispose the container.
+  addTearDown(container.dispose);
 
-  final double size;
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final isConnected = ref.watch(webSocketStatusModelProvider).isConnected;
-
-    return Tooltip(
-      message: isConnected ? 'Connected' : 'Not Connected',
-      waitDuration: const Duration(milliseconds: 500),
-      child: Container(
-        width: size,
-        height: size,
-        decoration: BoxDecoration(
-          color: isConnected ? Colors.green : Colors.red,
-          shape: BoxShape.circle,
-        ),
-      ),
-    );
-  }
+  return container;
 }

@@ -18,27 +18,31 @@
  */
 
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'knob.dart';
-import 'midi_mapping/model/midi_learn_state.dart';
+import 'midi_mapping/model/midi_learn.dart';
 import 'parameter.dart';
+import 'parameters_meta.dart';
 
-class KnobWithLabel extends StatelessWidget {
+class KnobWithLabel extends ConsumerWidget {
   const KnobWithLabel({
     super.key,
+    required this.parameterId,
     required this.isEnabled,
     required this.knobSize,
   });
 
+  final String parameterId;
   final bool isEnabled;
   final double knobSize;
 
   @override
-  Widget build(BuildContext context) {
-    final value = context.watch<double>();
-    final parameter = context.read<AudioParameterDoubleModel>();
-    final learningState = context.watch<MidiLearnState>();
+  Widget build(BuildContext context, WidgetRef ref) {
+    final value = ref.watch(audioParameterDoubleModelProvider(parameterId));
+    final parameter =
+        ref.read(audioParameterDoubleModelProvider(parameterId).notifier);
+    final learningState = ref.watch(midiLearnServiceProvider);
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -46,7 +50,7 @@ class KnobWithLabel extends StatelessWidget {
         AnimatedTheme(
           data: Theme.of(context).copyWith(
             colorScheme: learningState.maybeWhen(
-              waitForMidi: (id) => id == parameter.id
+              waitForMidi: (id) => id == parameterId
                   ? Theme.of(context)
                       .colorScheme
                       .copyWith(primary: Colors.white)
@@ -55,16 +59,16 @@ class KnobWithLabel extends StatelessWidget {
             ),
           ),
           child: Knob(
-            key: Key('knob-${parameter.id}'),
-            onChanged: isEnabled ? parameter.onUserChanged : (_) {},
-            value: value,
+            key: Key('knob-$parameterId'),
+            onChanged: isEnabled ? parameter.onUserChanged : null,
+            value: value.unwrapPrevious().valueOrNull,
             size: knobSize,
           ),
         ),
         if (isEnabled) const SizedBox(height: 5),
         if (isEnabled)
           Text(
-            parameter.name,
+            ref.watch(audioParameterMetadataProvider(parameterId)).name,
             textAlign: TextAlign.center,
           ),
       ],
