@@ -309,6 +309,7 @@ class _WifiScanningScreenState extends State<_WifiScanningScreen> {
       child = Padding(
         padding: const EdgeInsets.all(8),
         child: Column(
+          key: const Key('wifi scan complete page'),
           children: [
             Expanded(
               child: ListView.builder(

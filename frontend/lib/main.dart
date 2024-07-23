@@ -108,9 +108,15 @@ class App extends StatelessWidget {
     PresetsRepositoryBase? presetsRepository,
     ParameterService? parameterService,
     SelectedPresetRepositoryBase? selectedPresetRepository,
+    String? normalHost,
+    String? provisioningHost,
   }) {
+    provisioningHost ??= 'guitar-dsp.local';
+    normalHost ??= 'guitar-dsp.local';
+
     websocket ??= RobustWebsocket(
-      uri: Uri.parse('http://guitar-dsp.local:8080/websocket'),
+      uri: Uri.parse('http://guitar-dsp.local:8080/websocket')
+          .replace(host: normalHost),
     );
     _websocket = websocket;
     apiWebsocket ??= ApiWebsocket(websocket: websocket);
@@ -125,7 +131,7 @@ class App extends StatelessWidget {
             _log.info('Creating provisioning connection');
             return Provisioning(
               security: Security1(pop: 'abcd1234'),
-              transport: TransportHTTP('guitar-dsp.local'),
+              transport: TransportHTTP(provisioningHost!),
             );
           },
         );

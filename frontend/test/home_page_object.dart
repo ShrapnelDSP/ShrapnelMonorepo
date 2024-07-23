@@ -27,6 +27,8 @@ import 'package:shrapnel/knob.dart';
 
 import 'midi_mapping/midi_mapping_page_object.dart';
 import 'presets/presets_page_object.dart';
+import 'util.dart';
+import 'wifi_provisioning_page_object.dart';
 
 final _log = Logger('home_page_object');
 
@@ -34,6 +36,10 @@ class HomePageObject {
   HomePageObject(this.tester);
 
   final WidgetTester tester;
+
+  Finder get findHomePage => _findMidiLearnButton;
+
+  Finder get _findMidiLearnButton => find.byKey(const Key('midi-learn-button'));
 
   Finder findKnob(String parameterId) => find.byKey(Key('knob-$parameterId'));
 
@@ -50,7 +56,7 @@ class HomePageObject {
       find.byKey(const Key('undo-remove-duplicate-mappings'));
 
   Future<void> startMidiLearn() async {
-    await tester.tap(find.byKey(const Key('midi-learn-button')));
+    await tester.tap(_findMidiLearnButton);
     await tester.pumpAndSettle();
   }
 
@@ -108,22 +114,18 @@ class HomePageObject {
   }
 
   Future<void> waitUntilConnected({
-    Duration timeout = const Duration(seconds: 10),
+    Duration timeout = const Duration(seconds: 30),
   }) async {
-    var keepGoing = true;
-    final timer = Timer(timeout, () {
-      _log.warning('Connection to provisioned access point timed out');
-      keepGoing = false;
-    });
-    while (keepGoing) {
-      if (isConnected) {
-        timer.cancel();
-        return;
-      }
-      await tester.pump(const Duration(seconds: 1));
-    }
+    final success = await pumpWaitingFor(
+      tester: tester,
+      predicate: () => isConnected,
+      timeout: timeout,
+    );
 
-    throw TimeoutException('Connection timed out');
+    if (!success) {
+      _log.warning('Connection to provisioned access point timed out');
+      throw TimeoutException('Connection timed out');
+    }
   }
 
   Future<void> createPreset(String name) async {
@@ -132,6 +134,12 @@ class HomePageObject {
 
     final createPresetPage = CreatePresetPageObject(tester);
     await createPresetPage.submitName(name);
+  }
+
+  Future<WifiProvisioningPageObject> openWifiProvisioningPage() async {
+    await tester.tap(find.byKey(const Key('wifi provisioning button')));
+    await tester.pumpAndSettle();
+    return WifiProvisioningPageObject(tester);
   }
 }
 
