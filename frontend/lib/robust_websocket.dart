@@ -56,12 +56,8 @@ class RobustWebsocket extends ChangeNotifier
   @override
   bool isAlive = false;
 
-  final _connectionController = StreamController<void>.broadcast();
   final _streamController = StreamController<WebSocketData>.broadcast();
   final _sinkController = StreamController<WebSocketData>();
-
-  @override
-  Stream<void> get connectionStream => _connectionController.stream;
 
   @override
   StreamSink<WebSocketData> get sink => _sinkController;
@@ -80,6 +76,7 @@ class RobustWebsocket extends ChangeNotifier
     _log.warning('websocket close reason ${_transport!.websocket.closeReason}');
 
     isAlive = false;
+    notifyListeners();
 
     await Future<void>.delayed(const Duration(seconds: 5));
 
@@ -148,7 +145,6 @@ class RobustWebsocket extends ChangeNotifier
 
     _transport = transport;
     isAlive = true;
-    _connectionController.add(null);
     notifyListeners();
   }
 
@@ -158,7 +154,6 @@ class RobustWebsocket extends ChangeNotifier
     super.dispose();
     unawaited(_streamController.close());
     unawaited(_sinkController.close());
-    unawaited(_connectionController.close());
     unawaited(_transport?.dispose());
   }
 

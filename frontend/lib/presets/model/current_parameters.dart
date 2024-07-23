@@ -26,40 +26,33 @@ part 'current_parameters.g.dart';
 
 @riverpod
 AsyncValue<PresetParametersData> currentParameters(CurrentParametersRef ref) {
-  final ampGain = ref.watch(audioParameterDoubleModelProvider('ampGain')).value;
-  final ampChannel =
-      ref.watch(audioParameterDoubleModelProvider('ampChannel')).value;
-  final bass = ref.watch(audioParameterDoubleModelProvider('bass')).value;
-  final middle = ref.watch(audioParameterDoubleModelProvider('middle')).value;
-  final treble = ref.watch(audioParameterDoubleModelProvider('treble')).value;
-  final contour = ref.watch(audioParameterDoubleModelProvider('contour')).value;
-  final volume = ref.watch(audioParameterDoubleModelProvider('volume')).value;
-  final noiseGateThreshold =
-      ref.watch(audioParameterDoubleModelProvider('noiseGateThreshold')).value;
-  final noiseGateHysteresis =
-      ref.watch(audioParameterDoubleModelProvider('noiseGateHysteresis')).value;
-  final noiseGateAttack =
-      ref.watch(audioParameterDoubleModelProvider('noiseGateAttack')).value;
-  final noiseGateHold =
-      ref.watch(audioParameterDoubleModelProvider('noiseGateHold')).value;
-  final noiseGateRelease =
-      ref.watch(audioParameterDoubleModelProvider('noiseGateRelease')).value;
-  final noiseGateBypass =
-      ref.watch(audioParameterDoubleModelProvider('noiseGateBypass')).value;
-  final chorusRate =
-      ref.watch(audioParameterDoubleModelProvider('chorusRate')).value;
-  final chorusDepth =
-      ref.watch(audioParameterDoubleModelProvider('chorusDepth')).value;
-  final chorusMix =
-      ref.watch(audioParameterDoubleModelProvider('chorusMix')).value;
-  final chorusBypass =
-      ref.watch(audioParameterDoubleModelProvider('chorusBypass')).value;
-  final wahPosition =
-      ref.watch(audioParameterDoubleModelProvider('wahPosition')).value;
-  final wahVocal =
-      ref.watch(audioParameterDoubleModelProvider('wahVocal')).value;
-  final wahBypass =
-      ref.watch(audioParameterDoubleModelProvider('wahBypass')).value;
+  double? watchParameterValue(String id) {
+    return ref
+        .watch(audioParameterDoubleModelProvider(id))
+        .unwrapPrevious()
+        .valueOrNull;
+  }
+
+  final ampGain = watchParameterValue('ampGain');
+  final ampChannel = watchParameterValue('ampChannel');
+  final bass = watchParameterValue('bass');
+  final middle = watchParameterValue('middle');
+  final treble = watchParameterValue('treble');
+  final contour = watchParameterValue('contour');
+  final volume = watchParameterValue('volume');
+  final noiseGateThreshold = watchParameterValue('noiseGateThreshold');
+  final noiseGateHysteresis = watchParameterValue('noiseGateHysteresis');
+  final noiseGateAttack = watchParameterValue('noiseGateAttack');
+  final noiseGateHold = watchParameterValue('noiseGateHold');
+  final noiseGateRelease = watchParameterValue('noiseGateRelease');
+  final noiseGateBypass = watchParameterValue('noiseGateBypass');
+  final chorusRate = watchParameterValue('chorusRate');
+  final chorusDepth = watchParameterValue('chorusDepth');
+  final chorusMix = watchParameterValue('chorusMix');
+  final chorusBypass = watchParameterValue('chorusBypass');
+  final wahPosition = watchParameterValue('wahPosition');
+  final wahVocal = watchParameterValue('wahVocal');
+  final wahBypass = watchParameterValue('wahBypass');
 
   return switch ((
     ampGain,

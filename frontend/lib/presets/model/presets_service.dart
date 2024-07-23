@@ -54,9 +54,12 @@ abstract class SelectedPresetRepositoryBase {
 class PresetsService extends _$PresetsService {
   @override
   PresetsState build() {
-    final presets = ref.watch(presetsStreamProvider).valueOrNull;
-    final selectedPreset = ref.watch(selectedPresetStreamProvider).valueOrNull;
-    final parametersState = ref.watch(currentParametersProvider).valueOrNull;
+    final presets =
+        ref.watch(presetsStreamProvider).unwrapPrevious().valueOrNull;
+    final selectedPreset =
+        ref.watch(selectedPresetStreamProvider).unwrapPrevious().valueOrNull;
+    final parametersState =
+        ref.watch(currentParametersProvider).unwrapPrevious().valueOrNull;
 
     _log
       ..finest('build')

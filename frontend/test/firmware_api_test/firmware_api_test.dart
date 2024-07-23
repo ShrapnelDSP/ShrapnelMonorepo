@@ -21,14 +21,17 @@
 @Tags(['api'])
 library;
 
-import 'dart:io';
+import 'dart:async';
 
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:logging/logging.dart';
+import 'package:rxdart/rxdart.dart';
 import 'package:shrapnel/api/api_websocket.dart';
 import 'package:shrapnel/main.dart';
 import 'package:shrapnel/parameter.dart';
 
+import '../riverpod_util.dart';
 import 'util.dart';
 
 // audio parameter basic test
@@ -99,8 +102,6 @@ void main() {
   setupLogger(Level.ALL);
 
   late final MacAddress macAddress;
-  late ApiWebsocket api;
-  late ShrapnelUart uart;
 
   setUpAll(() async {
     macAddress = await flashFirmware(
@@ -120,35 +121,66 @@ void main() {
     setUp(() async {
       await nvsErase(port: port);
 
-      uart = await ShrapnelUart.open('/dev/ttyUSB0');
+      final uart = await ShrapnelUart.open('/dev/ttyUSB0');
       addTearDown(uart.dispose);
 
       await uart.provisionWifi(ssid: networkSsid, password: networkPassphrase);
 
       // Wait for firmware to start server after getting provisioned
       await Future<void>.delayed(const Duration(seconds: 10));
-
-      const uri = 'ws://$dutIpAddress:8080/websocket';
-      // closed by the WebSocketTransport
-      // ignore: close_sinks
-      final webSocket = await WebSocket.connect(uri);
-      final webSocketTransport =
-          WebSocketTransportAdapter(websocket: webSocket);
-      api = ApiWebsocket(websocket: webSocketTransport);
-      addTearDown(webSocketTransport.dispose);
     });
 
     test('simple test', () async {
-      final transport = ParameterTransport(websocket: api);
-      final service = ParameterService(transport: transport);
+      final container = createContainer(
+        overrides: [
+          normalHostProvider.overrideWithValue(dutIpAddress),
+        ],
+      );
 
-      final ampGain = service.getParameter('ampGain');
+      final expectation = expectLater(
+        container.listenAsStream(audioParameterDoubleModelProvider('ampGain')),
+        emitsInOrder([
+          isAsyncLoading<double>(),
+          isAsyncData<double>(closeTo(0.5, 0.000001)),
+        ]),
+      );
 
-      // Skip 1, because it's the default injected by the parameter model. We
-      // are waiting for the first update from the firmware here.
-      final update = await ampGain.skip(1).first;
-      // Expect notification including the default value
-      expect(update, closeTo(0.5, 0.000001));
+      // wait for connection, init
+      await pumpEventQueue();
+      await Future<void>.delayed(const Duration(seconds: 1));
+      await pumpEventQueue();
+      await Future<void>.delayed(const Duration(seconds: 1));
+      await pumpEventQueue();
+
+      await expectation;
     });
   });
 }
+
+extension ProviderContainerTestEx on ProviderContainer {
+  Stream<T> listenAsStream<T>(ProviderListenable<T> provider) {
+    final controller = BehaviorSubject<T>();
+
+    late final subscription = listen(
+      provider,
+      (_, value) {
+        controller.add(value);
+      },
+      fireImmediately: true,
+    );
+
+    controller.onCancel = () {
+      subscription.close();
+      unawaited(controller.close());
+    };
+
+    controller.add(read(provider));
+
+    return controller.stream;
+  }
+}
+
+Matcher isAsyncLoading<T>() => isA<AsyncLoading<T>>();
+
+Matcher isAsyncData<T>(Matcher matcher) =>
+    isA<AsyncData<T>>().having((data) => data.value, 'value', matcher);

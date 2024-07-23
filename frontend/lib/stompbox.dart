@@ -146,7 +146,7 @@ class _BypassButton extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final value =
-        ref.watch(audioParameterDoubleModelProvider(parameterId)).value ?? 1;
+        ref.watch(audioParameterDoubleModelProvider(parameterId)).unwrapPrevious().valueOrNull ?? 1;
     final bypass =
         ref.read(audioParameterDoubleModelProvider(parameterId).notifier);
     final learningState = ref.watch(midiLearnServiceProvider);
