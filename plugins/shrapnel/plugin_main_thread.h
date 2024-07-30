@@ -37,6 +37,8 @@
 // main thread, and instead a wrapper on AudioProcessorValueTreeState should be
 // injected.
 
+namespace shrapnel {
+
 // TODO this is probably unsound. The juce::Timer internal to the PropertiesFile
 // will run the callback on some random thread. It locks the PropertiesFile
 // lock, but setValue etc. are inherited from the PropertySet and do not lock.
@@ -286,10 +288,10 @@ private:
     std::unique_ptr<juce::PropertiesFile> propertiesFile;
 };
 
-class MainThread final : public juce::Thread
+class PluginMainThread final : public juce::Thread
 {
 public:
-    explicit MainThread(std::shared_ptr<ParameterAdapter> parameters)
+    explicit PluginMainThread(std::shared_ptr<ParameterAdapter> parameters)
         : juce::Thread{"shrapnel"},
           main_thread{
               [&](const AppMessage &message)
@@ -322,3 +324,5 @@ private:
     shrapnel::Queue<AppMessage, 4> in_queue;
     shrapnel::MainThread<4, ParameterAdapter> main_thread;
 };
+
+} // namespace shrapnel

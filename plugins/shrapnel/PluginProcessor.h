@@ -58,8 +58,8 @@ public:
 
 private:
     juce::AudioProcessorValueTreeState parameters;
-    std::shared_ptr<ParameterAdapter> parameter_adapter;
-    MainThread main_thread;
+    std::shared_ptr<shrapnel::ParameterAdapter> parameter_adapter;
+    shrapnel::PluginMainThread main_thread;
 
     shrapnel::dsp::BlockProcessor<ShrapnelAudioProcessor::block_size,
                                   ShrapnelAudioProcessor>
