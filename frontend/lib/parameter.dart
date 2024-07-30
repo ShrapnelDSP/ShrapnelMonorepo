@@ -92,12 +92,12 @@ sealed class ParameterServiceInputMessage with _$ParameterServiceInputMessage {
 
 class ParameterTransport
     implements
-        MessageTransport<ParameterServiceOutputMessage,
+        ReconnectingMessageTransport<ParameterServiceOutputMessage,
             ParameterServiceInputMessage> {
   ParameterTransport({required this.websocket}) {
-    _controller.stream.listen((message) {
-      websocket.send(ApiMessage.parameterOutput(message: message));
-    });
+    _controller.stream
+        .map((message) => ApiMessage.parameterOutput(message: message))
+        .listen(websocket.sink.add);
   }
 
   ApiWebsocket websocket;
@@ -126,7 +126,7 @@ class ParameterTransport
 
 class ParameterService extends ChangeNotifier {
   ParameterService({
-    required MessageTransport<ParameterServiceOutputMessage,
+    required ReconnectingMessageTransport<ParameterServiceOutputMessage,
             ParameterServiceInputMessage>
         transport,
   }) : _transport = transport {
@@ -162,7 +162,7 @@ class ParameterService extends ChangeNotifier {
 
   final _parameters = <String, AudioParameterDoubleModel>{};
 
-  final MessageTransport<ParameterServiceOutputMessage,
+  final ReconnectingMessageTransport<ParameterServiceOutputMessage,
       ParameterServiceInputMessage> _transport;
 
   void registerParameter(AudioParameterDoubleModel parameter) {

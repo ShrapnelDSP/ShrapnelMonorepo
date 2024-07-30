@@ -32,13 +32,12 @@ import '../model/models.dart';
 final _log = Logger('midi_mapping_service');
 
 class MidiMappingTransport
-    implements MessageTransport<MidiApiMessage, MidiApiMessage> {
+    implements ReconnectingMessageTransport<MidiApiMessage, MidiApiMessage> {
   MidiMappingTransport({required this.websocket}) {
     _controller.stream
         .logFinest(_log, (event) => 'send message: $event')
-        .listen(
-          (message) => websocket.send(ApiMessage.midiMapping(message: message)),
-        );
+        .map((message) => ApiMessage.midiMapping(message: message))
+        .listen(websocket.sink.add);
   }
 
   final _controller = StreamController<MidiApiMessage>();
@@ -96,7 +95,7 @@ class MidiMappingService extends ChangeNotifier {
   /// If there is an error, the mapping is removed.
   UnmodifiableMapView<MidiMappingId, MidiMapping> get mappings => _mappingsView;
 
-  MessageTransport<MidiApiMessage, MidiApiMessage> websocket;
+  ReconnectingMessageTransport<MidiApiMessage, MidiApiMessage> websocket;
   late StreamSubscription<MidiApiMessage> _subscription;
 
   Future<void> getMapping() async {

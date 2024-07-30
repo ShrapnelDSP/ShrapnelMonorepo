@@ -206,7 +206,7 @@ extension MidiMappingProtoEx on MidiMapping {
           ccNumber: proto.ccNumber,
           parameterId: proto.parameterName,
         ),
-      MidiMappingMode.parameter => MidiMapping.toggle(
+      MidiMappingMode.parameter => MidiMapping.parameter(
           midiChannel: proto.midiChannel,
           ccNumber: proto.ccNumber,
           parameterId: proto.parameterName,
@@ -303,6 +303,41 @@ extension MidiMessageProtoEx on MidiMessage {
           number: proto.programChange.number,
         ),
       midi_mapping_pb.MidiMessage_Parameters.notSet => throw ProtoException(),
+    };
+  }
+
+  midi_mapping_pb.MidiMessage toProto() {
+    return switch (this) {
+      MidiMessageNoteOn(:final note, :final velocity) =>
+        midi_mapping_pb.MidiMessage(
+          channel: channel,
+          noteOn: midi_mapping_pb.MidiMessage_NoteOn(
+            note: note,
+            velocity: velocity,
+          ),
+        ),
+      MidiMessageNoteOff(:final note, :final velocity) =>
+        midi_mapping_pb.MidiMessage(
+          channel: channel,
+          noteOff: midi_mapping_pb.MidiMessage_NoteOff(
+            note: note,
+            velocity: velocity,
+          ),
+        ),
+      MidiMessageControlChange(:final control, :final value) =>
+        midi_mapping_pb.MidiMessage(
+          channel: channel,
+          controlChange: midi_mapping_pb.MidiMessage_ControlChange(
+            control: control,
+            value: value,
+          ),
+        ),
+      MidiMessageProgramChange(:final number) => midi_mapping_pb.MidiMessage(
+          channel: channel,
+          programChange: midi_mapping_pb.MidiMessage_ProgramChange(
+            number: number,
+          ),
+        ),
     };
   }
 }

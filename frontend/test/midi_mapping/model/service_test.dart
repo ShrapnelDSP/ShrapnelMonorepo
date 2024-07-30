@@ -28,7 +28,7 @@ import 'package:shrapnel/midi_mapping/model/models.dart';
 import 'package:shrapnel/midi_mapping/model/service.dart';
 import 'service_test.mocks.dart';
 
-@GenerateMocks([MessageTransport])
+@GenerateMocks([ReconnectingMessageTransport])
 void main() {
   group('Get MIDI mapping: ', () {
     test('success', () async {
@@ -42,7 +42,7 @@ void main() {
       final sinkController = StreamController<MidiApiMessage>();
 
       final fakeWebsocket =
-          MockMessageTransport<MidiApiMessage, MidiApiMessage>();
+          MockReconnectingMessageTransport<MidiApiMessage, MidiApiMessage>();
       when(fakeWebsocket.connectionStream)
           .thenAnswer((_) => Stream.fromIterable([]));
       when(fakeWebsocket.isAlive).thenReturn(false);
@@ -110,7 +110,7 @@ void main() {
       final sinkController = StreamController<MidiApiMessage>();
 
       final fakeWebsocket =
-          MockMessageTransport<MidiApiMessage, MidiApiMessage>();
+          MockReconnectingMessageTransport<MidiApiMessage, MidiApiMessage>();
       when(fakeWebsocket.connectionStream)
           .thenAnswer((_) => Stream.fromIterable([]));
       when(fakeWebsocket.isAlive).thenReturn(false);

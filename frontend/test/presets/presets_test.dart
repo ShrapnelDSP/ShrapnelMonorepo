@@ -28,7 +28,6 @@ import 'package:mockito/mockito.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:shrapnel/api/api_websocket.dart';
 import 'package:shrapnel/audio_events.dart';
-import 'package:shrapnel/core/message_transport.dart';
 import 'package:shrapnel/main.dart';
 import 'package:shrapnel/parameter.dart';
 import 'package:shrapnel/presets/model/presets.dart';
@@ -45,9 +44,7 @@ final _log = Logger('presets_test');
     MockSpec<RobustWebsocket>(),
     MockSpec<ApiWebsocket>(),
     MockSpec<AudioClippingService>(),
-    MockSpec<
-        MessageTransport<ParameterServiceOutputMessage,
-            ParameterServiceInputMessage>>(),
+    MockSpec<ParameterTransport>(),
     MockSpec<PresetsRepositoryBase>(),
     MockSpec<SelectedPresetRepositoryBase>(),
   ],
@@ -82,7 +79,7 @@ void main() {
         'wahVocal': 1.0,
         'wahBypass': 0.1,
       };
-      final parameterTransport = MockMessageTransport();
+      final parameterTransport = MockParameterTransport();
       final parameterController =
           StreamController<ParameterServiceInputMessage>();
       // FIXME: see end of test
@@ -228,6 +225,7 @@ void main() {
       when(apiWebsocket.connectionStream)
           .thenAnswer((_) => const Stream.empty());
       when(apiWebsocket.isAlive).thenReturn(true);
+      when(apiWebsocket.sink).thenReturn(StreamController());
 
       final sut = App(
         websocket: websocket,

@@ -14,7 +14,7 @@ env:
   CMAKE_C_COMPILER_LAUNCHER: ccache
   CMAKE_CXX_COMPILER_LAUNCHER: ccache
   CCACHE_DIR: /ccache
-  FLUTTER_VERSION: '3.16.0'
+  FLUTTER_VERSION: '3.16.9'
   FLUTTER_CHANNEL: 'stable'
 
 jobs:
@@ -260,7 +260,7 @@ jobs:
       run: flutter pub run build_runner build
 
     - name: Test
-      run: flutter test --coverage
+      run: flutter test --coverage --exclude-tags=api
 
     - name: Coverage clean-up
       run: >

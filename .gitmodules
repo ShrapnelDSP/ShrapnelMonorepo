@@ -19,3 +19,9 @@
 [submodule "thirdparty/esp-idf-components/nanopb"]
 	path = thirdparty/esp-idf-components/nanopb/nanopb
 	url = https://github.com/nanopb/nanopb.git
+[submodule "thirdparty/esp-idf-components/esp32-fft/esp32-fft"]
+	path = thirdparty/esp-idf-components/esp32-fft/esp32-fft
+	url = https://github.com/Barabas5532/esp32-fft.git
+[submodule "thirdparty/esp-idf-components/embedded_cli/EmbeddedCLI"]
+	path = thirdparty/esp-idf-components/embedded_cli/EmbeddedCLI
+	url = https://github.com/AndreRenaud/EmbeddedCLI.git

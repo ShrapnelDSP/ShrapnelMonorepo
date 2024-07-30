@@ -74,6 +74,7 @@
 #include "pcm3060.h"
 #include "profiling.h"
 #include "server.h"
+#include "shrapnel_console.h"
 #include "wifi_state_machine.h"
 
 #define TAG "main"
@@ -518,6 +519,52 @@ extern "C" void app_main(void)
             std::make_unique<Crud>("nvs", "midi_mapping"),
             std::make_unique<Crud>("nvs", "presets"));
 
+    auto send_midi_message = [&](const midi::Message &message)
+    {
+        auto app_message = AppMessage{ApiMessage{message}, std::nullopt};
+        int rc = in_queue->send(&app_message, portMAX_DELAY);
+
+        if(rc != pdPASS)
+        {
+            ESP_LOGE(TAG, "Failed to send to main queue %d", rc);
+        }
+    };
+
+    auto setup_wifi = [&](const char *ssid, const char *password)
+    {
+        ESP_LOGI(TAG, "wifi config %s %s", ssid, password);
+
+        wifi_config_t wifi_cfg{};
+        esp_err_t rc = esp_wifi_get_config(WIFI_IF_STA, &wifi_cfg);
+        if(rc != ESP_OK)
+        {
+            ESP_LOGE(TAG, "get config failed 0x%x %s", rc, esp_err_to_name(rc));
+            return;
+        }
+
+        // According to Espressif code in the Wi-Fi provisioning component:
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wstringop-truncation"
+        // SSID can use all 32 bytes safely
+        strncpy((char *)wifi_cfg.sta.ssid, ssid, sizeof wifi_cfg.sta.ssid);
+#pragma GCC diagnostic pop
+        // Password should use up to 63 bytes, and leave a null termination
+        strlcpy((char *)wifi_cfg.sta.password,
+                password,
+                sizeof wifi_cfg.sta.password);
+
+        rc = esp_wifi_set_config(WIFI_IF_STA, &wifi_cfg);
+        if(rc != ESP_OK)
+        {
+            ESP_LOGE(TAG, "set config failed 0x%x %s", rc, esp_err_to_name(rc));
+            return;
+        }
+
+        wifi_send_event(wifi::InternalEvent::PROVISIONING_BYPASS);
+    };
+
+    auto console = shrapnel::Console(send_midi_message, setup_wifi);
+
     audio::i2s_setup(PROFILING_GPIO, audio_params.get());
 
     ParameterObserver<20> parameter_observer{persistence};
@@ -561,6 +608,18 @@ extern "C" void app_main(void)
             {
                 ESP_LOGI(TAG, "changed to state: %s", new_state.c_str());
             }
+        }
+
+        {
+            int c = EOF;
+            do
+            {
+                c = fgetc(stdin);
+                if(c != EOF)
+                {
+                    console.handle_character(c);
+                }
+            } while(c != EOF);
         }
 
         /* Check if the current iteration of the main loop took too long. This

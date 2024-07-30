@@ -657,6 +657,41 @@ std::optional<midi::Mapping> from_bytes(std::span<const uint8_t> buffer)
     return out;
 }
 
+template <>
+std::optional<shrapnel_midi_mapping_MidiMessage>
+from_bytes(std::span<const uint8_t> buffer)
+{
+    auto stream = pb_istream_from_buffer(buffer.data(), buffer.size());
+    shrapnel_midi_mapping_MidiMessage message =
+        shrapnel_midi_mapping_MidiMessage_init_zero;
+    bool success =
+        pb_decode(&stream, &shrapnel_midi_mapping_MidiMessage_msg, &message);
+    if(!success)
+    {
+        return std::nullopt;
+    }
+
+    return message;
+}
+
+template <>
+std::optional<midi::Message> from_bytes(std::span<const uint8_t> buffer)
+{
+    auto proto = from_bytes<shrapnel_midi_mapping_MidiMessage>(buffer);
+    if(!proto.has_value())
+    {
+        return std::nullopt;
+    }
+
+    midi::Message out{};
+    int rc = from_proto(*proto, out);
+    if(rc != 0)
+    {
+        return std::nullopt;
+    }
+    return out;
+}
+
 } // namespace api
 
 } // namespace shrapnel

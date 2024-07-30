@@ -17,18 +17,29 @@
  * ShrapnelDSP. If not, see <https://www.gnu.org/licenses/>.
  */
 
-import 'package:flutter/cupertino.dart';
+import 'dart:async';
+
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:logging/logging.dart';
 import 'package:shrapnel/amplifier.dart';
 import 'package:shrapnel/knob.dart';
 
 import 'midi_mapping/midi_mapping_page_object.dart';
 import 'presets/presets_page_object.dart';
+import 'util.dart';
+import 'wifi_provisioning_page_object.dart';
+
+final _log = Logger('home_page_object');
 
 class HomePageObject {
   HomePageObject(this.tester);
 
   final WidgetTester tester;
+
+  Finder get findHomePage => _findMidiLearnButton;
+
+  Finder get _findMidiLearnButton => find.byKey(const Key('midi-learn-button'));
 
   Finder findKnob(String parameterId) => find.byKey(Key('knob-$parameterId'));
 
@@ -45,7 +56,7 @@ class HomePageObject {
       find.byKey(const Key('undo-remove-duplicate-mappings'));
 
   Future<void> startMidiLearn() async {
-    await tester.tap(find.byKey(const Key('midi-learn-button')));
+    await tester.tap(_findMidiLearnButton);
     await tester.pumpAndSettle();
   }
 
@@ -84,5 +95,63 @@ class HomePageObject {
   }
 
   late final _presetsPage = PresetsPageObject(tester);
+
   PresetsPageObject get presetsPage => _presetsPage;
+
+  bool get isConnected {
+    final widget = find
+        .descendant(
+          of: find.byKey(const Key('websocket-status')),
+          matching: find.byType(Tooltip),
+        )
+        .evaluate()
+        .single
+        .widget as Tooltip;
+
+    _log.info(widget.message);
+
+    return widget.message == 'Connected';
+  }
+
+  Future<void> waitUntilConnected({
+    Duration timeout = const Duration(seconds: 30),
+  }) async {
+    final success = await pumpWaitingFor(
+      tester: tester,
+      predicate: () => isConnected,
+      timeout: timeout,
+    );
+
+    if (!success) {
+      _log.warning('Connection to provisioned access point timed out');
+      throw TimeoutException('Connection timed out');
+    }
+  }
+
+  Future<void> createPreset(String name) async {
+    await tester.tap(find.byKey(const Key('presets-create-button')));
+    await tester.pumpAndSettle();
+
+    final createPresetPage = CreatePresetPageObject(tester);
+    await createPresetPage.submitName(name);
+  }
+
+  Future<WifiProvisioningPageObject> openWifiProvisioningPage() async {
+    await tester.tap(find.byKey(const Key('wifi provisioning button')));
+    await tester.pumpAndSettle();
+    return WifiProvisioningPageObject(tester);
+  }
+}
+
+class CreatePresetPageObject {
+  CreatePresetPageObject(this.tester);
+
+  final WidgetTester tester;
+
+  Future<void> submitName(String name) async {
+    await tester.enterText(find.byKey(const Key('presets-name-field')), name);
+
+    await tester.tap(find.byKey(const Key('presets-confirm-name-button')));
+    await tester.pumpAndSettle();
+  }
 }

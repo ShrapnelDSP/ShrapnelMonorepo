@@ -27,13 +27,16 @@ abstract class MessageTransport<T1, T2> {
   /// Messages from the other side of the connection will appear in this stream.
   Stream<T2> get stream;
 
-  /// A null is emitted every time a connection is successfully created
-  Stream<void> get connectionStream;
-
-  /// Returns true if the connection is alive at the moment
-  bool get isAlive;
-
   /// Must be called to clean up resource after the transport is no longer in
   /// use.
   void dispose();
+}
+
+abstract class ReconnectingMessageTransport<T1, T2>
+    extends MessageTransport<T1, T2> {
+  /// Returns true if the connection is alive at the moment
+  bool get isAlive;
+
+  /// A null is emitted every time a connection is successfully created
+  Stream<void> get connectionStream;
 }

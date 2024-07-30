@@ -309,6 +309,7 @@ class _WifiScanningScreenState extends State<_WifiScanningScreen> {
       child = Padding(
         padding: const EdgeInsets.all(8),
         child: Column(
+          key: const Key('wifi scan complete page'),
           children: [
             Expanded(
               child: ListView.builder(
@@ -702,7 +703,7 @@ class WifiProvisioningService extends ChangeNotifier {
       return;
     }
 
-    _status = await _pollWifiStatusWithTimeout(const Duration(seconds: 10));
+    _status = await provisioning!.pollStatus(const Duration(seconds: 10));
     if (!_status.isSuccess()) {
       _log.severe(
         'could not connect to provisioned access point '
@@ -715,27 +716,6 @@ class WifiProvisioningService extends ChangeNotifier {
 
     _state = WifiProvisioningState.success;
     return;
-  }
-
-  Future<ConnectionStatus?> _pollWifiStatusWithTimeout(Duration timeout) async {
-    var keepGoing = true;
-    final timer = Timer(timeout, () {
-      _log.warning('Connection to provisioned access point timed out');
-      keepGoing = false;
-    });
-    ConnectionStatus? status;
-
-    while (keepGoing) {
-      status = await provisioning!.getStatus();
-
-      if (status.isTerminal()) {
-        timer.cancel();
-        return status;
-      }
-      await Future<void>.delayed(const Duration(seconds: 1));
-    }
-
-    return status;
   }
 
   void reset() {
@@ -766,5 +746,28 @@ extension ShrapnelAdditions on ConnectionStatus? {
     }
 
     return this!.state == WifiConnectionState.Connected;
+  }
+}
+
+extension StatusPollEx on Provisioning {
+  Future<ConnectionStatus?> pollStatus(Duration timeout) async {
+    var keepGoing = true;
+    final timer = Timer(timeout, () {
+      _log.warning('Connection to provisioned access point timed out');
+      keepGoing = false;
+    });
+    ConnectionStatus? status;
+
+    while (keepGoing) {
+      status = await getStatus();
+
+      if (status.isTerminal()) {
+        timer.cancel();
+        return status;
+      }
+      await Future<void>.delayed(const Duration(seconds: 1));
+    }
+
+    return status;
   }
 }

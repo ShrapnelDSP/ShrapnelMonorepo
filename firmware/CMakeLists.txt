@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.13)
 set(CMAKE_CXX_STANDARD 20)
 
 option(SHRAPNEL_RESET_WIFI_CREDENTIALS
-       "Remove the provisioning Wi-Fi credentials at power up"
+       "Remove the provisioned Wi-Fi credentials at power up"
        OFF
 )
 
@@ -18,6 +18,8 @@ project(esp32-dsp)
 
 add_subdirectory(../effects effects)
 add_subdirectory(../shrapnel shrapnel)
+add_subdirectory(../thirdparty/esp-idf-components/embedded_cli embedded_cli)
+add_subdirectory(../thirdparty/esp-idf-components/esp32-fft esp32-fft)
 add_subdirectory(../thirdparty/esp-idf-components/etl etl)
 add_subdirectory(../thirdparty/esp-idf-components/nanopb nanopb)
 add_subdirectory(components/esp_midi_uart)

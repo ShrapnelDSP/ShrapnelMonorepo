@@ -2,6 +2,6 @@
 
 set -eo pipefail
 
-flutter test
+flutter test --exclude-tags=api
 flutter analyze
 dart format -o none --set-exit-if-changed lib test
