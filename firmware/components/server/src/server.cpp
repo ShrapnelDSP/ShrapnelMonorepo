@@ -259,26 +259,16 @@ static void debug_print_sent_message(const ApiMessage &message)
 {
     etl::string<128> debug;
     etl::string_stream debug_stream{debug};
-    std::visit(
-        [&](const auto &message) -> void
-        {
-            debug_stream << message;
-            ESP_LOGD(TAG, "sending message: %s", debug.data());
-        },
-        message);
+    debug_stream << message;
+    ESP_LOGD(TAG, "sending message: %s", debug.data());
 }
 
 static void debug_print_received_message(const ApiMessage &message)
 {
     etl::string<128> debug;
     etl::string_stream debug_stream{debug};
-    std::visit(
-        [&](const auto &message) -> void
-        {
-            debug_stream << message;
-            ESP_LOGD(TAG, "received message: %s", debug.data());
-        },
-        message);
+    debug_stream << message;
+    ESP_LOGD(TAG, "received message: %s", debug.data());
 }
 
 void Server::send_message(const AppMessage &message)
