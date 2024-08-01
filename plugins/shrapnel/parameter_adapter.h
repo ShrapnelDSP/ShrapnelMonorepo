@@ -101,12 +101,6 @@ public:
         return parameter->getValue();
     }
 
-    // TODO this is not correct, need to make sure the iterator doesn't get
-    // invalidated between calls to begin and end.
-    //
-    // If iteration and updates all happened in the same thread, then it would
-    // be OK. We can move the updates to the main thread by sending updated
-    // events to a queue in the listener, and handling them in the main thread.
     MapType::iterator begin() { return parameterValues.begin(); }
 
     MapType::iterator end() { return parameterValues.end(); }
@@ -120,6 +114,7 @@ private:
         if(parameterValues.full())
         {
             jassertfalse;
+            return;
         }
 
         parameterValues[name] =
@@ -131,6 +126,8 @@ private:
 
     void parameterChanged(const juce::String &id, float value) override
     {
+        // FIXME: what thread is calling this? Probably need to send a message
+        // and handle on the main thread.
         auto id_str = id.toStdString();
         ESP_LOGD(TAG, "parameter update %s to %f", id_str.c_str(), value);
         parameterValues[parameters::id_t{id_str.c_str()}]->update(value);

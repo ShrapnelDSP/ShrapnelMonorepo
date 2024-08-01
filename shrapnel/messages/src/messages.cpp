@@ -178,3 +178,49 @@ std::optional<ApiMessage> from_bytes(std::span<const uint8_t> buffer)
 }
 
 } // namespace shrapnel::api
+
+etl::string_stream &operator<<(etl::string_stream &out, const ApiMessage &self)
+{
+    std::visit(
+        [&](const auto &message)
+        {
+            using T = std::decay_t<decltype(message)>;
+
+            if constexpr(std::is_same_v<T, shrapnel::parameters::ApiMessage>)
+            {
+                out << "<parameters::ApiMessage>" << message;
+            }
+            else if constexpr(std::is_same_v<T,
+                                             shrapnel::midi::MappingApiMessage>)
+            {
+                out << "<shrapnel::midi::MappingApiMessage>" << message;
+            }
+            else if constexpr(std::is_same_v<T, shrapnel::events::ApiMessage>)
+            {
+                out << "<events::ApiMessage>" << message;
+            }
+            else if constexpr(std::is_same_v<T,
+                                             shrapnel::selected_preset::
+                                                 SelectedPresetApiMessage>)
+            {
+                out << "<selected_preset::SelectedPresetApiMessage>" << message;
+            }
+            else if constexpr(std::is_same_v<
+                                  T,
+                                  shrapnel::presets::PresetsApiMessage>)
+            {
+                out << "<presets::PresetsApiMessage>" << message;
+            }
+            else if constexpr(std::is_same_v<T, shrapnel::midi::Message>)
+            {
+                out << "<midi::Message>" << message;
+            }
+            else
+            {
+                out << "<Unknown>";
+            }
+        },
+        self);
+
+    return out;
+}

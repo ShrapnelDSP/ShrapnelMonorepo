@@ -10,6 +10,7 @@ set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 add_subdirectory(../../effects effects)
 add_subdirectory(../../shrapnel shrapnel)
 add_subdirectory(../../thirdparty/JUCE JUCE)
+add_subdirectory(../../thirdparty/uWebSockets uWebSockets)
 add_subdirectory(../JUCE_static JUCE_static)
 add_subdirectory(../../thirdparty/esp-idf-components/nanopb nanopb)
 add_subdirectory(../../thirdparty/esp-idf-components/etl etl)
@@ -30,10 +31,12 @@ juce_add_plugin(ShrapnelDSP
 
 target_sources(ShrapnelDSP
                PRIVATE
-               PluginProcessor.cpp)
+               PluginProcessor.cpp
+               server.cpp)
 
 target_link_libraries(ShrapnelDSP
                       PRIVATE
                       shrapnel::audio
                       shrapnel::main_thread
+                      shrapnel::uwebsockets
                       juce_modules)

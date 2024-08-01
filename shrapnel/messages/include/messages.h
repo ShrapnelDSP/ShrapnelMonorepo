@@ -38,6 +38,8 @@ using ApiMessage =
 using FileDescriptor = std::optional<int>;
 using AppMessage = std::pair<ApiMessage, FileDescriptor>;
 
+etl::string_stream &operator<<(etl::string_stream &out, const ApiMessage &self);
+
 namespace shrapnel::api {
 
 template <>

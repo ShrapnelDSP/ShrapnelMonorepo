@@ -24,9 +24,9 @@
 #include <juce_data_structures/juce_data_structures.h>
 
 #include "juce_core/juce_core.h"
+#include "server.h"
 
 // TODO:
-// connect audio parameters to JUCE parameters
 // server
 
 // TODO does it really make sense to save the parameters as a VST plugin? That
@@ -293,10 +293,16 @@ class PluginMainThread final : public juce::Thread
 public:
     explicit PluginMainThread(std::shared_ptr<ParameterAdapter> parameters)
         : juce::Thread{"shrapnel"},
+          server(&in_queue, &out_queue),
           main_thread{
               [&](const AppMessage &message)
               {
-                  //TODO print the message, later hook up to server
+                  etl::string<256> buffer;
+                  etl::string_stream stream{buffer};
+                  stream << message.first;
+                  ESP_LOGI(TAG, "%s", buffer.data());
+
+                  //TODO hook up to server by putting message in out_queue
               },
               in_queue,
               std::move(parameters),
@@ -305,6 +311,7 @@ public:
               std::make_unique<JuceCrud>("presets"),
           }
     {
+        server.start();
     }
 
     void run() override
@@ -322,6 +329,8 @@ public:
 private:
     // A queue filled by the server with received API messages
     shrapnel::Queue<AppMessage, 4> in_queue;
+    shrapnel::Queue<AppMessage, 4> out_queue;
+    Server server;
     shrapnel::MainThread<4, ParameterAdapter> main_thread;
 };
 

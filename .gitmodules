@@ -25,3 +25,6 @@
 [submodule "thirdparty/esp-idf-components/embedded_cli/EmbeddedCLI"]
 	path = thirdparty/esp-idf-components/embedded_cli/EmbeddedCLI
 	url = https://github.com/AndreRenaud/EmbeddedCLI.git
+[submodule "thirdparty/uWebSockets/uWebSockets"]
+	path = thirdparty/uWebSockets/uWebSockets
+	url = https://github.com/uNetworking/uWebSockets.git
