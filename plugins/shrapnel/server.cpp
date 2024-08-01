@@ -6,7 +6,7 @@ int server_main()
 {
     /* Overly simple hello world app */
     uWS::App()
-        .get("/*",
+        .get("/websocket",
              [](auto *res, auto * /*req*/)
              {
                  std::cout << "Received request" << std::endl;
