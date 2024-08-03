@@ -266,6 +266,28 @@ Future<void> nvsLoad(String binaryPath, {required String port}) async {
   _log.info(result.stdout);
 }
 
+Future<void> nvsSave(String binaryPath, {required String port}) async {
+  _log.info('Saving NVS partition');
+
+  // pip can be used to install esptool into the global environment:
+  // https://docs.espressif.com/projects/esptool/en/latest/esp32/#quick-start
+  const command = 'esptool.py';
+  final args = '-p $port '
+      '-b 2000000 '
+      '--before default_reset --after hard_reset '
+      '--chip esp32 '
+      'read_flash --flash_mode dio --flash_size 4MB --flash_freq 80m '
+      '0x9000 0x6000 $binaryPath'
+      .split(' ');
+
+  final result = await Process.run(command, args);
+
+  _log.info(result.exitCode);
+  _log.info(result.pid);
+  _log.info(result.stderr);
+  _log.info(result.stdout);
+}
+
 /// UART driver
 class ShrapnelUart {
   ShrapnelUart._(this.port, this.reader) {

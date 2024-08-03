@@ -1,14 +1,16 @@
 name: shrapnel_test_tool
 description: A sample command-line application.
 version: 1.0.0
-# repository: https://github.com/my_org/my_repo
+
+publish_to: 'none'
 
 environment:
   sdk: ^3.2.6
 
-# Add regular dependencies here.
 dependencies:
-  # path: ^1.8.0
+  logging: ^1.2.0
+  shrapnel_test_lib:
+    path: ../shrapnel_test_lib
 
 dev_dependencies:
   lints: ^2.1.0
