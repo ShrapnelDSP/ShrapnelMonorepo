@@ -17,11 +17,51 @@ import 'dart:typed_data' as $typed_data;
 const Message$json = {
   '1': 'Message',
   '2': [
-    {'1': 'audio_event', '3': 1, '4': 1, '5': 11, '6': '.shrapnel.audio_events.Message', '9': 0, '10': 'audioEvent'},
-    {'1': 'command', '3': 2, '4': 1, '5': 11, '6': '.shrapnel.cmd_handling.Message', '9': 0, '10': 'command'},
-    {'1': 'midi_mapping', '3': 3, '4': 1, '5': 11, '6': '.shrapnel.midi_mapping.Message', '9': 0, '10': 'midiMapping'},
-    {'1': 'preset', '3': 4, '4': 1, '5': 11, '6': '.shrapnel.presets.Message', '9': 0, '10': 'preset'},
-    {'1': 'selected_preset', '3': 5, '4': 1, '5': 11, '6': '.shrapnel.selected_preset.Message', '9': 0, '10': 'selectedPreset'},
+    {
+      '1': 'audio_event',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.shrapnel.audio_events.Message',
+      '9': 0,
+      '10': 'audioEvent'
+    },
+    {
+      '1': 'command',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6': '.shrapnel.cmd_handling.Message',
+      '9': 0,
+      '10': 'command'
+    },
+    {
+      '1': 'midi_mapping',
+      '3': 3,
+      '4': 1,
+      '5': 11,
+      '6': '.shrapnel.midi_mapping.Message',
+      '9': 0,
+      '10': 'midiMapping'
+    },
+    {
+      '1': 'preset',
+      '3': 4,
+      '4': 1,
+      '5': 11,
+      '6': '.shrapnel.presets.Message',
+      '9': 0,
+      '10': 'preset'
+    },
+    {
+      '1': 'selected_preset',
+      '3': 5,
+      '4': 1,
+      '5': 11,
+      '6': '.shrapnel.selected_preset.Message',
+      '9': 0,
+      '10': 'selectedPreset'
+    },
   ],
   '8': [
     {'1': 'message'},
@@ -37,4 +77,3 @@ final $typed_data.Uint8List messageDescriptor = $convert.base64Decode(
     'GS5zaHJhcG5lbC5wcmVzZXRzLk1lc3NhZ2VIAFIGcHJlc2V0EkwKD3NlbGVjdGVkX3ByZXNldB'
     'gFIAEoCzIhLnNocmFwbmVsLnNlbGVjdGVkX3ByZXNldC5NZXNzYWdlSABSDnNlbGVjdGVkUHJl'
     'c2V0QgkKB21lc3NhZ2U=');
-

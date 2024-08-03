@@ -6,9 +6,6 @@
 # https://dart.dev/guides/libraries/private-files#pubspeclock.
 pubspec.lock
 
-.flutter-plugins
-.flutter-plugins-dependencies
-
 *.g.dart
 *.mocks.dart
 *.freezed.dart

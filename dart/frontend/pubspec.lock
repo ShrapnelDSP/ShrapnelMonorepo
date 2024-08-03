@@ -236,14 +236,6 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
-  flutter_libserialport:
-    dependency: "direct dev"
-    description:
-      name: flutter_libserialport
-      sha256: "20c320dcde8592a16f9badc0cacad61b1fb283dbec647b6ebfc1020f8274c67b"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.4.0"
   flutter_state_notifier:
     dependency: "direct main"
     description:
@@ -364,7 +356,7 @@ packages:
     source: hosted
     version: "4.8.1"
   libserialport:
-    dependency: "direct dev"
+    dependency: transitive
     description:
       name: libserialport
       sha256: "392e1592def65282429832ec66fa25e9e163d3b37716b97691482e2406720727"

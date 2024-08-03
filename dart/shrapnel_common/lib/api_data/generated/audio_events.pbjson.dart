@@ -19,8 +19,8 @@ const InputClipped$json = {
 };
 
 /// Descriptor for `InputClipped`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List inputClippedDescriptor = $convert.base64Decode(
-    'CgxJbnB1dENsaXBwZWQ=');
+final $typed_data.Uint8List inputClippedDescriptor =
+    $convert.base64Decode('CgxJbnB1dENsaXBwZWQ=');
 
 @$core.Deprecated('Use outputClippedDescriptor instead')
 const OutputClipped$json = {
@@ -28,15 +28,31 @@ const OutputClipped$json = {
 };
 
 /// Descriptor for `OutputClipped`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List outputClippedDescriptor = $convert.base64Decode(
-    'Cg1PdXRwdXRDbGlwcGVk');
+final $typed_data.Uint8List outputClippedDescriptor =
+    $convert.base64Decode('Cg1PdXRwdXRDbGlwcGVk');
 
 @$core.Deprecated('Use messageDescriptor instead')
 const Message$json = {
   '1': 'Message',
   '2': [
-    {'1': 'input_clipped', '3': 1, '4': 1, '5': 11, '6': '.shrapnel.audio_events.InputClipped', '9': 0, '10': 'inputClipped'},
-    {'1': 'output_clipped', '3': 2, '4': 1, '5': 11, '6': '.shrapnel.audio_events.OutputClipped', '9': 0, '10': 'outputClipped'},
+    {
+      '1': 'input_clipped',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.shrapnel.audio_events.InputClipped',
+      '9': 0,
+      '10': 'inputClipped'
+    },
+    {
+      '1': 'output_clipped',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6': '.shrapnel.audio_events.OutputClipped',
+      '9': 0,
+      '10': 'outputClipped'
+    },
   ],
   '8': [
     {'1': 'event'},
@@ -49,4 +65,3 @@ final $typed_data.Uint8List messageDescriptor = $convert.base64Decode(
     'MuSW5wdXRDbGlwcGVkSABSDGlucHV0Q2xpcHBlZBJNCg5vdXRwdXRfY2xpcHBlZBgCIAEoCzIk'
     'LnNocmFwbmVsLmF1ZGlvX2V2ZW50cy5PdXRwdXRDbGlwcGVkSABSDW91dHB1dENsaXBwZWRCBw'
     'oFZXZlbnQ=');
-
