@@ -101,8 +101,8 @@ packages:
     dependency: transitive
     description:
       path: "."
-      ref: no-flutter
-      resolved-ref: "9edee663e053efb8668dd591b09a0c989b0a21c6"
+      ref: shrapnel
+      resolved-ref: "8ea4d4b87d31f19a6a14d10193df2b8d44204cf2"
       url: "https://github.com/ShrapnelDSP/esp_softap_provisioning.git"
     source: git
     version: "1.0.1"
@@ -368,7 +368,7 @@ packages:
     source: hosted
     version: "1.0.4"
   shrapnel_common:
-    dependency: transitive
+    dependency: "direct overridden"
     description:
       path: "../shrapnel_common"
       relative: true

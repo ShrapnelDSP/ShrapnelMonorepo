@@ -1,0 +1,6 @@
+# melos_managed_dependency_overrides: shrapnel_common,shrapnel_test_lib
+dependency_overrides:
+  shrapnel_common:
+    path: ../shrapnel_common
+  shrapnel_test_lib:
+    path: ../shrapnel_test_lib

@@ -11,7 +11,7 @@ dependencies:
   esp_softap_provisioning:
     git:
       url: https://github.com/ShrapnelDSP/esp_softap_provisioning.git
-      ref: no-flutter
+      ref: shrapnel
   flutter_libserialport: ^0.4.0
   logging: ^1.2.0
   path: ^1.8.0
