@@ -295,15 +295,7 @@ public:
         : juce::Thread{"shrapnel"},
           server(&in_queue, &out_queue),
           main_thread{
-              [&](const AppMessage &message)
-              {
-                  etl::string<256> buffer;
-                  etl::string_stream stream{buffer};
-                  stream << message.first;
-                  ESP_LOGI(TAG, "%s", buffer.data());
-
-                  //TODO hook up to server by putting message in out_queue
-              },
+              [&](const AppMessage &message) { server.send_message(message); },
               in_queue,
               std::move(parameters),
               std::make_shared<JuceStorage>(),
