@@ -603,6 +603,20 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.4"
+  shrapnel_common:
+    dependency: "direct main"
+    description:
+      path: "../shrapnel_common"
+      relative: true
+    source: path
+    version: "1.0.0"
+  shrapnel_test_lib:
+    dependency: "direct dev"
+    description:
+      path: "../shrapnel_test_lib"
+      relative: true
+    source: path
+    version: "1.0.0"
   sky_engine:
     dependency: transitive
     description: flutter
@@ -793,5 +807,5 @@ packages:
     source: hosted
     version: "3.1.2"
 sdks:
-  dart: ">=3.2.0 <4.0.0"
+  dart: ">=3.2.6 <4.0.0"
   flutter: ">=3.7.0"

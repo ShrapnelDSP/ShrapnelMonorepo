@@ -27,6 +27,7 @@ import 'package:esp_softap_provisioning/src/connection_models.dart';
 import 'package:flutter/material.dart';
 import 'package:logging/logging.dart';
 import 'package:provider/provider.dart';
+import 'package:shrapnel_common/shrapnel_common.dart';
 
 class _Strings {
   static const initialMessage =
@@ -724,50 +725,5 @@ class WifiProvisioningService extends ChangeNotifier {
     provisioning = null;
     _status = null;
     _state = WifiProvisioningState.initial;
-  }
-}
-
-extension ShrapnelAdditions on ConnectionStatus? {
-  bool isTerminal() {
-    if (this == null) {
-      return true;
-    }
-
-    final state = this!.state;
-
-    return state == WifiConnectionState.Connected ||
-        state == WifiConnectionState.Disconnected ||
-        state == WifiConnectionState.ConnectionFailed;
-  }
-
-  bool isSuccess() {
-    if (this == null) {
-      return false;
-    }
-
-    return this!.state == WifiConnectionState.Connected;
-  }
-}
-
-extension StatusPollEx on Provisioning {
-  Future<ConnectionStatus?> pollStatus(Duration timeout) async {
-    var keepGoing = true;
-    final timer = Timer(timeout, () {
-      _log.warning('Connection to provisioned access point timed out');
-      keepGoing = false;
-    });
-    ConnectionStatus? status;
-
-    while (keepGoing) {
-      status = await getStatus();
-
-      if (status.isTerminal()) {
-        timer.cancel();
-        return status;
-      }
-      await Future<void>.delayed(const Duration(seconds: 1));
-    }
-
-    return status;
   }
 }

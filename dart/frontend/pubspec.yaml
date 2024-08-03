@@ -26,6 +26,8 @@ dependencies:
   provider: ^6.0.0
   remove_from_coverage: ^2.0.0
   rxdart: ^0.27.7
+  shrapnel_common:
+    path: ../shrapnel_common
   state_notifier: ^1.0.0
   vector_math: ^2.0.0
   web_socket_channel: ^2.1.0
@@ -40,6 +42,8 @@ dev_dependencies:
     sdk: flutter
   libserialport: ^0.3.0+1
   mockito: ^5.1.0
+  shrapnel_test_lib:
+    path: ../shrapnel_test_lib
 
 flutter:
   uses-material-design: true
