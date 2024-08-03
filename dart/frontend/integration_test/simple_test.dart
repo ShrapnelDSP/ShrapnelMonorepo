@@ -24,8 +24,8 @@ library;
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:logging/logging.dart';
-import 'package:shrapnel/api_data/midi_api_message.dart';
 import 'package:shrapnel/main.dart';
+import 'package:shrapnel_common/api_data/midi_api_message.dart';
 import 'package:shrapnel_test_lib/shrapnel_test_lib.dart';
 
 import '../test/home_page_object.dart';

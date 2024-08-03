@@ -21,10 +21,10 @@ import 'dart:async';
 
 import 'package:logging/logging.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:shrapnel_common/api_data/api_message.dart';
+import 'package:shrapnel_common/api_data/presets_message.dart';
 
 import '../../api/api_websocket.dart';
-import '../../api_data/api_message.dart';
-import '../../api_data/presets_message.dart';
 import '../../core/message_transport.dart';
 import '../../core/stream_extensions.dart';
 import 'presets.dart' as presets;

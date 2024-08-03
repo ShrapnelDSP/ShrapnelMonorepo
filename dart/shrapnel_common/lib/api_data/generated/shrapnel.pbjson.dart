@@ -37,3 +37,4 @@ final $typed_data.Uint8List messageDescriptor = $convert.base64Decode(
     'GS5zaHJhcG5lbC5wcmVzZXRzLk1lc3NhZ2VIAFIGcHJlc2V0EkwKD3NlbGVjdGVkX3ByZXNldB'
     'gFIAEoCzIhLnNocmFwbmVsLnNlbGVjdGVkX3ByZXNldC5NZXNzYWdlSABSDnNlbGVjdGVkUHJl'
     'c2V0QgkKB21lc3NhZ2U=');
+

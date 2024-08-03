@@ -19,7 +19,7 @@
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import '../../api_data/midi_api_message.dart';
+import 'package:shrapnel_common/api_data/midi_api_message.dart';
 
 part 'midi_learn_state.freezed.dart';
 

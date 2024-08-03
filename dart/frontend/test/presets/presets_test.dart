@@ -27,14 +27,14 @@ import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:shrapnel/api/api_websocket.dart';
-import 'package:shrapnel/api_data/api_message.dart';
-import 'package:shrapnel/api_data/parameter_message.dart';
 import 'package:shrapnel/audio_events.dart';
 import 'package:shrapnel/main.dart';
 import 'package:shrapnel/parameter.dart';
 import 'package:shrapnel/presets/model/presets.dart';
 import 'package:shrapnel/presets/model/presets_service.dart';
 import 'package:shrapnel/robust_websocket.dart';
+import 'package:shrapnel_common/api_data/api_message.dart';
+import 'package:shrapnel_common/api_data/parameter_message.dart';
 
 import '../home_page_object.dart';
 import 'presets_test.mocks.dart';

@@ -21,7 +21,7 @@ import 'package:flutter/material.dart';
 import 'package:logging/logging.dart';
 import 'package:pausable_timer/pausable_timer.dart';
 
-import 'api_data/audio_event_message.dart';
+import 'package:shrapnel_common/api_data/audio_event_message.dart';
 
 final _log = Logger('shrapnel.audio_events');
 

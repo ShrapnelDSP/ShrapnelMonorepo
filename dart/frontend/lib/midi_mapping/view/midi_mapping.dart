@@ -22,7 +22,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../api_data/midi_api_message.dart';
+import 'package:shrapnel_common/api_data/midi_api_message.dart';
 import '../../parameter.dart';
 import '../../presets/model/presets.dart';
 import '../model/service.dart';

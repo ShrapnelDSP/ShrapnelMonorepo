@@ -23,10 +23,10 @@ import 'package:flutter/widgets.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logging/logging.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:shrapnel_common/api_data/api_message.dart';
+import 'package:shrapnel_common/api_data/parameter_message.dart';
 
 import 'api/api_websocket.dart';
-import 'api_data/api_message.dart';
-import 'api_data/parameter_message.dart';
 import 'core/message_transport.dart';
 
 part 'parameter.freezed.dart';

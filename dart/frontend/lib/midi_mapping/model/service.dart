@@ -23,10 +23,10 @@ import 'dart:collection';
 import 'package:flutter/material.dart';
 import 'package:logging/logging.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:shrapnel_common/api_data/api_message.dart';
+import 'package:shrapnel_common/api_data/midi_api_message.dart';
 
 import '../../api/api_websocket.dart';
-import '../../api_data/api_message.dart';
-import '../../api_data/midi_api_message.dart';
 import '../../core/message_transport.dart';
 import '../../core/stream_extensions.dart';
 

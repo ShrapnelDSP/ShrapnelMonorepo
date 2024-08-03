@@ -19,8 +19,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:shrapnel/api_data/midi_api_message.dart';
 import 'package:shrapnel/midi_mapping/view/midi_mapping.dart';
+import 'package:shrapnel_common/api_data/midi_api_message.dart';
 
 class MidiMappingPageObject {
   const MidiMappingPageObject(this.tester);

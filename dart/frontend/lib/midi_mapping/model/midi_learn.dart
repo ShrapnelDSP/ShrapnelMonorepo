@@ -20,9 +20,9 @@
 import 'dart:async';
 
 import 'package:logging/logging.dart';
+import 'package:shrapnel_common/api_data/midi_api_message.dart';
 import 'package:state_notifier/state_notifier.dart';
 
-import '../../api_data/midi_api_message.dart';
 import 'midi_learn_state.dart';
 import 'service.dart';
 

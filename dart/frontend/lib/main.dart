@@ -26,10 +26,10 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:logging/logging.dart';
 import 'package:provider/provider.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:shrapnel_common/api_data/api_message.dart';
+import 'package:shrapnel_common/api_data/parameter_message.dart';
 
 import 'api/api_websocket.dart';
-import 'api_data/api_message.dart';
-import 'api_data/parameter_message.dart';
 import 'audio_events.dart';
 import 'chorus.dart';
 import 'core/message_transport.dart';

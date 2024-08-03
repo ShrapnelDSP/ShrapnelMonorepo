@@ -23,9 +23,9 @@ import 'dart:collection';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
-import 'package:shrapnel/api_data/midi_api_message.dart';
 import 'package:shrapnel/core/message_transport.dart';
 import 'package:shrapnel/midi_mapping/model/service.dart';
+import 'package:shrapnel_common/api_data/midi_api_message.dart';
 
 import 'service_test.mocks.dart';
 
