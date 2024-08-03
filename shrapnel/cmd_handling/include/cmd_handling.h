@@ -77,6 +77,12 @@ public:
 private:
     void parameter_update(const Update &message, int fd)
     {
+        ESP_LOGD(TAG,
+                 "parameter update %s %f %d",
+                 message.id.data(),
+                 message.value,
+                 fd);
+
         int rc = param->update(message.id, message.value);
         if(rc != 0)
         {
@@ -91,6 +97,8 @@ private:
 
     void initialise_parameters()
     {
+        ESP_LOGD(TAG, "initialise");
+
         for(const auto &[key, value] : *param)
         {
             Update message = {
