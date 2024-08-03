@@ -148,7 +148,11 @@ private:
     {
         for(const auto &param : updated_parameters)
         {
-            persistence->save(param.first.data(), param.second);
+            auto rc = persistence->save(param.first.data(), param.second);
+            if(rc != 0)
+            {
+                ESP_LOGE(TAG, "failed to save parameters %d", rc);
+            }
         }
 
         updated_parameters.clear();
@@ -522,11 +526,12 @@ extern "C" void app_main(void)
     auto send_midi_message = [&](const midi::Message &message)
     {
         auto app_message = AppMessage{ApiMessage{message}, std::nullopt};
-        int rc = in_queue->send(&app_message, portMAX_DELAY);
+        auto rc = in_queue->send(&app_message, portMAX_DELAY);
 
-        if(rc != pdPASS)
+        if(rc != queue_error::SUCCESS)
         {
-            ESP_LOGE(TAG, "Failed to send to main queue %d", rc);
+            ESP_LOGE(
+                TAG, "Failed to send to main queue %d", static_cast<int>(rc));
         }
     };
 

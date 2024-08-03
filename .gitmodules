@@ -16,6 +16,9 @@
 [submodule "test/support/protobuf-c/protobuf-c"]
 	path = test/support/protobuf-c/protobuf-c
 	url = https://github.com/protobuf-c/protobuf-c.git
+[submodule "thirdparty/esp-idf-components/cppcodec"]
+	path = thirdparty/esp-idf-components/cppcodec
+	url = https://github.com/ShrapnelDSP/cppcodec.git
 [submodule "thirdparty/esp-idf-components/nanopb"]
 	path = thirdparty/esp-idf-components/nanopb/nanopb
 	url = https://github.com/nanopb/nanopb.git

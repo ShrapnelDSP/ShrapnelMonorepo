@@ -228,7 +228,8 @@ public:
         {
             auto fd = message.second;
 
-            std::visit([this, fd](const auto &m) { handle_message(m, fd); },
+            std::visit([this, fd](const auto &m)
+                       { this->handle_message(m, fd); },
                        message.first);
         }
 
@@ -276,7 +277,7 @@ private:
         auto response = std::visit(
             [this](const auto &message)
                 -> std::optional<selected_preset::SelectedPresetApiMessage>
-            { return handle_selected_preset_message(message); },
+            { return this->handle_selected_preset_message(message); },
             app_message);
 
         if(response.has_value())
