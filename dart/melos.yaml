@@ -1,0 +1,7 @@
+name: shrapnel
+
+packages:
+  - frontend
+  - shrapnel_common
+  - shrapnel_test_lib
+  - shrapnel_test_tool
