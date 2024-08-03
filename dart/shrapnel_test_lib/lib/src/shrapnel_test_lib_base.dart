@@ -276,7 +276,7 @@ Future<void> nvsSave(String binaryPath, {required String port}) async {
       '-b 2000000 '
       '--before default_reset --after hard_reset '
       '--chip esp32 '
-      'read_flash --flash_mode dio --flash_size 4MB --flash_freq 80m '
+      'read_flash '
       '0x9000 0x6000 $binaryPath'
       .split(' ');
 

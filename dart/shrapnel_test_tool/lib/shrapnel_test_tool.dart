@@ -9,4 +9,6 @@ void main(List<String> arguments) {
 
   _log.info('hello $arguments');
   nvsSave('nvs_${DateTime.now().toIso8601String()}.bin', port: '/dev/ttyUSB0');
+
+  // TODO Add command to reload from file
 }
