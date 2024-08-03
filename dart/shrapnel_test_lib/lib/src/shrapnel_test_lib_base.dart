@@ -22,7 +22,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:esp_softap_provisioning/esp_softap_provisioning.dart';
-import 'package:flutter_libserialport/flutter_libserialport.dart';
+import 'package:libserialport/libserialport.dart';
 import 'package:logging/logging.dart';
 import 'package:path/path.dart' as p;
 import 'package:shrapnel_common/api_data/midi_api_message.dart';
