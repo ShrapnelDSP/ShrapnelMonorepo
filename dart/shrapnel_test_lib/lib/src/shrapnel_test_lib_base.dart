@@ -67,7 +67,7 @@ Future<void> setUpWiFi({required String ssid, required String password}) async {
   });
 
   var success =
-  await provisioning.sendWifiConfig(ssid: ssid, password: password);
+      await provisioning.sendWifiConfig(ssid: ssid, password: password);
   if (!success) {
     throw StateError('send wifi config failed');
   }
@@ -101,7 +101,7 @@ Future<void> _eraseFlash({required String port}) async {
 
 List<int> _getMacAddressFromEsptoolStdout(String espToolStdout) {
   final macRegex =
-  RegExp(r'^MAC: (([0-9a-f]{2}:){5}([0-9a-f]{2}))$', multiLine: true);
+      RegExp(r'^MAC: (([0-9a-f]{2}:){5}([0-9a-f]{2}))$', multiLine: true);
   final macString = macRegex.allMatches(espToolStdout).single.group(1)!;
   return macString.split(':').map((e) => int.parse(e, radix: 16)).toList();
 }
@@ -172,10 +172,10 @@ Future<(bool, MacAddress)> _checkIfAlreadyFlashed({
   // https://docs.espressif.com/projects/esptool/en/latest/esp32/#quick-start
   const command = 'esptool.py';
   final args = '-p $port '
-      '-b 2000000 '
-      '--before default_reset --after hard_reset '
-      '--chip esp32 '
-      'verify_flash 0x10000 $expectedHeaderFilePath'
+          '-b 2000000 '
+          '--before default_reset --after hard_reset '
+          '--chip esp32 '
+          'verify_flash 0x10000 $expectedHeaderFilePath'
       .split(' ');
 
   final result = await Process.run(command, args);
@@ -188,14 +188,14 @@ Future<(bool, MacAddress)> _checkIfAlreadyFlashed({
   _log.info(result.stdout);
 
   return (
-  switch (result.exitCode) {
-    0 => true,
-    2 => false,
-    _ => throw StateError(
-      'esptool.py exited with unexpected code ${result.exitCode}',
-    ),
-  },
-  _getMacAddressFromEsptoolStdout(result.stdout as String)
+    switch (result.exitCode) {
+      0 => true,
+      2 => false,
+      _ => throw StateError(
+          'esptool.py exited with unexpected code ${result.exitCode}',
+        ),
+    },
+    _getMacAddressFromEsptoolStdout(result.stdout as String)
   );
 }
 
@@ -206,13 +206,13 @@ Future<void> _flashFirmware(String path, {required String port}) async {
   // https://docs.espressif.com/projects/esptool/en/latest/esp32/#quick-start
   const command = 'esptool.py';
   final args = '-p $port '
-      '-b 2000000 '
-      '--before default_reset --after hard_reset '
-      '--chip esp32 '
-      'write_flash --flash_mode dio --flash_size 4MB --flash_freq 80m '
-      '0x1000 $path/bootloader.bin '
-      '0x8000 $path/partition-table.bin '
-      '0x10000 $path/esp32-dsp.bin'
+          '-b 2000000 '
+          '--before default_reset --after hard_reset '
+          '--chip esp32 '
+          'write_flash --flash_mode dio --flash_size 4MB --flash_freq 80m '
+          '0x1000 $path/bootloader.bin '
+          '0x8000 $path/partition-table.bin '
+          '0x10000 $path/esp32-dsp.bin'
       .split(' ');
 
   final result = await Process.run(command, args);
@@ -230,10 +230,10 @@ Future<void> nvsErase({required String port}) async {
   // https://docs.espressif.com/projects/esptool/en/latest/esp32/#quick-start
   const command = 'esptool.py';
   final args = '-p $port '
-      '-b 2000000 '
-      '--before default_reset --after hard_reset '
-      '--chip esp32 '
-      'erase_region 0x9000 0x6000'
+          '-b 2000000 '
+          '--before default_reset --after hard_reset '
+          '--chip esp32 '
+          'erase_region 0x9000 0x6000'
       .split(' ');
 
   final result = await Process.run(command, args);
@@ -251,11 +251,11 @@ Future<void> nvsLoad(String binaryPath, {required String port}) async {
   // https://docs.espressif.com/projects/esptool/en/latest/esp32/#quick-start
   const command = 'esptool.py';
   final args = '-p $port '
-      '-b 2000000 '
-      '--before default_reset --after hard_reset '
-      '--chip esp32 '
-      'write_flash --flash_mode dio --flash_size 4MB --flash_freq 80m '
-      '0x9000 $binaryPath'
+          '-b 2000000 '
+          '--before default_reset --after hard_reset '
+          '--chip esp32 '
+          'write_flash --flash_mode dio --flash_size 4MB --flash_freq 80m '
+          '0x9000 $binaryPath'
       .split(' ');
 
   final result = await Process.run(command, args);
@@ -273,11 +273,11 @@ Future<void> nvsSave(String binaryPath, {required String port}) async {
   // https://docs.espressif.com/projects/esptool/en/latest/esp32/#quick-start
   const command = 'esptool.py';
   final args = '-p $port '
-      '-b 2000000 '
-      '--before default_reset --after hard_reset '
-      '--chip esp32 '
-      'read_flash '
-      '0x9000 0x6000 $binaryPath'
+          '-b 2000000 '
+          '--before default_reset --after hard_reset '
+          '--chip esp32 '
+          'read_flash '
+          '0x9000 0x6000 $binaryPath'
       .split(' ');
 
   final result = await Process.run(command, args);
@@ -369,7 +369,7 @@ class ShrapnelUart {
 String escapeCommandArg(String arg) {
   return arg.replaceAllMapped(
     RegExp(r'[\\" ]'),
-        (match) => '\\${match.group(0)!}',
+    (match) => '\\${match.group(0)!}',
   );
 }
 

@@ -36,7 +36,7 @@ void main() {
     };
 
     final result =
-    testCases.map((key, value) => MapEntry(key, escapeCommandArg(key)));
+        testCases.map((key, value) => MapEntry(key, escapeCommandArg(key)));
 
     expect(result, testCases);
   });

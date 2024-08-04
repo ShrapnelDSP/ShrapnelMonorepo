@@ -7,3 +7,5 @@
 
 # https://melos.invertase.dev/getting-started#configure-the-workspace
 pubspec_overrides.yaml
+
+coverage

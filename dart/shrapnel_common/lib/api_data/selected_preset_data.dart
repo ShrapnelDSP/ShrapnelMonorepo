@@ -7,8 +7,8 @@ sealed class SelectedPresetMessage with _$SelectedPresetMessage {
   factory SelectedPresetMessage.read() = ReadSelectedPresetMessage;
 
   factory SelectedPresetMessage.notify({required int selectedPreset}) =
-  NotifySelectedPresetMessage;
+      NotifySelectedPresetMessage;
 
   factory SelectedPresetMessage.write({required int selectedPreset}) =
-  WriteSelectedPresetMessage;
+      WriteSelectedPresetMessage;
 }

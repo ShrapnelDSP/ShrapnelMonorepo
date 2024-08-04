@@ -49,5 +49,4 @@ class PresetData with _$PresetData {
     required String name,
     required PresetParametersData parameters,
   }) = _PresetData;
-
 }

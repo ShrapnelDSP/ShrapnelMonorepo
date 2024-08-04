@@ -24,7 +24,8 @@ import 'package:logging/logging.dart';
 import 'package:rxdart/rxdart.dart';
 
 import 'package:shrapnel_common/api_data/api_message.dart';
-import 'package:shrapnel_common/api_data/generated/shrapnel.pb.dart' as shrapnel_pb;
+import 'package:shrapnel_common/api_data/generated/shrapnel.pb.dart'
+    as shrapnel_pb;
 import 'package:shrapnel_common/api_data/proto_extension.dart';
 import '../core/message_transport.dart';
 import '../core/stream_extensions.dart';
