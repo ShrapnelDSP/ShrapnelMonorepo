@@ -18,7 +18,7 @@ env:
   FLUTTER_CHANNEL: 'stable'
   MELOS_VERSION: '^6.1.0'
   COVERDE_VERSION: '^0.2.0+2'
-  COVERAGE_VERSION: '^0.2.0+2'
+  COVERAGE_VERSION: '^1.9.0'
 
 jobs:
   build-firmware:

@@ -38,8 +38,8 @@ header:
     - '**/*.pbserver.dart'
     - '**/*.pb-c.c'
     - '**/*.pb-c.h'
-    - 'frontend/.dart_tool/**'
-    - 'frontend/linux/flutter/**'
+    - '**/.dart_tool/**'
+    - '**/linux/flutter/**'
       # Test support files are usually derivatives of third-party library code,
       # which is licensed under some other license.
     - 'test/support/**'
