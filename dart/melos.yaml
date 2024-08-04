@@ -1,0 +1,23 @@
+name: shrapnel
+
+packages:
+  - frontend
+  - shrapnel_common
+  - shrapnel_test_lib
+  - shrapnel_test_tool
+
+scripts:
+  generate_code:
+    run: melos exec --depends-on=build_runner -- "dart run build_runner build -d"
+
+  test:
+    run: melos exec -c 1 --depends-on=flutter_test -- "flutter test --coverage --exclude-tags=api"
+
+  test-dart:
+    run: melos exec -c 1 --depends-on=test -- "dart run coverage:test_with_coverage"
+
+  coverage:
+    description: Merge all packages coverage trace files ignoring data related to generated files.
+    run: >
+      coverde rm MELOS_ROOT_PATH/coverage/filtered.lcov.info &&
+      melos exec --file-exists=coverage/lcov.info -- "coverde filter --input ./coverage/lcov.info --output MELOS_ROOT_PATH/coverage/filtered.lcov.info --paths-parent MELOS_PACKAGE_PATH --filters '\.g\.dart'"

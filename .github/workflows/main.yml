@@ -16,6 +16,9 @@ env:
   CCACHE_DIR: /ccache
   FLUTTER_VERSION: '3.16.9'
   FLUTTER_CHANNEL: 'stable'
+  MELOS_VERSION: '^6.1.0'
+  COVERDE_VERSION: '^0.2.0+2'
+  COVERAGE_VERSION: '^1.8.0'
 
 jobs:
   build-firmware:
@@ -192,7 +195,7 @@ jobs:
     defaults:
       run:
         working-directory:
-          frontend
+          dart
     steps:
     - uses: actions/checkout@v2
       with:
@@ -205,10 +208,11 @@ jobs:
         channel: ${{ env.FLUTTER_CHANNEL }}
         cache: true
 
-    - run: flutter pub get
+    - run: dart pub global activate melos ${{ env.MELOS_VERSION }}
+    - run: dart run melos bootstrap
 
     - name: Generate code
-      run: flutter pub run build_runner build
+      run: dart run melos run generate_code
 
     - name: Analyze
       run: flutter analyze
@@ -218,7 +222,7 @@ jobs:
     defaults:
       run:
         working-directory:
-          frontend
+          dart
     steps:
     - uses: actions/checkout@v2
       with:
@@ -231,17 +235,18 @@ jobs:
         channel: ${{ env.FLUTTER_CHANNEL }}
         cache: true
 
-    - run: flutter pub get
+    - run: dart pub global activate melos ${{ env.MELOS_VERSION }}
+    - run: dart run melos bootstrap
 
     - name: Format
-      run: dart format -o none --set-exit-if-changed lib test
+      run: dart format -o none --set-exit-if-changed .
 
   flutter-test:
     runs-on: ubuntu-latest
     defaults:
       run:
         working-directory:
-          frontend
+          dart
     steps:
     - uses: actions/checkout@v2
       with:
@@ -254,25 +259,27 @@ jobs:
         channel: ${{ env.FLUTTER_CHANNEL }}
         cache: true
 
-    - run: flutter pub get
+    - run: dart pub global activate melos ${{ env.MELOS_VERSION }}
+    - run: dart pub global activate coverde ${{ env.COVERDE_VERSION }}
+    - run: dart pub global activate coverage ${{ env.COVERAGE_VERSION }}
+    - run: melos bootstrap
 
     - name: Generate code
-      run: flutter pub run build_runner build
+      run: melos run generate_code
 
     - name: Test
-      run: flutter test --coverage --exclude-tags=api
+      run: |
+        dart run melos run test
+        dart run melos run test-dart
 
     - name: Coverage clean-up
-      run: >
-        flutter pub run
-        remove_from_coverage --remove="\.g\.dart$"
-        --file=coverage/lcov.info
+      run: dart run melos run coverage
 
     - name: Coveralls
       uses: coverallsapp/github-action@master
       with:
-        path-to-lcov: frontend/coverage/lcov.info
-        base-path: frontend
+        path-to-lcov: dart/coverage/filtered.lcov.info
+        base-path: dart
         github-token: ${{ secrets.GITHUB_TOKEN }}
         parallel: true
         flag-name: "flutter"

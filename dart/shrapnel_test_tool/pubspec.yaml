@@ -1,0 +1,17 @@
+name: shrapnel_test_tool
+description: A sample command-line application.
+version: 1.0.0
+
+publish_to: 'none'
+
+environment:
+  sdk: ^3.2.6
+
+dependencies:
+  logging: ^1.2.0
+  shrapnel_test_lib:
+    path: ../shrapnel_test_lib
+
+dev_dependencies:
+  lints: ^2.1.0
+  test: ^1.24.0
