@@ -278,7 +278,7 @@ jobs:
     - name: Coveralls
       uses: coverallsapp/github-action@master
       with:
-        path-to-lcov: coverage/filtered.lcov.info
+        path-to-lcov: dart/coverage/filtered.lcov.info
         base-path: dart
         github-token: ${{ secrets.GITHUB_TOKEN }}
         parallel: true
