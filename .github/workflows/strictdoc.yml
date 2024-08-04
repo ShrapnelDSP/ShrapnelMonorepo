@@ -54,7 +54,7 @@ jobs:
     defaults:
       run:
         working-directory:
-          frontend
+          dart/frontend
     steps:
     - uses: actions/checkout@v3
 
@@ -79,7 +79,7 @@ jobs:
     - uses: actions/upload-artifact@v3
       with:
         name: frontend-docs
-        path: frontend/doc/api
+        path: dart/frontend/doc/api
         retention-days: 5
 
   deploy:
