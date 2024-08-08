@@ -332,7 +332,16 @@ class ShrapnelUart {
       .cast<List<int>>()
       .transform<String>(utf8.decoder)
       .transform(const LineSplitter())
-      .asBroadcastStream();
+      // Sometimes a log line fails to decode, possibly due to UART data
+      // corruption or because the firmware prints random binary data. Prevent
+      // it from causing a failing test.
+      .handleError((Object error, StackTrace stackTrace) {
+    _logger.severe(
+      'Failed to decode logs, possible data corruption',
+      error,
+      stackTrace,
+    );
+  }, test: (error) => error is FormatException).asBroadcastStream();
 
   Stream<String> get log => _log;
 

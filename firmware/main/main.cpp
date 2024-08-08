@@ -322,82 +322,6 @@ struct overloaded : Ts...
 template <class... Ts>
 overloaded(Ts...) -> overloaded<Ts...>;
 
-class ServerOutQueueAdapter final
-    : public shrapnel::QueueBase<std::pair<ApiMessage, std::optional<int>>>
-{
-public:
-    ServerOutQueueAdapter(shrapnel::QueueBase<AppMessage> &a_queue)
-        : queue{a_queue}
-    {
-    }
-
-    queue_error receive(std::pair<ApiMessage, std::optional<int>> *out,
-                        uint32_t time_to_wait) override
-    {
-        AppMessage message;
-
-        auto rc = queue.receive(&message, time_to_wait);
-        if(rc != shrapnel::queue_error::SUCCESS)
-        {
-            return rc;
-        }
-
-        *out = convert_to(message);
-    }
-
-    queue_error send(const std::pair<ApiMessage, std::optional<int>> *in,
-                     uint32_t time_to_wait) override
-    {
-        auto message = convert_from(*in);
-        return queue.send(&message, time_to_wait);
-    }
-
-private:
-    AppMessage
-    convert_from(const std::pair<ApiMessage, std::optional<int>> &message)
-    {
-        std::optional<int> fd = message.second;
-
-        return std::visit(
-            overloaded{
-                [=](const parameters::ApiMessage &message)
-                {
-                    return std::visit(
-                        overloaded{
-                            [](const parameters::Initialise &message)
-                            { return AppMessage{message}; },
-                            [=](const parameters::Update &message)
-                            {
-                                return AppMessage{ParameterUpdateApi{
-                                    .update{message},
-                                    .fd{fd},
-                                }};
-                            },
-                        },
-                        message);
-                },
-                [](const midi::MappingApiMessage &message)
-                { return AppMessage{message}; },
-                [](const events::ApiMessage &message)
-                { return AppMessage{message}; },
-                [](const selected_preset::SelectedPresetApiMessage &message)
-                { return AppMessage{message}; },
-                [](const presets::PresetsApiMessage &message)
-                { return AppMessage{message}; },
-                [](const midi::Message &message)
-                { return AppMessage{message}; },
-            },
-            message.first);
-    }
-
-    std::pair<ApiMessage, std::optional<int>>
-    convert_to(const AppMessage &message)
-    {
-    }
-
-    shrapnel::QueueBase<AppMessage> &queue;
-};
-
 extern "C" void app_main(void)
 {
     ESP_ERROR_CHECK(
@@ -546,10 +470,107 @@ extern "C" void app_main(void)
         }
     };
 
-    auto in_queue = new Queue<std::pair<ApiMessage, int>, QUEUE_LEN>;
+#if 0
+    auto convert_to =
+        [](const AppMessage &message) -> std::pair<ApiMessage, int>
+    {
+        return std::visit(
+            overloaded{
+                [](const parameters::ApiMessage &message) {
+                    return std::pair<ApiMessage, int>{message, std::nullopt};
+                },
+                [](const midi::MappingApiMessage &message) {
+                    return std::pair<ApiMessage, int>{message, std::nullopt};
+                },
+                [](const events::ApiMessage &message) {
+                    return std::pair<ApiMessage, int>{message, std::nullopt};
+                },
+                [](const selected_preset::SelectedPresetApiMessage &message) {
+                    return std::pair<ApiMessage, int>{message, std::nullopt};
+                },
+                [](const presets::PresetsApiMessage &message) {
+                    return std::pair<ApiMessage, int>{message, std::nullopt};
+                },
+                [](const midi::Message &message) {
+                    return std::pair<ApiMessage, int>{message, std::nullopt};
+                },
+                [](const ParameterUpdateMessage &message)
+                {
+                    return std::visit(
+                        overloaded{
+                            [](const ParameterUpdateApi &message) {
+                                return std::pair<ApiMessage, int>{
+                                    message.update, std::nullopt};
+                            },
+                            [](const ParameterUpdateHost &message) {
+                                return std::pair<ApiMessage, int>{
+                                    message.update, std::nullopt};
+                            },
+                            [](const ParameterUpdateOther &message) {
+                                return std::pair<ApiMessage, int>{
+                                    message.update, std::nullopt};
+                            },
+                        },
+                        message);
+                },
+            },
+            message);
+    };
+#endif
+
+    auto in_queue = new Queue<AppMessage, QUEUE_LEN>;
     auto out_queue =
         new Queue<std::pair<ApiMessage, std::optional<int>>, QUEUE_LEN>;
-    auto server = new Server(in_queue, out_queue);
+
+    auto convert_from =
+        [](const std::pair<ApiMessage, int> &message) -> AppMessage
+    {
+        int fd = message.second;
+
+        return std::visit(
+            overloaded{
+                [=](const parameters::ApiMessage &message)
+                {
+                    return std::visit(
+                        overloaded{
+                            [](const parameters::Initialise &message)
+                            { return AppMessage{message}; },
+                            [=](const parameters::Update &message)
+                            {
+                                return AppMessage{ParameterUpdateApi{
+                                    .update{message},
+                                    .fd{fd},
+                                }};
+                            },
+                        },
+                        message);
+                },
+                [](const midi::MappingApiMessage &message)
+                { return AppMessage{message}; },
+                [](const events::ApiMessage &message)
+                { return AppMessage{message}; },
+                [](const selected_preset::SelectedPresetApiMessage &message)
+                { return AppMessage{message}; },
+                [](const presets::PresetsApiMessage &message)
+                { return AppMessage{message}; },
+                [](const midi::Message &message)
+                { return AppMessage{message}; },
+            },
+            message.first);
+    };
+
+    auto server_send_output = [&](const std::pair<ApiMessage, int> &in,
+                                  uint32_t time_to_wait) -> void
+    {
+        auto message = convert_from(in);
+        auto rc = in_queue->send(&message, time_to_wait);
+        if(rc != queue_error::SUCCESS)
+        {
+            ESP_LOGE(TAG, "in_queue message dropped");
+        }
+    };
+
+    auto server = new Server(server_send_output, out_queue);
 
     auto app_send_event = [&](wifi::UserEvent event)
     {
@@ -600,9 +621,15 @@ extern "C" void app_main(void)
         server->send_message({message, std::nullopt});
     };
 
+    auto send_message2 = [&](const ApiMessage &message,
+                             const std::optional<int> fd) {
+        server->send_message({message, fd});
+    };
+
     auto main_thread =
         MainThread<QUEUE_LEN, parameters::AudioParameters<20, 1>>(
             send_message,
+            send_message2,
             *in_queue,
             audio_params,
             persistence,
@@ -611,7 +638,7 @@ extern "C" void app_main(void)
 
     auto send_midi_message = [&](const midi::Message &message)
     {
-        auto app_message = {ApiMessage{message}, std::nullopt};
+        auto app_message = AppMessage{message};
         auto rc = in_queue->send(&app_message, portMAX_DELAY);
 
         if(rc != queue_error::SUCCESS)

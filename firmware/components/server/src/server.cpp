@@ -35,10 +35,11 @@ static void debug_print_sent_message(const ApiMessage &message);
 static void debug_print_received_message(const ApiMessage &message);
 
 Server::Server(
-    QueueBase<std::pair<ApiMessage, int>> *a_in_queue,
+    etl::delegate<void(const std::pair<ApiMessage, int> &in,
+                       uint32_t time_to_wait)> a_output_message,
     QueueBase<std::pair<ApiMessage, std::optional<int>>> *a_out_queue)
 {
-    in_queue = a_in_queue;
+    output_message = a_output_message;
     out_queue = a_out_queue;
     work_semaphore = xSemaphoreCreateBinary();
     assert(work_semaphore);
@@ -147,11 +148,7 @@ esp_err_t websocket_get_handler(httpd_req_t *req)
     {
         debug_print_received_message(*message);
         auto out = std::pair<ApiMessage, int>{*message, fd};
-        auto queue_rc = self->in_queue->send(&out, pdMS_TO_TICKS(100));
-        if(queue_rc != queue_error::SUCCESS)
-        {
-            ESP_LOGE(TAG, "in_queue message dropped");
-        }
+        self->output_message(out, pdMS_TO_TICKS(100));
     }
     else
     {

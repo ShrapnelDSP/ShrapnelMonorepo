@@ -30,7 +30,8 @@ namespace shrapnel {
 class Server
 {
 public:
-    Server(QueueBase<std::pair<ApiMessage, int>> *in_queue,
+    Server(etl::delegate<void(const std::pair<ApiMessage, int> &in,
+                              uint32_t time_to_wait)> output_message,
            QueueBase<std::pair<ApiMessage, std::optional<int>>> *out_queue);
 
     void start();
@@ -41,7 +42,9 @@ public:
 private:
     httpd_handle_t server = nullptr;
 
-    QueueBase<std::pair<ApiMessage, int>> *in_queue;
+    etl::delegate<void(const std::pair<ApiMessage, int> &in,
+                       uint32_t time_to_wait)>
+        output_message;
     QueueBase<std::pair<ApiMessage, std::optional<int>>> *out_queue;
 
     /*

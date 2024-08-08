@@ -57,6 +57,8 @@ concept GettableParameter = requires(T a, parameters::id_t id) {
 };
 
 using SendMessageCallback = etl::delegate<void(const ApiMessage &)>;
+using SendMessageCallback2 =
+    etl::delegate<void(const ApiMessage &, const std::optional<int> &)>;
 using MidiMappingType = midi::MappingManager<10, 1>;
 
 template <typename AudioParametersT>
@@ -142,6 +144,7 @@ class MainThread
 {
 public:
     MainThread(SendMessageCallback a_send_message,
+               SendMessageCallback2 a_send_message2,
                Queue<AppMessage, QUEUE_LEN> &a_in_queue,
                std::shared_ptr<AudioParametersT> a_audio_params,
                std::shared_ptr<persistence::Storage> a_persistence,
@@ -150,6 +153,7 @@ public:
                std::unique_ptr<persistence::Crud<std::span<uint8_t>>>
                    a_presets_storage)
         : send_message{a_send_message},
+          send_message2{a_send_message2},
           in_queue{a_in_queue},
           clipping_throttle_timer{
               "clipping throttle", os::ms_to_ticks(1000), false},
@@ -257,8 +261,7 @@ public:
 
 private:
     void
-    handle_message(const selected_preset::SelectedPresetApiMessage &app_message,
-                   std::optional<int>)
+    handle_message(const selected_preset::SelectedPresetApiMessage &app_message)
     {
         auto response = std::visit(
             [this](const auto &message)
@@ -268,7 +271,7 @@ private:
 
         if(response.has_value())
         {
-            send_message({*response, std::nullopt});
+            send_message({*response});
         }
     }
 
@@ -347,13 +350,13 @@ private:
 
         if(response.has_value())
         {
-            send_message({*response, std::nullopt});
+            send_message({*response});
         }
     }
 
     void handle_message(const parameters::ApiMessage &app_message)
     {
-        cmd_handling->dispatch(app_message, std::nullopt);
+        cmd_handling->dispatch(app_message, -1);
     }
 
     void handle_message(const midi::MappingApiMessage &app_message)
@@ -423,15 +426,19 @@ private:
         }
     }
 
-    void handle_message(const midi::Message &message, std::optional<int>)
+    void handle_message(const midi::Message &message)
     {
         on_midi_message(message);
     }
 
-    void handle_message(const events::ApiMessage &app_message,
-                        std::optional<int>)
+    void handle_message(const events::ApiMessage &app_message)
     {
         // nothing to do
+    }
+
+    void handle_message(const ParameterUpdateMessage &app_message)
+    {
+        ESP_LOGI(TAG, "TODO handle parameter update");
     }
 
     std::optional<selected_preset::SelectedPresetApiMessage>
@@ -484,10 +491,11 @@ private:
     void cmd_handling_send_message(const parameters::ApiMessage &m,
                                    std::optional<int> fd)
     {
-        send_message({m, fd});
+        send_message2(m, fd);
     }
 
     SendMessageCallback send_message;
+    SendMessageCallback2 send_message2;
     Queue<AppMessage, QUEUE_LEN> &in_queue;
     os::Timer clipping_throttle_timer;
     os::Timer midi_message_notify_timer;
