@@ -151,7 +151,8 @@ public:
                std::unique_ptr<persistence::Crud<std::span<uint8_t>>>
                    a_midi_mapping_storage,
                std::unique_ptr<persistence::Crud<std::span<uint8_t>>>
-                   a_presets_storage)
+                   a_presets_storage,
+               etl::delegate<std::optional<uint8_t>()> a_get_midi_byte)
         : send_message{a_send_message},
           send_message2{a_send_message2},
           in_queue{a_in_queue},
@@ -183,7 +184,8 @@ public:
               std::move(a_presets_storage))},
           selected_preset_manager{
               std::make_shared<selected_preset::SelectedPresetManager>(
-                  a_persistence)}
+                  a_persistence)},
+          get_midi_byte{a_get_midi_byte}
     {
         parameter_notifier =
             std::make_shared<ParameterUpdateNotifier<AudioParametersT>>(
@@ -217,6 +219,16 @@ public:
 
     void loop()
     {
+        {
+            auto byte = get_midi_byte();
+            while(byte.has_value())
+            {
+                ESP_LOGI(TAG, "midi got byte 0x%02x", *byte);
+                midi_decoder->decode(*byte);
+                byte = get_midi_byte();
+            }
+        }
+
         if(AppMessage message;
            queue_error::SUCCESS == in_queue.receive(&message, 0))
         {
@@ -519,6 +531,7 @@ private:
         parameter_notifier;
     std::shared_ptr<PresetLoader<ParameterUpdateNotifier<AudioParametersT>>>
         preset_loader;
+    etl::delegate<std::optional<uint8_t>()> get_midi_byte;
 };
 
 } // namespace shrapnel

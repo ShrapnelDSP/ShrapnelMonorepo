@@ -626,6 +626,9 @@ extern "C" void app_main(void)
         server->send_message({message, fd});
     };
 
+    auto get_midi_byte = [&]() -> std::optional<uint8_t>
+    { return midi_uart->get_byte(0); };
+
     auto main_thread =
         MainThread<QUEUE_LEN, parameters::AudioParameters<20, 1>>(
             send_message,
@@ -634,7 +637,8 @@ extern "C" void app_main(void)
             audio_params,
             persistence,
             std::make_unique<Crud>("nvs", "midi_mapping"),
-            std::make_unique<Crud>("nvs", "presets"));
+            std::make_unique<Crud>("nvs", "presets"),
+            get_midi_byte);
 
     auto send_midi_message = [&](const midi::Message &message)
     {
