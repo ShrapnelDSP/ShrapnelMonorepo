@@ -34,8 +34,9 @@ namespace shrapnel {
 static void debug_print_sent_message(const ApiMessage &message);
 static void debug_print_received_message(const ApiMessage &message);
 
-Server::Server(QueueBase<AppMessage> *a_in_queue,
-               QueueBase<AppMessage> *a_out_queue)
+Server::Server(
+    QueueBase<std::pair<ApiMessage, int>> *a_in_queue,
+    QueueBase<std::pair<ApiMessage, std::optional<int>>> *a_out_queue)
 {
     in_queue = a_in_queue;
     out_queue = a_out_queue;
@@ -145,7 +146,7 @@ esp_err_t websocket_get_handler(httpd_req_t *req)
     if(message.has_value())
     {
         debug_print_received_message(*message);
-        auto out = AppMessage{*message, fd};
+        auto out = std::pair<ApiMessage, int>{*message, fd};
         auto queue_rc = self->in_queue->send(&out, pdMS_TO_TICKS(100));
         if(queue_rc != queue_error::SUCCESS)
         {
@@ -168,7 +169,7 @@ void websocket_send(void *arg)
 {
     auto self = reinterpret_cast<Server *>(arg);
 
-    AppMessage message;
+    std::pair<ApiMessage, std::optional<int>> message;
     auto rc = self->out_queue->receive(&message, 0);
     if(rc != queue_error::SUCCESS)
     {
@@ -192,7 +193,8 @@ void websocket_send(void *arg)
     xSemaphoreGive(self->work_semaphore);
 }
 
-void send_websocket_message(Server &self, const AppMessage &message)
+void send_websocket_message(
+    Server &self, const std::pair<ApiMessage, std::optional<int>> &message)
 {
     std::array<uint8_t, 1024> memory{};
     auto buffer = std::span<uint8_t>{memory};
@@ -271,7 +273,8 @@ static void debug_print_received_message(const ApiMessage &message)
     ESP_LOGD(TAG, "received message: %s", debug.data());
 }
 
-void Server::send_message(const AppMessage &message)
+void Server::send_message(
+    const std::pair<ApiMessage, std::optional<int>> &message)
 {
     ESP_LOGD(
         TAG, "%s called from task: %s", __FUNCTION__, pcTaskGetName(nullptr));

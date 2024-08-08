@@ -28,6 +28,38 @@
 #include <selected_preset_api.h>
 #include <variant>
 
+/** Parameter updated by an API client */
+struct ParameterUpdateApi final
+{
+    shrapnel::parameters::Update update;
+    /// File descriptor of connection to the API client
+    std::optional<int> fd;
+
+    std::strong_ordering
+    operator<=>(const ParameterUpdateApi &other) const = default;
+};
+
+/** Parameter updated by a the plugin host */
+struct ParameterUpdateHost final
+{
+    shrapnel::parameters::Update update;
+
+    std::strong_ordering
+    operator<=>(const ParameterUpdateHost &other) const = default;
+};
+
+/** Parameter updated by another source */
+struct ParameterUpdateOther final
+{
+    shrapnel::parameters::Update update;
+
+    std::strong_ordering
+    operator<=>(const ParameterUpdateOther &other) const = default;
+};
+
+using ParameterUpdateMessage =
+    std::variant<ParameterUpdateApi, ParameterUpdateHost, ParameterUpdateOther>;
+
 using ApiMessage =
     std::variant<shrapnel::parameters::ApiMessage,
                  shrapnel::midi::MappingApiMessage,
@@ -35,8 +67,15 @@ using ApiMessage =
                  shrapnel::selected_preset::SelectedPresetApiMessage,
                  shrapnel::presets::PresetsApiMessage,
                  shrapnel::midi::Message>;
-using FileDescriptor = std::optional<int>;
-using AppMessage = std::pair<ApiMessage, FileDescriptor>;
+
+using AppMessage =
+    std::variant<shrapnel::parameters::ApiMessage,
+                 shrapnel::midi::MappingApiMessage,
+                 shrapnel::events::ApiMessage,
+                 shrapnel::selected_preset::SelectedPresetApiMessage,
+                 shrapnel::presets::PresetsApiMessage,
+                 shrapnel::midi::Message,
+                 ParameterUpdateMessage>;
 
 etl::string_stream &operator<<(etl::string_stream &out, const ApiMessage &self);
 

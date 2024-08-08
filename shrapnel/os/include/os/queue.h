@@ -43,10 +43,10 @@ class QueueBase
 public:
     using value_type = T;
 
-    explicit QueueBase(int number_of_elements) { (void)number_of_elements; };
-
-    virtual queue_error receive(T *out, uint32_t time_to_wait) = 0;
-    virtual queue_error send(const T *in, uint32_t time_to_wait) = 0;
+    [[nodiscard]] virtual queue_error receive(T *out,
+                                              uint32_t time_to_wait) = 0;
+    [[nodiscard]] virtual queue_error send(const T *in,
+                                           uint32_t time_to_wait) = 0;
 };
 
 template <typename T, std::size_t MAX_SIZE>
@@ -56,12 +56,7 @@ class Queue final : public QueueBase<T>
     using ticks = std::chrono::duration<uint32_t>;
 
 public:
-    Queue()
-        : QueueBase<T>(MAX_SIZE),
-          used_semaphore{0},
-          free_semaphore{MAX_SIZE}
-    {
-    }
+    Queue() : QueueBase<T>(), used_semaphore{0}, free_semaphore{MAX_SIZE} {}
 
     [[nodiscard]] queue_error receive(T *out, uint32_t time_to_wait) override
     {

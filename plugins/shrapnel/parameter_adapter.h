@@ -68,6 +68,8 @@ public:
 
     int update(const parameters::id_t &id, float value)
     {
+        ESP_LOGD(TAG, "update %s %f", id.c_str(), value);
+
         // TODO:
         // Note that to make sure the host correctly handles automation, you should call
         // the beginChangeGesture() and endChangeGesture() methods to tell the host when
@@ -98,7 +100,11 @@ public:
             return 0.5;
         }
 
-        return parameter->getValue();
+        float value = parameter->getValue();
+
+        ESP_LOGD(TAG, "get %s %f", id.c_str(), value);
+
+        return value;
     }
 
     MapType::iterator begin() { return parameterValues.begin(); }
@@ -129,7 +135,7 @@ private:
         // FIXME: what thread is calling this? Probably need to send a message
         // and handle on the main thread.
         auto id_str = id.toStdString();
-        ESP_LOGD(TAG, "parameter update %s to %f", id_str.c_str(), value);
+        ESP_LOGD(TAG, "parameterChanged %s %f", id_str.c_str(), value);
         parameterValues[parameters::id_t{id_str.c_str()}]->update(value);
     }
 

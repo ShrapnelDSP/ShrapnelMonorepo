@@ -57,6 +57,7 @@ public:
     id_t name;
 
 private:
+    static constexpr char TAG[] = "AudioParameterFloat";
     std::atomic<float> value;
     float minimum;
     float maximum;

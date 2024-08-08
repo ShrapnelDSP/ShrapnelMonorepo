@@ -56,7 +56,7 @@ concept GettableParameter = requires(T a, parameters::id_t id) {
     } -> std::same_as<float>;
 };
 
-using SendMessageCallback = etl::delegate<void(const AppMessage &)>;
+using SendMessageCallback = etl::delegate<void(const ApiMessage &)>;
 using MidiMappingType = midi::MappingManager<10, 1>;
 
 template <typename AudioParametersT>
@@ -74,14 +74,7 @@ public:
 
     int update(const parameters::id_t &param, float value)
     {
-        auto message = AppMessage{
-            parameters::Update{
-                param,
-                value,
-            },
-            std::nullopt,
-        };
-        send_message(message);
+        send_message({parameters::Update{param, value}});
         return audio_params->update(param, value);
     }
 
@@ -130,10 +123,7 @@ public:
 
         presets::deserialise_live_parameters(*parameters, preset.parameters);
 
-        send_message({selected_preset::Notify{
-                          .selectedPresetId = id,
-                      },
-                      std::nullopt});
+        send_message({selected_preset::Notify{.selectedPresetId = id}});
         return 0;
     }
 
@@ -226,11 +216,8 @@ public:
         if(AppMessage message;
            queue_error::SUCCESS == in_queue.receive(&message, 0))
         {
-            auto fd = message.second;
-
-            std::visit([this, fd](const auto &m)
-                       { this->handle_message(m, fd); },
-                       message.first);
+            std::visit([this](const auto &m) { this->handle_message(m); },
+                       message);
         }
 
         if(!clipping_throttle_timer.is_active())
@@ -238,7 +225,7 @@ public:
             if(!events::input_clipped.test_and_set())
             {
                 ESP_LOGI(TAG, "input was clipped");
-                send_message({events::InputClipped{}, std::nullopt});
+                send_message({events::InputClipped{}});
                 auto rc = clipping_throttle_timer.start(os::ms_to_ticks(10));
                 if(rc != os::timer_error::TIMER_START_SUCCESS)
                 {
@@ -249,7 +236,7 @@ public:
             if(!events::output_clipped.test_and_set())
             {
                 ESP_LOGI(TAG, "output was clipped");
-                send_message({events::OutputClipped{}, std::nullopt});
+                send_message({events::OutputClipped{}});
                 auto rc = clipping_throttle_timer.start(os::ms_to_ticks(10));
                 if(rc != os::timer_error::TIMER_START_SUCCESS)
                 {
@@ -264,8 +251,7 @@ public:
         {
             last_notified_midi_message = *last_midi_message;
 
-            send_message(
-                {midi::MessageReceived{*last_midi_message}, std::nullopt});
+            send_message({midi::MessageReceived{*last_midi_message}});
         }
     }
 
@@ -286,8 +272,7 @@ private:
         }
     }
 
-    void handle_message(const presets::PresetsApiMessage &app_message,
-                        std::optional<int>)
+    void handle_message(const presets::PresetsApiMessage &app_message)
     {
         auto response = std::visit(
             [&](const auto &presets_message)
@@ -304,10 +289,9 @@ private:
                                const presets::PresetData &preset)
                         {
                             send_message({presets::Notify{
-                                              .id = id,
-                                              .preset = preset,
-                                          },
-                                          std::nullopt});
+                                .id = id,
+                                .preset = preset,
+                            }});
                         });
                 }
                 else if constexpr(std::is_same_v<PresetsMessageT,
@@ -367,19 +351,12 @@ private:
         }
     }
 
-    void handle_message(const parameters::ApiMessage &app_message,
-                        std::optional<int> fd)
+    void handle_message(const parameters::ApiMessage &app_message)
     {
-        if(!fd.has_value())
-        {
-            ESP_LOGE(TAG, "Must always have fd");
-        }
-
-        cmd_handling->dispatch(app_message, *fd);
+        cmd_handling->dispatch(app_message, std::nullopt);
     }
 
-    void handle_message(const midi::MappingApiMessage &app_message,
-                        std::optional<int>)
+    void handle_message(const midi::MappingApiMessage &app_message)
     {
         std::scoped_lock lock{midi_mutex};
 
@@ -396,15 +373,7 @@ private:
                     auto mappings = midi_mapping_manager->get();
                     for(const auto &[id, mapping] : *mappings)
                     {
-                        send_message({
-                            midi::Update{
-                                {
-                                    id,
-                                    mapping,
-                                },
-                            },
-                            std::nullopt,
-                        });
+                        return {midi::Update{{id, mapping}}};
                     }
                 }
                 else if constexpr(std::is_same_v<MidiMappingMessageT,
@@ -450,7 +419,7 @@ private:
 
         if(response.has_value())
         {
-            send_message({*response, std::nullopt});
+            send_message({*response});
         }
     }
 

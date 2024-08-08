@@ -36,6 +36,8 @@ AudioParameterFloat::AudioParameterFloat(const id_t &a_name,
 
 void AudioParameterFloat::update(float a_value)
 {
+    ESP_LOGD(TAG, "update %s %f", name.c_str(), a_value);
+
     if(a_value > 1)
     {
         return;
@@ -53,7 +55,9 @@ void AudioParameterFloat::update(float a_value)
 float AudioParameterFloat::get(void)
 {
     auto range = maximum - minimum;
-    return (value - minimum) / range;
+    const float out_value = (value - minimum) / range;
+    ESP_LOGD(TAG, "get %s %f", name.c_str(), out_value);
+    return out_value;
 }
 
 std::atomic<float> *AudioParameterFloat::get_raw_parameter(void)
