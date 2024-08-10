@@ -7,18 +7,19 @@ namespace shrapnel {
 class Server final : private juce::Thread
 {
 public:
-    Server(shrapnel::QueueBase<AppMessage> *in_queue,
-           shrapnel::QueueBase<AppMessage> *out_queue);
+    Server(etl::delegate<void(const std::pair<ApiMessage, int> &in,
+                              uint32_t time_to_wait)> output_message);
 
     void start();
 
-    void send_message(const AppMessage &message);
+    void send_message(const std::pair<ApiMessage, std::optional<int>> &message);
 
 private:
     void run() override;
 
-    QueueBase<AppMessage> *in_queue;
-    QueueBase<AppMessage> *out_queue;
+    etl::delegate<void(const std::pair<ApiMessage, int> &in,
+                       uint32_t time_to_wait)>
+        output_message;
 };
 
 } // namespace shrapnel

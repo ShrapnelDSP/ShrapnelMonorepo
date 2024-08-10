@@ -19,8 +19,17 @@
 
 #include "messages.h"
 #include "shrapnel.pb.h"
+#include <etl_utility.h>
 #include <pb_decode.h>
 #include <pb_encode.h>
+
+template <class... Ts>
+struct overloaded : Ts...
+{
+    using Ts::operator()...;
+};
+template <class... Ts>
+overloaded(Ts...) -> overloaded<Ts...>;
 
 namespace shrapnel::api {
 
@@ -219,6 +228,41 @@ etl::string_stream &operator<<(etl::string_stream &out, const ApiMessage &self)
             {
                 out << "<Unknown>";
             }
+        },
+        self);
+
+    return out;
+}
+
+etl::string_stream &operator<<(etl::string_stream &out,
+                               const ParameterUpdateApi &self)
+{
+    return out << "{ update=" << self.update << " fd=" << self.fd << " }";
+}
+
+etl::string_stream &operator<<(etl::string_stream &out,
+                               const ParameterUpdateHost &self)
+{
+    return out << "{ update=" << self.update << " }";
+}
+
+etl::string_stream &operator<<(etl::string_stream &out,
+                               const ParameterUpdateOther &self)
+{
+    return out << "{ update=" << self.update << " }";
+}
+
+etl::string_stream &operator<<(etl::string_stream &out,
+                               const ParameterUpdateMessage &self)
+{
+    std::visit(
+        overloaded{
+            [&](const ParameterUpdateApi &message)
+            { out << "<ParameterUpdateApi>" << message; },
+            [&](const ParameterUpdateHost &message)
+            { out << "<ParameterUpdateHost>" << message; },
+            [&](const ParameterUpdateOther &message)
+            { out << "<ParameterUpdateOther>" << message; },
         },
         self);
 

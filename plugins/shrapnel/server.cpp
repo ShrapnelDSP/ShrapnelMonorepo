@@ -8,7 +8,8 @@ namespace shrapnel {
 
 static void debug_print_sent_message(const ApiMessage &message);
 static void debug_print_received_message(const ApiMessage &message);
-static void send_websocket_message(const AppMessage &message);
+static void send_websocket_message(
+    const std::pair<ApiMessage, std::optional<int>> &message);
 
 uWS::App *globalApp;
 uWS::Loop *globalLoop;
@@ -17,17 +18,17 @@ struct UserData
 {
 };
 
-Server::Server(shrapnel::QueueBase<AppMessage> *a_in_queue,
-               shrapnel::QueueBase<AppMessage> *a_out_queue)
+Server::Server(etl::delegate<void(const std::pair<ApiMessage, int> &in,
+                                  uint32_t time_to_wait)> a_output_message)
     : Thread("server"),
-      in_queue{a_in_queue},
-      out_queue{a_out_queue}
+      output_message{a_output_message}
 {
 }
 
 void Server::start() { startThread(); }
 
-void Server::send_message(const AppMessage &message)
+void Server::send_message(
+    const std::pair<ApiMessage, std::optional<int>> &message)
 {
     if(!message.second.has_value())
     {
@@ -43,7 +44,8 @@ void Server::send_message(const AppMessage &message)
     send_websocket_message(message);
 }
 
-void send_websocket_message(const AppMessage &message)
+void send_websocket_message(
+    const std::pair<ApiMessage, std::optional<int>> &message)
 {
     std::array<uint8_t, 1024> memory{};
     auto buffer = std::span<uint8_t>{memory};
@@ -166,13 +168,9 @@ void Server::run()
                             if(decoded.has_value())
                             {
                                 debug_print_received_message(*decoded);
-                                auto out = AppMessage{*decoded, fd};
-
-                                auto queue_rc = in_queue->send(&out, 0);
-                                if(queue_rc != queue_error::SUCCESS)
-                                {
-                                    ESP_LOGE(TAG, "in_queue message dropped");
-                                }
+                                auto out =
+                                    std::pair<ApiMessage, int>{*decoded, fd};
+                                output_message(out, 100);
                             }
                             else
                             {

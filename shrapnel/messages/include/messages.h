@@ -60,6 +60,9 @@ struct ParameterUpdateOther final
 using ParameterUpdateMessage =
     std::variant<ParameterUpdateApi, ParameterUpdateHost, ParameterUpdateOther>;
 
+etl::string_stream &operator<<(etl::string_stream &out,
+                               const ParameterUpdateMessage &self);
+
 using ApiMessage =
     std::variant<shrapnel::parameters::ApiMessage,
                  shrapnel::midi::MappingApiMessage,

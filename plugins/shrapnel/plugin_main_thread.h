@@ -26,6 +26,14 @@
 #include "juce_core/juce_core.h"
 #include "server.h"
 
+template <class... Ts>
+struct overloaded : Ts...
+{
+    using Ts::operator()...;
+};
+template <class... Ts>
+overloaded(Ts...) -> overloaded<Ts...>;
+
 // TODO:
 // server
 
@@ -293,15 +301,27 @@ class PluginMainThread final : public juce::Thread
 public:
     explicit PluginMainThread(std::shared_ptr<ParameterAdapter> parameters)
         : juce::Thread{"shrapnel"},
-          server(&in_queue, &out_queue),
+          server{etl::delegate<void(const std::pair<ApiMessage, int> &in,
+                                    uint32_t time_to_wait)>::
+                     create<PluginMainThread,
+                            &PluginMainThread::server_send_output>(*this)},
           main_thread{
-              [&](const AppMessage &message) { server.send_message(message); },
+              [&](const ApiMessage &message) {
+                  server.send_message({message, std::nullopt});
+              },
+              [&](const ApiMessage &message, const std::optional<int> fd) {
+                  server.send_message({message, fd});
+              },
               in_queue,
               std::move(parameters),
               std::make_shared<JuceStorage>(),
               std::make_unique<JuceCrud>("midi_mapping"),
               std::make_unique<JuceCrud>("presets"),
-          }
+              []() -> std::optional<uint8_t>
+              {
+                  // FIXME: connect to JUCE MIDI stream
+                  return std::nullopt;
+              }}
     {
         server.start();
     }
@@ -321,9 +341,55 @@ public:
 private:
     // A queue filled by the server with received API messages
     shrapnel::Queue<AppMessage, 4> in_queue;
-    shrapnel::Queue<AppMessage, 4> out_queue;
     Server server;
     shrapnel::MainThread<4, ParameterAdapter> main_thread;
+
+    static AppMessage convert_from(const std::pair<ApiMessage, int> &message)
+    {
+        int fd = message.second;
+
+        return std::visit(
+            overloaded{
+                [=](const parameters::ApiMessage &message)
+                {
+                    return std::visit(
+                        overloaded{
+                            [](const parameters::Initialise &message)
+                            { return AppMessage{message}; },
+                            [=](const parameters::Update &message)
+                            {
+                                return AppMessage{ParameterUpdateApi{
+                                    .update{message},
+                                    .fd{fd},
+                                }};
+                            },
+                        },
+                        message);
+                },
+                [](const midi::MappingApiMessage &message)
+                { return AppMessage{message}; },
+                [](const events::ApiMessage &message)
+                { return AppMessage{message}; },
+                [](const selected_preset::SelectedPresetApiMessage &message)
+                { return AppMessage{message}; },
+                [](const presets::PresetsApiMessage &message)
+                { return AppMessage{message}; },
+                [](const midi::Message &message)
+                { return AppMessage{message}; },
+            },
+            message.first);
+    };
+
+    void server_send_output(const std::pair<ApiMessage, int> &in,
+                            uint32_t time_to_wait)
+    {
+        auto message = convert_from(in);
+        auto rc = in_queue.send(&message, time_to_wait);
+        if(rc != queue_error::SUCCESS)
+        {
+            ESP_LOGE(TAG, "in_queue message dropped");
+        }
+    };
 };
 
 } // namespace shrapnel

@@ -451,6 +451,11 @@ private:
     void handle_message(const ParameterUpdateMessage &app_message)
     {
         ESP_LOGI(TAG, "TODO handle parameter update");
+
+        etl::string<100> buffer;
+        etl::string_stream stream{buffer};
+        stream << app_message;
+        ESP_LOGI(TAG, "%s", buffer.data());
     }
 
     std::optional<selected_preset::SelectedPresetApiMessage>
