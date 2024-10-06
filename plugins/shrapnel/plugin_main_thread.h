@@ -25,14 +25,7 @@
 
 #include "juce_core/juce_core.h"
 #include "server.h"
-
-template <class... Ts>
-struct overloaded : Ts...
-{
-    using Ts::operator()...;
-};
-template <class... Ts>
-overloaded(Ts...) -> overloaded<Ts...>;
+#include <memory>
 
 // TODO:
 // server
@@ -296,10 +289,12 @@ private:
     std::unique_ptr<juce::PropertiesFile> propertiesFile;
 };
 
+template <typename AudioParametersT>
 class PluginMainThread final : public juce::Thread
 {
 public:
-    explicit PluginMainThread(std::shared_ptr<ParameterAdapter> parameters)
+    explicit PluginMainThread(
+        std::shared_ptr<ParameterAdapter<AudioParametersT>> parameters)
         : juce::Thread{"shrapnel"},
           server{etl::delegate<void(const std::pair<ApiMessage, int> &in,
                                     uint32_t time_to_wait)>::
@@ -342,7 +337,8 @@ private:
     // A queue filled by the server with received API messages
     shrapnel::Queue<AppMessage, 4> in_queue;
     Server server;
-    shrapnel::MainThread<4, ParameterAdapter> main_thread;
+    std::shared_ptr<AudioParametersT> audio_params;
+    shrapnel::MainThread<4, AudioParametersT> main_thread;
 
     static AppMessage convert_from(const std::pair<ApiMessage, int> &message)
     {
@@ -385,6 +381,23 @@ private:
     {
         auto message = convert_from(in);
         auto rc = in_queue.send(&message, time_to_wait);
+        if(rc != queue_error::SUCCESS)
+        {
+            ESP_LOGE(TAG, "in_queue message dropped");
+        }
+    };
+
+    void parameters_send_host_update(const char *id, float value)
+    {
+        auto message = AppMessage{
+            ParameterUpdateHost{
+                .update{
+                    .id{id},
+                    .value{value},
+                },
+            },
+        };
+        auto rc = in_queue.send(&message, 100);
         if(rc != queue_error::SUCCESS)
         {
             ESP_LOGE(TAG, "in_queue message dropped");

@@ -24,7 +24,6 @@
 #include <utility>
 
 #include "audio_param.h"
-#include "cmd_handling.h"
 #include "messages.h"
 #include "midi_handling.h"
 #include "midi_mapping.pb.h"
@@ -173,13 +172,6 @@ public:
                   *this))},
           midi_mutex{},
           audio_params{a_audio_params},
-          cmd_handling{
-              std::make_unique<parameters::CommandHandling<AudioParametersT>>(
-                  a_audio_params,
-                  parameters::CommandHandling<AudioParametersT>::
-                      SendMessageCallback::template create<
-                          MainThread,
-                          &MainThread::cmd_handling_send_message>(*this))},
           presets_manager{std::make_shared<presets::PresetsManager>(
               std::move(a_presets_storage))},
           selected_preset_manager{
@@ -368,8 +360,26 @@ private:
 
     void handle_message(const parameters::ApiMessage &app_message)
     {
-        cmd_handling->dispatch(app_message, -1);
-    }
+        std::visit(
+            overloaded{
+                [&](const parameters::Initialise &)
+                {
+                    ESP_LOGD(TAG, "initialise");
+
+                    for(const auto &[key, value] : *audio_params)
+                    {
+                        parameters::Update message = {
+                            .id{parameters::id_t{key}},
+                            .value{value->get()},
+                        };
+
+                        send_message(message);
+                    }
+                },
+                [](const parameters::Update &message) { assert(false); },
+            },
+            app_message);
+    } // namespace shrapnel
 
     void handle_message(const midi::MappingApiMessage &app_message)
     {
@@ -505,12 +515,6 @@ private:
 
     void clear_midi_notify_waiting() { is_midi_notify_waiting.clear(); };
 
-    void cmd_handling_send_message(const parameters::ApiMessage &m,
-                                   std::optional<int> fd)
-    {
-        send_message2(m, fd);
-    }
-
     SendMessageCallback send_message;
     SendMessageCallback2 send_message2;
     Queue<AppMessage, QUEUE_LEN> &in_queue;
@@ -528,7 +532,6 @@ private:
         PresetLoader<ParameterUpdateNotifier<AudioParametersT>>>>
         midi_message_handler;
     std::shared_ptr<AudioParametersT> audio_params;
-    std::unique_ptr<parameters::CommandHandling<AudioParametersT>> cmd_handling;
     std::shared_ptr<presets::PresetsManager> presets_manager;
     std::shared_ptr<selected_preset::SelectedPresetManager>
         selected_preset_manager;

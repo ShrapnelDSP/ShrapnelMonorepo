@@ -57,7 +57,6 @@
 
 #include "audio_events.h"
 #include "audio_param.h"
-#include "cmd_handling.h"
 #include "esp_crud.h"
 #include "esp_midi_uart.h"
 #include "esp_persistence.h"
@@ -313,14 +312,6 @@ failed_alloc_callback(size_t size, uint32_t caps, const char *function_name)
 }
 
 void nvs_debug_print();
-
-template <class... Ts>
-struct overloaded : Ts...
-{
-    using Ts::operator()...;
-};
-template <class... Ts>
-overloaded(Ts...) -> overloaded<Ts...>;
 
 extern "C" void app_main(void)
 {
