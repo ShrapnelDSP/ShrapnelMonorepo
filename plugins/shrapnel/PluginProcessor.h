@@ -19,6 +19,7 @@
 
 #pragma once
 
+#include "plugin_main_thread.h"
 #include "shrapnel_processor.h"
 #include <juce_audio_processors/juce_audio_processors.h>
 
@@ -57,8 +58,15 @@ public:
 
 private:
     juce::AudioProcessorValueTreeState parameters;
+    std::shared_ptr<shrapnel::ParameterAdapter<
+        shrapnel::parameters::AudioParameters<20, 1>>>
+        parameter_adapter;
+    shrapnel::PluginMainThread<shrapnel::parameters::AudioParameters<20, 1>>
+        main_thread;
+
     shrapnel::dsp::BlockProcessor<ShrapnelAudioProcessor::block_size,
                                   ShrapnelAudioProcessor>
         processor;
+
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(AudioPluginAudioProcessor)
 };

@@ -7,20 +7,20 @@ set(CMAKE_CXX_STANDARD_REQUIRED TRUE)
 
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
-add_subdirectory(../../effects/abstract_dsp abstract_dsp)
-add_subdirectory(../../effects/chorus chorus)
-add_subdirectory(../../effects/gate gate)
-add_subdirectory(../../effects/valvestate valvestate)
-add_subdirectory(../../effects/wah wah)
-add_subdirectory(../../firmware/components/audio audio)
-add_subdirectory(../../firmware/components/compiler_warning_flags compiler_warning_flags)
+add_subdirectory(../../effects effects)
+add_subdirectory(../../shrapnel shrapnel)
+add_subdirectory(../../thirdparty/JUCE JUCE)
+add_subdirectory(../../thirdparty/uWebSockets uWebSockets)
+add_subdirectory(../JUCE_static JUCE_static)
+add_subdirectory(../../thirdparty/esp-idf-components/nanopb nanopb)
+add_subdirectory(../../thirdparty/esp-idf-components/etl etl)
+
+# Fake esp-idf components are required for esp-dsp to build
 add_subdirectory(../../test/support/esp_common esp_common)
 add_subdirectory(../../test/support/esp_hw_support esp_hw_support)
 add_subdirectory(../../test/support/log log)
-add_subdirectory(../../thirdparty/JUCE JUCE)
 add_subdirectory(../../thirdparty/esp-idf-components/esp-dsp esp-dsp)
 add_subdirectory(../../thirdparty/esp-idf-components/esp32-fft esp32-fft)
-add_subdirectory(../JUCE_static JUCE_static)
 
 juce_add_plugin(ShrapnelDSP
                 COMPANY_NAME Barabas Raffai
@@ -31,9 +31,12 @@ juce_add_plugin(ShrapnelDSP
 
 target_sources(ShrapnelDSP
                PRIVATE
-               PluginProcessor.cpp)
+               PluginProcessor.cpp
+               server.cpp)
 
 target_link_libraries(ShrapnelDSP
                       PRIVATE
-                      audio
+                      shrapnel::audio
+                      shrapnel::main_thread
+                      shrapnel::uwebsockets
                       juce_modules)

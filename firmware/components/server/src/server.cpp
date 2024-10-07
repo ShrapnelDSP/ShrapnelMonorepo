@@ -34,10 +34,12 @@ namespace shrapnel {
 static void debug_print_sent_message(const ApiMessage &message);
 static void debug_print_received_message(const ApiMessage &message);
 
-Server::Server(QueueBase<AppMessage> *a_in_queue,
-               QueueBase<AppMessage> *a_out_queue)
+Server::Server(
+    etl::delegate<void(const std::pair<ApiMessage, int> &in,
+                       uint32_t time_to_wait)> a_output_message,
+    QueueBase<std::pair<ApiMessage, std::optional<int>>> *a_out_queue)
 {
-    in_queue = a_in_queue;
+    output_message = a_output_message;
     out_queue = a_out_queue;
     work_semaphore = xSemaphoreCreateBinary();
     assert(work_semaphore);
@@ -145,12 +147,8 @@ esp_err_t websocket_get_handler(httpd_req_t *req)
     if(message.has_value())
     {
         debug_print_received_message(*message);
-        auto out = AppMessage{*message, fd};
-        int queue_rc = self->in_queue->send(&out, pdMS_TO_TICKS(100));
-        if(queue_rc != pdPASS)
-        {
-            ESP_LOGE(TAG, "in_queue message dropped");
-        }
+        auto out = std::pair<ApiMessage, int>{*message, fd};
+        self->output_message(out, pdMS_TO_TICKS(100));
     }
     else
     {
@@ -168,9 +166,9 @@ void websocket_send(void *arg)
 {
     auto self = reinterpret_cast<Server *>(arg);
 
-    AppMessage message;
-    int rc = self->out_queue->receive(&message, 0);
-    if(!rc)
+    std::pair<ApiMessage, std::optional<int>> message;
+    auto rc = self->out_queue->receive(&message, 0);
+    if(rc != queue_error::SUCCESS)
     {
         ESP_LOGE(TAG, "%s failed to receive from queue", __FUNCTION__);
         return;
@@ -192,7 +190,8 @@ void websocket_send(void *arg)
     xSemaphoreGive(self->work_semaphore);
 }
 
-void send_websocket_message(Server &self, const AppMessage &message)
+void send_websocket_message(
+    Server &self, const std::pair<ApiMessage, std::optional<int>> &message)
 {
     std::array<uint8_t, 1024> memory{};
     auto buffer = std::span<uint8_t>{memory};
@@ -259,34 +258,25 @@ static void debug_print_sent_message(const ApiMessage &message)
 {
     etl::string<128> debug;
     etl::string_stream debug_stream{debug};
-    std::visit(
-        [&](const auto &message) -> void
-        {
-            debug_stream << message;
-            ESP_LOGD(TAG, "sending message: %s", debug.data());
-        },
-        message);
+    debug_stream << message;
+    ESP_LOGD(TAG, "sending message: %s", debug.data());
 }
 
 static void debug_print_received_message(const ApiMessage &message)
 {
     etl::string<128> debug;
     etl::string_stream debug_stream{debug};
-    std::visit(
-        [&](const auto &message) -> void
-        {
-            debug_stream << message;
-            ESP_LOGD(TAG, "received message: %s", debug.data());
-        },
-        message);
+    debug_stream << message;
+    ESP_LOGD(TAG, "received message: %s", debug.data());
 }
 
-void Server::send_message(const AppMessage &message)
+void Server::send_message(
+    const std::pair<ApiMessage, std::optional<int>> &message)
 {
     ESP_LOGD(
         TAG, "%s called from task: %s", __FUNCTION__, pcTaskGetName(nullptr));
 
-    if(errQUEUE_FULL == out_queue->send(&message, pdMS_TO_TICKS(100)))
+    if(queue_error::SUCCESS != out_queue->send(&message, pdMS_TO_TICKS(100)))
     {
         ESP_LOGE(TAG, "Failed to send message to websocket");
         return;

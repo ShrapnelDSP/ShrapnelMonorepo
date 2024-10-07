@@ -30,18 +30,22 @@ namespace shrapnel {
 class Server
 {
 public:
-    Server(QueueBase<AppMessage> *in_queue, QueueBase<AppMessage> *out_queue);
+    Server(etl::delegate<void(const std::pair<ApiMessage, int> &in,
+                              uint32_t time_to_wait)> output_message,
+           QueueBase<std::pair<ApiMessage, std::optional<int>>> *out_queue);
 
     void start();
     void stop();
 
-    void send_message(const AppMessage &message);
+    void send_message(const std::pair<ApiMessage, std::optional<int>> &message);
 
 private:
     httpd_handle_t server = nullptr;
 
-    QueueBase<AppMessage> *in_queue;
-    QueueBase<AppMessage> *out_queue;
+    etl::delegate<void(const std::pair<ApiMessage, int> &in,
+                       uint32_t time_to_wait)>
+        output_message;
+    QueueBase<std::pair<ApiMessage, std::optional<int>>> *out_queue;
 
     /*
      * TODO espressif's http server drops some calls to the work function when
@@ -53,7 +57,8 @@ private:
     SemaphoreHandle_t work_semaphore;
     friend esp_err_t websocket_get_handler(httpd_req_t *req);
     friend void websocket_send(void *arg);
-    friend void send_websocket_message(Server &self, const AppMessage &message);
+    friend void send_websocket_message(
+        Server &self, const std::pair<ApiMessage, std::optional<int>> &message);
 };
 
 } // namespace shrapnel

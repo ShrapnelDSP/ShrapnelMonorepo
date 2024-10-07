@@ -29,26 +29,6 @@
 
 #define QUEUE_LEN 4
 
-extern "C" {
-
-__attribute__((__noreturn__)) void
-_esp_error_check_failed(esp_err_t rc,
-                        const char *file,
-                        int line,
-                        const char *function,
-                        const char *expression)
-
-{
-    assert(false);
-}
-
-void _esp_error_check_failed_without_abort(esp_err_t rc,
-                                           const char *file,
-                                           int line,
-                                           const char *function,
-                                           const char *expression){};
-}
-
 namespace shrapnel::midi {
 
 template <typename T>
@@ -64,10 +44,10 @@ std::ostream &operator<<(std::ostream &out, const T &message)
 
 } // namespace shrapnel::midi
 
-class FakeMidiUart final : public shrapnel::midi::MidiUartBase
+class FakeMidiUart final : public shrapnel::midi::MidiUartBase<int>
 {
 public:
-    std::optional<uint8_t> get_byte(TickType_t) override
+    std::optional<uint8_t> get_byte(int) override
     {
         if(buffer.empty())
             return std::nullopt;
@@ -123,7 +103,6 @@ protected:
         return {
             send_message_fn,
             in_queue,
-            &midi_uart,
             audio_params,
             storage,
             std::move(midi_mapping_storage),
@@ -141,7 +120,7 @@ protected:
     void pushServerApiMessage(const AppMessage &message)
     {
         auto rc = in_queue.send(&message, 0);
-        ASSERT_THAT(rc, pdPASS);
+        ASSERT_THAT(rc, shrapnel::queue_error::SUCCESS);
     }
 
     testing::MockFunction<void(const AppMessage &)> send_message;
@@ -163,7 +142,7 @@ TEST_F(Integration, NotifiesServerAboutMidiMessages)
         juce::MidiMessage::noteOn(1, 0, static_cast<uint8_t>(1));
     pushMidiMessage(note_on_message);
 
-    shrapnel::os::Timer::impl::tick(pdMS_TO_TICKS(200));
+    shrapnel::os::Timer::impl::tick(os::ms_to_ticks(200));
 
     EXPECT_CALL(
         send_message,
