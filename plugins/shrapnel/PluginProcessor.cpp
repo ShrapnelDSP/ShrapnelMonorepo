@@ -81,8 +81,8 @@ AudioPluginAudioProcessor::AudioPluginAudioProcessor()
                   "wahBypass", "Wah Bypass", 0.f, 1.f, 1.f),
           },
       },
-      parameter_adapter{
-          std::make_shared<shrapnel::ParameterAdapter>(parameters)},
+      parameter_adapter{std::make_shared<shrapnel::ParameterAdapter<
+          shrapnel::parameters::AudioParameters<20, 1>>>(parameters)},
       main_thread{parameter_adapter},
       processor{
           // clang-format off
@@ -208,7 +208,7 @@ bool AudioPluginAudioProcessor::isBusesLayoutSupported(
     if(layouts.getMainOutputChannelSet() != juce::AudioChannelSet::stereo())
         return false;
 
-        // This checks if the input layout matches the output layout
+    // This checks if the input layout matches the output layout
 #if !JucePlugin_IsSynth
     if(layouts.getMainOutputChannelSet() != layouts.getMainInputChannelSet())
         return false;

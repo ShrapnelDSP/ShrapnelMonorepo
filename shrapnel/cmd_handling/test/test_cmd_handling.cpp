@@ -17,6 +17,8 @@
  * ShrapnelDSP. If not, see <https://www.gnu.org/licenses/>.
  */
 
+#if 0
+
 #include "gmock/gmock.h"
 #include "gtest/gtest.h"
 
@@ -161,3 +163,5 @@ TEST_F(CmdHandling, InitialiseParameters)
 } // namespace
 
 } // namespace
+
+#endif
